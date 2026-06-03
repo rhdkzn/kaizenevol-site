@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KaizenEvol — Done-For-You Meta Ads for Kitchen Remodellers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&family=Manrope:wght@500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #0A0A0A;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 0 20px;
+      }
+    }
+
+    /* NAV */
+    nav {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #FFFFFF;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span {
+      color: #3B82F6;
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      background: #3B82F6;
+      color: #FFFFFF;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .nav-cta:hover {
+      background: #2563EB;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 480px) {
+      .nav-cta {
+        font-size: 12px;
+        padding: 9px 16px;
+      }
+    }
+
+    /* LABEL */
+    .label {
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #3B82F6;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 100px 0 80px;
+      text-align: center;
+    }
+
+    .hero-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+      color: #FFFFFF;
+    }
+
+    .hero-headline .accent {
+      color: #3B82F6;
+    }
+
+    .hero-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: #9CA3AF;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #3B82F6;
+      color: #FFFFFF;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      text-decoration: none;
+      padding: 18px 40px;
+      border-radius: 10px;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 24px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #2563EB;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.45);
+    }
+
+    .btn-primary svg {
+      flex-shrink: 0;
+    }
+
+    .sub-cta-text {
+      font-size: 14px;
+      color: #6B7280;
+      font-style: italic;
+    }
+
+    /* SECTION SHARED */
+    section {
+      padding: 80px 0;
+    }
+
+    .section-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(26px, 4vw, 38px);
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 17px;
+      color: #9CA3AF;
+      margin-bottom: 48px;
+      max-width: 620px;
+    }
+
+    /* PROBLEM */
+    .problem {
+      background-color: #111111;
+    }
+
+    .problem-inner {
+      max-width: 680px;
+    }
+
+    .problem-list {
+      list-style: none;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .problem-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 17px;
+      color: #D1D5DB;
+      line-height: 1.5;
+    }
+
+    .problem-list li .icon {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: rgba(239, 68, 68, 0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .problem-list li .icon svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .problem-close {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #FFFFFF;
+      border-left: 3px solid #3B82F6;
+      padding-left: 16px;
+      line-height: 1.4;
+    }
+
+    /* WHAT YOU GET */
+    .outcomes {
+      background-color: #0A0A0A;
+    }
+
+    .outcomes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .outcomes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .outcome-card {
+      background: #111111;
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .outcome-card:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .outcome-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 42px;
+      color: #3B82F6;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .outcome-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .outcome-card p {
+      font-size: 14px;
+      color: #9CA3AF;
+      line-height: 1.5;
+    }
+
+    /* HOW IT WORKS */
+    .how {
+      background-color: #111111;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 24px;
+      position: relative;
+    }
+
+    .step:not(:last-child) {
+      padding-bottom: 40px;
+    }
+
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .step-num {
+      width: 44px;
+      height: 44px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 2px solid rgba(59, 130, 246, 0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: #3B82F6;
+      flex-shrink: 0;
+    }
+
+    .step-line {
+      width: 2px;
+      flex: 1;
+      background: rgba(59, 130, 246, 0.15);
+      margin-top: 8px;
+    }
+
+    .step-content {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    .step-content h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .step-content p {
+      font-size: 16px;
+      color: #9CA3AF;
+      line-height: 1.6;
+      max-width: 580px;
+    }
+
+    /* EXCLUSIVITY */
+    .exclusivity {
+      background-color: #0A0A0A;
+    }
+
+    .exclusivity-card {
+      background: #161616;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .exclusivity-card {
+        padding: 36px 24px;
+      }
+    }
+
+    .exclusivity-card .section-headline {
+      margin-bottom: 20px;
+    }
+
+    .exclusivity-card p {
+      font-size: 17px;
+      color: #9CA3AF;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .exclusivity-card p strong {
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    .lock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 100px;
+      padding: 8px 16px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #3B82F6;
+      margin-bottom: 24px;
+    }
+
+    /* ABOUT */
+    .about {
+      background-color: #111111;
+    }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      .about-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .about-photo {
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #161616;
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .about-content h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(24px, 3.5vw, 32px);
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .about-content p {
+      font-size: 16px;
+      color: #9CA3AF;
+      line-height: 1.7;
+      max-width: 580px;
+    }
+
+    /* FINAL CTA */
+    .final-cta {
+      background-color: #0A0A0A;
+      text-align: center;
+    }
+
+    .final-cta-card {
+      background: #111111;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 16px;
+      padding: 64px 40px;
+    }
+
+    @media (max-width: 640px) {
+      .final-cta-card {
+        padding: 48px 24px;
+      }
+    }
+
+    .final-cta .section-headline {
+      margin-bottom: 16px;
+    }
+
+    .final-cta .section-sub {
+      margin: 0 auto 40px;
+    }
+
+    .final-sub-copy {
+      font-size: 14px;
+      color: #6B7280;
+      margin-top: 16px;
+      font-style: italic;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid rgba(59, 130, 246, 0.08);
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 13px;
+      color: #4B5563;
+    }
+
+    footer a {
+      color: #6B7280;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #3B82F6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <div class="nav-logo">Kaizen<span>Evol</span></div>
+      <a href="https://calendly.com/rahaid-kaizenevol" target="_blank" rel="noopener" class="nav-cta">Book a Call</a>
+    </div>
+  </nav>
+
+  <!-- SECTION 1 — HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="label">UK Kitchen Remodellers — Exclusive Territories</span>
+      <h1 class="hero-headline">
+        We Get Kitchen Remodellers<br>
+        <span class="accent">2 Booked Clients a Month</span><br>
+        — Minimum £5,000 Project Value — In 7 Days
+      </h1>
+      <p class="hero-sub">Done-for-you Meta ads. You don't touch a thing. One kitchen remodeller per area.</p>
+      <div class="cta-group">
+        <a href="https://calendly.com/rahaid-kaizenevol" target="_blank" rel="noopener" class="btn-primary">
+          Book a Free Strategy Call
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <span class="sub-cta-text">No pitch. Just an honest conversation about your area and what's possible.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 — THE PROBLEM -->
+  <section class="problem">
+    <div class="container">
+      <div class="problem-inner">
+        <span class="label">The Problem</span>
+        <h2 class="section-headline">Most Kitchen Remodellers Are Stuck in the Same Trap</h2>
+        <ul class="problem-list">
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2L10 10M10 2L2 10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Referrals dry up with no warning
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2L10 10M10 2L2 10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Enquiries come in but half won't commit to budget
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2L10 10M10 2L2 10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            You're spending time quoting jobs you'll never win
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2L10 10M10 2L2 10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Quiet months kill cash flow
+          </li>
+        </ul>
+        <p class="problem-close">There's nothing wrong with your business. The problem is your pipeline.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — WHAT YOU GET -->
+  <section class="outcomes">
+    <div class="container">
+      <span class="label">What You Get</span>
+      <h2 class="section-headline">The Outcome, in Plain Terms</h2>
+      <p class="section-sub">Three things we deliver. Every month. For every client.</p>
+      <div class="outcomes-grid">
+        <div class="outcome-card">
+          <div class="outcome-number">2</div>
+          <h3>Qualified, Booked Clients Per Month</h3>
+          <p>Not leads. Not enquiries. Booked clients — ready to move forward.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-number">£5K<span style="font-size:24px">+</span></div>
+          <h3>Minimum Project Value Per Client</h3>
+          <p>Every lead is pre-qualified on budget before they speak to you.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-number">7</div>
+          <h3>Days to Live Ads — You Approve Everything</h3>
+          <p>We build it. You sign it off. We run it. Nothing goes live without your approval.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 — HOW IT WORKS -->
+  <section class="how">
+    <div class="container">
+      <span class="label">How It Works</span>
+      <h2 class="section-headline">Three Steps. Seven Days.</h2>
+      <p class="section-sub">Simple process. No complexity. No endless back-and-forth.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-left">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <h3>Strategy Call — 30 Minutes</h3>
+            <p>We learn your area, your target job value, and your capacity. You find out whether your territory is still open. No pressure, no pitch.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left">
+            <div class="step-num">2</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <h3>We Build in 7 Days</h3>
+            <p>Ads, copy, targeting, lead system — all of it. You review and approve before anything goes live. You don't touch an ad account once.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left">
+            <div class="step-num">3</div>
+          </div>
+          <div class="step-content">
+            <h3>We Run It</h3>
+            <p>Ongoing management, weekly reports, continuous optimisation. You focus on the kitchens. We handle the pipeline.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 — EXCLUSIVITY -->
+  <section class="exclusivity">
+    <div class="container">
+      <div class="exclusivity-card">
+        <div class="lock-badge">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="5" width="8" height="6" rx="1.5" fill="#3B82F6"/>
+            <path d="M4 5V3.5C4 2.4 4.9 1.5 6 1.5C7.1 1.5 8 2.4 8 3.5V5" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Exclusive Territories
+        </div>
+        <h2 class="section-headline">One Kitchen Remodeller Per Area. Full Stop.</h2>
+        <p>Once you sign, your competitors in your area <strong>cannot join KaizenEvol.</strong> Your territory is locked. <strong>That's not a marketing line</strong> — it's our operating model. We only win when you win, so we protect your area like it's ours.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 — ABOUT -->
+  <section class="about">
+    <div class="container">
+      <div class="about-inner">
+        <div class="about-photo">
+          <div class="avatar">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Silhouette body -->
+              <circle cx="50" cy="38" r="16" fill="#374151"/>
+              <path d="M18 88C18 70.3 32.3 56 50 56C67.7 56 82 70.3 82 88" fill="#374151"/>
+              <!-- Initial R overlay -->
+              <text x="50" y="44" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="20" fill="#3B82F6">R</text>
+            </svg>
+          </div>
+        </div>
+        <div class="about-content">
+          <span class="label">About</span>
+          <h2>Hi, I'm Rahaid.</h2>
+          <p>I built KaizenEvol to do one thing: get kitchen remodellers a predictable pipeline of high-value, booked clients. We run the ads. We manage the leads. We deliver results — or we don't stop until we do.</p>
+          <br />
+          <p>I work exclusively with kitchen remodellers across the UK, and I only take on one business per local area.</p>
+          <br />
+          <p>KaizenEvol is a done-for-you Meta ads system built exclusively for kitchen remodellers. We get them 2 qualified, booked clients per month — minimum £5,000 project value — live in 7 days. One remodeller per local area. Exclusive territory. Locked once signed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7 — BOOK A CALL -->
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-card">
+        <span class="label">Book a Call</span>
+        <h2 class="section-headline">Ready to Find Out If Your Area Is Still Available?</h2>
+        <p class="section-sub">Territories are going fast. Once an area is taken, it's gone.</p>
+        <div class="cta-group">
+          <a href="https://calendly.com/rahaid-kaizenevol" target="_blank" rel="noopener" class="btn-primary">
+            Book a Free Strategy Call
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <span class="sub-cta-text">It's a 30-minute call. You'll know exactly what we'd do for your business — and whether your territory is still open.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 KaizenEvol. All rights reserved. &nbsp;·&nbsp; <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>
