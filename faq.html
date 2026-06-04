@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KaizenEvol — Kitchen Client Acquisition</title>
+  <title>FAQ — KaizenEvol</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -92,8 +92,6 @@
       white-space: nowrap;
     }
     .btn-white:hover { opacity: .88; transform: translateY(-1px); }
-    .check-item { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; color: var(--text-primary); margin-bottom: 12px; }
-    .check-icon { color: var(--purple); font-size: 16px; margin-top: 2px; flex-shrink: 0; }
 
     /* ── NAVBAR ── */
     .navbar {
@@ -151,7 +149,7 @@
       transition: color .2s, background .2s;
     }
     .nav-links a:hover { color: var(--purple); background: var(--purple-light); }
-    .nav-links a.active { color: var(--purple); }
+    .nav-links a.active { color: var(--purple); background: var(--purple-light); }
     .nav-cta { font-size: 14px; padding: 10px 20px; }
     .hamburger {
       display: none;
@@ -167,7 +165,6 @@
       height: 2px;
       background: var(--text-primary);
       border-radius: 2px;
-      transition: all .3s;
     }
     .mobile-overlay {
       display: none;
@@ -208,22 +205,21 @@
     .mobile-panel a:hover { background: var(--purple-light); color: var(--purple); }
     .mobile-panel .btn-primary { margin-top: 12px; justify-content: center; }
 
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
+    /* ── PAGE HERO ── */
+    .page-hero {
       background: linear-gradient(135deg, #1a0533 0%, #2d1060 50%, #1e0a45 100%);
       position: relative;
-      display: flex;
-      align-items: center;
       overflow: hidden;
+      padding: 140px 24px 80px;
+      text-align: center;
     }
-    .hero::before {
+    .page-hero::before {
       content: '';
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 600px 400px at 20% 50%, rgba(109,63,192,0.35) 0%, transparent 70%),
-        radial-gradient(ellipse 500px 350px at 80% 30%, rgba(196,168,255,0.15) 0%, transparent 65%);
+        radial-gradient(ellipse 500px 300px at 25% 60%, rgba(109,63,192,0.3) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 250px at 75% 30%, rgba(196,168,255,0.12) 0%, transparent 65%);
       pointer-events: none;
     }
     .hero-grid {
@@ -235,110 +231,97 @@
       background-size: 48px 48px;
       pointer-events: none;
     }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 120px 24px 80px;
-      max-width: var(--max-w);
-      margin: 0 auto;
-    }
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 62px);
+    .page-hero-content { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; }
+    .page-hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
       font-weight: 800;
-      color: #ffffff;
-      line-height: 1.1;
-      letter-spacing: -1px;
-      margin-bottom: 24px;
-    }
-    .hero h1 .accent { color: #c4a8ff; }
-    .hero-sub {
-      font-size: clamp(16px, 2.2vw, 19px);
-      color: rgba(255,255,255,0.72);
-      max-width: 600px;
-      margin: 0 auto 36px;
-      line-height: 1.7;
-    }
-    .hero-sub-note { font-size: 14px; color: rgba(255,255,255,0.45); margin-top: 14px; }
-
-    /* ── WHO WE HELP ── */
-    .who-section { background: var(--bg-white); }
-    .who-card {
-      background: var(--purple-light);
-      border-radius: var(--radius-card);
-      padding: 40px;
-      margin-top: 48px;
-    }
-    .who-card-icon { font-size: 40px; margin-bottom: 16px; }
-    .who-card-title { font-size: 22px; font-weight: 800; color: var(--text-primary); margin-bottom: 12px; }
-    .who-card-para { font-size: 16px; color: var(--text-secondary); margin-bottom: 28px; line-height: 1.7; }
-    .scarcity-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--purple);
       color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 10px 20px;
-      border-radius: var(--radius-pill);
-      margin-top: 12px;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      margin-bottom: 18px;
     }
+    .page-hero-sub { font-size: clamp(15px, 2vw, 18px); color: rgba(255,255,255,0.72); max-width: 400px; margin: 0 auto; line-height: 1.7; }
 
-    /* ── PROCESS ── */
-    .process-section { background: var(--bg-tint); }
-    .process-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-top: 56px;
+    /* ── FAQ ACCORDION ── */
+    .faq-section { background: var(--bg-white); }
+    .faq-list { margin-top: 52px; display: flex; flex-direction: column; gap: 0; }
+    .faq-item {
+      border-bottom: 1px solid #f0eeff;
     }
-    .process-card {
-      background: #fff;
-      border-radius: var(--radius-card);
-      padding: 28px 24px 24px;
-      position: relative;
-      box-shadow: 0 2px 12px rgba(109,63,192,0.07);
-      transition: transform .2s, box-shadow .2s;
+    .faq-item:first-child { border-top: 1px solid #f0eeff; }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
     }
-    .process-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(109,63,192,0.13); }
-    .step-badge {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+    .faq-question-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .faq-chevron {
       width: 28px;
       height: 28px;
-      background: var(--purple);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
       border-radius: 50%;
+      background: var(--purple-light);
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .process-icon { font-size: 28px; margin-bottom: 14px; }
-    .process-title { font-size: 17px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
-    .process-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; }
-    .process-tag {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .5px;
-      text-transform: uppercase;
+      flex-shrink: 0;
+      transition: transform .3s, background .2s;
       color: var(--purple);
-      background: var(--purple-light);
-      padding: 4px 12px;
-      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 800;
     }
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+      background: var(--purple);
+      color: #fff;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .35s ease;
+    }
+    .faq-answer-inner {
+      padding: 0 0 24px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 700px;
+    }
+    .faq-item.open .faq-answer { max-height: 400px; }
 
-    /* ── MINI CTA BANNER ── */
-    .cta-banner {
+    /* ── FINAL CTA ── */
+    .final-cta {
       background: linear-gradient(135deg, #1a0533 0%, #2d1060 100%);
-      padding: 80px 24px;
+      padding: 100px 24px;
       text-align: center;
     }
-    .cta-banner h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; color: #fff; margin-bottom: 28px; }
+    .final-cta h2 {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .final-cta-sub {
+      font-size: clamp(15px, 2vw, 17px);
+      color: rgba(255,255,255,0.7);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .final-cta-note { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 14px; }
 
     /* ── FOOTER ── */
     .footer {
@@ -386,8 +369,6 @@
       .section-pad { padding: 64px 0; }
       .nav-links, .nav-cta { display: none; }
       .hamburger { display: flex; }
-      .process-grid { grid-template-columns: 1fr; }
-      .who-card { padding: 28px 20px; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
       .footer-right { text-align: left; }
     }
@@ -399,7 +380,7 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar" id="navbar">
+<nav class="navbar">
   <div class="navbar-inner">
     <a href="index.html" class="nav-logo">
       <div class="nav-logo-badge">K</div>
@@ -409,7 +390,7 @@
       <li><a href="index.html#process">How It Works</a></li>
       <li><a href="services.html">Services</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="faq.html" class="active">FAQ</a></li>
     </ul>
     <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary nav-cta">Book A Call</a>
     <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
@@ -435,75 +416,86 @@
   <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book A Call</a>
 </div>
 
-<!-- HERO -->
-<section class="hero">
+<!-- PAGE HERO -->
+<section class="page-hero">
   <div class="hero-grid"></div>
-  <div class="hero-content">
-    <span class="eyebrow-white">UK Kitchen Remodellers — Exclusive Client Acquisition</span>
-    <h1>Stop Waiting for Referrals.<br>Get Multiple Booked Clients<br><span class="accent">Every Month.</span></h1>
-    <p class="hero-sub">Done-for-you Meta ads built exclusively for kitchen remodellers across the UK. Multiple qualified, booked clients per month — minimum £5,000 project value. Live in 7 days. You touch nothing.</p>
+  <div class="page-hero-content">
+    <span class="eyebrow-white">FAQ</span>
+    <h1>Common Questions</h1>
+    <p class="page-hero-sub">Straight answers. No fluff.</p>
+  </div>
+</section>
+
+<!-- FAQ ACCORDION -->
+<section class="faq-section section-pad">
+  <div class="container">
+    <span class="eyebrow">&#10067; Questions</span>
+    <h2 class="section-h2">Everything You Need to Know</h2>
+    <p class="section-sub">If something&rsquo;s not covered here, book a call and ask directly. We&rsquo;ll give you a straight answer.</p>
+
+    <div class="faq-list" id="faqList">
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">What exactly do you do for me?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            We run your Meta ads end-to-end &mdash; campaigns, copy, targeting, creative, optimisation. You don&rsquo;t touch an ad account. You just show up to the consultations we put in your calendar.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">What results can I actually expect?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Multiple qualified, booked kitchen remodelling clients per month, each with a minimum project value of £5,000. That&rsquo;ss the written standard we hold ourselves to.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">How much do I need to spend on ads?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Ad spend is set per client based on your local market, competition, and goals. We discuss this during the discovery call and agree on a figure before anything goes live. Your ad spend goes directly to Meta &mdash; we don&rsquo;t mark it up or take a cut of it.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">What if I&rsquo;e tried Meta ads before and it didn&rsquo;t work?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Most failed Meta ads fail for the same reasons: wrong audience, weak creative, no qualification funnel, and no one watching the data closely enough. Generic ad agencies run generic campaigns. This system is built specifically for kitchen remodellers &mdash; the targeting, copy, and funnel are all purpose-built for your niche. Book the call and we&rsquo;ll show you exactly where things went wrong before.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <span class="eyebrow-white">Limited Availability &mdash; One Remodeller Per Area</span>
+    <h2>Ready to Fill Your Calendar<br>With Booked Clients?</h2>
+    <p class="final-cta-sub">Book a free 30-minute strategy call. No pitch, no pressure. You&rsquo;ll leave with a clear picture of what&rsquo;s possible for your business &mdash; whether we work together or not.</p>
     <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">&#128197; Book A Free Strategy Call &rarr;</a>
-    <p class="hero-sub-note">No pitch. Just strategy. 30 minutes.</p>
+    <p class="final-cta-note">No pitch. Just strategy. 30 minutes. Free.</p>
   </div>
-</section>
-
-<!-- WHO WE HELP -->
-<section class="who-section section-pad" id="who">
-  <div class="container">
-    <span class="eyebrow">&#127919; Who We Help</span>
-    <h2 class="section-h2">We Work Exclusively With Kitchen<br>Remodellers Across the UK</h2>
-    <p class="section-sub">We don&rsquo;t work with every trade or every niche. Kitchen remodelling is all we do. That means campaigns launch faster, copy lands better, and results come quicker.</p>
-    <div class="who-card">
-      <div class="who-card-icon">&#127968;</div>
-      <div class="who-card-title">Kitchen Remodelling Businesses</div>
-      <p class="who-card-para">If you design and install kitchens, you&rsquo;re who this was built for. Every part of the system — the targeting, the ad copy, the qualification funnel — is purpose-built for your niche and your customers.</p>
-      <div class="check-item"><span class="check-icon">&#10003;</span> Full-service kitchen design and installation companies</div>
-      <div class="check-item"><span class="check-icon">&#10003;</span> Independent remodellers and small studio teams</div>
-      <div class="check-item"><span class="check-icon">&#10003;</span> Businesses targeting £5,000&ndash;£50,000+ project values</div>
-      <div class="check-item"><span class="check-icon">&#10003;</span> Anyone tired of relying on word-of-mouth and slow seasons</div>
-      <div style="margin-top: 28px;">
-        <span class="scarcity-pill">&#128274; One remodeller per local area &mdash; locked once signed</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="process-section section-pad" id="process">
-  <div class="container">
-    <span class="eyebrow">&#9881+&#65039; How It Works</span>
-    <h2 class="section-h2">From Zero to Booked Clients in 7 Days</h2>
-    <p class="section-sub">Three steps. You approve one set of ads. Then we run everything. You just answer the phone.</p>
-    <div class="process-grid">
-      <div class="process-card">
-        <div class="step-badge">1</div>
-        <div class="process-icon">&#128222;</div>
-        <div class="process-title">Discovery Call</div>
-        <p class="process-desc">A focused 30-minute call. We learn your business, your ideal client, your local area, and what a good job looks like for you. No fluff. No wasted time.</p>
-        <span class="process-tag">30 minutes</span>
-      </div>
-      <div class="process-card">
-        <div class="step-badge">2</div>
-        <div class="process-icon">&#9998&#65039;</div>
-        <div class="process-title">Campaign Build</div>
-        <p class="process-desc">We build your entire campaign — copy, creatives, targeting, funnel. You review and approve before anything goes live. Nothing launches without your sign-off.</p>
-        <span class="process-tag">7 days</span>
-      </div>
-      <div class="process-card">
-        <div class="step-badge">3</div>
-        <div class="process-icon">&#128200;</div>
-        <div class="process-title">Launch + Optimise</div>
-        <p class="process-desc">Ads go live. We monitor daily, cut what isn&rsquo;t working, and scale what is. You get a simple weekly report. We handle everything else.</p>
-        <span class="process-tag">Ongoing</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MINI CTA BANNER -->
-<section class="cta-banner">
-  <h2>Ready to see what&rsquo;s possible?</h2>
-  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">Book A Free Strategy Call &rarr;</a>
 </section>
 
 <!-- FOOTER -->
@@ -527,6 +519,18 @@
 </footer>
 
 <script>
+  /* ── FAQ ACCORDION ── */
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const btn = item.querySelector('.faq-question');
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      faqItems.forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  /* ── MOBILE NAV ── */
   const hamburgerBtn = document.getElementById('hamburgerBtn');
   const mobileOverlay = document.getElementById('mobileOverlay');
   const mobilePanel = document.getElementById('mobilePanel');

@@ -1,533 +1,575 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Rahaid — founder of KaizenEvol. Meta ads specialist helping UK kitchen remodellers build a predictable pipeline of high-value clients." />
-  <title>About Rahaid — KaizenEvol</title>
+  <title>About — KaizenEvol</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500&family=Manrope:wght@500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
+    /* ── RESET ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: #111111; background: #ffffff; line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
 
-    body {
-      background-color: #0A0A0A;
-      color: #FFFFFF;
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --purple:        #6D3FC0;
+      --purple-light:  #F0EEFF;
+      --purple-mid:    #EDE8FF;
+      --bg-white:      #FFFFFF;
+      --bg-tint:       #F5F3FF;
+      --text-primary:  #111111;
+      --text-secondary:#555555;
+      --radius-card:   16px;
+      --radius-pill:   9999px;
+      --max-w:         900px;
     }
 
-    .container {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    /* ── NAV ── */
-    nav {
-      padding: 24px 0;
-      border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-    }
-    nav .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 20px;
-      letter-spacing: -0.5px;
-    }
-    .nav-logo span { color: #3B82F6; }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-    .nav-links a {
-      font-size: 14px;
-      color: #9CA3AF;
-      transition: color 0.15s;
-    }
-    .nav-links a:hover { color: #FFFFFF; }
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      background: #3B82F6;
-      color: #FFFFFF !important;
-      font-family: 'Manrope', sans-serif;
-      font-weight: 600;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      padding: 10px 20px;
-      border-radius: 8px;
-      transition: background 0.2s ease, transform 0.15s ease;
-    }
-    .nav-cta:hover { background: #2563EB !important; transform: translateY(-1px); }
-
-    /* ── LABEL ── */
-    .label {
-      font-family: 'Manrope', sans-serif;
+    /* ── UTILITY ── */
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .section-pad { padding: 96px 0; }
+    .eyebrow {
+      display: inline-block;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: #3B82F6;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      padding: 80px 0 64px;
-    }
-    .hero-inner {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 48px;
-      align-items: start;
-    }
-    @media (max-width: 640px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .hero-photo { order: -1; }
-    }
-    .hero h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(32px, 5vw, 48px);
-      letter-spacing: -1.5px;
-      line-height: 1.1;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
       margin-bottom: 20px;
     }
-    .hero h1 span { color: #3B82F6; }
-    .hero-tagline {
-      font-size: 18px;
-      color: #9CA3AF;
-      line-height: 1.6;
-      max-width: 52ch;
-      margin-bottom: 32px;
-      font-weight: 300;
-    }
-    .hero-photo {
-      flex-shrink: 0;
-    }
-    .photo-frame {
-      width: 180px;
-      height: 180px;
-      border-radius: 12px;
-      background: #161616;
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-    /* ⬇ REPLACE THIS SVG WITH YOUR ACTUAL PHOTO */
-    .photo-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    .photo-placeholder svg { opacity: 0.4; }
-    .photo-placeholder span {
+    .eyebrow-white {
+      display: inline-block;
       font-size: 11px;
-      color: #4B5563;
-      font-family: 'Manrope', sans-serif;
-      letter-spacing: 0.5px;
-    }
-
-    /* ── DIVIDER ── */
-    hr {
-      border: none;
-      border-top: 1px solid rgba(59, 130, 246, 0.08);
-      margin: 0;
-    }
-
-    /* ── STATS STRIP ── */
-    .stats {
-      padding: 40px 0;
-      display: flex;
-      gap: 48px;
-      flex-wrap: wrap;
-    }
-    .stat .num {
-      font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 2rem;
-      color: #3B82F6;
-      letter-spacing: -1px;
-      line-height: 1;
-    }
-    .stat .desc {
-      font-size: 13px;
-      color: #6B7280;
-      margin-top: 4px;
-    }
-
-    /* ── SECTIONS ── */
-    .section {
-      padding: 64px 0;
-      border-top: 1px solid rgba(59, 130, 246, 0.08);
-    }
-
-    .section h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(22px, 3.5vw, 30px);
-      letter-spacing: -0.5px;
-      line-height: 1.2;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #c4a8ff;
+      background: rgba(196,168,255,0.15);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
       margin-bottom: 20px;
     }
-
-    .section p {
-      font-size: 16px;
-      color: #9CA3AF;
-      line-height: 1.8;
-      max-width: 62ch;
-    }
-
-    .section p + p { margin-top: 16px; }
-
-    /* ── STORY ── */
-    .story-body p { max-width: 68ch; }
-
-    /* ── VALUES ── */
-    .values-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-top: 32px;
-    }
-    .value-card {
-      background: #111111;
-      border: 1px solid rgba(59, 130, 246, 0.1);
-      border-radius: 10px;
-      padding: 24px;
-      transition: border-color 0.2s;
-    }
-    .value-card:hover { border-color: rgba(59, 130, 246, 0.3); }
-    .value-card h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-    .value-card p {
-      font-size: 14px;
-      color: #6B7280;
-      line-height: 1.6;
-      max-width: none;
-    }
-
-    /* ── RESULTS ── */
-    .results-list {
-      margin-top: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .result-item {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      background: #111111;
-      border: 1px solid rgba(59, 130, 246, 0.1);
-      border-radius: 10px;
-      padding: 20px 24px;
-    }
-    .result-item .check {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(59, 130, 246, 0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .result-item .check svg { width: 12px; height: 12px; }
-    .result-item .text strong {
-      display: block;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 600;
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-    .result-item .text span {
-      font-size: 13px;
-      color: #6B7280;
-    }
-
-    /* ── QUOTE ── */
-    .quote-block {
-      margin-top: 32px;
-      border-left: 3px solid #3B82F6;
-      padding: 20px 24px;
-      background: #111111;
-      border-radius: 0 8px 8px 0;
-    }
-    .quote-block blockquote {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 18px;
-      font-weight: 500;
-      color: #FFFFFF;
-      line-height: 1.5;
-      margin-bottom: 12px;
-      font-style: italic;
-    }
-    .quote-block cite {
-      font-size: 13px;
-      color: #6B7280;
-      font-style: normal;
-    }
-
-    /* ── CTA ── */
-    .cta-section {
-      padding: 64px 0 80px;
-      border-top: 1px solid rgba(59, 130, 246, 0.08);
-      text-align: center;
-    }
-    .cta-section h2 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(22px, 3.5vw, 32px);
-      letter-spacing: -0.5px;
-      margin-bottom: 12px;
-    }
-    .cta-section p {
-      color: #9CA3AF;
-      font-size: 16px;
-      margin-bottom: 32px;
-      font-weight: 300;
-    }
+    .section-h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: var(--text-primary); line-height: 1.2; margin-bottom: 16px; }
+    .section-sub { font-size: 17px; color: var(--text-secondary); max-width: 640px; line-height: 1.7; }
     .btn-primary {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: #3B82F6;
-      color: #FFFFFF;
-      font-family: 'Space Grotesk', sans-serif;
+      gap: 6px;
+      background: var(--purple);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: var(--purple);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .btn-white:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      color: var(--purple);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: var(--radius-pill);
+      border: 2px solid var(--purple);
+      cursor: pointer;
+      transition: background .2s, color .2s;
+      white-space: nowrap;
+    }
+    .btn-outline:hover { background: var(--purple); color: #fff; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 48px);
+      max-width: 860px;
+      background: #ffffff;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 32px rgba(109,63,192,0.15), 0 1px 4px rgba(0,0,0,0.06);
+      z-index: 1000;
+      padding: 0 8px;
+    }
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+      padding: 0 16px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 700;
       font-size: 16px;
-      padding: 16px 36px;
-      border-radius: 10px;
-      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 24px rgba(59, 130, 246, 0.3);
+      color: var(--text-primary);
     }
-    .btn-primary:hover {
-      background: #2563EB;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.45);
+    .nav-logo-badge {
+      width: 32px;
+      height: 32px;
+      background: var(--purple);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
     }
-    .cta-note {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #4B5563;
-      font-style: italic;
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
     }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: var(--purple); background: var(--purple-light); }
+    .nav-links a.active { color: var(--purple); background: var(--purple-light); }
+    .nav-cta { font-size: 14px; padding: 10px 20px; }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      border: none;
+      background: none;
+    }
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+    }
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1100;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .mobile-overlay.open { opacity: 1; }
+    .mobile-panel {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(320px, 85vw);
+      height: 100dvh;
+      background: #fff;
+      z-index: 1200;
+      padding: 28px 24px;
+      transition: right .3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-panel.open { right: 0; }
+    .mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .mobile-close { font-size: 24px; background: none; border: none; cursor: pointer; color: var(--text-primary); line-height: 1; }
+    .mobile-panel a {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 14px 16px;
+      border-radius: 12px;
+      transition: background .2s, color .2s;
+      display: block;
+    }
+    .mobile-panel a:hover { background: var(--purple-light); color: var(--purple); }
+    .mobile-panel .btn-primary { margin-top: 12px; justify-content: center; }
 
-    /* ── FOOTER ── */
-    footer {
-      padding: 28px 0;
-      border-top: 1px solid rgba(59, 130, 246, 0.08);
+    /* ── PAGE HERO ── */
+    .page-hero {
+      background: linear-gradient(135deg, #1a0533 0%, #2d1060 50%, #1e0a45 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 140px 24px 80px;
       text-align: center;
     }
-    footer p { font-size: 13px; color: #4B5563; }
-    footer a { color: #6B7280; }
-    footer a:hover { color: #3B82F6; }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 500px 300px at 25% 60%, rgba(109,63,192,0.3) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 250px at 75% 30%, rgba(196,168,255,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(196,168,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(196,168,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    .page-hero-content { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; }
+    .page-hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      margin-bottom: 18px;
+    }
+    .page-hero-sub { font-size: clamp(15px, 2vw, 18px); color: rgba(255,255,255,0.72); max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+    /* ── TEAM ── */
+    .team-section { background: var(--bg-white); }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-top: 52px;
+    }
+    .team-card {
+      background: var(--purple-light);
+      border-radius: var(--radius-card);
+      padding: 36px 28px;
+    }
+    .team-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--purple);
+      border: 3px solid rgba(109,63,192,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .team-name { font-size: 20px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+    .team-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 18px;
+    }
+    .team-bio { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 12px; }
+    .team-links { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+    .team-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple);
+      transition: opacity .2s;
+    }
+    .team-link:hover { opacity: .7; }
+
+    /* ── COMMITMENT ── */
+    .commitment-section { background: var(--bg-tint); }
+    .guarantee-box {
+      background: var(--purple-light);
+      border-radius: var(--radius-card);
+      padding: 40px;
+      margin-top: 48px;
+    }
+    .guarantee-title { font-size: 22px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
+    .guarantee-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 32px; max-width: 560px; }
+    .guarantee-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .guarantee-item { display: flex; align-items: flex-start; gap: 12px; }
+    .guarantee-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .guarantee-item-title { font-size: 15px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+    .guarantee-item-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: linear-gradient(135deg, #1a0533 0%, #2d1060 100%);
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .cta-banner h2 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; color: #fff; margin-bottom: 28px; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: #fff;
+      border-top: 1px solid #f0eeff;
+      padding: 48px 24px;
+    }
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+    .footer-logo-badge {
+      width: 30px;
+      height: 30px;
+      background: var(--purple);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .footer-nav a { font-size: 14px; color: var(--text-secondary); font-weight: 500; transition: color .2s; }
+    .footer-nav a:hover { color: var(--purple); }
+    .footer-right { font-size: 13px; color: var(--text-secondary); text-align: right; line-height: 1.7; }
+    .footer-right a { color: var(--purple); font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .section-pad { padding: 64px 0; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .team-grid { grid-template-columns: 1fr; }
+      .guarantee-grid { grid-template-columns: 1fr; }
+      .guarantee-box { padding: 28px 20px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .footer-right { text-align: left; }
+    }
+    @media (min-width: 641px) {
+      .mobile-overlay, .mobile-panel { display: none !important; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <div class="container">
-      <a href="index.html" class="nav-logo">Kaizen<span>Evol</span></a>
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="nav-cta">Book a Call</a>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-badge">K</div>
+      KaizenEvol
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#process">How It Works</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary nav-cta">Book A Call</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-panel-header">
+    <div class="nav-logo">
+      <div class="nav-logo-badge">K</div>
+      KaizenEvol
+    </div>
+    <button class="mobile-close" id="mobileClose">&times;</button>
+  </div>
+  <a href="index.html#process">How It Works</a>
+  <a href="services.html">Services</a>
+  <a href="about.html">About</a>
+  <a href="faq.html">FAQ</a>
+  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book A Call</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="hero-grid"></div>
+  <div class="page-hero-content">
+    <span class="eyebrow-white">The Team</span>
+    <h1>Who&rsquo;s Behind KaizenEvol</h1>
+    <p class="page-hero-sub">Two specialists. One niche. Fully committed to your results.</p>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team-section section-pad">
+  <div class="container">
+    <span class="eyebrow">&#128101; The Founders</span>
+    <h2 class="section-h2">Meet the Team</h2>
+    <div class="team-grid">
+      <!-- Rahaid -->
+      <div class="team-card">
+        <div class="team-avatar">R</div>
+        <div class="team-name">Rahaid</div>
+        <div class="team-title">Co-Founder &mdash; Media Buyer</div>
+        <p class="team-bio">Rahaid runs the traffic side. Campaign architecture, ad creative, audience strategy, daily optimisation. He built KaizenEvol because he saw how much money talented remodellers were leaving on the table &mdash; not because their work wasn&rsquo;t good enough, but because nobody was putting it in front of the right people.</p>
+        <p class="team-bio">When he takes on your business, he&rsquo;s monitoring your campaigns daily, cutting losers and scaling winners before you&rsquo;ve even looked at your phone.</p>
+        <div class="team-links">
+          <a href="mailto:rahaid@kaizenevol.com" class="team-link">&#9993;&#65038; rahaid@kaizenevol.com</a>
+          <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="team-link">&#128197; Book a call &rarr;</a>
+        </div>
+      </div>
+      <!-- Diego -->
+      <div class="team-card">
+        <div class="team-avatar">D</div>
+        <div class="team-name">Diego</div>
+        <div class="team-title">Co-Founder &mdash; Operations &amp; Client Success</div>
+        <p class="team-bio">Diego keeps everything running. Onboarding, client communication, delivery, and making sure every remodeller we work with gets what they were promised &mdash; on time, every time.</p>
+        <p class="team-bio">Between the two of them, you get media buying expertise and operational discipline under one roof. No account managers. No middlemen. Just the people who actually do the work.</p>
+        <div class="team-links">
+          <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="team-link">&#128197; Book a call &rarr;</a>
+        </div>
       </div>
     </div>
-  </nav>
+  </div>
+</section>
 
-  <!-- HERO -->
-  <div style="padding-top: 0;">
-    <div class="container">
-      <div class="hero">
-        <div class="hero-inner">
+<!-- OUR COMMITMENT -->
+<section class="commitment-section section-pad">
+  <div class="container">
+    <span class="eyebrow">&#128737;&#65039; Our Commitment</span>
+    <h2 class="section-h2">We Only Win When You Win</h2>
+    <p class="section-sub">This isn&rsquo;t a standard agency retainer where you pay regardless of results. Here&rsquo;s exactly what we commit to.</p>
+    <div class="guarantee-box">
+      <div class="guarantee-title">The KaizenEvol Commitment</div>
+      <p class="guarantee-sub">Multiple qualified, booked clients per month &mdash; minimum £5,000 project value each. That&rsquo;ss the standard. Not an aspiration. A baseline.</p>
+      <div class="guarantee-grid">
+        <div class="guarantee-item">
+          <div class="guarantee-icon">&#127919;</div>
           <div>
-            <span class="label">About</span>
-            <h1>I'm Rahaid.<br>I build pipelines for <span>kitchen remodellers</span>.</h1>
-            <p class="hero-tagline">Meta ads specialist. I run done-for-you client acquisition systems that put qualified, booked jobs in your calendar — without you touching a single ad.</p>
+            <div class="guarantee-item-title">Result-focused from day one</div>
+            <p class="guarantee-item-desc">The 60-day trial period runs on a commission basis &mdash; we earn 20% of closed job value. We have skin in the game from the first day your ads go live.</p>
           </div>
-          <div class="hero-photo">
-            <div class="photo-frame">
-              <!-- REPLACE: swap the div below with an <img src="photo.jpg" alt="Rahaid" style="width:100%;height:100%;object-fit:cover;" /> -->
-              <div class="photo-placeholder">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="24" cy="18" r="10" fill="#374151"/>
-                  <path d="M6 44C6 34.6 14.1 27 24 27C33.9 27 42 34.6 42 44" fill="#374151"/>
-                </svg>
-                <span>Add your photo</span>
-              </div>
-            </div>
+        </div>
+        <div class="guarantee-item">
+          <div class="guarantee-icon">&#9889;</div>
+          <div>
+            <div class="guarantee-item-title">Live in 7 days, no delays</div>
+            <p class="guarantee-item-desc">From discovery call to live campaign in 7 days. We don&rsquo;t sit on work. If there&rsquo;s a delay, it&rsquo;ll be on our radar before you notice it.</p>
+          </div>
+        </div>
+        <div class="guarantee-item">
+          <div class="guarantee-icon">&#128235;</div>
+          <div>
+            <div class="guarantee-item-title">Direct access, fast response</div>
+            <p class="guarantee-item-desc">You have direct access to us &mdash; not an account manager, not a junior. We reply within the same working day. Every time.</p>
+          </div>
+        </div>
+        <div class="guarantee-item">
+          <div class="guarantee-icon">&#128274;</div>
+          <div>
+            <div class="guarantee-item-title">Your territory is locked</div>
+            <p class="guarantee-item-desc">Once you sign, no other kitchen remodeller in your local area gets access to this system. Your competitive edge is protected.</p>
           </div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <hr />
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <h2>Sounds like a fit?</h2>
+  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">Book A Free Call &rarr;</a>
+</section>
 
-  <!-- STATS -->
-  <div class="container">
-    <div class="stats">
-      <!-- UPDATE these numbers with your real figures -->
-      <div class="stat">
-        <div class="num">£5K+</div>
-        <div class="desc">Average project value per booked client</div>
-      </div>
-      <div class="stat">
-        <div class="num">7 Days</div>
-        <div class="desc">Average time from sign-up to live ads</div>
-      </div>
-      <div class="stat">
-        <div class="num">1</div>
-        <div class="desc">Remodeller per territory — no exceptions</div>
-      </div>
+<!-- FOOTER
+ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <div class="footer-logo-badge">K</div>
+      KaizenEvol
+    </a>
+    <nav class="footer-nav">
+      <a href="index.html#process">How It Works</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="footer-right">
+      <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a><br>
+      &copy; 2026 KaizenEvol
     </div>
   </div>
+</footer>
 
-  <!-- STORY -->
-  <div class="container">
-    <div class="section story-body">
-      <span class="label">My Story</span>
-      <h2>Why Kitchen Remodellers. Why Meta. Why Now.</h2>
-      <!-- UPDATE: replace the placeholder paragraphs below with your actual story -->
-      <p>
-        [Your story here — how you got into Meta ads, what led you to focus specifically on kitchen remodellers, and what made you realise most agencies weren't actually solving the pipeline problem for trades businesses.]
-      </p>
-      <p>
-        [What you saw that others were missing — the gap between "traffic" and "booked jobs", how you built the system, and why you decided to keep it exclusive to one remodeller per area.]
-      </p>
-      <p>
-        [What drives you now — what getting this right means to the businesses you work with, and why you take the guarantee seriously.]
-      </p>
-    </div>
-  </div>
+<script>
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileOverlay = document.getElementById('mobileOverlay');
+  const mobilePanel = document.getElementById('mobilePanel');
+  const mobileClose = document.getElementById('mobileClose');
 
-  <!-- HOW I WORK -->
-  <div class="container">
-    <div class="section">
-      <span class="label">How I Work</span>
-      <h2>A few things that don't change.</h2>
-
-      <div class="values-grid">
-        <div class="value-card">
-          <h3>Results, not retainers</h3>
-          <p>I guarantee 2 booked clients per month. If we don't hit it, I work for free until we do. No hiding behind "brand awareness".</p>
-        </div>
-        <div class="value-card">
-          <h3>One area, one client</h3>
-          <p>I won't take on a competitor in your territory. Ever. It's not a selling point — it's how the model works.</p>
-        </div>
-        <div class="value-card">
-          <h3>You don't touch the ads</h3>
-          <p>My job is to run everything. Your job is to show up for the calls I book and close the jobs. That's it.</p>
-        </div>
-        <div class="value-card">
-          <h3>Plain English, always</h3>
-          <p>No dashboards full of vanity metrics. Weekly reports in plain English: what's working, what's not, what's next.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RESULTS -->
-  <div class="container">
-    <div class="section">
-      <span class="label">Results</span>
-      <h2>What this looks like in practice.</h2>
-      <p>A sample of outcomes from clients running through the KaizenEvol system.</p>
-
-      <div class="results-list">
-        <!-- UPDATE: replace with real client results. Keep anonymous if needed (e.g. "Kitchen remodeller, Manchester") -->
-        <div class="result-item">
-          <div class="check">
-            <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 6L5 9L10 3" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="text">
-            <strong>[Client result — e.g. "3 booked consultations in first 14 days"]</strong>
-            <span>[Client description — e.g. "Kitchen remodeller, West London. Average job value £8,500."]</span>
-          </div>
-        </div>
-        <div class="result-item">
-          <div class="check">
-            <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 6L5 9L10 3" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="text">
-            <strong>[Client result]</strong>
-            <span>[Client description]</span>
-          </div>
-        </div>
-        <div class="result-item">
-          <div class="check">
-            <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 6L5 9L10 3" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="text">
-            <strong>[Client result]</strong>
-            <span>[Client description]</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- UPDATE: replace with a real client quote -->
-      <div class="quote-block">
-        <blockquote>"[Client quote here — a genuine line from a client about what it's like working with you. Keep it specific and honest, not hype.]"</blockquote>
-        <cite>— [First name], [City] · Kitchen Remodeller</cite>
-      </div>
-    </div>
-  </div>
-
-  <!-- CTA -->
-  <div class="container">
-    <div class="cta-section">
-      <h2>If your territory is still open, let's talk.</h2>
-      <p>30 minutes. I'll tell you exactly what I'd do for your area — and whether it makes sense to work together.</p>
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">
-        Book a Strategy Call
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-      <p class="cta-note">No pressure. No pitch deck.</p>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2026 KaizenEvol. All rights reserved. &nbsp;·&nbsp; <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></p>
-    </div>
-  </footer>
-
+  function openMenu() {
+    mobileOverlay.style.display = 'block';
+    mobilePanel.style.display = 'flex';
+    requestAnimationFrame(() => {
+      mobileOverlay.classList.add('open');
+      mobilePanel.classList.add('open');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobileOverlay.classList.remove('open');
+    mobilePanel.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      mobileOverlay.style.display = 'none';
+      mobilePanel.style.display = 'none';
+    }, 300);
+  }
+  hamburgerBtn.addEventListener('click', openMenu);
+  mobileClose.addEventListener('click', closeMenu);
+  mobileOverlay.addEventListener('click', closeMenu);
+  mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+</script>
 </body>
 </html>
