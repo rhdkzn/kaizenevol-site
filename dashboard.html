@@ -59,11 +59,9 @@
       margin-bottom: 28px;
     }
     .gate-badge {
-      width: 44px; height: 44px;
-      background: var(--purple);
+      width: 48px; height: 48px;
       border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 20px; font-weight: 800;
+      object-fit: contain;
     }
     .gate-logo-name { font-size: 22px; font-weight: 700; }
     .gate-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
@@ -119,11 +117,9 @@
     }
     .dash-logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 15px; }
     .dash-badge {
-      width: 30px; height: 30px;
-      background: var(--purple);
+      width: 32px; height: 32px;
       border-radius: 7px;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 13px; font-weight: 800;
+      object-fit: contain;
     }
     .dash-subtitle { font-size: 12px; color: var(--muted); font-weight: 500; letter-spacing: .3px; }
     .dash-header-right { display: flex; align-items: center; gap: 12px; }
@@ -410,7 +406,7 @@
 <div id="gate">
   <div class="gate-card">
     <div class="gate-logo">
-      <div class="gate-badge">K</div>
+      <img src="logo.png" alt="KaizenEvol" class="gate-badge" />
       <span class="gate-logo-name">KaizenEvol</span>
     </div>
     <div class="gate-title">Dashboard</div>
@@ -427,7 +423,7 @@
   <header class="dash-header">
     <div class="dash-header-inner">
       <div class="dash-logo">
-        <div class="dash-badge">K</div>
+        <img src="logo.png" alt="KaizenEvol" class="dash-badge" />
         KaizenEvol
       </div>
       <span class="dash-subtitle">Internal Dashboard</span>

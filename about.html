@@ -156,16 +156,10 @@
       color: var(--text-primary);
     }
     .nav-logo-badge {
-      width: 32px;
-      height: 32px;
-      background: var(--purple);
+      width: 36px;
+      height: 36px;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 800;
-      font-size: 15px;
+      object-fit: contain;
     }
     .nav-links {
       display: flex;
@@ -373,16 +367,10 @@
       color: var(--text-primary);
     }
     .footer-logo-badge {
-      width: 30px;
-      height: 30px;
-      background: var(--purple);
+      width: 32px;
+      height: 32px;
       border-radius: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 800;
-      font-size: 14px;
+      object-fit: contain;
     }
     .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
     .footer-nav a { font-size: 14px; color: var(--text-secondary); font-weight: 500; transition: color .2s; }
@@ -412,7 +400,7 @@
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="index.html" class="nav-logo">
-      <div class="nav-logo-badge">K</div>
+      <img src="logo.png" alt="KaizenEvol" class="nav-logo-badge" />
       KaizenEvol
     </a>
     <ul class="nav-links">
@@ -433,7 +421,7 @@
 <div class="mobile-panel" id="mobilePanel">
   <div class="mobile-panel-header">
     <div class="nav-logo">
-      <div class="nav-logo-badge">K</div>
+      <img src="logo.png" alt="KaizenEvol" class="nav-logo-badge" />
       KaizenEvol
     </div>
     <button class="mobile-close" id="mobileClose">&times;</button>
@@ -542,7 +530,7 @@
 <footer class="footer">
   <div class="footer-inner">
     <a href="index.html" class="footer-logo">
-      <div class="footer-logo-badge">K</div>
+      <img src="logo.png" alt="KaizenEvol" class="footer-logo-badge" />
       KaizenEvol
     </a>
     <nav class="footer-nav">
