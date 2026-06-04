@@ -1,377 +1,532 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KaizenEvol — Client Acquisition for Kitchen Remodellers</title>
   <meta name="description" content="Done-for-you Meta ads that book 2 qualified kitchen remodelling clients per month. Minimum £5,000 project value. Live in 7 days. One remodeller per area." />
+  <title>KaizenEvol — Done-For-You Meta Ads for Kitchen Remodellers</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&family=Manrope:wght@500;600&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:       #0a0a0a;
-      --surface:  #111111;
-      --border:   #1e1e1e;
-      --text:     #e8e8e8;
-      --muted:    #888888;
-      --accent:   #c8a96e;
-      --accent-h: #d4bc85;
-      --danger:   #e05252;
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
+      background-color: #0A0A0A;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
       font-size: 16px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
-    a { color: inherit; text-decoration: none; }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-    /* ── NAV ── */
+    @media (max-width: 640px) {
+      .container {
+        padding: 0 20px;
+      }
+    }
+
+    /* NAV */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+    }
+
+    nav .container {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.25rem 2rem;
-      background: rgba(10,10,10,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
     }
 
-    .logo {
-      font-size: 1.1rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      color: var(--accent);
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: #FFFFFF;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span {
+      color: #3B82F6;
     }
 
     .nav-cta {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--bg);
-      background: var(--accent);
-      padding: 0.5rem 1.25rem;
-      border-radius: 4px;
-      transition: background 0.15s;
-    }
-    .nav-cta:hover { background: var(--accent-h); }
-
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 7rem 1.5rem 5rem;
+      background: #3B82F6;
+      color: #FFFFFF;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background 0.2s ease, transform 0.15s ease;
     }
 
-    .hero-tag {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
+    .nav-cta:hover {
+      background: #2563EB;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 480px) {
+      .nav-cta {
+        font-size: 12px;
+        padding: 9px 16px;
+      }
+    }
+
+    /* LABEL */
+    .label {
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid rgba(200,169,110,0.3);
-      padding: 0.35rem 1rem;
-      border-radius: 100px;
-      margin-bottom: 2rem;
+      color: #3B82F6;
+      margin-bottom: 16px;
+      display: block;
     }
 
-    h1 {
-      font-size: clamp(2.4rem, 6vw, 4.5rem);
+    /* HERO */
+    .hero {
+      padding: 100px 0 80px;
+      text-align: center;
+    }
+
+    .hero-headline {
+      font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
+      font-size: clamp(32px, 5vw, 52px);
       line-height: 1.1;
-      letter-spacing: -0.02em;
-      max-width: 18ch;
-      margin: 0 auto 1.5rem;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+      color: #FFFFFF;
     }
 
-    h1 em {
-      font-style: normal;
-      color: var(--accent);
+    .hero-headline .accent {
+      color: #3B82F6;
     }
 
     .hero-sub {
-      font-size: clamp(1rem, 2vw, 1.2rem);
-      color: var(--muted);
-      max-width: 48ch;
-      margin: 0 auto 2.5rem;
-      font-weight: 300;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: #9CA3AF;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
     }
 
-    .hero-cta {
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-primary {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--bg);
-      background: var(--accent);
-      padding: 0.9rem 2rem;
-      border-radius: 6px;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .hero-cta:hover { background: var(--accent-h); transform: translateY(-1px); }
-
-    .hero-note {
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: var(--muted);
+      gap: 8px;
+      background: #3B82F6;
+      color: #FFFFFF;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      text-decoration: none;
+      padding: 18px 40px;
+      border-radius: 10px;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 24px rgba(59, 130, 246, 0.3);
     }
 
-    /* ── PROOF BAR ── */
-    .proof-bar {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 2.5rem 1.5rem;
+    .btn-primary:hover {
+      background: #2563EB;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.45);
+    }
+
+    .btn-primary svg {
+      flex-shrink: 0;
+    }
+
+    .sub-cta-text {
+      font-size: 14px;
+      color: #6B7280;
+      font-style: italic;
+    }
+
+    /* SECTION SHARED */
+    section {
+      padding: 80px 0;
+    }
+
+    .section-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(26px, 4vw, 38px);
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 17px;
+      color: #9CA3AF;
+      margin-bottom: 48px;
+      max-width: 620px;
+    }
+
+    /* PROBLEM */
+    .problem {
+      background-color: #111111;
+    }
+
+    .problem-inner {
+      max-width: 680px;
+    }
+
+    .problem-list {
+      list-style: none;
+      margin-bottom: 32px;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .problem-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 17px;
+      color: #D1D5DB;
+      line-height: 1.5;
+    }
+
+    .problem-list li .icon {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: rgba(239, 68, 68, 0.12);
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 3rem;
+      margin-top: 2px;
     }
 
-    .proof-item {
-      text-align: center;
-    }
-    .proof-item .num {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: -0.02em;
-    }
-    .proof-item .label {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 0.25rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    .problem-list li .icon svg {
+      width: 12px;
+      height: 12px;
     }
 
-    /* ── SECTIONS ── */
-    section {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 6rem 1.5rem;
-    }
-
-    .section-tag {
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1rem;
-    }
-
-    h2 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-      margin-bottom: 1.25rem;
-    }
-
-    .section-body {
-      color: var(--muted);
-      font-size: 1.05rem;
-      max-width: 58ch;
-      font-weight: 300;
-    }
-
-    /* ── PROBLEM ── */
-    .problem-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-top: 3rem;
-    }
-
-    .problem-card {
-      background: var(--surface);
-      padding: 1.75rem;
-    }
-    .problem-card .icon {
-      font-size: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-    .problem-card h3 {
-      font-size: 1rem;
+    .problem-close {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    .problem-card p {
-      font-size: 0.875rem;
-      color: var(--muted);
-      line-height: 1.55;
+      color: #FFFFFF;
+      border-left: 3px solid #3B82F6;
+      padding-left: 16px;
+      line-height: 1.4;
     }
 
-    /* ── HOW IT WORKS ── */
+    /* WHAT YOU GET */
+    .outcomes {
+      background-color: #0A0A0A;
+    }
+
+    .outcomes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .outcomes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .outcome-card {
+      background: #111111;
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .outcome-card:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .outcome-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 42px;
+      color: #3B82F6;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .outcome-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .outcome-card p {
+      font-size: 14px;
+      color: #9CA3AF;
+      line-height: 1.5;
+    }
+
+    /* HOW IT WORKS */
+    .how {
+      background-color: #111111;
+    }
+
     .steps {
-      margin-top: 3.5rem;
       display: flex;
       flex-direction: column;
       gap: 0;
     }
 
     .step {
-      display: grid;
-      grid-template-columns: 3rem 1fr;
-      gap: 1.5rem;
-      padding: 2rem 0;
-      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 24px;
+      position: relative;
     }
-    .step:last-child { border-bottom: none; }
+
+    .step:not(:last-child) {
+      padding-bottom: 40px;
+    }
+
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
 
     .step-num {
-      width: 3rem;
-      height: 3rem;
+      width: 44px;
+      height: 44px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 2px solid rgba(59, 130, 246, 0.4);
       border-radius: 50%;
-      border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--accent);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: #3B82F6;
       flex-shrink: 0;
+    }
+
+    .step-line {
+      width: 2px;
+      flex: 1;
+      background: rgba(59, 130, 246, 0.15);
+      margin-top: 8px;
+    }
+
+    .step-content {
+      padding-top: 8px;
+      padding-bottom: 8px;
     }
 
     .step-content h3 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-    .step-content p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      max-width: 52ch;
-    }
-
-    /* ── OFFER ── */
-    .offer-box {
-      margin-top: 3rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2.5rem;
-    }
-
-    .offer-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .offer-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      font-size: 0.95rem;
-    }
-
-    .offer-list li::before {
-      content: '✓';
-      color: var(--accent);
+      font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 0.05rem;
+      font-size: 20px;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
     }
 
-    /* ── EXCLUSIVITY ── */
-    .exclusivity-block {
-      margin-top: 3rem;
-      border: 1px solid rgba(200,169,110,0.2);
-      background: rgba(200,169,110,0.04);
-      border-radius: 8px;
-      padding: 2rem 2.5rem;
+    .step-content p {
+      font-size: 16px;
+      color: #9CA3AF;
+      line-height: 1.6;
+      max-width: 580px;
     }
 
-    .exclusivity-block .heading {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 0.75rem;
+    /* EXCLUSIVITY */
+    .exclusivity {
+      background-color: #0A0A0A;
     }
 
-    .exclusivity-block p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    /* ── CTA SECTION ── */
-    .cta-section {
+    .exclusivity-card {
+      background: #161616;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      padding: 48px 40px;
       text-align: center;
-      padding: 7rem 1.5rem;
-      max-width: 700px;
+    }
+
+    @media (max-width: 640px) {
+      .exclusivity-card {
+        padding: 36px 24px;
+      }
+    }
+
+    .exclusivity-card .section-headline {
+      margin-bottom: 20px;
+    }
+
+    .exclusivity-card p {
+      font-size: 17px;
+      color: #9CA3AF;
+      max-width: 560px;
       margin: 0 auto;
+      line-height: 1.7;
     }
 
-    .cta-section h2 { margin-bottom: 1rem; }
-
-    .cta-section .sub {
-      color: var(--muted);
-      font-size: 1rem;
-      margin-bottom: 2.5rem;
-      font-weight: 300;
+    .exclusivity-card p strong {
+      color: #FFFFFF;
+      font-weight: 500;
     }
 
-    .cta-btn {
+    .lock-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 1.05rem;
+      gap: 8px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 100px;
+      padding: 8px 16px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--bg);
-      background: var(--accent);
-      padding: 1rem 2.25rem;
-      border-radius: 6px;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .cta-btn:hover { background: var(--accent-h); transform: translateY(-1px); }
-
-    .cta-note {
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #3B82F6;
+      margin-bottom: 24px;
     }
 
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 1.5rem;
+    /* ABOUT */
+    .about {
+      background-color: #111111;
+    }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      .about-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .about-photo {
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #161616;
+      border: 2px solid rgba(59, 130, 246, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .about-content h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(24px, 3.5vw, 32px);
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .about-content p {
+      font-size: 16px;
+      color: #9CA3AF;
+      line-height: 1.7;
+      max-width: 580px;
+    }
+
+    /* FINAL CTA */
+    .final-cta {
+      background-color: #0A0A0A;
       text-align: center;
-      font-size: 0.8rem;
-      color: var(--muted);
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 600px) {
-      nav { padding: 1rem 1.25rem; }
-      .proof-bar { gap: 2rem; }
-      .offer-box { padding: 1.5rem; }
-      .exclusivity-block { padding: 1.5rem; }
+    .final-cta-card {
+      background: #111111;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 16px;
+      padding: 64px 40px;
+    }
+
+    @media (max-width: 640px) {
+      .final-cta-card {
+        padding: 48px 24px;
+      }
+    }
+
+    .final-cta .section-headline {
+      margin-bottom: 16px;
+    }
+
+    .final-cta .section-sub {
+      margin: 0 auto 40px;
+    }
+
+    .final-sub-copy {
+      font-size: 14px;
+      color: #6B7280;
+      margin-top: 16px;
+      font-style: italic;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid rgba(59, 130, 246, 0.08);
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 13px;
+      color: #4B5563;
+    }
+
+    footer a {
+      color: #6B7280;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #3B82F6;
     }
   </style>
 </head>
@@ -379,143 +534,211 @@
 
   <!-- NAV -->
   <nav>
-    <div class="logo">KaizenEvol</div>
-    <a href="#apply" class="nav-cta">Check Your Area</a>
+    <div class="container">
+      <div class="nav-logo">Kaizen<span>Evol</span></div>
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="nav-cta">Book a Call</a>
+    </div>
   </nav>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-tag">Kitchen Remodellers Only</div>
-    <h1>2 Booked Clients Per Month.<br /><em>Guaranteed.</em></h1>
-    <p class="hero-sub">Done-for-you Meta ads that put qualified leads in your calendar. Minimum £5,000 project value. Live in 7 days. You don't touch the ads.</p>
-    <a href="#apply" class="hero-cta">Check If Your Area Is Available →</a>
-    <p class="hero-note">One remodeller per territory. First come, first locked.</p>
-  </div>
-
-  <!-- PROOF BAR -->
-  <div class="proof-bar">
-    <div class="proof-item">
-      <div class="num">£5K+</div>
-      <div class="label">Min. Project Value</div>
-    </div>
-    <div class="proof-item">
-      <div class="num">7 Days</div>
-      <div class="label">To First Leads</div>
-    </div>
-    <div class="proof-item">
-      <div class="num">2/Mo</div>
-      <div class="label">Guaranteed Bookings</div>
-    </div>
-    <div class="proof-item">
-      <div class="num">1</div>
-      <div class="label">Remodeller Per Area</div>
-    </div>
-  </div>
-
-  <!-- PROBLEM -->
-  <section>
-    <div class="section-tag">The Problem</div>
-    <h2>Most remodellers are burning money on leads that go nowhere.</h2>
-    <p class="section-body">Referrals dry up. Lead platforms send the same tyre-kickers to five competitors. You spend hours chasing people who were never serious. It's exhausting and expensive.</p>
-
-    <div class="problem-grid">
-      <div class="problem-card">
-        <div class="icon">📋</div>
-        <h3>Unqualified enquiries</h3>
-        <p>Lead gen sites sell the same contact to multiple firms. You compete on price before you've even spoken.</p>
-      </div>
-      <div class="problem-card">
-        <div class="icon">🕐</div>
-        <h3>No time to manage ads</h3>
-        <p>You're on site, running crews, managing materials. There's no time left to learn Meta Ads Manager.</p>
-      </div>
-      <div class="problem-card">
-        <div class="icon">📉</div>
-        <h3>Inconsistent pipeline</h3>
-        <p>Feast or famine. Some months are full, others are dead. No predictability, no plan.</p>
-      </div>
-      <div class="problem-card">
-        <div class="icon">💸</div>
-        <h3>Wasted ad spend</h3>
-        <p>Agencies charge retainers and deliver traffic. Not booked jobs. The gap between the two costs a fortune.</p>
+  <!-- SECTION 1 — HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="label">UK Kitchen Remodellers — Exclusive Territories</span>
+      <h1 class="hero-headline">
+        We Get Kitchen Remodellers<br>
+        <span class="accent">2 Booked Clients a Month</span><br>
+        — Minimum £5,000 Project Value — In 7 Days
+      </h1>
+      <p class="hero-sub">Done-for-you Meta ads. You don't touch a thing. One kitchen remodeller per area.</p>
+      <div class="cta-group">
+        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">
+          Book a Free Strategy Call
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <span class="sub-cta-text">No pitch. Just an honest conversation about your area and what's possible.</span>
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section style="border-top: 1px solid var(--border);">
-    <div class="section-tag">How It Works</div>
-    <h2>Simple. Systematic. Hands-off for you.</h2>
-    <p class="section-body">We run the whole acquisition engine. You show up for the sales calls we book.</p>
+  <!-- SECTION 2 — THE PROBLEM -->
+  <section class="problem">
+    <div class="container">
+      <div class="problem-inner">
+        <span class="label">The Problem</span>
+        <h2 class="section-headline">Most Kitchen Remodellers Are Stuck in the Same Trap</h2>
+        <ul class="problem-list">
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2L10 10M10 2L2 10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Referrals dry up with no warning
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2L10 10M10 2L2 10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Enquiries come in but half won't commit to budget
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2L10 10M10 2L2 10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            You're spending time quoting jobs you'll never win
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2L10 10M10 2L2 10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Quiet months kill cash flow
+          </li>
+        </ul>
+        <p class="problem-close">There's nothing wrong with your business. The problem is your pipeline.</p>
+      </div>
+    </div>
+  </section>
 
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-content">
-          <h3>We build your campaign in 48 hours</h3>
-          <p>Ad copy, creative, audience targeting — all done. Built specifically for your service area and the type of jobs you want to win.</p>
+  <!-- SECTION 3 — WHAT YOU GET -->
+  <section class="outcomes">
+    <div class="container">
+      <span class="label">What You Get</span>
+      <h2 class="section-headline">The Outcome, in Plain Terms</h2>
+      <p class="section-sub">Three things we deliver. Every month. For every client.</p>
+      <div class="outcomes-grid">
+        <div class="outcome-card">
+          <div class="outcome-number">2</div>
+          <h3>Qualified, Booked Clients Per Month</h3>
+          <p>Not leads. Not enquiries. Booked clients — ready to move forward.</p>
         </div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-content">
-          <h3>Ads go live. Leads come in.</h3>
-          <p>We qualify every lead before it reaches you. No time-wasters. No people "just getting prices". Only homeowners with real budgets and real timelines.</p>
+        <div class="outcome-card">
+          <div class="outcome-number">£5K<span style="font-size:24px">+</span></div>
+          <h3>Minimum Project Value Per Client</h3>
+          <p>Every lead is pre-qualified on budget before they speak to you.</p>
         </div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-content">
-          <h3>Booked calls land in your calendar</h3>
-          <p>Pre-qualified prospects are scheduled directly into your diary. You close them. We keep the pipeline full.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-content">
-          <h3>We optimise every week</h3>
-          <p>Budget allocation, creative refresh, audience pruning — done weekly. You get a clear performance report. No jargon.</p>
+        <div class="outcome-card">
+          <div class="outcome-number">7</div>
+          <h3>Days to Live Ads — You Approve Everything</h3>
+          <p>We build it. You sign it off. We run it. Nothing goes live without your approval.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- OFFER -->
-  <section style="border-top: 1px solid var(--border);">
-    <div class="section-tag">The Offer</div>
-    <h2>Everything included. Nothing to manage.</h2>
-    <p class="section-body">We take full ownership of your client acquisition. You focus on the craft.</p>
-
-    <div class="offer-box">
-      <ul class="offer-list">
-        <li>Full Meta ad campaign build — creative, copy, audiences</li>
-        <li>Weekly optimisation and budget management</li>
-        <li>Lead qualification before anything hits your phone</li>
-        <li>Booked appointments directly into your calendar</li>
-        <li>Weekly performance reports in plain English</li>
-        <li>Dedicated account manager — one point of contact</li>
-        <li>Minimum 2 qualified, booked clients per month or we work for free until we hit it</li>
-      </ul>
-    </div>
-
-    <div class="exclusivity-block" style="margin-top: 2rem;">
-      <div class="heading">Exclusive Territory — One Remodeller Per Area</div>
-      <p>Once you're in, your territory is locked. No competitors in your postcode area will ever run through our system. That's not a marketing line — it's a contractual guarantee. If your area is gone when you apply, we'll tell you straight.</p>
+  <!-- SECTION 4 — HOW IT WORKS -->
+  <section class="how">
+    <div class="container">
+      <span class="label">How It Works</span>
+      <h2 class="section-headline">Three Steps. Seven Days.</h2>
+      <p class="section-sub">Simple process. No complexity. No endless back-and-forth.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-left">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <h3>Strategy Call — 30 Minutes</h3>
+            <p>We learn your area, your target job value, and your capacity. You find out whether your territory is still open. No pressure, no pitch.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left">
+            <div class="step-num">2</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <h3>We Build in 7 Days</h3>
+            <p>Ads, copy, targeting, lead system — all of it. You review and approve before anything goes live. You don't touch an ad account once.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-left">
+            <div class="step-num">3</div>
+          </div>
+          <div class="step-content">
+            <h3>We Run It</h3>
+            <p>Ongoing management, weekly reports, continuous optimisation. You focus on the kitchens. We handle the pipeline.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <div class="cta-section" id="apply">
-    <div class="section-tag">Apply Now</div>
-    <h2>Check If Your Area Is Still Available</h2>
-    <p class="sub">Takes 15 minutes. We'll tell you immediately if your territory is open, and what a realistic pipeline looks like for your market.</p>
-    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="cta-btn">Book a Strategy Call →</a>
-    <p class="cta-note">No pressure. No pitch deck. Just a straight conversation.</p>
-  </div>
+  <!-- SECTION 5 — EXCLUSIVITY -->
+  <section class="exclusivity">
+    <div class="container">
+      <div class="exclusivity-card">
+        <div class="lock-badge">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="5" width="8" height="6" rx="1.5" fill="#3B82F6"/>
+            <path d="M4 5V3.5C4 2.4 4.9 1.5 6 1.5C7.1 1.5 8 2.4 8 3.5V5" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Exclusive Territories
+        </div>
+        <h2 class="section-headline">One Kitchen Remodeller Per Area. Full Stop.</h2>
+        <p>Once you sign, your competitors in your area <strong>cannot join KaizenEvol.</strong> Your territory is locked. <strong>That's not a marketing line</strong> — it's our operating model. We only win when you win, so we protect your area like it's ours.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 — ABOUT -->
+  <section class="about">
+    <div class="container">
+      <div class="about-inner">
+        <div class="about-photo">
+          <div class="avatar">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="38" r="16" fill="#374151"/>
+              <path d="M18 88C18 70.3 32.3 56 50 56C67.7 56 82 70.3 82 88" fill="#374151"/>
+              <text x="50" y="44" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="20" fill="#3B82F6">R</text>
+            </svg>
+          </div>
+        </div>
+        <div class="about-content">
+          <span class="label">About</span>
+          <h2>Hi, I'm Rahaid.</h2>
+          <p>I built KaizenEvol to do one thing: get kitchen remodellers a predictable pipeline of high-value, booked clients. We run the ads. We manage the leads. We deliver results — or we don't stop until we do.</p>
+          <br />
+          <p>I work exclusively with kitchen remodellers across the UK, and I only take on one business per local area.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7 — BOOK A CALL -->
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-card">
+        <span class="label">Book a Call</span>
+        <h2 class="section-headline">Ready to Find Out If Your Area Is Still Available?</h2>
+        <p class="section-sub">Territories are going fast. Once an area is taken, it's gone.</p>
+        <div class="cta-group">
+          <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">
+            Book a Free Strategy Call
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <span class="sub-cta-text">It's a 30-minute call. You'll know exactly what we'd do for your business — and whether your territory is still open.</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- FOOTER -->
   <footer>
-    <p>&copy; 2026 KaizenEvol. All rights reserved.</p>
+    <div class="container">
+      <p>&copy; 2026 KaizenEvol. All rights reserved. &nbsp;·&nbsp; <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></p>
+    </div>
   </footer>
 
 </body>
