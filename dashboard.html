@@ -11,26 +11,26 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Poppins', sans-serif; background: #f5f3ff; color: #111; min-height: 100vh; line-height: 1.5; }
+    body { font-family: 'Poppins', sans-serif; background: #0d0b18; color: #f0eeff; min-height: 100vh; line-height: 1.5; }
     a { text-decoration: none; color: inherit; }
 
     :root {
-      --purple:      #6D3FC0;
-      --purple-d:    #5a32a0;
-      --purple-l:    #f0eeff;
-      --purple-m:    #ede8ff;
-      --bg:          #f5f3ff;
-      --surface:     #ffffff;
-      --border:      #e4dffa;
-      --text:        #111111;
-      --muted:       #666666;
-      --green:       #16a34a;
-      --amber:       #d97706;
-      --red:         #dc2626;
+      --purple:      #8B5CF6;
+      --purple-d:    #6D3FC0;
+      --purple-l:    rgba(139,92,246,0.15);
+      --purple-m:    rgba(139,92,246,0.28);
+      --bg:          #0d0b18;
+      --surface:     #16122a;
+      --border:      #2c2448;
+      --text:        #f0eeff;
+      --muted:       #7a6fa8;
+      --green:       #22c55e;
+      --amber:       #f59e0b;
+      --red:         #f87171;
       --radius:      12px;
       --radius-sm:   8px;
       --radius-pill: 9999px;
-      --shadow:      0 2px 12px rgba(109,63,192,0.08);
+      --shadow:      0 2px 20px rgba(0,0,0,0.45);
     }
 
     /* ─── GATE ─── */
@@ -39,11 +39,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(160deg, #fff 0%, #f5f3ff 60%, #ede8ff 100%);
+      background: linear-gradient(160deg, #0d0b18 0%, #13102a 60%, #1a1438 100%);
       padding: 24px;
     }
     .gate-card {
-      background: #fff;
+      background: var(--surface);
       border-radius: 20px;
       padding: 48px 40px;
       width: 100%;
@@ -76,6 +76,7 @@
       outline: none;
       transition: border-color .2s;
       margin-bottom: 12px;
+      background: var(--bg); color: var(--text);
     }
     .gate-input:focus { border-color: var(--purple); }
     .gate-input.error { border-color: var(--red); }
@@ -102,7 +103,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: #fff;
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
       padding: 0 32px;
     }
@@ -209,16 +210,16 @@
       font-size: 11px; font-weight: 700;
       padding: 3px 10px; border-radius: var(--radius-pill);
     }
-    .st-trial    { background: #fef3c7; color: #92400e; }
-    .st-retainer { background: #dcfce7; color: #14532d; }
-    .st-inactive { background: #f3f4f6; color: #6b7280; }
+    .st-trial    { background: rgba(245,158,11,0.18); color: #fbbf24; }
+    .st-retainer { background: rgba(34,197,94,0.15);  color: #4ade80; }
+    .st-inactive { background: rgba(156,163,175,0.12); color: #9ca3af; }
     .mini-select {
       padding: 4px 8px;
       border: 1.5px solid var(--border);
       border-radius: 6px;
       font-family: 'Poppins', sans-serif;
       font-size: 12px; outline: none;
-      background: #fff; cursor: pointer;
+      background: var(--surface); color: var(--text); cursor: pointer;
     }
     .client-fields { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 10px; }
     .cf { flex: 1; min-width: 110px; }
@@ -235,6 +236,7 @@
       border: 1.5px solid var(--border); border-radius: var(--radius-sm);
       font-size: 13px; font-family: 'Poppins', sans-serif; outline: none;
       transition: border-color .2s;
+      background: var(--surface); color: var(--text);
     }
     .date-inp:focus { border-color: var(--purple); }
 
@@ -255,7 +257,7 @@
       outline: none; transition: border-color .2s, background .2s;
       background: var(--bg);
     }
-    .mf-inp:focus { border-color: var(--purple); background: #fff; }
+    .mf-inp:focus { border-color: var(--purple); background: var(--surface); }
     .metric-updated { font-size: 11px; color: var(--muted); margin-top: 8px; }
 
     /* ─── TASKS ─── */
@@ -266,6 +268,7 @@
       border: 1.5px solid var(--border); border-radius: var(--radius-sm);
       font-family: 'Poppins', sans-serif; font-size: 13px;
       outline: none; transition: border-color .2s;
+      background: var(--bg); color: var(--text);
     }
     .task-inp:focus { border-color: var(--purple); }
     .add-btn {
@@ -313,6 +316,7 @@
       border: 1.5px solid var(--border); border-radius: var(--radius-sm);
       font-family: 'Poppins', sans-serif; font-size: 13px;
       outline: none; transition: border-color .2s;
+      background: var(--bg); color: var(--text);
     }
     .pipe-name-inp:focus { border-color: var(--purple); }
     .pipe-sel {
@@ -320,7 +324,7 @@
       padding: 8px 10px;
       border: 1.5px solid var(--border); border-radius: var(--radius-sm);
       font-family: 'Poppins', sans-serif; font-size: 13px;
-      outline: none; background: #fff; cursor: pointer;
+      outline: none; background: var(--surface); color: var(--text); cursor: pointer;
     }
     .pipe-list { display: flex; flex-direction: column; gap: 5px; }
     .pipe-item {
@@ -333,16 +337,16 @@
       font-size: 10px; font-weight: 700;
       padding: 3px 8px; border-radius: var(--radius-pill);
     }
-    .sg-lead       { background: #e0f2fe; color: #0369a1; }
-    .sg-discovery  { background: #fef9c3; color: #854d0e; }
-    .sg-proposal   { background: #fce7f3; color: #9d174d; }
-    .sg-won        { background: #dcfce7; color: #14532d; }
-    .sg-lost       { background: #fee2e2; color: #991b1b; }
+    .sg-lead       { background: rgba(56,189,248,0.15);  color: #38bdf8; }
+    .sg-discovery  { background: rgba(245,158,11,0.15);  color: #fbbf24; }
+    .sg-proposal   { background: rgba(244,114,182,0.15); color: #f472b6; }
+    .sg-won        { background: rgba(34,197,94,0.15);   color: #4ade80; }
+    .sg-lost       { background: rgba(248,113,113,0.15); color: #f87171; }
     .pipe-stage-edit {
       padding: 3px 7px;
       border: 1.5px solid var(--border); border-radius: 5px;
       font-family: 'Poppins', sans-serif; font-size: 11px;
-      outline: none; background: #fff; cursor: pointer;
+      outline: none; background: var(--surface); color: var(--text); cursor: pointer;
     }
     .p-del {
       font-size: 16px; color: var(--muted); cursor: pointer;
@@ -362,7 +366,7 @@
       transition: border-color .2s, background .2s;
       background: var(--bg);
     }
-    .notes-ta:focus { border-color: var(--purple); background: #fff; }
+    .notes-ta:focus { border-color: var(--purple); background: var(--surface); }
     .notes-saved { font-size: 11px; color: var(--muted); margin-top: 6px; height: 14px; }
 
     /* ─── QUICK LINKS ─── */
