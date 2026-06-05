@@ -346,10 +346,15 @@
       border-radius: var(--radius-pill);
       cursor: pointer;
       transition: opacity .2s;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
       display: flex; align-items: center; justify-content: center; gap: 7px;
     }
     .btn-copy:hover { opacity: .8; }
+    #waWrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
     .btn-wa {
       display: flex; align-items: center; justify-content: center; gap: 8px;
       width: 100%;
@@ -725,16 +730,19 @@
 
 <script>
   // ─────────────────────────────────────────────────────────────────
-  // CONFIG — fill these in before sending the link to your client
+  // CONFIG
   //
-  // FORMSPREE_ID: create a free form at https://formspree.io and
-  //   paste the 8-char ID here (e.g. 'xbjnkpqr') to get answers by email.
+  // FORMSPREE_ID: create a free form at https://formspree.io and paste
+  //   the 8-char ID here to receive submissions by email.
   //
-  // WA_NUMBER: your WhatsApp number in international format, no spaces,
-  //   no '+'. e.g. for +44 7700 900000 → '447700900000'
+  // WA_RECIPIENTS: numbers in international format, no spaces, no '+'.
+  //   e.g. +44 7700 900000 → '447700900000'
   // ─────────────────────────────────────────────────────────────────
-  const FORMSPREE_ID = '';
-  const WA_NUMBER    = '';
+  const FORMSPREE_ID  = '';
+  const WA_RECIPIENTS = [
+    { name: 'Rodrigo', number: '447364109609' },
+    { name: 'Diego',   number: '447423235232' },
+  ];
   // ─────────────────────────────────────────────────────────────────
 
   let step = 1;
@@ -807,9 +815,9 @@
       reqSel ('f_target', 'e_target');
     }
     if (s === 3) {
-      reqText('f_fb',   'e_fb');
-      reqRadio('f_bm',  'e_bm');
-      reqRadio('f_site','e_site');
+      reqText('f_fb',    'e_fb');
+      reqRadio('f_bm',   'e_bm');
+      reqRadio('f_site', 'e_site');
     }
     if (s === 4) {
       reqRadio('f_photos', 'e_photos');
@@ -848,10 +856,10 @@
 
   // ── conditional fields ──────────────────────────────────────────
   function runConditions() {
-    toggle('c_bmid',      rVal('f_bm')         === 'Yes');
+    toggle('c_bmid',       rVal('f_bm')         === 'Yes');
     const hasSite = rVal('f_site') === 'Yes';
-    toggle('c_siteurl',   hasSite);
-    toggle('c_pixel',     hasSite);
+    toggle('c_siteurl',    hasSite);
+    toggle('c_pixel',      hasSite);
     const hasPhotos = rVal('f_photos').startsWith('Yes');
     toggle('c_photoshare', hasPhotos);
     toggle('c_photolink',  rVal('f_photoshare') === 'Google Drive / Dropbox link');
@@ -912,28 +920,27 @@
   }
 
   function showSuccess(data) {
-    // hide form chrome
     document.getElementById('progressWrap').style.display = 'none';
     document.querySelectorAll('.step-sec').forEach(s => s.style.display = 'none');
-    // update header
     document.querySelector('.form-title').textContent = 'You\'re all set.';
     document.querySelector('.form-subtitle').textContent = '';
-    // populate & show success
-    const summary = Object.entries(data).map(([k,v]) => k + ': ' + v).join('\n');
+
+    const summary = Object.entries(data).map(([k, v]) => k + ': ' + v).join('\n');
     document.getElementById('summaryBox').textContent = summary;
-    // WhatsApp button
-    if (WA_NUMBER) {
-      const msg = encodeURIComponent(
-        '*KaizenEvol Onboarding — ' + data['Business Name'] + '*\n\n' + summary
-      );
+
+    const msg = encodeURIComponent(
+      '*KaizenEvol Onboarding — ' + data['Business Name'] + '*\n\n' + summary
+    );
+    WA_RECIPIENTS.forEach(r => {
       const a = document.createElement('a');
       a.className = 'btn-wa';
-      a.href = 'https://wa.me/' + WA_NUMBER + '?text=' + msg;
+      a.href = 'https://wa.me/' + r.number + '?text=' + msg;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
-      a.innerHTML = '&#128241; Send to KaizenEvol via WhatsApp';
+      a.innerHTML = '&#128241; Send to ' + r.name + ' via WhatsApp';
       document.getElementById('waWrap').appendChild(a);
-    }
+    });
+
     document.getElementById('successSec').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -945,7 +952,6 @@
       btn.innerHTML = '&#10003; Copied!';
       setTimeout(() => btn.innerHTML = '&#128203; Copy your answers', 2200);
     }).catch(() => {
-      // fallback: select text
       const box = document.getElementById('summaryBox');
       const range = document.createRange();
       range.selectNodeContents(box);
