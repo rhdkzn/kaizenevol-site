@@ -80,6 +80,7 @@
     }
     .gate-input:focus { border-color: var(--purple); }
     .gate-input.error { border-color: var(--red); }
+    .gate-input:disabled { opacity: 0.5; cursor: not-allowed; }
     .gate-btn {
       width: 100%;
       padding: 13px;
@@ -93,8 +94,10 @@
       cursor: pointer;
       transition: opacity .2s, transform .15s;
     }
-    .gate-btn:hover { opacity: .88; transform: translateY(-1px); }
+    .gate-btn:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+    .gate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .gate-err { color: var(--red); font-size: 13px; margin-top: 10px; min-height: 18px; }
+    .gate-lockout { color: var(--amber); font-size: 13px; margin-top: 10px; min-height: 18px; }
 
     /* ─── DASHBOARD ─── */
     #dashboard { display: none; }
@@ -415,9 +418,10 @@
     </div>
     <div class="gate-title">Dashboard</div>
     <div class="gate-sub">Private access only. Enter your password.</div>
-    <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="current-password" />
-    <button class="gate-btn" onclick="attemptLogin()">Unlock &rarr;</button>
+    <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" />
+    <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock &rarr;</button>
     <div class="gate-err" id="gateErr"></div>
+    <div class="gate-lockout" id="gateLockout"></div>
   </div>
 </div>
 
@@ -521,10 +525,79 @@
 
 <script>
 /* ── CONFIG ── */
-const PW_HASH = '6867c4883fb2de32c4ee364259a184ef367b56e3d6ac78e607c1e67e2aaad12e';
-const SESSION_KEY = 'ke_session';
-const DATA_KEY    = 'ke_data';
-const SESSION_TTL = 24 * 60 * 60 * 1000;
+const PW_HASH      = '6867c4883fb2de32c4ee364259a184ef367b56e3d6ac78e607c1e67e2aaad12e';
+const SESSION_KEY  = 'ke_session';
+const DATA_KEY     = 'ke_data';
+const LOCKOUT_KEY  = 'ke_lockout';
+const SESSION_TTL  = 24 * 60 * 60 * 1000;   // 24 hours
+const IDLE_TTL     = 30 * 60 * 1000;         // 30 minutes idle
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_TTL  = 30 * 60 * 1000;         // 30 minute lockout
+
+/* ── BRUTE-FORCE LOCKOUT ── */
+function getLockout() {
+  try { return JSON.parse(localStorage.getItem(LOCKOUT_KEY) || '{}'); } catch(e) { return {}; }
+}
+function isLockedOut() {
+  const l = getLockout();
+  return l.until && Date.now() < l.until;
+}
+function remainingLockout() {
+  const l = getLockout();
+  if (!l.until) return 0;
+  return Math.max(0, Math.ceil((l.until - Date.now()) / 60000));
+}
+function recordFailedAttempt() {
+  const l = getLockout();
+  const attempts = (l.attempts || 0) + 1;
+  if (attempts >= MAX_ATTEMPTS) {
+    localStorage.setItem(LOCKOUT_KEY, JSON.stringify({ attempts, until: Date.now() + LOCKOUT_TTL }));
+  } else {
+    localStorage.setItem(LOCKOUT_KEY, JSON.stringify({ attempts, until: null }));
+  }
+  return attempts;
+}
+function clearLockout() {
+  localStorage.removeItem(LOCKOUT_KEY);
+}
+
+function applyLockoutUI() {
+  const inp = document.getElementById('gateInput');
+  const btn = document.getElementById('gateBtn');
+  const lockoutEl = document.getElementById('gateLockout');
+  if (isLockedOut()) {
+    inp.disabled = true;
+    btn.disabled = true;
+    lockoutEl.textContent = `Too many failed attempts. Try again in ${remainingLockout()} minute(s).`;
+    setTimeout(applyLockoutUI, 30000);
+  } else {
+    inp.disabled = false;
+    btn.disabled = false;
+    lockoutEl.textContent = '';
+  }
+}
+
+/* ── IDLE TIMEOUT ── */
+let idleTimer = null;
+function resetIdle() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    logout();
+    document.getElementById('gateLockout').textContent = 'Session expired due to inactivity.';
+  }, IDLE_TTL);
+}
+function startIdleWatch() {
+  ['mousemove','keydown','click','scroll','touchstart'].forEach(evt =>
+    document.addEventListener(evt, resetIdle, { passive: true })
+  );
+  resetIdle();
+}
+function stopIdleWatch() {
+  clearTimeout(idleTimer);
+  ['mousemove','keydown','click','scroll','touchstart'].forEach(evt =>
+    document.removeEventListener(evt, resetIdle)
+  );
+}
 
 /* ── AUTH ── */
 async function sha256(s) {
@@ -533,18 +606,30 @@ async function sha256(s) {
 }
 
 async function attemptLogin() {
+  if (isLockedOut()) { applyLockoutUI(); return; }
   const pw = document.getElementById('gateInput').value;
   if (!pw) return;
   const hash = await sha256(pw);
   if (hash === PW_HASH) {
+    clearLockout();
     localStorage.setItem(SESSION_KEY, JSON.stringify({ hash, expires: Date.now() + SESSION_TTL }));
     showDashboard();
   } else {
+    const attempts = recordFailedAttempt();
     const inp = document.getElementById('gateInput');
     inp.classList.add('error');
-    document.getElementById('gateErr').textContent = 'Incorrect password.';
+    const remaining = MAX_ATTEMPTS - attempts;
+    const errEl = document.getElementById('gateErr');
+    if (isLockedOut()) {
+      errEl.textContent = '';
+      applyLockoutUI();
+    } else {
+      errEl.textContent = remaining > 0
+        ? `Incorrect password. ${remaining} attempt(s) remaining.`
+        : 'Incorrect password.';
+    }
     inp.value = '';
-    setTimeout(() => { inp.classList.remove('error'); document.getElementById('gateErr').textContent = ''; }, 2200);
+    setTimeout(() => { inp.classList.remove('error'); errEl.textContent = ''; }, 2200);
   }
 }
 
@@ -553,18 +638,23 @@ function tryAutoLogin() {
     const s = JSON.parse(localStorage.getItem(SESSION_KEY) || '{}');
     if (s.hash === PW_HASH && s.expires > Date.now()) { showDashboard(); return; }
   } catch(e) {}
+  applyLockoutUI();
 }
 
 function logout() {
+  stopIdleWatch();
   localStorage.removeItem(SESSION_KEY);
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('gate').style.display = 'flex';
   document.getElementById('gateInput').value = '';
+  document.getElementById('gateLockout').textContent = '';
+  applyLockoutUI();
 }
 
 function showDashboard() {
   document.getElementById('gate').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
+  startIdleWatch();
   init();
 }
 
