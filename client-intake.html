@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Onboarding — KaizenEvol</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #111111;
+      background: linear-gradient(160deg, #ffffff 0%, #f5f3ff 60%, #ede8ff 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    :root {
+      --purple:        #6D3FC0;
+      --purple-light:  #F0EEFF;
+      --purple-mid:    #EDE8FF;
+      --bg-tint:       #F5F3FF;
+      --text-primary:  #111111;
+      --text-muted:    #555555;
+      --radius-card:   16px;
+      --radius-pill:   9999px;
+      --max-w:         540px;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 36px 24px 0;
+    }
+    .header-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--text-primary);
+      text-decoration: none;
+      margin-bottom: 28px;
+    }
+    .header-logo img {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+    .form-title {
+      font-size: clamp(22px, 5vw, 28px);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .form-subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      max-width: var(--max-w);
+      margin: 0 auto 20px;
+      padding: 0 24px;
+    }
+    .progress-track {
+      height: 4px;
+      background: var(--purple-light);
+      border-radius: 4px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--purple);
+      border-radius: 4px;
+      transition: width .4s ease;
+    }
+    .step-dots {
+      display: flex;
+      justify-content: space-between;
+    }
+    .step-dot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+    }
+    .sdot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--purple-light);
+      border: 2px solid #ddd6f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #999;
+      transition: all .3s;
+    }
+    .step-dot-wrap.active .sdot  { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .step-dot-wrap.done   .sdot  { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .sdot-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #aaa;
+      text-align: center;
+      letter-spacing: .2px;
+    }
+    .step-dot-wrap.active .sdot-label { color: var(--purple); }
+    .step-dot-wrap.done   .sdot-label { color: var(--purple); }
+    @media (max-width: 380px) { .sdot-label { display: none; } }
+
+    /* ── CARD ── */
+    .form-card {
+      max-width: var(--max-w);
+      margin: 0 auto 48px;
+      padding: 0 20px;
+    }
+    .card-body {
+      background: #fff;
+      border-radius: var(--radius-card);
+      padding: 32px 28px 28px;
+      box-shadow: 0 4px 40px rgba(109,63,192,.10), 0 1px 4px rgba(0,0,0,.04);
+    }
+    @media (max-width: 480px) { .card-body { padding: 24px 20px 22px; } }
+
+    /* ── STEP SECTIONS ── */
+    .step-sec { display: none; }
+    .step-sec.active { display: block; }
+    .step-heading { font-size: 20px; font-weight: 800; color: var(--text-primary); margin-bottom: 6px; }
+    .step-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 26px; line-height: 1.6; }
+
+    /* ── FIELDS ── */
+    .field { margin-bottom: 18px; }
+    .field label.field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 7px;
+    }
+    .req { color: var(--purple); }
+    .field-hint { font-size: 12px; color: #999; margin-top: 5px; }
+    .field-err  { font-size: 12px; color: #e04040; margin-top: 5px; display: none; }
+    .field-err.show { display: block; }
+
+    input[type=text], input[type=tel], input[type=email],
+    input[type=url], select, textarea {
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      color: var(--text-primary);
+      background: #fafafa;
+      border: 1.5px solid #e5dff5;
+      border-radius: 10px;
+      padding: 12px 14px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(109,63,192,.10);
+      background: #fff;
+    }
+    input.err, select.err, textarea.err { border-color: #e04040; }
+    textarea { resize: vertical; min-height: 88px; }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236D3FC0' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 38px;
+    }
+
+    /* ── RADIO ── */
+    .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .r-opt {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 14px;
+      border: 1.5px solid #e5dff5;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color .18s, background .18s;
+    }
+    .r-opt:hover       { border-color: var(--purple); background: var(--purple-light); }
+    .r-opt.sel         { border-color: var(--purple); background: var(--purple-light); }
+    .r-opt input       { display: none; }
+    .r-circle {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid #c8baf0;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .18s, background .18s;
+    }
+    .r-opt.sel .r-circle { border-color: var(--purple); background: var(--purple); }
+    .r-opt.sel .r-circle::after {
+      content: ''; width: 6px; height: 6px;
+      border-radius: 50%; background: #fff;
+    }
+    .r-label { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+
+    /* ── CHECKBOX ── */
+    .cb-group { display: flex; flex-direction: column; gap: 8px; }
+    .cb-opt {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 14px;
+      border: 1.5px solid #e5dff5;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color .18s, background .18s;
+    }
+    .cb-opt:hover        { border-color: var(--purple); background: var(--purple-light); }
+    .cb-opt.chk          { border-color: var(--purple); background: var(--purple-light); }
+    .cb-opt input        { display: none; }
+    .cb-box {
+      width: 18px; height: 18px;
+      border-radius: 4px;
+      border: 2px solid #c8baf0;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .18s;
+    }
+    .cb-opt.chk .cb-box  { border-color: var(--purple); background: var(--purple); }
+    .cb-opt.chk .cb-box::after { content: '\2713'; color: #fff; font-size: 11px; font-weight: 800; }
+    .cb-label { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+
+    /* ── CONSENT ── */
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: var(--purple-light);
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      border: 1.5px solid transparent;
+      transition: border-color .2s;
+    }
+    .consent-row.chk { border-color: var(--purple); }
+    .consent-row input { display: none; }
+    .consent-cb {
+      width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+      border-radius: 4px;
+      border: 2px solid var(--purple);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .consent-row.chk .consent-cb { background: var(--purple); }
+    .consent-row.chk .consent-cb::after { content: '\2713'; color: #fff; font-size: 12px; font-weight: 800; }
+    .consent-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── CONDITIONAL ── */
+    .cond { display: none; }
+    .cond.show { display: block; }
+
+    /* ── NAV BUTTONS ── */
+    .form-nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid #f0eeff;
+    }
+    .btn-back {
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px; font-weight: 600;
+      color: var(--text-muted);
+      background: var(--purple-light);
+      border: none;
+      padding: 12px 20px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: opacity .2s;
+      flex-shrink: 0;
+    }
+    .btn-back:hover { opacity: .78; }
+    .btn-next {
+      flex: 1;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px; font-weight: 700;
+      color: #fff;
+      background: var(--purple);
+      border: none;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .btn-next:hover  { opacity: .88; transform: translateY(-1px); }
+    .btn-next:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+    /* ── SUCCESS ── */
+    .success-sec { display: none; text-align: center; }
+    .success-sec.active { display: block; }
+    .success-icon {
+      width: 68px; height: 68px;
+      background: var(--purple-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px;
+      margin: 0 auto 20px;
+    }
+    .success-title  { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    .success-sub    { font-size: 15px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.7; }
+    .summary-box {
+      background: var(--bg-tint);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: left;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 220px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    .btn-copy {
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: var(--purple);
+      background: var(--purple-light);
+      border: none;
+      padding: 13px 22px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: opacity .2s;
+      margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+    }
+    .btn-copy:hover { opacity: .8; }
+    .btn-wa {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px; font-weight: 700;
+      color: #fff;
+      background: #25D366;
+      border: none;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .btn-wa:hover { opacity: .88; }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      text-align: center;
+      padding: 0 24px 36px;
+      font-size: 12.5px;
+      color: #bbb;
+    }
+    .page-footer a { color: var(--purple); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header" id="pageHeader">
+  <a href="index.html" class="header-logo">
+    <img src="logo.png" alt="KaizenEvol" />
+    KaizenEvol
+  </a>
+  <h1 class="form-title">Client Onboarding</h1>
+  <p class="form-subtitle">Takes about 5 minutes. Everything we need to get your campaign live.</p>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:25%"></div>
+  </div>
+  <div class="step-dots">
+    <div class="step-dot-wrap active" data-s="1">
+      <div class="sdot"><span class="sn">1</span></div>
+      <span class="sdot-label">About You</span>
+    </div>
+    <div class="step-dot-wrap" data-s="2">
+      <div class="sdot"><span class="sn">2</span></div>
+      <span class="sdot-label">Business</span>
+    </div>
+    <div class="step-dot-wrap" data-s="3">
+      <div class="sdot"><span class="sn">3</span></div>
+      <span class="sdot-label">Meta &amp; Ads</span>
+    </div>
+    <div class="step-dot-wrap" data-s="4">
+      <div class="sdot"><span class="sn">4</span></div>
+      <span class="sdot-label">Assets</span>
+    </div>
+  </div>
+</div>
+
+<!-- FORM CARD -->
+<div class="form-card">
+  <div class="card-body">
+
+    <!-- SUCCESS (hidden until submit) -->
+    <div class="success-sec" id="successSec">
+      <div class="success-icon">&#10003;</div>
+      <h2 class="success-title">All done.</h2>
+      <p class="success-sub">Thanks &mdash; we have everything we need.<br>Expect a message within 24 hours to confirm next steps.</p>
+      <div class="summary-box" id="summaryBox"></div>
+      <button class="btn-copy" onclick="copyAnswers()">&#128203; Copy your answers</button>
+      <div id="waWrap"></div>
+    </div>
+
+    <!-- STEP 1: ABOUT YOU -->
+    <div class="step-sec active" id="s1">
+      <h2 class="step-heading">About You</h2>
+      <p class="step-sub">Basic contact details so we know who we&rsquo;re working with.</p>
+
+      <div class="field">
+        <label class="field-label" for="f_name">Full name <span class="req">*</span></label>
+        <input type="text" id="f_name" placeholder="e.g. Navpreet Singh" autocomplete="name" />
+        <div class="field-err" id="e_name">Please enter your full name.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_biz">Business trading name <span class="req">*</span></label>
+        <input type="text" id="f_biz" placeholder="e.g. Singh Kitchen Design" autocomplete="organization" />
+        <div class="field-err" id="e_biz">Please enter your business name.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_mobile">Mobile number <span class="req">*</span></label>
+        <input type="tel" id="f_mobile" placeholder="07xxx xxxxxx" autocomplete="tel" />
+        <div class="field-hint">The number you use on WhatsApp.</div>
+        <div class="field-err" id="e_mobile">Please enter your mobile number.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_email">Business email <span class="req">*</span></label>
+        <input type="email" id="f_email" placeholder="you@yourbusiness.co.uk" autocomplete="email" />
+        <div class="field-err" id="e_email">Please enter a valid email address.</div>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-next" onclick="next(1)">Continue &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: YOUR BUSINESS -->
+    <div class="step-sec" id="s2">
+      <h2 class="step-heading">Your Business</h2>
+      <p class="step-sub">Helps us build targeting that reaches the right people in the right areas.</p>
+
+      <div class="field">
+        <label class="field-label" for="f_area">Areas you cover <span class="req">*</span></label>
+        <input type="text" id="f_area" placeholder="e.g. Birmingham, Solihull, Coventry" />
+        <div class="field-hint">Towns, cities or postcodes you regularly take jobs in.</div>
+        <div class="field-err" id="e_area">Please enter your service area.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_radius">How far will you travel for a job? <span class="req">*</span></label>
+        <select id="f_radius">
+          <option value="">Select&hellip;</option>
+          <option>Up to 15 miles</option>
+          <option>Up to 25 miles</option>
+          <option>Up to 40 miles</option>
+          <option>50+ miles / flexible</option>
+        </select>
+        <div class="field-err" id="e_radius">Please select a travel radius.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_jval">Average kitchen job value <span class="req">*</span></label>
+        <select id="f_jval">
+          <option value="">Select&hellip;</option>
+          <option>&pound;5,000 &ndash; &pound;10,000</option>
+          <option>&pound;10,000 &ndash; &pound;20,000</option>
+          <option>&pound;20,000 &ndash; &pound;35,000</option>
+          <option>&pound;35,000+</option>
+        </select>
+        <div class="field-err" id="e_jval">Please select your average job value.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Types of work you do <span class="req">*</span></label>
+        <div class="cb-group" id="f_jtypes">
+          <label class="cb-opt" onclick="toggleCb(this)">
+            <input type="checkbox" value="Full kitchen remodel" />
+            <div class="cb-box"></div><span class="cb-label">Full kitchen remodel</span>
+          </label>
+          <label class="cb-opt" onclick="toggleCb(this)">
+            <input type="checkbox" value="Supply &amp; fit" />
+            <div class="cb-box"></div><span class="cb-label">Supply &amp; fit</span>
+          </label>
+          <label class="cb-opt" onclick="toggleCb(this)">
+            <input type="checkbox" value="Worktops only" />
+            <div class="cb-box"></div><span class="cb-label">Worktops only</span>
+          </label>
+          <label class="cb-opt" onclick="toggleCb(this)">
+            <input type="checkbox" value="Extensions / larger renovations" />
+            <div class="cb-box"></div><span class="cb-label">Extensions / larger renovations</span>
+          </label>
+        </div>
+        <div class="field-err" id="e_jtypes">Please select at least one type of work.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_target">Target new clients per month <span class="req">*</span></label>
+        <select id="f_target">
+          <option value="">Select&hellip;</option>
+          <option>2&ndash;3</option>
+          <option>4&ndash;6</option>
+          <option>7+</option>
+        </select>
+        <div class="field-err" id="e_target">Please select a target.</div>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="back(2)">&larr; Back</button>
+        <button class="btn-next" onclick="next(2)">Continue &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: META & ADS -->
+    <div class="step-sec" id="s3">
+      <h2 class="step-heading">Meta &amp; Ads Setup</h2>
+      <p class="step-sub">We need access to your Facebook assets to build and run the campaign.</p>
+
+      <div class="field">
+        <label class="field-label" for="f_fb">Facebook Business Page name or URL <span class="req">*</span></label>
+        <input type="text" id="f_fb" placeholder="e.g. Singh Kitchens or facebook.com/singhkitchens" />
+        <div class="field-err" id="e_fb">Please enter your Facebook Page.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_ig">Instagram handle</label>
+        <input type="text" id="f_ig" placeholder="@yourbusiness (optional)" />
+      </div>
+
+      <div class="field">
+        <label class="field-label">Do you have a Meta Business Manager? <span class="req">*</span></label>
+        <div class="radio-group" id="f_bm">
+          <label class="r-opt" onclick="pickR(this,'f_bm')">
+            <input type="radio" value="Yes" /><div class="r-circle"></div><span class="r-label">Yes, I have one</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_bm')">
+            <input type="radio" value="No" /><div class="r-circle"></div><span class="r-label">No</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_bm')">
+            <input type="radio" value="Not sure" /><div class="r-circle"></div><span class="r-label">Not sure</span>
+          </label>
+        </div>
+        <div class="field-err" id="e_bm">Please select an option.</div>
+      </div>
+
+      <div class="field cond" id="c_bmid">
+        <label class="field-label" for="f_bmid">Business Manager ID</label>
+        <input type="text" id="f_bmid" placeholder="e.g. 123456789012345" />
+        <div class="field-hint">Business Manager &rarr; Settings &rarr; Business Info &rarr; Business Manager ID.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Do you have a website? <span class="req">*</span></label>
+        <div class="radio-group" id="f_site">
+          <label class="r-opt" onclick="pickR(this,'f_site')">
+            <input type="radio" value="Yes" /><div class="r-circle"></div><span class="r-label">Yes</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_site')">
+            <input type="radio" value="No" /><div class="r-circle"></div><span class="r-label">No</span>
+          </label>
+        </div>
+        <div class="field-err" id="e_site">Please select an option.</div>
+      </div>
+
+      <div class="field cond" id="c_siteurl">
+        <label class="field-label" for="f_siteurl">Website URL</label>
+        <input type="url" id="f_siteurl" placeholder="https://www.yourbusiness.co.uk" />
+      </div>
+
+      <div class="field cond" id="c_pixel">
+        <label class="field-label">Meta Pixel installed on your site?</label>
+        <div class="radio-group" id="f_pixel">
+          <label class="r-opt" onclick="pickR(this,'f_pixel')">
+            <input type="radio" value="Yes" /><div class="r-circle"></div><span class="r-label">Yes</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_pixel')">
+            <input type="radio" value="No" /><div class="r-circle"></div><span class="r-label">No</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_pixel')">
+            <input type="radio" value="Not sure" /><div class="r-circle"></div><span class="r-label">Not sure</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="back(3)">&larr; Back</button>
+        <button class="btn-next" onclick="next(3)">Continue &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: CREATIVE ASSETS -->
+    <div class="step-sec" id="s4">
+      <h2 class="step-heading">Creative Assets</h2>
+      <p class="step-sub">Strong visuals = stronger results. The better the photos, the better the ads.</p>
+
+      <div class="field">
+        <label class="field-label">Do you have photos of completed kitchens? <span class="req">*</span></label>
+        <div class="radio-group" id="f_photos">
+          <label class="r-opt" onclick="pickR(this,'f_photos')">
+            <input type="radio" value="Yes &mdash; plenty to choose from" /><div class="r-circle"></div><span class="r-label">Yes &mdash; plenty to choose from</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_photos')">
+            <input type="radio" value="Yes &mdash; a few" /><div class="r-circle"></div><span class="r-label">Yes &mdash; a few</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_photos')">
+            <input type="radio" value="No &mdash; I need help with this" /><div class="r-circle"></div><span class="r-label">No &mdash; I need help with this</span>
+          </label>
+        </div>
+        <div class="field-err" id="e_photos">Please select an option.</div>
+      </div>
+
+      <div class="field cond" id="c_photoshare">
+        <label class="field-label">How will you share the photos?</label>
+        <div class="radio-group" id="f_photoshare">
+          <label class="r-opt" onclick="pickR(this,'f_photoshare')">
+            <input type="radio" value="Via WhatsApp" /><div class="r-circle"></div><span class="r-label">Via WhatsApp</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_photoshare')">
+            <input type="radio" value="Google Drive / Dropbox link" /><div class="r-circle"></div><span class="r-label">Google Drive / Dropbox link</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field cond" id="c_photolink">
+        <label class="field-label" for="f_photolink">Photo folder link</label>
+        <input type="url" id="f_photolink" placeholder="https://drive.google.com/..." />
+      </div>
+
+      <div class="field">
+        <label class="field-label">Do you have any video content? <span class="req">*</span></label>
+        <div class="radio-group" id="f_video">
+          <label class="r-opt" onclick="pickR(this,'f_video')">
+            <input type="radio" value="Yes" /><div class="r-circle"></div><span class="r-label">Yes</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_video')">
+            <input type="radio" value="No &mdash; I&rsquo;d like to create some" /><div class="r-circle"></div><span class="r-label">No &mdash; I&rsquo;d like to create some</span>
+          </label>
+          <label class="r-opt" onclick="pickR(this,'f_video')">
+            <input type="radio" value="No &mdash; not needed yet" /><div class="r-circle"></div><span class="r-label">No &mdash; not needed yet</span>
+          </label>
+        </div>
+        <div class="field-err" id="e_video">Please select an option.</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Customer reviews (tick all that apply)</label>
+        <div class="cb-group" id="f_reviews">
+          <label class="cb-opt" onclick="toggleCb(this)">
+            <input type="checkbox" value="Google reviews" />
+            <div class="cb-box"></div><span class="cb-label">Google reviews</span>
+          </label>
+          <label class="cb-opt" onclick="toggleCb(this)">
+            <input type="checkbox" value="Facebook reviews" />
+            <div class="cb-box"></div><span class="cb-label">Facebook reviews</span>
+          </label>
+          <label class="cb-opt" onclick="toggleCb(this)">
+            <input type="checkbox" value="Checkatrade / Trustpilot" />
+            <div class="cb-box"></div><span class="cb-label">Checkatrade / Trustpilot</span>
+          </label>
+          <label class="cb-opt" onclick="toggleCb(this)">
+            <input type="checkbox" value="None yet" />
+            <div class="cb-box"></div><span class="cb-label">None yet</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_gbp">Google Business Profile link</label>
+        <input type="url" id="f_gbp" placeholder="https://maps.google.com/... (optional)" />
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f_notes">Anything else we should know?</label>
+        <textarea id="f_notes" placeholder="Offers running, seasonal patterns, client types to avoid, anything relevant &mdash; add it here."></textarea>
+      </div>
+
+      <div class="field">
+        <label class="consent-row" id="consentRow" onclick="toggleConsent()">
+          <input type="checkbox" id="f_consent" />
+          <div class="consent-cb"></div>
+          <span class="consent-text">I confirm I&rsquo;m happy to share my business assets (photos, videos, page access) with KaizenEvol to build and run my ad campaigns.</span>
+        </label>
+        <div class="field-err" id="e_consent">Please tick this to continue.</div>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="back(4)">&larr; Back</button>
+        <button class="btn-next" id="submitBtn" onclick="submitForm()">Submit &#10003;</button>
+      </div>
+    </div>
+
+  </div><!-- /card-body -->
+</div><!-- /form-card -->
+
+<div class="page-footer">
+  <a href="index.html">KaizenEvol</a> &mdash; &copy; 2026
+</div>
+
+<script>
+  // ─────────────────────────────────────────────────────────────────
+  // CONFIG — fill these in before sending the link to your client
+  //
+  // FORMSPREE_ID: create a free form at https://formspree.io and
+  //   paste the 8-char ID here (e.g. 'xbjnkpqr') to get answers by email.
+  //
+  // WA_NUMBER: your WhatsApp number in international format, no spaces,
+  //   no '+'. e.g. for +44 7700 900000 → '447700900000'
+  // ─────────────────────────────────────────────────────────────────
+  const FORMSPREE_ID = '';
+  const WA_NUMBER    = '';
+  // ─────────────────────────────────────────────────────────────────
+
+  let step = 1;
+  const TOTAL = 4;
+
+  function next(s) {
+    if (!validate(s)) return;
+    setStep(s + 1);
+  }
+  function back(s) {
+    setStep(s - 1);
+  }
+
+  function setStep(n) {
+    document.getElementById('s' + step).classList.remove('active');
+    step = n;
+    document.getElementById('s' + step).classList.add('active');
+    document.querySelectorAll('.step-dot-wrap').forEach(el => {
+      const s = +el.dataset.s;
+      el.classList.toggle('done',   s < n);
+      el.classList.toggle('active', s === n);
+      const dot = el.querySelector('.sdot');
+      dot.innerHTML = s < n ? '&#10003;' : '<span class="sn">' + s + '</span>';
+    });
+    document.getElementById('progressFill').style.width = (n / TOTAL * 100) + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── validation ──────────────────────────────────────────────────
+  function validate(s) {
+    let ok = true;
+
+    function reqText(id, eid, checkFn) {
+      const el = document.getElementById(id);
+      const v  = el.value.trim();
+      const valid = checkFn ? checkFn(v) : v.length > 0;
+      el.classList.toggle('err', !valid);
+      document.getElementById(eid).classList.toggle('show', !valid);
+      if (!valid) ok = false;
+    }
+    function reqSel(id, eid) {
+      const el = document.getElementById(id);
+      const valid = el.value !== '';
+      el.classList.toggle('err', !valid);
+      document.getElementById(eid).classList.toggle('show', !valid);
+      if (!valid) ok = false;
+    }
+    function reqRadio(gid, eid) {
+      const has = !!document.getElementById(gid).querySelector('.r-opt.sel');
+      document.getElementById(eid).classList.toggle('show', !has);
+      if (!has) ok = false;
+    }
+    function reqCb(gid, eid) {
+      const has = !!document.getElementById(gid).querySelector('.cb-opt.chk');
+      document.getElementById(eid).classList.toggle('show', !has);
+      if (!has) ok = false;
+    }
+
+    if (s === 1) {
+      reqText('f_name',   'e_name');
+      reqText('f_biz',    'e_biz');
+      reqText('f_mobile', 'e_mobile');
+      reqText('f_email',  'e_email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+    }
+    if (s === 2) {
+      reqText('f_area',   'e_area');
+      reqSel ('f_radius', 'e_radius');
+      reqSel ('f_jval',   'e_jval');
+      reqCb  ('f_jtypes', 'e_jtypes');
+      reqSel ('f_target', 'e_target');
+    }
+    if (s === 3) {
+      reqText('f_fb',   'e_fb');
+      reqRadio('f_bm',  'e_bm');
+      reqRadio('f_site','e_site');
+    }
+    if (s === 4) {
+      reqRadio('f_photos', 'e_photos');
+      reqRadio('f_video',  'e_video');
+      const consent = document.getElementById('f_consent');
+      document.getElementById('e_consent').classList.toggle('show', !consent.checked);
+      if (!consent.checked) ok = false;
+    }
+    return ok;
+  }
+
+  // ── radio / checkbox helpers ────────────────────────────────────
+  function pickR(el, gid) {
+    document.getElementById(gid).querySelectorAll('.r-opt').forEach(o => o.classList.remove('sel'));
+    el.classList.add('sel');
+    el.querySelector('input').checked = true;
+    runConditions();
+  }
+  function toggleCb(el) {
+    el.classList.toggle('chk');
+    el.querySelector('input').checked = el.classList.contains('chk');
+  }
+  function toggleConsent() {
+    const row = document.getElementById('consentRow');
+    const inp = document.getElementById('f_consent');
+    row.classList.toggle('chk');
+    inp.checked = row.classList.contains('chk');
+  }
+  function rVal(gid) {
+    const sel = document.getElementById(gid).querySelector('.r-opt.sel input');
+    return sel ? sel.value : '';
+  }
+  function cbVals(gid) {
+    return [...document.getElementById(gid).querySelectorAll('.cb-opt.chk input')].map(i => i.value);
+  }
+
+  // ── conditional fields ──────────────────────────────────────────
+  function runConditions() {
+    toggle('c_bmid',      rVal('f_bm')         === 'Yes');
+    const hasSite = rVal('f_site') === 'Yes';
+    toggle('c_siteurl',   hasSite);
+    toggle('c_pixel',     hasSite);
+    const hasPhotos = rVal('f_photos').startsWith('Yes');
+    toggle('c_photoshare', hasPhotos);
+    toggle('c_photolink',  rVal('f_photoshare') === 'Google Drive / Dropbox link');
+  }
+  function toggle(id, show) {
+    document.getElementById(id).classList.toggle('show', show);
+    if (!show) {
+      const inp = document.getElementById(id).querySelector('input[type=text],input[type=url]');
+      if (inp) inp.value = '';
+    }
+  }
+
+  // ── collect & submit ────────────────────────────────────────────
+  function collect() {
+    return {
+      'Full Name':            document.getElementById('f_name').value.trim(),
+      'Business Name':        document.getElementById('f_biz').value.trim(),
+      'Mobile':               document.getElementById('f_mobile').value.trim(),
+      'Email':                document.getElementById('f_email').value.trim(),
+      'Service Area':         document.getElementById('f_area').value.trim(),
+      'Travel Radius':        document.getElementById('f_radius').value,
+      'Avg Job Value':        document.getElementById('f_jval').value,
+      'Job Types':            cbVals('f_jtypes').join(', ') || 'None selected',
+      'Target Clients/Month': document.getElementById('f_target').value,
+      'Facebook Page':        document.getElementById('f_fb').value.trim(),
+      'Instagram':            document.getElementById('f_ig').value.trim() || 'N/A',
+      'Meta Business Manager':rVal('f_bm'),
+      'Business Manager ID':  document.getElementById('f_bmid').value.trim() || 'N/A',
+      'Has Website':          rVal('f_site'),
+      'Website URL':          document.getElementById('f_siteurl').value.trim() || 'N/A',
+      'Pixel Installed':      rVal('f_pixel') || 'N/A',
+      'Has Photos':           rVal('f_photos'),
+      'Photo Share Method':   rVal('f_photoshare') || 'N/A',
+      'Photo Link':           document.getElementById('f_photolink').value.trim() || 'N/A',
+      'Video Content':        rVal('f_video'),
+      'Reviews':              cbVals('f_reviews').join(', ') || 'None',
+      'Google Business':      document.getElementById('f_gbp').value.trim() || 'N/A',
+      'Notes':                document.getElementById('f_notes').value.trim() || 'None',
+    };
+  }
+
+  async function submitForm() {
+    if (!validate(4)) return;
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    const data = collect();
+    if (FORMSPREE_ID) {
+      try {
+        await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+      } catch(e) { console.warn('Formspree:', e); }
+    }
+    showSuccess(data);
+  }
+
+  function showSuccess(data) {
+    // hide form chrome
+    document.getElementById('progressWrap').style.display = 'none';
+    document.querySelectorAll('.step-sec').forEach(s => s.style.display = 'none');
+    // update header
+    document.querySelector('.form-title').textContent = 'You\'re all set.';
+    document.querySelector('.form-subtitle').textContent = '';
+    // populate & show success
+    const summary = Object.entries(data).map(([k,v]) => k + ': ' + v).join('\n');
+    document.getElementById('summaryBox').textContent = summary;
+    // WhatsApp button
+    if (WA_NUMBER) {
+      const msg = encodeURIComponent(
+        '*KaizenEvol Onboarding — ' + data['Business Name'] + '*\n\n' + summary
+      );
+      const a = document.createElement('a');
+      a.className = 'btn-wa';
+      a.href = 'https://wa.me/' + WA_NUMBER + '?text=' + msg;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.innerHTML = '&#128241; Send to KaizenEvol via WhatsApp';
+      document.getElementById('waWrap').appendChild(a);
+    }
+    document.getElementById('successSec').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function copyAnswers() {
+    const text = document.getElementById('summaryBox').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      btn.innerHTML = '&#10003; Copied!';
+      setTimeout(() => btn.innerHTML = '&#128203; Copy your answers', 2200);
+    }).catch(() => {
+      // fallback: select text
+      const box = document.getElementById('summaryBox');
+      const range = document.createRange();
+      range.selectNodeContents(box);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    });
+  }
+</script>
+
+</body>
+</html>
