@@ -145,8 +145,23 @@
     .qlink-icon { font-size:15px; }
     .bottom-grid { display:grid; grid-template-columns:2fr 1.2fr 1fr; gap:22px; align-items:start; }
     .side-stack { display:flex; flex-direction:column; gap:22px; }
+    /* ── COMMISSION TRACKER ── */
+    .comm-add-row { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+    .comm-inp { flex:1; min-width:120px; padding:9px 12px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:13px; outline:none; transition:border-color .2s; background:var(--bg); color:var(--text); }
+    .comm-inp:focus { border-color:var(--purple); }
+    .comm-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .comm-table th { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); padding:0 8px 10px; text-align:left; border-bottom:1px solid var(--border); }
+    .comm-table td { padding:10px 8px; border-bottom:1px solid rgba(44,36,72,0.5); vertical-align:middle; }
+    .comm-table tr:last-child td { border-bottom:none; }
+    .comm-status { font-size:11px; font-weight:700; padding:3px 9px; border-radius:var(--radius-pill); cursor:pointer; border:none; font-family:'Poppins',sans-serif; }
+    .cs-pending { background:rgba(245,158,11,0.18); color:#fbbf24; }
+    .cs-paid    { background:rgba(34,197,94,0.15);  color:#4ade80; }
+    .comm-total-row { display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+    .comm-total-label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+    .comm-total-val { font-size:20px; font-weight:800; color:var(--amber); }
+    .comm-total-val.paid { color:var(--green); }
     @media(max-width:1000px){.stats-row{grid-template-columns:repeat(2,1fr);}.bottom-grid{grid-template-columns:1fr 1fr;}.metrics-grid{grid-template-columns:repeat(2,1fr);}}
-    @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 16px;}.stat-v{font-size:24px;}}
+    @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 16px;}.stat-v{font-size:24px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}}
   </style>
 </head>
 <body>
@@ -178,6 +193,7 @@
   <main class="dash-main">
     <section><div class="section-label">Overview</div><div class="stats-row" id="statsRow"></div></section>
     <section><div class="section-label">Clients</div><div id="clientsContainer"></div></section>
+    <section><div class="section-label">Commission Tracker</div><div id="commissionContainer"></div></section>
     <section><div class="section-label">Campaign Metrics</div><div id="metricsContainer"></div></section>
     <div class="bottom-grid">
       <section class="card">
@@ -233,18 +249,75 @@ function tryAutoLogin(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)
 function logout(){stopIdleWatch();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
 function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();}
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
-const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',roas:'',spend:'',updated:''}},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
+const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',bookedCalls:'',spend:'',updated:''}},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
 function load(){try{const r=localStorage.getItem(DATA_KEY);return r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);}catch(e){return structuredClone(DEFAULTS);}}
 function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function trialDays(startStr,total){if(!startStr)return null;const diff=Math.floor((Date.now()-new Date(startStr))/86400000);return{day:Math.max(1,diff+1),total};}
-function renderStats(data){const retainers=data.clients.filter(c=>c.status==='retainer');const active=data.clients.filter(c=>c.status!=='inactive');const mrr=retainers.reduce((n,c)=>n+(c.retainerValue||3500),0);const goal=data.settings.goalRetainers||10;const pct=Math.min(100,Math.round(retainers.length/goal*100));const nav=data.clients.find(c=>c.id==='nav');let trialStr='—';if(nav){if(nav.status==='retainer')trialStr='On retainer ✓';else if(nav.status==='trial'){const t=trialDays(nav.trialStartDate,nav.trialDays);trialStr=t?`Day ${t.day} / ${t.total}`:'Set start date ↓';}}document.getElementById('statsRow').innerHTML=`<div class="stat-card"><div class="stat-l">Active Clients</div><div class="stat-v">${active.length}</div><div class="stat-s">${retainers.length} on retainer</div></div><div class="stat-card"><div class="stat-l">Monthly Revenue</div><div class="stat-v">£${mrr.toLocaleString()}</div><div class="stat-s">MRR from retainers</div></div><div class="stat-card highlight"><div class="stat-l">Goal Progress</div><div class="stat-v">${retainers.length} / ${goal}</div><div class="stat-s">£${mrr.toLocaleString()} of £${(goal*(data.settings.retainerValue||3500)).toLocaleString()}/mo target</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div><div class="stat-card"><div class="stat-l">Nav Trial Status</div><div class="stat-v" style="font-size:18px;margin-top:6px;line-height:1.3;">${trialStr}</div><div class="stat-s">60-day trial &rarr; £3,500/mo</div></div>`;}
+function renderStats(data){
+  const retainers=data.clients.filter(c=>c.status==='retainer');
+  const active=data.clients.filter(c=>c.status!=='inactive');
+  const mrr=retainers.reduce((n,c)=>n+(c.retainerValue||3500),0);
+  const goal=data.settings.goalRetainers||10;
+  const pct=Math.min(100,Math.round(retainers.length/goal*100));
+  const nav=data.clients.find(c=>c.id==='nav');
+  // Trial days remaining
+  let trialDaysLeft='—'; let trialDay='—';
+  if(nav&&nav.status==='trial'){const t=trialDays(nav.trialStartDate,nav.trialDays);if(t){trialDay=`Day ${t.day}`;trialDaysLeft=`${Math.max(0,t.total-t.day+1)} days left`;}}
+  else if(nav&&nav.status==='retainer'){trialDay='Retainer';trialDaysLeft='✓ Converted';}
+  // Commission pending
+  const jobs=(data.commission&&data.commission.jobs)||[];
+  const pending=jobs.filter(j=>j.status==='pending').reduce((s,j)=>s+(j.commission||0),0);
+  // Booked calls this month
+  const navMetrics=data.metrics&&data.metrics.nav||{};
+  const bookedCalls=navMetrics.bookedCalls||'—';
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card highlight"><div class="stat-l">Goal Progress</div><div class="stat-v">${retainers.length} / ${goal}</div><div class="stat-s">£${mrr.toLocaleString()} MRR of £${(goal*(data.settings.retainerValue||3500)).toLocaleString()}/mo target</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div>
+    <div class="stat-card"><div class="stat-l">Nav Trial</div><div class="stat-v" style="font-size:26px">${trialDay}</div><div class="stat-s">${trialDaysLeft}</div></div>
+    <div class="stat-card"><div class="stat-l">Booked Calls (this month)</div><div class="stat-v">${bookedCalls}</div><div class="stat-s">Nav — qualified consultations</div></div>
+    <div class="stat-card"><div class="stat-l">Commission Owed</div><div class="stat-v" style="color:var(--amber)">£${pending.toLocaleString()}</div><div class="stat-s">${jobs.filter(j=>j.status==='pending').length} job(s) unpaid</div></div>`;
+}
 function stClass(s){return{trial:'st-trial',retainer:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
 function stLabel(s){return{trial:'⏱ Trial',retainer:'✓ Retainer',inactive:'○ Inactive'}[s]||s;}
 function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const t=c.status==='trial'?trialDays(c.trialStartDate,c.trialDays):null;const pct=t?Math.min(100,Math.round(t.day/t.total*100)):0;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="trial" ${c.status==='trial'?'selected':''}>Trial</option><option value="retainer" ${c.status==='retainer'?'selected':''}>Retainer</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer Value</div><div class="cf-v">£${(c.retainerValue||3500).toLocaleString()}/mo</div></div></div>${c.status==='trial'?`<div class="trial-section"><div class="trial-bar"><div class="trial-fill" style="width:${pct}%"></div></div><div class="trial-meta"><span>${t?`Day ${t.day} of ${t.total}`:'Set start date below'}</span><span>${t?`${Math.max(0,t.total-t.day+1)} days remaining`:''}</span></div></div><div class="date-row"><span class="date-lbl">Trial start date:</span><input type="date" class="date-inp" value="${c.trialStartDate||''}" onchange="setTrialStart('${c.id}',this.value)" /></div>`:''}</div>`;}).join('');}
 function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderStats(d);renderClients(d);}}
 function setTrialStart(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.trialStartDate=date;save(d);renderStats(d);renderClients(d);}}
-function renderMetrics(data){const active=data.clients.filter(c=>c.status!=='inactive');document.getElementById('metricsContainer').innerHTML=active.map(c=>{const m=data.metrics[c.id]||{};return`<div class="card" style="margin-bottom:14px;"><div style="font-size:13px;font-weight:700;margin-bottom:12px;">📊 ${esc(c.name)}</div><div class="metrics-grid"><div class="mf"><div class="mf-l">Cost per Result (£)</div><input class="mf-inp" type="text" placeholder="e.g. 12.50" value="${esc(m.cpr||'')}" onchange="saveMetric('${c.id}','cpr',this.value)" /></div><div class="mf"><div class="mf-l">CTR (%)</div><input class="mf-inp" type="text" placeholder="e.g. 3.2" value="${esc(m.ctr||'')}" onchange="saveMetric('${c.id}','ctr',this.value)" /></div><div class="mf"><div class="mf-l">ROAS</div><input class="mf-inp" type="text" placeholder="e.g. 4.5x" value="${esc(m.roas||'')}" onchange="saveMetric('${c.id}','roas',this.value)" /></div><div class="mf"><div class="mf-l">Ad Spend (£)</div><input class="mf-inp" type="text" placeholder="e.g. 450" value="${esc(m.spend||'')}" onchange="saveMetric('${c.id}','spend',this.value)" /></div></div><div class="metric-updated" id="mu_${c.id}">${m.updated?'Last saved: '+m.updated:'No data yet.'}</div></div>`;}).join('')||'<div class="card" style="color:var(--muted);font-size:13px;">No active clients.</div>';}
+function renderMetrics(data){const active=data.clients.filter(c=>c.status!=='inactive');document.getElementById('metricsContainer').innerHTML=active.map(c=>{const m=data.metrics[c.id]||{};return`<div class="card" style="margin-bottom:14px;"><div style="font-size:13px;font-weight:700;margin-bottom:12px;">📊 ${esc(c.name)}</div><div class="metrics-grid"><div class="mf"><div class="mf-l">Cost per Booked Call (£)</div><input class="mf-inp" type="text" placeholder="e.g. 18.00" value="${esc(m.cpr||'')}" onchange="saveMetric('${c.id}','cpr',this.value)" /></div><div class="mf"><div class="mf-l">CTR (%)</div><input class="mf-inp" type="text" placeholder="e.g. 3.2" value="${esc(m.ctr||'')}" onchange="saveMetric('${c.id}','ctr',this.value)" /></div><div class="mf"><div class="mf-l">Booked Calls (this month)</div><input class="mf-inp" type="text" placeholder="e.g. 4" value="${esc(m.bookedCalls||'')}" onchange="saveMetric('${c.id}','bookedCalls',this.value);const d2=load();renderStats(d2);" /></div><div class="mf"><div class="mf-l">Ad Spend (£)</div><input class="mf-inp" type="text" placeholder="e.g. 450" value="${esc(m.spend||'')}" onchange="saveMetric('${c.id}','spend',this.value)" /></div></div><div class="metric-updated" id="mu_${c.id}">${m.updated?'Last saved: '+m.updated:'No data yet.'}</div></div>`;}).join('')||'<div class="card" style="color:var(--muted);font-size:13px;">No active clients.</div>';}
+function renderCommission(data){
+  if(!data.commission)data.commission={jobs:[]};
+  const jobs=data.commission.jobs||[];
+  const pending=jobs.filter(j=>j.status==='pending').reduce((s,j)=>s+(j.commission||0),0);
+  const totalPaid=jobs.filter(j=>j.status==='paid').reduce((s,j)=>s+(j.commission||0),0);
+  const rows=jobs.length?jobs.map((j,i)=>`<tr>
+    <td>${esc(j.date||'—')}</td>
+    <td>${esc(j.clientName||'Nav')}</td>
+    <td>£${Number(j.jobValue||0).toLocaleString()}</td>
+    <td style="color:var(--amber);font-weight:700">£${Number(j.commission||0).toLocaleString()}</td>
+    <td><button class="comm-status ${j.status==='paid'?'cs-paid':'cs-pending'}" onclick="toggleCommStatus(${i})">${j.status==='paid'?'Paid':'Pending'}</button></td>
+    <td><button class="t-del" style="opacity:1;font-size:15px" onclick="delJob(${i})">×</button></td>
+  </tr>`).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px 0;">No jobs logged yet.</td></tr>';
+  document.getElementById('commissionContainer').innerHTML=`<div class="card">
+    <div class="comm-add-row">
+      <input type="date" class="comm-inp" id="commDate" style="max-width:160px" />
+      <input type="text" class="comm-inp" id="commClient" placeholder="Client name" value="Navpreet Singh" style="max-width:180px" />
+      <input type="number" class="comm-inp" id="commValue" placeholder="Job value (£)" min="0" style="max-width:160px" />
+      <button class="add-btn" onclick="addJob()">+ Log Job</button>
+    </div>
+    <table class="comm-table">
+      <thead><tr><th>Date</th><th>Client</th><th>Job Value</th><th>Commission (20%)</th><th>Status</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="comm-total-row">
+      <div>
+        <div class="comm-total-label">Commission Owed</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">£${totalPaid.toLocaleString()} paid to date</div>
+      </div>
+      <div class="comm-total-val ${pending===0&&jobs.length?'paid':''}">£${pending.toLocaleString()}</div>
+    </div>
+  </div>`;}
+function addJob(){const date=document.getElementById('commDate').value;const clientName=document.getElementById('commClient').value.trim()||'Navpreet Singh';const jobValue=parseFloat(document.getElementById('commValue').value);if(!jobValue||jobValue<=0)return;const commission=Math.round(jobValue*0.2*100)/100;const d=load();if(!d.commission)d.commission={jobs:[]};d.commission.jobs.unshift({date,clientName,jobValue,commission,status:'pending'});save(d);renderCommission(d);renderStats(d);document.getElementById('commValue').value='';document.getElementById('commDate').value='';}
+function toggleCommStatus(i){const d=load();if(!d.commission||!d.commission.jobs[i])return;d.commission.jobs[i].status=d.commission.jobs[i].status==='paid'?'pending':'paid';save(d);renderCommission(d);renderStats(d);}
+function delJob(i){const d=load();if(!d.commission)return;d.commission.jobs.splice(i,1);save(d);renderCommission(d);renderStats(d);}
 function saveMetric(id,field,val){const d=load();if(!d.metrics[id])d.metrics[id]={};d.metrics[id][field]=val;d.metrics[id].updated=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});save(d);const el=document.getElementById('mu_'+id);if(el)el.textContent='Saved · '+d.metrics[id].updated;}
 function renderTasks(data){const el=document.getElementById('taskList');if(!data.tasks.length){el.innerHTML='<div class="empty-msg">No tasks yet.</div>';return;}el.innerHTML=data.tasks.map((t,i)=>`<div class="task-item ${t.done?'done':''}"><div class="t-check ${t.done?'on':''}" onclick="toggleTask(${i})"></div><span class="t-text">${esc(t.text)}</span><button class="t-del" onclick="delTask(${i})">×</button></div>`).join('');}
 function addTask(){const inp=document.getElementById('taskInput');const txt=inp.value.trim();if(!txt)return;const d=load();d.tasks.unshift({text:txt,done:false});save(d);renderTasks(d);inp.value='';}
@@ -257,7 +330,7 @@ function setPipeStage(i,s){const d=load();d.pipeline[i].stage=s;save(d);renderPi
 function delProspect(i){const d=load();d.pipeline.splice(i,1);save(d);renderPipeline(d);}
 let notesTimer=null;
 function scheduleNoteSave(){clearTimeout(notesTimer);notesTimer=setTimeout(()=>{const d=load();d.notes=document.getElementById('notesArea').value;save(d);const el=document.getElementById('notesSaved');el.textContent='Saved.';setTimeout(()=>{el.textContent='';},1800);},700);}
-function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderClients(d);renderMetrics(d);renderTasks(d);renderPipeline(d);document.getElementById('notesArea').value=d.notes||'';}
+function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderClients(d);renderCommission(d);renderMetrics(d);renderTasks(d);renderPipeline(d);document.getElementById('notesArea').value=d.notes||'';}
 tryAutoLogin();
 </script>
 </body>
