@@ -204,6 +204,42 @@
       .dash-header { padding: 0 16px; }
       .stat-v { font-size: 24px; }
     }
+
+    /* ─── LEAD FINDER ─── */
+    .lf-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .lf-import-btn { background: var(--purple); color: #fff; border: none; border-radius: var(--radius-pill); padding: 8px 18px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .2s; }
+    .lf-import-btn:hover { opacity: .85; }
+    .lf-status { font-size: 12px; color: var(--muted); }
+    .lf-filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .lf-filter { background: none; border: 1.5px solid var(--border); border-radius: var(--radius-pill); padding: 5px 14px; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .2s; }
+    .lf-filter.active, .lf-filter:hover { border-color: var(--purple); color: var(--purple); }
+    .lf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    .lf-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; transition: border-color .2s; }
+    .lf-card:hover { border-color: var(--purple-d); }
+    .lf-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .lf-name { font-size: 14px; font-weight: 700; line-height: 1.3; flex: 1; }
+    .lf-score-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+    .lf-s5 { background: rgba(248,113,113,.18); color: #f87171; }
+    .lf-s4 { background: rgba(245,158,11,.18); color: #f59e0b; }
+    .lf-s3 { background: rgba(96,165,250,.18); color: #60a5fa; }
+    .lf-s2 { background: rgba(122,111,168,.12); color: var(--muted); }
+    .lf-s1 { background: rgba(255,255,255,.04); color: #4b5563; }
+    .lf-meta { font-size: 12px; color: var(--muted); line-height: 1.9; margin-bottom: 10px; }
+    .lf-meta a { color: var(--purple); }
+    .lf-meta a:hover { text-decoration: underline; }
+    .lf-ads { font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+    .lf-ads.bad     { color: var(--red); }
+    .lf-ads.low     { color: var(--red); }
+    .lf-ads.decent  { color: var(--amber); }
+    .lf-ads.none    { color: var(--green); }
+    .lf-ads.unknown { color: var(--muted); }
+    .lf-actions { display: flex; gap: 8px; }
+    .lf-push-btn { background: var(--purple); color: #fff; border: none; border-radius: var(--radius-pill); padding: 6px 14px; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .2s; flex: 1; }
+    .lf-push-btn:hover:not(:disabled) { opacity: .85; }
+    .lf-push-btn:disabled { opacity: 0.4; cursor: default; }
+    .lf-dismiss-btn { background: none; border: 1.5px solid var(--border); color: var(--muted); border-radius: var(--radius-pill); padding: 6px 12px; font-family: 'Poppins', sans-serif; font-size: 12px; cursor: pointer; transition: all .2s; }
+    .lf-dismiss-btn:hover { border-color: var(--red); color: var(--red); }
+    .lf-empty { color: var(--muted); font-size: 13px; padding: 12px 0; }
   </style>
 </head>
 <body>
@@ -252,6 +288,24 @@
     <section>
       <div class="section-label">Campaign Metrics</div>
       <div id="metricsContainer"></div>
+    </section>
+    <section>
+      <div class="section-label">Lead Finder</div>
+      <div class="card">
+        <div class="lf-toolbar">
+          <button class="lf-import-btn" onclick="document.getElementById('lfFileInput').click()">Import Prospects JSON</button>
+          <input type="file" id="lfFileInput" accept=".json" style="display:none" onchange="importLeads(event)" />
+          <span class="lf-status" id="lfStatus">No prospects loaded. Run the scraper then import the JSON file.</span>
+        </div>
+        <div class="lf-filters">
+          <button class="lf-filter active" onclick="filterLeads('all',this)">All</button>
+          <button class="lf-filter" onclick="filterLeads(5,this)">Score 5 — Bad ads</button>
+          <button class="lf-filter" onclick="filterLeads(4,this)">Score 4 — Decent ads</button>
+          <button class="lf-filter" onclick="filterLeads(3,this)">Score 3 — No ads</button>
+          <button class="lf-filter" onclick="filterLeads(2,this)">Score 2 — No FB</button>
+        </div>
+        <div class="lf-grid" id="lfGrid"></div>
+      </div>
     </section>
     <div class="bottom-grid">
       <section class="card">
@@ -445,7 +499,8 @@ const DEFAULTS = {
   clients: [{ id: 'nav', name: 'Navpreet Singh', status: 'trial', terms: '20% commission of job value', adSpend: '£300–500', retainerValue: 3500, trialDays: 60, trialStartDate: '' }],
   metrics: { nav: { cpr:'', ctr:'', roas:'', spend:'', updated:'' } },
   tasks: [], pipeline: [], notes: '',
-  settings: { goalRetainers: 10, retainerValue: 3500 }
+  settings: { goalRetainers: 10, retainerValue: 3500 },
+  leadFinder: { prospects: [], dismissed: [], importedAt: null, niche: '', city: '' }
 };
 function load() {
   try { const r = localStorage.getItem(DATA_KEY); return r ? { ...structuredClone(DEFAULTS), ...JSON.parse(r) } : structuredClone(DEFAULTS); }
@@ -555,6 +610,123 @@ function addProspect()      { const n=document.getElementById('pipeNameInput').v
 function setPipeStage(i,s)  { const d=load();d.pipeline[i].stage=s;save(d);renderPipeline(d); }
 function delProspect(i)     { const d=load();d.pipeline.splice(i,1);save(d);renderPipeline(d); }
 
+/* ── LEAD FINDER ── */
+let lfActiveFilter = 'all';
+
+function importLeads(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const json = JSON.parse(e.target.result);
+      const d = load();
+      d.leadFinder = {
+        prospects:  json.prospects || [],
+        dismissed:  [],
+        importedAt: json.scraped_at || new Date().toISOString(),
+        niche:      json.niche || '',
+        city:       json.city  || '',
+      };
+      save(d);
+      renderLeadFinder(d);
+      event.target.value = '';
+    } catch(err) {
+      alert('Invalid file. Make sure you select a prospects JSON from the scraper.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function renderLeadFinder(data) {
+  const lf        = data.leadFinder || {};
+  const prospects = lf.prospects || [];
+  const dismissed = new Set(lf.dismissed || []);
+  const statusEl  = document.getElementById('lfStatus');
+  const gridEl    = document.getElementById('lfGrid');
+
+  if (!prospects.length) {
+    statusEl.textContent = 'No prospects loaded. Run the scraper then import the JSON file.';
+    gridEl.innerHTML = '';
+    return;
+  }
+
+  const date   = lf.importedAt ? new Date(lf.importedAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '';
+  const active = prospects.filter(p => !dismissed.has(p.name));
+  statusEl.textContent = `${active.length} prospects · ${lf.niche} · ${lf.city} · Imported ${date}`;
+
+  const filtered = lfActiveFilter === 'all' ? active : active.filter(p => p.score === lfActiveFilter);
+
+  if (!filtered.length) {
+    gridEl.innerHTML = '<div class="lf-empty">No prospects match this filter.</div>';
+    return;
+  }
+
+  const inPipeline = new Set((data.pipeline || []).map(p => p.name));
+
+  gridEl.innerHTML = filtered.map(p => {
+    const realIdx = prospects.indexOf(p);
+    const scoreClass = `lf-s${p.score}`;
+    const adText  = p.running_ads
+      ? `${p.ad_count} ad${p.ad_count !== 1 ? 's' : ''} running · ${p.ad_quality} quality`
+      : p.has_facebook ? 'Facebook page · No ads running' : 'No Facebook presence';
+    const adClass = p.running_ads ? (p.ad_quality || 'unknown') : p.has_facebook ? 'none' : 'unknown';
+    const stars   = p.rating ? `⭐ ${p.rating} · ${p.reviews} reviews` : '';
+    const inPipe  = inPipeline.has(p.name);
+    const site    = (p.website || '').replace(/^https?:\/\//,'');
+
+    return `<div class="lf-card">
+      <div class="lf-card-head">
+        <div class="lf-name">${esc(p.name)}</div>
+        <div class="lf-score-badge ${scoreClass}">${p.score}</div>
+      </div>
+      <div class="lf-meta">
+        ${p.phone   ? `📞 ${esc(p.phone)}<br>`                                                                   : ''}
+        ${site      ? `🌐 <a href="${esc(p.website)}" target="_blank" rel="noopener">${esc(site)}</a><br>`        : ''}
+        ${p.address ? `📍 ${esc(p.address)}<br>`                                                                  : ''}
+        ${stars}
+      </div>
+      <div class="lf-ads ${adClass}">${adText}</div>
+      <div class="lf-actions">
+        <button class="lf-push-btn" onclick="pushToPipeline(${realIdx})" ${inPipe ? 'disabled' : ''}>
+          ${inPipe ? 'In Pipeline ✓' : '+ Push to Pipeline'}
+        </button>
+        <button class="lf-dismiss-btn" onclick="dismissLead(${realIdx})">Dismiss</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterLeads(score, btn) {
+  lfActiveFilter = score;
+  document.querySelectorAll('.lf-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLeadFinder(load());
+}
+
+function pushToPipeline(idx) {
+  const d = load();
+  const p = (d.leadFinder?.prospects || [])[idx];
+  if (!p) return;
+  if ((d.pipeline || []).some(x => x.name === p.name)) return;
+  d.pipeline = d.pipeline || [];
+  d.pipeline.push({ name: p.name, stage: 'lead' });
+  save(d);
+  renderPipeline(d);
+  renderLeadFinder(d);
+}
+
+function dismissLead(idx) {
+  const d = load();
+  if (!d.leadFinder) return;
+  const p = (d.leadFinder.prospects || [])[idx];
+  if (!p) return;
+  d.leadFinder.dismissed = d.leadFinder.dismissed || [];
+  if (!d.leadFinder.dismissed.includes(p.name)) d.leadFinder.dismissed.push(p.name);
+  save(d);
+  renderLeadFinder(d);
+}
+
 /* ── NOTES ── */
 let notesTimer=null;
 function scheduleNoteSave() {
@@ -570,7 +742,7 @@ function scheduleNoteSave() {
 function init() {
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
   const d=load();
-  renderStats(d);renderClients(d);renderMetrics(d);renderTasks(d);renderPipeline(d);
+  renderStats(d);renderClients(d);renderMetrics(d);renderTasks(d);renderPipeline(d);renderLeadFinder(d);
   document.getElementById('notesArea').value=d.notes||'';
 }
 
