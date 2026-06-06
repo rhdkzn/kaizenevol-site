@@ -197,19 +197,6 @@
     }
     .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
     .hero-note { font-size: 13px; color: #999; }
-    .hero-stats {
-      display: inline-flex; gap: 0; margin-top: 56px;
-      background: #fff; border-radius: var(--radius);
-      box-shadow: 0 4px 24px rgba(109,63,192,0.12);
-      overflow: hidden;
-    }
-    .hero-stat {
-      padding: 24px 36px; text-align: center;
-      border-right: 1px solid var(--purple-light);
-    }
-    .hero-stat:last-child { border-right: none; }
-    .hero-stat-num { font-size: 32px; font-weight: 800; color: var(--purple); line-height: 1; margin-bottom: 4px; }
-    .hero-stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
 
     /* PROBLEM */
     .problem-section { background: var(--bg-tint); }
@@ -436,9 +423,6 @@
       .section-pad { padding: 64px 0; }
       .nav-links, .nav-cta { display: none; }
       .hamburger { display: flex; }
-      .hero-stats { flex-direction: column; display: flex; }
-      .hero-stat { border-right: none; border-bottom: 1px solid var(--purple-light); }
-      .hero-stat:last-child { border-bottom: none; }
       .problem-grid { grid-template-columns: 1fr; }
       .process-grid { grid-template-columns: 1fr; }
       .ai-inner { grid-template-columns: 1fr; }
@@ -510,24 +494,6 @@
       <a href="#how" class="btn-outline">See How It Works</a>
     </div>
     <p class="hero-note">No pitch. Just strategy. 30 minutes.</p>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-num">7</div>
-        <div class="hero-stat-label">Days to First Lead</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">£5K+</div>
-        <div class="hero-stat-label">Min. Project Value</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">2+</div>
-        <div class="hero-stat-label">Booked Clients/Month</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">1</div>
-        <div class="hero-stat-label">Remodeller Per Area</div>
-      </div>
-    </div>
   </div>
 </section>
 
