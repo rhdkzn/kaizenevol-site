@@ -288,23 +288,6 @@
       <div class="section-label">Lead Scraper</div>
       <div class="scraper-setup">
         <div class="scraper-row">
-          <div class="f-group" style="flex:1;min-width:260px">
-            <div class="f-label">Firecrawl API Key</div>
-            <div class="api-key-wrap">
-              <input type="password" class="f-input" id="scraperKey" placeholder="fc-..." autocomplete="off" />
-              <button class="btn-save" onclick="saveApiKey()">Save Key</button>
-            </div>
-          </div>
-          <div class="f-group" style="flex:1;min-width:260px">
-            <div class="f-label">Meta Access Token</div>
-            <div class="api-key-wrap">
-              <input type="password" class="f-input" id="metaToken" placeholder="EAA..." autocomplete="off" />
-              <button class="btn-save" onclick="saveMetaToken()">Save Token</button>
-            </div>
-          </div>
-        </div>
-        <p class="scraper-hint">Firecrawl key from <strong style="color:var(--text)">app.firecrawl.dev</strong>. Meta token from <strong style="color:var(--text)">developers.facebook.com/tools/explorer</strong> (needs ads_read permission). Scrapes Google Maps for kitchen remodellers, checks their Meta ads, scores them 1–5, and adds them straight to the CRM.</p>
-        <div class="scraper-row">
           <div class="f-group" style="flex:2;min-width:240px">
             <div class="f-label">Target Areas (comma-separated)</div>
             <input type="text" class="f-input" id="scraperAreas" placeholder="e.g. Manchester, Birmingham, Leeds, Bristol" onblur="saveScraperField('areas',this.value)" />
