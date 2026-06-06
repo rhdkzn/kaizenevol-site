@@ -154,6 +154,33 @@
     .comm-total-label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
     .comm-total-val { font-size:20px; font-weight:800; color:var(--amber); }
     .comm-total-val.paid { color:var(--green); }
+    /* ── CLIENT CHECKLIST ── */
+    .checklist-clients { display:flex; flex-direction:column; gap:20px; }
+    .checklist-client { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px 24px; box-shadow:var(--shadow); }
+    .checklist-client-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px; }
+    .checklist-client-name { font-size:15px; font-weight:700; }
+    .checklist-progress-wrap { display:flex; align-items:center; gap:10px; }
+    .checklist-pct { font-size:12px; font-weight:700; color:var(--purple); }
+    .checklist-prog-bar { width:100px; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+    .checklist-prog-fill { height:100%; background:var(--purple); border-radius:3px; transition:width .3s; }
+    .checklist-phases { display:flex; flex-direction:column; gap:14px; }
+    .checklist-phase { }
+    .checklist-phase-label { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+    .checklist-phase-label.phase-active { color:var(--purple); border-bottom-color:var(--purple-m); }
+    .checklist-phase-label.phase-done { color:var(--green); border-bottom-color:rgba(34,197,94,0.2); }
+    .phase-done-badge { font-size:9px; font-weight:700; padding:2px 7px; border-radius:var(--radius-pill); background:rgba(34,197,94,0.15); color:var(--green); }
+    .phase-active-badge { font-size:9px; font-weight:700; padding:2px 7px; border-radius:var(--radius-pill); background:var(--purple-l); color:var(--purple); }
+    .checklist-items { display:flex; flex-direction:column; gap:5px; }
+    .cl-item { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--radius-sm); background:var(--bg); border:1.5px solid transparent; transition:border-color .15s; cursor:pointer; }
+    .cl-item:hover { border-color:var(--border); }
+    .cl-item.checked { opacity:.55; }
+    .cl-box { width:17px; height:17px; flex-shrink:0; border:2px solid var(--border); border-radius:4px; display:flex; align-items:center; justify-content:center; transition:background .15s,border-color .15s; }
+    .cl-item.checked .cl-box { background:var(--purple); border-color:var(--purple); }
+    .cl-item.checked .cl-box::after { content:'✓'; color:#fff; font-size:10px; font-weight:800; }
+    .cl-text { font-size:13px; flex:1; }
+    .cl-item.checked .cl-text { text-decoration:line-through; color:var(--muted); }
+    .checklist-phase.phase-locked .cl-item { opacity:.35; cursor:default; pointer-events:none; }
+    .checklist-phase.phase-locked .checklist-phase-label { color:rgba(122,111,168,0.45); border-bottom-color:rgba(44,36,72,0.4); }
     /* ── CLIENT PIPELINE ── */
     .pipeline-track { display:flex; flex-direction:column; gap:20px; }
     .pipe-client { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px 24px; box-shadow:var(--shadow); }
@@ -229,6 +256,7 @@
   <main class="dash-main">
     <section><div class="section-label">Overview</div><div class="stats-row" id="statsRow"></div></section>
     <section><div class="section-label">Client Pipeline</div><div class="pipeline-track" id="pipelineTrack"></div></section>
+    <section><div class="section-label">Client Checklist</div><div class="checklist-clients" id="checklistContainer"></div></section>
     <section><div class="section-label">Clients</div><div id="clientsContainer"></div></section>
     <section><div class="section-label">Commission Tracker</div><div id="commissionContainer"></div></section>
     <div class="bottom-grid">
@@ -316,8 +344,82 @@ function renderStats(data){
 function stClass(s){return{trial:'st-trial',retainer:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
 function stLabel(s){return{trial:'⏱ Trial',retainer:'✓ Retainer',inactive:'○ Inactive'}[s]||s;}
 function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const t=c.status==='trial'?trialDays(c.trialStartDate,c.trialDays):null;const pct=t?Math.min(100,Math.round(t.day/t.total*100)):0;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="trial" ${c.status==='trial'?'selected':''}>Trial</option><option value="retainer" ${c.status==='retainer'?'selected':''}>Retainer</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer Value</div><div class="cf-v">£${(c.retainerValue||3500).toLocaleString()}/mo</div></div></div>${c.status==='trial'?`<div class="trial-section"><div class="trial-bar"><div class="trial-fill" style="width:${pct}%"></div></div><div class="trial-meta"><span>${t?`Day ${t.day} of ${t.total}`:'Set start date below'}</span><span>${t?`${Math.max(0,t.total-t.day+1)} days remaining`:''}</span></div></div><div class="date-row"><span class="date-lbl">Trial start date:</span><input type="date" class="date-inp" value="${c.trialStartDate||''}" onchange="setTrialStart('${c.id}',this.value)" /></div>`:''}</div>`;}).join('');}
-function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderStats(d);renderClientPipeline(d);renderClients(d);}}
-function setTrialStart(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.trialStartDate=date;save(d);renderStats(d);renderClientPipeline(d);renderClients(d);}}
+function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderStats(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
+function setTrialStart(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.trialStartDate=date;save(d);renderStats(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
+const CLIENT_TASKS=[
+  {id:'ob1',phase:'onboarding',text:'Discovery call completed'},
+  {id:'ob2',phase:'onboarding',text:'Facebook Business Manager access granted'},
+  {id:'ob3',phase:'onboarding',text:'Meta Pixel installed and verified'},
+  {id:'ob4',phase:'onboarding',text:'Custom audiences created'},
+  {id:'ob5',phase:'onboarding',text:'Ad copy and creatives approved by client'},
+  {id:'ob6',phase:'onboarding',text:'Campaign structure reviewed'},
+  {id:'ob7',phase:'onboarding',text:'Campaign live ✓'},
+  {id:'tr1',phase:'trial',text:'Week 1 — performance review'},
+  {id:'tr2',phase:'trial',text:'Week 1 — report sent to client'},
+  {id:'tr3',phase:'trial',text:'Week 2 — cut underperformers, scale winners'},
+  {id:'tr4',phase:'trial',text:'Week 2 — report sent to client'},
+  {id:'tr5',phase:'trial',text:'Week 3 — performance review'},
+  {id:'tr6',phase:'trial',text:'Week 3 — report sent to client'},
+  {id:'tr7',phase:'trial',text:'Week 4 — creative refresh if CTR declining'},
+  {id:'tr8',phase:'trial',text:'Week 4 — report sent to client'},
+  {id:'op1',phase:'optimising',text:'Week 5–6 — scale best performing ads'},
+  {id:'op2',phase:'optimising',text:'Week 6 — report sent to client'},
+  {id:'op3',phase:'optimising',text:'Build retainer case — document results to date'},
+  {id:'op4',phase:'optimising',text:'Week 7–8 — report sent to client'},
+  {id:'cv1',phase:'conversion',text:'Retainer conversion call booked'},
+  {id:'cv2',phase:'conversion',text:'Retainer agreement sent'},
+  {id:'cv3',phase:'conversion',text:'Retainer agreement signed'},
+  {id:'cv4',phase:'conversion',text:'First retainer invoice raised'},
+  {id:'rt1',phase:'retainer',text:'Monthly report — Month 1'},
+  {id:'rt2',phase:'retainer',text:'Monthly report — Month 2'},
+  {id:'rt3',phase:'retainer',text:'Monthly report — Month 3'},
+  {id:'rt4',phase:'retainer',text:'Case study / testimonial requested'},
+];
+const PHASE_ORDER=['onboarding','trial','optimising','conversion','retainer'];
+const PHASE_LABELS={onboarding:'Onboarding',trial:'Trial — Weeks 1–4',optimising:'Optimising — Weeks 5–8',conversion:'Conversion',retainer:'Retainer'};
+function activePhaseForStage(stageKey){
+  const map={onboarding:'onboarding',live:'trial',optimising:'optimising',conversion:'conversion',retainer:'retainer'};
+  return map[stageKey]||'onboarding';
+}
+function renderClientChecklist(data){
+  const el=document.getElementById('checklistContainer');
+  const active=data.clients.filter(c=>c.status!=='inactive');
+  if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;">No active clients.</div>';return;}
+  if(!data.clientTasks)data.clientTasks={};
+  el.innerHTML=active.map(c=>{
+    if(!data.clientTasks[c.id])data.clientTasks[c.id]={};
+    const ct=data.clientTasks[c.id];
+    const stageInfo=getClientStage(c);
+    const activePhase=activePhaseForStage(stageInfo.key);
+    const activePhaseIdx=PHASE_ORDER.indexOf(activePhase);
+    const total=CLIENT_TASKS.length;
+    const done=CLIENT_TASKS.filter(t=>ct[t.id]).length;
+    const pct=Math.round(done/total*100);
+    const phases=PHASE_ORDER.map((phase,pi)=>{
+      const tasks=CLIENT_TASKS.filter(t=>t.phase===phase);
+      const phaseDone=tasks.every(t=>ct[t.id]);
+      const isCurrent=pi===activePhaseIdx;
+      const isLocked=pi>activePhaseIdx;
+      const isDonePh=pi<activePhaseIdx||phaseDone;
+      let labelCls=isCurrent?'phase-active':isDonePh?'phase-done':'';
+      let phaseCls=isLocked?'phase-locked':'';
+      let badge=isCurrent?'<span class="phase-active-badge">Current</span>':isDonePh?'<span class="phase-done-badge">Done</span>':'';
+      const items=tasks.map(t=>`<div class="cl-item ${ct[t.id]?'checked':''}" onclick="toggleClientTask('${c.id}','${t.id}')"><div class="cl-box"></div><span class="cl-text">${esc(t.text)}</span></div>`).join('');
+      return`<div class="checklist-phase ${phaseCls}"><div class="checklist-phase-label ${labelCls}">${PHASE_LABELS[phase]}${badge}</div><div class="checklist-items">${items}</div></div>`;
+    }).join('');
+    return`<div class="checklist-client">
+      <div class="checklist-client-header">
+        <div class="checklist-client-name">${esc(c.name)}</div>
+        <div class="checklist-progress-wrap">
+          <div class="checklist-prog-bar"><div class="checklist-prog-fill" style="width:${pct}%"></div></div>
+          <div class="checklist-pct">${done} / ${total}</div>
+        </div>
+      </div>
+      <div class="checklist-phases">${phases}</div>
+    </div>`;
+  }).join('');
+}
+function toggleClientTask(clientId,taskId){const d=load();if(!d.clientTasks)d.clientTasks={};if(!d.clientTasks[clientId])d.clientTasks[clientId]={};d.clientTasks[clientId][taskId]=!d.clientTasks[clientId][taskId];save(d);renderClientChecklist(d);}
 const PIPE_STAGES=[
   {key:'onboarding', label:'Onboarding'},
   {key:'live',       label:'Campaign Live'},
@@ -423,7 +525,7 @@ function setPipeStage(i,s){const d=load();d.pipeline[i].stage=s;save(d);renderPi
 function delProspect(i){const d=load();d.pipeline.splice(i,1);save(d);renderPipeline(d);}
 let notesTimer=null;
 function scheduleNoteSave(){clearTimeout(notesTimer);notesTimer=setTimeout(()=>{const d=load();d.notes=document.getElementById('notesArea').value;save(d);const el=document.getElementById('notesSaved');el.textContent='Saved.';setTimeout(()=>{el.textContent='';},1800);},700);}
-function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderClientPipeline(d);renderClients(d);renderCommission(d);renderTasks(d);renderPipeline(d);document.getElementById('notesArea').value=d.notes||'';}
+function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);renderCommission(d);renderTasks(d);renderPipeline(d);document.getElementById('notesArea').value=d.notes||'';}
 tryAutoLogin();
 </script>
 </body>
