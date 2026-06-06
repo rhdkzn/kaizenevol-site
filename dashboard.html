@@ -95,12 +95,6 @@
     .date-lbl { font-size:12px; color:var(--muted); white-space:nowrap; }
     .date-inp { padding:5px 10px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-size:13px; font-family:'Poppins',sans-serif; outline:none; transition:border-color .2s; background:var(--surface); color:var(--text); }
     .date-inp:focus { border-color:var(--purple); }
-    .metrics-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-    .mf { display:flex; flex-direction:column; gap:4px; }
-    .mf-l { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
-    .mf-inp { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; color:var(--text); outline:none; transition:border-color .2s,background .2s; background:var(--bg); }
-    .mf-inp:focus { border-color:var(--purple); background:var(--surface); }
-    .metric-updated { font-size:11px; color:var(--muted); margin-top:8px; }
     .task-row { display:flex; gap:8px; margin-bottom:14px; }
     .task-inp { flex:1; padding:9px 13px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:13px; outline:none; transition:border-color .2s; background:var(--bg); color:var(--text); }
     .task-inp:focus { border-color:var(--purple); }
@@ -160,7 +154,6 @@
     .comm-total-label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
     .comm-total-val { font-size:20px; font-weight:800; color:var(--amber); }
     .comm-total-val.paid { color:var(--green); }
-    @media(max-width:1000px){.stats-row{grid-template-columns:repeat(2,1fr);}.bottom-grid{grid-template-columns:1fr 1fr;}.metrics-grid{grid-template-columns:repeat(2,1fr);}}
     @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 16px;}.stat-v{font-size:24px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}}
   </style>
 </head>
@@ -194,7 +187,6 @@
     <section><div class="section-label">Overview</div><div class="stats-row" id="statsRow"></div></section>
     <section><div class="section-label">Clients</div><div id="clientsContainer"></div></section>
     <section><div class="section-label">Commission Tracker</div><div id="commissionContainer"></div></section>
-    <section><div class="section-label">Campaign Metrics</div><div id="metricsContainer"></div></section>
     <div class="bottom-grid">
       <section class="card">
         <div class="section-label">Tasks</div>
@@ -282,7 +274,6 @@ function stLabel(s){return{trial:'⏱ Trial',retainer:'✓ Retainer',inactive:'�
 function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const t=c.status==='trial'?trialDays(c.trialStartDate,c.trialDays):null;const pct=t?Math.min(100,Math.round(t.day/t.total*100)):0;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="trial" ${c.status==='trial'?'selected':''}>Trial</option><option value="retainer" ${c.status==='retainer'?'selected':''}>Retainer</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer Value</div><div class="cf-v">£${(c.retainerValue||3500).toLocaleString()}/mo</div></div></div>${c.status==='trial'?`<div class="trial-section"><div class="trial-bar"><div class="trial-fill" style="width:${pct}%"></div></div><div class="trial-meta"><span>${t?`Day ${t.day} of ${t.total}`:'Set start date below'}</span><span>${t?`${Math.max(0,t.total-t.day+1)} days remaining`:''}</span></div></div><div class="date-row"><span class="date-lbl">Trial start date:</span><input type="date" class="date-inp" value="${c.trialStartDate||''}" onchange="setTrialStart('${c.id}',this.value)" /></div>`:''}</div>`;}).join('');}
 function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderStats(d);renderClients(d);}}
 function setTrialStart(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.trialStartDate=date;save(d);renderStats(d);renderClients(d);}}
-function renderMetrics(data){const active=data.clients.filter(c=>c.status!=='inactive');document.getElementById('metricsContainer').innerHTML=active.map(c=>{const m=data.metrics[c.id]||{};return`<div class="card" style="margin-bottom:14px;"><div style="font-size:13px;font-weight:700;margin-bottom:12px;">📊 ${esc(c.name)}</div><div class="metrics-grid"><div class="mf"><div class="mf-l">Cost per Booked Call (£)</div><input class="mf-inp" type="text" placeholder="e.g. 18.00" value="${esc(m.cpr||'')}" onchange="saveMetric('${c.id}','cpr',this.value)" /></div><div class="mf"><div class="mf-l">CTR (%)</div><input class="mf-inp" type="text" placeholder="e.g. 3.2" value="${esc(m.ctr||'')}" onchange="saveMetric('${c.id}','ctr',this.value)" /></div><div class="mf"><div class="mf-l">Booked Calls (this month)</div><input class="mf-inp" type="text" placeholder="e.g. 4" value="${esc(m.bookedCalls||'')}" onchange="saveMetric('${c.id}','bookedCalls',this.value);const d2=load();renderStats(d2);" /></div><div class="mf"><div class="mf-l">Ad Spend (£)</div><input class="mf-inp" type="text" placeholder="e.g. 450" value="${esc(m.spend||'')}" onchange="saveMetric('${c.id}','spend',this.value)" /></div></div><div class="metric-updated" id="mu_${c.id}">${m.updated?'Last saved: '+m.updated:'No data yet.'}</div></div>`;}).join('')||'<div class="card" style="color:var(--muted);font-size:13px;">No active clients.</div>';}
 function renderCommission(data){
   if(!data.commission)data.commission={jobs:[]};
   const jobs=data.commission.jobs||[];
@@ -318,7 +309,6 @@ function renderCommission(data){
 function addJob(){const date=document.getElementById('commDate').value;const clientName=document.getElementById('commClient').value.trim()||'Navpreet Singh';const jobValue=parseFloat(document.getElementById('commValue').value);if(!jobValue||jobValue<=0)return;const commission=Math.round(jobValue*0.2*100)/100;const d=load();if(!d.commission)d.commission={jobs:[]};d.commission.jobs.unshift({date,clientName,jobValue,commission,status:'pending'});save(d);renderCommission(d);renderStats(d);document.getElementById('commValue').value='';document.getElementById('commDate').value='';}
 function toggleCommStatus(i){const d=load();if(!d.commission||!d.commission.jobs[i])return;d.commission.jobs[i].status=d.commission.jobs[i].status==='paid'?'pending':'paid';save(d);renderCommission(d);renderStats(d);}
 function delJob(i){const d=load();if(!d.commission)return;d.commission.jobs.splice(i,1);save(d);renderCommission(d);renderStats(d);}
-function saveMetric(id,field,val){const d=load();if(!d.metrics[id])d.metrics[id]={};d.metrics[id][field]=val;d.metrics[id].updated=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});save(d);const el=document.getElementById('mu_'+id);if(el)el.textContent='Saved · '+d.metrics[id].updated;}
 function renderTasks(data){const el=document.getElementById('taskList');if(!data.tasks.length){el.innerHTML='<div class="empty-msg">No tasks yet.</div>';return;}el.innerHTML=data.tasks.map((t,i)=>`<div class="task-item ${t.done?'done':''}"><div class="t-check ${t.done?'on':''}" onclick="toggleTask(${i})"></div><span class="t-text">${esc(t.text)}</span><button class="t-del" onclick="delTask(${i})">×</button></div>`).join('');}
 function addTask(){const inp=document.getElementById('taskInput');const txt=inp.value.trim();if(!txt)return;const d=load();d.tasks.unshift({text:txt,done:false});save(d);renderTasks(d);inp.value='';}
 function toggleTask(i){const d=load();d.tasks[i].done=!d.tasks[i].done;save(d);renderTasks(d);}
@@ -330,7 +320,7 @@ function setPipeStage(i,s){const d=load();d.pipeline[i].stage=s;save(d);renderPi
 function delProspect(i){const d=load();d.pipeline.splice(i,1);save(d);renderPipeline(d);}
 let notesTimer=null;
 function scheduleNoteSave(){clearTimeout(notesTimer);notesTimer=setTimeout(()=>{const d=load();d.notes=document.getElementById('notesArea').value;save(d);const el=document.getElementById('notesSaved');el.textContent='Saved.';setTimeout(()=>{el.textContent='';},1800);},700);}
-function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderClients(d);renderCommission(d);renderMetrics(d);renderTasks(d);renderPipeline(d);document.getElementById('notesArea').value=d.notes||'';}
+function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderClients(d);renderCommission(d);renderTasks(d);renderPipeline(d);document.getElementById('notesArea').value=d.notes||'';}
 tryAutoLogin();
 </script>
 </body>
