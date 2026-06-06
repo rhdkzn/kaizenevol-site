@@ -321,6 +321,11 @@
           <button class="btn-save" onclick="runScraper()" id="scanBtn">&#9654; Scan Now</button>
         </div>
         <div class="scraper-status-bar" id="scraperStatus"></div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <button class="btn-save" onclick="document.getElementById('jsonFileInp').click()">&#8679; Import prospects.json</button>
+          <input type="file" id="jsonFileInp" accept=".json" style="display:none" onchange="importScraperJSON(event)" />
+          <span style="font-size:12px;color:var(--muted)" id="importJsonStatus"></span>
+        </div>
       </div>
     </section>
 
@@ -574,6 +579,7 @@ function addLeadFromBing(item,area){const biz=item.name||'';if(!biz)return false
 /* ── LEADS CRM ── */
 function loadLeads(){try{return JSON.parse(localStorage.getItem(LEADS_KEY)||'[]');}catch(e){return[];}}
 function saveLeads(arr){localStorage.setItem(LEADS_KEY,JSON.stringify(arr));}
+function importScraperJSON(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(e){try{const json=JSON.parse(e.target.result);const prospects=json.prospects||[];const city=json.city||'';const arr=loadLeads();const existing=new Set(arr.map(l=>l.business.toLowerCase()));let added=0;for(const p of prospects){if(!p.name||existing.has(p.name.toLowerCase()))continue;const adNote=p.running_ads?`${p.ad_count} ad${p.ad_count!==1?'s':''} running (${p.ad_quality} quality)`:p.has_facebook?'Facebook page, no ads':'No Facebook presence';const notes=[`Score: ${p.score}/5`,p.website?`Website: ${p.website}`:'',p.address?`Address: ${p.address}`:'',p.rating?`Rating: ${p.rating} ⭐ (${p.reviews} reviews)`:'',adNote].filter(Boolean).join(' · ');arr.unshift({id:uid(),business:p.name,owner:'',area:city,phone:p.phone||'',email:'',source:'Lead Scraper',stage:'new',notes,lastContact:'',followUp:'',createdAt:Date.now()});existing.add(p.name.toLowerCase());added++;}saveLeads(arr);event.target.value='';renderLeadStats();renderLeads();const el=document.getElementById('importJsonStatus');el.textContent=added>0?`${added} new lead${added!==1?'s':''} imported — ${json.niche||''} · ${city}`:'No new leads — all already in CRM.';setTimeout(()=>{el.textContent='';},5000);}catch(err){alert('Invalid file. Select a prospects JSON from the scraper.');}};reader.readAsText(file);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
 const STAGE_CLS={new:'sg-new',contacted:'sg-contacted',call:'sg-call',proposal:'sg-proposal',won:'sg-won',lost:'sg-lost'};
