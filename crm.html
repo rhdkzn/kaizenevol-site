@@ -20,6 +20,21 @@
       --green:#22c55e;--amber:#f59e0b;--red:#f87171;
       --radius:12px;--radius-sm:8px;--radius-pill:9999px;--shadow:0 2px 20px rgba(0,0,0,0.45);
     }
+    #gate{min-height:100vh;display:none;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d0b18 0%,#13102a 60%,#1a1438 100%);padding:24px;}
+    .gate-card{background:var(--surface);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(109,63,192,0.14);text-align:center;}
+    .gate-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;}
+    .gate-badge{width:48px;height:48px;border-radius:11px;object-fit:contain;}
+    .gate-logo-name{font-size:22px;font-weight:700;}
+    .gate-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+    .gate-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+    .gate-input{width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:15px;outline:none;transition:border-color .2s;margin-bottom:12px;background:var(--bg);color:var(--text);}
+    .gate-input:focus{border-color:var(--purple);}
+    .gate-input.error{border-color:var(--red);}
+    .gate-input:disabled{opacity:0.5;cursor:not-allowed;}
+    .gate-btn{width:100%;padding:13px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .15s;}
+    .gate-btn:hover:not(:disabled){opacity:.88;transform:translateY(-1px);}
+    .gate-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+    .gate-err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px;}
     #app{display:none;}
     .dash-header{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;}
     .dash-header-inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px;}
@@ -234,6 +249,16 @@
   </style>
 </head>
 <body>
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-logo"><img src="logo.png" alt="KaizenEvol" class="gate-badge" /><span class="gate-logo-name">KaizenEvol</span></div>
+    <div class="gate-title">CRM</div>
+    <div class="gate-sub">Private access only. Enter your password.</div>
+    <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" />
+    <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock &rarr;</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
 <div id="app">
   <header class="dash-header">
     <div class="dash-header-inner">
@@ -373,9 +398,12 @@ let activeFilter='all',idleTimer=null,autoScanTimer=null;
 function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();},IDLE_TTL);}
 function startIdle(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
 function stopIdle(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
-function checkSession(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');if(s.hash===PW_HASH&&s.expires>Date.now()){showApp();return;}}catch(e){}window.location.href='dashboard.html';}
-function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);window.location.href='dashboard.html';}
-function showApp(){document.getElementById('app').style.display='block';startIdle();init();}
+function checkSession(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');if(s.hash===PW_HASH&&s.expires>Date.now()){showApp();return;}}catch(e){}showGate();}
+function showGate(){document.getElementById('gate').style.display='flex';document.getElementById('app').style.display='none';setTimeout(()=>document.getElementById('gateInput').focus(),50);}
+async function attemptLogin(){const pw=document.getElementById('gateInput').value;if(!pw)return;const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';const hash=await pbkdf2Hash(pw);btn.textContent='Unlock →';if(hash===PW_HASH){localStorage.setItem(SESSION_KEY,JSON.stringify({hash,expires:Date.now()+864e5}));document.getElementById('gate').style.display='none';showApp();}else{const inp=document.getElementById('gateInput');inp.classList.add('error');document.getElementById('gateErr').textContent='Incorrect password.';inp.value='';btn.disabled=false;setTimeout(()=>{inp.classList.remove('error');document.getElementById('gateErr').textContent='';},2400);}}
+async function pbkdf2Hash(pw){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode('0f45e8c98a23269130d1d1704e0e135f'),iterations:200000,hash:'SHA-256'},key,256);return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);showGate();}
+function showApp(){document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();init();}
 
 /* ── DATA ── */
 const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',bookedCalls:'',spend:'',updated:''}},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
@@ -597,6 +625,7 @@ function init(){
   renderLeadStats();
   renderLeads();
 }
+document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
 checkSession();
 </script>
 </body>
