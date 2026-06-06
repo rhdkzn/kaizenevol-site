@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KaizenEvol — CRM</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Poppins',sans-serif;background:#0d0b18;color:#f0eeff;min-height:100vh;line-height:1.5;}
+    a{text-decoration:none;color:inherit;}
+    :root{
+      --purple:#8B5CF6;--purple-d:#6D3FC0;--purple-l:rgba(139,92,246,0.15);--purple-m:rgba(139,92,246,0.28);
+      --bg:#0d0b18;--surface:#16122a;--border:#2c2448;--text:#f0eeff;--muted:#7a6fa8;
+      --green:#22c55e;--amber:#f59e0b;--red:#f87171;
+      --radius:12px;--radius-sm:8px;--radius-pill:9999px;--shadow:0 2px 20px rgba(0,0,0,0.45);
+    }
+    #gate{min-height:100vh;display:none;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d0b18 0%,#13102a 60%,#1a1438 100%);padding:24px;}
+    .gate-card{background:var(--surface);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(109,63,192,0.14);text-align:center;}
+    .gate-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;}
+    .gate-badge{width:48px;height:48px;border-radius:11px;object-fit:contain;}
+    .gate-logo-name{font-size:22px;font-weight:700;}
+    .gate-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+    .gate-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+    .gate-input{width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:15px;outline:none;transition:border-color .2s;margin-bottom:12px;background:var(--bg);color:var(--text);}
+    .gate-input:focus{border-color:var(--purple);}
+    .gate-input.error{border-color:var(--red);}
+    .gate-input:disabled{opacity:0.5;cursor:not-allowed;}
+    .gate-btn{width:100%;padding:13px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .15s;}
+    .gate-btn:hover:not(:disabled){opacity:.88;transform:translateY(-1px);}
+    .gate-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+    .gate-err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px;}
+    #app{display:none;}
+    .dash-header{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;}
+    .dash-header-inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px;}
+    .dash-logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;}
+    .dash-badge{width:32px;height:32px;border-radius:7px;object-fit:contain;}
+    .dash-nav{display:flex;align-items:center;gap:4px;}
+    .dash-nav-link{font-size:13px;font-weight:600;color:var(--muted);padding:6px 13px;border-radius:var(--radius-pill);transition:color .2s,background .2s;}
+    .dash-nav-link:hover{color:var(--text);background:var(--purple-l);}
+    .dash-nav-link.active{color:var(--purple);background:var(--purple-l);}
+    .dash-header-right{display:flex;align-items:center;gap:12px;}
+    .dash-date{font-size:12px;color:var(--muted);font-weight:500;}
+    .btn-logout{font-size:12px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:5px 13px;cursor:pointer;font-family:'Poppins',sans-serif;transition:color .2s,border-color .2s;}
+    .btn-logout:hover{color:var(--red);border-color:var(--red);}
+    .main{max-width:1240px;margin:0 auto;padding:28px 32px 72px;display:flex;flex-direction:column;gap:28px;}
+    .section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:14px;}
+    .card{background:var(--surface);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);border:1px solid var(--border);}
+    .empty-msg{font-size:13px;color:var(--muted);text-align:center;padding:24px 0;}
+    /* ── CLIENT PIPELINE ── */
+    .pipeline-track{display:flex;flex-direction:column;gap:20px;}
+    .pipe-client{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);}
+    .pipe-client-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
+    .pipe-client-name{font-size:15px;font-weight:700;}
+    .pipe-stage-label{font-size:11px;font-weight:700;padding:4px 12px;border-radius:var(--radius-pill);}
+    .psl-onboarding{background:rgba(56,189,248,0.15);color:#38bdf8;}
+    .psl-live{background:rgba(139,92,246,0.18);color:#a78bfa;}
+    .psl-optimising{background:rgba(244,114,182,0.15);color:#f472b6;}
+    .psl-conversion{background:rgba(245,158,11,0.2);color:#fbbf24;}
+    .psl-retainer{background:rgba(34,197,94,0.15);color:#4ade80;}
+    .psl-inactive{background:rgba(156,163,175,0.1);color:#9ca3af;}
+    .pipe-stages{display:flex;align-items:center;gap:0;margin-bottom:18px;}
+    .pipe-stage-node{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+    .pipe-stage-node::before{content:'';position:absolute;top:11px;left:-50%;width:100%;height:2px;background:var(--border);z-index:0;}
+    .pipe-stage-node:first-child::before{display:none;}
+    .pipe-node-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:var(--bg);z-index:1;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;transition:all .3s;}
+    .pipe-node-dot.done{background:var(--purple);border-color:var(--purple);}
+    .pipe-node-dot.done::after{content:'✓';color:#fff;}
+    .pipe-node-dot.active{background:var(--purple);border-color:var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,0.25);}
+    .pipe-node-dot.active::after{content:'●';color:#fff;font-size:8px;}
+    .pipe-node-dot.alert{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,158,11,0.25);}
+    .pipe-node-dot.alert::after{content:'!';color:#fff;font-size:11px;font-weight:900;}
+    .pipe-node-dot.retainer-dot{background:var(--green);border-color:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,0.2);}
+    .pipe-node-dot.retainer-dot::after{content:'✓';color:#fff;}
+    .pipe-stage-name{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-top:6px;text-align:center;}
+    .pipe-stage-node.active .pipe-stage-name{color:var(--purple);}
+    .pipe-stage-node.alert-node .pipe-stage-name{color:var(--amber);}
+    .pipe-stage-node.retainer-node .pipe-stage-name{color:var(--green);}
+    .pipe-stage-node.done-node .pipe-stage-name{color:var(--muted);}
+    .pipe-stage-node.active::before,.pipe-stage-node.done-node::before{background:var(--purple);}
+    .pipe-stage-node.retainer-node::before{background:var(--green);}
+    .pipe-progress-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+    .pipe-progress-bar{flex:1;min-width:120px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+    .pipe-progress-fill{height:100%;border-radius:3px;transition:width .4s ease;}
+    .pipe-progress-fill.normal{background:var(--purple);}
+    .pipe-progress-fill.alert{background:var(--amber);}
+    .pipe-progress-fill.done{background:var(--green);}
+    .pipe-progress-meta{font-size:12px;color:var(--muted);white-space:nowrap;}
+    .pipe-next-action{margin-top:14px;padding:12px 14px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--purple);font-size:12px;color:var(--text);line-height:1.5;}
+    .pipe-next-action.alert-action{border-left-color:var(--amber);}
+    .pipe-next-action.green-action{border-left-color:var(--green);}
+    .pipe-next-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+    /* ── CLIENT CHECKLIST ── */
+    .checklist-clients{display:flex;flex-direction:column;gap:20px;}
+    .checklist-client{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);}
+    .checklist-client-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+    .checklist-client-name{font-size:15px;font-weight:700;}
+    .checklist-progress-wrap{display:flex;align-items:center;gap:10px;}
+    .checklist-pct{font-size:12px;font-weight:700;color:var(--purple);}
+    .checklist-prog-bar{width:100px;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+    .checklist-prog-fill{height:100%;background:var(--purple);border-radius:3px;transition:width .3s;}
+    .checklist-phases{display:flex;flex-direction:column;gap:14px;}
+    .checklist-phase-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+    .checklist-phase-label.phase-active{color:var(--purple);border-bottom-color:var(--purple-m);}
+    .checklist-phase-label.phase-done{color:var(--green);border-bottom-color:rgba(34,197,94,0.2);}
+    .phase-done-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:var(--radius-pill);background:rgba(34,197,94,0.15);color:var(--green);}
+    .phase-active-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:var(--radius-pill);background:var(--purple-l);color:var(--purple);}
+    .checklist-items{display:flex;flex-direction:column;gap:5px;}
+    .cl-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-sm);background:var(--bg);border:1.5px solid transparent;transition:border-color .15s;cursor:pointer;}
+    .cl-item:hover{border-color:var(--border);}
+    .cl-item.checked{opacity:.55;}
+    .cl-box{width:17px;height:17px;flex-shrink:0;border:2px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;}
+    .cl-item.checked .cl-box{background:var(--purple);border-color:var(--purple);}
+    .cl-item.checked .cl-box::after{content:'✓';color:#fff;font-size:10px;font-weight:800;}
+    .cl-text{font-size:13px;flex:1;}
+    .cl-item.checked .cl-text{text-decoration:line-through;color:var(--muted);}
+    .checklist-phase.phase-locked .cl-item{opacity:.35;cursor:default;pointer-events:none;}
+    .checklist-phase.phase-locked .checklist-phase-label{color:rgba(122,111,168,0.45);border-bottom-color:rgba(44,36,72,0.4);}
+    /* ── CLIENTS ── */
+    .status-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);}
+    .st-trial{background:rgba(245,158,11,0.18);color:#fbbf24;}
+    .st-retainer{background:rgba(34,197,94,0.15);color:#4ade80;}
+    .st-inactive{background:rgba(156,163,175,0.12);color:#9ca3af;}
+    .mini-select{padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:'Poppins',sans-serif;font-size:12px;outline:none;background:var(--surface);color:var(--text);cursor:pointer;}
+    .client-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
+    .client-name{font-size:16px;font-weight:700;}
+    .client-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .client-fields{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:10px;}
+    .cf{flex:1;min-width:110px;}
+    .cf-l{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+    .cf-v{font-size:13px;font-weight:500;color:var(--text);}
+    .trial-section{margin-top:14px;}
+    .trial-bar{height:7px;background:var(--purple-l);border-radius:4px;overflow:hidden;margin:5px 0;}
+    .trial-fill{height:100%;background:var(--purple);border-radius:4px;transition:width .4s;}
+    .trial-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
+    .date-row{display:flex;align-items:center;gap:8px;margin-top:12px;}
+    .date-lbl{font-size:12px;color:var(--muted);white-space:nowrap;}
+    .date-inp{padding:5px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:border-color .2s;background:var(--surface);color:var(--text);}
+    .date-inp:focus{border-color:var(--purple);}
+    /* ── COMMISSION ── */
+    .comm-add-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+    .comm-inp{flex:1;min-width:120px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;outline:none;transition:border-color .2s;background:var(--bg);color:var(--text);}
+    .comm-inp:focus{border-color:var(--purple);}
+    .comm-table{width:100%;border-collapse:collapse;font-size:13px;}
+    .comm-table th{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:0 8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+    .comm-table td{padding:10px 8px;border-bottom:1px solid rgba(44,36,72,0.5);vertical-align:middle;}
+    .comm-table tr:last-child td{border-bottom:none;}
+    .comm-status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--radius-pill);cursor:pointer;border:none;font-family:'Poppins',sans-serif;}
+    .cs-pending{background:rgba(245,158,11,0.18);color:#fbbf24;}
+    .cs-paid{background:rgba(34,197,94,0.15);color:#4ade80;}
+    .comm-total-row{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+    .comm-total-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+    .comm-total-val{font-size:20px;font-weight:800;color:var(--amber);}
+    .comm-total-val.paid{color:var(--green);}
+    .add-btn{padding:9px 16px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
+    .add-btn:hover{opacity:.88;}
+    .t-del{font-size:17px;color:var(--muted);cursor:pointer;background:none;border:none;opacity:0.5;transition:opacity .2s,color .2s;}
+    .t-del:hover{opacity:1;color:var(--red);}
+    /* ── LEAD SCRAPER / PROSPECT CRM ── */
+    .stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+    .stat-card{background:var(--surface);border-radius:var(--radius);padding:18px 20px;border:1px solid var(--border);}
+    .stat-card.highlight{background:var(--purple);border-color:var(--purple);}
+    .stat-l{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+    .highlight .stat-l{color:rgba(255,255,255,.65);}
+    .stat-v{font-size:26px;font-weight:800;color:var(--text);line-height:1;}
+    .highlight .stat-v{color:#fff;}
+    .stat-s{font-size:11px;color:var(--muted);margin-top:3px;}
+    .scraper-setup{display:flex;flex-direction:column;gap:14px;}
+    .scraper-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
+    .api-key-wrap{display:flex;gap:8px;}
+    .api-key-wrap .f-input{flex:1;}
+    .scraper-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+    .toggle-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;}
+    .toggle-wrap input[type=checkbox]{width:16px;height:16px;accent-color:var(--purple);cursor:pointer;}
+    .toggle-label{font-size:13px;font-weight:600;color:var(--text);}
+    .scraper-hint{font-size:11px;color:var(--muted);line-height:1.6;margin-top:-4px;}
+    .scraper-status-bar{font-size:12px;color:var(--muted);min-height:18px;transition:color .2s;}
+    .scraper-status-bar.running{color:var(--amber);}
+    .scraper-status-bar.done{color:var(--green);}
+    .scraper-status-bar.error{color:var(--red);}
+    .form-toggle{display:flex;align-items:center;justify-content:space-between;}
+    .form-toggle-btn{font-size:13px;font-weight:700;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);padding:8px 18px;cursor:pointer;font-family:'Poppins',sans-serif;transition:opacity .2s;}
+    .form-toggle-btn:hover{opacity:.88;}
+    .add-form{display:none;margin-top:18px;}
+    .add-form.open{display:block;}
+    .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
+    .form-grid-wide{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .f-group{display:flex;flex-direction:column;gap:4px;}
+    .f-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+    .f-input,.f-select,.f-textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;outline:none;transition:border-color .2s;background:var(--bg);color:var(--text);}
+    .f-input:focus,.f-select:focus,.f-textarea:focus{border-color:var(--purple);}
+    .f-textarea{resize:vertical;min-height:72px;}
+    .form-actions{display:flex;gap:10px;}
+    .btn-save{padding:10px 24px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
+    .btn-save:hover:not(:disabled){opacity:.88;}
+    .btn-cancel{padding:10px 20px;background:none;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:color .2s,border-color .2s;}
+    .btn-cancel:hover{color:var(--text);border-color:var(--muted);}
+    .filter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .search-inp{padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:13px;outline:none;background:var(--bg);color:var(--text);min-width:220px;transition:border-color .2s;}
+    .search-inp:focus{border-color:var(--purple);}
+    .filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
+    .fpill{font-size:12px;font-weight:600;padding:5px 13px;border-radius:var(--radius-pill);border:1.5px solid var(--border);color:var(--muted);background:none;cursor:pointer;font-family:'Poppins',sans-serif;transition:all .2s;}
+    .fpill:hover{border-color:var(--purple);color:var(--purple);}
+    .fpill.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+    .sort-sel{padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:12px;outline:none;background:var(--surface);color:var(--text);cursor:pointer;margin-left:auto;}
+    .leads-list{display:flex;flex-direction:column;gap:10px;}
+    .lead-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 18px;transition:border-color .2s;}
+    .lead-card:hover{border-color:var(--purple-m);}
+    .lead-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
+    .lead-name{font-size:15px;font-weight:700;}
+    .lead-owner{font-size:12px;color:var(--muted);margin-top:2px;}
+    .lead-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .stage-sel{padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;outline:none;background:var(--surface);color:var(--text);cursor:pointer;}
+    .lead-del{font-size:18px;color:var(--muted);cursor:pointer;background:none;border:none;opacity:0.4;transition:opacity .2s,color .2s;}
+    .lead-del:hover{opacity:1;color:var(--red);}
+    .lead-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;}
+    .lm{display:flex;flex-direction:column;gap:2px;}
+    .lm-l{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);}
+    .lm-v{font-size:12px;color:var(--text);font-weight:500;}
+    .lm-v a{color:var(--purple);}
+    .lm-v a:hover{opacity:.8;}
+    .lead-dates{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;}
+    .ld{display:flex;align-items:center;gap:6px;}
+    .ld-l{font-size:11px;color:var(--muted);white-space:nowrap;}
+    .ld-inp{padding:4px 9px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:'Poppins',sans-serif;outline:none;background:var(--surface);color:var(--text);transition:border-color .2s;}
+    .ld-inp:focus{border-color:var(--purple);}
+    .lead-notes-row{display:flex;align-items:flex-start;gap:8px;margin-top:6px;}
+    .lead-notes-inp{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:12px;color:var(--text);background:var(--surface);outline:none;resize:none;min-height:48px;transition:border-color .2s;}
+    .lead-notes-inp:focus{border-color:var(--purple);}
+    .notes-save-btn{padding:7px 13px;background:var(--purple-l);color:var(--purple);border:1.5px solid var(--purple-m);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap;}
+    .notes-save-btn:hover{background:var(--purple-m);}
+    .source-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);background:var(--purple-l);color:var(--purple);}
+    .stage-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--radius-pill);}
+    .sg-new{background:rgba(56,189,248,0.15);color:#38bdf8;}
+    .sg-contacted{background:rgba(245,158,11,0.15);color:#fbbf24;}
+    .sg-call{background:rgba(244,114,182,0.15);color:#f472b6;}
+    .sg-proposal{background:rgba(139,92,246,0.15);color:#a78bfa;}
+    .sg-won{background:rgba(34,197,94,0.15);color:#4ade80;}
+    .sg-lost{background:rgba(248,113,113,0.15);color:#f87171;}
+    /* Section divider */
+    .section-divider{height:1px;background:var(--border);margin:4px 0;}
+    @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);}.form-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:640px){.stats-row{grid-template-columns:repeat(2,1fr);}.form-grid{grid-template-columns:1fr;}.form-grid-wide{grid-template-columns:1fr;}.main{padding:18px 16px 56px;}.dash-header{padding:0 16px;}.pipe-stage-name{font-size:8px;}.pipe-node-dot{width:18px;height:18px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}}
+  </style>
+</head>
+<body>
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-logo"><img src="logo.png" alt="KaizenEvol" class="gate-badge" /><span class="gate-logo-name">KaizenEvol</span></div>
+    <div class="gate-title">CRM</div>
+    <div class="gate-sub">Private access only. Enter your password.</div>
+    <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" />
+    <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock &rarr;</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+<div id="app">
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <a href="dashboard.html" class="dash-logo"><img src="logo.png" alt="KaizenEvol" class="dash-badge" />KaizenEvol</a>
+      <nav class="dash-nav">
+        <a href="dashboard.html" class="dash-nav-link">Dashboard</a>
+        <a href="crm.html" class="dash-nav-link active">CRM</a>
+        <a href="reports.html" class="dash-nav-link">Reports</a>
+      </nav>
+      <div class="dash-header-right">
+        <span class="dash-date" id="headerDate"></span>
+        <button class="btn-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </header>
+  <main class="main">
+
+    <!-- CLIENT PIPELINE -->
+    <section>
+      <div class="section-label">Client Pipeline</div>
+      <div class="pipeline-track" id="pipelineTrack"></div>
+    </section>
+
+    <!-- CLIENT CHECKLIST -->
+    <section>
+      <div class="section-label">Client Checklist</div>
+      <div class="checklist-clients" id="checklistContainer"></div>
+    </section>
+
+    <!-- CLIENTS -->
+    <section>
+      <div class="section-label">Clients</div>
+      <div id="clientsContainer"></div>
+    </section>
+
+    <!-- COMMISSION TRACKER -->
+    <section>
+      <div class="section-label">Commission Tracker</div>
+      <div id="commissionContainer"></div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PROSPECT STATS -->
+    <section>
+      <div class="section-label">Prospect Overview</div>
+      <div class="stats-row" id="statsRow"></div>
+    </section>
+
+    <!-- LEAD SCRAPER -->
+    <section class="card">
+      <div class="section-label">Lead Scraper</div>
+      <div class="scraper-setup">
+        <div class="scraper-row">
+          <div class="f-group" style="flex:2;min-width:240px">
+            <div class="f-label">Target Areas (comma-separated)</div>
+            <input type="text" class="f-input" id="scraperAreas" placeholder="e.g. Manchester, Birmingham, Leeds, Bristol" onblur="saveScraperField('areas',this.value)" />
+          </div>
+          <div class="f-group" style="min-width:170px">
+            <div class="f-label">Auto-scan Interval</div>
+            <select class="f-select" id="scanInterval" onchange="saveScraperField('interval',this.value)">
+              <option value="20">Every 20 min</option>
+              <option value="30">Every 30 min</option>
+              <option value="60">Every 1 hour</option>
+              <option value="120">Every 2 hours</option>
+              <option value="360">Every 6 hours</option>
+              <option value="720">Every 12 hours</option>
+            </select>
+          </div>
+        </div>
+        <div class="scraper-controls">
+          <label class="toggle-wrap">
+            <input type="checkbox" id="autoScanToggle" onchange="toggleAutoScan()" />
+            <span class="toggle-label">Auto-scan while page is open</span>
+          </label>
+          <button class="btn-save" onclick="runScraper()" id="scanBtn">&#9654; Scan Now</button>
+        </div>
+        <div class="scraper-status-bar" id="scraperStatus"></div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <button class="btn-save" onclick="document.getElementById('jsonFileInp').click()">&#8679; Import prospects.json</button>
+          <input type="file" id="jsonFileInp" accept=".json" style="display:none" onchange="importScraperJSON(event)" />
+          <button class="btn-save" onclick="exportObsidian()" style="background:var(--purple-d)">&#8615; Export to Obsidian</button>
+          <span style="font-size:12px;color:var(--muted)" id="importJsonStatus"></span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ALL LEADS -->
+    <section class="card">
+      <div class="section-label">All Leads</div>
+      <div class="filter-bar" style="margin-bottom:16px;">
+        <input type="text" class="search-inp" id="searchInp" placeholder="Search name, area, email..." oninput="renderLeads()" />
+        <div class="filter-pills">
+          <button class="fpill active" onclick="setFilter('all',this)">All</button>
+          <button class="fpill" onclick="setFilter('new',this)">New</button>
+          <button class="fpill" onclick="setFilter('contacted',this)">Contacted</button>
+          <button class="fpill" onclick="setFilter('call',this)">Call Booked</button>
+          <button class="fpill" onclick="setFilter('proposal',this)">Proposal</button>
+          <button class="fpill" onclick="setFilter('won',this)">Won</button>
+          <button class="fpill" onclick="setFilter('lost',this)">Lost</button>
+        </div>
+        <select class="sort-sel" id="sortSel" onchange="renderLeads()"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A-Z</option><option value="followup">Follow-up date</option></select>
+      </div>
+      <div class="leads-list" id="leadsList"></div>
+    </section>
+
+  </main>
+</div>
+<script>
+const PW_HASH='6f853cb4d060884a4dd3949c23fdb519ad8d8fac70ce9d27d0824a52a2a39350',SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',SCRAPER_KEY='ke_scraper',IDLE_TTL=18e5;
+let activeFilter='all',idleTimer=null,autoScanTimer=null;
+
+function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();},IDLE_TTL);}
+function startIdle(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
+function stopIdle(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
+function checkSession(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');if(s.hash===PW_HASH&&s.expires>Date.now()){showApp();return;}}catch(e){}showGate();}
+function showGate(){document.getElementById('gate').style.display='flex';document.getElementById('app').style.display='none';setTimeout(()=>document.getElementById('gateInput').focus(),50);}
+async function attemptLogin(){const pw=document.getElementById('gateInput').value;if(!pw)return;const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';const hash=await pbkdf2Hash(pw);btn.textContent='Unlock →';if(hash===PW_HASH){localStorage.setItem(SESSION_KEY,JSON.stringify({hash,expires:Date.now()+864e5}));document.getElementById('gate').style.display='none';showApp();}else{const inp=document.getElementById('gateInput');inp.classList.add('error');document.getElementById('gateErr').textContent='Incorrect password.';inp.value='';btn.disabled=false;setTimeout(()=>{inp.classList.remove('error');document.getElementById('gateErr').textContent='';},2400);}}
+async function pbkdf2Hash(pw){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode('0f45e8c98a23269130d1d1704e0e135f'),iterations:200000,hash:'SHA-256'},key,256);return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);showGate();}
+function showApp(){document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();init();}
+
+/* ── DATA ── */
+const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',bookedCalls:'',spend:'',updated:''}},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
+function load(){try{const r=localStorage.getItem(DATA_KEY);return r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);}catch(e){return structuredClone(DEFAULTS);}}
+function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function trialDays(startStr,total){if(!startStr)return null;const diff=Math.floor((Date.now()-new Date(startStr))/86400000);return{day:Math.max(1,diff+1),total};}
+function getClientStage(c){
+  if(c.status==='inactive')return{key:'inactive',label:'Inactive',day:0,daysLeft:0,pct:0};
+  if(c.status==='retainer')return{key:'retainer',label:'Retainer',day:60,daysLeft:0,pct:100};
+  if(!c.trialStartDate)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};
+  const t=trialDays(c.trialStartDate,c.trialDays||60);
+  if(!t)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};
+  const day=t.day;const total=t.total;const left=Math.max(0,total-day+1);
+  const pct=Math.min(100,Math.round(day/total*100));
+  if(day>=55)return{key:'conversion',label:'Conversion Due',day,daysLeft:left,pct};
+  if(day>=31)return{key:'optimising',label:'Optimising',day,daysLeft:left,pct};
+  return{key:'live',label:'Campaign Live',day,daysLeft:left,pct};
+}
+
+/* ── CLIENT PIPELINE ── */
+const PIPE_STAGES=[{key:'onboarding',label:'Onboarding'},{key:'live',label:'Campaign Live'},{key:'optimising',label:'Optimising'},{key:'conversion',label:'Conversion Due'},{key:'retainer',label:'Retainer'}];
+function getNextAction(stageKey,daysLeft,clientName){
+  const n=clientName.split(' ')[0];
+  switch(stageKey){
+    case 'onboarding':return{text:`Set ${n}'s trial start date to begin campaign tracking.`,cls:''};
+    case 'live':return{text:`Campaign running. Monitor daily spend and early lead quality. ${daysLeft} days to optimisation phase.`,cls:''};
+    case 'optimising':return{text:`Cut underperformers, scale winners. Start building retainer case. ${daysLeft} days to conversion conversation.`,cls:''};
+    case 'conversion':return{text:`Book retainer conversion call with ${n} — ${daysLeft} day(s) remaining on trial.`,cls:'alert-action'};
+    case 'retainer':return{text:`${n} is on retainer. Focus on results, retention, and case study.`,cls:'green-action'};
+    default:return{text:'',cls:''};
+  }
+}
+function renderClientPipeline(data){
+  const el=document.getElementById('pipelineTrack');
+  const active=data.clients.filter(c=>c.status!=='inactive');
+  if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;">No active clients.</div>';return;}
+  el.innerHTML=active.map(c=>{
+    const s=getClientStage(c);
+    const stageIdx=PIPE_STAGES.findIndex(p=>p.key===s.key);
+    const action=getNextAction(s.key,s.daysLeft,c.name);
+    const fillCls=s.key==='conversion'?'alert':s.key==='retainer'?'done':'normal';
+    const stageLabelCls=`psl-${s.key}`;
+    const nodes=PIPE_STAGES.map((p,i)=>{
+      let dotCls='';let nodeCls='';
+      if(i<stageIdx){dotCls='done';nodeCls='done-node';}
+      else if(i===stageIdx){
+        if(s.key==='conversion'){dotCls='alert';nodeCls='alert-node';}
+        else if(s.key==='retainer'){dotCls='retainer-dot';nodeCls='retainer-node';}
+        else{dotCls='active';nodeCls='active';}
+      }
+      return`<div class="pipe-stage-node ${nodeCls}"><div class="pipe-node-dot ${dotCls}"></div><div class="pipe-stage-name">${p.label}</div></div>`;
+    }).join('');
+    const progressRow=s.key!=='onboarding'&&s.key!=='inactive'?`<div class="pipe-progress-row"><div class="pipe-progress-bar"><div class="pipe-progress-fill ${fillCls}" style="width:${s.pct}%"></div></div><div class="pipe-progress-meta">${s.key==='retainer'?'Converted ✓':`Day ${s.day} / ${c.trialDays||60} &mdash; ${s.daysLeft} days left`}</div></div>`:'';
+    return`<div class="pipe-client">
+      <div class="pipe-client-header"><div class="pipe-client-name">${esc(c.name)}</div><span class="pipe-stage-label ${stageLabelCls}">${s.label}</span></div>
+      <div class="pipe-stages">${nodes}</div>
+      ${progressRow}
+      ${action.text?`<div class="pipe-next-action ${action.cls}"><div class="pipe-next-label">Next Action</div>${esc(action.text)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ── CLIENT CHECKLIST ── */
+const CLIENT_TASKS=[
+  {id:'ob1',phase:'onboarding',text:'Discovery call completed'},
+  {id:'ob2',phase:'onboarding',text:'Facebook Business Manager access granted'},
+  {id:'ob3',phase:'onboarding',text:'Meta Pixel installed and verified'},
+  {id:'ob4',phase:'onboarding',text:'Custom audiences created'},
+  {id:'ob5',phase:'onboarding',text:'Ad copy and creatives approved by client'},
+  {id:'ob6',phase:'onboarding',text:'Campaign structure reviewed'},
+  {id:'ob7',phase:'onboarding',text:'Campaign live ✓'},
+  {id:'tr1',phase:'trial',text:'Week 1 — performance review'},
+  {id:'tr2',phase:'trial',text:'Week 1 — report sent to client'},
+  {id:'tr3',phase:'trial',text:'Week 2 — cut underperformers, scale winners'},
+  {id:'tr4',phase:'trial',text:'Week 2 — report sent to client'},
+  {id:'tr5',phase:'trial',text:'Week 3 — performance review'},
+  {id:'tr6',phase:'trial',text:'Week 3 — report sent to client'},
+  {id:'tr7',phase:'trial',text:'Week 4 — creative refresh if CTR declining'},
+  {id:'tr8',phase:'trial',text:'Week 4 — report sent to client'},
+  {id:'op1',phase:'optimising',text:'Week 5–6 — scale best performing ads'},
+  {id:'op2',phase:'optimising',text:'Week 6 — report sent to client'},
+  {id:'op3',phase:'optimising',text:'Build retainer case — document results to date'},
+  {id:'op4',phase:'optimising',text:'Week 7–8 — report sent to client'},
+  {id:'cv1',phase:'conversion',text:'Retainer conversion call booked'},
+  {id:'cv2',phase:'conversion',text:'Retainer agreement sent'},
+  {id:'cv3',phase:'conversion',text:'Retainer agreement signed'},
+  {id:'cv4',phase:'conversion',text:'First retainer invoice raised'},
+  {id:'rt1',phase:'retainer',text:'Monthly report — Month 1'},
+  {id:'rt2',phase:'retainer',text:'Monthly report — Month 2'},
+  {id:'rt3',phase:'retainer',text:'Monthly report — Month 3'},
+  {id:'rt4',phase:'retainer',text:'Case study / testimonial requested'},
+];
+const PHASE_ORDER=['onboarding','trial','optimising','conversion','retainer'];
+const PHASE_LABELS={onboarding:'Onboarding',trial:'Trial — Weeks 1–4',optimising:'Optimising — Weeks 5–8',conversion:'Conversion',retainer:'Retainer'};
+function activePhaseForStage(stageKey){const map={onboarding:'onboarding',live:'trial',optimising:'optimising',conversion:'conversion',retainer:'retainer'};return map[stageKey]||'onboarding';}
+function renderClientChecklist(data){
+  const el=document.getElementById('checklistContainer');
+  const active=data.clients.filter(c=>c.status!=='inactive');
+  if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;">No active clients.</div>';return;}
+  if(!data.clientTasks)data.clientTasks={};
+  el.innerHTML=active.map(c=>{
+    if(!data.clientTasks[c.id])data.clientTasks[c.id]={};
+    const ct=data.clientTasks[c.id];
+    const stageInfo=getClientStage(c);
+    const activePhase=activePhaseForStage(stageInfo.key);
+    const activePhaseIdx=PHASE_ORDER.indexOf(activePhase);
+    const total=CLIENT_TASKS.length;
+    const done=CLIENT_TASKS.filter(t=>ct[t.id]).length;
+    const pct=Math.round(done/total*100);
+    const phases=PHASE_ORDER.map((phase,pi)=>{
+      const tasks=CLIENT_TASKS.filter(t=>t.phase===phase);
+      const phaseDone=tasks.every(t=>ct[t.id]);
+      const isCurrent=pi===activePhaseIdx;
+      const isLocked=pi>activePhaseIdx;
+      const isDonePh=pi<activePhaseIdx||phaseDone;
+      let labelCls=isCurrent?'phase-active':isDonePh?'phase-done':'';
+      let phaseCls=isLocked?'phase-locked':'';
+      let badge=isCurrent?'<span class="phase-active-badge">Current</span>':isDonePh?'<span class="phase-done-badge">Done</span>':'';
+      const items=tasks.map(t=>`<div class="cl-item ${ct[t.id]?'checked':''}" onclick="toggleClientTask('${c.id}','${t.id}')"><div class="cl-box"></div><span class="cl-text">${esc(t.text)}</span></div>`).join('');
+      return`<div class="checklist-phase ${phaseCls}"><div class="checklist-phase-label ${labelCls}">${PHASE_LABELS[phase]}${badge}</div><div class="checklist-items">${items}</div></div>`;
+    }).join('');
+    return`<div class="checklist-client">
+      <div class="checklist-client-header">
+        <div class="checklist-client-name">${esc(c.name)}</div>
+        <div class="checklist-progress-wrap">
+          <div class="checklist-prog-bar"><div class="checklist-prog-fill" style="width:${pct}%"></div></div>
+          <div class="checklist-pct">${done} / ${total}</div>
+        </div>
+      </div>
+      <div class="checklist-phases">${phases}</div>
+    </div>`;
+  }).join('');
+}
+function toggleClientTask(clientId,taskId){const d=load();if(!d.clientTasks)d.clientTasks={};if(!d.clientTasks[clientId])d.clientTasks[clientId]={};d.clientTasks[clientId][taskId]=!d.clientTasks[clientId][taskId];save(d);renderClientChecklist(d);}
+
+/* ── CLIENTS ── */
+function stClass(s){return{trial:'st-trial',retainer:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
+function stLabel(s){return{trial:'⏱ Trial',retainer:'✓ Retainer',inactive:'○ Inactive'}[s]||s;}
+function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const t=c.status==='trial'?trialDays(c.trialStartDate,c.trialDays):null;const pct=t?Math.min(100,Math.round(t.day/t.total*100)):0;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="trial" ${c.status==='trial'?'selected':''}>Trial</option><option value="retainer" ${c.status==='retainer'?'selected':''}>Retainer</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer Value</div><div class="cf-v">£${(c.retainerValue||3500).toLocaleString()}/mo</div></div></div>${c.status==='trial'?`<div class="trial-section"><div class="trial-bar"><div class="trial-fill" style="width:${pct}%"></div></div><div class="trial-meta"><span>${t?`Day ${t.day} of ${t.total}`:'Set start date below'}</span><span>${t?`${Math.max(0,t.total-t.day+1)} days remaining`:''}</span></div></div><div class="date-row"><span class="date-lbl">Trial start date:</span><input type="date" class="date-inp" value="${c.trialStartDate||''}" onchange="setTrialStart('${c.id}',this.value)" /></div>`:''}</div>`;}).join('');}
+function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
+function setTrialStart(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.trialStartDate=date;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
+
+/* ── COMMISSION ── */
+function renderCommission(data){
+  if(!data.commission)data.commission={jobs:[]};
+  const jobs=data.commission.jobs||[];
+  const pending=jobs.filter(j=>j.status==='pending').reduce((s,j)=>s+(j.commission||0),0);
+  const totalPaid=jobs.filter(j=>j.status==='paid').reduce((s,j)=>s+(j.commission||0),0);
+  const rows=jobs.length?jobs.map((j,i)=>`<tr>
+    <td>${esc(j.date||'—')}</td><td>${esc(j.clientName||'Nav')}</td>
+    <td>£${Number(j.jobValue||0).toLocaleString()}</td>
+    <td style="color:var(--amber);font-weight:700">£${Number(j.commission||0).toLocaleString()}</td>
+    <td><button class="comm-status ${j.status==='paid'?'cs-paid':'cs-pending'}" onclick="toggleCommStatus(${i})">${j.status==='paid'?'Paid':'Pending'}</button></td>
+    <td><button class="t-del" onclick="delJob(${i})">×</button></td>
+  </tr>`).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px 0;">No jobs logged yet.</td></tr>';
+  document.getElementById('commissionContainer').innerHTML=`<div class="card">
+    <div class="comm-add-row">
+      <input type="date" class="comm-inp" id="commDate" style="max-width:160px" />
+      <input type="text" class="comm-inp" id="commClient" placeholder="Client name" value="Navpreet Singh" style="max-width:180px" />
+      <input type="number" class="comm-inp" id="commValue" placeholder="Job value (£)" min="0" style="max-width:160px" />
+      <button class="add-btn" onclick="addJob()">+ Log Job</button>
+    </div>
+    <table class="comm-table">
+      <thead><tr><th>Date</th><th>Client</th><th>Job Value</th><th>Commission (20%)</th><th>Status</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="comm-total-row">
+      <div><div class="comm-total-label">Commission Owed</div><div style="font-size:11px;color:var(--muted);margin-top:2px">£${totalPaid.toLocaleString()} paid to date</div></div>
+      <div class="comm-total-val ${pending===0&&jobs.length?'paid':''}">£${pending.toLocaleString()}</div>
+    </div>
+  </div>`;}
+function addJob(){const date=document.getElementById('commDate').value;const clientName=document.getElementById('commClient').value.trim()||'Navpreet Singh';const jobValue=parseFloat(document.getElementById('commValue').value);if(!jobValue||jobValue<=0)return;const commission=Math.round(jobValue*0.2*100)/100;const d=load();if(!d.commission)d.commission={jobs:[]};d.commission.jobs.unshift({date,clientName,jobValue,commission,status:'pending'});save(d);renderCommission(d);document.getElementById('commValue').value='';document.getElementById('commDate').value='';}
+function toggleCommStatus(i){const d=load();if(!d.commission||!d.commission.jobs[i])return;d.commission.jobs[i].status=d.commission.jobs[i].status==='paid'?'pending':'paid';save(d);renderCommission(d);}
+function delJob(i){const d=load();if(!d.commission)return;d.commission.jobs.splice(i,1);save(d);renderCommission(d);}
+
+/* ── LEAD SCRAPER ── */
+const BAD_AD_SIGNALS=['boost post','call us','click here','limited time','act now'];
+const GOOD_AD_SIGNALS=['before','after','transform','free quote','free estimate','results','case study'];
+function loadScraper(){try{return JSON.parse(localStorage.getItem(SCRAPER_KEY)||'{}')}catch(e){return{}}}
+function saveScraper(s){localStorage.setItem(SCRAPER_KEY,JSON.stringify(s));}
+function saveApiKey(){const s=loadScraper();s.apiKey=document.getElementById('scraperKey').value.trim();saveScraper(s);setScraperStatus('Firecrawl key saved.','done');setTimeout(()=>updateScraperStatus(),2000);}
+function saveMetaToken(){const s=loadScraper();s.metaToken=document.getElementById('metaToken').value.trim();saveScraper(s);setScraperStatus('Meta token saved.','done');setTimeout(()=>updateScraperStatus(),2000);}
+function saveScraperField(field,val){const s=loadScraper();s[field]=val;saveScraper(s);}
+function initScraper(){const s=loadScraper();if(!s.apiKey)s.apiKey='fc-e0b8e1200468421ba97b14fc6996882e';if(!s.metaToken)s.metaToken='***REMOVED***';if(!s.interval)s.interval='20';saveScraper(s);if(s.areas)document.getElementById('scraperAreas').value=s.areas;document.getElementById('scanInterval').value=s.interval;if(s.autoScan){document.getElementById('autoScanToggle').checked=true;scheduleAutoScan();}updateScraperStatus();}
+function toggleAutoScan(){const en=document.getElementById('autoScanToggle').checked;const s=loadScraper();s.autoScan=en;saveScraper(s);if(en){scheduleAutoScan();setScraperStatus('Auto-scan enabled.','done');}else{clearTimeout(autoScanTimer);autoScanTimer=null;setScraperStatus('Auto-scan disabled.','');}}
+function scheduleAutoScan(){clearTimeout(autoScanTimer);const s=loadScraper();const mins=parseInt(s.interval||'20');const last=s.lastScanTimestamp||0;const delay=Math.max(5000,last+mins*60000-Date.now());autoScanTimer=setTimeout(async()=>{await runScraper();if(loadScraper().autoScan)scheduleAutoScan();},delay);updateScraperStatus();}
+function updateScraperStatus(){const s=loadScraper();let msg='';if(s.lastScan)msg='Last scan: '+s.lastScan;if(s.autoScan&&autoScanTimer!==null){const interval=parseInt(s.interval||'20');const remaining=Math.max(0,Math.round(((s.lastScanTimestamp||0)+interval*60000-Date.now())/60000));const str=remaining<60?remaining+'m':Math.floor(remaining/60)+'h '+(remaining%60)+'m';msg+=(msg?' · ':'')+'Next scan in '+str;}setScraperStatus(msg,'');}
+function setScraperStatus(msg,type){const el=document.getElementById('scraperStatus');el.textContent=msg;el.className='scraper-status-bar'+(type?' '+type:'');}
+function scoreProspect(hasFb,runningAds,adQuality,rating,reviews){if(runningAds&&['bad','low'].includes(adQuality))return 5;if(runningAds&&['decent','good'].includes(adQuality))return 4;if(hasFb&&!runningAds)return 3;if(!hasFb&&rating>=3.5&&reviews>=20)return 2;return 1;}
+async function searchFirecrawl(niche,area,apiKey){const query=(niche+' in '+area).replace(/\s+/g,'+');const schema={type:'object',properties:{businesses:{type:'array',items:{type:'object',properties:{name:{type:'string'},phone:{type:'string'},website:{type:'string'},address:{type:'string'},rating:{type:'number'},reviews:{type:'integer'}}}}}};const payload={url:'https://www.google.com/maps/search/'+query,formats:['extract'],actions:[{type:'wait',milliseconds:2000},{type:'scroll',direction:'down',amount:1500},{type:'wait',milliseconds:1500},{type:'scroll',direction:'down',amount:1500},{type:'wait',milliseconds:1500},{type:'scroll',direction:'down',amount:1500},{type:'wait',milliseconds:1500},{type:'scroll',direction:'down',amount:1500},{type:'wait',milliseconds:1500},{type:'scroll',direction:'down',amount:1500},{type:'wait',milliseconds:1000}],extract:{prompt:'Extract ALL businesses listed on this Google Maps page. Return as many as possible — aim for 20 to 30. For each business: name, phone number, website URL, full address, star rating as a decimal number, and review count as an integer.',schema}};const resp=await fetch('https://api.firecrawl.dev/v1/scrape',{method:'POST',headers:{'Authorization':'Bearer '+apiKey,'Content-Type':'application/json'},body:JSON.stringify(payload)});if(!resp.ok)throw new Error('Firecrawl '+resp.status);const d=await resp.json();return(d.extract||d.data&&d.data.extract||{}).businesses||[];}
+async function checkMetaAds(name,token){if(!token)return{running_ads:false,ad_count:0,ad_quality:'unknown'};try{const p=new URLSearchParams({search_terms:name,ad_type:'ALL',fields:'id,ad_creative_bodies,ad_creative_link_titles',limit:'5',access_token:token});p.append('ad_reached_countries[]','GB');const d=await(await fetch('https://graph.facebook.com/v19.0/ads_archive?'+p)).json();if(d.error||!d.data)return{running_ads:false,ad_count:0,ad_quality:'unknown'};const ads=d.data;if(!ads.length)return{running_ads:false,ad_count:0,ad_quality:'none'};let txt='';for(const a of ads)txt+=((a.ad_creative_bodies||[]).join(' ')+' '+(a.ad_creative_link_titles||[]).join(' ')).toLowerCase();const bad=BAD_AD_SIGNALS.filter(s=>txt.includes(s)).length,good=GOOD_AD_SIGNALS.filter(s=>txt.includes(s)).length;return{running_ads:true,ad_count:ads.length,ad_quality:!txt?'low':bad>good?'bad':good>0?'decent':'low'};}catch(e){return{running_ads:false,ad_count:0,ad_quality:'unknown'};}}
+async function runScraper(){const s=loadScraper();if(!s.apiKey){setScraperStatus('Add your Firecrawl API key first.','error');return;}const areas=(s.areas||'').split(',').map(a=>a.trim()).filter(Boolean);if(!areas.length){setScraperStatus('Add target areas above.','error');return;}const btn=document.getElementById('scanBtn');btn.disabled=true;let added=0;for(const area of areas){setScraperStatus('Scraping Google Maps — kitchen remodellers in '+area+'...','running');try{const businesses=await searchFirecrawl('kitchen remodelers',area,s.apiKey);setScraperStatus('Found '+businesses.length+' businesses in '+area+'. Checking Meta ads...','running');for(const b of businesses){if(!b.name)continue;if((b.rating||0)>0&&(b.rating||0)<3.0)continue;const arr=loadLeads();if(arr.some(l=>l.business.toLowerCase()===b.name.toLowerCase()))continue;const meta=await checkMetaAds(b.name,s.metaToken||'');await new Promise(r=>setTimeout(r,500));const hasFb=(b.website||'').toLowerCase().includes('facebook.com');const score=scoreProspect(hasFb,meta.running_ads,meta.ad_quality,b.rating||0,b.reviews||0);const adNote=meta.running_ads?`${meta.ad_count} ad${meta.ad_count!==1?'s':''} running (${meta.ad_quality} quality)`:hasFb?'Facebook page, no ads':'No Facebook presence';const notes=['Score: '+score+'/5',b.website?'Website: '+b.website:'',b.address?'Address: '+b.address:'',b.rating?'Rating: '+b.rating+' ⭐ ('+b.reviews+' reviews)':'',adNote].filter(Boolean).join(' · ');const updated=loadLeads();updated.unshift({id:uid(),business:b.name,owner:'',area,phone:b.phone||'',email:'',source:'Lead Scraper',stage:'new',notes,lastContact:'',followUp:'',createdAt:Date.now()});saveLeads(updated);added++;}}catch(e){console.warn('Scraper:',e.message);setScraperStatus('Error scanning '+area+': '+e.message,'error');}}const now=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});const u=loadScraper();u.lastScan=now;u.lastScanTimestamp=Date.now();saveScraper(u);btn.disabled=false;setScraperStatus('Scan complete — '+added+' new lead(s) added. Last scan: '+now,added>0?'done':'');renderLeadStats();renderLeads();}
+
+/* ── LEADS CRM ── */
+function loadLeads(){try{return JSON.parse(localStorage.getItem(LEADS_KEY)||'[]');}catch(e){return[];}}
+function saveLeads(arr){localStorage.setItem(LEADS_KEY,JSON.stringify(arr));}
+function importScraperJSON(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(e){try{const json=JSON.parse(e.target.result);const prospects=json.prospects||[];const city=json.city||'';const arr=loadLeads();const existing=new Set(arr.map(l=>l.business.toLowerCase()));let added=0;for(const p of prospects){if(!p.name||existing.has(p.name.toLowerCase()))continue;const adNote=p.running_ads?`${p.ad_count} ad${p.ad_count!==1?'s':''} running (${p.ad_quality} quality)`:p.has_facebook?'Facebook page, no ads':'No Facebook presence';const notes=[`Score: ${p.score}/5`,p.website?`Website: ${p.website}`:'',p.address?`Address: ${p.address}`:'',p.rating?`Rating: ${p.rating} ⭐ (${p.reviews} reviews)`:'',adNote].filter(Boolean).join(' · ');arr.unshift({id:uid(),business:p.name,owner:'',area:city,phone:p.phone||'',email:'',source:'Lead Scraper',stage:'new',notes,lastContact:'',followUp:'',createdAt:Date.now()});existing.add(p.name.toLowerCase());added++;}saveLeads(arr);event.target.value='';renderLeadStats();renderLeads();const el=document.getElementById('importJsonStatus');el.textContent=added>0?`${added} new lead${added!==1?'s':''} imported — ${json.niche||''} · ${city}`:'No new leads — all already in CRM.';setTimeout(()=>{el.textContent='';},5000);}catch(err){alert('Invalid file. Select a prospects JSON from the scraper.');}};reader.readAsText(file);}
+function exportObsidian(){const arr=loadLeads();if(!arr.length){alert('No leads to export.');return;}const date=new Date().toISOString().slice(0,10);const SCORE_LABEL={5:'Bad ads — easiest close',4:'Decent ads — pitch better results',3:'FB page, no ads — needs education',2:'No FB, good business',1:'Low priority'};let md='---\ndate: '+date+'\ntags: [crm-export, leads]\ntype: lead-export\n---\n\n# CRM Lead Export — '+date+'\n\n> Generated from KaizenEvol CRM. Drop individual sections into pipeline/prospects/ in Obsidian.\n\n';for(const l of arr){const score=parseInt((l.notes||'').match(/Score:\s*(\d)/)?.[1]||'0');md+='---\n\n## '+l.business+'\n\n';md+='| Field | Value |\n|---|---|\n';md+='| Score | '+(score?score+'/5 — '+(SCORE_LABEL[score]||''):'—')+'|\n';md+='| Stage | '+l.stage+' |\n';md+='| Area | '+(l.area||'—')+' |\n';md+='| Phone | '+(l.phone||'—')+' |\n';md+='| Email | '+(l.email||'—')+' |\n';md+='| Source | '+l.source+' |\n';md+='| Added | '+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' |\n';if(l.lastContact)md+='| Last Contact | '+l.lastContact+' |\n';if(l.followUp)md+='| Follow-Up | '+l.followUp+' |\n';if(l.notes)md+='\n**Notes:** '+l.notes+'\n';md+='\n';}const blob=new Blob([md],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ke-leads-'+date+'.md';a.click();URL.revokeObjectURL(a.href);document.getElementById('importJsonStatus').textContent=arr.length+' leads exported — drop the file into your Obsidian vault.';setTimeout(()=>{document.getElementById('importJsonStatus').textContent='';},5000);}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
+const STAGE_CLS={new:'sg-new',contacted:'sg-contacted',call:'sg-call',proposal:'sg-proposal',won:'sg-won',lost:'sg-lost'};
+function toggleForm(){const f=document.getElementById('addForm'),b=document.getElementById('toggleFormBtn');f.classList.toggle('open');b.textContent=f.classList.contains('open')?'− Cancel':'+ New Lead';}
+function saveLead(){const biz=document.getElementById('fBusiness').value.trim();if(!biz){document.getElementById('fBusiness').focus();return;}const lead={id:uid(),business:biz,owner:document.getElementById('fOwner').value.trim(),area:document.getElementById('fArea').value.trim(),phone:document.getElementById('fPhone').value.trim(),email:document.getElementById('fEmail').value.trim(),source:document.getElementById('fSource').value,stage:document.getElementById('fStage').value,notes:document.getElementById('fNotes').value.trim(),lastContact:'',followUp:'',createdAt:Date.now()};const arr=loadLeads();arr.unshift(lead);saveLeads(arr);['fBusiness','fOwner','fArea','fPhone','fEmail','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStage').value='new';toggleForm();renderLeadStats();renderLeads();}
+function deleteLead(id){if(!confirm('Delete this lead?'))return;saveLeads(loadLeads().filter(l=>l.id!==id));renderLeadStats();renderLeads();}
+function updateLeadField(id,field,val){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(l){l[field]=val;saveLeads(arr);}if(field==='stage'){renderLeadStats();renderLeads();}}
+function saveLeadNotes(id){const val=document.getElementById('ln_'+id).value;updateLeadField(id,'notes',val);const btn=document.getElementById('lnb_'+id);if(btn){btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save';},1600);}}
+function setFilter(stage,el){activeFilter=stage;document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLeads();}
+function renderLeadStats(){const arr=loadLeads();const c={new:0,contacted:0,call:0,proposal:0,won:0,lost:0};arr.forEach(l=>{if(c[l.stage]!==undefined)c[l.stage]++;});const total=arr.length;const conv=total>0?Math.round(c.won/total*100):0;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+total+'</div><div class="stat-s">All time</div></div><div class="stat-card"><div class="stat-l">New</div><div class="stat-v">'+c.new+'</div><div class="stat-s">Awaiting contact</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+c.contacted+'</div><div class="stat-s">In conversation</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">'+c.call+'</div><div class="stat-s">Discovery scheduled</div></div><div class="stat-card highlight"><div class="stat-l">Won</div><div class="stat-v">'+c.won+'</div><div class="stat-s">Closed clients</div></div><div class="stat-card"><div class="stat-l">Conv. Rate</div><div class="stat-v">'+conv+'%</div><div class="stat-s">Won / Total</div></div>';}
+function renderLeads(){const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone).toLowerCase().includes(search));if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});const el=document.getElementById('leadsList');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>'<div class="lead-card"><div class="lead-top"><div><div class="lead-name">'+esc(l.business)+'</div><div class="lead-owner">'+(esc(l.owner)||'&mdash;')+'</div></div><div class="lead-right"><span class="stage-badge '+(STAGE_CLS[l.stage]||'')+'">'+(STAGE_LABEL[l.stage]||l.stage)+'</span><select class="stage-sel" onchange="updateLeadField(\''+l.id+'\',\'stage\',this.value)">'+Object.entries(STAGE_LABEL).map(([v,lab])=>'<option value="'+v+'"'+(l.stage===v?' selected':'')+'>'+lab+'</option>').join('')+'</select><button class="lead-del" onclick="deleteLead(\''+l.id+'\')">×</button></div></div><div class="lead-meta">'+(l.area?'<div class="lm"><div class="lm-l">Area</div><div class="lm-v">'+esc(l.area)+'</div></div>':'')+(l.phone?'<div class="lm"><div class="lm-l">Phone</div><div class="lm-v"><a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a></div></div>':'')+(l.email?'<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div></div>':'')+'<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">'+esc(l.source)+'</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">'+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="'+esc(l.lastContact)+'" onchange="updateLeadField(\''+l.id+'\',\'lastContact\',this.value)" /></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="'+esc(l.followUp)+'" onchange="updateLeadField(\''+l.id+'\',\'followUp\',this.value)" /></div></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_'+l.id+'" placeholder="Notes...">'+esc(l.notes)+'</textarea><button class="notes-save-btn" id="lnb_'+l.id+'" onclick="saveLeadNotes(\''+l.id+'\')">Save</button></div></div>').join('');}
+
+function init(){
+  document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+  const d=load();
+  renderClientPipeline(d);
+  renderClientChecklist(d);
+  renderClients(d);
+  renderCommission(d);
+  initScraper();
+  renderLeadStats();
+  renderLeads();
+}
+document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
+checkSession();
+</script>
+</body>
+</html>

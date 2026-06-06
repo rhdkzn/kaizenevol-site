@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — KaizenEvol</title>
+  <meta name="description" content="Straight answers to common questions about how KaizenEvol works, pricing, results, and what makes us different from other agencies." />
+  <link rel="canonical" href="https://kaizenevol.com/faq.html" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kaizenevol.com/faq.html" />
+  <meta property="og:site_name" content="KaizenEvol" />
+  <meta property="og:title" content="FAQ — KaizenEvol" />
+  <meta property="og:description" content="Straight answers to common questions about how KaizenEvol works, pricing, results, and what makes us different from other agencies." />
+  <meta property="og:image" content="https://kaizenevol.com/og-image.svg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FAQ — KaizenEvol" />
+  <meta name="twitter:description" content="Straight answers. No fluff. Everything you need to know about the KaizenEvol system." />
+  <meta name="twitter:image" content="https://kaizenevol.com/og-image.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; color: #111111; background: #ffffff; line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --purple:        #6D3FC0;
+      --purple-light:  #F0EEFF;
+      --purple-mid:    #EDE8FF;
+      --bg-white:      #FFFFFF;
+      --bg-tint:       #F5F3FF;
+      --text-primary:  #111111;
+      --text-secondary:#555555;
+      --radius-card:   16px;
+      --radius-pill:   9999px;
+      --max-w:         900px;
+    }
+
+    /* ── UTILITY ── */
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .section-pad { padding: 96px 0; }
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 20px;
+    }
+    .eyebrow-white {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #c4a8ff;
+      background: rgba(196,168,255,0.15);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 20px;
+    }
+    .section-h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: var(--text-primary); line-height: 1.2; margin-bottom: 16px; }
+    .section-sub { font-size: 17px; color: var(--text-secondary); max-width: 640px; line-height: 1.7; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--purple);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: var(--purple);
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .btn-white:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 48px);
+      max-width: 860px;
+      background: #ffffff;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 32px rgba(109,63,192,0.15), 0 1px 4px rgba(0,0,0,0.06);
+      z-index: 1000;
+      padding: 0 8px;
+    }
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+      padding: 0 16px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text-primary);
+    }
+    .nav-logo-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: var(--purple); background: var(--purple-light); }
+    .nav-links a.active { color: var(--purple); background: var(--purple-light); }
+    .nav-cta { font-size: 14px; padding: 10px 20px; }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      border: none;
+      background: none;
+    }
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+    }
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1100;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .mobile-overlay.open { opacity: 1; }
+    .mobile-panel {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(320px, 85vw);
+      height: 100dvh;
+      background: #fff;
+      z-index: 1200;
+      padding: 28px 24px;
+      transition: right .3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-panel.open { right: 0; }
+    .mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .mobile-close { font-size: 24px; background: none; border: none; cursor: pointer; color: var(--text-primary); line-height: 1; }
+    .mobile-panel a {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 14px 16px;
+      border-radius: 12px;
+      transition: background .2s, color .2s;
+      display: block;
+    }
+    .mobile-panel a:hover { background: var(--purple-light); color: var(--purple); }
+    .mobile-panel .btn-primary { margin-top: 12px; justify-content: center; }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      background: linear-gradient(160deg, #ffffff 0%, #f5f3ff 60%, #ede8ff 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 140px 24px 80px;
+      text-align: center;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 500px 300px at 25% 100%, rgba(109,63,192,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 250px at 75% 0%, rgba(109,63,192,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(109,63,192,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(109,63,192,0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    .page-hero-content { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; }
+    .page-hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      margin-bottom: 18px;
+    }
+    .page-hero-sub { font-size: clamp(15px, 2vw, 18px); color: var(--text-secondary); max-width: 400px; margin: 0 auto; line-height: 1.7; }
+
+    /* ── FAQ ACCORDION ── */
+    .faq-section { background: var(--bg-white); }
+    .faq-list { margin-top: 52px; display: flex; flex-direction: column; gap: 0; }
+    .faq-item {
+      border-bottom: 1px solid #f0eeff;
+    }
+    .faq-item:first-child { border-top: 1px solid #f0eeff; }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Poppins', sans-serif;
+    }
+    .faq-question-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .faq-chevron {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--purple-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform .3s, background .2s;
+      color: var(--purple);
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+      background: var(--purple);
+      color: #fff;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .35s ease;
+    }
+    .faq-answer-inner {
+      padding: 0 0 24px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 700px;
+    }
+    .faq-item.open .faq-answer { max-height: 600px; }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      background: linear-gradient(135deg, #1a0533 0%, #2d1060 100%);
+      padding: 100px 24px;
+      text-align: center;
+    }
+    .final-cta h2 {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .final-cta-sub {
+      font-size: clamp(15px, 2vw, 17px);
+      color: rgba(255,255,255,0.7);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+    .final-cta-note { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 14px; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: #fff;
+      border-top: 1px solid #f0eeff;
+      padding: 48px 24px;
+    }
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+    .footer-logo-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 7px;
+      object-fit: contain;
+    }
+    .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .footer-nav a { font-size: 14px; color: var(--text-secondary); font-weight: 500; transition: color .2s; }
+    .footer-nav a:hover { color: var(--purple); }
+    .footer-right { font-size: 13px; color: var(--text-secondary); text-align: right; line-height: 1.7; }
+    .footer-right a { color: var(--purple); font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .section-pad { padding: 64px 0; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .footer-right { text-align: left; }
+    }
+    @media (min-width: 641px) {
+      .mobile-overlay, .mobile-panel { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.png" alt="KaizenEvol" class="nav-logo-badge" />
+      KaizenEvol
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#process">How It Works</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faq.html" class="active">FAQ</a></li>
+    </ul>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary nav-cta">Book A Call</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-panel-header">
+    <div class="nav-logo">
+      <img src="logo.png" alt="KaizenEvol" class="nav-logo-badge" />
+      KaizenEvol
+    </div>
+    <button class="mobile-close" id="mobileClose">&times;</button>
+  </div>
+  <a href="index.html#process">How It Works</a>
+  <a href="services.html">Services</a>
+  <a href="about.html">About</a>
+  <a href="faq.html">FAQ</a>
+  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book A Call</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="hero-grid"></div>
+  <div class="page-hero-content">
+    <span class="eyebrow">FAQ</span>
+    <h1>Common Questions</h1>
+    <p class="page-hero-sub">Straight answers. No fluff.</p>
+  </div>
+</section>
+
+<!-- FAQ ACCORDION -->
+<section class="faq-section section-pad">
+  <div class="container">
+    <span class="eyebrow">&#10067; Questions</span>
+    <h2 class="section-h2">Everything You Need to Know</h2>
+    <p class="section-sub">If something&rsquo;s not covered here, book a call and ask directly. We&rsquo;ll give you a straight answer.</p>
+
+    <div class="faq-list" id="faqList">
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">What exactly do you do for me?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Everything. We build your campaigns from scratch &mdash; copy, creatives, targeting, and the qualification funnel that filters leads before they reach you. Once it&rsquo;s live, we optimise daily and send you a simple report every week. You show up to the consultations we put in your calendar. That&rsquo;s your job. Everything else is ours.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">What results can I realistically expect?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Multiple qualified, booked kitchen remodelling clients per month &mdash; each with a high project value. We don&rsquo;t count enquiries or unqualified leads as results. We count booked consultations with homeowners who have a real budget and a real project.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">How long until I see results?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Campaigns go live within 7 days of the discovery call. The system is designed to deliver booked jobs within 60 days. We&rsquo;re testing and cutting underperforming ads, scaling what&rsquo;s working, and tightening the funnel throughout. You&rsquo;re not waiting months to see movement.
+          </div>
+        </div>
+      </div>
+
+<div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">How much of my time does this take?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Minimal. You&rsquo;ll spend 30 minutes on the discovery call, then a short review session when we present the campaign before launch &mdash; that&rsquo;s it for setup. After that, the only time you spend is on the consultations we book into your calendar. We handle reporting, optimisation, and all communication with leads.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">How much do I need to spend on ads?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            It depends on your local market, how competitive your area is, and your monthly client targets. We agree on the right figure together during the discovery call &mdash; nothing is set without your sign-off. Your ad spend is paid directly to Meta by you. We don&rsquo;t hold the budget, take a cut, or mark it up.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">What counts as a &ldquo;qualified lead&rdquo;?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            A qualified lead is a homeowner who has passed through our intake funnel &mdash; they&rsquo;ve confirmed they own the property, have a genuine kitchen project in mind, have a realistic budget, and are looking to move forward within a reasonable timeframe. Renters, tyre-kickers, and people with no budget don&rsquo;t make it through. You only see people who are serious.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">What if I&rsquo;ve tried Meta ads before and it didn&rsquo;t work?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Failed Meta ads almost always fail for the same reasons: generic copy, wrong audience, no qualification funnel, and no one actually watching the data. Most agencies run the same campaigns for every client. This system is purpose-built for kitchen remodellers &mdash; the targeting, copy, and funnel are all specific to your niche. Book a call and we&rsquo;ll walk through exactly what went wrong last time.
+          </div>
+        </div>
+      </div>
+
+<div class="faq-item">
+        <button class="faq-question">
+          <span class="faq-question-text">Why do you only work with one remodeller per area?</span>
+          <span class="faq-chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Because we&rsquo;d be competing against ourselves if we didn&rsquo;t. Running the same ad system for two kitchen remodellers in the same town would drive up costs, dilute results, and put us in the uncomfortable position of deciding whose campaign to favour. One client per area means our interests are fully aligned with yours. Once you sign, no other remodeller in your local market gets access to this.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <span class="eyebrow-white">Limited Availability &mdash; One Remodeller Per Area</span>
+    <h2>Ready to Fill Your Calendar<br>With Booked Clients?</h2>
+    <p class="final-cta-sub">Book a free 30-minute strategy call. No pitch, no pressure. You&rsquo;ll leave with a clear picture of what&rsquo;s possible for your business &mdash; whether we work together or not.</p>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">&#128197; Book A Free Strategy Call &rarr;</a>
+    <p class="final-cta-note">No pitch. Just strategy. 30 minutes. Free.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <img src="logo.png" alt="KaizenEvol" class="footer-logo-badge" />
+      KaizenEvol
+    </a>
+    <nav class="footer-nav">
+      <a href="index.html#process">How It Works</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="footer-right">
+      <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a><br>
+      &copy; 2026 KaizenEvol
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── FAQ ACCORDION ── */
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const btn = item.querySelector('.faq-question');
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      faqItems.forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  /* ── MOBILE NAV ── */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileOverlay = document.getElementById('mobileOverlay');
+  const mobilePanel = document.getElementById('mobilePanel');
+  const mobileClose = document.getElementById('mobileClose');
+
+  function openMenu() {
+    mobileOverlay.style.display = 'block';
+    mobilePanel.style.display = 'flex';
+    requestAnimationFrame(() => {
+      mobileOverlay.classList.add('open');
+      mobilePanel.classList.add('open');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobileOverlay.classList.remove('open');
+    mobilePanel.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      mobileOverlay.style.display = 'none';
+      mobilePanel.style.display = 'none';
+    }, 300);
+  }
+  hamburgerBtn.addEventListener('click', openMenu);
+  mobileClose.addEventListener('click', closeMenu);
+  mobileOverlay.addEventListener('click', closeMenu);
+  mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+</script>
+</body>
+</html>

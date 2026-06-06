@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KaizenEvol — Meta Client Acquisition for Kitchen Remodellers</title>
+  <meta name="description" content="Done-for-you Meta ads system that books 2+ qualified kitchen remodelling clients per month, minimum £5,000 project value, live in 7 days. One remodeller per area." />
+  <link rel="canonical" href="https://kaizenevol.com/" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kaizenevol.com/" />
+  <meta property="og:title" content="KaizenEvol — Meta Client Acquisition for Kitchen Remodellers" />
+  <meta property="og:description" content="Done-for-you Meta ads. 2+ booked clients/month. £5K+ project value. Live in 7 days." />
+  <meta property="og:image" content="https://kaizenevol.com/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; color: #111111; background: #ffffff; line-height: 1.6; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+
+    :root {
+      --purple:       #6D3FC0;
+      --purple-dark:  #2d1060;
+      --purple-light: #F0EEFF;
+      --purple-mid:   #EDE8FF;
+      --bg-tint:      #F5F3FF;
+      --text:         #111111;
+      --muted:        #555555;
+      --radius:       16px;
+      --radius-pill:  9999px;
+      --max-w:        960px;
+    }
+
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .section-pad { padding: 96px 0; }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 20px;
+    }
+    .eyebrow-white {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #c4a8ff;
+      background: rgba(196,168,255,0.15);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 20px;
+    }
+    .section-h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--text); line-height: 1.15; margin-bottom: 16px; }
+    .section-h2 em { font-style: normal; color: var(--purple); }
+    .section-sub { font-size: 17px; color: var(--muted); max-width: 640px; line-height: 1.75; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--purple); color: #fff;
+      font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700;
+      padding: 14px 28px; border-radius: var(--radius-pill); border: none;
+      cursor: pointer; transition: opacity .2s, transform .15s; white-space: nowrap;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: transparent; color: var(--purple);
+      font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700;
+      padding: 13px 28px; border-radius: var(--radius-pill);
+      border: 2px solid var(--purple);
+      cursor: pointer; transition: background .2s, color .2s; white-space: nowrap;
+    }
+    .btn-outline:hover { background: var(--purple); color: #fff; }
+    .btn-white {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; color: var(--purple);
+      font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700;
+      padding: 14px 28px; border-radius: var(--radius-pill); border: none;
+      cursor: pointer; transition: opacity .2s, transform .15s; white-space: nowrap;
+    }
+    .btn-white:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      background: var(--purple);
+      overflow: hidden; white-space: nowrap; padding: 10px 0;
+    }
+    .marquee-inner {
+      display: inline-block;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-inner span {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0 48px; color: #fff;
+    }
+    .marquee-inner span em { color: #c4a8ff; font-style: normal; }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* NAV */
+    .navbar {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 48px); max-width: 900px;
+      background: #fff; border-radius: var(--radius-pill);
+      box-shadow: 0 4px 32px rgba(109,63,192,0.15), 0 1px 4px rgba(0,0,0,0.06);
+      z-index: 1000; padding: 0 8px;
+    }
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 58px; padding: 0 16px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
+    .nav-logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-links a {
+      font-size: 14px; font-weight: 600; color: var(--muted);
+      padding: 6px 12px; border-radius: var(--radius-pill);
+      transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: var(--purple); background: var(--purple-light); }
+    .nav-cta { font-size: 14px; padding: 10px 20px; }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 6px; border: none; background: none;
+    }
+    .hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all .3s; }
+    .mobile-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 1100; opacity: 0; transition: opacity .3s;
+    }
+    .mobile-overlay.open { opacity: 1; }
+    .mobile-panel {
+      position: fixed; top: 0; right: -100%;
+      width: min(320px, 85vw); height: 100dvh;
+      background: #fff; z-index: 1200;
+      padding: 28px 24px; transition: right .3s ease;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .mobile-panel.open { right: 0; }
+    .mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .mobile-close { font-size: 24px; background: none; border: none; cursor: pointer; color: var(--text); line-height: 1; }
+    .mobile-panel a {
+      font-size: 16px; font-weight: 600; color: var(--text);
+      padding: 14px 16px; border-radius: 12px;
+      transition: background .2s, color .2s; display: block;
+    }
+    .mobile-panel a:hover { background: var(--purple-light); color: var(--purple); }
+    .mobile-panel .btn-primary { margin-top: 12px; justify-content: center; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #ffffff 0%, #f5f3ff 60%, #ede8ff 100%);
+      position: relative; display: flex; align-items: center; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 700px 500px at 70% 100%, rgba(109,63,192,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 300px at 10% 0%, rgba(109,63,192,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(109,63,192,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(109,63,192,0.05) 1px, transparent 1px);
+      background-size: 48px 48px; pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 1; text-align: center;
+      padding: 140px 24px 80px; max-width: var(--max-w); margin: 0 auto;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px); font-weight: 800; color: var(--text);
+      line-height: 1.1; letter-spacing: -1px; margin-bottom: 24px;
+    }
+    .hero h1 .accent { color: var(--purple); }
+    .hero-sub {
+      font-size: clamp(16px, 2.2vw, 19px); color: var(--muted);
+      max-width: 620px; margin: 0 auto 36px; line-height: 1.75;
+    }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+    .hero-note { font-size: 13px; color: #999; }
+
+    /* PROBLEM */
+    .problem-section { background: var(--bg-tint); }
+    .problem-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 20px; margin-top: 48px 0 40px;
+    }
+    .problem-card {
+      background: #fff; border-radius: var(--radius);
+      padding: 28px; display: flex; gap: 20px; align-items: flex-start;
+      box-shadow: 0 2px 12px rgba(109,63,192,0.06);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .problem-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(109,63,192,0.12); }
+    .problem-num {
+      font-size: 36px; font-weight: 800; color: var(--purple-light);
+      line-height: 1; flex-shrink: 0; min-width: 48px;
+    }
+    .problem-text strong { display: block; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .problem-text p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .problem-callout {
+      background: var(--purple-light); border-radius: var(--radius);
+      padding: 24px 28px; margin-top: 24px;
+      font-size: 16px; color: var(--muted);
+    }
+    .problem-callout strong { color: var(--purple); }
+
+    /* HOW IT WORKS */
+    .process-section { background: #fff; }
+    .process-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; margin-top: 48px;
+    }
+    .process-card {
+      background: var(--bg-tint); border-radius: var(--radius);
+      padding: 32px 24px 28px; position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .process-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(109,63,192,0.13); }
+    .step-badge {
+      position: absolute; top: 20px; right: 20px;
+      width: 28px; height: 28px;
+      background: var(--purple); color: #fff;
+      font-size: 12px; font-weight: 800; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .process-icon { font-size: 28px; margin-bottom: 14px; }
+    .process-title { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+    .process-desc { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 16px; }
+    .process-tag {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      letter-spacing: .5px; text-transform: uppercase;
+      color: var(--purple); background: var(--purple-light);
+      padding: 4px 12px; border-radius: var(--radius-pill);
+    }
+
+    /* AI ADVANTAGE */
+    .ai-section { background: var(--bg-tint); }
+    .ai-mechs {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 16px; margin-top: 48px;
+    }
+    .ai-mech {
+      background: #fff; border-radius: var(--radius);
+      padding: 24px 28px; display: flex; gap: 16px; align-items: flex-start;
+      box-shadow: 0 2px 12px rgba(109,63,192,0.06);
+    }
+    .ai-mech-icon { font-size: 24px; flex-shrink: 0; }
+    .ai-mech-text strong { display: block; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .ai-mech-text p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* PRICING */
+    .pricing-section { background: #fff; }
+    .pricing-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 24px; margin-top: 48px;
+    }
+    .pricing-card {
+      background: var(--bg-tint); border-radius: var(--radius);
+      padding: 40px; border: 2px solid transparent;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .pricing-card:hover { border-color: var(--purple-mid); box-shadow: 0 8px 32px rgba(109,63,192,0.12); }
+    .pricing-card.featured {
+      background: linear-gradient(160deg, var(--purple-dark) 0%, var(--purple) 100%);
+      color: #fff; border-color: transparent;
+    }
+    .pricing-card.featured:hover { box-shadow: 0 12px 40px rgba(109,63,192,0.35); }
+    .pricing-badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      background: #fff; color: var(--purple);
+      padding: 4px 14px; border-radius: var(--radius-pill); margin-bottom: 20px;
+    }
+    .pricing-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+    }
+    .pricing-card.featured .pricing-label { color: #c4a8ff; }
+    .pricing-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .pricing-price { font-size: 52px; font-weight: 800; line-height: 1; margin-bottom: 6px; color: var(--purple); }
+    .pricing-card.featured .pricing-price { color: #fff; }
+    .pricing-price-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .pricing-card.featured .pricing-price-sub { color: rgba(255,255,255,0.65); }
+    .pricing-features { list-style: none; margin-bottom: 32px; }
+    .pricing-features li {
+      font-size: 14px; padding: 10px 0;
+      border-bottom: 1px solid rgba(109,63,192,0.1);
+      display: flex; gap: 10px; align-items: flex-start; line-height: 1.5;
+    }
+    .pricing-card.featured .pricing-features li { border-bottom-color: rgba(255,255,255,0.12); }
+    .pricing-features li::before { content: '✓'; color: var(--purple); font-weight: 800; flex-shrink: 0; }
+    .pricing-card.featured .pricing-features li::before { color: #c4a8ff; }
+
+    /* EXCLUSIVITY */
+    .excl-section {
+      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+      color: #fff;
+    }
+    .excl-inner {
+      display: grid; grid-template-columns: 1fr 380px;
+      gap: 64px; align-items: center;
+    }
+    .excl-body { font-size: 17px; color: rgba(255,255,255,0.8); line-height: 1.75; margin-bottom: 32px; }
+    .excl-body p { margin-bottom: 16px; }
+    .excl-card {
+      background: rgba(255,255,255,0.1); border-radius: var(--radius);
+      padding: 36px; backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .excl-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+    .excl-list { list-style: none; }
+    .excl-list li {
+      font-size: 14px; color: rgba(255,255,255,0.8);
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex; gap: 10px;
+    }
+    .excl-list li:last-child { border-bottom: none; }
+    .excl-list li::before { content: '✓'; color: #c4a8ff; font-weight: 800; }
+
+    /* ABOUT */
+    .about-section { background: var(--bg-tint); }
+    .about-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: start;
+    }
+    .about-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 12px; margin-top: 32px;
+    }
+    .about-stat {
+      background: #fff; border-radius: var(--radius);
+      padding: 20px; text-align: center;
+      box-shadow: 0 2px 12px rgba(109,63,192,0.06);
+    }
+    .about-stat-num { font-size: 32px; font-weight: 800; color: var(--purple); margin-bottom: 4px; }
+    .about-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+    .about-body { font-size: 16px; color: var(--muted); line-height: 1.8; }
+    .about-body p { margin-bottom: 16px; }
+
+    /* FAQ */
+    .faq-section { background: #fff; }
+    .faq-list { margin-top: 40px; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 24px rgba(109,63,192,0.08); }
+    .faq-item { border-bottom: 1px solid var(--purple-light); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      width: 100%; text-align: left; background: none; border: none;
+      font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 600;
+      color: var(--text); padding: 22px 28px;
+      cursor: pointer; display: flex; justify-content: space-between;
+      align-items: center; gap: 16px; transition: background .15s;
+    }
+    .faq-q:hover { background: var(--purple-light); }
+    .faq-icon { font-size: 20px; color: var(--purple); flex-shrink: 0; transition: transform .2s; }
+    .faq-a { display: none; padding: 0 28px 22px; font-size: 15px; color: var(--muted); line-height: 1.75; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    /* FINAL CTA */
+    .cta-section {
+      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+      text-align: center; color: #fff;
+    }
+    .cta-section .section-h2 { color: #fff; margin-bottom: 16px; }
+    .cta-section p { color: rgba(255,255,255,0.8); font-size: 17px; margin-bottom: 36px; max-width: 540px; margin-left: auto; margin-right: auto; }
+    .cta-note { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.55); }
+
+    /* FOOTER */
+    .footer {
+      background: #fff; border-top: 1px solid var(--purple-light);
+      padding: 48px 24px;
+    }
+    .footer-inner {
+      max-width: var(--max-w); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 32px; flex-wrap: wrap;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+    .footer-logo img { width: 32px; height: 32px; border-radius: 7px; object-fit: contain; }
+    .footer-nav { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-nav a { font-size: 14px; color: var(--muted); font-weight: 500; transition: color .2s; }
+    .footer-nav a:hover { color: var(--purple); }
+    .footer-right { font-size: 13px; color: var(--muted); text-align: right; line-height: 1.7; }
+    .footer-right a { color: var(--purple); font-weight: 600; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .section-pad { padding: 64px 0; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .process-grid { grid-template-columns: 1fr; }
+      .ai-mechs { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .excl-inner { grid-template-columns: 1fr; }
+      .about-inner { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: repeat(3, 1fr); }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .footer-right { text-align: left; }
+    }
+    @media (min-width: 769px) {
+      .mobile-overlay, .mobile-panel { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span>Multiple Booked Clients/Month <em>·</em> High-Ticket Projects Only <em>·</em> Live in 7 Days <em>·</em> One Remodeller Per Area <em>·</em> No Ad Account Headaches <em>·</em> No Lead Chasing</span>
+    <span>Multiple Booked Clients/Month <em>·</em> High-Ticket Projects Only <em>·</em> Live in 7 Days <em>·</em> One Remodeller Per Area <em>·</em> No Ad Account Headaches <em>·</em> No Lead Chasing</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="logo.png" alt="KaizenEvol" />
+      KaizenEvol
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary nav-cta">Book A Call</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-panel-header">
+    <div class="nav-logo">KaizenEvol</div>
+    <button class="mobile-close" id="mobileClose">&times;</button>
+  </div>
+  <a href="#how">How It Works</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#about">About</a>
+  <a href="#faq">FAQ</a>
+  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book A Call</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <span class="eyebrow">UK Kitchen Remodellers — Exclusive Client Acquisition</span>
+    <h1>Stop Waiting for Referrals.<br>Get <span class="accent">Multiple Booked Clients</span><br>Every Month.</h1>
+    <p class="hero-sub">Done-for-you Meta ads built exclusively for kitchen remodellers across the UK. Minimum £5,000 project value per job. Live in 7 days. You touch nothing.</p>
+    <div class="hero-actions">
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">📅 Book A Free Strategy Call →</a>
+      <a href="#how" class="btn-outline">See How It Works</a>
+    </div>
+    <p class="hero-note">No pitch. Just strategy. 30 minutes.</p>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem-section section-pad" id="problem">
+  <div class="container">
+    <span class="eyebrow">The Real Problem</span>
+    <h2 class="section-h2">Most Remodellers Are Losing Jobs<br>to Ads That <em>Don't Work</em></h2>
+    <p class="section-sub">It's not a demand problem. Kitchen demand in the UK is strong. It's a system problem.</p>
+    <div class="problem-grid" style="margin-top:40px">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <div class="problem-text">
+          <strong>Agencies charge retainers before results</strong>
+          <p>You pay £1,000–£2,000/mo upfront. They take 90 days to "optimise." Your phone stays quiet.</p>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <div class="problem-text">
+          <strong>DIY ads burn money with no strategy</strong>
+          <p>Boosting posts and guessing audiences costs more per lead than a proper campaign — and the leads are worse.</p>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <div class="problem-text">
+          <strong>Lead platforms sell the same lead to 10 competitors</strong>
+          <p>Checkatrade, MyBuilder, Rated People — you're bidding against yourself at inflated prices.</p>
+        </div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">04</div>
+        <div class="problem-text">
+          <strong>No system means feast or famine</strong>
+          <p>Busy for 6 weeks, then nothing. No predictable way to fill the diary month after month.</p>
+        </div>
+      </div>
+    </div>
+    <div class="problem-callout">
+      The problem isn't demand. <strong>Kitchen demand in the UK is strong.</strong> The problem is your current approach — or lack of one.
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="process-section section-pad" id="how">
+  <div class="container">
+    <span class="eyebrow">⚙️ The System</span>
+    <h2 class="section-h2">From Zero to Booked Calls<br>in <em>7 Days</em></h2>
+    <p class="section-sub">Three steps. You approve one set of ads. Then we run everything. You just answer the phone.</p>
+    <div class="process-grid">
+      <div class="process-card">
+        <div class="step-badge">1</div>
+        <div class="process-icon">📞</div>
+        <div class="process-title">Strategy Call</div>
+        <p class="process-desc">We map your service area, target projects, and ideal client. 45 minutes. We handle everything from here.</p>
+        <span class="process-tag">Day 1</span>
+      </div>
+      <div class="process-card">
+        <div class="step-badge">2</div>
+        <div class="process-icon">✏️</div>
+        <div class="process-title">AI Campaign Build</div>
+        <p class="process-desc">Creatives, copy, targeting, and funnel — built and sent for approval within 72 hours. No stock photos, no generic copy.</p>
+        <span class="process-tag">Days 2–4</span>
+      </div>
+      <div class="process-card">
+        <div class="step-badge">3</div>
+        <div class="process-icon">📈</div>
+        <div class="process-title">Launch, Optimise, Scale</div>
+        <p class="process-desc">Campaigns go live. We monitor daily, kill what doesn't work, and double down on what does. Weekly report. Nothing else required from you.</p>
+        <span class="process-tag">Day 7+</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI ADVANTAGE -->
+<section class="ai-section section-pad" id="ai">
+  <div class="container">
+    <span class="eyebrow">Why It Works</span>
+    <h2 class="section-h2">Built for One Niche.<br><em>Tuned by AI.</em></h2>
+    <div class="ai-mechs">
+        <div class="ai-mech">
+          <div class="ai-mech-icon">🎯</div>
+          <div class="ai-mech-text">
+            <strong>Niche-only targeting</strong>
+            <p>Every campaign is built exclusively for kitchen remodellers. Not generic home improvement. Your specific buyer, in your specific area.</p>
+          </div>
+        </div>
+        <div class="ai-mech">
+          <div class="ai-mech-icon">⏱️</div>
+          <div class="ai-mech-text">
+            <strong>Daily performance monitoring</strong>
+            <p>AI flags underperforming ads within hours, not weeks. Budget never sits on dead campaigns.</p>
+          </div>
+        </div>
+        <div class="ai-mech">
+          <div class="ai-mech-icon">⚡</div>
+          <div class="ai-mech-text">
+            <strong>Creative built to convert</strong>
+            <p>Hooks, copy, and visuals developed from what's working across the niche — not guesswork.</p>
+          </div>
+        </div>
+        <div class="ai-mech">
+          <div class="ai-mech-icon">🙋</div>
+          <div class="ai-mech-text">
+            <strong>Pre-qualified before they reach you</strong>
+            <p>The funnel filters tyre-kickers. By the time someone books a call, they know the project scope and are ready to move.</p>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section section-pad" id="pricing">
+  <div class="container" style="text-align:center">
+    <span class="eyebrow">Investment</span>
+    <h2 class="section-h2">Pricing Is Discussed<br><em>on the Call</em></h2>
+    <p class="section-sub" style="margin: 0 auto 36px;">We don't publish pricing publicly. Every arrangement is based on your area, your goals, and what makes sense for your business. Book a call and we'll walk through it — no obligation.</p>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">📅 Book A Call to Discuss →</a>
+    <p style="margin-top:16px; font-size:13px; color:#999;">No pitch. If it's not a fit, we'll say so.</p>
+  </div>
+</section>
+
+<!-- EXCLUSIVITY -->
+<section class="excl-section section-pad" id="exclusivity">
+  <div class="container">
+    <div class="excl-inner">
+      <div>
+        <span class="eyebrow-white">🔒 Territory Exclusivity</span>
+        <h2 class="section-h2" style="color:#fff">One Remodeller.<br>One Area.<br><span style="color:#c4a8ff">Full Focus.</span></h2>
+        <div class="excl-body">
+          <p>We only work with one kitchen remodeller per local area. Once your postcode is claimed, it's locked. No competitor of yours will ever run through this system in your market.</p>
+          <p>This isn't a marketing tactic. It's the only way the system works at this level. Split focus means split results.</p>
+        </div>
+        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">Check Area Availability →</a>
+      </div>
+      <div class="excl-card">
+        <h3>What Exclusivity Means</h3>
+        <ul class="excl-list">
+          <li>No other kitchen remodeller in your territory</li>
+          <li>Competitors see the same leads — but not through us</li>
+          <li>Locked from day one of the trial</li>
+          <li>Retained for as long as you remain a client</li>
+          <li>First come, first served — no waiting list</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section section-pad" id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div>
+        <span class="eyebrow">Who's Behind This</span>
+        <h2 class="section-h2">Built by Operators,<br>Not <em>Salesmen</em></h2>
+        <div class="about-stats">
+          <div class="about-stat">
+            <div class="about-stat-num">7</div>
+            <div class="about-stat-label">Days to Live</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">UK</div>
+            <div class="about-stat-label">Kitchen Remodellers Only</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">1</div>
+            <div class="about-stat-label">Per Local Area</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="about-body">
+          <p>I'm Rahaid, and alongside my business partner Diego, we run KaizenEvol — a Meta ads operation built exclusively for UK kitchen remodellers.</p>
+          <p>No junior account managers. No offshore teams. No 12-slide decks about "brand awareness." Just campaigns built, launched, and managed by people who do this every day.</p>
+          <p>We're selective about who we work with. Our goal is to build a tight roster of serious remodellers — not a volume agency. Every client gets proper attention, not a template.</p>
+          <p>If you're serious about fixing your pipeline, let's talk. If you want three discovery calls and a proposal PDF, we're not the right fit.</p>
+        </div>
+        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary" style="margin-top:8px">Book a Call →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section section-pad" id="faq">
+  <div class="container">
+    <span class="eyebrow">Common Questions</span>
+    <h2 class="section-h2">Straight <em>Answers</em></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">Do I need to know anything about Meta ads?<span class="faq-icon">+</span></button>
+        <div class="faq-a">No. You need a Facebook Business Manager account and a budget. We handle everything else — account structure, creatives, copy, targeting, funnel, optimisation, reporting. Zero involvement required from your side.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What ad budget do I need?<span class="faq-icon">+</span></button>
+        <div class="faq-a">We set this based on your area and goals. Typically £300–£800/month. You control the budget — it goes directly into your ad account, not through us.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What's the 2 clients/month target based on?<span class="faq-icon">+</span></button>
+        <div class="faq-a">It's the minimum we build the system to hit. Actual results depend on your close rate, area, and ad spend. We track every metric weekly and adjust. If we're off target, you'll know before we do — we share the numbers directly.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Why commission-only for the first 60 days?<span class="faq-icon">+</span></button>
+        <div class="faq-a">Because it removes your risk. You don't pay a retainer until the system has proven it works in your market. The commission structure keeps us aligned — we only earn when you earn.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">How quickly can you get started?<span class="faq-icon">+</span></button>
+        <div class="faq-a">First leads within 7 days of the strategy call. Build phase takes 2–4 days. We book the call, agree the plan, build the campaign, and launch. Simple.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What if my area is already taken?<span class="faq-icon">+</span></button>
+        <div class="faq-a">We can't take you on in that territory. We don't make exceptions — the exclusivity is the product. Check availability now and we'll confirm your postcode area on the call.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section section-pad" id="cta">
+  <div class="container">
+    <span class="eyebrow-white">Ready?</span>
+    <h2 class="section-h2">Ready to Fill Your Pipeline?</h2>
+    <p>Book a 20-minute call. We'll confirm your area is available and walk through exactly how the system works for your market.</p>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">📅 Book Your Call →</a>
+    <div class="cta-note">No pitch. No hard sell. If it's not a fit, we'll tell you.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <img src="logo.png" alt="KaizenEvol" />
+      KaizenEvol
+    </a>
+    <nav class="footer-nav">
+      <a href="#how">How It Works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="footer-right">
+      <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a><br>
+      © 2026 KaizenEvol
+    </div>
+  </div>
+</footer>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Mobile menu
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileOverlay = document.getElementById('mobileOverlay');
+  const mobilePanel = document.getElementById('mobilePanel');
+  const mobileClose = document.getElementById('mobileClose');
+
+  function openMenu() {
+    mobileOverlay.style.display = 'block';
+    mobilePanel.style.display = 'flex';
+    requestAnimationFrame(() => {
+      mobileOverlay.classList.add('open');
+      mobilePanel.classList.add('open');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobileOverlay.classList.remove('open');
+    mobilePanel.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      mobileOverlay.style.display = 'none';
+      mobilePanel.style.display = 'none';
+    }, 300);
+  }
+  hamburgerBtn.addEventListener('click', openMenu);
+  mobileClose.addEventListener('click', closeMenu);
+  mobileOverlay.addEventListener('click', closeMenu);
+  mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+</script>
+</body>
+</html>
