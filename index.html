@@ -255,11 +255,10 @@
 
     /* AI ADVANTAGE */
     .ai-section { background: var(--bg-tint); }
-    .ai-inner {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 64px; align-items: start; margin-top: 48px;
+    .ai-mechs {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 16px; margin-top: 48px;
     }
-    .ai-mechs { display: flex; flex-direction: column; gap: 16px; }
     .ai-mech {
       background: #fff; border-radius: var(--radius);
       padding: 24px 28px; display: flex; gap: 16px; align-items: flex-start;
@@ -268,21 +267,6 @@
     .ai-mech-icon { font-size: 24px; flex-shrink: 0; }
     .ai-mech-text strong { display: block; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
     .ai-mech-text p { font-size: 13px; color: var(--muted); line-height: 1.65; }
-    .ai-metrics {
-      background: linear-gradient(160deg, var(--purple-dark) 0%, var(--purple) 100%);
-      border-radius: var(--radius); padding: 40px; color: #fff;
-    }
-    .ai-metrics-title {
-      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-      text-transform: uppercase; color: #c4a8ff; margin-bottom: 28px;
-    }
-    .metric-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.12);
-    }
-    .metric-row:last-child { border-bottom: none; }
-    .metric-label { font-size: 14px; color: rgba(255,255,255,0.75); }
-    .metric-val { font-size: 24px; font-weight: 800; color: #fff; }
 
     /* PRICING */
     .pricing-section { background: #fff; }
@@ -425,7 +409,7 @@
       .hamburger { display: flex; }
       .problem-grid { grid-template-columns: 1fr; }
       .process-grid { grid-template-columns: 1fr; }
-      .ai-inner { grid-template-columns: 1fr; }
+      .ai-mechs { grid-template-columns: 1fr; }
       .pricing-grid { grid-template-columns: 1fr; }
       .excl-inner { grid-template-columns: 1fr; }
       .about-inner { grid-template-columns: 1fr; }
@@ -576,8 +560,7 @@
   <div class="container">
     <span class="eyebrow">Why It Works</span>
     <h2 class="section-h2">Built for One Niche.<br><em>Tuned by AI.</em></h2>
-    <div class="ai-inner">
-      <div class="ai-mechs">
+    <div class="ai-mechs">
         <div class="ai-mech">
           <div class="ai-mech-icon">🎯</div>
           <div class="ai-mech-text">
@@ -607,30 +590,6 @@
           </div>
         </div>
       </div>
-      <div class="ai-metrics">
-        <div class="ai-metrics-title">Benchmark Performance</div>
-        <div class="metric-row">
-          <span class="metric-label">Time to First Lead</span>
-          <span class="metric-val">7 days</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Min. Project Value</span>
-          <span class="metric-val">£5,000</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Target Leads/Month</span>
-          <span class="metric-val">8–12</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Booked Calls/Month</span>
-          <span class="metric-val">4–6</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Closed Clients/Month</span>
-          <span class="metric-val">2+</span>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
