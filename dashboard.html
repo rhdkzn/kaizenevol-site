@@ -154,7 +154,50 @@
     .comm-total-label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
     .comm-total-val { font-size:20px; font-weight:800; color:var(--amber); }
     .comm-total-val.paid { color:var(--green); }
-    @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 16px;}.stat-v{font-size:24px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}}
+    /* ── CLIENT PIPELINE ── */
+    .pipeline-track { display:flex; flex-direction:column; gap:20px; }
+    .pipe-client { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px 24px; box-shadow:var(--shadow); }
+    .pipe-client-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; gap:12px; flex-wrap:wrap; }
+    .pipe-client-name { font-size:15px; font-weight:700; }
+    .pipe-stage-label { font-size:11px; font-weight:700; padding:4px 12px; border-radius:var(--radius-pill); }
+    .psl-onboarding { background:rgba(56,189,248,0.15); color:#38bdf8; }
+    .psl-live       { background:rgba(139,92,246,0.18); color:#a78bfa; }
+    .psl-optimising { background:rgba(244,114,182,0.15); color:#f472b6; }
+    .psl-conversion { background:rgba(245,158,11,0.2);  color:#fbbf24; }
+    .psl-retainer   { background:rgba(34,197,94,0.15);  color:#4ade80; }
+    .psl-inactive   { background:rgba(156,163,175,0.1); color:#9ca3af; }
+    .pipe-stages { display:flex; align-items:center; gap:0; margin-bottom:18px; }
+    .pipe-stage-node { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; }
+    .pipe-stage-node::before { content:''; position:absolute; top:11px; left:-50%; width:100%; height:2px; background:var(--border); z-index:0; }
+    .pipe-stage-node:first-child::before { display:none; }
+    .pipe-node-dot { width:22px; height:22px; border-radius:50%; border:2px solid var(--border); background:var(--bg); z-index:1; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:800; transition:all .3s; }
+    .pipe-node-dot.done { background:var(--purple); border-color:var(--purple); }
+    .pipe-node-dot.done::after { content:'✓'; color:#fff; }
+    .pipe-node-dot.active { background:var(--purple); border-color:var(--purple); box-shadow:0 0 0 4px rgba(139,92,246,0.25); }
+    .pipe-node-dot.active::after { content:'●'; color:#fff; font-size:8px; }
+    .pipe-node-dot.alert { background:var(--amber); border-color:var(--amber); box-shadow:0 0 0 4px rgba(245,158,11,0.25); }
+    .pipe-node-dot.alert::after { content:'!'; color:#fff; font-size:11px; font-weight:900; }
+    .pipe-node-dot.retainer-dot { background:var(--green); border-color:var(--green); box-shadow:0 0 0 4px rgba(34,197,94,0.2); }
+    .pipe-node-dot.retainer-dot::after { content:'✓'; color:#fff; }
+    .pipe-stage-name { font-size:9px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); margin-top:6px; text-align:center; }
+    .pipe-stage-node.active .pipe-stage-name { color:var(--purple); }
+    .pipe-stage-node.alert-node .pipe-stage-name { color:var(--amber); }
+    .pipe-stage-node.retainer-node .pipe-stage-name { color:var(--green); }
+    .pipe-stage-node.done-node .pipe-stage-name { color:var(--muted); }
+    .pipe-stage-node.active::before,.pipe-stage-node.done-node::before { background:var(--purple); }
+    .pipe-stage-node.retainer-node::before { background:var(--green); }
+    .pipe-progress-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .pipe-progress-bar { flex:1; min-width:120px; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+    .pipe-progress-fill { height:100%; border-radius:3px; transition:width .4s ease; }
+    .pipe-progress-fill.normal { background:var(--purple); }
+    .pipe-progress-fill.alert  { background:var(--amber); }
+    .pipe-progress-fill.done   { background:var(--green); }
+    .pipe-progress-meta { font-size:12px; color:var(--muted); white-space:nowrap; }
+    .pipe-next-action { margin-top:14px; padding:12px 14px; background:var(--bg); border-radius:var(--radius-sm); border-left:3px solid var(--purple); font-size:12px; color:var(--text); line-height:1.5; }
+    .pipe-next-action.alert-action { border-left-color:var(--amber); }
+    .pipe-next-action.green-action { border-left-color:var(--green); }
+    .pipe-next-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+    @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 16px;}.stat-v{font-size:24px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}.pipe-stage-name{font-size:8px;}.pipe-node-dot{width:18px;height:18px;}}
   </style>
 </head>
 <body>
@@ -185,6 +228,7 @@
   </header>
   <main class="dash-main">
     <section><div class="section-label">Overview</div><div class="stats-row" id="statsRow"></div></section>
+    <section><div class="section-label">Client Pipeline</div><div class="pipeline-track" id="pipelineTrack"></div></section>
     <section><div class="section-label">Clients</div><div id="clientsContainer"></div></section>
     <section><div class="section-label">Commission Tracker</div><div id="commissionContainer"></div></section>
     <div class="bottom-grid">
@@ -272,8 +316,67 @@ function renderStats(data){
 function stClass(s){return{trial:'st-trial',retainer:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
 function stLabel(s){return{trial:'⏱ Trial',retainer:'✓ Retainer',inactive:'○ Inactive'}[s]||s;}
 function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const t=c.status==='trial'?trialDays(c.trialStartDate,c.trialDays):null;const pct=t?Math.min(100,Math.round(t.day/t.total*100)):0;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="trial" ${c.status==='trial'?'selected':''}>Trial</option><option value="retainer" ${c.status==='retainer'?'selected':''}>Retainer</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer Value</div><div class="cf-v">£${(c.retainerValue||3500).toLocaleString()}/mo</div></div></div>${c.status==='trial'?`<div class="trial-section"><div class="trial-bar"><div class="trial-fill" style="width:${pct}%"></div></div><div class="trial-meta"><span>${t?`Day ${t.day} of ${t.total}`:'Set start date below'}</span><span>${t?`${Math.max(0,t.total-t.day+1)} days remaining`:''}</span></div></div><div class="date-row"><span class="date-lbl">Trial start date:</span><input type="date" class="date-inp" value="${c.trialStartDate||''}" onchange="setTrialStart('${c.id}',this.value)" /></div>`:''}</div>`;}).join('');}
-function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderStats(d);renderClients(d);}}
-function setTrialStart(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.trialStartDate=date;save(d);renderStats(d);renderClients(d);}}
+function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderStats(d);renderClientPipeline(d);renderClients(d);}}
+function setTrialStart(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.trialStartDate=date;save(d);renderStats(d);renderClientPipeline(d);renderClients(d);}}
+const PIPE_STAGES=[
+  {key:'onboarding', label:'Onboarding'},
+  {key:'live',       label:'Campaign Live'},
+  {key:'optimising', label:'Optimising'},
+  {key:'conversion', label:'Conversion Due'},
+  {key:'retainer',   label:'Retainer'}
+];
+function getClientStage(c){
+  if(c.status==='inactive')return{key:'inactive',label:'Inactive',day:0,daysLeft:0,pct:0};
+  if(c.status==='retainer')return{key:'retainer',label:'Retainer',day:60,daysLeft:0,pct:100};
+  if(!c.trialStartDate)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};
+  const t=trialDays(c.trialStartDate,c.trialDays||60);
+  if(!t)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};
+  const day=t.day; const total=t.total; const left=Math.max(0,total-day+1);
+  const pct=Math.min(100,Math.round(day/total*100));
+  if(day>=55)return{key:'conversion',label:'Conversion Due',day,daysLeft:left,pct};
+  if(day>=31)return{key:'optimising',label:'Optimising',day,daysLeft:left,pct};
+  return{key:'live',label:'Campaign Live',day,daysLeft:left,pct};
+}
+function getNextAction(stageKey,daysLeft,clientName){
+  const n=clientName.split(' ')[0];
+  switch(stageKey){
+    case 'onboarding': return{text:`Set ${n}'s trial start date to begin campaign tracking.`,cls:''};
+    case 'live':       return{text:`Campaign running. Monitor daily spend and early lead quality. ${daysLeft} days to optimisation phase.`,cls:''};
+    case 'optimising': return{text:`Cut underperformers, scale winners. Start building retainer case. ${daysLeft} days to conversion conversation.`,cls:''};
+    case 'conversion': return{text:`Book retainer conversion call with ${n} — ${daysLeft} day(s) remaining on trial.`,cls:'alert-action'};
+    case 'retainer':   return{text:`${n} is on retainer. Focus on results, retention, and case study.`,cls:'green-action'};
+    default:           return{text:'',cls:''};
+  }
+}
+function renderClientPipeline(data){
+  const el=document.getElementById('pipelineTrack');
+  const active=data.clients.filter(c=>c.status!=='inactive');
+  if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;">No active clients.</div>';return;}
+  el.innerHTML=active.map(c=>{
+    const s=getClientStage(c);
+    const stageIdx=PIPE_STAGES.findIndex(p=>p.key===s.key);
+    const action=getNextAction(s.key,s.daysLeft,c.name);
+    const fillCls=s.key==='conversion'?'alert':s.key==='retainer'?'done':'normal';
+    const stageLabelCls=`psl-${s.key==='inactive'?'inactive':s.key}`;
+    const nodes=PIPE_STAGES.map((p,i)=>{
+      let dotCls=''; let nodeCls='';
+      if(i<stageIdx){dotCls='done';nodeCls='done-node';}
+      else if(i===stageIdx){
+        if(s.key==='conversion'){dotCls='alert';nodeCls='alert-node';}
+        else if(s.key==='retainer'){dotCls='retainer-dot';nodeCls='retainer-node';}
+        else{dotCls='active';nodeCls='active';}
+      }
+      return`<div class="pipe-stage-node ${nodeCls}"><div class="pipe-node-dot ${dotCls}"></div><div class="pipe-stage-name">${p.label}</div></div>`;
+    }).join('');
+    const progressRow=s.key!=='onboarding'&&s.key!=='inactive'?`<div class="pipe-progress-row"><div class="pipe-progress-bar"><div class="pipe-progress-fill ${fillCls}" style="width:${s.pct}%"></div></div><div class="pipe-progress-meta">${s.key==='retainer'?'Converted ✓':`Day ${s.day} / ${c.trialDays||60} &mdash; ${s.daysLeft} days left`}</div></div>`:'';
+    return`<div class="pipe-client">
+      <div class="pipe-client-header"><div class="pipe-client-name">${esc(c.name)}</div><span class="pipe-stage-label ${stageLabelCls}">${s.label}</span></div>
+      <div class="pipe-stages">${nodes}</div>
+      ${progressRow}
+      ${action.text?`<div class="pipe-next-action ${action.cls}"><div class="pipe-next-label">Next Action</div>${esc(action.text)}</div>`:''}
+    </div>`;
+  }).join('');
+}
 function renderCommission(data){
   if(!data.commission)data.commission={jobs:[]};
   const jobs=data.commission.jobs||[];
@@ -320,7 +423,7 @@ function setPipeStage(i,s){const d=load();d.pipeline[i].stage=s;save(d);renderPi
 function delProspect(i){const d=load();d.pipeline.splice(i,1);save(d);renderPipeline(d);}
 let notesTimer=null;
 function scheduleNoteSave(){clearTimeout(notesTimer);notesTimer=setTimeout(()=>{const d=load();d.notes=document.getElementById('notesArea').value;save(d);const el=document.getElementById('notesSaved');el.textContent='Saved.';setTimeout(()=>{el.textContent='';},1800);},700);}
-function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderClients(d);renderCommission(d);renderTasks(d);renderPipeline(d);document.getElementById('notesArea').value=d.notes||'';}
+function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderClientPipeline(d);renderClients(d);renderCommission(d);renderTasks(d);renderPipeline(d);document.getElementById('notesArea').value=d.notes||'';}
 tryAutoLogin();
 </script>
 </body>
