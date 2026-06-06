@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KaizenEvol — Leads & CRM</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; background: #0d0b18; color: #f0eeff; min-height: 100vh; line-height: 1.5; }
+    a { text-decoration: none; color: inherit; }
+    :root {
+      --purple:      #8B5CF6;
+      --purple-d:    #6D3FC0;
+      --purple-l:    rgba(139,92,246,0.15);
+      --purple-m:    rgba(139,92,246,0.28);
+      --bg:          #0d0b18;
+      --surface:     #16122a;
+      --border:      #2c2448;
+      --text:        #f0eeff;
+      --muted:       #7a6fa8;
+      --green:       #22c55e;
+      --amber:       #f59e0b;
+      --red:         #f87171;
+      --radius:      12px;
+      --radius-sm:   8px;
+      --radius-pill: 9999px;
+      --shadow:      0 2px 20px rgba(0,0,0,0.45);
+    }
+    #gate { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,#0d0b18 0%,#13102a 60%,#1a1438 100%); padding:24px; }
+    .gate-card { background:var(--surface); border-radius:20px; padding:48px 40px; width:100%; max-width:400px; box-shadow:0 8px 40px rgba(109,63,192,0.14); text-align:center; }
+    .gate-logo { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:28px; }
+    .gate-badge { width:48px; height:48px; border-radius:11px; object-fit:contain; }
+    .gate-logo-name { font-size:22px; font-weight:700; }
+    .gate-title { font-size:18px; font-weight:700; margin-bottom:6px; }
+    .gate-sub { font-size:13px; color:var(--muted); margin-bottom:28px; }
+    .gate-input { width:100%; padding:13px 16px; border:2px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:15px; outline:none; transition:border-color .2s; margin-bottom:12px; background:var(--bg); color:var(--text); }
+    .gate-input:focus { border-color:var(--purple); }
+    .gate-input.error { border-color:var(--red); }
+    .gate-input:disabled { opacity:0.5; cursor:not-allowed; }
+    .gate-btn { width:100%; padding:13px; background:var(--purple); color:#fff; border:none; border-radius:var(--radius-pill); font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:opacity .2s,transform .15s; }
+    .gate-btn:hover:not(:disabled) { opacity:.88; transform:translateY(-1px); }
+    .gate-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .gate-err { color:var(--red); font-size:13px; margin-top:10px; min-height:18px; }
+    .gate-lockout { color:var(--amber); font-size:13px; margin-top:6px; min-height:18px; }
+    #app { display:none; }
+    .dash-header { position:sticky; top:0; z-index:100; background:var(--surface); border-bottom:1px solid var(--border); padding:0 32px; }
+    .dash-header-inner { max-width:1240px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:58px; gap:16px; }
+    .dash-logo { display:flex; align-items:center; gap:9px; font-weight:700; font-size:15px; }
+    .dash-badge { width:32px; height:32px; border-radius:7px; object-fit:contain; }
+    .dash-nav { display:flex; align-items:center; gap:4px; }
+    .dash-nav-link { font-size:13px; font-weight:600; color:var(--muted); padding:6px 13px; border-radius:var(--radius-pill); transition:color .2s,background .2s; }
+    .dash-nav-link:hover { color:var(--text); background:var(--purple-l); }
+    .dash-nav-link.active { color:var(--purple); background:var(--purple-l); }
+    .dash-header-right { display:flex; align-items:center; gap:12px; }
+    .dash-date { font-size:12px; color:var(--muted); font-weight:500; }
+    .btn-logout { font-size:12px; font-weight:600; color:var(--muted); background:none; border:1.5px solid var(--border); border-radius:var(--radius-pill); padding:5px 13px; cursor:pointer; font-family:'Poppins',sans-serif; transition:color .2s,border-color .2s; }
+    .btn-logout:hover { color:var(--red); border-color:var(--red); }
+    .main { max-width:1240px; margin:0 auto; padding:28px 32px 72px; display:flex; flex-direction:column; gap:24px; }
+    .section-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--purple); margin-bottom:14px; }
+    .card { background:var(--surface); border-radius:var(--radius); padding:22px 24px; box-shadow:var(--shadow); border:1px solid var(--border); }
+    .stats-row { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+    .stat-card { background:var(--surface); border-radius:var(--radius); padding:18px 20px; border:1px solid var(--border); }
+    .stat-card.highlight { background:var(--purple); border-color:var(--purple); }
+    .stat-l { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+    .highlight .stat-l { color:rgba(255,255,255,.65); }
+    .stat-v { font-size:26px; font-weight:800; color:var(--text); line-height:1; }
+    .highlight .stat-v { color:#fff; }
+    .stat-s { font-size:11px; color:var(--muted); margin-top:3px; }
+    .highlight .stat-s { color:rgba(255,255,255,.65); }
+    .form-toggle { display:flex; align-items:center; justify-content:space-between; }
+    .form-toggle-btn { font-size:13px; font-weight:700; background:var(--purple); color:#fff; border:none; border-radius:var(--radius-pill); padding:8px 18px; cursor:pointer; font-family:'Poppins',sans-serif; transition:opacity .2s; }
+    .form-toggle-btn:hover { opacity:.88; }
+    .add-form { display:none; margin-top:18px; }
+    .add-form.open { display:block; }
+    .form-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:12px; }
+    .form-grid-wide { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    .f-group { display:flex; flex-direction:column; gap:4px; }
+    .f-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
+    .f-input,.f-select,.f-textarea { width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:13px; outline:none; transition:border-color .2s; background:var(--bg); color:var(--text); }
+    .f-input:focus,.f-select:focus,.f-textarea:focus { border-color:var(--purple); }
+    .f-textarea { resize:vertical; min-height:72px; }
+    .form-actions { display:flex; gap:10px; }
+    .btn-save { padding:10px 24px; background:var(--purple); color:#fff; border:none; border-radius:var(--radius-pill); font-family:'Poppins',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:opacity .2s; }
+    .btn-save:hover { opacity:.88; }
+    .btn-cancel { padding:10px 20px; background:none; color:var(--muted); border:1.5px solid var(--border); border-radius:var(--radius-pill); font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:color .2s,border-color .2s; }
+    .btn-cancel:hover { color:var(--text); border-color:var(--muted); }
+    .filter-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .search-inp { padding:8px 14px; border:1.5px solid var(--border); border-radius:var(--radius-pill); font-family:'Poppins',sans-serif; font-size:13px; outline:none; background:var(--bg); color:var(--text); min-width:220px; transition:border-color .2s; }
+    .search-inp:focus { border-color:var(--purple); }
+    .filter-pills { display:flex; gap:6px; flex-wrap:wrap; }
+    .fpill { font-size:12px; font-weight:600; padding:5px 13px; border-radius:var(--radius-pill); border:1.5px solid var(--border); color:var(--muted); background:none; cursor:pointer; font-family:'Poppins',sans-serif; transition:all .2s; }
+    .fpill:hover { border-color:var(--purple); color:var(--purple); }
+    .fpill.active { background:var(--purple); border-color:var(--purple); color:#fff; }
+    .sort-sel { padding:7px 10px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:12px; outline:none; background:var(--surface); color:var(--text); cursor:pointer; margin-left:auto; }
+    .leads-list { display:flex; flex-direction:column; gap:10px; }
+    .lead-card { background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius); padding:16px 18px; transition:border-color .2s; }
+    .lead-card:hover { border-color:var(--purple-m); }
+    .lead-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .lead-name { font-size:15px; font-weight:700; }
+    .lead-owner { font-size:12px; color:var(--muted); margin-top:2px; }
+    .lead-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .stage-sel { padding:4px 8px; border:1.5px solid var(--border); border-radius:6px; font-family:'Poppins',sans-serif; font-size:11px; font-weight:700; outline:none; background:var(--surface); color:var(--text); cursor:pointer; }
+    .lead-del { font-size:18px; color:var(--muted); cursor:pointer; background:none; border:none; opacity:0.4; transition:opacity .2s,color .2s; }
+    .lead-del:hover { opacity:1; color:var(--red); }
+    .lead-meta { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:10px; }
+    .lm { display:flex; flex-direction:column; gap:2px; }
+    .lm-l { font-size:10px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); }
+    .lm-v { font-size:12px; color:var(--text); font-weight:500; }
+    .lm-v a { color:var(--purple); }
+    .lm-v a:hover { opacity:.8; }
+    .lead-dates { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+    .ld { display:flex; align-items:center; gap:6px; }
+    .ld-l { font-size:11px; color:var(--muted); white-space:nowrap; }
+    .ld-inp { padding:4px 9px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-size:12px; font-family:'Poppins',sans-serif; outline:none; background:var(--surface); color:var(--text); transition:border-color .2s; }
+    .ld-inp:focus { border-color:var(--purple); }
+    .lead-notes-row { display:flex; align-items:flex-start; gap:8px; margin-top:6px; }
+    .lead-notes-inp { flex:1; padding:7px 10px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:12px; color:var(--text); background:var(--surface); outline:none; resize:none; min-height:48px; transition:border-color .2s; }
+    .lead-notes-inp:focus { border-color:var(--purple); }
+    .notes-save-btn { padding:7px 13px; background:var(--purple-l); color:var(--purple); border:1.5px solid var(--purple-m); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:background .2s; white-space:nowrap; }
+    .notes-save-btn:hover { background:var(--purple-m); }
+    .source-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--radius-pill); background:var(--purple-l); color:var(--purple); }
+    .stage-badge { font-size:10px; font-weight:700; padding:3px 9px; border-radius:var(--radius-pill); }
+    .sg-new       { background:rgba(56,189,248,0.15);  color:#38bdf8; }
+    .sg-contacted { background:rgba(245,158,11,0.15);  color:#fbbf24; }
+    .sg-call      { background:rgba(244,114,182,0.15); color:#f472b6; }
+    .sg-proposal  { background:rgba(139,92,246,0.15);  color:#a78bfa; }
+    .sg-won       { background:rgba(34,197,94,0.15);   color:#4ade80; }
+    .sg-lost      { background:rgba(248,113,113,0.15); color:#f87171; }
+    .empty-msg { font-size:13px; color:var(--muted); text-align:center; padding:36px 0; }
+    @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);}.form-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:640px){.stats-row{grid-template-columns:repeat(2,1fr);}.form-grid{grid-template-columns:1fr;}.form-grid-wide{grid-template-columns:1fr;}.main{padding:18px 16px 56px;}.dash-header{padding:0 16px;}}
+  </style>
+</head>
+<body>
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-logo"><img src="logo.png" alt="KaizenEvol" class="gate-badge" /><span class="gate-logo-name">KaizenEvol</span></div>
+    <div class="gate-title">Leads &amp; CRM</div>
+    <div class="gate-sub">Private access only. Enter your password.</div>
+    <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" />
+    <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock &rarr;</button>
+    <div class="gate-err" id="gateErr"></div>
+    <div class="gate-lockout" id="gateLockout"></div>
+  </div>
+</div>
+<div id="app">
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <a href="dashboard.html" class="dash-logo"><img src="logo.png" alt="KaizenEvol" class="dash-badge" />KaizenEvol</a>
+      <nav class="dash-nav">
+        <a href="dashboard.html" class="dash-nav-link">Dashboard</a>
+        <a href="leads.html" class="dash-nav-link active">Leads &amp; CRM</a>
+      </nav>
+      <div class="dash-header-right">
+        <span class="dash-date" id="headerDate"></span>
+        <button class="btn-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </header>
+  <main class="main">
+    <section>
+      <div class="section-label">Overview</div>
+      <div class="stats-row" id="statsRow"></div>
+    </section>
+    <section class="card">
+      <div class="form-toggle">
+        <div class="section-label" style="margin-bottom:0">Add New Lead</div>
+        <button class="form-toggle-btn" id="toggleFormBtn" onclick="toggleForm()">+ New Lead</button>
+      </div>
+      <div class="add-form" id="addForm">
+        <div class="form-grid">
+          <div class="f-group"><div class="f-label">Business Name *</div><input class="f-input" id="fBusiness" placeholder="e.g. Smith's Kitchens" /></div>
+          <div class="f-group"><div class="f-label">Owner / Contact Name</div><input class="f-input" id="fOwner" placeholder="e.g. John Smith" /></div>
+          <div class="f-group"><div class="f-label">Area / Location</div><input class="f-input" id="fArea" placeholder="e.g. Manchester" /></div>
+          <div class="f-group"><div class="f-label">Phone</div><input class="f-input" id="fPhone" placeholder="e.g. 07700 900000" /></div>
+          <div class="f-group"><div class="f-label">Email</div><input class="f-input" id="fEmail" type="email" placeholder="e.g. john@smithkitchens.co.uk" /></div>
+          <div class="f-group"><div class="f-label">Source</div><select class="f-select" id="fSource"><option>Facebook Ad</option><option>Instagram</option><option>Referral</option><option>Cold Outreach</option><option>Website</option><option>Other</option></select></div>
+        </div>
+        <div class="form-grid-wide">
+          <div class="f-group"><div class="f-label">Stage</div><select class="f-select" id="fStage"><option value="new">New Lead</option><option value="contacted">Contacted</option><option value="call">Call Booked</option><option value="proposal">Proposal Sent</option><option value="won">Won</option><option value="lost">Lost</option></select></div>
+          <div class="f-group"><div class="f-label">Notes</div><textarea class="f-textarea" id="fNotes" placeholder="Any initial notes..."></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-save" onclick="saveLead()">Save Lead</button>
+          <button class="btn-cancel" onclick="toggleForm()">Cancel</button>
+        </div>
+      </div>
+    </section>
+    <section class="card">
+      <div class="section-label">All Leads</div>
+      <div class="filter-bar" style="margin-bottom:16px;">
+        <input type="text" class="search-inp" id="searchInp" placeholder="Search name, area, email..." oninput="renderLeads()" />
+        <div class="filter-pills">
+          <button class="fpill active" onclick="setFilter('all',this)">All</button>
+          <button class="fpill" onclick="setFilter('new',this)">New</button>
+          <button class="fpill" onclick="setFilter('contacted',this)">Contacted</button>
+          <button class="fpill" onclick="setFilter('call',this)">Call Booked</button>
+          <button class="fpill" onclick="setFilter('proposal',this)">Proposal</button>
+          <button class="fpill" onclick="setFilter('won',this)">Won</button>
+          <button class="fpill" onclick="setFilter('lost',this)">Lost</button>
+        </div>
+        <select class="sort-sel" id="sortSel" onchange="renderLeads()"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A-Z</option><option value="followup">Follow-up date</option></select>
+      </div>
+      <div class="leads-list" id="leadsList"></div>
+    </section>
+  </main>
+</div>
+<script>
+  const PW_SALT='0f45e8c98a23269130d1d1704e0e135f',PW_HASH='6f853cb4d060884a4dd3949c23fdb519ad8d8fac70ce9d27d0824a52a2a39350',PW_ITER=200000,SESSION_KEY='ke_session',LEADS_KEY='ke_leads',LOCKOUT_KEY='ke_lockout',SESSION_TTL=864e5,IDLE_TTL=18e5,MAX_ATT=5,LOCKOUT_TTL=18e5;
+  let activeFilter='all';
+  async function pbkdf2Hash(pw){const enc=new TextEncoder();const km=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(PW_SALT),iterations:PW_ITER,hash:'SHA-256'},km,256);return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+  function getLockout(){try{return JSON.parse(localStorage.getItem(LOCKOUT_KEY)||'{}');}catch(e){return {};}}
+  function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
+  function remainingLockout(){const l=getLockout();return Math.max(0,Math.ceil((l.until-Date.now())/60000));}
+  function recordFail(){const l=getLockout();const a=(l.attempts||0)+1;const u=a>=MAX_ATT?Date.now()+LOCKOUT_TTL:null;localStorage.setItem(LOCKOUT_KEY,JSON.stringify({attempts:a,until:u}));return a;}
+  function clearLockout(){localStorage.removeItem(LOCKOUT_KEY);}
+  function applyLockoutUI(){const i=document.getElementById('gateInput'),b=document.getElementById('gateBtn'),e=document.getElementById('gateLockout');if(isLockedOut()){i.disabled=b.disabled=true;e.textContent=`Too many attempts. Try again in ${remainingLockout()} minute(s).`;setTimeout(applyLockoutUI,30000);}else{i.disabled=b.disabled=false;e.textContent='';}}
+  let idleTimer=null;
+  function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();document.getElementById('gateLockout').textContent='Session expired.';},IDLE_TTL);}
+  function startIdle(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
+  function stopIdle(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
+  async function attemptLogin(){if(isLockedOut()){applyLockoutUI();return;}const pw=document.getElementById('gateInput').value;if(!pw)return;const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';const hash=await pbkdf2Hash(pw);btn.textContent='Unlock →';if(hash===PW_HASH){clearLockout();localStorage.setItem(SESSION_KEY,JSON.stringify({hash,expires:Date.now()+SESSION_TTL}));showApp();}else{const a=recordFail();const inp=document.getElementById('gateInput');inp.classList.add('error');const err=document.getElementById('gateErr');if(isLockedOut()){err.textContent='';applyLockoutUI();}else{const l=MAX_ATT-a;err.textContent=l>0?`Incorrect. ${l} attempt(s) remaining.`:'Incorrect password.';}inp.value='';btn.disabled=false;setTimeout(()=>{inp.classList.remove('error');err.textContent='';},2400);}}
+  function tryAutoLogin(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');if(s.hash===PW_HASH&&s.expires>Date.now()){showApp();return;}}catch(e){}applyLockoutUI();}
+  function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);document.getElementById('app').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
+  function showApp(){document.getElementById('gate').style.display='none';document.getElementById('app').style.display='block';startIdle();init();}
+  document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
+  function loadLeads(){try{return JSON.parse(localStorage.getItem(LEADS_KEY)||'[]');}catch(e){return [];}}
+  function saveLeads(arr){localStorage.setItem(LEADS_KEY,JSON.stringify(arr));}
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+  const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
+  const STAGE_CLS={new:'sg-new',contacted:'sg-contacted',call:'sg-call',proposal:'sg-proposal',won:'sg-won',lost:'sg-lost'};
+  function toggleForm(){const f=document.getElementById('addForm'),b=document.getElementById('toggleFormBtn');f.classList.toggle('open');b.textContent=f.classList.contains('open')?'− Cancel':'+ New Lead';}
+  function saveLead(){const biz=document.getElementById('fBusiness').value.trim();if(!biz){document.getElementById('fBusiness').focus();return;}const lead={id:uid(),business:biz,owner:document.getElementById('fOwner').value.trim(),area:document.getElementById('fArea').value.trim(),phone:document.getElementById('fPhone').value.trim(),email:document.getElementById('fEmail').value.trim(),source:document.getElementById('fSource').value,stage:document.getElementById('fStage').value,notes:document.getElementById('fNotes').value.trim(),lastContact:'',followUp:'',createdAt:Date.now()};const arr=loadLeads();arr.unshift(lead);saveLeads(arr);['fBusiness','fOwner','fArea','fPhone','fEmail','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStage').value='new';toggleForm();renderStats();renderLeads();}
+  function deleteLead(id){if(!confirm('Delete this lead?'))return;saveLeads(loadLeads().filter(l=>l.id!==id));renderStats();renderLeads();}
+  function updateLeadField(id,field,val){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(l){l[field]=val;saveLeads(arr);}if(field==='stage'){renderStats();renderLeads();}}
+  function saveLeadNotes(id){const val=document.getElementById('ln_'+id).value;updateLeadField(id,'notes',val);const btn=document.getElementById('lnb_'+id);if(btn){btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save';},1600);}}
+  function setFilter(stage,el){activeFilter=stage;document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLeads();}
+  function renderStats(){const arr=loadLeads();const c={new:0,contacted:0,call:0,proposal:0,won:0,lost:0};arr.forEach(l=>{if(c[l.stage]!==undefined)c[l.stage]++;});const total=arr.length;const conv=total>0?Math.round(c.won/total*100):0;document.getElementById('statsRow').innerHTML=`<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">${total}</div><div class="stat-s">All time</div></div><div class="stat-card"><div class="stat-l">New</div><div class="stat-v">${c.new}</div><div class="stat-s">Awaiting contact</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">${c.contacted}</div><div class="stat-s">In conversation</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">${c.call}</div><div class="stat-s">Discovery scheduled</div></div><div class="stat-card highlight"><div class="stat-l">Won</div><div class="stat-v">${c.won}</div><div class="stat-s">Closed clients</div></div><div class="stat-card"><div class="stat-l">Conv. Rate</div><div class="stat-v">${conv}%</div><div class="stat-s">Won / Total</div></div>`;}
+  function renderLeads(){const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone).toLowerCase().includes(search));if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});const el=document.getElementById('leadsList');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>`<div class="lead-card"><div class="lead-top"><div><div class="lead-name">${esc(l.business)}</div><div class="lead-owner">${esc(l.owner)||'&mdash;'}</div></div><div class="lead-right"><span class="stage-badge ${STAGE_CLS[l.stage]||''}">${STAGE_LABEL[l.stage]||l.stage}</span><select class="stage-sel" onchange="updateLeadField('${l.id}','stage',this.value)">${Object.entries(STAGE_LABEL).map(([v,lab])=>`<option value="${v}" ${l.stage===v?'selected':''}>${lab}</option>`).join('')}</select><button class="lead-del" onclick="deleteLead('${l.id}')">&#215;</button></div></div><div class="lead-meta">${l.area?`<div class="lm"><div class="lm-l">Area</div><div class="lm-v">${esc(l.area)}</div></div>`:''} ${l.phone?`<div class="lm"><div class="lm-l">Phone</div><div class="lm-v"><a href="tel:${esc(l.phone)}">${esc(l.phone)}</a></div></div>`:''} ${l.email?`<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></div></div>`:''}<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">${esc(l.source)}</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">${new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="${esc(l.lastContact)}" onchange="updateLeadField('${l.id}','lastContact',this.value)" /></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="${esc(l.followUp)}" onchange="updateLeadField('${l.id}','followUp',this.value)" /></div></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_${l.id}" placeholder="Notes...">${esc(l.notes)}</textarea><button class="notes-save-btn" id="lnb_${l.id}" onclick="saveLeadNotes('${l.id}')">Save</button></div></div>`).join('');}
+  function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});renderStats();renderLeads();}
+  tryAutoLogin();
+</script>
+</body>
+</html>
