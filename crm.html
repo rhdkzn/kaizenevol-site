@@ -271,16 +271,21 @@
     .send-status{font-size:12px;font-weight:600;}
     .send-status.ok{color:var(--green);}
     .send-status.err{color:var(--red);}
-    .outreach-queue{display:flex;flex-direction:column;gap:8px;}
-    .oq-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);flex-wrap:wrap;}
-    .oq-name{font-size:13px;font-weight:700;flex:1;min-width:140px;}
-    .oq-area{font-size:11px;color:var(--muted);}
-    .oq-email-inp{padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:12px;outline:none;background:var(--surface);color:var(--text);min-width:200px;flex:1;transition:border-color .2s;}
+    .oq-scroll{max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;padding-right:4px;}
+    .oq-scroll::-webkit-scrollbar{width:3px;}
+    .oq-scroll::-webkit-scrollbar-track{background:transparent;}
+    .oq-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+    .oq-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);}
+    .oq-info{flex:1;min-width:0;}
+    .oq-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .oq-meta{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .oq-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .oq-email-inp{padding:5px 9px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:11px;outline:none;background:var(--surface);color:var(--text);width:170px;transition:border-color .2s;}
     .oq-email-inp:focus{border-color:var(--purple);}
-    .oq-send-btn{padding:6px 16px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s;}
+    .oq-send-btn{padding:5px 14px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s;}
     .oq-send-btn:hover:not(:disabled){opacity:.88;}
     .oq-send-btn:disabled{opacity:.45;cursor:not-allowed;}
-    .oq-sent-badge{font-size:11px;font-weight:700;color:var(--green);padding:4px 10px;background:rgba(34,197,94,0.12);border-radius:var(--radius-pill);}
+    .oq-sent-badge{font-size:10px;font-weight:700;color:var(--green);padding:3px 8px;background:rgba(34,197,94,0.12);border-radius:var(--radius-pill);white-space:nowrap;flex-shrink:0;}
     @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);}.form-grid{grid-template-columns:1fr 1fr;}.tmpl-grid{grid-template-columns:1fr;}}
     @media(max-width:640px){.stats-row{grid-template-columns:repeat(2,1fr);}.form-grid{grid-template-columns:1fr;}.form-grid-wide{grid-template-columns:1fr;}.main{padding:18px 16px 56px;}.dash-header{padding:0 12px;}.pipe-stage-name{font-size:8px;}.pipe-node-dot{width:18px;height:18px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}.dash-date{display:none;}.dash-nav-link{padding:5px 9px;font-size:12px;}.btn-logout{padding:5px 10px;font-size:11px;}.dash-header-inner{gap:8px;}}
   </style>
@@ -407,8 +412,11 @@
           <button onclick="closeCompose()" style="margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-family:'Poppins',sans-serif;font-size:13px;padding:0">Cancel</button>
         </div>
       </div>
-      <div class="section-label" style="margin-top:16px">Outreach Queue</div>
-      <div class="outreach-queue" id="outreachQueue"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:8px">
+        <div class="section-label" style="margin:0">Outreach Queue</div>
+        <span id="queueCount" style="font-size:11px;color:var(--muted)"></span>
+      </div>
+      <div class="oq-scroll" id="outreachQueue"></div>
     </section>
 
     <!-- ALL LEADS -->
@@ -664,9 +672,9 @@ const RESEND_KEY='re_jkywUd22_8kksqepyWRxG3LVm3Lr1vTpN';
 const FROM_EMAIL='rahaid@mail.kaizenevol.com';
 const EMAIL_MAX=40;
 const EMAIL_TEMPLATES=[
-  {id:'initial',name:'Initial Outreach',subject:'Quick question about {{business_name}}',body:'Hi,\n\nI came across {{business_name}} while looking at kitchen remodelling businesses in {{area}}.\n\nI run a lead generation system built specifically for kitchen remodellers — we get 2 qualified, booked clients a month, minimum £5,000 project value, guaranteed.\n\nWorth a 10-minute call this week to see if it\'s a fit?\n\nRahaid\nKaizenEvol'},
-  {id:'followup1',name:'Follow-up 1 (Day 3)',subject:'Still worth a chat? — {{business_name}}',body:'Hi,\n\nJust following up on my email from a few days ago.\n\nI know you\'re busy running {{business_name}} — just wanted to check if you had 10 minutes for a quick call about adding more qualified kitchen remodelling leads to your pipeline.\n\nNo obligations. Happy to jump on a call whenever suits.\n\nRahaid\nKaizenEvol'},
-  {id:'followup2',name:'Follow-up 2 (Day 7)',subject:'Last one — {{business_name}}',body:'Hi,\n\nThis is my last message — I don\'t want to clog your inbox.\n\nIf adding 2+ qualified clients a month on a performance basis is something you\'d consider for {{business_name}}, I\'m here whenever the timing\'s right.\n\nRahaid\nKaizenEvol'}
+  {id:'initial',name:'Initial Outreach',subject:'Quick question, {{business_name}}',body:'Hi,\n\nQuick one — are you currently running any ads to get kitchen remodelling enquiries, or is it mostly word of mouth?\n\nI ask because I run a system built specifically for kitchen remodellers in {{area}}. We book 2+ qualified enquiries a month — minimum £5k project value — and handle everything so you don\'t have to touch a thing.\n\nWorth a 15-minute call to see if there\'s a fit?\n\nRahaid\nKaizenEvol'},
+  {id:'followup1',name:'Follow-up 1 (Day 3)',subject:'Re: Quick question, {{business_name}}',body:'Hi,\n\nJust following up on my last message.\n\nIf lead flow isn\'t a priority right now, no problem — just let me know and I\'ll leave you alone.\n\nBut if you\'d want more qualified kitchen remodelling enquiries coming in each month without the hassle, I\'d love to show you how it works. 15 minutes, straight conversation.\n\nRahaid\nKaizenEvol'},
+  {id:'followup2',name:'Follow-up 2 (Day 7)',subject:'Last one — {{business_name}}',body:'Hi,\n\nThis is my last email — I don\'t want to clog up your inbox.\n\nIf you ever want to talk about getting more booked kitchen remodelling clients in {{area}}, I\'m here.\n\nRahaid\nKaizenEvol'}
 ];
 let selectedTmplId=null,composeLeadId=null;
 function loadEmail(){try{return JSON.parse(localStorage.getItem(EMAIL_KEY)||'{}')}catch(e){return{}}}
@@ -681,7 +689,7 @@ function selectTemplate(id){selectedTmplId=id;renderTemplates();if(composeLeadId
 function openCompose(leadId){composeLeadId=leadId;if(!selectedTmplId)selectedTmplId='initial';renderTemplates();const lead=loadLeads().find(l=>l.id===leadId);if(!lead)return;const tmpl=EMAIL_TEMPLATES.find(t=>t.id===selectedTmplId);if(!tmpl)return;document.getElementById('composeSubject').value=mergeTmpl(tmpl.subject,lead);document.getElementById('composeBody').value=mergeTmpl(tmpl.body,lead);document.getElementById('composeTo').innerHTML='To: <strong>'+(lead.email?esc(lead.email):'<span style="color:var(--amber)">No email on file — add below</span>')+'</strong>&ensp;·&ensp;'+esc(lead.business);document.getElementById('sendStatus').textContent='';const box=document.getElementById('composeBox');box.classList.add('open');box.scrollIntoView({behavior:'smooth',block:'nearest'});}
 function closeCompose(){document.getElementById('composeBox').classList.remove('open');document.getElementById('sendStatus').textContent='';composeLeadId=null;}
 async function sendEmail(){const today=getSentToday();if(today>=EMAIL_MAX){document.getElementById('sendStatus').textContent='Daily limit reached ('+today+'/'+EMAIL_MAX+').';document.getElementById('sendStatus').className='send-status err';return;}const lead=loadLeads().find(l=>l.id===composeLeadId);if(!lead||!lead.email){document.getElementById('sendStatus').textContent='Add an email address to this lead first.';document.getElementById('sendStatus').className='send-status err';return;}const subject=document.getElementById('composeSubject').value.trim();const body=document.getElementById('composeBody').value.trim();if(!subject||!body){document.getElementById('sendStatus').textContent='Subject and body required.';document.getElementById('sendStatus').className='send-status err';return;}const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent='Sending…';document.getElementById('sendStatus').textContent='';try{const resp=await fetch('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+RESEND_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'Rahaid @ KaizenEvol <'+FROM_EMAIL+'>',to:[lead.email],subject,text:body})});const d=await resp.json();if(!resp.ok)throw new Error(d.message||('Status '+resp.status));incrementSent();markLeadEmailed(composeLeadId,selectedTmplId);updateLeadField(composeLeadId,'stage','contacted');updateLeadField(composeLeadId,'lastContact',new Date().toISOString().slice(0,10));document.getElementById('sendStatus').textContent='Sent ✓';document.getElementById('sendStatus').className='send-status ok';renderOutreachQueue();renderLeadStats();renderLeads();setTimeout(closeCompose,1800);}catch(e){document.getElementById('sendStatus').textContent='Failed: '+e.message;document.getElementById('sendStatus').className='send-status err';}btn.disabled=false;btn.textContent='Send';}
-function renderOutreachQueue(){const leads=loadLeads().filter(l=>l.stage==='new'||l.stage==='contacted');const e=loadEmail();const el=document.getElementById('outreachQueue');if(!leads.length){el.innerHTML='<div class="empty-msg">No leads in queue. Run a scrape first.</div>';return;}const atLimit=getSentToday()>=EMAIL_MAX;el.innerHTML=leads.map(l=>{const hist=(e.history||{})[l.id]||[];const lastSent=hist.length?new Date(hist[hist.length-1].sentAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'';const sentBadge=hist.length?'<span class="oq-sent-badge">'+hist.length+' sent</span>':'';return'<div class="oq-row"><div style="flex:1;min-width:140px"><div class="oq-name">'+esc(l.business)+'</div><div class="oq-area">'+esc(l.area||'—')+(lastSent?' · Last sent '+lastSent:'')+'</div></div>'+sentBadge+'<input type="email" class="oq-email-inp" placeholder="Email address" value="'+esc(l.email||'')+'" onblur="saveQueueEmail(\''+l.id+'\',this.value)" /><button class="oq-send-btn" onclick="openCompose(\''+l.id+'\')"'+(atLimit?' disabled title="Daily limit reached ('+getSentToday()+'/'+EMAIL_MAX+')"':'')+'>Compose</button></div>';}).join('');}
+function renderOutreachQueue(){const leads=loadLeads().filter(l=>l.stage==='new'||l.stage==='contacted');const e=loadEmail();const el=document.getElementById('outreachQueue');const countEl=document.getElementById('queueCount');if(countEl)countEl.textContent=leads.length+' lead'+(leads.length!==1?'s':'');if(!leads.length){el.innerHTML='<div class="empty-msg">No leads in queue. Run a scrape first.</div>';return;}const atLimit=getSentToday()>=EMAIL_MAX;el.innerHTML=leads.map(l=>{const hist=(e.history||{})[l.id]||[];const lastSent=hist.length?new Date(hist[hist.length-1].sentAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'';const sentBadge=hist.length?'<span class="oq-sent-badge">'+hist.length+' sent</span>':'';return'<div class="oq-row"><div class="oq-info"><div class="oq-name">'+esc(l.business)+'</div><div class="oq-meta">'+esc(l.area||'—')+(lastSent?' · Last sent '+lastSent:'')+'</div></div>'+sentBadge+'<input type="email" class="oq-email-inp" placeholder="Add email" value="'+esc(l.email||'')+'" onblur="saveQueueEmail(\''+l.id+'\',this.value)" /><button class="oq-send-btn" onclick="openCompose(\''+l.id+'\')"'+(atLimit?' disabled title="Daily limit reached"':'')+'>Compose</button></div>';}).join('');}
 function saveQueueEmail(id,val){updateLeadField(id,'email',val.trim());}
 function initEmail(){document.getElementById('emailSentToday').textContent=getSentToday();renderTemplates();renderOutreachQueue();}
 
