@@ -281,23 +281,31 @@
     .send-status{font-size:12px;font-weight:600;}
     .send-status.ok{color:var(--green);}
     .send-status.err{color:var(--red);}
-    .oq-scroll{max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;padding-right:4px;}
+    .oq-scroll{max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px;}
     .oq-scroll::-webkit-scrollbar{width:3px;}
     .oq-scroll::-webkit-scrollbar-track{background:transparent;}
     .oq-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-    .oq-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);}
+    .oq-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);transition:border-color .2s;}
+    .oq-row:hover{border-color:rgba(139,92,246,0.4);}
+    .oq-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
     .oq-info{flex:1;min-width:0;}
     .oq-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .oq-meta{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .oq-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-    .oq-email-inp{padding:5px 9px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:11px;outline:none;background:var(--surface);color:var(--text);width:170px;transition:border-color .2s;}
+    .oq-meta{font-size:11px;color:var(--muted);}
+    .oq-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .oq-email-inp{padding:5px 9px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:11px;outline:none;background:var(--surface);color:var(--text);width:160px;transition:border-color .2s;}
     .oq-email-inp:focus{border-color:var(--purple);}
     .oq-send-btn{padding:5px 14px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s;}
     .oq-send-btn:hover:not(:disabled){opacity:.88;}
     .oq-send-btn:disabled{opacity:.45;cursor:not-allowed;}
-    .oq-sent-badge{font-size:10px;font-weight:700;color:var(--green);padding:3px 8px;background:rgba(34,197,94,0.12);border-radius:var(--radius-pill);white-space:nowrap;flex-shrink:0;}
+    .oq-sent-badge{font-size:10px;font-weight:700;color:var(--green);padding:2px 7px;background:rgba(34,197,94,0.12);border-radius:var(--radius-pill);white-space:nowrap;flex-shrink:0;}
     @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);}.form-grid{grid-template-columns:1fr 1fr;}.tmpl-grid{grid-template-columns:1fr;}}
-    @media(max-width:640px){.stats-row{grid-template-columns:repeat(2,1fr);}.form-grid{grid-template-columns:1fr;}.form-grid-wide{grid-template-columns:1fr;}.main{padding:18px 16px 56px;}.dash-header{padding:0 12px;}.pipe-stage-name{font-size:8px;}.pipe-node-dot{width:18px;height:18px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}.dash-date{display:none;}.dash-nav-link{padding:5px 9px;font-size:12px;}.btn-logout{padding:5px 10px;font-size:11px;}.dash-header-inner{gap:8px;}}
+    .leads-scroll{max-height:600px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-right:4px;}
+    .leads-scroll::-webkit-scrollbar{width:3px;}
+    .leads-scroll::-webkit-scrollbar-track{background:transparent;}
+    .leads-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+    .leads-count{font-size:11px;color:var(--muted);}
+    @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);}.form-grid{grid-template-columns:1fr 1fr;}.tmpl-grid{grid-template-columns:1fr;}}
+    @media(max-width:640px){.stats-row{grid-template-columns:repeat(2,1fr);}.form-grid{grid-template-columns:1fr;}.form-grid-wide{grid-template-columns:1fr;}.main{padding:18px 16px 56px;}.dash-header{padding:0 12px;}.pipe-stage-name{font-size:8px;}.pipe-node-dot{width:18px;height:18px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}.dash-date{display:none;}.dash-nav-link{padding:5px 9px;font-size:12px;}.btn-logout{padding:5px 10px;font-size:11px;}.dash-header-inner{gap:8px;}.oq-row{flex-wrap:wrap;}.oq-actions{width:100%;padding-left:44px;}.oq-email-inp{flex:1;width:auto !important;}}
   </style>
 </head>
 <body>
@@ -360,45 +368,6 @@
       <div class="stats-row" id="statsRow"></div>
     </section>
 
-    <!-- LEAD SCRAPER -->
-    <section class="card">
-      <div class="section-label">Lead Scraper</div>
-      <div class="scraper-setup">
-        <div class="scraper-row">
-          <div class="f-group" style="flex:2;min-width:240px">
-            <div class="f-label">Target Areas (comma-separated)</div>
-            <input type="text" class="f-input" id="scraperAreas" placeholder="e.g. Manchester, Birmingham, Leeds, Bristol" onblur="saveScraperField('areas',this.value)" />
-          </div>
-          <div class="f-group" style="min-width:170px">
-            <div class="f-label">Auto-scan Interval</div>
-            <select class="f-select" id="scanInterval" onchange="saveScraperField('interval',this.value)">
-              <option value="20">Every 20 min</option>
-              <option value="30">Every 30 min</option>
-              <option value="60">Every 1 hour</option>
-              <option value="120">Every 2 hours</option>
-              <option value="360">Every 6 hours</option>
-              <option value="720">Every 12 hours</option>
-            </select>
-          </div>
-        </div>
-        <div class="scraper-controls">
-          <label class="toggle-wrap">
-            <input type="checkbox" id="autoScanToggle" onchange="toggleAutoScan()" />
-            <span class="toggle-label">Auto-scan while page is open</span>
-          </label>
-          <button class="btn-save" onclick="runScraper()" id="scanBtn">&#9654; Scan Now</button>
-        </div>
-        <div class="scraper-status-bar" id="scraperStatus"></div>
-        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <button class="btn-save" onclick="document.getElementById('jsonFileInp').click()">&#8679; Import prospects.json</button>
-          <input type="file" id="jsonFileInp" accept=".json" style="display:none" onchange="importScraperJSON(event)" />
-          <button class="btn-save" onclick="exportObsidian()" style="background:var(--purple-d)">&#8615; Export to Obsidian</button>
-          <span style="font-size:12px;color:var(--muted)" id="importJsonStatus"></span>
-        </div>
-      </div>
-    </section>
-
-
     <!-- EMAIL OUTREACH -->
     <section class="card">
       <div class="section-label">Email Outreach</div>
@@ -442,9 +411,50 @@
       <div class="oq-scroll" id="outreachQueue"></div>
     </section>
 
+    <!-- LEAD SCRAPER -->
+    <section class="card">
+      <div class="section-label">Lead Scraper</div>
+      <div class="scraper-setup">
+        <div class="scraper-row">
+          <div class="f-group" style="flex:2;min-width:240px">
+            <div class="f-label">Target Areas (comma-separated)</div>
+            <input type="text" class="f-input" id="scraperAreas" placeholder="e.g. Manchester, Birmingham, Leeds, Bristol" onblur="saveScraperField('areas',this.value)" />
+          </div>
+          <div class="f-group" style="min-width:170px">
+            <div class="f-label">Auto-scan Interval</div>
+            <select class="f-select" id="scanInterval" onchange="saveScraperField('interval',this.value)">
+              <option value="20">Every 20 min</option>
+              <option value="30">Every 30 min</option>
+              <option value="60">Every 1 hour</option>
+              <option value="120">Every 2 hours</option>
+              <option value="360">Every 6 hours</option>
+              <option value="720">Every 12 hours</option>
+            </select>
+          </div>
+        </div>
+        <div class="scraper-controls">
+          <label class="toggle-wrap">
+            <input type="checkbox" id="autoScanToggle" onchange="toggleAutoScan()" />
+            <span class="toggle-label">Auto-scan while page is open</span>
+          </label>
+          <button class="btn-save" onclick="runScraper()" id="scanBtn">&#9654; Scan Now</button>
+        </div>
+        <div class="scraper-status-bar" id="scraperStatus"></div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <button class="btn-save" onclick="document.getElementById('jsonFileInp').click()">&#8679; Import prospects.json</button>
+          <input type="file" id="jsonFileInp" accept=".json" style="display:none" onchange="importScraperJSON(event)" />
+          <button class="btn-save" onclick="exportObsidian()" style="background:var(--purple-d)">&#8615; Export to Obsidian</button>
+          <span style="font-size:12px;color:var(--muted)" id="importJsonStatus"></span>
+        </div>
+      </div>
+    </section>
+
     <!-- ALL LEADS -->
     <section class="card">
-      <div class="section-label">All Leads</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div class="section-label" style="margin:0">All Leads</div>
+        <span class="leads-count" id="leadsCount"></span>
+      </div>
       <div class="filter-bar" style="margin-bottom:16px;">
         <input type="text" class="search-inp" id="searchInp" placeholder="Search name, area, email..." oninput="renderLeads()" />
         <div class="filter-pills">
@@ -458,7 +468,7 @@
         </div>
         <select class="sort-sel" id="sortSel" onchange="renderLeads()"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A-Z</option><option value="followup">Follow-up date</option></select>
       </div>
-      <div class="leads-list" id="leadsList"></div>
+      <div class="leads-scroll" id="leadsList"></div>
     </section>
 
   </main>
@@ -688,7 +698,7 @@ function updateLeadField(id,field,val){const arr=loadLeads();const l=arr.find(x=
 function saveLeadNotes(id){const val=document.getElementById('ln_'+id).value;updateLeadField(id,'notes',val);const btn=document.getElementById('lnb_'+id);if(btn){btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save';},1600);}}
 function setFilter(stage,el){activeFilter=stage;document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLeads();}
 function renderLeadStats(){const arr=loadLeads();const c={new:0,contacted:0,call:0,proposal:0,won:0,lost:0};arr.forEach(l=>{if(c[l.stage]!==undefined)c[l.stage]++;});const total=arr.length;const conv=total>0?Math.round(c.won/total*100):0;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+total+'</div><div class="stat-s">All time</div></div><div class="stat-card"><div class="stat-l">New</div><div class="stat-v">'+c.new+'</div><div class="stat-s">Awaiting contact</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+c.contacted+'</div><div class="stat-s">In conversation</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">'+c.call+'</div><div class="stat-s">Discovery scheduled</div></div><div class="stat-card highlight"><div class="stat-l">Won</div><div class="stat-v">'+c.won+'</div><div class="stat-s">Closed clients</div></div><div class="stat-card"><div class="stat-l">Conv. Rate</div><div class="stat-v">'+conv+'%</div><div class="stat-s">Won / Total</div></div>';}
-function renderLeads(){const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone).toLowerCase().includes(search));if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});const el=document.getElementById('leadsList');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>'<div class="lead-card"><div class="lead-top"><div><div class="lead-name">'+esc(l.business)+'</div><div class="lead-owner">'+(esc(l.owner)||'&mdash;')+'</div></div><div class="lead-right"><span class="stage-badge '+(STAGE_CLS[l.stage]||'')+'">'+(STAGE_LABEL[l.stage]||l.stage)+'</span><select class="stage-sel" onchange="updateLeadField(\''+l.id+'\',\'stage\',this.value)">'+Object.entries(STAGE_LABEL).map(([v,lab])=>'<option value="'+v+'"'+(l.stage===v?' selected':'')+'>'+lab+'</option>').join('')+'</select><button class="lead-del" onclick="deleteLead(\''+l.id+'\')">×</button></div></div><div class="lead-meta">'+(l.area?'<div class="lm"><div class="lm-l">Area</div><div class="lm-v">'+esc(l.area)+'</div></div>':'')+(l.phone?'<div class="lm"><div class="lm-l">Phone</div><div class="lm-v"><a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a></div></div>':'')+(l.email?'<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div></div>':'')+'<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">'+esc(l.source)+'</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">'+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="'+esc(l.lastContact)+'" onchange="updateLeadField(\''+l.id+'\',\'lastContact\',this.value)" /></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="'+esc(l.followUp)+'" onchange="updateLeadField(\''+l.id+'\',\'followUp\',this.value)" /></div></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_'+l.id+'" placeholder="Notes...">'+esc(l.notes)+'</textarea><button class="notes-save-btn" id="lnb_'+l.id+'" onclick="saveLeadNotes(\''+l.id+'\')">Save</button></div></div>').join('');}
+function renderLeads(){const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone).toLowerCase().includes(search));if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});const el=document.getElementById('leadsList');const countEl=document.getElementById('leadsCount');if(countEl)countEl.textContent=arr.length+' lead'+(arr.length!==1?'s':'');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>'<div class="lead-card"><div class="lead-top"><div><div class="lead-name">'+esc(l.business)+'</div><div class="lead-owner">'+(esc(l.owner)||'&mdash;')+'</div></div><div class="lead-right"><span class="stage-badge '+(STAGE_CLS[l.stage]||'')+'">'+(STAGE_LABEL[l.stage]||l.stage)+'</span><select class="stage-sel" onchange="updateLeadField(\''+l.id+'\',\'stage\',this.value)">'+Object.entries(STAGE_LABEL).map(([v,lab])=>'<option value="'+v+'"'+(l.stage===v?' selected':'')+'>'+lab+'</option>').join('')+'</select><button class="lead-del" onclick="deleteLead(\''+l.id+'\')">×</button></div></div><div class="lead-meta">'+(l.area?'<div class="lm"><div class="lm-l">Area</div><div class="lm-v">'+esc(l.area)+'</div></div>':'')+(l.phone?'<div class="lm"><div class="lm-l">Phone</div><div class="lm-v"><a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a></div></div>':'')+(l.email?'<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div></div>':'')+'<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">'+esc(l.source)+'</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">'+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="'+esc(l.lastContact)+'" onchange="updateLeadField(\''+l.id+'\',\'lastContact\',this.value)" /></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="'+esc(l.followUp)+'" onchange="updateLeadField(\''+l.id+'\',\'followUp\',this.value)" /></div></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_'+l.id+'" placeholder="Notes...">'+esc(l.notes)+'</textarea><button class="notes-save-btn" id="lnb_'+l.id+'" onclick="saveLeadNotes(\''+l.id+'\')">Save</button></div></div>').join('');}
 
 /* ── EMAIL OUTREACH ── */
 const RESEND_KEY='re_jkywUd22_8kksqepyWRxG3LVm3Lr1vTpN';
@@ -718,7 +728,8 @@ function selectTemplate(id){selectedTmplId=id;renderTemplates();if(composeLeadId
 function openCompose(leadId){composeLeadId=leadId;if(!selectedTmplId)selectedTmplId='initial';renderTemplates();const lead=loadLeads().find(l=>l.id===leadId);if(!lead)return;const tmpl=loadTemplates().find(t=>t.id===selectedTmplId);if(!tmpl)return;document.getElementById('composeSubject').value=mergeTmpl(tmpl.subject,lead);document.getElementById('composeBody').value=mergeTmpl(tmpl.body,lead);document.getElementById('composeTo').innerHTML='To: <strong>'+(lead.email?esc(lead.email):'<span style="color:var(--amber)">No email on file — add below</span>')+'</strong>&ensp;·&ensp;'+esc(lead.business);document.getElementById('sendStatus').textContent='';const box=document.getElementById('composeBox');box.classList.add('open');box.scrollIntoView({behavior:'smooth',block:'nearest'});}
 function closeCompose(){document.getElementById('composeBox').classList.remove('open');document.getElementById('sendStatus').textContent='';composeLeadId=null;}
 async function sendEmail(){const today=getSentToday();if(today>=EMAIL_MAX){document.getElementById('sendStatus').textContent='Daily limit reached ('+today+'/'+EMAIL_MAX+').';document.getElementById('sendStatus').className='send-status err';return;}const lead=loadLeads().find(l=>l.id===composeLeadId);if(!lead||!lead.email){document.getElementById('sendStatus').textContent='Add an email address to this lead first.';document.getElementById('sendStatus').className='send-status err';return;}const subject=document.getElementById('composeSubject').value.trim();const body=document.getElementById('composeBody').value.trim();if(!subject||!body){document.getElementById('sendStatus').textContent='Subject and body required.';document.getElementById('sendStatus').className='send-status err';return;}const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent='Sending…';document.getElementById('sendStatus').textContent='';try{const resp=await fetch('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+RESEND_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'Rahaid @ KaizenEvol <'+FROM_EMAIL+'>',to:[lead.email],subject,text:body})});const d=await resp.json();if(!resp.ok)throw new Error(d.message||('Status '+resp.status));incrementSent();markLeadEmailed(composeLeadId,selectedTmplId);updateLeadField(composeLeadId,'stage','contacted');updateLeadField(composeLeadId,'lastContact',new Date().toISOString().slice(0,10));document.getElementById('sendStatus').textContent='Sent ✓';document.getElementById('sendStatus').className='send-status ok';renderOutreachQueue();renderLeadStats();renderLeads();setTimeout(closeCompose,1800);}catch(e){document.getElementById('sendStatus').textContent='Failed: '+e.message;document.getElementById('sendStatus').className='send-status err';}btn.disabled=false;btn.textContent='Send';}
-function renderOutreachQueue(){const leads=loadLeads().filter(l=>l.stage==='new'||l.stage==='contacted');const e=loadEmail();const el=document.getElementById('outreachQueue');const countEl=document.getElementById('queueCount');if(countEl)countEl.textContent=leads.length+' lead'+(leads.length!==1?'s':'');if(!leads.length){el.innerHTML='<div class="empty-msg">No leads in queue. Run a scrape first.</div>';return;}const atLimit=getSentToday()>=EMAIL_MAX;el.innerHTML=leads.map(l=>{const hist=(e.history||{})[l.id]||[];const lastSent=hist.length?new Date(hist[hist.length-1].sentAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'';const sentBadge=hist.length?'<span class="oq-sent-badge">'+hist.length+' sent</span>':'';return'<div class="oq-row"><div class="oq-info"><div class="oq-name">'+esc(l.business)+'</div><div class="oq-meta">'+esc(l.area||'—')+(lastSent?' · Last sent '+lastSent:'')+'</div></div>'+sentBadge+'<input type="email" class="oq-email-inp" placeholder="Add email" value="'+esc(l.email||'')+'" onblur="saveQueueEmail(\''+l.id+'\',this.value)" /><button class="oq-send-btn" onclick="openCompose(\''+l.id+'\')"'+(atLimit?' disabled title="Daily limit reached"':'')+'>Compose</button></div>';}).join('');}
+const OQ_COLORS=['#8B5CF6','#38bdf8','#f472b6','#4ade80','#f59e0b','#f87171'];
+function renderOutreachQueue(){const leads=loadLeads().filter(l=>l.stage==='new'||l.stage==='contacted');const e=loadEmail();const el=document.getElementById('outreachQueue');const countEl=document.getElementById('queueCount');if(countEl)countEl.textContent=leads.length+' lead'+(leads.length!==1?'s':'');if(!leads.length){el.innerHTML='<div class="empty-msg">No leads in queue. Run a scrape first.</div>';return;}const atLimit=getSentToday()>=EMAIL_MAX;el.innerHTML=leads.map((l,i)=>{const hist=(e.history||{})[l.id]||[];const lastSent=hist.length?new Date(hist[hist.length-1].sentAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'';const sentBadge=hist.length?'<span class="oq-sent-badge">'+hist.length+' sent</span>':'';const col=OQ_COLORS[i%OQ_COLORS.length];const initial=(l.business||'?')[0].toUpperCase();return'<div class="oq-row"><div class="oq-avatar" style="background:'+col+'">'+initial+'</div><div class="oq-info"><div class="oq-name">'+esc(l.business)+'</div><div class="oq-meta">'+esc(l.area||'—')+(lastSent?' · Last sent '+lastSent:'')+'</div></div>'+sentBadge+'<div class="oq-actions"><input type="email" class="oq-email-inp" placeholder="Add email" value="'+esc(l.email||'')+'" onblur="saveQueueEmail(\''+l.id+'\',this.value)" /><button class="oq-send-btn" onclick="openCompose(\''+l.id+'\')"'+(atLimit?' disabled title="Daily limit reached"':'')+'>Compose</button></div></div>';}).join('');}
 function saveQueueEmail(id,val){updateLeadField(id,'email',val.trim());}
 function initEmail(){document.getElementById('emailSentToday').textContent=getSentToday();renderTemplates();renderOutreachQueue();}
 
