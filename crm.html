@@ -251,11 +251,21 @@
     .email-counter-val{font-size:22px;font-weight:800;color:var(--purple);}
     .email-counter-max{color:var(--muted);font-size:13px;}
     .tmpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
-    .tmpl-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:border-color .2s;}
+    .tmpl-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:border-color .2s;position:relative;}
     .tmpl-card:hover,.tmpl-card.selected{border-color:var(--purple);}
     .tmpl-card.selected{background:var(--purple-l);}
-    .tmpl-name{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px;}
+    .tmpl-name{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px;padding-right:22px;}
     .tmpl-subject-preview{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .tmpl-edit-btn{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:4px;line-height:1;transition:color .2s,background .2s;}
+    .tmpl-edit-btn:hover{color:var(--purple);background:var(--purple-l);}
+    .tmpl-edit-panel{background:var(--bg);border:1.5px solid var(--purple);border-radius:var(--radius);padding:16px;margin-bottom:16px;display:none;}
+    .tmpl-edit-panel.open{display:block;}
+    .tmpl-edit-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .tmpl-edit-title{font-size:13px;font-weight:700;color:var(--purple);}
+    .tmpl-reset-btn{font-size:11px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:4px 10px;cursor:pointer;font-family:'Poppins',sans-serif;transition:color .2s,border-color .2s;}
+    .tmpl-reset-btn:hover{color:var(--amber);border-color:var(--amber);}
+    .tmpl-save-btn{padding:8px 22px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+    .tmpl-save-btn:hover{opacity:.88;}
     .compose-box{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;display:none;}
     .compose-box.open{display:block;}
     .compose-subject{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;outline:none;background:var(--surface);color:var(--text);margin-bottom:10px;transition:border-color .2s;}
@@ -402,6 +412,19 @@
       </div>
       <div class="section-label" style="margin-top:4px">Templates</div>
       <div class="tmpl-grid" id="tmplGrid"></div>
+      <div class="tmpl-edit-panel" id="tmplEditPanel">
+        <input type="hidden" id="tmplEditId" />
+        <div class="tmpl-edit-header">
+          <span class="tmpl-edit-title" id="tmplEditTitle"></span>
+          <button class="tmpl-reset-btn" onclick="resetTemplate()">Reset to default</button>
+        </div>
+        <input type="text" class="compose-subject" id="tmplEditSubject" placeholder="Subject line" />
+        <textarea class="compose-body" id="tmplEditBody" placeholder="Email body..." style="min-height:180px"></textarea>
+        <div class="compose-actions" style="margin-top:10px">
+          <button class="tmpl-save-btn" onclick="saveTemplateEdit()">Save template</button>
+          <button onclick="closeTemplateEdit()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-family:'Poppins',sans-serif;font-size:13px;padding:0 8px">Cancel</button>
+        </div>
+      </div>
       <div class="compose-box" id="composeBox">
         <div class="compose-to" id="composeTo" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
         <input type="text" class="compose-subject" id="composeSubject" placeholder="Subject line" />
@@ -679,14 +702,20 @@ const EMAIL_TEMPLATES=[
 let selectedTmplId=null,composeLeadId=null;
 function loadEmail(){try{return JSON.parse(localStorage.getItem(EMAIL_KEY)||'{}')}catch(e){return{}}}
 function saveEmail(e){localStorage.setItem(EMAIL_KEY,JSON.stringify(e));_cloudPush(EMAIL_KEY,e);}
+function loadTemplates(){const e=loadEmail();return(e.templates&&e.templates.length===EMAIL_TEMPLATES.length)?e.templates:EMAIL_TEMPLATES.map(t=>({...t}));}
+function saveTemplates(arr){const e=loadEmail();e.templates=arr;saveEmail(e);}
+function openTemplateEdit(id){const t=loadTemplates().find(x=>x.id===id);if(!t)return;closeCompose();document.getElementById('tmplEditId').value=id;document.getElementById('tmplEditTitle').textContent='Editing: '+t.name;document.getElementById('tmplEditSubject').value=t.subject;document.getElementById('tmplEditBody').value=t.body;document.getElementById('tmplEditPanel').classList.add('open');document.getElementById('tmplEditPanel').scrollIntoView({behavior:'smooth',block:'nearest'});}
+function saveTemplateEdit(){const id=document.getElementById('tmplEditId').value;const subject=document.getElementById('tmplEditSubject').value.trim();const body=document.getElementById('tmplEditBody').value;if(!subject||!body)return;const arr=loadTemplates();const t=arr.find(x=>x.id===id);if(t){t.subject=subject;t.body=body;}saveTemplates(arr);closeTemplateEdit();renderTemplates();}
+function resetTemplate(){const id=document.getElementById('tmplEditId').value;const def=EMAIL_TEMPLATES.find(x=>x.id===id);if(!def)return;document.getElementById('tmplEditSubject').value=def.subject;document.getElementById('tmplEditBody').value=def.body;}
+function closeTemplateEdit(){document.getElementById('tmplEditPanel').classList.remove('open');}
 function getTodayKey(){return new Date().toISOString().slice(0,10);}
 function getSentToday(){const e=loadEmail();return(e.sent||{})[getTodayKey()]||0;}
 function incrementSent(){const e=loadEmail();if(!e.sent)e.sent={};const k=getTodayKey();e.sent[k]=(e.sent[k]||0)+1;saveEmail(e);document.getElementById('emailSentToday').textContent=e.sent[k];}
 function markLeadEmailed(leadId,tmplId){const e=loadEmail();if(!e.history)e.history={};if(!e.history[leadId])e.history[leadId]=[];e.history[leadId].push({tmplId,sentAt:Date.now()});saveEmail(e);}
 function mergeTmpl(str,lead){return str.replace(/\{\{business_name\}\}/g,lead.business||'').replace(/\{\{area\}\}/g,lead.area||'').replace(/\{\{ad_status\}\}/g,lead.notes||'');}
-function renderTemplates(){const el=document.getElementById('tmplGrid');el.innerHTML=EMAIL_TEMPLATES.map(t=>'<div class="tmpl-card'+(selectedTmplId===t.id?' selected':'')+'" onclick="selectTemplate(\''+t.id+'\')"><div class="tmpl-name">'+t.name+'</div><div class="tmpl-subject-preview">'+esc(t.subject)+'</div></div>').join('');}
+function renderTemplates(){const el=document.getElementById('tmplGrid');el.innerHTML=loadTemplates().map(t=>'<div class="tmpl-card'+(selectedTmplId===t.id?' selected':'')+'" onclick="selectTemplate(\''+t.id+'\')"><div class="tmpl-name">'+t.name+'</div><div class="tmpl-subject-preview">'+esc(t.subject)+'</div><button class="tmpl-edit-btn" onclick="event.stopPropagation();openTemplateEdit(\''+t.id+'\')" title="Edit template">✎</button></div>').join('');}
 function selectTemplate(id){selectedTmplId=id;renderTemplates();if(composeLeadId)openCompose(composeLeadId);}
-function openCompose(leadId){composeLeadId=leadId;if(!selectedTmplId)selectedTmplId='initial';renderTemplates();const lead=loadLeads().find(l=>l.id===leadId);if(!lead)return;const tmpl=EMAIL_TEMPLATES.find(t=>t.id===selectedTmplId);if(!tmpl)return;document.getElementById('composeSubject').value=mergeTmpl(tmpl.subject,lead);document.getElementById('composeBody').value=mergeTmpl(tmpl.body,lead);document.getElementById('composeTo').innerHTML='To: <strong>'+(lead.email?esc(lead.email):'<span style="color:var(--amber)">No email on file — add below</span>')+'</strong>&ensp;·&ensp;'+esc(lead.business);document.getElementById('sendStatus').textContent='';const box=document.getElementById('composeBox');box.classList.add('open');box.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function openCompose(leadId){composeLeadId=leadId;if(!selectedTmplId)selectedTmplId='initial';renderTemplates();const lead=loadLeads().find(l=>l.id===leadId);if(!lead)return;const tmpl=loadTemplates().find(t=>t.id===selectedTmplId);if(!tmpl)return;document.getElementById('composeSubject').value=mergeTmpl(tmpl.subject,lead);document.getElementById('composeBody').value=mergeTmpl(tmpl.body,lead);document.getElementById('composeTo').innerHTML='To: <strong>'+(lead.email?esc(lead.email):'<span style="color:var(--amber)">No email on file — add below</span>')+'</strong>&ensp;·&ensp;'+esc(lead.business);document.getElementById('sendStatus').textContent='';const box=document.getElementById('composeBox');box.classList.add('open');box.scrollIntoView({behavior:'smooth',block:'nearest'});}
 function closeCompose(){document.getElementById('composeBox').classList.remove('open');document.getElementById('sendStatus').textContent='';composeLeadId=null;}
 async function sendEmail(){const today=getSentToday();if(today>=EMAIL_MAX){document.getElementById('sendStatus').textContent='Daily limit reached ('+today+'/'+EMAIL_MAX+').';document.getElementById('sendStatus').className='send-status err';return;}const lead=loadLeads().find(l=>l.id===composeLeadId);if(!lead||!lead.email){document.getElementById('sendStatus').textContent='Add an email address to this lead first.';document.getElementById('sendStatus').className='send-status err';return;}const subject=document.getElementById('composeSubject').value.trim();const body=document.getElementById('composeBody').value.trim();if(!subject||!body){document.getElementById('sendStatus').textContent='Subject and body required.';document.getElementById('sendStatus').className='send-status err';return;}const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent='Sending…';document.getElementById('sendStatus').textContent='';try{const resp=await fetch('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+RESEND_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'Rahaid @ KaizenEvol <'+FROM_EMAIL+'>',to:[lead.email],subject,text:body})});const d=await resp.json();if(!resp.ok)throw new Error(d.message||('Status '+resp.status));incrementSent();markLeadEmailed(composeLeadId,selectedTmplId);updateLeadField(composeLeadId,'stage','contacted');updateLeadField(composeLeadId,'lastContact',new Date().toISOString().slice(0,10));document.getElementById('sendStatus').textContent='Sent ✓';document.getElementById('sendStatus').className='send-status ok';renderOutreachQueue();renderLeadStats();renderLeads();setTimeout(closeCompose,1800);}catch(e){document.getElementById('sendStatus').textContent='Failed: '+e.message;document.getElementById('sendStatus').className='send-status err';}btn.disabled=false;btn.textContent='Send';}
 function renderOutreachQueue(){const leads=loadLeads().filter(l=>l.stage==='new'||l.stage==='contacted');const e=loadEmail();const el=document.getElementById('outreachQueue');const countEl=document.getElementById('queueCount');if(countEl)countEl.textContent=leads.length+' lead'+(leads.length!==1?'s':'');if(!leads.length){el.innerHTML='<div class="empty-msg">No leads in queue. Run a scrape first.</div>';return;}const atLimit=getSentToday()>=EMAIL_MAX;el.innerHTML=leads.map(l=>{const hist=(e.history||{})[l.id]||[];const lastSent=hist.length?new Date(hist[hist.length-1].sentAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'';const sentBadge=hist.length?'<span class="oq-sent-badge">'+hist.length+' sent</span>':'';return'<div class="oq-row"><div class="oq-info"><div class="oq-name">'+esc(l.business)+'</div><div class="oq-meta">'+esc(l.area||'—')+(lastSent?' · Last sent '+lastSent:'')+'</div></div>'+sentBadge+'<input type="email" class="oq-email-inp" placeholder="Add email" value="'+esc(l.email||'')+'" onblur="saveQueueEmail(\''+l.id+'\',this.value)" /><button class="oq-send-btn" onclick="openCompose(\''+l.id+'\')"'+(atLimit?' disabled title="Daily limit reached"':'')+'>Compose</button></div>';}).join('');}
