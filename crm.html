@@ -245,7 +245,43 @@
     .sg-lost{background:rgba(248,113,113,0.15);color:#f87171;}
     /* Section divider */
     .section-divider{height:1px;background:var(--border);margin:4px 0;}
-    @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);}.form-grid{grid-template-columns:1fr 1fr;}}
+    /* Email outreach */
+    .email-settings-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);}
+    .email-counter{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;}
+    .email-counter-val{font-size:22px;font-weight:800;color:var(--purple);}
+    .email-counter-max{color:var(--muted);font-size:13px;}
+    .tmpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+    .tmpl-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:border-color .2s;}
+    .tmpl-card:hover,.tmpl-card.selected{border-color:var(--purple);}
+    .tmpl-card.selected{background:var(--purple-l);}
+    .tmpl-name{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px;}
+    .tmpl-subject-preview{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .compose-box{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;display:none;}
+    .compose-box.open{display:block;}
+    .compose-subject{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;outline:none;background:var(--surface);color:var(--text);margin-bottom:10px;transition:border-color .2s;}
+    .compose-subject:focus{border-color:var(--purple);}
+    .compose-body{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;outline:none;background:var(--surface);color:var(--text);resize:vertical;min-height:140px;transition:border-color .2s;line-height:1.6;}
+    .compose-body:focus{border-color:var(--purple);}
+    .compose-actions{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;}
+    .compose-to{font-size:12px;color:var(--muted);}
+    .compose-to strong{color:var(--text);}
+    .send-btn{padding:10px 28px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+    .send-btn:hover:not(:disabled){opacity:.88;}
+    .send-btn:disabled{opacity:.45;cursor:not-allowed;}
+    .send-status{font-size:12px;font-weight:600;}
+    .send-status.ok{color:var(--green);}
+    .send-status.err{color:var(--red);}
+    .outreach-queue{display:flex;flex-direction:column;gap:8px;}
+    .oq-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);flex-wrap:wrap;}
+    .oq-name{font-size:13px;font-weight:700;flex:1;min-width:140px;}
+    .oq-area{font-size:11px;color:var(--muted);}
+    .oq-email-inp{padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:12px;outline:none;background:var(--surface);color:var(--text);min-width:200px;flex:1;transition:border-color .2s;}
+    .oq-email-inp:focus{border-color:var(--purple);}
+    .oq-send-btn{padding:6px 16px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s;}
+    .oq-send-btn:hover:not(:disabled){opacity:.88;}
+    .oq-send-btn:disabled{opacity:.45;cursor:not-allowed;}
+    .oq-sent-badge{font-size:11px;font-weight:700;color:var(--green);padding:4px 10px;background:rgba(34,197,94,0.12);border-radius:var(--radius-pill);}
+    @media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr);}.form-grid{grid-template-columns:1fr 1fr;}.tmpl-grid{grid-template-columns:1fr;}}
     @media(max-width:640px){.stats-row{grid-template-columns:repeat(2,1fr);}.form-grid{grid-template-columns:1fr;}.form-grid-wide{grid-template-columns:1fr;}.main{padding:18px 16px 56px;}.dash-header{padding:0 12px;}.pipe-stage-name{font-size:8px;}.pipe-node-dot{width:18px;height:18px;}.comm-add-row{flex-direction:column;}.comm-table{font-size:12px;}.dash-date{display:none;}.dash-nav-link{padding:5px 9px;font-size:12px;}.btn-logout{padding:5px 10px;font-size:11px;}.dash-header-inner{gap:8px;}}
   </style>
 </head>
@@ -348,6 +384,33 @@
     </section>
 
 
+    <!-- EMAIL OUTREACH -->
+    <section class="card">
+      <div class="section-label">Email Outreach</div>
+      <div class="email-settings-row">
+        <span style="font-size:13px;font-weight:600">From: rahaid@updates.kaizenevol.com</span>
+        <div class="email-counter">
+          <span style="font-size:12px;color:var(--muted)">Sent today</span>
+          <span class="email-counter-val" id="emailSentToday">0</span>
+          <span class="email-counter-max">/ 40</span>
+        </div>
+      </div>
+      <div class="section-label" style="margin-top:4px">Templates</div>
+      <div class="tmpl-grid" id="tmplGrid"></div>
+      <div class="compose-box" id="composeBox">
+        <div class="compose-to" id="composeTo" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
+        <input type="text" class="compose-subject" id="composeSubject" placeholder="Subject line" />
+        <textarea class="compose-body" id="composeBody" placeholder="Email body..."></textarea>
+        <div class="compose-actions">
+          <button class="send-btn" id="sendBtn" onclick="sendEmail()">Send</button>
+          <span class="send-status" id="sendStatus"></span>
+          <button onclick="closeCompose()" style="margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-family:'Poppins',sans-serif;font-size:13px;padding:0">Cancel</button>
+        </div>
+      </div>
+      <div class="section-label" style="margin-top:16px">Outreach Queue</div>
+      <div class="outreach-queue" id="outreachQueue"></div>
+    </section>
+
     <!-- ALL LEADS -->
     <section class="card">
       <div class="section-label">All Leads</div>
@@ -370,7 +433,7 @@
   </main>
 </div>
 <script>
-const PW_HASH='6f853cb4d060884a4dd3949c23fdb519ad8d8fac70ce9d27d0824a52a2a39350',SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',SCRAPER_KEY='ke_scraper',IDLE_TTL=18e5;
+const PW_HASH='6f853cb4d060884a4dd3949c23fdb519ad8d8fac70ce9d27d0824a52a2a39350',SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',SCRAPER_KEY='ke_scraper',EMAIL_KEY='ke_email',IDLE_TTL=18e5;
 let activeFilter='all',idleTimer=null,autoScanTimer=null;
 
 function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();},IDLE_TTL);}
@@ -381,7 +444,7 @@ function showGate(){document.getElementById('gate').style.display='flex';documen
 async function attemptLogin(){const pw=document.getElementById('gateInput').value;if(!pw)return;const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';const hash=await pbkdf2Hash(pw);btn.textContent='Unlock →';if(hash===PW_HASH){localStorage.setItem(SESSION_KEY,JSON.stringify({hash,expires:Date.now()+864e5}));document.getElementById('gate').style.display='none';showApp();}else{const inp=document.getElementById('gateInput');inp.classList.add('error');document.getElementById('gateErr').textContent='Incorrect password.';inp.value='';btn.disabled=false;setTimeout(()=>{inp.classList.remove('error');document.getElementById('gateErr').textContent='';},2400);}}
 async function pbkdf2Hash(pw){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode('0f45e8c98a23269130d1d1704e0e135f'),iterations:200000,hash:'SHA-256'},key,256);return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');}
 function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);showGate();}
-async function showApp(){document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();const[remoteLeads,remoteScraper]=await Promise.all([_cloudPull(LEADS_KEY),_cloudPull(SCRAPER_KEY)]);if(Array.isArray(remoteLeads)&&remoteLeads.length>0){localStorage.setItem(LEADS_KEY,JSON.stringify(remoteLeads));}else if(!remoteLeads){const local=loadLeads();if(local.length>0)_cloudPush(LEADS_KEY,local);}if(remoteScraper&&Object.keys(remoteScraper).length>0){localStorage.setItem(SCRAPER_KEY,JSON.stringify(remoteScraper));}else if(!remoteScraper){_cloudPush(SCRAPER_KEY,loadScraper());}init();}
+async function showApp(){document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();const[remoteLeads,remoteScraper,remoteEmail]=await Promise.all([_cloudPull(LEADS_KEY),_cloudPull(SCRAPER_KEY),_cloudPull(EMAIL_KEY)]);if(Array.isArray(remoteLeads)&&remoteLeads.length>0){localStorage.setItem(LEADS_KEY,JSON.stringify(remoteLeads));}else if(!remoteLeads){const local=loadLeads();if(local.length>0)_cloudPush(LEADS_KEY,local);}if(remoteScraper&&Object.keys(remoteScraper).length>0){localStorage.setItem(SCRAPER_KEY,JSON.stringify(remoteScraper));}else if(!remoteScraper){_cloudPush(SCRAPER_KEY,loadScraper());}if(remoteEmail&&Object.keys(remoteEmail).length>0){localStorage.setItem(EMAIL_KEY,JSON.stringify(remoteEmail));}else if(!remoteEmail){_cloudPush(EMAIL_KEY,loadEmail());}init();}
 
 /* ── DATA ── */
 const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',bookedCalls:'',spend:'',updated:''}},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
@@ -596,6 +659,32 @@ function setFilter(stage,el){activeFilter=stage;document.querySelectorAll('.fpil
 function renderLeadStats(){const arr=loadLeads();const c={new:0,contacted:0,call:0,proposal:0,won:0,lost:0};arr.forEach(l=>{if(c[l.stage]!==undefined)c[l.stage]++;});const total=arr.length;const conv=total>0?Math.round(c.won/total*100):0;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+total+'</div><div class="stat-s">All time</div></div><div class="stat-card"><div class="stat-l">New</div><div class="stat-v">'+c.new+'</div><div class="stat-s">Awaiting contact</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+c.contacted+'</div><div class="stat-s">In conversation</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">'+c.call+'</div><div class="stat-s">Discovery scheduled</div></div><div class="stat-card highlight"><div class="stat-l">Won</div><div class="stat-v">'+c.won+'</div><div class="stat-s">Closed clients</div></div><div class="stat-card"><div class="stat-l">Conv. Rate</div><div class="stat-v">'+conv+'%</div><div class="stat-s">Won / Total</div></div>';}
 function renderLeads(){const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone).toLowerCase().includes(search));if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});const el=document.getElementById('leadsList');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>'<div class="lead-card"><div class="lead-top"><div><div class="lead-name">'+esc(l.business)+'</div><div class="lead-owner">'+(esc(l.owner)||'&mdash;')+'</div></div><div class="lead-right"><span class="stage-badge '+(STAGE_CLS[l.stage]||'')+'">'+(STAGE_LABEL[l.stage]||l.stage)+'</span><select class="stage-sel" onchange="updateLeadField(\''+l.id+'\',\'stage\',this.value)">'+Object.entries(STAGE_LABEL).map(([v,lab])=>'<option value="'+v+'"'+(l.stage===v?' selected':'')+'>'+lab+'</option>').join('')+'</select><button class="lead-del" onclick="deleteLead(\''+l.id+'\')">×</button></div></div><div class="lead-meta">'+(l.area?'<div class="lm"><div class="lm-l">Area</div><div class="lm-v">'+esc(l.area)+'</div></div>':'')+(l.phone?'<div class="lm"><div class="lm-l">Phone</div><div class="lm-v"><a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a></div></div>':'')+(l.email?'<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div></div>':'')+'<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">'+esc(l.source)+'</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">'+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="'+esc(l.lastContact)+'" onchange="updateLeadField(\''+l.id+'\',\'lastContact\',this.value)" /></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="'+esc(l.followUp)+'" onchange="updateLeadField(\''+l.id+'\',\'followUp\',this.value)" /></div></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_'+l.id+'" placeholder="Notes...">'+esc(l.notes)+'</textarea><button class="notes-save-btn" id="lnb_'+l.id+'" onclick="saveLeadNotes(\''+l.id+'\')">Save</button></div></div>').join('');}
 
+/* ── EMAIL OUTREACH ── */
+const RESEND_KEY='re_jkywUd22_8kksqepyWRxG3LVm3Lr1vTpN';
+const FROM_EMAIL='rahaid@updates.kaizenevol.com';
+const EMAIL_MAX=40;
+const EMAIL_TEMPLATES=[
+  {id:'initial',name:'Initial Outreach',subject:'Quick question about {{business_name}}',body:'Hi,\n\nI came across {{business_name}} while looking at kitchen remodelling businesses in {{area}}.\n\nI run a lead generation system built specifically for kitchen remodellers — we get 2 qualified, booked clients a month, minimum £5,000 project value, guaranteed.\n\nWorth a 10-minute call this week to see if it\'s a fit?\n\nRahaid\nKaizenEvol'},
+  {id:'followup1',name:'Follow-up 1 (Day 3)',subject:'Still worth a chat? — {{business_name}}',body:'Hi,\n\nJust following up on my email from a few days ago.\n\nI know you\'re busy running {{business_name}} — just wanted to check if you had 10 minutes for a quick call about adding more qualified kitchen remodelling leads to your pipeline.\n\nNo obligations. Happy to jump on a call whenever suits.\n\nRahaid\nKaizenEvol'},
+  {id:'followup2',name:'Follow-up 2 (Day 7)',subject:'Last one — {{business_name}}',body:'Hi,\n\nThis is my last message — I don\'t want to clog your inbox.\n\nIf adding 2+ qualified clients a month on a performance basis is something you\'d consider for {{business_name}}, I\'m here whenever the timing\'s right.\n\nRahaid\nKaizenEvol'}
+];
+let selectedTmplId=null,composeLeadId=null;
+function loadEmail(){try{return JSON.parse(localStorage.getItem(EMAIL_KEY)||'{}')}catch(e){return{}}}
+function saveEmail(e){localStorage.setItem(EMAIL_KEY,JSON.stringify(e));_cloudPush(EMAIL_KEY,e);}
+function getTodayKey(){return new Date().toISOString().slice(0,10);}
+function getSentToday(){const e=loadEmail();return(e.sent||{})[getTodayKey()]||0;}
+function incrementSent(){const e=loadEmail();if(!e.sent)e.sent={};const k=getTodayKey();e.sent[k]=(e.sent[k]||0)+1;saveEmail(e);document.getElementById('emailSentToday').textContent=e.sent[k];}
+function markLeadEmailed(leadId,tmplId){const e=loadEmail();if(!e.history)e.history={};if(!e.history[leadId])e.history[leadId]=[];e.history[leadId].push({tmplId,sentAt:Date.now()});saveEmail(e);}
+function mergeTmpl(str,lead){return str.replace(/\{\{business_name\}\}/g,lead.business||'').replace(/\{\{area\}\}/g,lead.area||'').replace(/\{\{ad_status\}\}/g,lead.notes||'');}
+function renderTemplates(){const el=document.getElementById('tmplGrid');el.innerHTML=EMAIL_TEMPLATES.map(t=>'<div class="tmpl-card'+(selectedTmplId===t.id?' selected':'')+'" onclick="selectTemplate(\''+t.id+'\')"><div class="tmpl-name">'+t.name+'</div><div class="tmpl-subject-preview">'+esc(t.subject)+'</div></div>').join('');}
+function selectTemplate(id){selectedTmplId=id;renderTemplates();if(composeLeadId)openCompose(composeLeadId);}
+function openCompose(leadId){composeLeadId=leadId;if(!selectedTmplId)selectedTmplId='initial';renderTemplates();const lead=loadLeads().find(l=>l.id===leadId);if(!lead)return;const tmpl=EMAIL_TEMPLATES.find(t=>t.id===selectedTmplId);if(!tmpl)return;document.getElementById('composeSubject').value=mergeTmpl(tmpl.subject,lead);document.getElementById('composeBody').value=mergeTmpl(tmpl.body,lead);document.getElementById('composeTo').innerHTML='To: <strong>'+(lead.email?esc(lead.email):'<span style="color:var(--amber)">No email on file — add below</span>')+'</strong>&ensp;·&ensp;'+esc(lead.business);document.getElementById('sendStatus').textContent='';const box=document.getElementById('composeBox');box.classList.add('open');box.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function closeCompose(){document.getElementById('composeBox').classList.remove('open');document.getElementById('sendStatus').textContent='';composeLeadId=null;}
+async function sendEmail(){const today=getSentToday();if(today>=EMAIL_MAX){document.getElementById('sendStatus').textContent='Daily limit reached ('+today+'/'+EMAIL_MAX+').';document.getElementById('sendStatus').className='send-status err';return;}const lead=loadLeads().find(l=>l.id===composeLeadId);if(!lead||!lead.email){document.getElementById('sendStatus').textContent='Add an email address to this lead first.';document.getElementById('sendStatus').className='send-status err';return;}const subject=document.getElementById('composeSubject').value.trim();const body=document.getElementById('composeBody').value.trim();if(!subject||!body){document.getElementById('sendStatus').textContent='Subject and body required.';document.getElementById('sendStatus').className='send-status err';return;}const btn=document.getElementById('sendBtn');btn.disabled=true;btn.textContent='Sending…';document.getElementById('sendStatus').textContent='';try{const resp=await fetch('https://api.resend.com/emails',{method:'POST',headers:{'Authorization':'Bearer '+RESEND_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'Rahaid @ KaizenEvol <'+FROM_EMAIL+'>',to:[lead.email],subject,text:body})});const d=await resp.json();if(!resp.ok)throw new Error(d.message||('Status '+resp.status));incrementSent();markLeadEmailed(composeLeadId,selectedTmplId);updateLeadField(composeLeadId,'stage','contacted');updateLeadField(composeLeadId,'lastContact',new Date().toISOString().slice(0,10));document.getElementById('sendStatus').textContent='Sent ✓';document.getElementById('sendStatus').className='send-status ok';renderOutreachQueue();renderLeadStats();renderLeads();setTimeout(closeCompose,1800);}catch(e){document.getElementById('sendStatus').textContent='Failed: '+e.message;document.getElementById('sendStatus').className='send-status err';}btn.disabled=false;btn.textContent='Send';}
+function renderOutreachQueue(){const leads=loadLeads().filter(l=>l.stage==='new'||l.stage==='contacted');const e=loadEmail();const el=document.getElementById('outreachQueue');if(!leads.length){el.innerHTML='<div class="empty-msg">No leads in queue. Run a scrape first.</div>';return;}const atLimit=getSentToday()>=EMAIL_MAX;el.innerHTML=leads.map(l=>{const hist=(e.history||{})[l.id]||[];const lastSent=hist.length?new Date(hist[hist.length-1].sentAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'';const sentBadge=hist.length?'<span class="oq-sent-badge">'+hist.length+' sent</span>':'';return'<div class="oq-row"><div style="flex:1;min-width:140px"><div class="oq-name">'+esc(l.business)+'</div><div class="oq-area">'+esc(l.area||'—')+(lastSent?' · Last sent '+lastSent:'')+'</div></div>'+sentBadge+'<input type="email" class="oq-email-inp" placeholder="Email address" value="'+esc(l.email||'')+'" onblur="saveQueueEmail(\''+l.id+'\',this.value)" /><button class="oq-send-btn" onclick="openCompose(\''+l.id+'\')"'+(atLimit?' disabled title="Daily limit reached ('+getSentToday()+'/'+EMAIL_MAX+')"':'')+'>Compose</button></div>';}).join('');}
+function saveQueueEmail(id,val){updateLeadField(id,'email',val.trim());}
+function initEmail(){document.getElementById('emailSentToday').textContent=getSentToday();renderTemplates();renderOutreachQueue();}
+
 function init(){
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
   const d=load();
@@ -606,6 +695,7 @@ function init(){
   initScraper();
   renderLeadStats();
   renderLeads();
+  initEmail();
 }
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
 checkSession();
