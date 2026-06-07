@@ -739,7 +739,9 @@ function renderOutreachQueue(){const leads=loadLeads().filter(l=>l.stage==='new'
 function saveQueueEmail(id,val){updateLeadField(id,'email',val.trim());}
 function initEmail(){document.getElementById('emailSentToday').textContent=getSentToday();renderTemplates();renderOutreachQueue();}
 
+function purgeUSLeads(){const arr=loadLeads();const clean=arr.filter(l=>!l.phone||!/^(\(\d{3}\)|\+1[\s\-])/.test(l.phone.trim()));if(clean.length<arr.length){saveLeads(clean);console.log('Purged '+(arr.length-clean.length)+' US leads');}}
 function init(){
+  purgeUSLeads();
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
   const d=load();
   renderClientPipeline(d);
