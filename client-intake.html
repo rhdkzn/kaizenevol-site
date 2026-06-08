@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KaizenEvol — Client Intake</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Poppins',sans-serif;background:#0d0b18;color:#f0eeff;min-height:100vh;line-height:1.5;}
+    a{text-decoration:none;color:inherit;}
+    :root{
+      --purple:#8B5CF6;--purple-d:#6D3FC0;--purple-l:rgba(139,92,246,0.15);--purple-m:rgba(139,92,246,0.28);
+      --bg:#0d0b18;--surface:#16122a;--border:#2c2448;--text:#f0eeff;--muted:#7a6fa8;
+      --green:#22c55e;--amber:#f59e0b;--red:#f87171;
+      --radius:12px;--radius-sm:8px;--radius-pill:9999px;--shadow:0 2px 20px rgba(0,0,0,0.45);
+    }
+
+    /* ── HEADER ── */
+    .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;}
+    .header-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;height:56px;gap:10px;}
+    .header-badge{width:30px;height:30px;border-radius:7px;object-fit:contain;}
+    .header-name{font-size:15px;font-weight:700;}
+
+    /* ── LAYOUT ── */
+    .page{max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+
+    /* ── HERO ── */
+    .hero{margin-bottom:40px;}
+    .hero-eyebrow{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);background:var(--purple-l);padding:5px 13px;border-radius:var(--radius-pill);margin-bottom:14px;}
+    .hero-title{font-size:26px;font-weight:800;line-height:1.25;letter-spacing:-0.02em;margin-bottom:10px;}
+    .hero-sub{font-size:14px;color:var(--muted);max-width:520px;}
+
+    /* ── PROGRESS ── */
+    .progress-bar{display:flex;align-items:center;gap:0;margin-bottom:36px;}
+    .prog-step{display:flex;align-items:center;gap:8px;flex:1;}
+    .prog-step:last-child{flex:none;}
+    .prog-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);transition:all .3s;flex-shrink:0;}
+    .prog-dot.active{border-color:var(--purple);background:var(--purple);color:#fff;box-shadow:0 0 0 4px rgba(139,92,246,0.2);}
+    .prog-dot.done{border-color:var(--purple);background:var(--purple);color:#fff;}
+    .prog-dot.done::after{content:'✓';font-size:12px;}
+    .prog-dot.done span{display:none;}
+    .prog-label{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;}
+    .prog-label.active{color:var(--text);}
+    .prog-line{flex:1;height:2px;background:var(--border);margin:0 8px;}
+    .prog-line.done{background:var(--purple);}
+
+    /* ── STEPS ── */
+    .step{display:none;}
+    .step.active{display:block;}
+
+    /* ── SECTION ── */
+    .section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:18px;}
+    .card{background:var(--surface);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:20px;}
+
+    /* ── FORM ELEMENTS ── */
+    .field{margin-bottom:20px;}
+    .field:last-child{margin-bottom:0;}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+    label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:0.3px;}
+    label .req{color:var(--purple);}
+    input[type="text"],input[type="email"],input[type="tel"],input[type="url"],input[type="number"],select,textarea{
+      width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+      font-family:'Poppins',sans-serif;font-size:14px;outline:none;transition:border-color .2s;
+      background:var(--bg);color:var(--text);
+    }
+    input::placeholder,textarea::placeholder{color:var(--muted);}
+    select option{background:var(--bg);color:var(--text);}
+    input:focus,select:focus,textarea:focus{border-color:var(--purple);}
+    input.err,select.err,textarea.err{border-color:var(--red);}
+    textarea{resize:vertical;min-height:90px;line-height:1.6;}
+    .field-hint{font-size:11px;color:var(--muted);margin-top:5px;}
+    .field-err{font-size:11px;color:var(--red);margin-top:5px;display:none;}
+    .field-err.show{display:block;}
+
+    /* ── CHECKBOX GROUP ── */
+    .check-group{display:flex;flex-direction:column;gap:9px;}
+    .check-item{display:flex;align-items:center;gap:10px;cursor:pointer;}
+    .check-item input[type="checkbox"]{width:17px;height:17px;accent-color:var(--purple);cursor:pointer;flex-shrink:0;}
+    .check-item span{font-size:13px;color:var(--text);}
+
+    /* ── RADIO GROUP ── */
+    .radio-group{display:flex;flex-direction:column;gap:9px;}
+    .radio-item{display:flex;align-items:center;gap:10px;cursor:pointer;}
+    .radio-item input[type="radio"]{width:17px;height:17px;accent-color:var(--purple);cursor:pointer;flex-shrink:0;}
+    .radio-item span{font-size:13px;color:var(--text);}
+
+    /* ── PILL TOGGLE ── */
+    .pill-group{display:flex;flex-wrap:wrap;gap:8px;}
+    .pill-toggle{position:relative;}
+    .pill-toggle input{position:absolute;opacity:0;width:0;height:0;}
+    .pill-toggle label{
+      display:block;padding:7px 16px;border-radius:var(--radius-pill);border:1.5px solid var(--border);
+      font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;
+      background:transparent;
+    }
+    .pill-toggle input:checked + label{border-color:var(--purple);background:var(--purple-l);color:var(--purple);}
+
+    /* ── RANGE ── */
+    .range-wrap{display:flex;align-items:center;gap:14px;}
+    input[type="range"]{flex:1;accent-color:var(--purple);height:6px;cursor:pointer;}
+    .range-val{font-size:14px;font-weight:700;color:var(--purple);min-width:56px;text-align:right;}
+
+    /* ── BUTTONS ── */
+    .btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:28px;}
+    .btn-row.first{justify-content:flex-end;}
+    .btn-primary{padding:13px 28px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .15s;}
+    .btn-primary:hover{opacity:.88;transform:translateY(-1px);}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+    .btn-ghost{padding:12px 24px;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:color .2s,border-color .2s;}
+    .btn-ghost:hover{color:var(--text);border-color:var(--muted);}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:12px 22px;font-size:13px;font-weight:600;box-shadow:var(--shadow);transition:transform .3s ease;z-index:999;white-space:nowrap;}
+    .toast.show{transform:translateX(-50%) translateY(0);}
+    .toast.success{border-color:var(--green);color:var(--green);}
+    .toast.error{border-color:var(--red);color:var(--red);}
+
+    /* ── SUCCESS STATE ── */
+    #success{display:none;text-align:center;padding:60px 0;}
+    #success.active{display:block;}
+    .success-icon{font-size:52px;margin-bottom:20px;}
+    .success-title{font-size:24px;font-weight:800;margin-bottom:10px;}
+    .success-sub{font-size:14px;color:var(--muted);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:600px){
+      .header{padding:0 16px;}
+      .page{padding:28px 16px 60px;}
+      .field-row,.field-row-3{grid-template-columns:1fr;}
+      .card{padding:20px;}
+      .btn-row{flex-direction:column-reverse;gap:10px;}
+      .btn-ghost,.btn-primary{width:100%;text-align:center;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <img src="logo.png" alt="KaizenEvol" class="header-badge" />
+      <span class="header-name">KaizenEvol</span>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <!-- Hero -->
+    <div class="hero" id="formHero">
+      <span class="hero-eyebrow">Client Onboarding</span>
+      <h1 class="hero-title">Welcome, Navpreet.<br/>Let's get everything set up.</h1>
+      <p class="hero-sub">Takes about 5 minutes. The more detail you give us, the faster we can launch — and the better the results.</p>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progressBar">
+      <div class="prog-step">
+        <div class="prog-dot active" id="dot1"><span>1</span></div>
+        <span class="prog-label active" id="lbl1">Business</span>
+      </div>
+      <div class="prog-line" id="line1"></div>
+      <div class="prog-step">
+        <div class="prog-dot" id="dot2"><span>2</span></div>
+        <span class="prog-label" id="lbl2">Territory</span>
+      </div>
+      <div class="prog-line" id="line2"></div>
+      <div class="prog-step">
+        <div class="prog-dot" id="dot3"><span>3</span></div>
+        <span class="prog-label" id="lbl3">Meta Access</span>
+      </div>
+      <div class="prog-line" id="line3"></div>
+      <div class="prog-step">
+        <div class="prog-dot" id="dot4"><span>4</span></div>
+        <span class="prog-label" id="lbl4">Goals</span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="intakeForm" novalidate>
+
+      <!-- ── STEP 1: Business Details ── -->
+      <div class="step active" id="step1">
+        <p class="section-label">Step 1 of 4 — Business Details</p>
+
+        <div class="card">
+          <div class="field field-row">
+            <div>
+              <label for="ownerName">Full name <span class="req">*</span></label>
+              <input type="text" id="ownerName" name="ownerName" placeholder="Navpreet Singh" value="Navpreet Singh" />
+              <span class="field-err" id="ownerName-err">Required</span>
+            </div>
+            <div>
+              <label for="businessName">Business name <span class="req">*</span></label>
+              <input type="text" id="businessName" name="businessName" placeholder="e.g. Singh Kitchens Ltd" />
+              <span class="field-err" id="businessName-err">Required</span>
+            </div>
+          </div>
+
+          <div class="field field-row">
+            <div>
+              <label for="email">Email <span class="req">*</span></label>
+              <input type="email" id="email" name="email" placeholder="nav@example.com" />
+              <span class="field-err" id="email-err">Valid email required</span>
+            </div>
+            <div>
+              <label for="phone">Phone / WhatsApp <span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone" placeholder="+44 7700 000000" />
+              <span class="field-err" id="phone-err">Required</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="website">Website <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+            <input type="url" id="website" name="website" placeholder="https://yoursite.co.uk" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field">
+            <label>Types of work you take on <span class="req">*</span></label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" name="workTypes" value="full-kitchen-remodel" /><span>Full kitchen remodel</span></label>
+              <label class="check-item"><input type="checkbox" name="workTypes" value="units-fitting" /><span>Units & fitting only</span></label>
+              <label class="check-item"><input type="checkbox" name="workTypes" value="worktops" /><span>Worktops / surfaces</span></label>
+              <label class="check-item"><input type="checkbox" name="workTypes" value="appliances" /><span>Appliances & installation</span></label>
+              <label class="check-item"><input type="checkbox" name="workTypes" value="extensions" /><span>Kitchen extensions / knock-throughs</span></label>
+            </div>
+            <span class="field-err" id="workTypes-err">Select at least one</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field field-row">
+            <div>
+              <label for="avgJobValue">Average job value (£) <span class="req">*</span></label>
+              <input type="number" id="avgJobValue" name="avgJobValue" placeholder="8000" min="1000" />
+              <span class="field-hint">Typical completed project value</span>
+              <span class="field-err" id="avgJobValue-err">Required</span>
+            </div>
+            <div>
+              <label for="yearsTrading">Years trading <span class="req">*</span></label>
+              <select id="yearsTrading" name="yearsTrading">
+                <option value="">Select...</option>
+                <option value="less-1">Less than 1 year</option>
+                <option value="1-3">1–3 years</option>
+                <option value="3-5">3–5 years</option>
+                <option value="5-10">5–10 years</option>
+                <option value="10+">10+ years</option>
+              </select>
+              <span class="field-err" id="yearsTrading-err">Required</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row first">
+          <button type="button" class="btn-primary" onclick="nextStep(1)">Next: Territory &rarr;</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Territory & Current Marketing ── -->
+      <div class="step" id="step2">
+        <p class="section-label">Step 2 of 4 — Territory & Current Marketing</p>
+
+        <div class="card">
+          <div class="field">
+            <label for="serviceArea">Service area / territory <span class="req">*</span></label>
+            <textarea id="serviceArea" name="serviceArea" rows="2" placeholder="e.g. Birmingham, Solihull, Coventry — roughly 30-mile radius from B1"></textarea>
+            <div class="field-hint">Towns, cities, or postcodes you cover. Be specific — this shapes who we target.</div>
+            <span class="field-err" id="serviceArea-err">Required</span>
+          </div>
+
+          <div class="field">
+            <label for="maxTravelMiles">Max travel distance (miles)</label>
+            <div class="range-wrap">
+              <input type="range" id="maxTravelMiles" name="maxTravelMiles" min="5" max="100" value="30" oninput="document.getElementById('milesVal').textContent=this.value+' mi'" />
+              <span class="range-val" id="milesVal">30 mi</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field">
+            <label>Current lead sources <span style="color:var(--muted);font-weight:400;">(tick all that apply)</span></label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" name="leadSources" value="referrals" /><span>Referrals / word of mouth</span></label>
+              <label class="check-item"><input type="checkbox" name="leadSources" value="google" /><span>Google (organic or ads)</span></label>
+              <label class="check-item"><input type="checkbox" name="leadSources" value="facebook-ig" /><span>Facebook / Instagram ads</span></label>
+              <label class="check-item"><input type="checkbox" name="leadSources" value="checkatrade" /><span>Checkatrade / MyBuilder / Rated People</span></label>
+              <label class="check-item"><input type="checkbox" name="leadSources" value="website" /><span>Website (inbound)</span></label>
+              <label class="check-item"><input type="checkbox" name="leadSources" value="none" /><span>No active lead gen currently</span></label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="monthlyLeads">Approximate leads per month currently</label>
+            <select id="monthlyLeads" name="monthlyLeads">
+              <option value="">Select...</option>
+              <option value="0">0 — I rely on referrals</option>
+              <option value="1-5">1–5</option>
+              <option value="5-10">5–10</option>
+              <option value="10-20">10–20</option>
+              <option value="20+">20+</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="currentAdSpend">Current monthly ad spend (£)</label>
+            <input type="number" id="currentAdSpend" name="currentAdSpend" placeholder="0" min="0" />
+            <div class="field-hint">Leave blank or enter 0 if not currently running ads</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn-ghost" onclick="prevStep(2)">&larr; Back</button>
+          <button type="button" class="btn-primary" onclick="nextStep(2)">Next: Meta Access &rarr;</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Meta / Facebook Setup ── -->
+      <div class="step" id="step3">
+        <p class="section-label">Step 3 of 4 — Meta & Facebook Setup</p>
+
+        <div class="card">
+          <div class="field">
+            <label for="fbPageName">Facebook Page name <span class="req">*</span></label>
+            <input type="text" id="fbPageName" name="fbPageName" placeholder="e.g. Singh Kitchens" />
+            <div class="field-hint">The name of your business Facebook Page — not your personal profile</div>
+            <span class="field-err" id="fbPageName-err">Required</span>
+          </div>
+
+          <div class="field">
+            <label for="fbPageUrl">Facebook Page URL</label>
+            <input type="url" id="fbPageUrl" name="fbPageUrl" placeholder="https://www.facebook.com/singkitchens" />
+          </div>
+
+          <div class="field">
+            <label for="igHandle">Instagram handle <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+            <input type="text" id="igHandle" name="igHandle" placeholder="@singkitchens" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field">
+            <label>Do you have a Meta Business Manager / Business Suite account? <span class="req">*</span></label>
+            <div class="radio-group" id="hasBMGroup">
+              <label class="radio-item"><input type="radio" name="hasBusinessManager" value="yes" /><span>Yes</span></label>
+              <label class="radio-item"><input type="radio" name="hasBusinessManager" value="no" /><span>No — I don't have one</span></label>
+              <label class="radio-item"><input type="radio" name="hasBusinessManager" value="unsure" /><span>Not sure</span></label>
+            </div>
+            <span class="field-err" id="hasBusinessManager-err">Please select one</span>
+          </div>
+
+          <div class="field" id="bmIdField" style="display:none;">
+            <label for="bmId">Business Manager ID <span style="color:var(--muted);font-weight:400;">(optional — helps us get access faster)</span></label>
+            <input type="text" id="bmId" name="bmId" placeholder="e.g. 123456789012345" />
+            <div class="field-hint">Find it in Business Settings → Business Info at the top of the page</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field">
+            <label>Do you have a Meta Pixel installed on your website? <span class="req">*</span></label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="hasPixel" value="yes" /><span>Yes, it's live</span></label>
+              <label class="radio-item"><input type="radio" name="hasPixel" value="no" /><span>No</span></label>
+              <label class="radio-item"><input type="radio" name="hasPixel" value="nosite" /><span>I don't have a website</span></label>
+              <label class="radio-item"><input type="radio" name="hasPixel" value="unsure" /><span>Not sure</span></label>
+            </div>
+            <span class="field-err" id="hasPixel-err">Please select one</span>
+          </div>
+
+          <div class="field">
+            <label for="accessNotes">Anything else we should know about your Meta setup?</label>
+            <textarea id="accessNotes" name="accessNotes" rows="2" placeholder="e.g. previously worked with an agency, had a disabled ad account, etc."></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn-ghost" onclick="prevStep(3)">&larr; Back</button>
+          <button type="button" class="btn-primary" onclick="nextStep(3)">Next: Goals &rarr;</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: Goals & Expectations ── -->
+      <div class="step" id="step4">
+        <p class="section-label">Step 4 of 4 — Goals & Expectations</p>
+
+        <div class="card">
+          <div class="field">
+            <label for="monthlyRevenueTarget">Monthly revenue target (£) <span class="req">*</span></label>
+            <input type="number" id="monthlyRevenueTarget" name="monthlyRevenueTarget" placeholder="20000" min="1000" />
+            <div class="field-hint">What would a good month look like in terms of revenue from new jobs?</div>
+            <span class="field-err" id="monthlyRevenueTarget-err">Required</span>
+          </div>
+
+          <div class="field">
+            <label for="newJobsPerMonth">New jobs per month target <span class="req">*</span></label>
+            <select id="newJobsPerMonth" name="newJobsPerMonth">
+              <option value="">Select...</option>
+              <option value="1-2">1–2 (quality over volume)</option>
+              <option value="3-5">3–5</option>
+              <option value="5-10">5–10</option>
+              <option value="10+">10+ (I have the capacity)</option>
+            </select>
+            <span class="field-err" id="newJobsPerMonth-err">Required</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field">
+            <label>How quickly can you respond to a new lead? <span class="req">*</span></label>
+            <div class="pill-group" id="responseSpeedGroup">
+              <div class="pill-toggle"><input type="radio" name="responseSpeed" id="rs1" value="under-1h" /><label for="rs1">Under 1 hour</label></div>
+              <div class="pill-toggle"><input type="radio" name="responseSpeed" id="rs2" value="same-day" /><label for="rs2">Same day</label></div>
+              <div class="pill-toggle"><input type="radio" name="responseSpeed" id="rs3" value="24h" /><label for="rs3">Within 24 hrs</label></div>
+              <div class="pill-toggle"><input type="radio" name="responseSpeed" id="rs4" value="2-3-days" /><label for="rs4">2–3 days</label></div>
+            </div>
+            <span class="field-err" id="responseSpeed-err">Required</span>
+          </div>
+
+          <div class="field">
+            <label>What's your current pipeline capacity? <span class="req">*</span></label>
+            <div class="radio-group">
+              <label class="radio-item"><input type="radio" name="capacity" value="fully-available" /><span>Fully available — actively looking for jobs</span></label>
+              <label class="radio-item"><input type="radio" name="capacity" value="some-gaps" /><span>Some gaps — a few more jobs would be ideal</span></label>
+              <label class="radio-item"><input type="radio" name="capacity" value="near-full" /><span>Near full — planning ahead for next month</span></label>
+              <label class="radio-item"><input type="radio" name="capacity" value="full" /><span>Fully booked — planning beyond that</span></label>
+            </div>
+            <span class="field-err" id="capacity-err">Required</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field">
+            <label for="trialBudget">Agreed monthly ad spend for trial (£)</label>
+            <input type="number" id="trialBudget" name="trialBudget" placeholder="300" value="300" min="0" />
+            <div class="field-hint">Pre-agreed: £300–£500/mo. Change only if discussed.</div>
+          </div>
+
+          <div class="field">
+            <label for="additionalNotes">Anything else we should know?</label>
+            <textarea id="additionalNotes" name="additionalNotes" rows="3" placeholder="Constraints, preferences, past experience with agencies, anything that'll help us get you results faster..."></textarea>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn-ghost" onclick="prevStep(4)">&larr; Back</button>
+          <button type="submit" class="btn-primary" id="submitBtn">Submit Intake Form ✓</button>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- Success -->
+    <div id="success">
+      <div class="success-icon">✅</div>
+      <h2 class="success-title">You're all set, Nav.</h2>
+      <p class="success-sub">We've received everything we need. Rahaid will be in touch within 24 hours to confirm next steps and get access sorted.</p>
+    </div>
+
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    // Show/hide BM ID field based on BM selection
+    document.querySelectorAll('input[name="hasBusinessManager"]').forEach(r => {
+      r.addEventListener('change', () => {
+        document.getElementById('bmIdField').style.display = r.value === 'yes' ? 'block' : 'none';
+      });
+    });
+
+    function showToast(msg, type = 'error') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function updateProgress(step) {
+      for (let i = 1; i <= totalSteps; i++) {
+        const dot = document.getElementById('dot' + i);
+        const lbl = document.getElementById('lbl' + i);
+        dot.className = 'prog-dot';
+        lbl.className = 'prog-label';
+        if (i < step) {
+          dot.className = 'prog-dot done';
+        } else if (i === step) {
+          dot.className = 'prog-dot active';
+          lbl.className = 'prog-label active';
+        }
+      }
+      for (let i = 1; i < totalSteps; i++) {
+        const line = document.getElementById('line' + i);
+        if (line) line.className = i < step ? 'prog-line done' : 'prog-line';
+      }
+    }
+
+    function clearErrors(stepEl) {
+      stepEl.querySelectorAll('.field-err.show').forEach(e => e.classList.remove('show'));
+      stepEl.querySelectorAll('.err').forEach(e => e.classList.remove('err'));
+    }
+
+    function validateStep(step) {
+      const stepEl = document.getElementById('step' + step);
+      clearErrors(stepEl);
+      let valid = true;
+
+      function fail(inputId, errId) {
+        const inp = document.getElementById(inputId);
+        const err = document.getElementById(errId);
+        if (inp) inp.classList.add('err');
+        if (err) err.classList.add('show');
+        valid = false;
+      }
+
+      if (step === 1) {
+        const owner = document.getElementById('ownerName');
+        if (!owner.value.trim()) fail('ownerName', 'ownerName-err');
+        const biz = document.getElementById('businessName');
+        if (!biz.value.trim()) fail('businessName', 'businessName-err');
+        const email = document.getElementById('email');
+        if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) fail('email', 'email-err');
+        const phone = document.getElementById('phone');
+        if (!phone.value.trim()) fail('phone', 'phone-err');
+        const checked = stepEl.querySelectorAll('input[name="workTypes"]:checked');
+        if (checked.length === 0) {
+          document.getElementById('workTypes-err').classList.add('show');
+          valid = false;
+        }
+        const avgJob = document.getElementById('avgJobValue');
+        if (!avgJob.value || parseFloat(avgJob.value) < 1) fail('avgJobValue', 'avgJobValue-err');
+        const years = document.getElementById('yearsTrading');
+        if (!years.value) fail('yearsTrading', 'yearsTrading-err');
+      }
+
+      if (step === 2) {
+        const area = document.getElementById('serviceArea');
+        if (!area.value.trim()) fail('serviceArea', 'serviceArea-err');
+      }
+
+      if (step === 3) {
+        const fbPage = document.getElementById('fbPageName');
+        if (!fbPage.value.trim()) fail('fbPageName', 'fbPageName-err');
+        const bm = document.querySelector('input[name="hasBusinessManager"]:checked');
+        if (!bm) {
+          document.getElementById('hasBusinessManager-err').classList.add('show');
+          valid = false;
+        }
+        const pixel = document.querySelector('input[name="hasPixel"]:checked');
+        if (!pixel) {
+          document.getElementById('hasPixel-err').classList.add('show');
+          valid = false;
+        }
+      }
+
+      if (step === 4) {
+        const rev = document.getElementById('monthlyRevenueTarget');
+        if (!rev.value || parseFloat(rev.value) < 1) fail('monthlyRevenueTarget', 'monthlyRevenueTarget-err');
+        const jobs = document.getElementById('newJobsPerMonth');
+        if (!jobs.value) fail('newJobsPerMonth', 'newJobsPerMonth-err');
+        const rs = document.querySelector('input[name="responseSpeed"]:checked');
+        if (!rs) {
+          document.getElementById('responseSpeed-err').classList.add('show');
+          valid = false;
+        }
+        const cap = document.querySelector('input[name="capacity"]:checked');
+        if (!cap) {
+          document.getElementById('capacity-err').classList.add('show');
+          valid = false;
+        }
+      }
+
+      return valid;
+    }
+
+    function nextStep(from) {
+      if (!validateStep(from)) {
+        showToast('Please fill in the required fields');
+        return;
+      }
+      if (from < totalSteps) {
+        document.getElementById('step' + from).classList.remove('active');
+        document.getElementById('step' + (from + 1)).classList.add('active');
+        currentStep = from + 1;
+        updateProgress(currentStep);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function prevStep(from) {
+      if (from > 1) {
+        document.getElementById('step' + from).classList.remove('active');
+        document.getElementById('step' + (from - 1)).classList.add('active');
+        currentStep = from - 1;
+        updateProgress(currentStep);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function collectFormData() {
+      const fd = new FormData(document.getElementById('intakeForm'));
+      const data = {};
+      fd.forEach((v, k) => {
+        if (data[k]) {
+          data[k] = Array.isArray(data[k]) ? [...data[k], v] : [data[k], v];
+        } else {
+          data[k] = v;
+        }
+      });
+      // Collect checkboxes
+      ['workTypes', 'leadSources'].forEach(name => {
+        data[name] = [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(c => c.value);
+      });
+      data.maxTravelMiles = document.getElementById('maxTravelMiles').value;
+      data.submittedAt = new Date().toISOString();
+      return data;
+    }
+
+    document.getElementById('intakeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateStep(4)) {
+        showToast('Please fill in the required fields');
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      const data = collectFormData();
+      console.log('[KaizenEvol Intake]', JSON.stringify(data, null, 2));
+
+      // POST to webhook if configured; otherwise fall through gracefully
+      const WEBHOOK_URL = window.INTAKE_WEBHOOK_URL || '';
+      if (WEBHOOK_URL) {
+        try {
+          await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+        } catch (err) {
+          console.warn('Webhook post failed:', err);
+        }
+      }
+
+      // Show success
+      document.getElementById('intakeForm').style.display = 'none';
+      document.getElementById('progressBar').style.display = 'none';
+      document.getElementById('formHero').style.display = 'none';
+      document.getElementById('success').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
