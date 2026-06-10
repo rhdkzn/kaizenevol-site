@@ -494,59 +494,6 @@
     .about-bio p { font-size: 16px; color: var(--muted); line-height: 1.75; margin-bottom: 16px; }
     .about-bio p:last-child { margin-bottom: 0; }
 
-    .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-    .faq-item {
-      background: var(--white);
-      border-radius: var(--radius-card);
-      box-shadow: 0 2px 12px rgba(109,63,192,0.06);
-      overflow: hidden;
-    }
-    .faq-q {
-      width: 100%;
-      background: none;
-      border: none;
-      text-align: left;
-      padding: 22px 24px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      transition: color 0.2s;
-    }
-    .faq-q:hover { color: var(--purple); }
-    .faq-q.open { color: var(--purple); }
-    .faq-icon {
-      width: 24px;
-      height: 24px;
-      background: var(--purple-light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: var(--purple);
-      flex-shrink: 0;
-      font-weight: 700;
-      transition: transform 0.25s;
-    }
-    .faq-q.open .faq-icon { transform: rotate(45deg); }
-    .faq-a {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.35s ease;
-      padding: 0 24px;
-    }
-    .faq-a.open {
-      max-height: 400px;
-      padding: 0 24px 22px;
-    }
-    .faq-a p { font-size: 15px; color: var(--muted); line-height: 1.7; }
-
     .final-cta {
       text-align: center;
       padding: 100px 24px;
@@ -645,7 +592,7 @@
       <li><a href="#problem">The Problem</a></li>
       <li><a href="#how-it-works">How It Works</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="#faq">FAQ</a></li>
+      <li><a href="faq.html">FAQ</a></li>
     </ul>
     <a class="btn-primary nav-cta" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
     <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
@@ -659,7 +606,7 @@
   <a href="#problem" class="mobile-link">The Problem</a>
   <a href="#how-it-works" class="mobile-link">How It Works</a>
   <a href="#about" class="mobile-link">About</a>
-  <a href="#faq" class="mobile-link">FAQ</a>
+  <a href="faq.html" class="mobile-link">FAQ</a>
   <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary" style="margin-top:12px;">Book a Call</a>
 </div>
 
@@ -842,41 +789,6 @@
   </div>
 </section>
 
-<section class="section section-tint" id="faq">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="eyebrow">FAQ</div>
-      <h2>Questions We Get <em>Every Time</em></h2>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item reveal">
-        <button class="faq-q">How is this different from what I've tried before?<div class="faq-icon">+</div></button>
-        <div class="faq-a"><p>Most agencies are generalists. They build the same campaign for a kitchen remodeller that they build for a dentist or a gym. We work exclusively with kitchen remodellers in the UK — which means we know your buyers, your objections, and your market before we've even spoken. The campaigns launch in 7 days because there's nothing to learn.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">What if it doesn't work?<div class="faq-icon">+</div></button>
-        <div class="faq-a"><p>If we don't deliver the agreed number of qualified booked kitchen jobs within 60 days, your management fee is waived or refunded. You only cover ad spend — which goes direct to Meta, not through us. The risk sits with us, not with you.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">How long until I see results?<div class="faq-icon">+</div></button>
-        <div class="faq-a"><p>Campaigns are live within 7 days of your strategy call. Most clients see their first qualified enquiries within the first two weeks. The 60-day guarantee window gives us enough time to optimise the campaigns to your specific area and buyer profile.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">Do I need to do anything day-to-day?<div class="faq-icon">+</div></button>
-        <div class="faq-a"><p>No. We handle everything — campaign setup, ad creative, targeting, daily monitoring, weekly optimisation, and reporting. Your only job is to take the calls from qualified homeowners and book the visits. We'll send you a plain-English report every week so you always know what's happening.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">What does it cost?<div class="faq-icon">+</div></button>
-        <div class="faq-a"><p>Pricing is discussed on the strategy call because it depends on your area, average project value, and current pipeline. We offer a commission-based trial for qualified new clients — you only pay when we deliver results. After the trial period, we move to a fixed monthly retainer. Book a call and we'll walk you through the numbers clearly.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">What if my area is already taken?<div class="faq-icon">+</div></button>
-        <div class="faq-a"><p>We take one kitchen remodeller per postcode area. If your territory is already taken by an existing client, we'll tell you on the call. We won't take you on as a second client in the same area — that would undermine the exclusivity guarantee we give every client. If you're on the fence, the best move is to book a call before your competitor does.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="final-cta" id="contact">
   <div class="eyebrow eyebrow-dark" style="margin-bottom:24px;">Ready to Start?</div>
   <h2>Your Competitors Are Running Ads Right Now.<br>Your Area Might Still Be Available.</h2>
@@ -900,7 +812,7 @@
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#why-it-works">Why It Works</a></li>
         <li><a href="#about">About</a></li>
-        <li><a href="#faq">FAQ</a></li>
+        <li><a href="faq.html">FAQ</a></li>
       </ul>
       <div class="footer-right">
         <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a>
@@ -919,19 +831,6 @@
   mobileClose.addEventListener('click',  () => { mobileNav.classList.remove('open'); });
   document.querySelectorAll('.mobile-link').forEach(link => {
     link.addEventListener('click', () => { mobileNav.classList.remove('open'); });
-  });
-
-  document.querySelectorAll('.faq-q').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item   = btn.closest('.faq-item');
-      const answer = item.querySelector('.faq-a');
-      const isOpen = btn.classList.contains('open');
-      document.querySelectorAll('.faq-q').forEach(b => {
-        b.classList.remove('open');
-        b.closest('.faq-item').querySelector('.faq-a').classList.remove('open');
-      });
-      if (!isOpen) { btn.classList.add('open'); answer.classList.add('open'); }
-    });
   });
 
   const revealEls = document.querySelectorAll('.reveal');
