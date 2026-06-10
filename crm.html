@@ -678,7 +678,7 @@ function delJob(i){const d=load();if(!d.commission)return;d.commission.jobs.spli
 const BAD_AD_SIGNALS=['boost post','call us','click here','limited time','act now'];
 const GOOD_AD_SIGNALS=['before','after','transform','free quote','free estimate','results','case study'];
 const _sb=supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
-async async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){console.warn('Supabase push:',e);}}
+async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){console.warn('Supabase push:',e);}}
 async function _cloudPull(key){try{const{data,error}=await _sb.from('app_data').select('data').eq('id',key).single();if(!error&&data){localStorage.setItem(key,JSON.stringify(data.data));return data.data;}}catch(e){}return null;}
 function loadScraper(){try{return JSON.parse(localStorage.getItem(SCRAPER_KEY)||'{}')}catch(e){return{}}}
 function saveScraper(s){localStorage.setItem(SCRAPER_KEY,JSON.stringify(s));_cloudPush(SCRAPER_KEY,s);}
