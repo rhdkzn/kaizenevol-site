@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — KaizenEvol [PREVIEW]</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; color: #111111; background: #ffffff; line-height: 1.65; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    :root {
+      --purple:        #6D3FC0;
+      --purple-light:  #F0EEFF;
+      --purple-mid:    #EDE8FF;
+      --bg-white:      #FFFFFF;
+      --bg-tint:       #F5F3FF;
+      --text-primary:  #111111;
+      --text-secondary:#555555;
+      --radius-card:   20px;
+      --radius-pill:   9999px;
+      --max-w:         900px;
+      --shadow-sm:  0 1px 4px rgba(109,63,192,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:  0 4px 16px rgba(109,63,192,0.10), 0 1px 4px rgba(109,63,192,0.06);
+      --shadow-lg:  0 12px 40px rgba(109,63,192,0.16), 0 4px 12px rgba(109,63,192,0.08);
+      --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .section-pad { padding: 100px 0; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--purple); background: var(--purple-light);
+      padding: 6px 14px; border-radius: var(--radius-pill); margin-bottom: 20px;
+    }
+    .eyebrow-white {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #c4a8ff; background: rgba(196,168,255,0.15);
+      padding: 6px 14px; border-radius: var(--radius-pill); margin-bottom: 20px;
+    }
+    .section-h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--text-primary); line-height: 1.12; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .section-sub { font-size: 17px; color: var(--text-secondary); max-width: 640px; line-height: 1.75; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--purple); color: #fff; font-family: 'Poppins', sans-serif;
+      font-size: 15px; font-weight: 700; padding: 15px 30px;
+      border-radius: var(--radius-pill); border: none; cursor: pointer;
+      transition: opacity .2s var(--ease-out), transform .2s var(--ease-out), box-shadow .2s;
+      white-space: nowrap; box-shadow: 0 4px 16px rgba(109,63,192,0.35);
+    }
+    .btn-primary:hover { opacity: .92; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(109,63,192,0.45); }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #ffffff; color: var(--purple); font-family: 'Poppins', sans-serif;
+      font-size: 15px; font-weight: 700; padding: 15px 30px;
+      border-radius: var(--radius-pill); border: none; cursor: pointer;
+      transition: opacity .2s, transform .2s var(--ease-out), box-shadow .2s;
+      white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    .btn-white:hover { opacity: .92; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.20); }
+    .btn-white:active { transform: scale(0.97); }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 48px); max-width: 880px;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 32px rgba(109,63,192,0.18), 0 1px 4px rgba(109,63,192,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+      z-index: 1000; padding: 0 8px;
+    }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 58px; padding: 0 16px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; color: var(--purple); letter-spacing: -0.02em; }
+    .nav-logo-badge { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 600; color: var(--text-secondary); padding: 7px 13px; border-radius: var(--radius-pill); transition: color .2s, background .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--purple); background: var(--purple-light); }
+    .nav-cta { font-size: 14px; padding: 10px 20px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; border: none; background: none; }
+    .hamburger span { width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all .25s var(--ease-out); }
+
+    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1100; opacity: 0; transition: opacity .3s; backdrop-filter: blur(4px); }
+    .mobile-overlay.open { opacity: 1; }
+    .mobile-panel { position: fixed; top: 0; right: -100%; width: min(320px, 85vw); height: 100dvh; background: #fff; z-index: 1200; padding: 28px 24px; transition: right .3s var(--ease-out); display: flex; flex-direction: column; gap: 8px; box-shadow: -20px 0 60px rgba(109,63,192,0.15); }
+    .mobile-panel.open { right: 0; }
+    .mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .mobile-close { font-size: 24px; background: none; border: none; cursor: pointer; color: var(--text-primary); line-height: 1; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .mobile-close:hover { background: var(--purple-light); }
+    .mobile-panel a { font-size: 16px; font-weight: 600; color: var(--text-primary); padding: 14px 16px; border-radius: 14px; transition: background .2s, color .2s; display: block; }
+    .mobile-panel a:hover { background: var(--purple-light); color: var(--purple); }
+    .mobile-panel .btn-primary { margin-top: 12px; justify-content: center; }
+
+    /* PAGE HERO */
+    .page-hero {
+      background: linear-gradient(160deg, #ffffff 0%, #f5f3ff 55%, #ede8ff 100%);
+      position: relative; overflow: hidden; padding: 148px 24px 88px; text-align: center;
+    }
+    .page-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 500px 300px at 25% 100%, rgba(109,63,192,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 250px at 75% 0%, rgba(109,63,192,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(109,63,192,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(109,63,192,0.05) 1px, transparent 1px);
+      background-size: 48px 48px; pointer-events: none;
+    }
+    .page-hero-content { position: relative; z-index: 1; max-width: var(--max-w); margin: 0 auto; }
+    .page-hero h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 800; color: var(--text-primary); line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 18px; }
+    .page-hero-sub { font-size: clamp(15px, 2vw, 18px); color: var(--text-secondary); max-width: 560px; margin: 0 auto 36px; line-height: 1.75; }
+
+    /* FEATURES */
+    .features-section { background: var(--bg-white); }
+    .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 56px; }
+    .feature-card {
+      background: var(--purple-light); border-radius: var(--radius-card); padding: 32px 28px;
+      transition: transform .25s var(--ease-out), box-shadow .25s, background .25s;
+      position: relative; overflow: hidden; cursor: default;
+      border: 1px solid transparent;
+    }
+    .feature-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--purple) 0%, #5a2ea6 100%);
+      opacity: 0; transition: opacity .3s var(--ease-out);
+    }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-card:hover .feature-title { color: #fff; }
+    .feature-card:hover .feature-desc { color: rgba(255,255,255,0.85); }
+    .feature-icon {
+      width: 52px; height: 52px; margin-bottom: 16px; display: block;
+      position: relative; z-index: 1;
+      transition: transform .25s var(--ease-spring);
+    }
+    .feature-card:hover .feature-icon { transform: scale(1.1) rotate(-5deg); }
+    .feature-title { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 9px; position: relative; z-index: 1; transition: color .25s; }
+    .feature-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; position: relative; z-index: 1; transition: color .25s; }
+
+    /* SYSTEM */
+    .system-section { background: var(--bg-tint); }
+    .system-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 56px; }
+    .system-card {
+      background: #fff; border-radius: var(--radius-card); padding: 36px 32px;
+      border-left: 4px solid var(--purple); position: relative;
+      box-shadow: var(--shadow-sm); border: 1px solid rgba(109,63,192,0.08);
+      border-left: 4px solid var(--purple);
+      transition: transform .25s var(--ease-out), box-shadow .25s;
+    }
+    .system-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .system-num {
+      font-size: 56px; font-weight: 800; line-height: 1; margin-bottom: 10px;
+      letter-spacing: -3px;
+      background: linear-gradient(135deg, rgba(109,63,192,0.12) 0%, rgba(109,63,192,0.03) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .system-title { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
+    .system-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+    /* CTA BANNER */
+    .cta-banner {
+      background: linear-gradient(135deg, #1a0533 0%, #2d1060 40%, var(--purple) 100%);
+      padding: 88px 24px; text-align: center; position: relative; overflow: hidden;
+    }
+    .cta-banner::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(196,168,255,0.15) 0%, transparent 70%);
+    }
+    .cta-banner h2 { font-size: clamp(24px, 3.5vw, 38px); font-weight: 800; color: #fff; margin-bottom: 32px; letter-spacing: -0.02em; position: relative; }
+
+    /* FOOTER */
+    .footer { background: #fff; border-top: 1px solid #f0eeff; padding: 48px 24px; }
+    .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .footer-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; color: var(--purple); letter-spacing: -0.02em; }
+    .footer-logo-badge { width: 32px; height: 32px; border-radius: 7px; object-fit: contain; }
+    .footer-nav { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+    .footer-nav a { font-size: 14px; color: var(--text-secondary); font-weight: 500; padding: 5px 11px; border-radius: var(--radius-pill); transition: color .2s, background .2s; }
+    .footer-nav a:hover { color: var(--purple); background: var(--purple-light); }
+    .footer-right { font-size: 13px; color: var(--text-secondary); text-align: right; line-height: 1.7; }
+    .footer-right a { color: var(--purple); font-weight: 600; }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .55s cubic-bezier(0.16,1,0.3,1), transform .55s cubic-bezier(0.16,1,0.3,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+    @media (max-width: 640px) {
+      .section-pad { padding: 72px 0; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .features-grid, .system-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .footer-right { text-align: left; }
+    }
+    @media (min-width: 641px) { .mobile-overlay, .mobile-panel { display: none !important; } }
+  </style>
+</head>
+<body>
+
+<div style="background:linear-gradient(90deg,#2d1060,#6D3FC0);color:#fff;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;letter-spacing:0.3px;">
+  UI/UX PRO MAX PREVIEW — <a href="services.html" style="color:#c4a8ff;text-decoration:underline;">Back to live site</a>
+</div>
+
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="index-preview.html" class="nav-logo">
+      <img src="logo.png" alt="KaizenEvol" class="nav-logo-badge" onerror="this.style.display='none'" />
+      KaizenEvol
+    </a>
+    <ul class="nav-links">
+      <li><a href="index-preview.html#how-it-works">How It Works</a></li>
+      <li><a href="services-preview.html" class="active">Services</a></li>
+      <li><a href="about-preview.html">About</a></li>
+      <li><a href="faq-preview.html">FAQ</a></li>
+    </ul>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary nav-cta">Book A Call</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-panel-header">
+    <div class="nav-logo"><img src="logo.png" alt="KaizenEvol" class="nav-logo-badge" onerror="this.style.display='none'" />KaizenEvol</div>
+    <button class="mobile-close" id="mobileClose">&times;</button>
+  </div>
+  <a href="index-preview.html#how-it-works">How It Works</a>
+  <a href="services-preview.html">Services</a>
+  <a href="about-preview.html">About</a>
+  <a href="faq-preview.html">FAQ</a>
+  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book A Call</a>
+</div>
+
+<section class="page-hero">
+  <div class="hero-grid"></div>
+  <div class="page-hero-content">
+    <span class="eyebrow reveal">What We Do</span>
+    <h1 class="reveal">Everything Done For You</h1>
+    <p class="page-hero-sub reveal">You don&rsquo;t touch an ad account. You don&rsquo;t chase a single lead. Every part of the system is built, run, and optimised by us.</p>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary reveal">Book A Free Call &rarr;</a>
+  </div>
+</section>
+
+<section class="features-section section-pad">
+  <div class="container">
+    <span class="eyebrow reveal">What You Get</span>
+    <h2 class="section-h2 reveal">Six Things We Handle So You Don&rsquo;t Have To</h2>
+    <p class="section-sub reveal">From the first ad variation to the booked appointment in your calendar — here&rsquo;s exactly what&rsquo;s covered.</p>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#EDE8FF"/><rect x="9" y="8" width="18" height="23" rx="2.5" fill="white" stroke="#6D3FC0" stroke-width="1.5"/><rect x="13" y="14" width="10" height="1.5" rx="0.75" fill="#6D3FC0" fill-opacity="0.45"/><rect x="13" y="18" width="7" height="1.5" rx="0.75" fill="#6D3FC0" fill-opacity="0.45"/><rect x="13" y="22" width="9" height="1.5" rx="0.75" fill="#6D3FC0" fill-opacity="0.45"/><path d="M29 30L37 22L41 26L33 34L29 35Z" fill="#6D3FC0" fill-opacity="0.2" stroke="#6D3FC0" stroke-width="1.5" stroke-linejoin="round"/><line x1="35.5" y1="23.5" x2="39.5" y2="27.5" stroke="#6D3FC0" stroke-width="1.5"/></svg>
+        <div class="feature-title">Ad Copy + Creative</div>
+        <p class="feature-desc">Written and designed specifically for kitchen remodelling. Multiple variations tested simultaneously to find what converts fastest in your market.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#EDE8FF"/><circle cx="24" cy="21" r="13" fill="#6D3FC0" fill-opacity="0.08"/><circle cx="24" cy="21" r="9" fill="#6D3FC0" fill-opacity="0.1"/><path d="M24 9C19.03 9 15 13.03 15 18C15 24.25 24 35 24 35C24 35 33 24.25 33 18C33 13.03 28.97 9 24 9Z" fill="#6D3FC0" fill-opacity="0.25" stroke="#6D3FC0" stroke-width="1.8"/><circle cx="24" cy="18" r="4" fill="white"/><circle cx="24" cy="18" r="2.5" fill="#6D3FC0"/></svg>
+        <div class="feature-title">Hyper-Local Targeting</div>
+        <p class="feature-desc">Ads targeted to homeowners in your specific service area — not broad, wasteful geographic targeting. The right people, in the right postcode.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#EDE8FF"/><path d="M10 12H38L28 24V36L20 33V24L10 12Z" fill="#6D3FC0" fill-opacity="0.2" stroke="#6D3FC0" stroke-width="1.8" stroke-linejoin="round"/><path d="M18 28L22 32L30 22" stroke="#6D3FC0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="feature-title">Lead Qualification System</div>
+        <p class="feature-desc">Leads are filtered before they reach you. No tyre-kickers, no renters, no tiny budgets. You only speak to people who are genuinely ready to invest.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#EDE8FF"/><rect x="8" y="13" width="32" height="25" rx="3" fill="white" stroke="#6D3FC0" stroke-width="1.5"/><rect x="8" y="13" width="32" height="9" rx="3" fill="#6D3FC0"/><rect x="8" y="18" width="32" height="4" fill="#6D3FC0"/><rect x="15" y="9" width="3" height="8" rx="1.5" fill="#6D3FC0"/><rect x="30" y="9" width="3" height="8" rx="1.5" fill="#6D3FC0"/><path d="M17 30L21 34L31 24" stroke="#6D3FC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="feature-title">Booked Appointments</div>
+        <p class="feature-desc">Qualified prospects are booked straight into your calendar. No back-and-forth. No chasing. They show up ready to discuss their project.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#EDE8FF"/><line x1="10" y1="37" x2="38" y2="37" stroke="#6D3FC0" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><rect x="11" y="28" width="6" height="9" rx="2" fill="#6D3FC0" fill-opacity="0.3"/><rect x="21" y="21" width="6" height="16" rx="2" fill="#6D3FC0" fill-opacity="0.6"/><rect x="31" y="13" width="6" height="24" rx="2" fill="#6D3FC0"/><path d="M14 25L24 18L34 10" stroke="#9B72E8" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="2.5 2"/></svg>
+        <div class="feature-title">Weekly Performance Reports</div>
+        <p class="feature-desc">A clear, simple report every week. Cost per lead, appointments booked, pipeline value. No jargon, no fluff &mdash; just the numbers that matter.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-4">
+        <svg class="feature-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="12" fill="#EDE8FF"/><path d="M14 24C14 18.48 18.48 14 24 14C27.5 14 30.6 15.7 32.5 18.3" stroke="#6D3FC0" stroke-width="2" stroke-linecap="round"/><path d="M34 24C34 29.52 29.52 34 24 34C20.5 34 17.4 32.3 15.5 29.7" stroke="#6D3FC0" stroke-width="2" stroke-linecap="round"/><path d="M31 14.5L33 18.5L29 18.5" stroke="#6D3FC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 33.5L15 29.5L19 29.5" stroke="#6D3FC0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="24" r="3.5" fill="#6D3FC0" fill-opacity="0.2"/><circle cx="24" cy="24" r="2" fill="#6D3FC0"/></svg>
+        <div class="feature-title">Daily Campaign Optimisation</div>
+        <p class="feature-desc">We review your campaigns every single day. Underperforming ads are cut fast. Winning ads get more budget. No drift, no wasted spend.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="system-section section-pad">
+  <div class="container">
+    <span class="eyebrow reveal">The System</span>
+    <h2 class="section-h2 reveal">The Kitchen Client Acquisition Engine&trade;</h2>
+    <p class="section-sub reveal">Not a generic ad service. A purpose-built system for kitchen remodellers &mdash; tested, refined, and running in real UK markets.</p>
+    <div class="system-grid">
+      <div class="system-card reveal reveal-delay-1">
+        <div class="system-num">01</div>
+        <div class="system-title">Market Research Before We Spend a Penny</div>
+        <p class="system-desc">Before any ad goes live, we research your local market &mdash; competitor positioning, audience intent signals, pricing benchmarks. The campaign is built on data, not guesswork.</p>
+      </div>
+      <div class="system-card reveal reveal-delay-2">
+        <div class="system-num">02</div>
+        <div class="system-title">Multi-Variation Testing at Launch</div>
+        <p class="system-desc">We launch 8&ndash;12 ad variations simultaneously. Different hooks, different angles, different creatives. The system finds the winner fast &mdash; then we cut everything else and scale.</p>
+      </div>
+      <div class="system-card reveal reveal-delay-1">
+        <div class="system-num">03</div>
+        <div class="system-title">AI-Assisted Optimisation Loop</div>
+        <p class="system-desc">Campaign data feeds into daily decisions. Budget shifts toward winning audiences automatically. Manual oversight keeps quality sharp. No wasted spend left to linger.</p>
+      </div>
+      <div class="system-card reveal reveal-delay-2">
+        <div class="system-num">04</div>
+        <div class="system-title">Qualification Funnel That Filters Junk</div>
+        <p class="system-desc">A bespoke intake funnel qualifies every lead before it touches your calendar. Budget, timeline, project scope &mdash; all screened. You only speak to serious prospects.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <h2>Ready to get started?</h2>
+  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">Book A Free Call &rarr;</a>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index-preview.html" class="footer-logo">
+      <img src="logo.png" alt="KaizenEvol" class="footer-logo-badge" onerror="this.style.display='none'" />
+      KaizenEvol
+    </a>
+    <nav class="footer-nav">
+      <a href="index-preview.html#how-it-works">How It Works</a>
+      <a href="services-preview.html">Services</a>
+      <a href="about-preview.html">About</a>
+      <a href="faq-preview.html">FAQ</a>
+    </nav>
+    <div class="footer-right">
+      <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a><br>
+      &copy; 2026 KaizenEvol
+    </div>
+  </div>
+</footer>
+
+<script>
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileOverlay = document.getElementById('mobileOverlay');
+  const mobilePanel = document.getElementById('mobilePanel');
+  const mobileClose = document.getElementById('mobileClose');
+  function openMenu() { mobileOverlay.style.display = 'block'; mobilePanel.style.display = 'flex'; requestAnimationFrame(() => { mobileOverlay.classList.add('open'); mobilePanel.classList.add('open'); }); document.body.style.overflow = 'hidden'; }
+  function closeMenu() { mobileOverlay.classList.remove('open'); mobilePanel.classList.remove('open'); document.body.style.overflow = ''; setTimeout(() => { mobileOverlay.style.display = 'none'; mobilePanel.style.display = 'none'; }, 300); }
+  hamburgerBtn.addEventListener('click', openMenu);
+  mobileClose.addEventListener('click', closeMenu);
+  mobileOverlay.addEventListener('click', closeMenu);
+  mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
