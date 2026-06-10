@@ -187,10 +187,11 @@
     }
 
     /* ── PRINT ── */
+    @page { size: A4 portrait; margin: 0; }
     @media print {
       html { background: none; }
-      body { padding: 0; }
-      .poster { box-shadow: none; border-radius: 0; width: 100%; }
+      body { padding: 0; margin: 0; }
+      .poster { box-shadow: none; border-radius: 0; width: 210mm; }
     }
   </style>
 </head>
