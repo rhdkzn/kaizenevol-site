@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /dashboard.html
+Disallow: /crm.html
+Disallow: /reports.html

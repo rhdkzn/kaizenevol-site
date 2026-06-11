@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Pinned to v2.39.7 — SRI hash should be added once hash is verified from build artefact -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
@@ -213,15 +215,19 @@
   </main>
 </div>
 <script>
-const PW_HASH='6f853cb4d060884a4dd3949c23fdb519ad8d8fac70ce9d27d0824a52a2a39350',SESSION_KEY='ke_session',DATA_KEY='ke_data',REPORTS_KEY='ke_reports',IDLE_TTL=18e5;
+// Configure via Settings — do not hardcode credentials
+const SESSION_KEY='ke_session',DATA_KEY='ke_data',REPORTS_KEY='ke_reports',IDLE_TTL=18e5;
+// Supabase client — uses same project as dashboard/crm
+const _sb=supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
 let idleTimer=null;
 
 function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>logout(),IDLE_TTL);}
 function startIdle(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
 function stopIdle(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
-function checkSession(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');if(s.hash===PW_HASH&&s.expires>Date.now()){showApp();return;}}catch(e){}window.location.href='dashboard.html';}
-function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);window.location.href='dashboard.html';}
+async function checkSession(){const{data:{session}}=await _sb.auth.getSession();if(!session){window.location.href='dashboard.html';return;}showApp();}
+function logout(){stopIdle();_sb.auth.signOut();localStorage.removeItem(SESSION_KEY);window.location.href='dashboard.html';}
 function showApp(){document.getElementById('app').style.display='block';startIdle();init();}
+_sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(!session&&document.getElementById('app').style.display!=='none')){logout();}});
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function loadData(){try{const r=localStorage.getItem(DATA_KEY);return r?JSON.parse(r):{clients:[{id:'nav',name:'Navpreet Singh'}]};}catch(e){return{clients:[]};}}

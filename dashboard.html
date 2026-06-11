@@ -133,7 +133,8 @@
     @media(max-width:900px){.bottom-grid{grid-template-columns:1fr 1fr;}.rev-retainer-grid{grid-template-columns:repeat(5,1fr);}}
     @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 12px;}.stat-v{font-size:24px;}.rev-current{font-size:24px;}.rev-retainer-grid{grid-template-columns:repeat(5,1fr);}.dash-date{display:none;}.dash-nav-link{padding:5px 9px;font-size:12px;}.btn-logout{padding:5px 10px;font-size:11px;}.dash-header-inner{gap:8px;}}
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Pinned to v2.39.7 — SRI hash should be added once hash is verified from build artefact -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div id="gate">
@@ -211,8 +212,8 @@
   </main>
 </div>
 <script>
-const PW_SALT='0f45e8c98a23269130d1d1704e0e135f',PW_HASH='6f853cb4d060884a4dd3949c23fdb519ad8d8fac70ce9d27d0824a52a2a39350',PW_ITER=200000,SESSION_KEY='ke_session',DATA_KEY='ke_data',LOCKOUT_KEY='ke_lockout',SESSION_TTL=864e5,IDLE_TTL=18e5,MAX_ATTEMPTS=5,LOCKOUT_TTL=18e5;
-async function pbkdf2Hash(password){const enc=new TextEncoder();const keyMaterial=await crypto.subtle.importKey('raw',enc.encode(password),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(PW_SALT),iterations:PW_ITER,hash:'SHA-256'},keyMaterial,256);return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+// Configure via Settings — do not hardcode credentials
+const SESSION_KEY='ke_session',DATA_KEY='ke_data',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=5,LOCKOUT_TTL=18e5;
 function getLockout(){try{return JSON.parse(localStorage.getItem(LOCKOUT_KEY)||'{}');}catch(e){return {};}}
 function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
 function remainingLockout(){const l=getLockout();return Math.max(0,Math.ceil((l.until-Date.now())/60000));}
@@ -223,9 +224,32 @@ let idleTimer=null;
 function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();document.getElementById('gateLockout').textContent='Session expired due to inactivity.';},IDLE_TTL);}
 function startIdleWatch(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
 function stopIdleWatch(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
-async function attemptLogin(){if(isLockedOut()){applyLockoutUI();return;}const pw=document.getElementById('gateInput').value;if(!pw)return;const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';const hash=await pbkdf2Hash(pw);btn.textContent='Unlock →';if(hash===PW_HASH){clearLockout();localStorage.setItem(SESSION_KEY,JSON.stringify({hash,expires:Date.now()+SESSION_TTL}));showDashboard();}else{const attempts=recordFailedAttempt();const inp=document.getElementById('gateInput');inp.classList.add('error');const errEl=document.getElementById('gateErr');if(isLockedOut()){errEl.textContent='';applyLockoutUI();}else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=left>0?`Incorrect password. ${left} attempt(s) remaining.`:'Incorrect password.';}inp.value='';btn.disabled=false;setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},2400);}}
-function tryAutoLogin(){try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'{}');if(s.hash===PW_HASH&&s.expires>Date.now()){showDashboard();return;}}catch(e){}applyLockoutUI();}
-function logout(){stopIdleWatch();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
+async function attemptLogin(){
+  if(isLockedOut()){applyLockoutUI();return;}
+  const pw=document.getElementById('gateInput').value;if(!pw)return;
+  const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';
+  // Use Supabase Auth — configure via Settings — do not hardcode credentials
+  const email='rahaid@kaizenevol.com';
+  const{data,error}=await _sb.auth.signInWithPassword({email,password:pw});
+  btn.textContent='Unlock →';
+  if(error){
+    const attempts=recordFailedAttempt();
+    const inp=document.getElementById('gateInput');inp.classList.add('error');
+    const errEl=document.getElementById('gateErr');
+    if(isLockedOut()){errEl.textContent='';applyLockoutUI();}
+    else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=left>0?`Incorrect password. ${left} attempt(s) remaining.`:'Incorrect password.';}
+    inp.value='';btn.disabled=false;
+    setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},2400);
+    return false;
+  }
+  clearLockout();
+  localStorage.setItem(SESSION_KEY,JSON.stringify({access_token:data.session.access_token,expires_at:data.session.expires_at}));
+  showDashboard();
+  return true;
+}
+async function checkSession(){const{data:{session}}=await _sb.auth.getSession();if(!session){applyLockoutUI();return;}showDashboard();}
+function logout(){stopIdleWatch();_sb.auth.signOut();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
+_sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(!session&&document.getElementById('dashboard').style.display!=='none')){logout();}});
 async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();const remote=await _cloudPull(DATA_KEY);if(remote&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};localStorage.setItem(DATA_KEY,JSON.stringify(merged));}else if(!remote){_cloudPush(DATA_KEY,load());}init();}
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
 const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',bookedCalls:'',spend:'',updated:''}},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
@@ -313,7 +337,7 @@ function init(){
   renderTasks(d);
   document.getElementById('notesArea').value=d.notes||'';
 }
-tryAutoLogin();
+checkSession();
 </script>
 </body>
 </html>
