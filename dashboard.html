@@ -153,7 +153,7 @@
     <div class="gate-logo"><img src="logo.png" alt="KaizenEvol" class="gate-badge" /><span class="gate-logo-name">KaizenEvol</span></div>
     <div class="gate-title" id="gateTitle">Dashboard</div>
     <div class="gate-sub" id="gateSub">Private access only. Enter your password.</div>
-    <div id="gateErr" style="font-size:12px;color:#f87171;margin-top:8px;min-height:18px;word-break:break-word;cursor:pointer" onclick="localStorage.removeItem('ke_lockout')" title="Click to clear lockout"></div>
+    <div id="gateErr" style="font-size:12px;color:#f87171;margin-top:8px;min-height:18px;word-break:break-word;"></div>
     <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" />
     <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock &rarr;</button>
     <div class="gate-lockout" id="gateLockout"></div>
@@ -248,7 +248,9 @@ async function attemptLogin(){
   if(inSetupMode()){
     const{hash,salt}=await pbkdf2Hash(pw,null);
     localStorage.setItem(PW_HASH_KEY,hash);localStorage.setItem(PW_SALT_KEY,salt);
-    clearLockout();openSession();btn.disabled=false;showDashboard();return true;
+    clearLockout();openSession();
+    _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});
+    btn.disabled=false;showDashboard();return true;
   }
   const storedHash=localStorage.getItem(PW_HASH_KEY),storedSalt=localStorage.getItem(PW_SALT_KEY);
   const{hash}=await pbkdf2Hash(pw,storedSalt);
@@ -263,12 +265,14 @@ async function attemptLogin(){
     setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);
     return false;
   }
-  clearLockout();openSession();showDashboard();return true;
+  clearLockout();openSession();
+  _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});
+  showDashboard();return true;
 }
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
 function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showDashboard();return;}}catch(e){}}initGateUI();applyLockoutUI();}
 let _dashChannel=null;
-function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
+function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();_sb.auth.signOut().catch(()=>{});localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
 async function showDashboard(){
   document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();
   const remote=await _cloudPull(DATA_KEY);

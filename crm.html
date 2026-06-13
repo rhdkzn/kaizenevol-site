@@ -527,7 +527,9 @@ async function attemptLogin(){
   if(inSetupMode()){
     const{hash,salt}=await pbkdf2Hash(pw,null);
     localStorage.setItem(PW_HASH_KEY,hash);localStorage.setItem(PW_SALT_KEY,salt);
-    clearLockout();openSession();btn.disabled=false;document.getElementById('gate').style.display='none';showApp();return true;
+    clearLockout();openSession();
+    _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});
+    btn.disabled=false;document.getElementById('gate').style.display='none';showApp();return true;
   }
   const storedHash=localStorage.getItem(PW_HASH_KEY),storedSalt=localStorage.getItem(PW_SALT_KEY);
   const{hash}=await pbkdf2Hash(pw,storedSalt);
@@ -542,9 +544,11 @@ async function attemptLogin(){
     setTimeout(()=>{inp.classList.remove('error');if(!isLockedOut()){errEl.textContent='';}},2400);
     return false;
   }
-  clearLockout();openSession();document.getElementById('gate').style.display='none';showApp();return true;
+  clearLockout();openSession();
+  _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});
+  document.getElementById('gate').style.display='none';showApp();return true;
 }
-function logout(){if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);_realtimeChannel=null;}clearInterval(_syncInterval);stopIdle();localStorage.removeItem(SESSION_KEY);showGate();}
+function logout(){if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);_realtimeChannel=null;}clearInterval(_syncInterval);stopIdle();_sb.auth.signOut().catch(()=>{});localStorage.removeItem(SESSION_KEY);showGate();}
 let _syncInterval=null,_realtimeChannel=null;
 async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);if(Array.isArray(remote)&&remote.length>0){const local=loadLeads();if(remote.length!==local.length||JSON.stringify(remote)!==JSON.stringify(local)){localStorage.setItem(LEADS_KEY,JSON.stringify(remote));renderLeads();renderLeadStats();renderOutreachQueue();}}}
 async function showApp(){
@@ -570,6 +574,7 @@ const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'2
 function load(){try{const r=localStorage.getItem(DATA_KEY);return r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);}catch(e){return structuredClone(DEFAULTS);}}
 function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function safeId(s){return String(s||'').replace(/[^a-zA-Z0-9_-]/g,'');}
 function trialDays(startStr,total){if(!startStr)return null;const diff=Math.floor((Date.now()-new Date(startStr))/86400000);return{day:Math.max(1,diff+1),total};}
 function getClientStage(c){
   if(c.status==='inactive')return{key:'inactive',label:'Inactive',day:0,daysLeft:0,pct:0};
@@ -807,7 +812,7 @@ function getSentToday(){const e=loadEmail();return(e.sent||{})[getTodayKey()]||0
 function incrementSent(){const e=loadEmail();if(!e.sent)e.sent={};const k=getTodayKey();e.sent[k]=(e.sent[k]||0)+1;saveEmail(e);document.getElementById('emailSentToday').textContent=e.sent[k];}
 function markLeadEmailed(leadId,tmplId){const e=loadEmail();if(!e.history)e.history={};if(!e.history[leadId])e.history[leadId]=[];e.history[leadId].push({tmplId,sentAt:Date.now()});saveEmail(e);}
 function mergeTmpl(str,lead){const firstName=lead.owner?lead.owner.trim().split(/\s+/)[0]:'there';return str.replace(/\{\{first_name\}\}/g,firstName).replace(/\{\{business_name\}\}/g,lead.business||'').replace(/\{\{area\}\}/g,lead.area||'').replace(/\{\{ad_status\}\}/g,lead.notes||'');}
-function renderTemplates(){const el=document.getElementById('tmplGrid');el.innerHTML=loadTemplates().map(t=>'<div class="tmpl-card'+(selectedTmplId===t.id?' selected':'')+'" onclick="selectTemplate(\''+t.id+'\')"><div class="tmpl-name">'+esc(t.name)+'</div><div class="tmpl-subject-preview">'+esc(t.subject)+'</div><button class="tmpl-edit-btn" onclick="event.stopPropagation();openTemplateEdit(\''+t.id+'\')" title="Edit template">✎</button></div>').join('');}
+function renderTemplates(){const el=document.getElementById('tmplGrid');el.innerHTML=loadTemplates().map(t=>{const sid=safeId(t.id);return'<div class="tmpl-card'+(selectedTmplId===t.id?' selected':'')+'" onclick="selectTemplate(\''+sid+'\')"><div class="tmpl-name">'+esc(t.name)+'</div><div class="tmpl-subject-preview">'+esc(t.subject)+'</div><button class="tmpl-edit-btn" onclick="event.stopPropagation();openTemplateEdit(\''+sid+'\')" title="Edit template">✎</button></div>';}).join('');}
 function selectTemplate(id){selectedTmplId=id;renderTemplates();if(composeLeadId)openCompose(composeLeadId);}
 function openCompose(leadId){composeLeadId=leadId;if(!selectedTmplId)selectedTmplId='initial';renderTemplates();const lead=loadLeads().find(l=>l.id===leadId);if(!lead)return;const tmpl=loadTemplates().find(t=>t.id===selectedTmplId);if(!tmpl)return;document.getElementById('composeSubject').value=mergeTmpl(tmpl.subject,lead);document.getElementById('composeBody').value=mergeTmpl(tmpl.body,lead);document.getElementById('composeTo').innerHTML='To: <strong>'+(lead.email?esc(lead.email):'<span style="color:var(--amber)">No email on file — add below</span>')+'</strong>&ensp;·&ensp;'+esc(lead.business);document.getElementById('sendStatus').textContent='';const box=document.getElementById('composeBox');box.classList.add('open');box.scrollIntoView({behavior:'smooth',block:'nearest'});}
 function closeCompose(){document.getElementById('composeBox').classList.remove('open');document.getElementById('sendStatus').textContent='';composeLeadId=null;}
