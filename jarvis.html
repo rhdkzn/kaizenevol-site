@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JARVIS — KaizenEvol</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Poppins',sans-serif;background:#060812;color:#e8eaf6;min-height:100vh;line-height:1.5;overflow-x:hidden;}
+    a{text-decoration:none;color:inherit;}
+    :root{
+      --blue:#4fc3f7;--blue-d:#0288d1;--blue-l:rgba(79,195,247,0.1);--blue-m:rgba(79,195,247,0.3);
+      --purple:#8B5CF6;--purple-l:rgba(139,92,246,0.15);--purple-m:rgba(139,92,246,0.3);
+      --amber:#f59e0b;--green:#22c55e;--red:#f87171;
+      --bg:#060812;--surface:#0d1021;--border:#1a2040;--text:#e8eaf6;--muted:#556080;
+      --radius:12px;--radius-sm:8px;--radius-pill:9999px;
+    }
+
+    /* ── GATE ── */
+    #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 25%,#0d1442 0%,#060812 65%);padding:24px;}
+    .gate-card{background:var(--surface);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;border:1px solid var(--border);text-align:center;box-shadow:0 0 60px rgba(79,195,247,0.05);}
+    .gate-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px;}
+    .gate-badge{width:40px;height:40px;border-radius:9px;object-fit:contain;}
+    .gate-logo-name{font-size:20px;font-weight:700;}
+    .gate-title{font-size:24px;font-weight:700;color:var(--blue);letter-spacing:3px;margin-bottom:6px;}
+    .gate-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+    .gate-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:14px;outline:none;transition:border-color .2s;margin-bottom:12px;background:var(--bg);color:var(--text);}
+    .gate-input:focus{border-color:var(--blue);}
+    .gate-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--blue-d),var(--blue));color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+    .gate-btn:hover{opacity:.85;}
+    .gate-btn:disabled{opacity:.5;cursor:not-allowed;}
+    .gate-err{color:var(--red);font-size:12px;margin-top:8px;min-height:16px;}
+
+    /* ── LAYOUT ── */
+    #jarvis{display:none;flex-direction:column;height:100vh;overflow:hidden;}
+
+    /* ── HEADER ── */
+    .j-header{flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;}
+    .j-header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px;gap:16px;}
+    .j-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;}
+    .j-badge{width:28px;height:28px;border-radius:6px;object-fit:contain;}
+    .j-nav{display:flex;align-items:center;gap:2px;}
+    .j-nav-link{font-size:12px;font-weight:600;color:var(--muted);padding:5px 12px;border-radius:var(--radius-pill);transition:color .2s,background .2s;}
+    .j-nav-link:hover{color:var(--text);background:var(--blue-l);}
+    .j-nav-link.active{color:var(--blue);background:var(--blue-l);}
+    .j-header-right{display:flex;align-items:center;gap:8px;}
+    .j-icon-btn{width:34px;height:34px;border-radius:50%;background:none;border:1.5px solid var(--border);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:15px;font-family:'Poppins',sans-serif;}
+    .j-icon-btn:hover{border-color:var(--blue-m);color:var(--blue);background:var(--blue-l);}
+    .btn-logout{font-size:11px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:4px 12px;cursor:pointer;font-family:'Poppins',sans-serif;transition:color .2s,border-color .2s;}
+    .btn-logout:hover{color:var(--red);border-color:var(--red);}
+
+    /* ── STAGE ── */
+    .j-stage{flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px 16px;}
+    .orb-wrap{position:relative;width:190px;height:190px;display:flex;align-items:center;justify-content:center;}
+    .orb-ring{position:absolute;border-radius:50%;border:1.5px solid transparent;}
+    .orb-r1{width:190px;height:190px;}
+    .orb-r2{width:145px;height:145px;}
+    .orb-r3{width:108px;height:108px;}
+    .orb-core{width:68px;height:68px;border-radius:50%;position:relative;z-index:1;}
+
+    /* IDLE */
+    .state-idle .orb-r1{border-color:rgba(79,195,247,.18);animation:idle-ring 3.5s ease-in-out infinite;}
+    .state-idle .orb-r2{border-color:rgba(79,195,247,.3);animation:idle-ring 3.5s ease-in-out infinite .6s;}
+    .state-idle .orb-r3{border-color:rgba(79,195,247,.45);animation:idle-ring 3.5s ease-in-out infinite 1.2s;}
+    .state-idle .orb-core{background:radial-gradient(circle,#4fc3f7 0%,#0288d1 55%,#01579b 100%);box-shadow:0 0 22px rgba(79,195,247,.4),0 0 44px rgba(79,195,247,.15);animation:idle-core 3.5s ease-in-out infinite;}
+    @keyframes idle-ring{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.05);opacity:1}}
+    @keyframes idle-core{0%,100%{box-shadow:0 0 22px rgba(79,195,247,.4),0 0 44px rgba(79,195,247,.15)}50%{box-shadow:0 0 32px rgba(79,195,247,.65),0 0 64px rgba(79,195,247,.25)}}
+
+    /* LISTENING */
+    .state-listening .orb-r1{border-color:rgba(79,195,247,.5);animation:listen-ring 1s ease-out infinite;}
+    .state-listening .orb-r2{border-color:rgba(79,195,247,.7);animation:listen-ring 1s ease-out infinite .18s;}
+    .state-listening .orb-r3{border-color:var(--blue);animation:listen-ring 1s ease-out infinite .36s;}
+    .state-listening .orb-core{background:radial-gradient(circle,#b3e5fc 0%,#4fc3f7 55%,#0288d1 100%);box-shadow:0 0 32px rgba(79,195,247,.85),0 0 64px rgba(79,195,247,.35);animation:listen-core .55s ease-in-out infinite alternate;}
+    @keyframes listen-ring{0%{transform:scale(.92);opacity:.9}100%{transform:scale(1.18);opacity:0}}
+    @keyframes listen-core{from{transform:scale(.95)}to{transform:scale(1.06)}}
+
+    /* THINKING */
+    .state-thinking .orb-r1{border-color:rgba(245,158,11,.35);animation:think-ring 1.4s linear infinite;}
+    .state-thinking .orb-r2{border-color:rgba(245,158,11,.55);animation:think-ring 1.4s linear infinite .45s;}
+    .state-thinking .orb-r3{border-color:rgba(245,158,11,.75);animation:think-ring 1.4s linear infinite .9s;}
+    .state-thinking .orb-core{background:radial-gradient(circle,#fde68a 0%,#f59e0b 55%,#b45309 100%);box-shadow:0 0 28px rgba(245,158,11,.7),0 0 56px rgba(245,158,11,.25);animation:think-core 1.1s ease-in-out infinite;}
+    @keyframes think-ring{0%{transform:rotate(0deg);opacity:.6}50%{opacity:.9}100%{transform:rotate(360deg);opacity:.6}}
+    @keyframes think-core{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+
+    /* SPEAKING */
+    .state-speaking .orb-r1{border-color:rgba(139,92,246,.4);animation:speak-r1 .9s ease-in-out infinite;}
+    .state-speaking .orb-r2{border-color:rgba(139,92,246,.6);animation:speak-r2 .9s ease-in-out infinite .12s;}
+    .state-speaking .orb-r3{border-color:rgba(139,92,246,.8);animation:speak-r3 .9s ease-in-out infinite .24s;}
+    .state-speaking .orb-core{background:radial-gradient(circle,#c4b5fd 0%,#8B5CF6 55%,#6D28D9 100%);box-shadow:0 0 30px rgba(139,92,246,.75),0 0 60px rgba(139,92,246,.28);animation:speak-core .45s ease-in-out infinite alternate;}
+    @keyframes speak-r1{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.07);opacity:.85}}
+    @keyframes speak-r2{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.05);opacity:.9}}
+    @keyframes speak-r3{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.03);opacity:1}}
+    @keyframes speak-core{from{transform:scale(.94)}to{transform:scale(1.06)}}
+
+    .orb-status{margin-top:18px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);transition:color .3s;min-height:16px;}
+    .state-listening .orb-status{color:var(--blue);}
+    .state-thinking .orb-status{color:var(--amber);}
+    .state-speaking .orb-status{color:#a78bfa;}
+
+    /* ── TRANSCRIPT ── */
+    .j-transcript{flex:1;overflow-y:auto;padding:4px 24px 12px;max-width:760px;width:100%;margin:0 auto;}
+    .j-transcript::-webkit-scrollbar{width:3px;}
+    .j-transcript::-webkit-scrollbar-track{background:transparent;}
+    .j-transcript::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+    .j-msg{display:flex;gap:10px;margin-bottom:12px;animation:msg-in .25s ease;}
+    @keyframes msg-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .j-msg.user{flex-direction:row-reverse;}
+    .j-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+    .j-msg.user .j-av{background:var(--purple-l);color:#a78bfa;border:1.5px solid var(--purple-m);}
+    .j-msg.jarvis .j-av{background:var(--blue-l);color:var(--blue);border:1.5px solid var(--blue-m);font-size:10px;}
+    .j-bubble{max-width:74%;padding:10px 15px;border-radius:14px;font-size:13.5px;line-height:1.65;}
+    .j-msg.user .j-bubble{background:var(--purple-l);border:1px solid var(--purple-m);border-top-right-radius:4px;}
+    .j-msg.jarvis .j-bubble{background:var(--surface);border:1px solid var(--border);border-top-left-radius:4px;}
+    .j-time{font-size:10px;color:var(--muted);margin-top:4px;display:block;}
+    .j-msg.user .j-time{text-align:right;}
+    .j-typing .j-bubble{padding:14px 18px;}
+    .dots{display:flex;gap:4px;}
+    .dots span{width:6px;height:6px;background:var(--blue);border-radius:50%;animation:dot .9s ease-in-out infinite;}
+    .dots span:nth-child(2){animation-delay:.18s;}
+    .dots span:nth-child(3){animation-delay:.36s;}
+    @keyframes dot{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-4px);opacity:1}}
+    .j-welcome{text-align:center;padding:16px 24px 8px;color:var(--muted);font-size:13px;line-height:1.9;}
+    .j-welcome-title{font-size:14px;font-weight:600;color:var(--blue);margin-bottom:6px;letter-spacing:.5px;}
+
+    /* ── TEXT INPUT ── */
+    .j-text-panel{flex-shrink:0;padding:0 24px 10px;max-width:760px;width:100%;margin:0 auto;display:none;}
+    .j-text-panel.open{display:flex;gap:8px;}
+    .j-text-inp{flex:1;padding:9px 16px;border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:13px;outline:none;background:var(--surface);color:var(--text);transition:border-color .2s;}
+    .j-text-inp:focus{border-color:var(--blue);}
+    .j-send-btn{padding:9px 18px;background:var(--blue-d);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
+    .j-send-btn:hover{opacity:.85;}
+
+    /* ── CONTROLS ── */
+    .j-controls{flex-shrink:0;padding:10px 24px 18px;display:flex;align-items:center;justify-content:center;gap:16px;}
+    .ctrl-btn{padding:7px 15px;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;border:1.5px solid var(--border);background:none;color:var(--muted);display:flex;align-items:center;gap:5px;}
+    .ctrl-btn:hover{border-color:var(--blue-m);color:var(--blue);background:var(--blue-l);}
+    .ctrl-btn.on{border-color:var(--blue);color:var(--blue);background:var(--blue-l);}
+    .mic-btn{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--blue-d),var(--blue));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(79,195,247,.3);transition:all .2s;color:#fff;font-size:22px;}
+    .mic-btn:hover:not(:disabled){transform:scale(1.06);box-shadow:0 0 36px rgba(79,195,247,.5);}
+    .mic-btn.active{background:linear-gradient(135deg,#c0392b,#f87171);box-shadow:0 0 24px rgba(248,113,113,.45);animation:mic-pulse .9s ease-in-out infinite;}
+    .mic-btn:disabled{opacity:.45;cursor:not-allowed;transform:none !important;}
+    @keyframes mic-pulse{0%,100%{box-shadow:0 0 20px rgba(248,113,113,.4)}50%{box-shadow:0 0 40px rgba(248,113,113,.65),0 0 60px rgba(248,113,113,.2)}}
+    .mic-hint{font-size:10px;color:var(--muted);text-align:center;margin-top:4px;letter-spacing:.5px;}
+
+    /* ── SETTINGS MODAL ── */
+    .overlay{position:fixed;inset:0;background:rgba(6,8,18,.88);z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px);}
+    .overlay.open{display:flex;}
+    .modal{background:var(--surface);border-radius:18px;border:1px solid var(--border);width:100%;max-width:460px;box-shadow:0 24px 64px rgba(0,0,0,.7);}
+    .modal-head{padding:22px 24px 0;display:flex;align-items:center;justify-content:space-between;}
+    .modal-title{font-size:15px;font-weight:700;}
+    .modal-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:color .2s;font-family:'Poppins',sans-serif;}
+    .modal-close:hover{color:var(--text);}
+    .modal-body{padding:18px 24px;display:flex;flex-direction:column;gap:14px;}
+    .f-group{display:flex;flex-direction:column;gap:5px;}
+    .f-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);}
+    .f-input,.f-select{padding:9px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;outline:none;background:var(--bg);color:var(--text);transition:border-color .2s;width:100%;}
+    .f-input:focus,.f-select:focus{border-color:var(--blue);}
+    .f-hint{font-size:11px;color:var(--muted);line-height:1.5;}
+    .f-row{display:flex;gap:8px;align-items:flex-start;}
+    .f-row .f-input{flex:1;}
+    .test-btn{padding:8px 14px;background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .test-btn:hover{border-color:var(--blue-m);color:var(--blue);}
+    .modal-foot{padding:0 24px 20px;display:flex;gap:8px;justify-content:flex-end;}
+    .btn-save{padding:9px 20px;background:linear-gradient(135deg,var(--blue-d),var(--blue));color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+    .btn-save:hover{opacity:.85;}
+    .btn-cancel{padding:9px 18px;background:none;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+    .btn-cancel:hover{color:var(--text);border-color:var(--muted);}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-pill);padding:9px 18px;font-size:12px;font-weight:600;opacity:0;transition:all .3s;z-index:2000;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);pointer-events:none;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .toast.ok{color:var(--green);border-color:rgba(34,197,94,.3);}
+    .toast.err{color:var(--red);border-color:rgba(248,113,113,.3);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:640px){
+      .j-header{padding:0 16px;}
+      .j-stage{padding:18px 16px 10px;}
+      .orb-wrap{width:150px;height:150px;}
+      .orb-r1{width:150px;height:150px;}
+      .orb-r2{width:115px;height:115px;}
+      .orb-r3{width:85px;height:85px;}
+      .orb-core{width:54px;height:54px;}
+      .j-transcript{padding:4px 16px 10px;}
+      .j-text-panel{padding:0 16px 8px;}
+      .j-controls{padding:8px 16px 14px;gap:12px;}
+      .j-nav-link{padding:4px 9px;font-size:11px;}
+      .btn-logout{padding:3px 10px;font-size:10px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-logo">
+      <img src="logo.png" alt="KaizenEvol" class="gate-badge" />
+      <span class="gate-logo-name">KaizenEvol</span>
+    </div>
+    <div class="gate-title">JARVIS</div>
+    <div class="gate-sub">Your AI orchestrator. Private access only.</div>
+    <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" />
+    <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock JARVIS &rarr;</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<!-- JARVIS UI -->
+<div id="jarvis">
+  <header class="j-header">
+    <div class="j-header-inner">
+      <div class="j-logo">
+        <img src="logo.png" alt="KaizenEvol" class="j-badge" />
+        KaizenEvol
+      </div>
+      <nav class="j-nav">
+        <a href="dashboard.html" class="j-nav-link">Dashboard</a>
+        <a href="crm.html" class="j-nav-link">CRM</a>
+        <a href="reports.html" class="j-nav-link">Reports</a>
+        <a href="jarvis.html" class="j-nav-link active">JARVIS</a>
+      </nav>
+      <div class="j-header-right">
+        <button class="j-icon-btn" onclick="openSettings()" title="Settings">&#9881;</button>
+        <button class="btn-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="j-stage">
+    <div class="orb-wrap state-idle" id="orb">
+      <div class="orb-ring orb-r1"></div>
+      <div class="orb-ring orb-r2"></div>
+      <div class="orb-ring orb-r3"></div>
+      <div class="orb-core"></div>
+    </div>
+    <div class="orb-status" id="orbStatus">Standby</div>
+  </div>
+
+  <div class="j-transcript" id="transcript">
+    <div class="j-welcome" id="welcomeMsg">
+      <div class="j-welcome-title">Good to have you back, Sir.</div>
+      Click the mic to speak &mdash; or use the spacebar. Type below if you prefer silence.<br />
+      JARVIS is briefed on KaizenEvol, your agents, and Navpreet&rsquo;s campaign.
+    </div>
+  </div>
+
+  <div class="j-text-panel" id="textPanel">
+    <input type="text" class="j-text-inp" id="textInput" placeholder="Type a message to JARVIS&hellip;" />
+    <button class="j-send-btn" onclick="sendText()">Send</button>
+  </div>
+
+  <div class="j-controls">
+    <button class="ctrl-btn" id="typeBtn" onclick="toggleText()">&#9112; Type</button>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="Click to talk (or hold Space)">&#127908;</button>
+      <div class="mic-hint">SPACE to talk</div>
+    </div>
+    <button class="ctrl-btn" onclick="clearChat()">&#128465; Clear</button>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">&#9881; JARVIS Settings</div>
+      <button class="modal-close" onclick="closeSettings()">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div class="f-group">
+        <div class="f-label">Anthropic API Key</div>
+        <input type="password" class="f-input" id="sAnthropicKey" placeholder="sk-ant-&hellip;" />
+        <div class="f-hint">Required. Powers JARVIS via Claude. Get one at console.anthropic.com.</div>
+      </div>
+      <div class="f-group">
+        <div class="f-label">Voice Provider</div>
+        <select class="f-select" id="sProvider" onchange="onProviderChange()">
+          <option value="elevenlabs">ElevenLabs (recommended &mdash; realistic voice)</option>
+          <option value="browser">Browser TTS (free, sounds robotic)</option>
+        </select>
+      </div>
+      <div id="elFields">
+        <div class="f-group" style="margin-top:10px;">
+          <div class="f-label">ElevenLabs API Key</div>
+          <input type="password" class="f-input" id="sElKey" placeholder="Your ElevenLabs API key" />
+        </div>
+        <div class="f-group" style="margin-top:10px;">
+          <div class="f-label">Voice ID</div>
+          <div class="f-row">
+            <input type="text" class="f-input" id="sVoiceId" placeholder="nPczCjzI2devNBz1zQrb" />
+            <button class="test-btn" onclick="testVoice()">&#9654; Test</button>
+          </div>
+          <div class="f-hint">Default: Brian (authoritative British male). Find IDs at elevenlabs.io/voice-lab.</div>
+        </div>
+      </div>
+      <div id="browserFields" style="display:none;margin-top:4px;">
+        <div class="f-group">
+          <div class="f-label">Browser Voice</div>
+          <select class="f-select" id="sBrowserVoice"></select>
+          <div class="f-hint">UK English voices recommended. Quality varies by OS.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+      <button class="btn-save" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+const SESSION_KEY = 'ke_session';
+const PW_HASH_KEY = 'ke_pw_hash';
+const PW_SALT_KEY = 'ke_pw_salt';
+const SETT_KEY = 'ke_jarvis_sett';
+const CONV_KEY = 'ke_jarvis_conv';
+const IDLE_TTL = 18e5;
+const DEFAULT_VOICE = 'nPczCjzI2devNBz1zQrb';
+const ORB_STATES = ['idle','listening','thinking','speaking'];
+const STATUS_TEXT = {idle:'Standby',listening:'Listening…',thinking:'Processing…',speaking:'Speaking…'};
+
+const SYSTEM = `You are JARVIS — KaizenEvol's AI orchestrator. Calm authority, dry British precision, occasional wit. Address Rahaid as "Sir".
+
+Agents you dispatch:
+• Aurelius — Meta traffic strategy, campaign architecture
+• Zenith — Kill/scale decisions, CPA/CPL metrics
+• Vortex — Creative, hooks, ad copy, briefs
+• Nexus — Tracking, CAPI, pixel
+• Stratos — Funnel strategy, unit economics
+
+KaizenEvol: Done-for-you Meta ads for kitchen remodellers. Offer: 2 qualified booked calls/month, \xa35k+ project value, live in 7 days. Pricing: 60-day trial (20% commission) → \xa33,500/mo retainer. Goal: 10 retainers by EOY 2026. Active: 1 client (Navpreet Singh, trial). MRR: \xa30. Partner: Diego handles cold outreach and pipeline.
+
+Response rules:
+- No markdown, no bullet points, no headers — spoken word only
+- 1–3 sentences unless a detailed brief is explicitly requested
+- When routing to an agent, name them and what you're dispatching them to do
+- Use "Sir" once per response, naturally
+- Lead with the answer, not the reasoning
+- Today is 2026-06-13`;
+
+// ── Auth ─────────────────────────────────────
+async function pbkdf2(pw, saltHex) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey('raw', enc.encode(pw), {name:'PBKDF2'}, false, ['deriveBits']);
+  const salt = saltHex
+    ? new Uint8Array(saltHex.match(/../g).map(h=>parseInt(h,16)))
+    : crypto.getRandomValues(new Uint8Array(32));
+  const bits = await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'}, key, 256);
+  const hash = Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const usedSalt = Array.from(salt).map(b=>b.toString(16).padStart(2,'0')).join('');
+  return {hash, salt: usedSalt};
+}
+
+async function attemptLogin() {
+  const pw = document.getElementById('gateInput').value;
+  if (!pw) return;
+  const btn = document.getElementById('gateBtn');
+  btn.disabled = true; btn.textContent = 'Verifying…';
+  const storedHash = localStorage.getItem(PW_HASH_KEY);
+  const storedSalt = localStorage.getItem(PW_SALT_KEY);
+  if (!storedHash) {
+    document.getElementById('gateErr').textContent = 'Set your password via the main dashboard first.';
+    btn.disabled = false; btn.textContent = 'Unlock JARVIS →';
+    return;
+  }
+  const {hash} = await pbkdf2(pw, storedSalt);
+  btn.disabled = false; btn.textContent = 'Unlock JARVIS →';
+  if (hash !== storedHash) {
+    document.getElementById('gateErr').textContent = 'Incorrect password.';
+    document.getElementById('gateInput').value = '';
+    setTimeout(() => { document.getElementById('gateErr').textContent = ''; }, 3000);
+    return;
+  }
+  localStorage.setItem(SESSION_KEY, JSON.stringify({token: crypto.randomUUID(), expires_at: Date.now() + 86400000}));
+  launch();
+}
+
+function checkSession() {
+  const s = localStorage.getItem(SESSION_KEY);
+  if (s) { try { const p = JSON.parse(s); if (p.expires_at > Date.now()) { launch(); return; } } catch(e){} }
+  document.getElementById('gateInput').focus();
+}
+
+let idleTimer = null;
+function startIdle() { ['mousemove','keydown','click','touchstart'].forEach(e => document.addEventListener(e, resetIdle, {passive:true})); resetIdle(); }
+function resetIdle() { clearTimeout(idleTimer); idleTimer = setTimeout(logout, IDLE_TTL); }
+
+function logout() {
+  stopRecognition();
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  localStorage.removeItem(SESSION_KEY);
+  document.getElementById('jarvis').style.display = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('gateInput').value = '';
+}
+
+function launch() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('jarvis').style.display = 'flex';
+  startIdle();
+  restoreChat();
+  initRecognition();
+  if (!sett().anthropicKey) setTimeout(openSettings, 600);
+}
+
+document.getElementById('gateInput').addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
+
+// ── Settings ─────────────────────────────────
+function sett() { try { return JSON.parse(localStorage.getItem(SETT_KEY) || '{}'); } catch(e) { return {}; } }
+function saveSett(s) { localStorage.setItem(SETT_KEY, JSON.stringify(s)); }
+
+function openSettings() {
+  const s = sett();
+  document.getElementById('sAnthropicKey').value = s.anthropicKey || '';
+  document.getElementById('sElKey').value = s.elevenKey || '';
+  document.getElementById('sVoiceId').value = s.voiceId || DEFAULT_VOICE;
+  document.getElementById('sProvider').value = s.provider || 'elevenlabs';
+  onProviderChange();
+  populateBrowserVoices();
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings() { document.getElementById('settingsModal').classList.remove('open'); }
+
+function saveSettings() {
+  const s = {
+    anthropicKey: document.getElementById('sAnthropicKey').value.trim(),
+    elevenKey: document.getElementById('sElKey').value.trim(),
+    voiceId: document.getElementById('sVoiceId').value.trim() || DEFAULT_VOICE,
+    provider: document.getElementById('sProvider').value,
+    browserVoice: document.getElementById('sBrowserVoice').value,
+  };
+  saveSett(s);
+  closeSettings();
+  toast('Settings saved.', 'ok');
+}
+
+function onProviderChange() {
+  const v = document.getElementById('sProvider').value;
+  document.getElementById('elFields').style.display = v === 'elevenlabs' ? 'block' : 'none';
+  document.getElementById('browserFields').style.display = v === 'browser' ? 'block' : 'none';
+}
+
+function populateBrowserVoices() {
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  const sel = document.getElementById('sBrowserVoice');
+  const cur = sett().browserVoice;
+  sel.innerHTML = voices.map(v => `<option value="${xe(v.name)}" ${v.name===cur?'selected':''}>${xe(v.name)} (${xe(v.lang)})</option>`).join('') || '<option>Loading voices&hellip;</option>';
+}
+if (window.speechSynthesis) window.speechSynthesis.addEventListener('voiceschanged', populateBrowserVoices);
+
+async function testVoice() {
+  const provider = document.getElementById('sProvider').value;
+  const sample = 'JARVIS online. Good afternoon, Sir.';
+  if (provider === 'elevenlabs') {
+    const key = document.getElementById('sElKey').value.trim();
+    const vid = document.getElementById('sVoiceId').value.trim() || DEFAULT_VOICE;
+    if (!key) { toast('Enter your ElevenLabs key first.', 'err'); return; }
+    try { await elTTS(sample, key, vid); } catch(e) { toast('Test failed: ' + e.message, 'err'); }
+  } else {
+    bTTS(sample, document.getElementById('sBrowserVoice').value);
+  }
+}
+
+// ── Orb ────────────────────────────────────
+function setOrb(state) {
+  const orb = document.getElementById('orb');
+  ORB_STATES.forEach(s => orb.classList.remove('state-' + s));
+  orb.classList.add('state-' + state);
+  document.getElementById('orbStatus').textContent = STATUS_TEXT[state];
+}
+
+// ── Conversation ────────────────────────────
+let history = [];
+let display = [];
+
+function restoreChat() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CONV_KEY) || '{}');
+    history = saved.h || [];
+    display = saved.d || [];
+    if (display.length) {
+      document.getElementById('welcomeMsg').style.display = 'none';
+      display.forEach(m => appendMsg(m.role, m.text, m.time, false));
+      scrollBottom();
+    }
+  } catch(e) { history = []; display = []; }
+}
+
+function saveChat() {
+  localStorage.setItem(CONV_KEY, JSON.stringify({h: history, d: display}));
+}
+
+function clearChat() {
+  stopRecognition();
+  history = []; display = [];
+  localStorage.removeItem(CONV_KEY);
+  document.getElementById('transcript').innerHTML = '<div class="j-welcome"><div class="j-welcome-title">Conversation cleared, Sir.</div>Ready when you are.</div>';
+  setOrb('idle');
+}
+
+function appendMsg(role, text, time, save = true) {
+  const isUser = role === 'user';
+  const t = time || new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  const el = document.createElement('div');
+  el.className = 'j-msg ' + role;
+  el.innerHTML = `<div class="j-av">${isUser ? 'S' : 'J'}</div><div><div class="j-bubble">${xe(text)}</div><span class="j-time">${t}</span></div>`;
+  const tc = document.getElementById('transcript');
+  const wm = document.getElementById('welcomeMsg');
+  if (wm) wm.style.display = 'none';
+  tc.appendChild(el);
+  scrollBottom();
+  if (save) { display.push({role, text, time: t}); saveChat(); }
+  return el;
+}
+
+function showTyping() {
+  const el = document.createElement('div');
+  el.className = 'j-msg jarvis j-typing'; el.id = 'typing';
+  el.innerHTML = '<div class="j-av">J</div><div class="j-bubble"><div class="dots"><span></span><span></span><span></span></div></div>';
+  document.getElementById('transcript').appendChild(el);
+  scrollBottom();
+}
+function hideTyping() { const e = document.getElementById('typing'); if (e) e.remove(); }
+function scrollBottom() { const t = document.getElementById('transcript'); t.scrollTop = t.scrollHeight; }
+
+// ── Claude ──────────────────────────────────
+let busy = false;
+
+async function process(text) {
+  if (busy || !text.trim()) return;
+  busy = true;
+  document.getElementById('micBtn').disabled = true;
+  appendMsg('user', text);
+  history.push({role:'user', content:text});
+  if (history.length > 40) history = history.slice(-40);
+  showTyping();
+  setOrb('thinking');
+  let reply = '';
+  try {
+    const s = sett();
+    if (!s.anthropicKey) { hideTyping(); setOrb('idle'); openSettings(); busy = false; document.getElementById('micBtn').disabled = false; return; }
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': s.anthropicKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-allow-browser': 'true',
+      },
+      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:512, system:SYSTEM, messages:history})
+    });
+    if (!res.ok) { const e = await res.json().catch(()=>({error:{message:'API error '+res.status}})); throw new Error(e.error?.message || 'API error ' + res.status); }
+    const data = await res.json();
+    reply = data.content[0].text;
+    history.push({role:'assistant', content:reply});
+  } catch(e) {
+    hideTyping(); setOrb('idle');
+    toast(e.message, 'err');
+    busy = false; document.getElementById('micBtn').disabled = false;
+    return;
+  }
+  hideTyping();
+  appendMsg('jarvis', reply);
+  setOrb('speaking');
+  try { await speak(reply); } catch(e) { toast('TTS error — check settings.', 'err'); }
+  setOrb('idle');
+  busy = false;
+  document.getElementById('micBtn').disabled = false;
+}
+
+// ── ElevenLabs TTS ──────────────────────────
+async function elTTS(text, key, voiceId) {
+  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId || DEFAULT_VOICE}`, {
+    method: 'POST',
+    headers: {'xi-api-key': key, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg'},
+    body: JSON.stringify({text, model_id:'eleven_turbo_v2_5', voice_settings:{stability:.55,similarity_boost:.75,style:.06,use_speaker_boost:true}})
+  });
+  if (!res.ok) throw new Error('ElevenLabs ' + res.status);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  return new Promise((ok, fail) => {
+    const a = new Audio(url);
+    a.onended = () => { URL.revokeObjectURL(url); ok(); };
+    a.onerror = () => { URL.revokeObjectURL(url); fail(new Error('Audio playback failed')); };
+    a.play().catch(fail);
+  });
+}
+
+// ── Browser TTS ─────────────────────────────
+function bTTS(text, voiceName) {
+  return new Promise(ok => {
+    if (!window.speechSynthesis) { ok(); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.92; u.pitch = 0.88; u.volume = 1;
+    if (voiceName) {
+      const v = window.speechSynthesis.getVoices().find(x => x.name === voiceName);
+      if (v) u.voice = v;
+    } else {
+      const v = window.speechSynthesis.getVoices().find(x => x.lang === 'en-GB');
+      if (v) u.voice = v;
+    }
+    u.onend = ok; u.onerror = ok;
+    window.speechSynthesis.speak(u);
+  });
+}
+
+async function speak(text) {
+  const s = sett();
+  if ((s.provider || 'elevenlabs') === 'elevenlabs' && s.elevenKey) {
+    await elTTS(text, s.elevenKey, s.voiceId || DEFAULT_VOICE);
+  } else {
+    await bTTS(text, s.browserVoice);
+  }
+}
+
+// ── Speech Recognition ────────────────────────
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null;
+let recActive = false;
+let recResult = '';
+
+function initRecognition() {
+  if (!SR) return;
+  rec = new SR();
+  rec.lang = 'en-GB';
+  rec.continuous = false;
+  rec.interimResults = false;
+  rec.onresult = e => { recResult = e.results[0][0].transcript; };
+  rec.onerror = e => {
+    if (e.error !== 'no-speech' && e.error !== 'aborted') toast('Mic: ' + e.error, 'err');
+    setOrb('idle'); recActive = false;
+    document.getElementById('micBtn').classList.remove('active');
+  };
+  rec.onend = () => {
+    recActive = false;
+    document.getElementById('micBtn').classList.remove('active');
+    if (recResult) { const t = recResult; recResult = ''; process(t); }
+    else setOrb('idle');
+  };
+}
+
+function startRec() {
+  if (busy || !SR) { if (!SR) toast('Speech not supported. Use Chrome or Edge.', 'err'); return; }
+  if (!rec) initRecognition();
+  if (recActive) return;
+  recResult = '';
+  try { rec.start(); } catch(e) { return; }
+  recActive = true;
+  setOrb('listening');
+  document.getElementById('micBtn').classList.add('active');
+}
+
+function stopRecognition() {
+  if (recActive && rec) { try { rec.stop(); } catch(e){} }
+}
+
+function toggleMic() {
+  if (busy) return;
+  if (recActive) { stopRecognition(); recResult = ''; setOrb('idle'); }
+  else startRec();
+}
+
+// Spacebar hold-to-talk
+let spaceHeld = false;
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && !e.repeat && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    if (!spaceHeld && !busy) { spaceHeld = true; startRec(); }
+  }
+});
+document.addEventListener('keyup', e => {
+  if (e.code === 'Space' && spaceHeld) {
+    spaceHeld = false;
+    if (recActive) stopRecognition();
+  }
+});
+
+// ── Text input ───────────────────────────────
+function toggleText() {
+  const p = document.getElementById('textPanel');
+  const b = document.getElementById('typeBtn');
+  const open = p.classList.toggle('open');
+  b.classList.toggle('on', open);
+  if (open) document.getElementById('textInput').focus();
+}
+
+function sendText() {
+  const inp = document.getElementById('textInput');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = '';
+  process(txt);
+}
+
+document.getElementById('textInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendText(); });
+
+// ── Toast ───────────────────────────────────
+let toastTimer = null;
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  clearTimeout(toastTimer);
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  toastTimer = setTimeout(() => { el.className = 'toast'; }, 3500);
+}
+
+// ── Util ──────────────────────────────────────
+function xe(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Boot ──────────────────────────────────────
+checkSession();
+</script>
+</body>
+</html>
