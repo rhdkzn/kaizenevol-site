@@ -51,6 +51,21 @@
     .dash-date{font-size:12px;color:var(--muted);font-weight:500;}
     .btn-logout{font-size:12px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:5px 13px;cursor:pointer;font-family:'Poppins',sans-serif;transition:color .2s,border-color .2s;}
     .btn-logout:hover{color:var(--red);border-color:var(--red);}
+    .btn-chpw{font-size:12px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:5px 13px;cursor:pointer;font-family:'Poppins',sans-serif;transition:color .2s,border-color .2s;}
+    .btn-chpw:hover{color:var(--purple);border-color:var(--purple);}
+    #chpwModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:24px;}
+    #chpwModal.open{display:flex;}
+    .chpw-card{background:var(--surface);border-radius:16px;padding:36px 32px;width:100%;max-width:380px;box-shadow:0 8px 40px rgba(0,0,0,0.5);}
+    .chpw-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+    .chpw-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
+    .chpw-inp{width:100%;padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Poppins',sans-serif;font-size:13px;outline:none;margin-bottom:10px;box-sizing:border-box;transition:border-color .2s;}
+    .chpw-inp:focus{border-color:var(--purple);}
+    .chpw-err{font-size:12px;color:var(--red);min-height:18px;margin-bottom:10px;}
+    .chpw-ok{font-size:12px;color:var(--green);min-height:18px;margin-bottom:10px;}
+    .chpw-btns{display:flex;gap:10px;margin-top:4px;}
+    .chpw-submit{flex:1;padding:10px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+    .chpw-submit:hover{background:var(--purple-d);}
+    .chpw-cancel{padding:10px 16px;background:none;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;}
     .dash-main{max-width:1240px;margin:0 auto;padding:28px 32px 72px;display:flex;flex-direction:column;gap:28px;}
     .section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:14px;}
     /* Stats */
@@ -170,6 +185,7 @@
       </nav>
       <div class="dash-header-right">
         <span class="dash-date" id="headerDate"></span>
+        <button class="btn-chpw" onclick="openChangePw()">Change Password</button>
         <button class="btn-logout" onclick="logout()">Log out</button>
       </div>
     </div>
@@ -222,6 +238,21 @@
 
   </main>
 </div>
+<div id="chpwModal" onclick="if(event.target===this)closeChangePw()">
+  <div class="chpw-card">
+    <div class="chpw-title">Change Password</div>
+    <div class="chpw-sub">Updates both your local gate and Supabase sync.</div>
+    <input type="password" class="chpw-inp" id="chpwCurrent" placeholder="Current password" autocomplete="current-password" />
+    <input type="password" class="chpw-inp" id="chpwNew" placeholder="New password" autocomplete="new-password" />
+    <input type="password" class="chpw-inp" id="chpwConfirm" placeholder="Confirm new password" autocomplete="new-password" onkeydown="if(event.key==='Enter')submitChangePw()" />
+    <div class="chpw-err" id="chpwErr"></div>
+    <div class="chpw-ok" id="chpwOk"></div>
+    <div class="chpw-btns">
+      <button class="chpw-cancel" onclick="closeChangePw()">Cancel</button>
+      <button class="chpw-submit" id="chpwBtn" onclick="submitChangePw()">Update Password</button>
+    </div>
+  </div>
+</div>
 <script>
 // Configure via Settings — do not hardcode credentials
 const SESSION_KEY='ke_session',DATA_KEY='ke_data',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=5,LOCKOUT_TTL=18e5;
@@ -271,6 +302,31 @@ async function attemptLogin(){
 }
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
 function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showDashboard();return;}}catch(e){}}initGateUI();applyLockoutUI();}
+function openChangePw(){document.getElementById('chpwCurrent').value='';document.getElementById('chpwNew').value='';document.getElementById('chpwConfirm').value='';document.getElementById('chpwErr').textContent='';document.getElementById('chpwOk').textContent='';document.getElementById('chpwBtn').disabled=false;document.getElementById('chpwBtn').textContent='Update Password';document.getElementById('chpwModal').classList.add('open');setTimeout(()=>document.getElementById('chpwCurrent').focus(),50);}
+function closeChangePw(){document.getElementById('chpwModal').classList.remove('open');}
+async function submitChangePw(){
+  const cur=document.getElementById('chpwCurrent').value;
+  const nw=document.getElementById('chpwNew').value;
+  const cf=document.getElementById('chpwConfirm').value;
+  const err=document.getElementById('chpwErr');const ok=document.getElementById('chpwOk');
+  err.textContent='';ok.textContent='';
+  if(!cur||!nw||!cf){err.textContent='All fields are required.';return;}
+  if(nw.length<8){err.textContent='New password must be at least 8 characters.';return;}
+  if(nw!==cf){err.textContent='New passwords do not match.';return;}
+  const storedHash=localStorage.getItem(PW_HASH_KEY),storedSalt=localStorage.getItem(PW_SALT_KEY);
+  if(!storedHash){err.textContent='No password set — log out and set one from the gate.';return;}
+  const btn=document.getElementById('chpwBtn');btn.disabled=true;btn.textContent='Verifying…';
+  const{hash:curHash}=await pbkdf2Hash(cur,storedSalt);
+  if(curHash!==storedHash){err.textContent='Current password is incorrect.';btn.disabled=false;btn.textContent='Update Password';return;}
+  btn.textContent='Updating…';
+  const{hash:newHash,salt:newSalt}=await pbkdf2Hash(nw,null);
+  localStorage.setItem(PW_HASH_KEY,newHash);localStorage.setItem(PW_SALT_KEY,newSalt);
+  const{error:sbErr}=await _sb.auth.updateUser({password:nw});
+  if(sbErr){ok.textContent='Local password updated. Supabase sync password unchanged — update it manually in Supabase Auth if needed.';console.warn('Supabase updateUser:',sbErr);}
+  else{ok.textContent='Password updated successfully.';}
+  btn.disabled=false;btn.textContent='Update Password';
+  setTimeout(closeChangePw,2000);
+}
 let _dashChannel=null;
 function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();_sb.auth.signOut().catch(()=>{});localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
 async function showDashboard(){
