@@ -267,8 +267,19 @@ async function attemptLogin(){
 }
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
 function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showDashboard();return;}}catch(e){}}initGateUI();applyLockoutUI();}
-function logout(){stopIdleWatch();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
-async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();const remote=await _cloudPull(DATA_KEY);if(remote&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};localStorage.setItem(DATA_KEY,JSON.stringify(merged));}else if(!remote){_cloudPush(DATA_KEY,load());}init();}
+let _dashChannel=null;
+function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
+async function showDashboard(){
+  document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();
+  const remote=await _cloudPull(DATA_KEY);
+  if(remote&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};localStorage.setItem(DATA_KEY,JSON.stringify(merged));}
+  else if(!remote){_cloudPush(DATA_KEY,load());}
+  if(_dashChannel){_sb.removeChannel(_dashChannel);}
+  _dashChannel=_sb.channel('dash_sync')
+    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderStats(merged);renderRevenue(merged);renderSnapshot(merged);renderTasks(merged);}})
+    .subscribe();
+  init();
+}
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
 const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',bookedCalls:'',spend:'',updated:''}},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
 async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){console.warn('Supabase push:',e);}}
