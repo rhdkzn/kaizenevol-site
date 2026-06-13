@@ -142,9 +142,9 @@
     <div class="gate-logo"><img src="logo.png" alt="KaizenEvol" class="gate-badge" /><span class="gate-logo-name">KaizenEvol</span></div>
     <div class="gate-title">Dashboard</div>
     <div class="gate-sub">Private access only. Enter your password.</div>
+    <div class="gate-err" id="gateErr" style="font-size:11px;color:var(--amber,#f59e0b);margin-top:6px;cursor:pointer" onclick="localStorage.removeItem('ke_lockout')" title="Click to clear lockout"></div>
     <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" />
     <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock &rarr;</button>
-    <div class="gate-err" id="gateErr"></div>
     <div class="gate-lockout" id="gateLockout"></div>
   </div>
 </div>
@@ -237,10 +237,10 @@ async function attemptLogin(){
     const attempts=recordFailedAttempt();
     const inp=document.getElementById('gateInput');inp.classList.add('error');
     const errEl=document.getElementById('gateErr');
-    if(isLockedOut()){errEl.textContent='';applyLockoutUI();}
-    else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=left>0?`Incorrect password. ${left} attempt(s) remaining.`:'Incorrect password.';}
+    if(isLockedOut()){applyLockoutUI();}
+    else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=error.message||(`Incorrect password. ${left} attempt(s) remaining.`);}
     inp.value='';btn.disabled=false;
-    setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},2400);
+    setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);
     return false;
   }
   clearLockout();
@@ -248,7 +248,7 @@ async function attemptLogin(){
   showDashboard();
   return true;
 }
-async function checkSession(){const{data:{session}}=await _sb.auth.getSession();if(!session){applyLockoutUI();return;}showDashboard();}
+async function checkSession(){try{const{data:{session},error}=await _sb.auth.getSession();if(error)document.getElementById('gateErr').textContent='Auth error: '+error.message;if(!session){applyLockoutUI();return;}showDashboard();}catch(e){document.getElementById('gateErr').textContent='Connection error — check console.';console.error('checkSession:',e);}}
 function logout(){stopIdleWatch();_sb.auth.signOut();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
 _sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(!session&&document.getElementById('dashboard').style.display!=='none')){logout();}});
 async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();const remote=await _cloudPull(DATA_KEY);if(remote&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};localStorage.setItem(DATA_KEY,JSON.stringify(merged));}else if(!remote){_cloudPush(DATA_KEY,load());}init();}
