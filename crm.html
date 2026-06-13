@@ -494,6 +494,7 @@
 // Configure via Settings — do not hardcode credentials
 const SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',SCRAPER_KEY='ke_scraper',EMAIL_KEY='ke_email',IDLE_TTL=18e5;
 const LOCKOUT_KEY='ke_lockout',MAX_ATTEMPTS=5,LOCKOUT_TTL=18e5;
+const _sb=supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
 let activeFilter='all',idleTimer=null,autoScanTimer=null;
 
 function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();},IDLE_TTL);}
@@ -712,7 +713,6 @@ function delJob(i){const d=load();if(!d.commission)return;d.commission.jobs.spli
 /* ── LEAD SCRAPER ── */
 const BAD_AD_SIGNALS=['boost post','call us','click here','limited time','act now'];
 const GOOD_AD_SIGNALS=['before','after','transform','free quote','free estimate','results','case study'];
-const _sb=supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
 async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){console.warn('Supabase push:',e);}}
 async function _cloudPull(key){try{const{data,error}=await _sb.from('app_data').select('data').eq('id',key).single();if(!error&&data){localStorage.setItem(key,JSON.stringify(data.data));return data.data;}}catch(e){}return null;}
 function loadScraper(){try{return JSON.parse(localStorage.getItem(SCRAPER_KEY)||'{}')}catch(e){return{}}}
