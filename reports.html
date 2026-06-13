@@ -224,10 +224,9 @@ let idleTimer=null;
 function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>logout(),IDLE_TTL);}
 function startIdle(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
 function stopIdle(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
-async function checkSession(){const{data:{session}}=await _sb.auth.getSession();if(!session){window.location.href='dashboard.html';return;}showApp();}
-function logout(){stopIdle();_sb.auth.signOut();localStorage.removeItem(SESSION_KEY);window.location.href='dashboard.html';}
+function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showApp();return;}}catch(e){}}window.location.href='dashboard.html';}
+function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);window.location.href='dashboard.html';}
 function showApp(){document.getElementById('app').style.display='block';startIdle();init();}
-_sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(!session&&document.getElementById('app').style.display!=='none')){logout();}});
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function loadData(){try{const r=localStorage.getItem(DATA_KEY);return r?JSON.parse(r):{clients:[{id:'nav',name:'Navpreet Singh'}]};}catch(e){return{clients:[]};}}

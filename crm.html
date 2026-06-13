@@ -321,8 +321,8 @@
 <div id="gate">
   <div class="gate-card">
     <div class="gate-logo"><img src="logo.png" alt="KaizenEvol" class="gate-badge" /><span class="gate-logo-name">KaizenEvol</span></div>
-    <div class="gate-title">CRM</div>
-    <div class="gate-sub">Private access only. Enter your password.</div>
+    <div class="gate-title" id="gateTitle">CRM</div>
+    <div class="gate-sub" id="gateSub">Private access only. Enter your password.</div>
     <input type="password" class="gate-input" id="gateInput" placeholder="Password" autocomplete="off" />
     <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock &rarr;</button>
     <div class="gate-err" id="gateErr"></div>
@@ -505,17 +505,27 @@ function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
 function remainingLockout(){const l=getLockout();return Math.max(0,Math.ceil((l.until-Date.now())/60000));}
 function recordFailedAttempt(){const l=getLockout();const attempts=(l.attempts||0)+1;const until=attempts>=MAX_ATTEMPTS?Date.now()+LOCKOUT_TTL:null;localStorage.setItem(LOCKOUT_KEY,JSON.stringify({attempts,until}));return attempts;}
 function clearLockout(){localStorage.removeItem(LOCKOUT_KEY);}
-async function checkSession(){const{data:{session}}=await _sb.auth.getSession();if(!session){showGate();return;}showApp();}
+// Auth — PBKDF2 via SubtleCrypto. No external service dependency.
+const PW_HASH_KEY='ke_pw_hash',PW_SALT_KEY='ke_pw_salt';
+function inSetupMode(){return !localStorage.getItem(PW_HASH_KEY);}
+function initGateUI(){if(inSetupMode()){const t=document.getElementById('gateTitle'),s=document.getElementById('gateSub'),b=document.getElementById('gateBtn');if(t)t.textContent='Set Your Password';if(s)s.textContent='First time setup — choose a password for this dashboard.';if(b)b.textContent='Set Password →';}}
+async function pbkdf2Hash(pw,saltHex){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const salt=saltHex?new Uint8Array(saltHex.match(/../g).map(h=>parseInt(h,16))):crypto.getRandomValues(new Uint8Array(32));const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},key,256);const hash=Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');const usedSalt=Array.from(salt).map(b=>b.toString(16).padStart(2,'0')).join('');return{hash,salt:usedSalt};}
+function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
+function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showApp();return;}}catch(e){}}initGateUI();showGate();}
 function showGate(){document.getElementById('gate').style.display='flex';document.getElementById('app').style.display='none';setTimeout(()=>document.getElementById('gateInput').focus(),50);}
 async function attemptLogin(){
   if(isLockedOut()){const err=document.getElementById('gateErr');err.textContent=`Too many failed attempts. Try again in ${remainingLockout()} minute(s).`;return;}
   const pw=document.getElementById('gateInput').value;if(!pw)return;
   const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';
-  // Use Supabase Auth — configure via Settings — do not hardcode credentials
-  const email='rahaid@kaizenevol.com';
-  const{data,error}=await _sb.auth.signInWithPassword({email,password:pw});
-  btn.textContent='Unlock →';
-  if(error){
+  if(inSetupMode()){
+    const{hash,salt}=await pbkdf2Hash(pw,null);
+    localStorage.setItem(PW_HASH_KEY,hash);localStorage.setItem(PW_SALT_KEY,salt);
+    clearLockout();openSession();btn.disabled=false;document.getElementById('gate').style.display='none';showApp();return true;
+  }
+  const storedHash=localStorage.getItem(PW_HASH_KEY),storedSalt=localStorage.getItem(PW_SALT_KEY);
+  const{hash}=await pbkdf2Hash(pw,storedSalt);
+  btn.textContent='Unlock →';btn.disabled=false;
+  if(hash!==storedHash){
     const attempts=recordFailedAttempt();
     const inp=document.getElementById('gateInput');inp.classList.add('error');
     const errEl=document.getElementById('gateErr');
@@ -525,14 +535,9 @@ async function attemptLogin(){
     setTimeout(()=>{inp.classList.remove('error');if(!isLockedOut()){errEl.textContent='';}},2400);
     return false;
   }
-  clearLockout();
-  localStorage.setItem(SESSION_KEY,JSON.stringify({access_token:data.session.access_token,expires_at:data.session.expires_at}));
-  document.getElementById('gate').style.display='none';
-  showApp();
-  return true;
+  clearLockout();openSession();document.getElementById('gate').style.display='none';showApp();return true;
 }
-function logout(){clearInterval(_syncInterval);stopIdle();_sb.auth.signOut();localStorage.removeItem(SESSION_KEY);showGate();}
-_sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(!session&&document.getElementById('app').style.display!=='none')){logout();}});
+function logout(){clearInterval(_syncInterval);stopIdle();localStorage.removeItem(SESSION_KEY);showGate();}
 let _syncInterval=null;async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);if(Array.isArray(remote)&&remote.length>0){const local=loadLeads();if(remote.length!==local.length||JSON.stringify(remote)!==JSON.stringify(local)){localStorage.setItem(LEADS_KEY,JSON.stringify(remote));renderLeads();renderLeadStats();renderOutreachQueue();}}}async function showApp(){document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();clearInterval(_syncInterval);_syncInterval=setInterval(_liveSyncLeads,180000);const[remoteLeads,remoteScraper,remoteEmail]=await Promise.all([_cloudPull(LEADS_KEY),_cloudPull(SCRAPER_KEY),_cloudPull(EMAIL_KEY)]);if(Array.isArray(remoteLeads)&&remoteLeads.length>0){localStorage.setItem(LEADS_KEY,JSON.stringify(remoteLeads));}else if(!remoteLeads){const local=loadLeads();if(local.length>0)_cloudPush(LEADS_KEY,local);}if(remoteScraper&&Object.keys(remoteScraper).length>0){localStorage.setItem(SCRAPER_KEY,JSON.stringify(remoteScraper));}else if(!remoteScraper){_cloudPush(SCRAPER_KEY,loadScraper());}if(remoteEmail&&Object.keys(remoteEmail).length>0){localStorage.setItem(EMAIL_KEY,JSON.stringify(remoteEmail));}else if(!remoteEmail){_cloudPush(EMAIL_KEY,loadEmail());}init();}
 
 /* ── DATA ── */
