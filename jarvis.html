@@ -6,6 +6,11 @@
   <title>JARVIS — KaizenEvol</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#060812" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="JARVIS" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -348,7 +353,7 @@ Response rules:
 - Lead with the answer, not the reasoning
 - Today is 2026-06-13`;
 
-// ── Auth ─────────────────────────────────────
+// ── Auth ───────────────────────────────
 async function pbkdf2(pw, saltHex) {
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey('raw', enc.encode(pw), {name:'PBKDF2'}, false, ['deriveBits']);
@@ -415,7 +420,7 @@ function launch() {
 
 document.getElementById('gateInput').addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
 
-// ── Settings ─────────────────────────────────
+// ── Settings ────────────────────────────
 function sett() { try { return JSON.parse(localStorage.getItem(SETT_KEY) || '{}'); } catch(e) { return {}; } }
 function saveSett(s) { localStorage.setItem(SETT_KEY, JSON.stringify(s)); }
 
@@ -471,7 +476,7 @@ async function testVoice() {
   }
 }
 
-// ── Orb ────────────────────────────────────
+// ── Orb ──────────────────────────────────
 function setOrb(state) {
   const orb = document.getElementById('orb');
   ORB_STATES.forEach(s => orb.classList.remove('state-' + s));
@@ -479,7 +484,7 @@ function setOrb(state) {
   document.getElementById('orbStatus').textContent = STATUS_TEXT[state];
 }
 
-// ── Conversation ────────────────────────────
+// ── Conversation ──────────────────────────
 let history = [];
 let display = [];
 
@@ -533,7 +538,7 @@ function showTyping() {
 function hideTyping() { const e = document.getElementById('typing'); if (e) e.remove(); }
 function scrollBottom() { const t = document.getElementById('transcript'); t.scrollTop = t.scrollHeight; }
 
-// ── Claude ──────────────────────────────────
+// ── Claude ──────────────────────────────
 let busy = false;
 
 async function process(text) {
@@ -705,7 +710,7 @@ function sendText() {
 
 document.getElementById('textInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendText(); });
 
-// ── Toast ───────────────────────────────────
+// ── Toast ─────────────────────────────────
 let toastTimer = null;
 function toast(msg, type = '') {
   const el = document.getElementById('toast');
@@ -715,8 +720,13 @@ function toast(msg, type = '') {
   toastTimer = setTimeout(() => { el.className = 'toast'; }, 3500);
 }
 
-// ── Util ──────────────────────────────────────
+// ── Util ────────────────────────────────────
 function xe(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Service Worker ───────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
 
 // ── Boot ──────────────────────────────────────
 checkSession();
