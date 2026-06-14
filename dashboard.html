@@ -53,7 +53,6 @@
     .btn-logout:hover{color:var(--red);border-color:var(--red);}
 .dash-main{max-width:1240px;margin:0 auto;padding:28px 32px 72px;display:flex;flex-direction:column;gap:28px;}
     .section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:14px;}
-    /* Stats */
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
     .stat-card{background:var(--surface);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);border:1px solid var(--border);}
     .stat-card.highlight{background:var(--purple);border-color:var(--purple);}
@@ -65,7 +64,6 @@
     .highlight .stat-s{color:rgba(255,255,255,.65);}
     .prog-bar{height:5px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:10px;overflow:hidden;}
     .prog-fill{height:100%;background:#fff;border-radius:3px;transition:width .4s ease;}
-    /* Revenue Target */
     .revenue-card{background:var(--surface);border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow);border:1px solid var(--border);}
     .rev-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap;}
     .rev-title{font-size:18px;font-weight:800;}
@@ -83,7 +81,6 @@
     .ret-slot{height:36px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--muted);transition:all .2s;}
     .ret-slot.filled{background:var(--purple);border-color:var(--purple);color:#fff;}
     .ret-slot.filled.retainer{background:var(--green);border-color:var(--green);}
-    /* Client Snapshot */
     .snapshot-list{display:flex;flex-direction:column;gap:10px;}
     .snap-item{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid var(--border);transition:border-color .2s;}
     .snap-item:hover{border-color:var(--purple-m);}
@@ -98,11 +95,9 @@
     .psl-conversion{background:rgba(245,158,11,0.2);color:#fbbf24;}
     .psl-retainer{background:rgba(34,197,94,0.15);color:#4ade80;}
     .psl-inactive{background:rgba(156,163,175,0.1);color:#9ca3af;}
-    /* Bottom grid */
     .bottom-grid{display:grid;grid-template-columns:2fr 1.2fr 1fr;gap:22px;align-items:start;}
     .side-stack{display:flex;flex-direction:column;gap:22px;}
     .card{background:var(--surface);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);border:1px solid var(--border);}
-    /* Tasks */
     .task-row{display:flex;gap:8px;margin-bottom:14px;}
     .task-inp{flex:1;padding:9px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Poppins',sans-serif;font-size:13px;outline:none;transition:border-color .2s;background:var(--bg);color:var(--text);}
     .task-inp:focus{border-color:var(--purple);}
@@ -121,11 +116,9 @@
     .task-item:hover .t-del{opacity:1;}
     .t-del:hover{color:var(--red);}
     .empty-msg{font-size:12px;color:var(--muted);text-align:center;padding:20px 0;}
-    /* Notes */
     .notes-ta{width:100%;min-height:130px;padding:13px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--text);line-height:1.6;border:1.5px solid var(--border);border-radius:var(--radius-sm);resize:vertical;outline:none;transition:border-color .2s,background .2s;background:var(--bg);}
     .notes-ta:focus{border-color:var(--purple);background:var(--surface);}
     .notes-saved{font-size:11px;color:var(--muted);margin-top:6px;height:14px;}
-    /* Quick Links */
     .qlinks{display:flex;flex-direction:column;gap:7px;}
     .qlink{display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--bg);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--text);transition:background .2s,color .2s;border:1.5px solid transparent;}
     .qlink:hover{background:var(--purple-l);color:var(--purple);border-color:var(--purple-m);}
@@ -133,18 +126,10 @@
     @media(max-width:900px){.bottom-grid{grid-template-columns:1fr 1fr;}.rev-retainer-grid{grid-template-columns:repeat(5,1fr);}}
     @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 12px;}.stat-v{font-size:24px;}.rev-current{font-size:24px;}.rev-retainer-grid{grid-template-columns:repeat(5,1fr);}.dash-date{display:none;}.dash-nav-link{padding:5px 9px;font-size:12px;}.btn-logout{padding:5px 10px;font-size:11px;}.dash-header-inner{gap:8px;}}
   </style>
-  <!-- Pinned to v2.39.7 — SRI hash should be added once hash is verified from build artefact -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    window.onerror=function(msg,src,line){
-      var d=document.getElementById('gateErr');
-      if(d)d.textContent='JS Error: '+msg+' (line '+line+')';
-      return false;
-    };
-    window.onunhandledrejection=function(e){
-      var d=document.getElementById('gateErr');
-      if(d)d.textContent='Error: '+(e.reason&&e.reason.message||e.reason||'Unknown async error');
-    };
+    window.onerror=function(msg,src,line){var d=document.getElementById('gateErr');if(d)d.textContent='JS Error: '+msg+' (line '+line+')';return false;};
+    window.onunhandledrejection=function(e){var d=document.getElementById('gateErr');if(d)d.textContent='Error: '+(e.reason&&e.reason.message||e.reason||'Unknown async error');};
   </script>
 </head>
 <body>
@@ -167,21 +152,18 @@
         <a href="dashboard.html" class="dash-nav-link active">Dashboard</a>
         <a href="crm.html" class="dash-nav-link">CRM</a>
         <a href="reports.html" class="dash-nav-link">Reports</a>
-        <a href="jarvis.html" class="dash-nav-link">JARVIS</a>
       </nav>
       <div class="dash-header-right">
         <span class="dash-date" id="headerDate"></span>
-<button class="btn-logout" onclick="logout()">Log out</button>
+        <button class="btn-logout" onclick="logout()">Log out</button>
       </div>
     </div>
   </header>
   <main class="dash-main">
-
     <section>
       <div class="section-label">Overview</div>
       <div class="stats-row" id="statsRow"></div>
     </section>
-
     <section>
       <div class="section-label">Revenue Target</div>
       <div class="revenue-card">
@@ -208,7 +190,6 @@
         <div class="rev-retainer-grid" id="retainerGrid"></div>
       </div>
     </section>
-
     <section class="card">
       <div class="section-label">Quick Links</div>
       <div class="qlinks">
@@ -220,11 +201,9 @@
         <a href="https://adsmanager.facebook.com" target="_blank" class="qlink"><span class="qlink-icon">&#x1F4CA;</span> Ads Manager</a>
       </div>
     </section>
-
   </main>
 </div>
 <script>
-// Configure via Settings — do not hardcode credentials
 const SESSION_KEY='ke_session',DATA_KEY='ke_data',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=5,LOCKOUT_TTL=18e5;
 function getLockout(){try{return JSON.parse(localStorage.getItem(LOCKOUT_KEY)||'{}');}catch(e){return {};}}
 function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
@@ -237,7 +216,6 @@ function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();
 function startIdleWatch(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
 function stopIdleWatch(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
 const _sb=supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
-// Auth — PBKDF2 via SubtleCrypto. No external service dependency.
 const PW_HASH_KEY='ke_pw_hash',PW_SALT_KEY='ke_pw_salt';
 function inSetupMode(){return !localStorage.getItem(PW_HASH_KEY);}
 function initGateUI(){if(inSetupMode()){document.getElementById('gateTitle').textContent='Set Your Password';document.getElementById('gateSub').textContent='First time setup — choose a password for this dashboard.';document.getElementById('gateBtn').textContent='Set Password →';}}
@@ -246,45 +224,18 @@ async function attemptLogin(){
   if(isLockedOut()){applyLockoutUI();return;}
   const pw=document.getElementById('gateInput').value;if(!pw)return;
   const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';
-  if(inSetupMode()){
-    const{hash,salt}=await pbkdf2Hash(pw,null);
-    localStorage.setItem(PW_HASH_KEY,hash);localStorage.setItem(PW_SALT_KEY,salt);
-    clearLockout();openSession();
-    _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});
-    btn.disabled=false;showDashboard();return true;
-  }
+  if(inSetupMode()){const{hash,salt}=await pbkdf2Hash(pw,null);localStorage.setItem(PW_HASH_KEY,hash);localStorage.setItem(PW_SALT_KEY,salt);clearLockout();openSession();_sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});btn.disabled=false;showDashboard();return true;}
   const storedHash=localStorage.getItem(PW_HASH_KEY),storedSalt=localStorage.getItem(PW_SALT_KEY);
   const{hash}=await pbkdf2Hash(pw,storedSalt);
   btn.textContent='Unlock →';btn.disabled=false;
-  if(hash!==storedHash){
-    const attempts=recordFailedAttempt();
-    const inp=document.getElementById('gateInput');inp.classList.add('error');
-    const errEl=document.getElementById('gateErr');
-    if(isLockedOut()){applyLockoutUI();}
-    else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=`Incorrect password. ${left} attempt(s) remaining.`;}
-    inp.value='';
-    setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);
-    return false;
-  }
-  clearLockout();openSession();
-  _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});
-  showDashboard();return true;
+  if(hash!==storedHash){const attempts=recordFailedAttempt();const inp=document.getElementById('gateInput');inp.classList.add('error');const errEl=document.getElementById('gateErr');if(isLockedOut()){applyLockoutUI();}else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=`Incorrect password. ${left} attempt(s) remaining.`;}inp.value='';setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);return false;}
+  clearLockout();openSession();_sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});showDashboard();return true;
 }
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
 function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showDashboard();return;}}catch(e){}}initGateUI();applyLockoutUI();}
 let _dashChannel=null;
 function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();_sb.auth.signOut().catch(()=>{});localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
-async function showDashboard(){
-  document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();
-  const remote=await _cloudPull(DATA_KEY);
-  if(remote&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};localStorage.setItem(DATA_KEY,JSON.stringify(merged));}
-  else if(!remote){_cloudPush(DATA_KEY,load());}
-  if(_dashChannel){_sb.removeChannel(_dashChannel);}
-  _dashChannel=_sb.channel('dash_sync')
-    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderStats(merged);renderRevenue(merged);renderSnapshot(merged);renderTasks(merged);}})
-    .subscribe();
-  init();
-}
+async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();const remote=await _cloudPull(DATA_KEY);if(remote&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};localStorage.setItem(DATA_KEY,JSON.stringify(merged));}else if(!remote){_cloudPush(DATA_KEY,load());}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderStats(merged);renderRevenue(merged);renderSnapshot(merged);renderTasks(merged);}}).subscribe();init();}
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
 const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',bookedCalls:'',spend:'',updated:''}},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
 async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){console.warn('Supabase push:',e);}}
@@ -293,85 +244,17 @@ function load(){try{const r=localStorage.getItem(DATA_KEY);return r?{...structur
 function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));_cloudPush(DATA_KEY,data);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function trialDays(startStr,total){if(!startStr)return null;const diff=Math.floor((Date.now()-new Date(startStr))/86400000);return{day:Math.max(1,diff+1),total};}
-function getClientStage(c){
-  if(c.status==='inactive')return{key:'inactive',label:'Inactive',day:0,daysLeft:0,pct:0};
-  if(c.status==='retainer')return{key:'retainer',label:'Retainer',day:60,daysLeft:0,pct:100};
-  if(!c.trialStartDate)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};
-  const t=trialDays(c.trialStartDate,c.trialDays||60);
-  if(!t)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};
-  const day=t.day;const total=t.total;const left=Math.max(0,total-day+1);
-  const pct=Math.min(100,Math.round(day/total*100));
-  if(day>=55)return{key:'conversion',label:'Conversion Due',day,daysLeft:left,pct};
-  if(day>=31)return{key:'optimising',label:'Optimising',day,daysLeft:left,pct};
-  return{key:'live',label:'Campaign Live',day,daysLeft:left,pct};
-}
-function renderStats(data){
-  const retainers=data.clients.filter(c=>c.status==='retainer');
-  const active=data.clients.filter(c=>c.status!=='inactive');
-  const mrr=retainers.reduce((n,c)=>n+(c.retainerValue||3500),0);
-  const goal=data.settings.goalRetainers||10;
-  const pct=Math.min(100,Math.round(retainers.length/goal*100));
-  const nav=data.clients.find(c=>c.id==='nav');
-  let trialInfo='—';
-  if(nav&&nav.status==='trial'){const t=trialDays(nav.trialStartDate,nav.trialDays);if(t){trialInfo=`Day ${t.day} / ${t.total}`;}}
-  else if(nav&&nav.status==='retainer'){trialInfo='Retainer ✓';}
-  const jobs=(data.commission&&data.commission.jobs)||[];
-  const pending=jobs.filter(j=>j.status==='pending').reduce((s,j)=>s+(j.commission||0),0);
-  document.getElementById('statsRow').innerHTML=`
-    <div class="stat-card highlight"><div class="stat-l">Goal Progress</div><div class="stat-v">${retainers.length} / ${goal}</div><div class="stat-s">£${mrr.toLocaleString()} MRR</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div>
-    <div class="stat-card"><div class="stat-l">MRR</div><div class="stat-v">£${mrr.toLocaleString()}</div><div class="stat-s">of £${((goal*(data.settings.retainerValue||3500))).toLocaleString()}/mo target</div></div>
-    <div class="stat-card"><div class="stat-l">Active Clients</div><div class="stat-v">${active.length}</div><div class="stat-s">${retainers.length} retainer${retainers.length!==1?'s':''} · ${active.length-retainers.length} trial</div></div>
-    <div class="stat-card"><div class="stat-l">Commission Owed</div><div class="stat-v" style="color:var(--amber)">£${pending.toLocaleString()}</div><div class="stat-s">${jobs.filter(j=>j.status==='pending').length} unpaid job(s)</div></div>`;
-}
-function renderRevenue(data){
-  const retainers=data.clients.filter(c=>c.status==='retainer');
-  const goal=data.settings.goalRetainers||10;
-  const rv=data.settings.retainerValue||3500;
-  const mrr=retainers.reduce((n,c)=>n+(c.retainerValue||rv),0);
-  const pct=Math.min(100,mrr/(goal*rv)*100);
-  document.getElementById('revCurrent').textContent='£'+mrr.toLocaleString();
-  document.getElementById('revFill').style.width=pct+'%';
-  const milestones=[{id:'m1',clients:1},{id:'m3',clients:3},{id:'m5',clients:5},{id:'m7',clients:7},{id:'m10',clients:10}];
-  milestones.forEach(m=>{const el=document.getElementById(m.id);if(el){if(retainers.length>=m.clients)el.classList.add('reached');else el.classList.remove('reached');}});
-  const grid=document.getElementById('retainerGrid');
-  grid.innerHTML=Array.from({length:goal},(_,i)=>{
-    const client=retainers[i];
-    const filled=i<retainers.length;
-    return`<div class="ret-slot ${filled?'filled retainer':''}" title="${filled?esc(client.name):'Empty slot'}">${filled?esc(client.name.split(' ')[0]):''}</div>`;
-  }).join('');
-}
-function renderSnapshot(data){
-  const active=data.clients.filter(c=>c.status!=='inactive');
-  const el=document.getElementById('snapshotList');
-  if(!el)return;
-  if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:16px 0;">No active clients. Add one in the CRM.</div>';return;}
-  el.innerHTML=active.map(c=>{
-    const s=getClientStage(c);
-    const dayStr=s.key==='retainer'?'Converted ✓':s.key==='onboarding'?'Set start date':s.key==='inactive'?'':(`Day ${s.day} / ${c.trialDays||60} — ${s.daysLeft} days left`);
-    return`<div class="snap-item">
-      <div class="snap-name">${esc(c.name)}</div>
-      <span class="snap-stage psl-${s.key}">${esc(s.label)}</span>
-      <div class="snap-day">${esc(dayStr)}</div>
-      <a href="crm.html" class="snap-link">View in CRM →</a>
-    </div>`;
-  }).join('');
-}
+function getClientStage(c){if(c.status==='inactive')return{key:'inactive',label:'Inactive',day:0,daysLeft:0,pct:0};if(c.status==='retainer')return{key:'retainer',label:'Retainer',day:60,daysLeft:0,pct:100};if(!c.trialStartDate)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};const t=trialDays(c.trialStartDate,c.trialDays||60);if(!t)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};const day=t.day;const total=t.total;const left=Math.max(0,total-day+1);const pct=Math.min(100,Math.round(day/total*100));if(day>=55)return{key:'conversion',label:'Conversion Due',day,daysLeft:left,pct};if(day>=31)return{key:'optimising',label:'Optimising',day,daysLeft:left,pct};return{key:'live',label:'Campaign Live',day,daysLeft:left,pct};}
+function renderStats(data){const retainers=data.clients.filter(c=>c.status==='retainer');const active=data.clients.filter(c=>c.status!=='inactive');const mrr=retainers.reduce((n,c)=>n+(c.retainerValue||3500),0);const goal=data.settings.goalRetainers||10;const pct=Math.min(100,Math.round(retainers.length/goal*100));const jobs=(data.commission&&data.commission.jobs)||[];const pending=jobs.filter(j=>j.status==='pending').reduce((s,j)=>s+(j.commission||0),0);document.getElementById('statsRow').innerHTML=`<div class="stat-card highlight"><div class="stat-l">Goal Progress</div><div class="stat-v">${retainers.length} / ${goal}</div><div class="stat-s">£${mrr.toLocaleString()} MRR</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div><div class="stat-card"><div class="stat-l">MRR</div><div class="stat-v">£${mrr.toLocaleString()}</div><div class="stat-s">of £${((goal*(data.settings.retainerValue||3500))).toLocaleString()}/mo target</div></div><div class="stat-card"><div class="stat-l">Active Clients</div><div class="stat-v">${active.length}</div><div class="stat-s">${retainers.length} retainer${retainers.length!==1?'s':''} · ${active.length-retainers.length} trial</div></div><div class="stat-card"><div class="stat-l">Commission Owed</div><div class="stat-v" style="color:var(--amber)">£${pending.toLocaleString()}</div><div class="stat-s">${jobs.filter(j=>j.status==='pending').length} unpaid job(s)</div></div>`;}
+function renderRevenue(data){const retainers=data.clients.filter(c=>c.status==='retainer');const goal=data.settings.goalRetainers||10;const rv=data.settings.retainerValue||3500;const mrr=retainers.reduce((n,c)=>n+(c.retainerValue||rv),0);const pct=Math.min(100,mrr/(goal*rv)*100);document.getElementById('revCurrent').textContent='£'+mrr.toLocaleString();document.getElementById('revFill').style.width=pct+'%';const milestones=[{id:'m1',clients:1},{id:'m3',clients:3},{id:'m5',clients:5},{id:'m7',clients:7},{id:'m10',clients:10}];milestones.forEach(m=>{const el=document.getElementById(m.id);if(el){if(retainers.length>=m.clients)el.classList.add('reached');else el.classList.remove('reached');}});const grid=document.getElementById('retainerGrid');grid.innerHTML=Array.from({length:goal},(_,i)=>{const client=retainers[i];const filled=i<retainers.length;return`<div class="ret-slot ${filled?'filled retainer':''}" title="${filled?esc(client.name):'Empty slot'}">${filled?esc(client.name.split(' ')[0]):''}</div>`;}).join('');}
+function renderSnapshot(data){const active=data.clients.filter(c=>c.status!=='inactive');const el=document.getElementById('snapshotList');if(!el)return;if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:16px 0;">No active clients.</div>';return;}el.innerHTML=active.map(c=>{const s=getClientStage(c);const dayStr=s.key==='retainer'?'Converted ✓':s.key==='onboarding'?'Set start date':s.key==='inactive'?'':(`Day ${s.day} / ${c.trialDays||60} — ${s.daysLeft} days left`);return`<div class="snap-item"><div class="snap-name">${esc(c.name)}</div><span class="snap-stage psl-${s.key}">${esc(s.label)}</span><div class="snap-day">${esc(dayStr)}</div><a href="crm.html" class="snap-link">View in CRM →</a></div>`;}).join('');}
 function renderTasks(data){const el=document.getElementById('taskList');if(!el)return;if(!data.tasks.length){el.innerHTML='<div class="empty-msg">No tasks yet.</div>';return;}el.innerHTML=data.tasks.map((t,i)=>`<div class="task-item ${t.done?'done':''}"><div class="t-check ${t.done?'on':''}" onclick="toggleTask(${i})"></div><span class="t-text">${esc(t.text)}</span><button class="t-del" onclick="delTask(${i})">×</button></div>`).join('');}
 function addTask(){const inp=document.getElementById('taskInput');const txt=inp.value.trim();if(!txt)return;const d=load();d.tasks.unshift({text:txt,done:false});save(d);renderTasks(d);inp.value='';}
 function toggleTask(i){const d=load();d.tasks[i].done=!d.tasks[i].done;save(d);renderTasks(d);}
 function delTask(i){const d=load();d.tasks.splice(i,1);save(d);renderTasks(d);}
 let notesTimer=null;
 function scheduleNoteSave(){clearTimeout(notesTimer);notesTimer=setTimeout(()=>{const d=load();d.notes=document.getElementById('notesArea').value;save(d);const el=document.getElementById('notesSaved');el.textContent='Saved.';setTimeout(()=>{el.textContent='';},1800);},700);}
-function init(){
-  document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
-  const d=load();
-  renderStats(d);
-  renderRevenue(d);
-  renderSnapshot(d);
-  renderTasks(d);
-  const notesEl=document.getElementById('notesArea');
-  if(notesEl)notesEl.value=d.notes||'';
-}
+function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';}
 checkSession();
 </script>
 </body>
