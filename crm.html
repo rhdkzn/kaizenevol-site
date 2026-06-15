@@ -500,7 +500,7 @@
 <script>
 // Configure via Settings — do not hardcode credentials
 const SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',SCRAPER_KEY='ke_scraper',EMAIL_KEY='ke_email',IDLE_TTL=18e5;
-const LOCKOUT_KEY='ke_lockout',MAX_ATTEMPTS=5,LOCKOUT_TTL=18e5;
+const LOCKOUT_KEY='ke_lockout',MAX_ATTEMPTS=3,LOCKOUT_TTL=18e5;
 const _sb=supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
 let activeFilter='all',idleTimer=null,autoScanTimer=null;
 
@@ -512,11 +512,10 @@ function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
 function remainingLockout(){const l=getLockout();return Math.max(0,Math.ceil((l.until-Date.now())/60000));}
 function recordFailedAttempt(){const l=getLockout();const attempts=(l.attempts||0)+1;const until=attempts>=MAX_ATTEMPTS?Date.now()+LOCKOUT_TTL:null;localStorage.setItem(LOCKOUT_KEY,JSON.stringify({attempts,until}));return attempts;}
 function clearLockout(){localStorage.removeItem(LOCKOUT_KEY);}
-// Auth — PBKDF2 via SubtleCrypto. No external service dependency.
-const PW_HASH_KEY='ke_pw_hash',PW_SALT_KEY='ke_pw_salt';
-function inSetupMode(){return !localStorage.getItem(PW_HASH_KEY);}
-function initGateUI(){if(inSetupMode()){const t=document.getElementById('gateTitle'),s=document.getElementById('gateSub'),b=document.getElementById('gateBtn');if(t)t.textContent='Set Your Password';if(s)s.textContent='First time setup — choose a password for this dashboard.';if(b)b.textContent='Set Password →';}}
-async function pbkdf2Hash(pw,saltHex){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const salt=saltHex?new Uint8Array(saltHex.match(/../g).map(h=>parseInt(h,16))):crypto.getRandomValues(new Uint8Array(32));const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},key,256);const hash=Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');const usedSalt=Array.from(salt).map(b=>b.toString(16).padStart(2,'0')).join('');return{hash,salt:usedSalt};}
+// Auth — hardcoded PBKDF2 hash, same on every device.
+const PW_HASH='967b2c7f7d08166bfabad63fb8fbd5743cfdbb7965bc33c08e73c700e2dc20f1',PW_SALT='6b61697a656e65766f6c323032366b61697a656e65766f6c3230323661613030';
+function initGateUI(){}
+async function pbkdf2Hash(pw){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const salt=new Uint8Array(PW_SALT.match(/../g).map(h=>parseInt(h,16)));const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},key,256);return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');}
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
 function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showApp();return;}}catch(e){}}initGateUI();showGate();}
 function showGate(){document.getElementById('gate').style.display='flex';document.getElementById('app').style.display='none';setTimeout(()=>document.getElementById('gateInput').focus(),50);}
@@ -524,17 +523,9 @@ async function attemptLogin(){
   if(isLockedOut()){const err=document.getElementById('gateErr');err.textContent=`Too many failed attempts. Try again in ${remainingLockout()} minute(s).`;return;}
   const pw=document.getElementById('gateInput').value;if(!pw)return;
   const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';
-  if(inSetupMode()){
-    const{hash,salt}=await pbkdf2Hash(pw,null);
-    localStorage.setItem(PW_HASH_KEY,hash);localStorage.setItem(PW_SALT_KEY,salt);
-    clearLockout();openSession();
-    _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});
-    btn.disabled=false;document.getElementById('gate').style.display='none';showApp();return true;
-  }
-  const storedHash=localStorage.getItem(PW_HASH_KEY),storedSalt=localStorage.getItem(PW_SALT_KEY);
-  const{hash}=await pbkdf2Hash(pw,storedSalt);
+  const hash=await pbkdf2Hash(pw);
   btn.textContent='Unlock →';btn.disabled=false;
-  if(hash!==storedHash){
+  if(hash!==PW_HASH){
     const attempts=recordFailedAttempt();
     const inp=document.getElementById('gateInput');inp.classList.add('error');
     const errEl=document.getElementById('gateErr');

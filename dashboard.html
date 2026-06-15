@@ -204,7 +204,7 @@
   </main>
 </div>
 <script>
-const SESSION_KEY='ke_session',DATA_KEY='ke_data',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=5,LOCKOUT_TTL=18e5;
+const SESSION_KEY='ke_session',DATA_KEY='ke_data',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=3,LOCKOUT_TTL=18e5;
 function getLockout(){try{return JSON.parse(localStorage.getItem(LOCKOUT_KEY)||'{}');}catch(e){return {};}}
 function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
 function remainingLockout(){const l=getLockout();return Math.max(0,Math.ceil((l.until-Date.now())/60000));}
@@ -216,28 +216,20 @@ function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();
 function startIdleWatch(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
 function stopIdleWatch(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
 const _sb=supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
-const PW_HASH_KEY='ke_pw_hash',PW_SALT_KEY='ke_pw_salt';
-function inSetupMode(){return !localStorage.getItem(PW_HASH_KEY);}
-function initGateUI(){if(inSetupMode()){document.getElementById('gateTitle').textContent='Set Your Password';document.getElementById('gateSub').textContent='First time setup — choose a password for this dashboard.';document.getElementById('gateBtn').textContent='Set Password →';}}
-async function pbkdf2Hash(pw,saltHex){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const salt=saltHex?new Uint8Array(saltHex.match(/../g).map(h=>parseInt(h,16))):crypto.getRandomValues(new Uint8Array(32));const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},key,256);const hash=Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');const usedSalt=Array.from(salt).map(b=>b.toString(16).padStart(2,'0')).join('');return{hash,salt:usedSalt};}
+const PW_HASH='967b2c7f7d08166bfabad63fb8fbd5743cfdbb7965bc33c08e73c700e2dc20f1',PW_SALT='6b61697a656e65766f6c323032366b61697a656e65766f6c3230323661613030';
+function initGateUI(){}
+async function pbkdf2Hash(pw,saltHex){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const salt=new Uint8Array(saltHex.match(/../g).map(h=>parseInt(h,16)));const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},key,256);return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');}
 async function attemptLogin(){
   if(isLockedOut()){applyLockoutUI();return;}
   const pw=document.getElementById('gateInput').value;if(!pw)return;
   const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';
-  if(inSetupMode()){const{hash,salt}=await pbkdf2Hash(pw,null);localStorage.setItem(PW_HASH_KEY,hash);localStorage.setItem(PW_SALT_KEY,salt);clearLockout();openSession();_sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});btn.disabled=false;showDashboard();return true;}
-  const storedHash=localStorage.getItem(PW_HASH_KEY),storedSalt=localStorage.getItem(PW_SALT_KEY);
-  const{hash}=await pbkdf2Hash(pw,storedSalt);
+  const hash=await pbkdf2Hash(pw,PW_SALT);
   btn.textContent='Unlock →';btn.disabled=false;
-  if(hash!==storedHash){
-    btn.textContent='Checking…';
-    try{const{error}=await _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw});
-    if(!error){const{hash:newHash,salt:newSalt}=await pbkdf2Hash(pw,null);localStorage.setItem(PW_HASH_KEY,newHash);localStorage.setItem(PW_SALT_KEY,newSalt);clearLockout();openSession();btn.disabled=false;showDashboard();return true;}}catch(e){}
-    btn.textContent='Unlock →';btn.disabled=false;
-    const attempts=recordFailedAttempt();const inp=document.getElementById('gateInput');inp.classList.add('error');const errEl=document.getElementById('gateErr');if(isLockedOut()){applyLockoutUI();}else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=`Incorrect password. ${left} attempt(s) remaining.`;}inp.value='';setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);return false;}
+  if(hash!==PW_HASH){const attempts=recordFailedAttempt();const inp=document.getElementById('gateInput');inp.classList.add('error');const errEl=document.getElementById('gateErr');if(isLockedOut()){applyLockoutUI();}else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=`Incorrect password. ${left} attempt(s) remaining.`;}inp.value='';setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);return false;}
   clearLockout();openSession();_sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});showDashboard();return true;
 }
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
-function checkSession(){if(new URLSearchParams(location.search).has('reset')){localStorage.removeItem(PW_HASH_KEY);localStorage.removeItem(PW_SALT_KEY);localStorage.removeItem(SESSION_KEY);localStorage.removeItem(LOCKOUT_KEY);history.replaceState(null,'',location.pathname);}const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showDashboard();return;}}catch(e){}}initGateUI();applyLockoutUI();}
+function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showDashboard();return;}}catch(e){}}initGateUI();applyLockoutUI();}
 let _dashChannel=null;
 function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();_sb.auth.signOut().catch(()=>{});localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
 async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();const remote=await _cloudPull(DATA_KEY);if(remote&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};localStorage.setItem(DATA_KEY,JSON.stringify(merged));}else if(!remote){_cloudPush(DATA_KEY,load());}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderStats(merged);renderRevenue(merged);renderSnapshot(merged);renderTasks(merged);}}).subscribe();init();}
