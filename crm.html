@@ -593,7 +593,7 @@ async function showApp(){
   _realtimeChannel=_sb.channel('crm_sync')
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));renderLeads();renderLeadStats();renderOutreachQueue();}})
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));const u=load();renderClientPipeline(u);renderClientChecklist(u);renderClients(u);renderCommission(u);}})
-    .subscribe().catch(()=>{});
+    .subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});
 }
 
 /* ── DATA ── */

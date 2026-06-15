@@ -19,7 +19,7 @@
       "source": "/(dashboard|crm|reports).html",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.resend.com https://graph.facebook.com https://maps.googleapis.com https://places.googleapis.com;" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://maps.gstatic.com https://maps.googleapis.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.resend.com https://graph.facebook.com https://maps.googleapis.com https://places.googleapis.com https://cdn.jsdelivr.net;" }
       ]
     }
   ]
