@@ -806,7 +806,10 @@ async function searchGooglePlaces(niche,area,googleKey){
   await _loadMapsJS(googleKey);
   return new Promise(function(resolve,reject){
     var svc=new google.maps.places.PlacesService(document.createElement('div'));
-    svc.textSearch({query:niche+' in '+area,region:'gb',type:['establishment']},function(results,status){
+    var q=niche+' in '+area+' UK';
+    console.log('Places textSearch query:',q);
+    svc.textSearch({query:q,region:'gb'},function(results,status){
+      console.log('Places status:',status,'results:',(results||[]).length);
       if(status===google.maps.places.PlacesServiceStatus.OK||status===google.maps.places.PlacesServiceStatus.ZERO_RESULTS){
         var out=[];
         for(var i=0;i<(results||[]).length;i++){
