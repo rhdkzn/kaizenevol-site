@@ -190,17 +190,37 @@
         <div class="rev-retainer-grid" id="retainerGrid"></div>
       </div>
     </section>
-    <section class="card">
-      <div class="section-label">Quick Links</div>
-      <div class="qlinks">
-        <a href="crm.html" class="qlink"><span class="qlink-icon">&#x1F465;</span> CRM</a>
-        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" class="qlink"><span class="qlink-icon">&#x1F4C5;</span> Calendly</a>
-        <a href="mailto:rahaid@kaizenevol.com" class="qlink"><span class="qlink-icon">&#x1F4E7;</span> rahaid@kaizenevol.com</a>
-        <a href="https://kaizenevol.com" target="_blank" class="qlink"><span class="qlink-icon">&#x1F310;</span> KaizenEvol Site</a>
-        <a href="https://business.facebook.com" target="_blank" class="qlink"><span class="qlink-icon">&#x1F4E3;</span> Meta Business Suite</a>
-        <a href="https://adsmanager.facebook.com" target="_blank" class="qlink"><span class="qlink-icon">&#x1F4CA;</span> Ads Manager</a>
-      </div>
+    <section>
+      <div class="section-label">Clients</div>
+      <div class="snapshot-list" id="snapshotList"></div>
     </section>
+    <div class="bottom-grid">
+      <div class="card">
+        <div class="section-label">Tasks</div>
+        <div class="task-row">
+          <input type="text" class="task-inp" id="taskInput" placeholder="Add a task…" onkeydown="if(event.key==='Enter')addTask()" />
+          <button class="add-btn" onclick="addTask()">Add</button>
+        </div>
+        <div class="task-list" id="taskList"><div class="empty-msg">No tasks yet.</div></div>
+      </div>
+      <div class="side-stack">
+        <div class="card">
+          <div class="section-label">Notes</div>
+          <textarea class="notes-ta" id="notesArea" placeholder="Quick notes…" oninput="scheduleNoteSave()"></textarea>
+          <div class="notes-saved" id="notesSaved"></div>
+        </div>
+        <div class="card">
+          <div class="section-label">Quick Links</div>
+          <div class="qlinks">
+            <a href="crm.html" class="qlink"><span class="qlink-icon">&#x1F465;</span> CRM</a>
+            <a href="reports.html" class="qlink"><span class="qlink-icon">&#x1F4CB;</span> Reports</a>
+            <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" class="qlink"><span class="qlink-icon">&#x1F4C5;</span> Calendly</a>
+            <a href="https://business.facebook.com" target="_blank" class="qlink"><span class="qlink-icon">&#x1F4E3;</span> Meta Business Suite</a>
+            <a href="https://adsmanager.facebook.com" target="_blank" class="qlink"><span class="qlink-icon">&#x1F4CA;</span> Ads Manager</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </div>
 <script>
