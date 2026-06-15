@@ -583,7 +583,9 @@ async function showApp(){
     if(remoteEmail&&Object.keys(remoteEmail).length>0){localStorage.setItem(EMAIL_KEY,JSON.stringify(remoteEmail));initEmail();}
     else if(!remoteEmail){_cloudPush(EMAIL_KEY,loadEmail());}
     if(remoteData&&typeof remoteData==='object'&&Object.keys(remoteData).length>0){
-      localStorage.setItem(DATA_KEY,JSON.stringify({...structuredClone(DEFAULTS),...remoteData}));
+      const merged={...structuredClone(DEFAULTS),...remoteData};
+      if(!Array.isArray(remoteData.clients)||remoteData.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);
+      localStorage.setItem(DATA_KEY,JSON.stringify(merged));
       const d=load();renderClientPipeline(d);renderClientChecklist(d);renderClients(d);renderCommission(d);
     }else if(!remoteData){_cloudPush(DATA_KEY,load());}
   }catch(e){console.warn('Cloud sync:',e);}
