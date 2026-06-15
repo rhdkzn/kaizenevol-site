@@ -793,44 +793,27 @@ var _mapsApiPromise=null;
 function _loadMapsJS(apiKey){
   if(_mapsApiPromise)return _mapsApiPromise;
   _mapsApiPromise=new Promise(function(resolve,reject){
-    if(window.google&&window.google.maps&&window.google.maps.places){resolve();return;}
+    if(window.google&&window.google.maps){resolve();return;}
     window._mapsReadyCB=function(){resolve();};
     var s=document.createElement('script');
-    s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(apiKey)+'&libraries=places&v=weekly&callback=_mapsReadyCB';
-    s.onerror=function(){_mapsApiPromise=null;reject(new Error('Failed to load Maps API — check your Google API key'));};
+    s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(apiKey)+'&loading=async&libraries=places&v=weekly&callback=_mapsReadyCB';
+    s.onerror=function(){_mapsApiPromise=null;reject(new Error('Failed to load Maps API — check your API key'));};
     document.head.appendChild(s);
   });
   return _mapsApiPromise;
 }
 async function searchGooglePlaces(niche,area,googleKey){
   await _loadMapsJS(googleKey);
-  return new Promise(function(resolve,reject){
-    var svc=new google.maps.places.PlacesService(document.createElement('div'));
-    var q=niche+' in '+area+' UK';
-    console.log('Places textSearch query:',q);
-    svc.textSearch({query:q,region:'gb'},function(results,status){
-      console.log('Places status:',status,'results:',(results||[]).length);
-      if(status===google.maps.places.PlacesServiceStatus.OK||status===google.maps.places.PlacesServiceStatus.ZERO_RESULTS){
-        var out=[];
-        for(var i=0;i<(results||[]).length;i++){
-          var r=results[i];
-          out.push({name:r.name||'',phone:'',website:r.website||'',address:r.formatted_address||'',rating:parseFloat(r.rating)||0,reviews:parseInt(r.user_ratings_total)||0,placeId:r.place_id||''});
-        }
-        resolve(out);
-      }else{reject(new Error('Places search failed: '+status));}
-    });
-  });
+  var lib=await google.maps.importLibrary('places');
+  var Place=lib.Place;
+  var q=niche+' in '+area+' UK';
+  console.log('Place.searchByText query:',q);
+  var res=await Place.searchByText({textQuery:q,fields:['displayName','formattedAddress','nationalPhoneNumber','websiteURI','rating','userRatingCount'],region:'gb'});
+  var places=res.places||[];
+  console.log('Places returned:',places.length);
+  return places.map(function(p){return{name:p.displayName||'',phone:p.nationalPhoneNumber||'',website:p.websiteURI||'',address:p.formattedAddress||'',rating:parseFloat(p.rating)||0,reviews:parseInt(p.userRatingCount)||0};}).filter(function(b){return b.name;});
 }
-async function enrichPhone(placeId){
-  return new Promise(function(resolve){
-    var svc=new google.maps.places.PlacesService(document.createElement('div'));
-    svc.getDetails({placeId:placeId,fields:['formatted_phone_number','international_phone_number','website']},function(r,status){
-      if(status===google.maps.places.PlacesServiceStatus.OK&&r){
-        resolve({phone:r.international_phone_number||r.formatted_phone_number||'',website:r.website||''});
-      }else{resolve({phone:'',website:''});}
-    });
-  });
-}
+async function enrichPhone(placeId){return{phone:'',website:''};}
 async function checkMetaAds(name,token){if(!token)return{running_ads:false,ad_count:0,ad_quality:'unknown'};try{const p=new URLSearchParams({search_terms:name,ad_type:'ALL',fields:'id,ad_creative_bodies,ad_creative_link_titles',limit:'5'});p.append('ad_reached_countries[]','GB');const d=await(await fetch('https://graph.facebook.com/v19.0/ads_archive?'+p,{headers:{'Authorization':'Bearer '+token}})).json();if(d.error||!d.data)return{running_ads:false,ad_count:0,ad_quality:'unknown'};const ads=d.data;if(!ads.length)return{running_ads:false,ad_count:0,ad_quality:'none'};let txt='';for(const a of ads)txt+=((a.ad_creative_bodies||[]).join(' ')+' '+(a.ad_creative_link_titles||[]).join(' ')).toLowerCase();const bad=BAD_AD_SIGNALS.filter(s=>txt.includes(s)).length,good=GOOD_AD_SIGNALS.filter(s=>txt.includes(s)).length;return{running_ads:true,ad_count:ads.length,ad_quality:!txt?'low':bad>good?'bad':good>0?'decent':'low'};}catch(e){return{running_ads:false,ad_count:0,ad_quality:'unknown'};}}
 async function runScraper(){const s=loadScraper();if(!s.googleKey){setScraperStatus('Google Places API key not set — add it below.','error');return;}const niche=(s.niche||'kitchen fitters').trim();const areas=(s.areas||'').split(',').map(a=>a.trim()).filter(Boolean);if(!areas.length){setScraperStatus('Add target areas above.','error');return;}const btn=document.getElementById('scanBtn');btn.disabled=true;let added=0;let totalFound=0;let totalDupes=0;let totalNoPhone=0;let totalBadRating=0;for(const area of areas){setScraperStatus('Searching Google — '+niche+' in '+area+'...','running');try{const businesses=await searchGooglePlaces(niche,area,s.googleKey);totalFound+=businesses.length;setScraperStatus('Found '+businesses.length+' in '+area+'. Filtering & checking ads...','running');let bIdx=0;for(const b of businesses){bIdx++;if(!b.name)continue;const rating=b.rating||0;const reviews=b.reviews||0;if(rating>0&&rating<3.0&&reviews>=5){totalBadRating++;continue;}const arr=loadLeads();if(arr.some(l=>l.business.toLowerCase()===b.name.toLowerCase())){totalDupes++;continue;}let ph=(b.phone||'').trim();if(!ph&&b.placeId){const det=await enrichPhone(b.placeId);ph=det.phone||'';if(!b.website&&det.website)b.website=det.website;}if(!ph){totalNoPhone++;continue;}const phClean=ph.replace(/[^\d+]/g,'').replace(/^\+/,'+');if(!/^(\+44|0[1-9])/.test(phClean)){totalNoPhone++;continue;}setScraperStatus('Checking '+bIdx+'/'+businesses.length+' — '+b.name.slice(0,30)+'...','running');const meta=await checkMetaAds(b.name,s.metaToken||'');const hasFb=(b.website||'').toLowerCase().includes('facebook.com');const score=scoreProspect(hasFb,meta.running_ads,meta.ad_quality,rating,reviews);const adNote=meta.running_ads?`${meta.ad_count} ad${meta.ad_count!==1?'s':''} running (${meta.ad_quality} quality)`:hasFb?'Facebook page, no ads':'No Facebook presence';const notes=['Score: '+score+'/5',b.website?'Website: '+b.website:'',b.address?'Address: '+b.address:'',rating?'Rating: '+rating+' ⭐ ('+reviews+' reviews)':'No rating yet',adNote].filter(Boolean).join(' · ');const updated=loadLeads();updated.unshift({id:uid(),business:b.name,owner:'',area,phone:ph,email:'',source:'Lead Scraper',stage:'new',notes,lastContact:'',followUp:'',createdAt:Date.now()});saveLeads(updated);added++;}}catch(e){console.warn('Scraper:',e.message);setScraperStatus('Error scanning '+area+': '+e.message,'error');}}const now=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});const u=loadScraper();u.lastScan=now;u.lastScanTimestamp=Date.now();saveScraper(u);btn.disabled=false;setScraperStatus('Scan complete — '+totalFound+' found · '+added+' added'+(totalDupes?' · '+totalDupes+' dupes':'')+(totalNoPhone?' · '+totalNoPhone+' no UK number':'')+(totalBadRating?' · '+totalBadRating+' low-rated':'')+'. Last scan: '+now,added>0?'done':'');renderLeadStats();renderLeads();}
 
