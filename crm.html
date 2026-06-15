@@ -572,22 +572,26 @@ let _syncInterval=null,_realtimeChannel=null;
 async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);if(Array.isArray(remote)&&remote.length>0){const local=loadLeads();if(remote.length!==local.length||JSON.stringify(remote)!==JSON.stringify(local)){localStorage.setItem(LEADS_KEY,JSON.stringify(remote));renderLeads();renderLeadStats();renderOutreachQueue();}}}
 async function showApp(){
   document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();
+  init();
   clearInterval(_syncInterval);_syncInterval=setInterval(_liveSyncLeads,60000);
-  const[remoteLeads,remoteScraper,remoteEmail,remoteData]=await Promise.all([_cloudPull(LEADS_KEY),_cloudPull(SCRAPER_KEY),_cloudPull(EMAIL_KEY),_cloudPull(DATA_KEY)]);
-  if(Array.isArray(remoteLeads)&&remoteLeads.length>0){localStorage.setItem(LEADS_KEY,JSON.stringify(remoteLeads));}
-  else if(!remoteLeads){const local=loadLeads();if(local.length>0)_cloudPush(LEADS_KEY,local);}
-  if(remoteScraper&&Object.keys(remoteScraper).length>0){localStorage.setItem(SCRAPER_KEY,JSON.stringify(remoteScraper));}
-  else if(!remoteScraper){_cloudPush(SCRAPER_KEY,loadScraper());}
-  if(remoteEmail&&Object.keys(remoteEmail).length>0){localStorage.setItem(EMAIL_KEY,JSON.stringify(remoteEmail));}
-  else if(!remoteEmail){_cloudPush(EMAIL_KEY,loadEmail());}
-  if(remoteData&&typeof remoteData==='object'){localStorage.setItem(DATA_KEY,JSON.stringify({...structuredClone(DEFAULTS),...remoteData}));}
-  else if(!remoteData){_cloudPush(DATA_KEY,load());}
+  try{
+    const[remoteLeads,remoteScraper,remoteEmail,remoteData]=await Promise.all([_cloudPull(LEADS_KEY),_cloudPull(SCRAPER_KEY),_cloudPull(EMAIL_KEY),_cloudPull(DATA_KEY)]);
+    if(Array.isArray(remoteLeads)&&remoteLeads.length>0){localStorage.setItem(LEADS_KEY,JSON.stringify(remoteLeads));renderLeads();renderLeadStats();renderOutreachQueue();}
+    else if(!remoteLeads){const local=loadLeads();if(local.length>0)_cloudPush(LEADS_KEY,local);}
+    if(remoteScraper&&Object.keys(remoteScraper).length>0){localStorage.setItem(SCRAPER_KEY,JSON.stringify(remoteScraper));initScraper();}
+    else if(!remoteScraper){_cloudPush(SCRAPER_KEY,loadScraper());}
+    if(remoteEmail&&Object.keys(remoteEmail).length>0){localStorage.setItem(EMAIL_KEY,JSON.stringify(remoteEmail));initEmail();}
+    else if(!remoteEmail){_cloudPush(EMAIL_KEY,loadEmail());}
+    if(remoteData&&typeof remoteData==='object'&&Object.keys(remoteData).length>0){
+      localStorage.setItem(DATA_KEY,JSON.stringify({...structuredClone(DEFAULTS),...remoteData}));
+      const d=load();renderClientPipeline(d);renderClientChecklist(d);renderClients(d);renderCommission(d);
+    }else if(!remoteData){_cloudPush(DATA_KEY,load());}
+  }catch(e){console.warn('Cloud sync:',e);}
   if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);}
   _realtimeChannel=_sb.channel('crm_sync')
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));renderLeads();renderLeadStats();renderOutreachQueue();}})
-    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));}})
-    .subscribe();
-  init();
+    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));const u=load();renderClientPipeline(u);renderClientChecklist(u);renderClients(u);renderCommission(u);}})
+    .subscribe().catch(()=>{});
 }
 
 /* ── DATA ── */
