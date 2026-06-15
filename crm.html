@@ -458,6 +458,16 @@
           <button class="btn-save" onclick="runScraper()" id="scanBtn">&#9654; Scan Now</button>
         </div>
         <div class="scraper-status-bar" id="scraperStatus"></div>
+        <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;">
+          <div class="f-group" style="flex:1;min-width:220px">
+            <div class="f-label">Serper API Key</div>
+            <input type="password" class="f-input" id="scraperKey" placeholder="Serper key (for Google scraping)" onblur="saveApiKey()" />
+          </div>
+          <div class="f-group" style="flex:1;min-width:220px">
+            <div class="f-label">Meta Access Token</div>
+            <input type="password" class="f-input" id="metaToken" placeholder="Meta token (for ad checks)" onblur="saveMetaToken()" />
+          </div>
+        </div>
         <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
           <button class="btn-save" onclick="document.getElementById('jsonFileInp').click()">&#8679; Import prospects.json</button>
           <input type="file" id="jsonFileInp" accept=".json" style="display:none" onchange="importScraperJSON(event)" />
@@ -477,7 +487,25 @@
     <section class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div class="section-label" style="margin:0">All Leads</div>
-        <span class="leads-count" id="leadsCount"></span>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="leads-count" id="leadsCount"></span>
+          <button class="btn-save" id="toggleFormBtn" onclick="toggleForm()" style="padding:7px 16px;font-size:12px;">+ New Lead</button>
+        </div>
+      </div>
+      <div id="addForm" style="display:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px;background:var(--bg);">
+        <div class="form-grid">
+          <div class="f-group"><div class="f-label">Business Name *</div><input type="text" class="f-input" id="fBusiness" placeholder="e.g. Johnson Kitchens" /></div>
+          <div class="f-group"><div class="f-label">Owner Name</div><input type="text" class="f-input" id="fOwner" placeholder="e.g. Mike Johnson" /></div>
+          <div class="f-group"><div class="f-label">Area</div><input type="text" class="f-input" id="fArea" placeholder="e.g. Manchester" /></div>
+          <div class="f-group"><div class="f-label">Phone</div><input type="tel" class="f-input" id="fPhone" placeholder="e.g. 07700 900000" /></div>
+          <div class="f-group"><div class="f-label">Email</div><input type="email" class="f-input" id="fEmail" placeholder="e.g. mike@kitchens.com" /></div>
+          <div class="f-group"><div class="f-label">Source</div><select class="f-select" id="fSource"><option value="Manual">Manual</option><option value="Referral">Referral</option><option value="Lead Scraper">Lead Scraper</option><option value="Cold Call">Cold Call</option></select></div>
+        </div>
+        <div class="form-grid-wide">
+          <div class="f-group"><div class="f-label">Stage</div><select class="f-select" id="fStage"><option value="new">New Lead</option><option value="contacted">Contacted</option><option value="call">Call Booked</option><option value="proposal">Proposal Sent</option><option value="won">Won</option><option value="lost">Lost</option></select></div>
+          <div class="f-group"><div class="f-label">Notes</div><input type="text" class="f-input" id="fNotes" placeholder="Optional notes" /></div>
+        </div>
+        <button class="btn-save" onclick="saveLead()">Save Lead</button>
       </div>
       <div class="filter-bar" style="margin-bottom:16px;">
         <input type="text" class="search-inp" id="searchInp" placeholder="Search name, area, email..." oninput="renderLeads()" />
@@ -745,12 +773,10 @@ async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key
 async function _cloudPull(key){try{const{data,error}=await _sb.from('app_data').select('data').eq('id',key).single();if(!error&&data){localStorage.setItem(key,JSON.stringify(data.data));return data.data;}}catch(e){}return null;}
 function loadScraper(){try{return JSON.parse(localStorage.getItem(SCRAPER_KEY)||'{}')}catch(e){return{}}}
 function saveScraper(s){localStorage.setItem(SCRAPER_KEY,JSON.stringify(s));_cloudPush(SCRAPER_KEY,s);}
-function saveApiKey(){const s=loadScraper();s.apiKey=document.getElementById('scraperKey').value.trim();saveScraper(s);setScraperStatus('Firecrawl key saved.','done');setTimeout(()=>updateScraperStatus(),2000);}
+function saveApiKey(){const s=loadScraper();s.serperKey=document.getElementById('scraperKey').value.trim();saveScraper(s);setScraperStatus('Serper key saved.','done');setTimeout(()=>updateScraperStatus(),2000);}
 function saveMetaToken(){const s=loadScraper();s.metaToken=document.getElementById('metaToken').value.trim();saveScraper(s);setScraperStatus('Meta token saved.','done');setTimeout(()=>updateScraperStatus(),2000);}
 function saveScraperField(field,val){const s=loadScraper();s[field]=val;saveScraper(s);}
-function initScraper(){const s=loadScraper();if(!s.serperKey)s.serperKey=''; // Configure via Settings — do not hardcode credentials
-if(!s.metaToken)s.metaToken=''; // Configure via Settings — do not hardcode credentials
-if(!s.interval)s.interval='20';if(!s.niche)s.niche='kitchen remodelers';saveScraper(s);document.getElementById('scraperNiche').value=s.niche;if(s.areas)document.getElementById('scraperAreas').value=s.areas;document.getElementById('scanInterval').value=s.interval;if(s.autoScan){document.getElementById('autoScanToggle').checked=true;scheduleAutoScan();}updateScraperStatus();}
+function initScraper(){const s=loadScraper();if(!s.serperKey)s.serperKey='';if(!s.metaToken)s.metaToken='';if(!s.interval)s.interval='20';if(!s.niche)s.niche='kitchen remodelers';saveScraper(s);document.getElementById('scraperNiche').value=s.niche;if(s.areas)document.getElementById('scraperAreas').value=s.areas;document.getElementById('scanInterval').value=s.interval;if(s.serperKey&&document.getElementById('scraperKey'))document.getElementById('scraperKey').value=s.serperKey;if(s.metaToken&&document.getElementById('metaToken'))document.getElementById('metaToken').value=s.metaToken;if(s.autoScan){document.getElementById('autoScanToggle').checked=true;scheduleAutoScan();}updateScraperStatus();}
 function toggleAutoScan(){const en=document.getElementById('autoScanToggle').checked;const s=loadScraper();s.autoScan=en;saveScraper(s);if(en){scheduleAutoScan();setScraperStatus('Auto-scan enabled.','done');}else{clearTimeout(autoScanTimer);autoScanTimer=null;setScraperStatus('Auto-scan disabled.','');}}
 function scheduleAutoScan(){clearTimeout(autoScanTimer);const s=loadScraper();const mins=parseInt(s.interval||'20');const last=s.lastScanTimestamp||0;const delay=Math.max(5000,last+mins*60000-Date.now());autoScanTimer=setTimeout(async()=>{await runScraper();if(loadScraper().autoScan)scheduleAutoScan();},delay);updateScraperStatus();}
 function updateScraperStatus(){const s=loadScraper();let msg='';if(s.lastScan)msg='Last scan: '+s.lastScan;if(s.autoScan&&autoScanTimer!==null){const interval=parseInt(s.interval||'20');const remaining=Math.max(0,Math.round(((s.lastScanTimestamp||0)+interval*60000-Date.now())/60000));const str=remaining<60?remaining+'m':Math.floor(remaining/60)+'h '+(remaining%60)+'m';msg+=(msg?' · ':'')+'Next scan in '+str;}setScraperStatus(msg,'');}
@@ -768,7 +794,7 @@ function exportObsidian(){const arr=loadLeads();if(!arr.length){alert('No leads 
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
 const STAGE_CLS={new:'sg-new',contacted:'sg-contacted',call:'sg-call',proposal:'sg-proposal',won:'sg-won',lost:'sg-lost'};
-function toggleForm(){const f=document.getElementById('addForm'),b=document.getElementById('toggleFormBtn');f.classList.toggle('open');b.textContent=f.classList.contains('open')?'− Cancel':'+ New Lead';}
+function toggleForm(){const f=document.getElementById('addForm'),b=document.getElementById('toggleFormBtn');const open=f.style.display==='none'||!f.style.display;f.style.display=open?'block':'none';b.textContent=open?'− Cancel':'+ New Lead';}
 function saveLead(){const biz=document.getElementById('fBusiness').value.trim();if(!biz){document.getElementById('fBusiness').focus();return;}const lead={id:uid(),business:biz,owner:document.getElementById('fOwner').value.trim(),area:document.getElementById('fArea').value.trim(),phone:document.getElementById('fPhone').value.trim(),email:document.getElementById('fEmail').value.trim(),source:document.getElementById('fSource').value,stage:document.getElementById('fStage').value,notes:document.getElementById('fNotes').value.trim(),lastContact:'',followUp:'',createdAt:Date.now()};const arr=loadLeads();arr.unshift(lead);saveLeads(arr);['fBusiness','fOwner','fArea','fPhone','fEmail','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStage').value='new';toggleForm();renderLeadStats();renderLeads();}
 function deleteLead(id){if(!confirm('Delete this lead?'))return;saveLeads(loadLeads().filter(l=>l.id!==id));renderLeadStats();renderLeads();}
 function updateLeadField(id,field,val){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(l){l[field]=val;saveLeads(arr);}if(field==='stage'){renderLeadStats();renderLeads();}}
