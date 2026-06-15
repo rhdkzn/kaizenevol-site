@@ -146,7 +146,7 @@ function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{cons
 function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);window.location.href='dashboard.html';}
 function showApp(){document.getElementById('app').style.display='block';startIdle();init();}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function loadData(){try{const r=localStorage.getItem(DATA_KEY);return r?JSON.parse(r):{clients:[{id:'nav',name:'Navpreet Singh'}]};}catch(e){return{clients:[];};}}
+function loadData(){try{const r=localStorage.getItem(DATA_KEY);return r?JSON.parse(r):{clients:[{id:'nav',name:'Navpreet Singh'}]};}catch(e){return{clients:[]};}}
 function loadReports(){try{return JSON.parse(localStorage.getItem(REPORTS_KEY)||'[]');}catch(e){return[];}}
 function saveReports(arr){localStorage.setItem(REPORTS_KEY,JSON.stringify(arr));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}

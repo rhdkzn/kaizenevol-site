@@ -228,7 +228,12 @@ async function attemptLogin(){
   const storedHash=localStorage.getItem(PW_HASH_KEY),storedSalt=localStorage.getItem(PW_SALT_KEY);
   const{hash}=await pbkdf2Hash(pw,storedSalt);
   btn.textContent='Unlock →';btn.disabled=false;
-  if(hash!==storedHash){const attempts=recordFailedAttempt();const inp=document.getElementById('gateInput');inp.classList.add('error');const errEl=document.getElementById('gateErr');if(isLockedOut()){applyLockoutUI();}else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=`Incorrect password. ${left} attempt(s) remaining.`;}inp.value='';setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);return false;}
+  if(hash!==storedHash){
+    btn.textContent='Checking…';
+    try{const{error}=await _sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw});
+    if(!error){const{hash:newHash,salt:newSalt}=await pbkdf2Hash(pw,null);localStorage.setItem(PW_HASH_KEY,newHash);localStorage.setItem(PW_SALT_KEY,newSalt);clearLockout();openSession();btn.disabled=false;showDashboard();return true;}}catch(e){}
+    btn.textContent='Unlock →';btn.disabled=false;
+    const attempts=recordFailedAttempt();const inp=document.getElementById('gateInput');inp.classList.add('error');const errEl=document.getElementById('gateErr');if(isLockedOut()){applyLockoutUI();}else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=`Incorrect password. ${left} attempt(s) remaining.`;}inp.value='';setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);return false;}
   clearLockout();openSession();_sb.auth.signInWithPassword({email:'rahaid@kaizenevol.com',password:pw}).catch(()=>{});showDashboard();return true;
 }
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
