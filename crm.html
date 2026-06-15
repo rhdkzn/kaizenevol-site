@@ -791,16 +791,17 @@ function updateScraperStatus(){const s=loadScraper();let msg='';if(s.lastScan)ms
 function setScraperStatus(msg,type){const el=document.getElementById('scraperStatus');el.textContent=msg;el.className='scraper-status-bar'+(type?' '+type:'');}
 function scoreProspect(hasFb,runningAds,adQuality,rating,reviews){if(runningAds&&['bad','low'].includes(adQuality))return 5;if(runningAds&&['decent','good'].includes(adQuality))return 4;if(hasFb&&!runningAds)return 3;if(!hasFb&&rating>=3.5&&reviews>=20)return 2;return 1;}
 let _mapsLoaded=false;
+function _waitForMapsPlace(resolve){const t=setInterval(()=>{if(window.google&&window.google.maps&&window.google.maps.places&&window.google.maps.places.Place){clearInterval(t);resolve();}},100);setTimeout(()=>{clearInterval(t);resolve();},10000);}
 async function loadMapsAPI(apiKey){
-  if(_mapsLoaded&&window.google?.maps?.places?.Place)return;
-  if(document.getElementById('_gmap_script'))await new Promise(r=>{const t=setInterval(()=>{if(window.google?.maps?.places?.Place){clearInterval(t);r();}},100);setTimeout(()=>{clearInterval(t);r();},10000);return;}
-  await new Promise((resolve,reject)=>{
-    const s=document.createElement('script');
+  if(_mapsLoaded&&window.google&&window.google.maps&&window.google.maps.places&&window.google.maps.places.Place)return;
+  if(document.getElementById('_gmap_script')){await new Promise(_waitForMapsPlace);return;}
+  await new Promise(function(resolve,reject){
+    var s=document.createElement('script');
     s.id='_gmap_script';
     s.src='https://maps.googleapis.com/maps/api/js?key='+apiKey+'&libraries=places&v=weekly';
-    s.async=true;s.defer=true;
-    s.onload=()=>{const t=setInterval(()=>{if(window.google?.maps?.places?.Place){clearInterval(t);_mapsLoaded=true;resolve();}},100);setTimeout(()=>{clearInterval(t);resolve();},8000);};
-    s.onerror=()=>reject(new Error('Failed to load Maps JS API'));
+    s.async=true;
+    s.onload=function(){_mapsLoaded=true;_waitForMapsPlace(resolve);};
+    s.onerror=function(){reject(new Error('Failed to load Maps JS API — check your key'));};
     document.head.appendChild(s);
   });
 }
