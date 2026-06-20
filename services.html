@@ -102,10 +102,13 @@
     .system-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-0.01em}
     .system-desc{font-size:14px;color:var(--muted);line-height:1.7}
 
-    .final-cta{background:linear-gradient(135deg,#1a0533 0%,var(--purple) 100%);padding:96px 24px;text-align:center}
-    .final-cta h2{font-size:clamp(26px,4vw,42px);margin-bottom:16px}
-    .final-cta p{font-size:17px;color:rgba(255,255,255,0.75);margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7}
+    .final-cta{padding:100px 24px;text-align:center;background:linear-gradient(135deg,#150930 0%,#2a1260 50%,#150930 100%);position:relative;overflow:hidden}
+    .final-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:400px;background:radial-gradient(ellipse at center,rgba(109,63,192,0.35) 0%,transparent 70%);pointer-events:none}
+    .final-cta-inner{position:relative;z-index:1}
+    .final-cta h2{font-size:clamp(26px,4vw,42px);color:#fff;margin-bottom:16px;max-width:640px;margin-left:auto;margin-right:auto}
+    .final-cta p{font-size:17px;color:rgba(255,255,255,0.72);margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7}
     .final-cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .final-cta-note{margin-top:16px;font-size:13px;color:rgba(255,255,255,0.4)}
 
     .footer{background:var(--surface);border-top:1px solid var(--border);padding:40px 0 max(40px,calc(24px + env(safe-area-inset-bottom)))}
     .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
@@ -170,7 +173,7 @@
       <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'" style="height:28px;width:auto">
       <span class="nav-logo-text">KaizenEvol</span>
     </div>
-    <button class="mobile-close" id="mobileClose">&times;</button>
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
   </div>
   <a href="index.html#how-it-works">How It Works</a>
   <a href="services.html">Services</a>
@@ -185,7 +188,7 @@
   <div class="page-hero-inner">
     <h1 class="reveal">Everything Done For You</h1>
     <p class="page-hero-sub reveal">You don&rsquo;t touch an ad account. You don&rsquo;t chase a single lead. Every part of the system is built, run, and optimised by us.</p>
-    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary reveal">Book a Free Call &rarr;</a>
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary reveal">Book a Free Strategy Call &rarr;</a>
   </div>
 </section>
 
@@ -227,7 +230,7 @@
 <section class="section section-bg">
   <div class="container">
     <div class="section-header reveal">
-      <h2>The Kitchen Client Acquisition Engine&trade;</h2>
+      <h2>The Kitchen Client Engine —<br>Built Differently</h2>
       <p>Not a generic ad service. A purpose-built system for kitchen remodellers &mdash; tested, refined, and running in real UK markets.</p>
     </div>
     <div class="system-list">
@@ -242,7 +245,7 @@
         <div class="system-num">02</div>
         <div>
           <div class="system-title">Multi-Variation Testing at Launch</div>
-          <p class="system-desc">We launch 8&ndash;12 ad variations simultaneously. Different hooks, different angles, different creatives. The system finds the winner fast &mdash; then we cut everything else and scale.</p>
+          <p class="system-desc">We launch 5+ ad variations simultaneously. Different hooks, different angles, different creatives. The system finds the winner fast &mdash; then we cut everything else and scale.</p>
         </div>
       </div>
       <div class="system-item reveal">
@@ -264,11 +267,14 @@
 </section>
 
 <section class="final-cta" id="contact">
-  <h2 class="reveal">Ready to Get Started?</h2>
-  <p class="reveal">Book a free 30-minute strategy call. We&rsquo;ll confirm your area is available and walk through exactly what&rsquo;s achievable for your business.</p>
-  <div class="final-cta-btns reveal">
-    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">Book a Free Call &rarr;</a>
-    <a href="mailto:rahaid@kaizenevol.com" class="btn-ghost" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.75)">Email Us Directly</a>
+  <div class="final-cta-inner">
+    <h2 class="reveal">Ready to Fill Your Calendar<br>With Booked Clients?</h2>
+    <p class="reveal">Book a free 30-minute strategy call. We&rsquo;ll confirm your area is available and walk through exactly what&rsquo;s achievable for your business.</p>
+    <div class="final-cta-btns reveal">
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">Book a Free Strategy Call &rarr;</a>
+      <a href="mailto:rahaid@kaizenevol.com" class="btn-ghost" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.75)">Email Us Directly</a>
+    </div>
+    <p class="final-cta-note reveal">4 client slots per quarter. One remodeller per area.</p>
   </div>
 </section>
 

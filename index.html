@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>KaizenEvol — Meta Ads for UK Kitchen Remodellers</title>
-  <meta name="description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, 2 booked clients per month guaranteed — or you don't pay." />
+  <meta name="description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, your agreed client target per month — or you don't pay." />
   <link rel="canonical" href="https://kaizenevol.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://kaizenevol.com/" />
   <meta property="og:site_name" content="KaizenEvol" />
   <meta property="og:title" content="KaizenEvol — Meta Ads for UK Kitchen Remodellers" />
-  <meta property="og:description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, 2 booked clients per month guaranteed — or you don't pay." />
+  <meta property="og:description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, your agreed client target per month — or you don't pay." />
   <meta property="og:image" content="https://kaizenevol.com/og-image.svg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="KaizenEvol — Meta Ads for UK Kitchen Remodellers" />
-  <meta name="twitter:description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, 2 booked clients per month guaranteed — or you don't pay." />
+  <meta name="twitter:description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, your agreed client target per month — or you don't pay." />
   <meta name="twitter:image" content="https://kaizenevol.com/og-image.svg" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
@@ -51,8 +51,8 @@
     body { background:var(--bg); color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; line-height:1.65; overflow-x:hidden; }
     p { text-wrap: pretty; }
 
-    .skip-link { position:absolute; top:-100%; left:24px; background:var(--purple); color:#fff; padding:8px 16px; border-radius:var(--radius-pill); font-size:14px; font-weight:600; text-decoration:none; z-index:9999; transition:top 0.2s; }
-    .skip-link:focus { top:16px; }
+    .skip-link { position:absolute; left:-9999px; top:0; background:var(--purple); color:#fff; padding:8px 16px; border-radius:0 0 var(--radius-card) 0; font-size:14px; font-weight:700; text-decoration:none; z-index:9999; }
+    .skip-link:focus { left:0; }
     :focus-visible { outline:2px solid var(--purple-bright); outline-offset:3px; }
 
     em { color:var(--purple-light); font-style:normal; }
@@ -82,14 +82,14 @@
 
     /* NAVBAR */
     .nav-wrap { position:fixed; top:max(16px,env(safe-area-inset-top)); left:0; right:0; z-index:999; display:flex; justify-content:center; pointer-events:none; }
-    .navbar { pointer-events:all; display:flex; align-items:center; justify-content:space-between; background:rgba(13,11,26,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:var(--radius-pill); padding:10px 20px; max-width:880px; width:calc(100% - 32px); gap:16px; transition:border-color 0.2s; }
+    .navbar { pointer-events:all; display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 8px 0 20px; background:rgba(13,11,26,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:var(--radius-pill); max-width:900px; width:calc(100% - 48px); transition:border-color 0.2s; }
     .navbar:hover { border-color:var(--border-hover); }
     .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
     .nav-logo img { height:28px; width:auto; }
     .nav-logo-text { font-weight:700; font-size:16px; color:var(--text); letter-spacing:-0.02em; }
     .nav-links { display:flex; gap:4px; list-style:none; }
-    .nav-links a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; padding:6px 14px; border-radius:var(--radius-pill); transition:color 0.15s,background 0.15s; }
-    .nav-links a:hover { color:var(--text); background:var(--surface-2); }
+    .nav-links a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; padding:7px 14px; border-radius:var(--radius-pill); transition:color 0.15s,background 0.15s; }
+    .nav-links a:hover,.nav-links a.active { color:var(--text); background:var(--surface-2); }
     .nav-cta { flex-shrink:0; font-size:14px; padding:9px 20px; }
 
     .hamburger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; min-width:44px; min-height:44px; align-items:center; justify-content:center; }
@@ -230,7 +230,7 @@
       .ai-grid{grid-template-columns:repeat(2,1fr)}
       .steps-grid{grid-template-columns:repeat(2,1fr)}
     }
-    @media(max-width:720px) {
+    @media(max-width:768px) {
       .nav-links,.nav-cta{display:none}
       .hamburger{display:flex}
       .problem-card{grid-template-columns:1fr;gap:8px}
@@ -242,7 +242,9 @@
       .footer-right{text-align:center}
       .footer-nav{justify-content:center}
       .calc-wrap{padding:28px 24px}
+      .section{padding:64px 0}
     }
+    @media(min-width:769px){.mobile-overlay,.mobile-panel{display:none !important}}
     @media(max-width:480px) {
       .hero-ctas{flex-direction:column;align-items:stretch}
       .hero-ctas a{text-align:center}
@@ -278,7 +280,7 @@
 
 <div class="nav-wrap">
   <nav class="navbar">
-    <a class="nav-logo" href="#home">
+    <a class="nav-logo" href="index.html">
       <img src="logo.png" alt="KaizenEvol" width="32" height="32" onerror="this.style.display='none'">
       <span class="nav-logo-text">KaizenEvol</span>
     </a>
@@ -302,7 +304,7 @@
       <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'" style="height:28px;width:auto;">
       <span class="nav-logo-text">KaizenEvol</span>
     </div>
-    <button class="mobile-close" id="mobileClose">&times;</button>
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
   </div>
   <a href="#how-it-works">How It Works</a>
   <a href="services.html">Services</a>
@@ -316,7 +318,7 @@
 <section class="hero" id="home">
   <div class="hero-inner container">
     <h1>Stop Losing £5,000+ Kitchen Jobs<br>to Businesses That Market Better</h1>
-    <p class="hero-sub">Done-for-you Meta ads, built only for kitchen remodellers. Exclusive to your area, live in 7 days, and <strong>2 booked clients a month — or you don't pay.</strong></p>
+    <p class="hero-sub">Done-for-you Meta ads, built only for kitchen remodellers. Exclusive to your area, live in 7 days, and <strong>your agreed client target per month — or you don't pay.</strong></p>
 
     <div class="calc-wrap">
       <div class="calc-label">Your numbers. Your potential.</div>
@@ -455,7 +457,7 @@
   </div>
 </section>
 
-<section class="section section-surface" id="pricing">
+<section class="section section-bg" id="pricing">
   <div class="container">
     <div class="section-header" style="text-align:center">
       <h2>Pricing Is <em>Discussed on the Call</em></h2>
@@ -468,16 +470,16 @@
   </div>
 </section>
 
-<section class="section section-bg" id="guarantee">
+<section class="section section-surface" id="guarantee">
   <div class="container">
     <div class="guarantee-inner">
       <div class="guarantee-copy">
-        <h2>2 Booked Clients a Month —<br><em>or You Don't Pay</em></h2>
-        <p>Within 60 days of launch: 2 qualified, booked kitchen clients per month, each with a minimum £5,000 project value. If we miss the target, your management fee is waived. The risk sits with us, not you.</p>
+        <h2>Your Agreed Client Target —<br><em>or You Don't Pay</em></h2>
+        <p>Within 60 days of launch: your agreed number of qualified, booked kitchen clients per month, each with a minimum £5,000 project value. If we miss the target, your management fee is waived. The risk sits with us, not you.</p>
         <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Claim Your Area</a>
       </div>
       <ol class="guarantee-list">
-        <li>2 qualified, booked kitchen clients per month — minimum £5,000 project value — or your management fee is waived</li>
+        <li>Your agreed monthly target of qualified, booked kitchen clients — minimum £5,000 project value — or your management fee is waived</li>
         <li>Exclusive territory: one remodeller per area, locked for the duration of your engagement</li>
         <li>Live campaigns within 7 days of your strategy call</li>
         <li>Full transparency: you own your ad account and all data, always</li>
@@ -505,7 +507,7 @@
       </details>
       <details class="faq-inline-item">
         <summary class="faq-inline-summary">What results can I realistically expect?</summary>
-        <p class="faq-inline-answer">Multiple qualified, booked kitchen clients per month, each with a high project value. We don't count enquiries or unqualified leads as results. We count booked consultations with homeowners who have a real budget and a real project. Our guarantee: 2 per month minimum within 60 days, or your management fee is waived.</p>
+        <p class="faq-inline-answer">Multiple qualified, booked kitchen clients per month, each with a high project value. We don't count enquiries or unqualified leads as results. We count booked consultations with homeowners who have a real budget and a real project. Our guarantee: your agreed monthly target, delivered within 60 days — or your management fee is waived.</p>
       </details>
       <details class="faq-inline-item">
         <summary class="faq-inline-summary">How much of my time does this take?</summary>
@@ -544,6 +546,7 @@
         <li><a href="#problem">The Problem</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#why-it-works">Why It Works</a></li>
+        <li><a href="services.html">Services</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="faq.html">FAQ</a></li>
       </ul>
