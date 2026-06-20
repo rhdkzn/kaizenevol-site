@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>KaizenEvol — Meta Client Acquisition for Kitchen Remodellers</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
@@ -43,6 +43,11 @@
     }
 
     p { text-wrap: pretty; }
+
+    .container {
+      padding-left: max(24px, env(safe-area-inset-left));
+      padding-right: max(24px, env(safe-area-inset-right));
+    }
 
     :focus-visible {
       outline: 2px solid var(--purple);
@@ -213,7 +218,7 @@
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px;
+      padding: 14px 11px;
       flex-direction: column;
       gap: 5px;
     }
@@ -251,7 +256,20 @@
     }
     .mobile-panel.open { right: 0; }
     .mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-    .mobile-close { font-size: 24px; background: none; border: none; cursor: pointer; color: var(--text); line-height: 1; }
+    .mobile-close {
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      line-height: 1;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
     .mobile-panel a {
       font-size: 16px;
       font-weight: 600;
@@ -503,7 +521,7 @@
     .footer {
       background: var(--white);
       border-top: 1px solid rgba(109,63,192,0.1);
-      padding: 40px 0;
+      padding: 40px 0 max(40px, calc(24px + env(safe-area-inset-bottom)));
     }
     .footer-inner {
       display: flex;
@@ -552,6 +570,7 @@
 
     @media (max-width: 900px) {
       .ai-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 760px) {
