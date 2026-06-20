@@ -109,7 +109,8 @@
     .hero::before { content:''; position:absolute; top:-10%; left:50%; transform:translateX(-50%); width:900px; height:600px; background:radial-gradient(ellipse at center,rgba(109,63,192,0.2) 0%,transparent 65%); pointer-events:none; z-index:0; }
     .hero-inner { position:relative; z-index:1; text-align:center; animation:hero-rise 0.9s var(--ease-out-expo) both; }
     .hero h1 { font-size:clamp(34px,5.5vw,58px); margin-bottom:20px; }
-    .hero-sub { font-size:clamp(16px,2vw,18px); color:var(--muted); max-width:520px; margin:0 auto 44px; line-height:1.7; }
+    .hero-sub { font-size:clamp(16px,2vw,18px); color:var(--muted); max-width:540px; margin:0 auto 44px; line-height:1.7; }
+    .hero-sub strong { color:var(--text); font-weight:700; }
 
     /* CALCULATOR */
     .calc-wrap { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:36px 40px; max-width:600px; margin:0 auto 40px; text-align:left; }
@@ -175,16 +176,6 @@
     .pricing-center strong { color:var(--text); font-weight:600; }
     .pricing-note { margin-top:14px; font-size:13px; color:var(--muted); }
 
-    /* GUARANTEE */
-    .exclusivity-inner { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
-    .exclusivity-copy h2 { font-size:clamp(28px,3.5vw,40px); margin-bottom:18px; }
-    .exclusivity-copy p { color:var(--muted); font-size:16px; margin-bottom:24px; line-height:1.7; }
-    .exclusivity-card { background:var(--surface-2); border:1px solid rgba(109,63,192,0.3); border-radius:var(--radius-card); padding:32px 28px; }
-    .exclusivity-card h3 { font-size:16px; font-weight:700; margin-bottom:24px; }
-    .exclusivity-list { list-style:none; display:flex; flex-direction:column; gap:16px; }
-    .exclusivity-list li { display:flex; gap:14px; align-items:flex-start; font-size:14px; color:var(--muted); line-height:1.6; }
-    .check-icon { width:20px; height:20px; border-radius:50%; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.28); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; color:#4ade80; font-size:10px; font-weight:700; }
-
     /* FAQ */
     .faq-inline { border-top:1px solid var(--border); }
     .faq-inline-item { border-bottom:1px solid var(--border); }
@@ -237,7 +228,6 @@
       .steps-grid{grid-template-columns:1fr}
       .ai-featured-row{grid-template-columns:1fr}
       .ai-grid{grid-template-columns:1fr}
-      .exclusivity-inner{grid-template-columns:1fr;gap:32px}
       .footer-inner{flex-direction:column;text-align:center}
       .footer-right{text-align:center}
       .footer-nav{justify-content:center}
@@ -278,7 +268,7 @@
 
 <div class="nav-wrap">
   <nav class="navbar">
-    <a class="nav-logo" href="#">
+    <a class="nav-logo" href="#home">
       <img src="logo.png" alt="KaizenEvol" width="32" height="32" onerror="this.style.display='none'">
       <span class="nav-logo-text">KaizenEvol</span>
     </a>
@@ -316,7 +306,7 @@
 <section class="hero" id="home">
   <div class="hero-inner container">
     <h1>Stop Losing £5,000+ Kitchen Jobs<br>to Businesses That Market Better</h1>
-    <p class="hero-sub">Find out exactly what bad marketing is costing you — then let us fix it.</p>
+    <p class="hero-sub">Done-for-you Meta ads, built only for kitchen remodellers. Exclusive to your area, live in 7 days, and <strong>2 booked clients a month — or you don't pay.</strong></p>
 
     <div class="calc-wrap">
       <div class="calc-label">Your numbers. Your potential.</div>
@@ -329,20 +319,20 @@
       </div>
       <div class="calc-row">
         <div class="calc-row-header">
-          <label for="missedJobs">Missed Jobs Per Month</label>
-          <span class="calc-row-value"><span id="missedJobsDisplay">3</span></span>
+          <label for="missedJobs">Jobs You Miss Each Month</label>
+          <span class="calc-row-value"><span id="missedJobsDisplay">2</span></span>
         </div>
-        <input type="range" id="missedJobs" min="1" max="20" step="1" value="3" aria-label="Missed jobs per month">
+        <input type="range" id="missedJobs" min="1" max="20" step="1" value="2" aria-label="Jobs missed per month">
       </div>
       <div class="calc-result">
-        <div class="calc-result-label">You're potentially losing</div>
+        <div class="calc-result-label">Revenue on the table</div>
         <div class="calc-result-amounts">
           <div>
-            <div class="calc-result-amount" id="monthlyLoss">£15,000</div>
+            <div class="calc-result-amount" id="monthlyLoss">£10,000</div>
             <div class="calc-result-period">Per Month</div>
           </div>
           <div>
-            <div class="calc-result-amount" id="annualLoss">£180,000</div>
+            <div class="calc-result-amount" id="annualLoss">£120,000</div>
             <div class="calc-result-period">Per Year</div>
           </div>
         </div>
@@ -350,7 +340,7 @@
     </div>
 
     <div class="hero-ctas">
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Book Your Free Kitchen Lead Audit</a>
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Book Your Free Strategy Call</a>
       <a href="#how-it-works" class="btn-ghost">See How It Works</a>
     </div>
     <p class="hero-note"><strong>4 client slots per quarter.</strong> One remodeller per area. Your territory, your leads.</p>
@@ -382,7 +372,7 @@
       </div>
     </div>
     <div class="problem-callout">
-      <p>Missing just 3 kitchen jobs a month at £5,000 each is <em>£180,000 a year</em> left on the table. That's not a business problem. That's a marketing problem.</p>
+      <p>Just 2 kitchen jobs a month at £5,000 each is <em>£120,000 a year</em> left on the table. That's not a craft problem. That's a marketing problem — and it's fixable.</p>
     </div>
   </div>
 </section>
@@ -455,7 +445,7 @@
   </div>
 </section>
 
-<section class="section section-bg" id="pricing">
+<section class="section section-surface" id="pricing">
   <div class="container">
     <div class="section-header" style="text-align:center">
       <h2>Pricing Is <em>Discussed on the Call</em></h2>
@@ -464,30 +454,6 @@
       <p>We structure every engagement around your situation: your area, your average project value, your current pipeline. A flat rate that works brilliantly for one remodeller might not suit another.<br><br>What we can tell you: we offer a <strong>commission-based trial</strong> to qualified new clients, so you're only paying when we deliver real results. After that, we move to a fixed monthly retainer.</p>
       <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Discuss Pricing on a Call</a>
       <p class="pricing-note">30 minutes. You'll leave with a clear picture of what's possible in your area.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section section-surface" id="exclusivity">
-  <div class="container">
-    <div class="exclusivity-inner">
-      <div class="exclusivity-copy">
-        <h2>Paying Clients or<br><em>You Don't Pay</em></h2>
-        <p>We guarantee 2 qualified, booked kitchen clients per month — each with a minimum £5,000 project value. If we don't hit that within 60 days, your management fee is waived. Full stop.</p>
-        <p>You only cover ad spend, paid direct to Meta, not through us. The risk sits with us, not you.</p>
-        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Claim Your Area</a>
-      </div>
-      <div class="exclusivity-card">
-        <h3>What You're Guaranteed</h3>
-        <ul class="exclusivity-list">
-          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>2 qualified, booked kitchen clients per month (minimum £5,000 project value) or your management fee is waived</span></li>
-          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Exclusive territory: one remodeller per area, locked for the duration of our engagement</span></li>
-          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Live campaigns within 7 days of your strategy call</span></li>
-          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Full transparency: you own your ad account and all data, always</span></li>
-          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Direct access to Rahaid and Diego — not a junior, not a ticketing system</span></li>
-          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Plain-English weekly reports: cost per lead, cost per booked client, zero jargon</span></li>
-        </ul>
-      </div>
     </div>
   </div>
 </section>
@@ -528,7 +494,7 @@
     <h2>Your Competitors Are Running Ads Right Now.<br>Your Area Might Still Be Available.</h2>
     <p>Book a free 30-minute strategy call. An honest look at what's achievable for your business in your area.</p>
     <div class="final-cta-btns">
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-white" target="_blank" rel="noopener">Book Your Free Kitchen Lead Audit</a>
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-white" target="_blank" rel="noopener">Book Your Free Strategy Call</a>
       <a href="mailto:rahaid@kaizenevol.com" class="btn-ghost" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.75);">Email Us Directly</a>
     </div>
     <p class="final-scarcity">4 client slots available per quarter. One per area.</p>
