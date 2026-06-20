@@ -319,7 +319,7 @@
     .mobile-panel .btn-primary { margin-top: 12px; justify-content: center; }
 
     .hero {
-      background: linear-gradient(160deg, #ffffff 0%, #f5f3ff 60%, #ede8ff 100%);
+      background: linear-gradient(160deg, var(--white) 0%, var(--purple-tint) 60%, var(--purple-mid) 100%);
       position: relative;
       overflow: hidden;
       padding: 160px 0 100px;
@@ -643,7 +643,7 @@
 
 <a href="#main-content" class="skip-link">Skip to content</a>
 
-<div class="marquee-band">
+<div class="marquee-band" aria-hidden="true">
   <div class="marquee-inner" id="marqueeInner">
     <span>Kitchen Remodellers <span class="marquee-dot">·</span></span>
     <span>7 Days to Live Campaigns <span class="marquee-dot">·</span></span>
@@ -667,7 +667,7 @@
 <div class="nav-wrap">
   <nav class="navbar">
     <a class="nav-logo" href="#">
-      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <img src="logo.png" alt="KaizenEvol" width="32" height="32" onerror="this.style.display='none'">
       <span class="nav-logo-text">KaizenEvol</span>
     </a>
     <ul class="nav-links">
@@ -838,12 +838,12 @@
       <div class="exclusivity-card">
         <h3>What You're Guaranteed</h3>
         <ul class="exclusivity-list">
-          <li><div class="check-icon">&#10003;</div><span>2 qualified, booked kitchen clients per month (minimum £5,000 project value each) or your management fee is waived</span></li>
-          <li><div class="check-icon">&#10003;</div><span>Exclusive territory: one remodeller per area, locked for the duration of our engagement</span></li>
-          <li><div class="check-icon">&#10003;</div><span>Live campaigns within 7 days of your strategy call</span></li>
-          <li><div class="check-icon">&#10003;</div><span>Full transparency: you own your ad account and all data, always</span></li>
-          <li><div class="check-icon">&#10003;</div><span>Direct access to Rahaid and Diego — not a junior, not a ticketing system</span></li>
-          <li><div class="check-icon">&#10003;</div><span>Plain-English weekly reports: cost per lead, cost per booked client, zero jargon</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>2 qualified, booked kitchen clients per month (minimum £5,000 project value each) or your management fee is waived</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Exclusive territory: one remodeller per area, locked for the duration of our engagement</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Live campaigns within 7 days of your strategy call</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Full transparency: you own your ad account and all data, always</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Direct access to Rahaid and Diego — not a junior, not a ticketing system</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Plain-English weekly reports: cost per lead, cost per booked client, zero jargon</span></li>
         </ul>
       </div>
     </div>
@@ -904,7 +904,7 @@
   <div class="container">
     <div class="footer-inner">
       <a class="footer-logo" href="#">
-        <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+        <img src="logo.png" alt="KaizenEvol" width="28" height="28" onerror="this.style.display='none'">
         <span class="footer-logo-text">KaizenEvol</span>
       </a>
       <ul class="footer-nav">
