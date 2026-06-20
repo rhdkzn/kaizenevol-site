@@ -26,6 +26,8 @@
       --radius-card:  16px;
       --radius-pill:  9999px;
       --max-w:        960px;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     html { scroll-behavior: smooth; }
@@ -75,12 +77,13 @@
       font-size: 15px;
       padding: 14px 28px;
       text-decoration: none;
-      transition: opacity 0.2s, transform 0.2s;
+      transition: opacity 0.15s var(--ease-out-quart), transform 0.2s var(--ease-out-expo);
       border: none;
       cursor: pointer;
       font-family: 'Poppins', sans-serif;
     }
-    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+    .btn-primary:active { transform: translateY(0) scale(0.98); transition-duration: 0.08s; }
 
     .btn-outline {
       display: inline-block;
@@ -92,11 +95,12 @@
       font-size: 15px;
       padding: 12px 28px;
       text-decoration: none;
-      transition: background 0.2s, color 0.2s, transform 0.2s;
+      transition: background 0.15s var(--ease-out-quart), color 0.15s var(--ease-out-quart), transform 0.2s var(--ease-out-expo);
       cursor: pointer;
       font-family: 'Poppins', sans-serif;
     }
-    .btn-outline:hover { background: var(--purple); color: #fff; transform: translateY(-1px); }
+    .btn-outline:hover { background: var(--purple); color: #fff; transform: translateY(-2px); }
+    .btn-outline:active { transform: translateY(0) scale(0.98); transition-duration: 0.08s; }
 
     .btn-white {
       display: inline-block;
@@ -107,12 +111,13 @@
       font-size: 15px;
       padding: 14px 28px;
       text-decoration: none;
-      transition: opacity 0.2s, transform 0.2s;
+      transition: opacity 0.15s var(--ease-out-quart), transform 0.2s var(--ease-out-expo);
       border: none;
       cursor: pointer;
       font-family: 'Poppins', sans-serif;
     }
-    .btn-white:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-white:hover { opacity: 0.9; transform: translateY(-2px); }
+    .btn-white:active { transform: translateY(0) scale(0.98); transition-duration: 0.08s; }
 
     .card {
       background: var(--white);
@@ -285,6 +290,7 @@
       max-width: 780px;
       margin: 0 auto;
       padding: 0 24px;
+      animation: hero-rise 0.9s var(--ease-out-expo) both;
     }
     .hero h1 {
       font-size: clamp(36px, 5vw, 58px);
@@ -540,14 +546,27 @@
     .footer-right a { font-size: 14px; color: var(--purple); text-decoration: none; }
     .footer-copy { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-    .reveal {
+    @keyframes hero-rise {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Step-card stagger: JS adds .will-animate before IO fires; IO removes it to reveal */
+    .step-card.will-animate {
       opacity: 0;
       transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity 0.55s var(--ease-out-expo), transform 0.55s var(--ease-out-expo);
+      transition-delay: calc(var(--i, 0) * 0.1s);
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-inner { animation: none; }
+      .step-card.will-animate {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .marquee-inner { animation-play-state: paused; }
     }
 
     @media (max-width: 760px) {
@@ -641,34 +660,34 @@
 
 <section class="section section-white" id="problem">
   <div class="container">
-    <div class="section-header reveal">
+    <div class="section-header">
       <div class="eyebrow">The Problem</div>
       <h2>Why Your Pipeline Feels Like<br><em>Feast or Famine</em></h2>
       <p>Most kitchen remodellers are brilliant at their craft. Their marketing is a different story.</p>
     </div>
     <div class="problem-grid">
-      <div class="problem-card reveal">
+      <div class="problem-card">
         <div class="problem-number">01</div>
         <h3>Shared Leads — A Race to the Bottom</h3>
         <p>Checkatrade and MyBuilder sell the same enquiry to 4–6 competitors. You're not competing on quality — you're competing on price. And you'll lose that war every time.</p>
       </div>
-      <div class="problem-card reveal">
+      <div class="problem-card">
         <div class="problem-number">02</div>
         <h3>Past Ads That Burned Money, Not Leads</h3>
         <p>You tried boosted posts. Maybe a generic agency. They delivered reports, not booked jobs. The distrust is earned — but the problem isn't ads. It's the wrong ads, built by the wrong people.</p>
       </div>
-      <div class="problem-card reveal">
+      <div class="problem-card">
         <div class="problem-number">03</div>
         <h3>No Predictability — Ever</h3>
         <p>Word of mouth is uncontrollable. One quiet month means payroll anxiety, crew concerns, and sleepless nights. You can't scale something you can't predict.</p>
       </div>
-      <div class="problem-card reveal">
+      <div class="problem-card">
         <div class="problem-number">04</div>
         <h3>Wasted Estimates on Wrong Clients</h3>
         <p>You drive out, measure up, spend two hours — and they wanted a £1,200 flat-pack install. There's no filter. Every enquiry costs you time you can't get back.</p>
       </div>
     </div>
-    <div class="problem-callout reveal">
+    <div class="problem-callout">
       <p>Missing just 3 kitchen jobs a month at £5,000 each is <em>£180,000 a year</em> left on the table. That's not a business problem. That's a marketing problem.</p>
     </div>
   </div>
@@ -676,25 +695,25 @@
 
 <section class="section section-tint" id="how-it-works">
   <div class="container">
-    <div class="section-header reveal">
+    <div class="section-header">
       <div class="eyebrow">The Process</div>
       <h2>From Strategy Call to <em>Booked Jobs</em><br>in 7 Days</h2>
       <p>Simple, fast, and built entirely around kitchen remodellers. No learning curve on our end.</p>
     </div>
     <div class="steps-grid">
-      <div class="step-card reveal">
+      <div class="step-card" style="--i: 0">
         <div class="step-badge">1</div>
         <div class="step-tag">Day 1</div>
         <h3>Strategy Call</h3>
         <p>We learn your business, area, current pipeline, average project value, and goals. 30 minutes. No pitch. Just clarity on what's possible in your postcode area.</p>
       </div>
-      <div class="step-card reveal">
+      <div class="step-card" style="--i: 1">
         <div class="step-badge">2</div>
         <div class="step-tag">Days 2–7</div>
         <h3>Campaign Build</h3>
         <p>AI-powered copy, targeting, and 5 ad variations built specifically for your area. Lead filter installed. Tracking set up. You approve everything before anything goes live.</p>
       </div>
-      <div class="step-card reveal">
+      <div class="step-card" style="--i: 2">
         <div class="step-badge">3</div>
         <div class="step-tag">Ongoing</div>
         <h3>Launch &amp; Optimise</h3>
@@ -706,38 +725,38 @@
 
 <section class="section section-white" id="why-it-works">
   <div class="container">
-    <div class="section-header reveal">
+    <div class="section-header">
       <div class="eyebrow">Why It Works</div>
       <h2>The <em>Kitchen Client Engine</em> —<br>Built Differently</h2>
       <p>Here's why this works when everything else hasn't.</p>
     </div>
     <div class="ai-grid">
-      <div class="ai-card reveal">
+      <div class="ai-card">
         <div class="ai-icon">&#127919;</div>
         <h3>Postcode-Level Targeting</h3>
         <p>We only target homeowners actively researching kitchen remodels within your specific service area. Not the UK. Not your region. Your postcodes.</p>
       </div>
-      <div class="ai-card reveal">
+      <div class="ai-card">
         <div class="ai-icon">&#128274;</div>
         <h3>Built-In Lead Filter</h3>
         <p>Price-shoppers and tyre-kickers are screened out before they ever reach your phone. Every lead that comes through has been pre-qualified against your minimum project value.</p>
       </div>
-      <div class="ai-card reveal">
+      <div class="ai-card">
         <div class="ai-icon">&#129302;</div>
         <h3>AI Creative Testing</h3>
         <p>We run 5+ ad variations simultaneously. The AI identifies what converts in your specific market — fast. No guesswork. No wasted budget on hunches.</p>
       </div>
-      <div class="ai-card reveal">
+      <div class="ai-card">
         <div class="ai-icon">&#128202;</div>
         <h3>Weekly Plain-English Reports</h3>
         <p>No jargon. No vanity metrics. Cost per lead, cost per booked visit, cost per signed job. You always know exactly what your pipeline costs and what it's worth.</p>
       </div>
-      <div class="ai-card reveal">
+      <div class="ai-card">
         <div class="ai-icon">&#127757;</div>
         <h3>Exclusive UK Territory</h3>
         <p>We take one kitchen remodeller per area. Your competitor down the road cannot use this system in your postcode. The territory is yours for as long as we work together.</p>
       </div>
-      <div class="ai-card reveal">
+      <div class="ai-card">
         <div class="ai-icon">&#9889;</div>
         <h3>7 Days to Live</h3>
         <p>Because we work exclusively with kitchen remodellers, there's no learning curve. We know your industry, your buyers, your objections. Campaigns are live in a week — not months.</p>
@@ -748,11 +767,11 @@
 
 <section class="section section-tint" id="pricing">
   <div class="container">
-    <div class="section-header reveal">
+    <div class="section-header">
       <div class="eyebrow">Pricing</div>
       <h2>Pricing Is <em>Discussed on the Call</em></h2>
     </div>
-    <div class="pricing-center reveal">
+    <div class="pricing-center">
       <p>We structure every engagement around your situation — your area, your average project value, your current pipeline. A flat rate that works brilliantly for one remodeller might not suit another.<br><br>What we can tell you: we offer a <strong>commission-based trial</strong> to qualified new clients, so you're only paying when we deliver real results. After that, we move to a fixed monthly retainer.</p>
       <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Discuss Pricing on a Call</a>
       <p class="pricing-note">No obligation. 30 minutes. You'll leave with a clear picture of what's possible.</p>
@@ -763,14 +782,14 @@
 <section class="section section-tint" id="exclusivity">
   <div class="container">
     <div class="exclusivity-inner">
-      <div class="exclusivity-copy reveal">
+      <div class="exclusivity-copy">
         <div class="eyebrow">Our Guarantee</div>
         <h2>Paying Clients or<br>You Don't Pay</h2>
         <p>We guarantee 2 qualified, booked kitchen clients per month — each with a minimum £5,000 project value. If we don't hit that within 60 days, your management fee is waived. Full stop.</p>
         <p>You only cover ad spend — paid direct to Meta, not through us. The risk sits with us, not you.</p>
         <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Claim Your Area</a>
       </div>
-      <div class="exclusivity-card reveal">
+      <div class="exclusivity-card">
         <h3>What You're Guaranteed</h3>
         <ul class="exclusivity-list">
           <li><div class="check-icon">&#10003;</div><span>2 qualified, booked kitchen clients per month — minimum £5,000 project value each — or your management fee is waived</span></li>
@@ -848,13 +867,19 @@
   mobileOverlay.addEventListener('click', closeMenu);
   mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer  = new IntersectionObserver((entries) => {
+  // Step-card stagger: add .will-animate synchronously so cards start hidden,
+  // then remove it when each card enters the viewport.
+  const stepCards = document.querySelectorAll('.step-card');
+  stepCards.forEach(el => el.classList.add('will-animate'));
+  const staggerObs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('will-animate');
+        staggerObs.unobserve(entry.target);
+      }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  revealEls.forEach(el => observer.observe(el));
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  stepCards.forEach(el => staggerObs.observe(el));
 
   const sections  = document.querySelectorAll('section[id]');
   const navLinks  = document.querySelectorAll('.nav-links a');
