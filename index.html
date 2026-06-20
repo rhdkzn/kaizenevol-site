@@ -339,18 +339,17 @@
     .section-header.dark p { color: rgba(255,255,255,0.7); }
 
     .problem-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+      border-top: 1px solid rgba(109,63,192,0.1);
     }
     .problem-card {
-      background: var(--white);
-      border-radius: var(--radius-card);
-      box-shadow: 0 2px 12px rgba(109,63,192,0.06);
-      padding: 28px 24px;
-      position: relative;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 12px 48px;
+      padding: 28px 0;
+      align-items: baseline;
+      border-bottom: 1px solid rgba(109,63,192,0.1);
     }
-    .problem-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .problem-card h3 { font-size: 18px; font-weight: 700; }
     .problem-card p { font-size: 15px; color: var(--muted); line-height: 1.6; }
     .problem-callout {
       margin-top: 32px;
@@ -406,7 +405,7 @@
 
     .ai-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
     }
     .ai-card {
@@ -414,17 +413,6 @@
       border-radius: var(--radius-card);
       box-shadow: 0 2px 12px rgba(109,63,192,0.06);
       padding: 28px 24px;
-    }
-    .ai-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--purple-light);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 14px;
-      font-size: 22px;
     }
     .ai-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
     .ai-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
@@ -565,10 +553,14 @@
       .marquee-inner { animation-play-state: paused; }
     }
 
+    @media (max-width: 900px) {
+      .ai-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
     @media (max-width: 760px) {
       .nav-links, .nav-cta { display: none; }
       .hamburger { display: flex; }
-      .problem-grid { grid-template-columns: 1fr; }
+      .problem-card { grid-template-columns: 1fr; gap: 8px; }
       .steps-grid { grid-template-columns: 1fr; }
       .ai-grid { grid-template-columns: 1fr; }
       .exclusivity-inner { grid-template-columns: 1fr; gap: 32px; }
@@ -721,32 +713,26 @@
     </div>
     <div class="ai-grid">
       <div class="ai-card">
-        <div class="ai-icon">&#127919;</div>
         <h3>Postcode-Level Targeting</h3>
         <p>We only target homeowners actively researching kitchen remodels within your specific service area. Not the UK. Not your region. Your postcodes.</p>
       </div>
       <div class="ai-card">
-        <div class="ai-icon">&#128274;</div>
         <h3>Built-In Lead Filter</h3>
         <p>Price-shoppers and tyre-kickers are screened out before they ever reach your phone. Every lead that comes through has been pre-qualified against your minimum project value.</p>
       </div>
       <div class="ai-card">
-        <div class="ai-icon">&#129302;</div>
         <h3>AI Creative Testing</h3>
         <p>We run 5+ ad variations simultaneously. The AI identifies what converts in your specific market — fast. No guesswork. No wasted budget on hunches.</p>
       </div>
       <div class="ai-card">
-        <div class="ai-icon">&#128202;</div>
         <h3>Weekly Plain-English Reports</h3>
         <p>No jargon. No vanity metrics. Cost per lead, cost per booked visit, cost per signed job. You always know exactly what your pipeline costs and what it's worth.</p>
       </div>
       <div class="ai-card">
-        <div class="ai-icon">&#127757;</div>
         <h3>Exclusive UK Territory</h3>
         <p>We take one kitchen remodeller per area. Your competitor down the road cannot use this system in your postcode. The territory is yours for as long as we work together.</p>
       </div>
       <div class="ai-card">
-        <div class="ai-icon">&#9889;</div>
         <h3>7 Days to Live</h3>
         <p>Because we work exclusively with kitchen remodellers, there's no learning curve. We know your industry, your buyers, your objections. Campaigns are live in a week — not months.</p>
       </div>
