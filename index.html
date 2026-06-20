@@ -11,13 +11,13 @@
   <meta property="og:site_name" content="KaizenEvol" />
   <meta property="og:title" content="KaizenEvol — Meta Ads for UK Kitchen Remodellers" />
   <meta property="og:description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, your agreed client target per month — or you don't pay." />
-  <meta property="og:image" content="https://kaizenevol.com/og-image.svg" />
+  <meta property="og:image" content="https://kaizenevol.com/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="KaizenEvol — Meta Ads for UK Kitchen Remodellers" />
   <meta name="twitter:description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, your agreed client target per month — or you don't pay." />
-  <meta name="twitter:image" content="https://kaizenevol.com/og-image.svg" />
+  <meta name="twitter:image" content="https://kaizenevol.com/og-image.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
@@ -25,6 +25,39 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What if I've tried Meta ads before and they didn't work?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Most failed ads share the same causes: generic copy, wrong audience, no qualification funnel, and no one watching the data. This system is purpose-built for kitchen remodellers — targeting, copy, and funnel are all niche-specific." }
+      },
+      {
+        "@type": "Question",
+        "name": "How much do I need to spend on ads?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It depends on your local market and monthly client targets. We agree the figure together on the discovery call. Ad spend is paid directly to Meta by you — we don't hold it, take a cut, or mark it up." }
+      },
+      {
+        "@type": "Question",
+        "name": "What results can I realistically expect?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Multiple qualified, booked kitchen clients per month, each with a high project value. Our guarantee: your agreed monthly target delivered within 60 days, or your management fee is waived." }
+      },
+      {
+        "@type": "Question",
+        "name": "How much of my time does this take?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Minimal. A 30-minute discovery call and a short review before launch. After that, your only time is on the consultations we book. We handle reporting, optimisation, and all lead communication." }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do you only work with one remodeller per area?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Running the same system for two remodellers in the same town would drive up costs and dilute results. One client per area keeps our interests fully aligned with yours and protects your competitive edge." }
+      }
+    ]
+  }
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -38,7 +71,7 @@
       --purple-bright:  #8B5CF6;
       --purple-light:   #A78BFA;
       --text:           #EEE8FF;
-      --muted:          rgba(238,232,255,0.52);
+      --muted:          rgba(238,232,255,0.62);
       --white:          #ffffff;
       --radius-card:    14px;
       --radius-pill:    9999px;
@@ -148,8 +181,8 @@
     .guarantee-copy h2 { font-size:clamp(28px,3.5vw,42px); margin-bottom:20px; }
     .guarantee-copy p { color:var(--muted); font-size:16px; margin-bottom:32px; line-height:1.75; max-width:420px; }
     .guarantee-list { list-style:none; counter-reset:g; display:flex; flex-direction:column; gap:22px; padding:0; margin:0; }
-    .guarantee-list li { counter-increment:g; display:grid; grid-template-columns:26px 1fr; gap:16px; font-size:15px; color:var(--muted); line-height:1.65; }
-    .guarantee-list li::before { content:counter(g,'0' decimal); font-size:11px; font-weight:700; letter-spacing:0.06em; color:var(--purple-bright); padding-top:2px; }
+    .guarantee-list li { counter-increment:g; display:flex; align-items:flex-start; gap:16px; font-size:15px; color:var(--muted); line-height:1.65; }
+    .guarantee-list li::before { content:counter(g,'0' decimal); font-size:11px; font-weight:700; letter-spacing:0.06em; color:var(--purple-bright); padding-top:2px; flex-shrink:0; min-width:26px; }
     .faq-border-top { border-top:1px solid var(--border); }
 
     /* PROBLEM */
@@ -201,7 +234,7 @@
     .final-cta h2 { font-size:clamp(28px,4vw,44px); color:#fff; margin-bottom:18px; max-width:640px; margin-left:auto; margin-right:auto; }
     .final-cta p { color:rgba(255,255,255,0.72); font-size:17px; margin-bottom:36px; max-width:460px; margin-left:auto; margin-right:auto; }
     .final-cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
-    .final-scarcity { margin-top:24px; font-size:13px; color:rgba(255,255,255,0.42); }
+    .final-scarcity { margin-top:24px; font-size:13px; color:rgba(255,255,255,0.58); }
 
     /* FOOTER */
     .footer { background:var(--surface); border-top:1px solid var(--border); padding:40px 0 max(40px,calc(24px + env(safe-area-inset-bottom))); }
@@ -262,7 +295,7 @@
     <span>Kitchen Remodellers<span class="marquee-dot"> · </span></span>
     <span>7 Days to Live<span class="marquee-dot"> · </span></span>
     <span>One Remodeller Per Area<span class="marquee-dot"> · </span></span>
-    <span>AI-Powered Meta Ads<span class="marquee-dot"> · </span></span>
+    <span>AI-Assisted Meta Ads<span class="marquee-dot"> · </span></span>
     <span>Exclusive UK Territories<span class="marquee-dot"> · </span></span>
     <span>Results or You Don't Pay<span class="marquee-dot"> · </span></span>
     <span>Qualified Leads Only<span class="marquee-dot"> · </span></span>
@@ -270,7 +303,7 @@
     <span>Kitchen Remodellers<span class="marquee-dot"> · </span></span>
     <span>7 Days to Live<span class="marquee-dot"> · </span></span>
     <span>One Remodeller Per Area<span class="marquee-dot"> · </span></span>
-    <span>AI-Powered Meta Ads<span class="marquee-dot"> · </span></span>
+    <span>AI-Assisted Meta Ads<span class="marquee-dot"> · </span></span>
     <span>Exclusive UK Territories<span class="marquee-dot"> · </span></span>
     <span>Results or You Don't Pay<span class="marquee-dot"> · </span></span>
     <span>Qualified Leads Only<span class="marquee-dot"> · </span></span>
@@ -287,6 +320,7 @@
     <ul class="nav-links">
       <li><a href="#how-it-works">How It Works</a></li>
       <li><a href="services.html">Services</a></li>
+      <li><a href="#guarantee">Guarantee</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="faq.html">FAQ</a></li>
     </ul>
@@ -308,6 +342,7 @@
   </div>
   <a href="#how-it-works">How It Works</a>
   <a href="services.html">Services</a>
+  <a href="#guarantee">Guarantee</a>
   <a href="about.html">About</a>
   <a href="faq.html">FAQ</a>
   <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book a Call</a>
@@ -336,7 +371,7 @@
         </div>
         <input type="range" id="missedJobs" min="1" max="20" step="1" value="2" aria-label="Jobs missed per month">
       </div>
-      <div class="calc-result">
+      <div class="calc-result" aria-live="polite" aria-atomic="true">
         <div class="calc-result-label">Revenue on the table</div>
         <div class="calc-result-amounts">
           <div>
@@ -400,13 +435,13 @@
         <div class="step-badge">1</div>
         <span class="step-tag">Day 1</span>
         <h3>Strategy Call</h3>
-        <p>We learn your business, area, current pipeline, average project value, and goals. 30 minutes on the phone — a clear picture of what's achievable in your postcode.</p>
+        <p>We learn your business, area, current pipeline, average project value, and goals. 30 minutes on the phone — a clear picture of what's achievable in your local area.</p>
       </div>
       <div class="step-card" style="--i:1">
         <div class="step-badge">2</div>
         <span class="step-tag">Days 2–7</span>
         <h3>Campaign Build</h3>
-        <p>AI-powered copy, targeting, and 5 ad variations built specifically for your area. Lead filter installed. Tracking set up. You approve everything before anything goes live.</p>
+        <p>AI-assisted copy, targeting, and 5 ad variations built specifically for your area. Lead filter installed. Tracking set up. You approve everything before anything goes live.</p>
       </div>
       <div class="step-card" style="--i:2">
         <div class="step-badge">3</div>
@@ -437,8 +472,8 @@
       </div>
       <div class="ai-grid">
         <div class="ai-card">
-          <h3>Postcode-Level Targeting</h3>
-          <p>We only target homeowners actively researching kitchen remodels within your specific service area. Your postcodes, nobody else's.</p>
+          <h3>Hyper-Local Targeting</h3>
+          <p>We only target homeowners actively researching kitchen remodels within your specific service area. Your local area, locked to you.</p>
         </div>
         <div class="ai-card">
           <h3>Built-In Lead Filter</h3>
@@ -475,7 +510,7 @@
     <div class="guarantee-inner">
       <div class="guarantee-copy">
         <h2>Your Agreed Client Target —<br><em>or You Don't Pay</em></h2>
-        <p>Within 60 days of launch: your agreed number of qualified, booked kitchen clients per month, each with a minimum £5,000 project value. If we miss the target, your management fee is waived. The risk sits with us, not you.</p>
+        <p>Within 60 days of launch: your agreed number of qualified, booked kitchen clients per month (typically 2–4 booked consultations per month depending on your area and ad spend), each with a minimum £5,000 project value. If we miss the target, your management fee is waived. The risk sits with us, not you.</p>
         <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Claim Your Area</a>
       </div>
       <ol class="guarantee-list">
