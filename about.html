@@ -114,7 +114,7 @@
     .commitment-list li{counter-increment:c;display:grid;grid-template-columns:26px 1fr;gap:14px}
     .commitment-list li::before{content:counter(c,'0' decimal);font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--purple-bright);padding-top:3px}
     .commitment-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px}
-    .commitment-desc{font-size:14px;color:var(--muted);line-height:1.65}
+    .commitment-desc{grid-column:2;font-size:14px;color:var(--muted);line-height:1.65}
 
     /* FINAL CTA */
     .final-cta{padding:100px 24px;text-align:center;background:linear-gradient(135deg,#150930 0%,#2a1260 50%,#150930 100%);position:relative;overflow:hidden}
