@@ -39,7 +39,10 @@
       font-size: 16px;
       line-height: 1.65;
       overflow-x: hidden;
+      font-optical-sizing: auto;
     }
+
+    p { text-wrap: pretty; }
 
     .accent { color: var(--purple); }
     em { color: var(--purple); font-style: normal; }
@@ -66,6 +69,7 @@
       font-weight: 800;
       line-height: 1.2;
       letter-spacing: -0.02em;
+      text-wrap: balance;
     }
 
     .btn-primary {
@@ -345,14 +349,6 @@
       box-shadow: 0 2px 12px rgba(109,63,192,0.06);
       padding: 28px 24px;
       position: relative;
-    }
-    .problem-number {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: var(--purple);
-      text-transform: uppercase;
-      margin-bottom: 10px;
     }
     .problem-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
     .problem-card p { font-size: 15px; color: var(--muted); line-height: 1.6; }
@@ -661,28 +657,23 @@
 <section class="section section-white" id="problem">
   <div class="container">
     <div class="section-header">
-      <div class="eyebrow">The Problem</div>
       <h2>Why Your Pipeline Feels Like<br><em>Feast or Famine</em></h2>
       <p>Most kitchen remodellers are brilliant at their craft. Their marketing is a different story.</p>
     </div>
     <div class="problem-grid">
       <div class="problem-card">
-        <div class="problem-number">01</div>
         <h3>Shared Leads — A Race to the Bottom</h3>
         <p>Checkatrade and MyBuilder sell the same enquiry to 4–6 competitors. You're not competing on quality — you're competing on price. And you'll lose that war every time.</p>
       </div>
       <div class="problem-card">
-        <div class="problem-number">02</div>
         <h3>Past Ads That Burned Money, Not Leads</h3>
         <p>You tried boosted posts. Maybe a generic agency. They delivered reports, not booked jobs. The distrust is earned — but the problem isn't ads. It's the wrong ads, built by the wrong people.</p>
       </div>
       <div class="problem-card">
-        <div class="problem-number">03</div>
         <h3>No Predictability — Ever</h3>
         <p>Word of mouth is uncontrollable. One quiet month means payroll anxiety, crew concerns, and sleepless nights. You can't scale something you can't predict.</p>
       </div>
       <div class="problem-card">
-        <div class="problem-number">04</div>
         <h3>Wasted Estimates on Wrong Clients</h3>
         <p>You drive out, measure up, spend two hours — and they wanted a £1,200 flat-pack install. There's no filter. Every enquiry costs you time you can't get back.</p>
       </div>
@@ -696,7 +687,6 @@
 <section class="section section-tint" id="how-it-works">
   <div class="container">
     <div class="section-header">
-      <div class="eyebrow">The Process</div>
       <h2>From Strategy Call to <em>Booked Jobs</em><br>in 7 Days</h2>
       <p>Simple, fast, and built entirely around kitchen remodellers. No learning curve on our end.</p>
     </div>
@@ -726,7 +716,6 @@
 <section class="section section-white" id="why-it-works">
   <div class="container">
     <div class="section-header">
-      <div class="eyebrow">Why It Works</div>
       <h2>The <em>Kitchen Client Engine</em> —<br>Built Differently</h2>
       <p>Here's why this works when everything else hasn't.</p>
     </div>
@@ -768,7 +757,6 @@
 <section class="section section-tint" id="pricing">
   <div class="container">
     <div class="section-header">
-      <div class="eyebrow">Pricing</div>
       <h2>Pricing Is <em>Discussed on the Call</em></h2>
     </div>
     <div class="pricing-center">
@@ -806,7 +794,6 @@
 
 
 <section class="final-cta" id="contact">
-  <div class="eyebrow eyebrow-dark" style="margin-bottom:24px;">Ready to Start?</div>
   <h2>Your Competitors Are Running Ads Right Now.<br>Your Area Might Still Be Available.</h2>
   <p>Book a free 30-minute strategy call. No pitch. Just an honest look at what's possible for your business in your area.</p>
   <div class="final-cta-btns">
