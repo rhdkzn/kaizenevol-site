@@ -79,7 +79,7 @@
       <nav class="dash-nav">
         <a href="dashboard.html" class="dash-nav-link">Dashboard</a>
         <a href="crm.html" class="dash-nav-link">CRM</a>
-        <a href="reports.html" class="dash-nav-link active">Reports</a>
+        <a href="reports.html" class="dash-nav-link active" aria-current="page">Reports</a>
       </nav>
       <div class="dash-header-right">
         <span class="dash-date" id="headerDate"></span>
@@ -142,9 +142,9 @@ let idleTimer=null;
 function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>logout(),IDLE_TTL);}
 function startIdle(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
 function stopIdle(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
-function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showApp();return;}}catch(e){}}window.location.href='dashboard.html';}
+function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){showApp();return;}else{localStorage.removeItem(SESSION_KEY);}}catch(e){localStorage.removeItem(SESSION_KEY);}}window.location.href='dashboard.html';}
 function logout(){stopIdle();localStorage.removeItem(SESSION_KEY);window.location.href='dashboard.html';}
-async function showApp(){document.getElementById('app').style.display='block';startIdle();const remote=await _cloudPull(REPORTS_KEY);if(Array.isArray(remote)&&remote.length>0){localStorage.setItem(REPORTS_KEY,JSON.stringify(remote));}else if(!remote){const local=loadReports();if(local.length>0)_cloudPush(REPORTS_KEY,local);}init();}
+async function showApp(){document.getElementById('app').style.display='block';startIdle();const remote=await _cloudPull(REPORTS_KEY);if(Array.isArray(remote)&&remote.length>0){localStorage.setItem(REPORTS_KEY,JSON.stringify(remote));}else if(!remote||remote.length===0){const local=loadReports();if(local.length>0)_cloudPush(REPORTS_KEY,local);}init();}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function loadData(){try{const r=localStorage.getItem(DATA_KEY);return r?JSON.parse(r):{clients:[{id:'nav',name:'Navpreet Singh'}]};}catch(e){return{clients:[]};}}
 async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){}}
