@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -51,8 +51,8 @@
     body { background:var(--bg); color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; line-height:1.65; overflow-x:hidden; }
     p { text-wrap: pretty; }
 
-    .skip-link { position:absolute; top:-100%; left:24px; background:var(--purple); color:#fff; padding:8px 16px; border-radius:var(--radius-pill); font-size:14px; font-weight:600; text-decoration:none; z-index:9999; transition:top 0.2s; }
-    .skip-link:focus { top:16px; }
+    .skip-link { position:absolute; left:-9999px; top:0; background:var(--purple); color:#fff; padding:8px 16px; border-radius:0 0 var(--radius-card) 0; font-size:14px; font-weight:700; text-decoration:none; z-index:9999; }
+    .skip-link:focus { left:0; }
     :focus-visible { outline:2px solid var(--purple-bright); outline-offset:3px; }
 
     em { color:var(--purple-light); font-style:normal; }
@@ -82,14 +82,14 @@
 
     /* NAVBAR */
     .nav-wrap { position:fixed; top:max(16px,env(safe-area-inset-top)); left:0; right:0; z-index:999; display:flex; justify-content:center; pointer-events:none; }
-    .navbar { pointer-events:all; display:flex; align-items:center; justify-content:space-between; background:rgba(13,11,26,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:var(--radius-pill); padding:10px 20px; max-width:880px; width:calc(100% - 32px); gap:16px; transition:border-color 0.2s; }
+    .navbar { pointer-events:all; display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 8px 0 20px; background:rgba(13,11,26,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:var(--radius-pill); max-width:900px; width:calc(100% - 48px); transition:border-color 0.2s; }
     .navbar:hover { border-color:var(--border-hover); }
     .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
     .nav-logo img { height:28px; width:auto; }
     .nav-logo-text { font-weight:700; font-size:16px; color:var(--text); letter-spacing:-0.02em; }
     .nav-links { display:flex; gap:4px; list-style:none; }
-    .nav-links a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; padding:6px 14px; border-radius:var(--radius-pill); transition:color 0.15s,background 0.15s; }
-    .nav-links a:hover { color:var(--text); background:var(--surface-2); }
+    .nav-links a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; padding:7px 14px; border-radius:var(--radius-pill); transition:color 0.15s,background 0.15s; }
+    .nav-links a:hover,.nav-links a.active { color:var(--text); background:var(--surface-2); }
     .nav-cta { flex-shrink:0; font-size:14px; padding:9px 20px; }
 
     .hamburger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; min-width:44px; min-height:44px; align-items:center; justify-content:center; }
@@ -230,7 +230,7 @@
       .ai-grid{grid-template-columns:repeat(2,1fr)}
       .steps-grid{grid-template-columns:repeat(2,1fr)}
     }
-    @media(max-width:720px) {
+    @media(max-width:768px) {
       .nav-links,.nav-cta{display:none}
       .hamburger{display:flex}
       .problem-card{grid-template-columns:1fr;gap:8px}
@@ -242,7 +242,9 @@
       .footer-right{text-align:center}
       .footer-nav{justify-content:center}
       .calc-wrap{padding:28px 24px}
+      .section{padding:64px 0}
     }
+    @media(min-width:769px){.mobile-overlay,.mobile-panel{display:none !important}}
     @media(max-width:480px) {
       .hero-ctas{flex-direction:column;align-items:stretch}
       .hero-ctas a{text-align:center}
@@ -278,7 +280,7 @@
 
 <div class="nav-wrap">
   <nav class="navbar">
-    <a class="nav-logo" href="#home">
+    <a class="nav-logo" href="index.html">
       <img src="logo.png" alt="KaizenEvol" width="32" height="32" onerror="this.style.display='none'">
       <span class="nav-logo-text">KaizenEvol</span>
     </a>
@@ -302,7 +304,7 @@
       <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'" style="height:28px;width:auto;">
       <span class="nav-logo-text">KaizenEvol</span>
     </div>
-    <button class="mobile-close" id="mobileClose">&times;</button>
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
   </div>
   <a href="#how-it-works">How It Works</a>
   <a href="services.html">Services</a>
@@ -455,7 +457,7 @@
   </div>
 </section>
 
-<section class="section section-surface" id="pricing">
+<section class="section section-bg" id="pricing">
   <div class="container">
     <div class="section-header" style="text-align:center">
       <h2>Pricing Is <em>Discussed on the Call</em></h2>
@@ -468,7 +470,7 @@
   </div>
 </section>
 
-<section class="section section-bg" id="guarantee">
+<section class="section section-surface" id="guarantee">
   <div class="container">
     <div class="guarantee-inner">
       <div class="guarantee-copy">
@@ -544,6 +546,7 @@
         <li><a href="#problem">The Problem</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#why-it-works">Why It Works</a></li>
+        <li><a href="services.html">Services</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="faq.html">FAQ</a></li>
       </ul>
