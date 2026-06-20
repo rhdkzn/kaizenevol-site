@@ -2,101 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KaizenEvol — Meta Client Acquisition for Kitchen Remodellers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>KaizenEvol — Meta Ads for UK Kitchen Remodellers</title>
+  <meta name="description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, 2 booked clients per month guaranteed — or you don't pay." />
+  <link rel="canonical" href="https://kaizenevol.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kaizenevol.com/" />
+  <meta property="og:site_name" content="KaizenEvol" />
+  <meta property="og:title" content="KaizenEvol — Meta Ads for UK Kitchen Remodellers" />
+  <meta property="og:description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, 2 booked clients per month guaranteed — or you don't pay." />
+  <meta property="og:image" content="https://kaizenevol.com/og-image.svg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="KaizenEvol — Meta Ads for UK Kitchen Remodellers" />
+  <meta name="twitter:description" content="Done-for-you Meta campaigns built exclusively for UK kitchen remodellers. Exclusive territory, live in 7 days, 2 booked clients per month guaranteed — or you don't pay." />
+  <meta name="twitter:image" content="https://kaizenevol.com/og-image.svg" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      /* Colour tokens */
-      --color-bg:          #0A0A0A;
-      --color-surface:     #111111;
-      --color-surface-2:   #161616;
-      --color-surface-3:   #1C1C1C;
-      --color-border:      rgba(109, 63, 192, 0.12);
-      --color-border-hover:rgba(109, 63, 192, 0.40);
-      --color-accent:      #6D3FC0;
-      --color-accent-dark: #2D1060;
-      --color-accent-dim:  rgba(109, 63, 192, 0.15);
-      --color-accent-glow: rgba(109, 63, 192, 0.25);
-      --color-text:        #FFFFFF;
-      --color-text-2:      #C8D0DC;
-      --color-text-3:      #6B7280;
-      --color-danger:      #EF4444;
-      --color-success:     #22C55E;
-
-      /* Spacing tokens (8px grid) */
-      --space-1:  8px;
-      --space-2:  16px;
-      --space-3:  24px;
-      --space-4:  32px;
-      --space-5:  40px;
-      --space-6:  48px;
-      --space-8:  64px;
-      --space-10: 80px;
-      --space-12: 96px;
-
-      /* Type tokens */
-      --text-xs:   0.6875rem;   /* 11px */
-      --text-sm:   0.8125rem;   /* 13px */
-      --text-base: 0.9375rem;   /* 15px */
-      --text-md:   1rem;        /* 16px */
-      --text-lg:   1.0625rem;   /* 17px */
-      --text-xl:   1.125rem;    /* 18px */
-      --text-2xl:  1.25rem;     /* 20px */
-      --text-3xl:  1.5rem;      /* 24px */
-      --text-4xl:  2rem;        /* 32px */
-      --text-5xl:  2.5rem;      /* 40px */
-      --text-hero: clamp(2.5rem, 5.5vw, 3.75rem);
-
-      /* Shape */
-      --radius-sm:   6px;
-      --radius-md:   12px;
-      --radius-lg:   16px;
-      --radius-pill: 9999px;
-      --max-w:       900px;
-
-      /* Motion */
-      --dur-fast:   150ms;
-      --dur-base:   250ms;
-      --dur-slow:   600ms;
-      --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+      --purple:       #6D3FC0;
+      --purple-dark:  #2d1060;
+      --purple-light: #F0EEFF;
+      --purple-mid:   #EDE8FF;
+      --purple-tint:  #F5F3FF;
+      --text:         #111111;
+      --muted:        #555555;
+      --white:        #ffffff;
+      --radius-card:  16px;
+      --radius-pill:  9999px;
+      --max-w:        960px;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: var(--text-md);
+      background: var(--white);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
       line-height: 1.65;
       overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
+      font-optical-sizing: auto;
     }
+
+    p { text-wrap: pretty; }
 
     .container {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 0 var(--space-3);
+      padding-left: max(24px, env(safe-area-inset-left));
+      padding-right: max(24px, env(safe-area-inset-right));
     }
 
-    /* ─── TYPOGRAPHY ─── */
-    h1, h2, h3, h4 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      line-height: 1.12;
-      letter-spacing: -0.025em;
-      color: var(--color-text);
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 24px;
+      background: var(--purple);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 9999;
+      transition: top 0.2s;
     }
+    .skip-link:focus { top: 16px; }
+
+    :focus-visible {
+      outline: 2px solid var(--purple);
+      outline-offset: 3px;
+    }
+    .btn-white:focus-visible { outline-color: rgba(255,255,255,0.9); }
+
+    .accent { color: var(--purple); }
+    em { color: var(--purple); font-style: normal; }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
 
     .eyebrow {
       display: inline-flex;
@@ -110,57 +101,69 @@
       color: var(--color-accent);
       margin-bottom: var(--space-2);
     }
-    .eyebrow::before {
-      content: '';
-      display: inline-block;
-      width: 16px;
-      height: 1px;
-      background: var(--color-accent);
-      flex-shrink: 0;
-    }
 
-    /* ─── BUTTONS ─── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-1);
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: var(--text-base);
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      transition:
-        background var(--dur-base) var(--ease-out),
-        color var(--dur-base) var(--ease-out),
-        transform var(--dur-base) var(--ease-out),
-        box-shadow var(--dur-base) var(--ease-out);
-      white-space: nowrap;
+    h1, h2, h3, h4 {
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+    h1, h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
     }
 
     .btn-primary {
       background: var(--color-accent);
       color: #fff;
       padding: 14px 28px;
+      text-decoration: none;
+      transition: opacity 0.15s var(--ease-out-quart), transform 0.2s var(--ease-out-expo);
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
     }
-    .btn-primary:hover {
-      background: #5A33A3;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px var(--color-accent-glow);
-    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+    .btn-primary:active { transform: translateY(0) scale(0.98); transition-duration: 0.08s; }
 
     .btn-ghost {
       background: transparent;
-      color: var(--color-text-2);
-      padding: 14px 28px;
-      border: 1px solid var(--color-border);
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 12px 28px;
+      text-decoration: none;
+      transition: background 0.15s var(--ease-out-quart), color 0.15s var(--ease-out-quart), transform 0.2s var(--ease-out-expo);
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
     }
-    .btn-ghost:hover {
-      border-color: var(--color-border-hover);
-      color: var(--color-text);
-      transform: translateY(-2px);
+    .btn-outline:hover { background: var(--purple); color: #fff; transform: translateY(-2px); }
+    .btn-outline:active { transform: translateY(0) scale(0.98); transition-duration: 0.08s; }
+
+    .btn-white {
+      display: inline-block;
+      background: #fff;
+      color: var(--purple);
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 28px;
+      text-decoration: none;
+      transition: opacity 0.15s var(--ease-out-quart), transform 0.2s var(--ease-out-expo);
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn-white:hover { opacity: 0.9; transform: translateY(-2px); }
+    .btn-white:active { transform: translateY(0) scale(0.98); transition-duration: 0.08s; }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      box-shadow: 0 2px 12px rgba(109,63,192,0.06);
+      padding: 28px 24px;
     }
 
     .btn-outline-white {
@@ -204,7 +207,7 @@
     /* ─── NAVBAR ─── */
     .nav-wrap {
       position: fixed;
-      top: var(--space-2);
+      top: max(16px, env(safe-area-inset-top));
       left: 0; right: 0;
       z-index: 999;
       display: flex;
@@ -266,7 +269,7 @@
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px;
+      padding: 14px 11px;
       flex-direction: column;
       gap: 5px;
     }
@@ -302,8 +305,21 @@
       gap: var(--space-1);
     }
     .mobile-panel.open { right: 0; }
-    .mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
-    .mobile-close { font-size: 24px; background: none; border: none; cursor: pointer; color: var(--color-text-2); line-height: 1; }
+    .mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .mobile-close {
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      line-height: 1;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
     .mobile-panel a {
       font-size: var(--text-md);
       font-weight: 500;
@@ -319,6 +335,7 @@
 
     /* ─── HERO ─── */
     .hero {
+      background: linear-gradient(160deg, var(--white) 0%, var(--purple-tint) 60%, var(--purple-mid) 100%);
       position: relative;
       padding: 160px 0 112px;
       overflow: hidden;
@@ -352,7 +369,8 @@
       text-align: center;
       max-width: 800px;
       margin: 0 auto;
-      padding: 0 var(--space-3);
+      padding: 0 24px;
+      animation: hero-rise 0.9s var(--ease-out-expo) both;
     }
     .hero h1 {
       font-size: var(--text-hero);
@@ -388,31 +406,11 @@
       color: var(--color-text-3);
       font-weight: 500;
     }
-    .hero-note strong { color: var(--color-accent); font-weight: 600; }
-    .hero-note::before {
-      content: '';
-      display: inline-block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--color-accent);
-      flex-shrink: 0;
-    }
+    .hero-note strong { color: var(--purple); }
 
-    /* ─── DIVIDER ─── */
-    .section-divider {
-      border: none;
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--color-border), transparent);
-      margin: 0;
-    }
-
-    /* ─── SECTIONS ─── */
-    .section {
-      padding: var(--space-12) 0;
-    }
-    .section-surface { background: var(--color-surface); }
-    .section-bg     { background: var(--color-bg); }
-
+    .section { padding: 96px 0; }
+    .section-tint { background: var(--purple-tint); }
+    .section-white { background: var(--white); }
     .section-header {
       margin-bottom: var(--space-8);
     }
@@ -431,63 +429,28 @@
       margin-top: var(--space-2);
       line-height: 1.7;
     }
+    .section-header h2 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 14px; }
+    .section-header p { font-size: 17px; color: var(--muted); max-width: 580px; margin: 0 auto; }
 
     /* ─── PROBLEM ─── */
     .problem-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-3);
+      border-top: 1px solid rgba(109,63,192,0.1);
     }
     .problem-card {
-      background: var(--color-surface-2);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4);
-      transition: border-color var(--dur-base), transform var(--dur-base) var(--ease-out);
-      position: relative;
-      overflow: hidden;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 12px 48px;
+      padding: 28px 0;
+      align-items: baseline;
+      border-bottom: 1px solid rgba(109,63,192,0.1);
     }
-    .problem-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 100%;
-      background: var(--color-accent);
-      opacity: 0;
-      transition: opacity var(--dur-base);
-    }
-    .problem-card:hover {
-      border-color: var(--color-border-hover);
-      transform: translateY(-4px);
-    }
-    .problem-card:hover::before { opacity: 1; }
-
-    .problem-num {
-      font-family: 'Manrope', sans-serif;
-      font-size: var(--text-xs);
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-      margin-bottom: var(--space-2);
-    }
-    .problem-card h3 {
-      font-size: var(--text-xl);
-      margin-bottom: var(--space-1);
-      letter-spacing: -0.02em;
-    }
-    .problem-card p {
-      font-size: var(--text-base);
-      color: var(--color-text-2);
-      line-height: 1.7;
-    }
-
-    .callout-box {
-      margin-top: var(--space-5);
-      background: rgba(109, 63, 192, 0.06);
-      border: 1px solid rgba(109, 63, 192, 0.20);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4) var(--space-5);
+    .problem-card h3 { font-size: 18px; font-weight: 700; }
+    .problem-card p { font-size: 15px; color: var(--muted); line-height: 1.6; }
+    .problem-callout {
+      margin-top: 32px;
+      background: var(--purple-mid);
+      border-radius: var(--radius-card);
+      padding: 28px 32px;
       text-align: center;
     }
     .callout-box p {
@@ -553,11 +516,16 @@
       line-height: 1.7;
     }
 
-    /* ─── WHY IT WORKS ─── */
-    .features-grid {
+    .ai-grid-wrap { display: flex; flex-direction: column; gap: 20px; }
+    .ai-featured-row {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-3);
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .ai-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
     }
     .feature-card {
       background: var(--color-surface-2);
@@ -566,31 +534,14 @@
       padding: var(--space-4);
       transition: border-color var(--dur-base), transform var(--dur-base) var(--ease-out);
     }
-    .feature-card:hover {
-      border-color: var(--color-border-hover);
-      transform: translateY(-4px);
+    .ai-card--featured {
+      background: var(--purple-light);
+      box-shadow: none;
+      padding: 36px 32px;
     }
-    .feature-icon {
-      width: 40px; height: 40px;
-      background: var(--color-accent-dim);
-      border: 1px solid rgba(109, 63, 192, 0.25);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      margin-bottom: var(--space-2);
-    }
-    .feature-card h3 {
-      font-size: var(--text-lg);
-      margin-bottom: var(--space-1);
-      letter-spacing: -0.01em;
-    }
-    .feature-card p {
-      font-size: var(--text-base);
-      color: var(--color-text-2);
-      line-height: 1.7;
-    }
+    .ai-card--featured h3 { font-size: 20px; }
+    .ai-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .ai-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
     /* ─── PRICING ─── */
     .pricing-panel {
@@ -622,9 +573,14 @@
       gap: var(--space-10);
       align-items: center;
     }
-    .guarantee-copy h2 {
-      font-size: clamp(var(--text-4xl), 3.5vw, var(--text-5xl));
-      margin-bottom: var(--space-3);
+    .exclusivity-copy h2 { font-size: clamp(28px, 3.5vw, 38px); color: var(--text); margin-bottom: 18px; }
+    .exclusivity-copy p { color: var(--muted); font-size: 1rem; margin-bottom: 24px; line-height: 1.7; }
+    .exclusivity-card {
+      background: var(--white);
+      border: 1px solid rgba(109,63,192,0.12);
+      border-radius: var(--radius-card);
+      padding: 36px 32px;
+      box-shadow: 0 2px 16px rgba(109,63,192,0.07);
     }
     .guarantee-copy h2 em {
       font-style: normal;
@@ -676,59 +632,24 @@
       font-weight: 700;
     }
 
-    /* ─── FINAL CTA ─── */
     .final-cta {
       background: var(--color-surface);
       border-top: 1px solid var(--color-border);
       padding: var(--space-12) var(--space-3);
       text-align: center;
-      position: relative;
-      overflow: hidden;
+      padding: 100px 24px;
+      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
     }
-    .final-cta::before {
-      content: '';
-      position: absolute;
-      bottom: -40%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 700px;
-      height: 400px;
-      background: radial-gradient(ellipse at center, rgba(109, 63, 192, 0.10) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .final-cta-inner { position: relative; z-index: 1; }
-    .final-cta h2 {
-      font-size: clamp(var(--text-4xl), 4vw, var(--text-5xl));
-      margin-bottom: var(--space-3);
-      max-width: 640px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .final-cta p {
-      color: var(--color-text-2);
-      font-size: var(--text-lg);
-      margin-bottom: var(--space-5);
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .final-cta-btns {
-      display: flex;
-      gap: var(--space-2);
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .final-scarcity {
-      margin-top: var(--space-4);
-      font-size: var(--text-sm);
-      color: var(--color-text-3);
-    }
+    .final-cta h2 { font-size: clamp(28px, 4vw, 44px); color: #fff; margin-bottom: 18px; max-width: 640px; margin-left: auto; margin-right: auto; }
+    .final-cta p { color: rgba(255,255,255,0.8); font-size: 17px; margin-bottom: 36px; }
+    .final-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .final-scarcity { margin-top: 24px; font-size: 13px; color: rgba(255,255,255,0.75); }
 
     /* ─── FOOTER ─── */
     .footer {
-      background: var(--color-bg);
-      border-top: 1px solid var(--color-border);
-      padding: var(--space-5) 0;
+      background: var(--white);
+      border-top: 1px solid rgba(109,63,192,0.1);
+      padding: 40px 0 max(40px, calc(24px + env(safe-area-inset-bottom)));
     }
     .footer-inner {
       display: flex;
@@ -773,29 +694,75 @@
     }
     .footer-copy { font-size: var(--text-xs); color: var(--color-text-3); margin-top: 4px; }
 
-    /* ─── REVEAL ANIMATION ─── */
-    [data-reveal] {
+    .faq-inline { border-top: 1px solid rgba(109,63,192,0.1); }
+    .faq-inline-item { border-bottom: 1px solid rgba(109,63,192,0.1); }
+    .faq-inline-summary {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 22px 0;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text);
+    }
+    .faq-inline-summary::-webkit-details-marker { display: none; }
+    .faq-inline-summary::after {
+      content: '+';
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--purple);
+      flex-shrink: 0;
+      transition: transform 0.2s var(--ease-out-quart);
+    }
+    details[open] > .faq-inline-summary::after { transform: rotate(45deg); }
+    .faq-inline-answer {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.75;
+      padding-bottom: 24px;
+      max-width: 720px;
+    }
+
+    @keyframes hero-rise {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Step-card stagger: JS adds .will-animate before IO fires; IO removes it to reveal */
+    .step-card.will-animate {
       opacity: 0;
       transform: translateY(24px);
-      transition:
-        opacity var(--dur-slow) var(--ease-out),
-        transform var(--dur-slow) var(--ease-out);
+      transition: opacity 0.55s var(--ease-out-expo), transform 0.55s var(--ease-out-expo);
+      transition-delay: calc(var(--i, 0) * 0.1s);
     }
-    [data-reveal].revealed {
-      opacity: 1;
-      transform: translateY(0);
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-inner { animation: none; }
+      .step-card.will-animate {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .marquee-inner { animation-play-state: paused; }
+    }
+
+    @media (max-width: 900px) {
+      .ai-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* ─── MOBILE ─── */
     @media (max-width: 720px) {
       .nav-links, .nav-cta { display: none; }
       .hamburger { display: flex; }
-      .problem-grid  { grid-template-columns: 1fr; }
-      .steps-grid    { grid-template-columns: 1fr; }
-      .features-grid { grid-template-columns: 1fr; }
-      .guarantee-inner { grid-template-columns: 1fr; gap: var(--space-5); }
-      .section { padding: var(--space-8) 0; }
-      .hero { padding: 120px 0 var(--space-10); }
+      .problem-card { grid-template-columns: 1fr; gap: 8px; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .ai-featured-row { grid-template-columns: 1fr; }
+      .ai-grid { grid-template-columns: 1fr; }
+      .exclusivity-inner { grid-template-columns: 1fr; gap: 32px; }
       .footer-inner { flex-direction: column; text-align: center; }
       .footer-right { text-align: center; }
       .footer-nav { justify-content: center; }
@@ -810,8 +777,9 @@
 </head>
 <body>
 
-<!-- ─── MARQUEE ─── -->
-<div class="marquee-band">
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<div class="marquee-band" aria-hidden="true">
   <div class="marquee-inner" id="marqueeInner">
     <span>Kitchen Remodellers<span class="marquee-dot"> · </span></span>
     <span>7 Days to Live<span class="marquee-dot"> · </span></span>
@@ -836,7 +804,7 @@
 <div class="nav-wrap">
   <nav class="navbar">
     <a class="nav-logo" href="#">
-      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <img src="logo.png" alt="KaizenEvol" width="32" height="32" onerror="this.style.display='none'">
       <span class="nav-logo-text">KaizenEvol</span>
     </a>
     <ul class="nav-links">
@@ -866,26 +834,21 @@
   <a href="services.html">Services</a>
   <a href="about.html">About</a>
   <a href="faq.html">FAQ</a>
-  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top:16px;">Book a Call</a>
+  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book a Call</a>
 </div>
 
-<!-- ─── HERO ─── -->
+<main id="main-content">
+
 <section class="hero" id="home">
   <div class="hero-inner">
-    <div class="eyebrow" data-reveal>Meta Ads for Kitchen Remodellers</div>
-    <h1 data-reveal data-delay="80">
-      Stop Losing <em>£5,000+</em> Kitchen Jobs<br>to Businesses That Market Better
-    </h1>
-    <p class="hero-sub" data-reveal data-delay="160">
-      We run AI-powered Meta campaigns exclusively for UK kitchen remodellers — so serious homeowners come to you, pre-qualified, with a real budget. 7 days to live. One remodeller per area.
-    </p>
-    <div class="hero-ctas" data-reveal data-delay="240">
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn btn-primary" target="_blank" rel="noopener">Book Your Free Kitchen Lead Audit</a>
-      <a href="#how-it-works" class="btn btn-ghost">See How It Works</a>
+    <div class="eyebrow">Meta Ads for Kitchen Remodellers</div>
+    <h1>Stop Losing £5,000+ Kitchen Jobs<br>to Businesses That Market Better</h1>
+    <p>We run AI-powered Meta campaigns exclusively for UK kitchen remodellers, so serious homeowners come to you, pre-qualified, with a real budget. 7 days to live. One remodeller per area.</p>
+    <div class="hero-ctas">
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Book Your Free Kitchen Lead Audit</a>
+      <a href="#how-it-works" class="btn-outline">See How It Works</a>
     </div>
-    <p class="hero-note" data-reveal data-delay="320">
-      <strong>4 client slots per quarter</strong> &mdash; one kitchen remodeller per area, your territory, your leads
-    </p>
+    <p class="hero-note"><strong>4 client slots per quarter.</strong> We work exclusively with one kitchen remodeller per area. Your territory, your leads.</p>
   </div>
 </section>
 
@@ -894,34 +857,29 @@
 <!-- ─── PROBLEM ─── -->
 <section class="section section-bg" id="problem">
   <div class="container">
-    <div class="section-header" data-reveal>
-      <div class="eyebrow">The Problem</div>
+    <div class="section-header">
       <h2>Why Your Pipeline Feels Like<br><em>Feast or Famine</em></h2>
       <p>Most kitchen remodellers are brilliant at their craft. Their marketing is a different story.</p>
     </div>
     <div class="problem-grid">
-      <div class="problem-card" data-reveal data-delay="0">
-        <div class="problem-num">01</div>
-        <h3>Shared Leads — A Race to the Bottom</h3>
+      <div class="problem-card">
+        <h3>Shared Leads: A Race to the Bottom</h3>
         <p>Checkatrade and MyBuilder sell the same enquiry to 4–6 competitors. You're not competing on quality — you're competing on price. And you'll lose that war every time.</p>
       </div>
-      <div class="problem-card" data-reveal data-delay="80">
-        <div class="problem-num">02</div>
+      <div class="problem-card">
         <h3>Past Ads That Burned Money, Not Leads</h3>
         <p>You tried boosted posts. Maybe a generic agency. They delivered reports, not booked jobs. The distrust is earned — but the problem isn't ads. It's the wrong ads, built by the wrong people.</p>
       </div>
-      <div class="problem-card" data-reveal data-delay="160">
-        <div class="problem-num">03</div>
-        <h3>No Predictability — Ever</h3>
+      <div class="problem-card">
+        <h3>No Predictability</h3>
         <p>Word of mouth is uncontrollable. One quiet month means payroll anxiety, crew concerns, and sleepless nights. You can't scale something you can't predict.</p>
       </div>
-      <div class="problem-card" data-reveal data-delay="240">
-        <div class="problem-num">04</div>
+      <div class="problem-card">
         <h3>Wasted Estimates on Wrong Clients</h3>
-        <p>You drive out, measure up, spend two hours — and they wanted a £1,200 flat-pack install. There's no filter. Every enquiry costs you time you can't get back.</p>
+        <p>You drive out, measure up, spend two hours, and they wanted a £1,200 flat-pack install. There's no filter. Every enquiry costs you time you can't get back.</p>
       </div>
     </div>
-    <div class="callout-box" data-reveal>
+    <div class="problem-callout">
       <p>Missing just 3 kitchen jobs a month at £5,000 each is <em>£180,000 a year</em> left on the table. That's not a business problem. That's a marketing problem.</p>
     </div>
   </div>
@@ -932,29 +890,28 @@
 <!-- ─── HOW IT WORKS ─── -->
 <section class="section section-surface" id="how-it-works">
   <div class="container">
-    <div class="section-header" data-reveal>
-      <div class="eyebrow">The Process</div>
+    <div class="section-header">
       <h2>From Strategy Call to <em>Booked Jobs</em><br>in 7 Days</h2>
-      <p>Simple, fast, and built entirely around kitchen remodellers. No learning curve on our end.</p>
+      <p>Simple, fast, and built entirely around kitchen remodellers. We know this trade inside out.</p>
     </div>
     <div class="steps-grid">
-      <div class="step-card" data-reveal data-delay="0">
-        <div class="step-num">01</div>
+      <div class="step-card" style="--i: 0">
+        <div class="step-badge">1</div>
         <div class="step-tag">Day 1</div>
         <h3>Strategy Call</h3>
-        <p>We learn your business, area, current pipeline, average project value, and goals. 30 minutes. No pitch. Just clarity on what's possible in your postcode area.</p>
+        <p>We learn your business, area, current pipeline, average project value, and goals. 30 minutes on the phone — a clear picture of what's achievable in your postcode.</p>
       </div>
-      <div class="step-card" data-reveal data-delay="80">
-        <div class="step-num">02</div>
+      <div class="step-card" style="--i: 1">
+        <div class="step-badge">2</div>
         <div class="step-tag">Days 2–7</div>
         <h3>Campaign Build</h3>
         <p>AI-powered copy, targeting, and 5 ad variations built specifically for your area. Lead filter installed. Tracking set up. You approve everything before anything goes live.</p>
       </div>
-      <div class="step-card" data-reveal data-delay="160">
-        <div class="step-num">03</div>
+      <div class="step-card" style="--i: 2">
+        <div class="step-badge">3</div>
         <div class="step-tag">Ongoing</div>
         <h3>Launch &amp; Optimise</h3>
-        <p>Live campaigns, daily monitoring, weekly plain-English reports. Kill losers, scale winners. We handle everything — you focus on the kitchens.</p>
+        <p>Live campaigns, daily monitoring, weekly plain-English reports. Kill losers, scale winners. We handle the pipeline; you focus on the kitchens.</p>
       </div>
     </div>
   </div>
@@ -965,60 +922,52 @@
 <!-- ─── WHY IT WORKS ─── -->
 <section class="section section-bg" id="why-it-works">
   <div class="container">
-    <div class="section-header" data-reveal>
-      <div class="eyebrow">Why It Works</div>
+    <div class="section-header">
       <h2>The <em>Kitchen Client Engine</em> —<br>Built Differently</h2>
       <p>Here's why this works when everything else hasn't.</p>
     </div>
-    <div class="features-grid">
-      <div class="feature-card" data-reveal data-delay="0">
-        <div class="feature-icon">&#127919;</div>
-        <h3>Postcode-Level Targeting</h3>
-        <p>We only target homeowners actively researching kitchen remodels within your specific service area. Not the UK. Not your region. Your postcodes.</p>
+    <div class="ai-grid-wrap">
+      <div class="ai-featured-row">
+        <div class="ai-card ai-card--featured">
+          <h3>Exclusive UK Territory</h3>
+          <p>We take one kitchen remodeller per area. Your competitor down the road cannot use this system in your postcode. The territory is yours for as long as we work together.</p>
+        </div>
+        <div class="ai-card ai-card--featured">
+          <h3>7 Days to Live</h3>
+          <p>Because we work exclusively with kitchen remodellers, there's no learning curve. We know your industry, your buyers, your objections. Campaigns are live in a week, not months.</p>
+        </div>
       </div>
-      <div class="feature-card" data-reveal data-delay="80">
-        <div class="feature-icon">&#128274;</div>
-        <h3>Built-In Lead Filter</h3>
-        <p>Price-shoppers and tyre-kickers are screened out before they ever reach your phone. Every lead that comes through has been pre-qualified against your minimum project value.</p>
-      </div>
-      <div class="feature-card" data-reveal data-delay="160">
-        <div class="feature-icon">&#129302;</div>
-        <h3>AI Creative Testing</h3>
-        <p>We run 5+ ad variations simultaneously. The AI identifies what converts in your specific market — fast. No guesswork. No wasted budget on hunches.</p>
-      </div>
-      <div class="feature-card" data-reveal data-delay="240">
-        <div class="feature-icon">&#128202;</div>
-        <h3>Weekly Plain-English Reports</h3>
-        <p>No jargon. No vanity metrics. Cost per lead, cost per booked visit, cost per signed job. You always know exactly what your pipeline costs and what it's worth.</p>
-      </div>
-      <div class="feature-card" data-reveal data-delay="320">
-        <div class="feature-icon">&#127757;</div>
-        <h3>Exclusive UK Territory</h3>
-        <p>We take one kitchen remodeller per area. Your competitor down the road cannot use this system in your postcode. The territory is yours for as long as we work together.</p>
-      </div>
-      <div class="feature-card" data-reveal data-delay="400">
-        <div class="feature-icon">&#9889;</div>
-        <h3>7 Days to Live</h3>
-        <p>Because we work exclusively with kitchen remodellers, there's no learning curve. We know your industry, your buyers, your objections. Campaigns are live in a week — not months.</p>
+      <div class="ai-grid">
+        <div class="ai-card">
+          <h3>Postcode-Level Targeting</h3>
+          <p>We only target homeowners actively researching kitchen remodels within your specific service area. Your postcodes, nobody else's.</p>
+        </div>
+        <div class="ai-card">
+          <h3>Built-In Lead Filter</h3>
+          <p>Price-shoppers and tyre-kickers are screened out before they reach your phone. Every lead has been pre-qualified against your minimum project value.</p>
+        </div>
+        <div class="ai-card">
+          <h3>AI Creative Testing</h3>
+          <p>We run 5+ ad variations simultaneously. The AI identifies what converts in your specific market, fast. No guesswork, no wasted budget on hunches.</p>
+        </div>
+        <div class="ai-card">
+          <h3>Plain-English Reports</h3>
+          <p>Cost per lead, cost per booked visit, cost per signed job. You always know exactly what your pipeline costs and what it's worth. Zero jargon.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<hr class="section-divider">
-
-<!-- ─── PRICING ─── -->
-<section class="section section-surface" id="pricing">
+<section class="section section-white" id="pricing">
   <div class="container">
-    <div class="section-header" data-reveal style="text-align:center;">
-      <div class="eyebrow">Pricing</div>
+    <div class="section-header">
       <h2>Pricing Is <em>Discussed on the Call</em></h2>
     </div>
-    <div class="pricing-panel" data-reveal>
-      <p>We structure every engagement around your situation — your area, your average project value, your current pipeline. A flat rate that works brilliantly for one remodeller might not suit another.</p>
-      <p>What we can tell you: we offer a <strong>commission-based trial</strong> to qualified new clients, so you're only paying when we deliver real results. After that, we move to a fixed monthly retainer.</p>
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn btn-primary" target="_blank" rel="noopener">Discuss Pricing on a Call</a>
-      <p class="pricing-note">No obligation. 30 minutes. You'll leave with a clear picture of what's possible.</p>
+    <div class="pricing-center">
+      <p>We structure every engagement around your situation: your area, your average project value, your current pipeline. A flat rate that works brilliantly for one remodeller might not suit another.<br><br>What we can tell you: we offer a <strong>commission-based trial</strong> to qualified new clients, so you're only paying when we deliver real results. After that, we move to a fixed monthly retainer.</p>
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Discuss Pricing on a Call</a>
+      <p class="pricing-note">30 minutes. You'll leave with a clear picture of what's possible in your area.</p>
     </div>
   </div>
 </section>
@@ -1028,41 +977,23 @@
 <!-- ─── GUARANTEE ─── -->
 <section class="section section-bg" id="exclusivity">
   <div class="container">
-    <div class="guarantee-inner">
-      <div class="guarantee-copy" data-reveal>
+    <div class="exclusivity-inner">
+      <div class="exclusivity-copy">
         <div class="eyebrow">Our Guarantee</div>
         <h2>Paying Clients or<br><em>You Don't Pay</em></h2>
         <p>We guarantee 2 qualified, booked kitchen clients per month — each with a minimum £5,000 project value. If we don't hit that within 60 days, your management fee is waived. Full stop.</p>
-        <p>You only cover ad spend — paid direct to Meta, not through us. The risk sits with us, not you.</p>
-        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn btn-primary" target="_blank" rel="noopener">Claim Your Area</a>
+        <p>You only cover ad spend, paid direct to Meta, not through us. The risk sits with us, not you.</p>
+        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Claim Your Area</a>
       </div>
-      <div class="guarantee-panel" data-reveal data-delay="120">
+      <div class="exclusivity-card">
         <h3>What You're Guaranteed</h3>
-        <ul class="guarantee-list">
-          <li>
-            <span class="check">&#10003;</span>
-            <span>2 qualified, booked kitchen clients per month — minimum £5,000 project value each — or your management fee is waived</span>
-          </li>
-          <li>
-            <span class="check">&#10003;</span>
-            <span>Exclusive territory — one remodeller per area, locked for the duration of our engagement</span>
-          </li>
-          <li>
-            <span class="check">&#10003;</span>
-            <span>Live campaigns within 7 days of your strategy call</span>
-          </li>
-          <li>
-            <span class="check">&#10003;</span>
-            <span>Full transparency — you own your ad account and all data, always</span>
-          </li>
-          <li>
-            <span class="check">&#10003;</span>
-            <span>Direct access to Rahaid and Diego — not a junior, not a ticketing system</span>
-          </li>
-          <li>
-            <span class="check">&#10003;</span>
-            <span>Plain-English weekly reports — cost per lead, cost per booked client, no jargon</span>
-          </li>
+        <ul class="exclusivity-list">
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>2 qualified, booked kitchen clients per month (minimum £5,000 project value each) or your management fee is waived</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Exclusive territory: one remodeller per area, locked for the duration of our engagement</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Live campaigns within 7 days of your strategy call</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Full transparency: you own your ad account and all data, always</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Direct access to Rahaid and Diego — not a junior, not a ticketing system</span></li>
+          <li><div class="check-icon" aria-hidden="true">&#10003;</div><span>Plain-English weekly reports: cost per lead, cost per booked client, zero jargon</span></li>
         </ul>
       </div>
     </div>
@@ -1071,26 +1002,59 @@
 
 <hr class="section-divider">
 
-<!-- ─── FINAL CTA ─── -->
-<section class="final-cta" id="contact">
-  <div class="final-cta-inner">
-    <div class="eyebrow" style="justify-content:center; margin-bottom:var(--space-3);">Ready to Start?</div>
-    <h2 data-reveal>Your Competitors Are Running Ads Right Now.<br>Your Area Might Still Be Available.</h2>
-    <p data-reveal data-delay="80">Book a free 30-minute strategy call. No pitch. Just an honest look at what's possible for your business in your area.</p>
-    <div class="final-cta-btns" data-reveal data-delay="160">
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn btn-primary" target="_blank" rel="noopener">Book Your Free Kitchen Lead Audit</a>
-      <a href="mailto:rahaid@kaizenevol.com" class="btn btn-outline-white">Email Us Directly</a>
+<section class="section section-white" id="faq">
+  <div class="container">
+    <div class="section-header">
+      <h2>Questions Worth Asking</h2>
+      <p>The ones we'd expect before anyone books a call with us.</p>
     </div>
-    <p class="final-scarcity" data-reveal data-delay="240">4 client slots available per quarter &mdash; one remodeller per area &mdash; first to book holds the territory</p>
+    <div class="faq-inline">
+
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">What if I've tried Meta ads before and they didn't work?</summary>
+        <p class="faq-inline-answer">Failed Meta ads almost always fail for the same reasons: generic copy, wrong audience, no qualification funnel, and no one actually watching the data. Most agencies run the same campaigns for every client. This system is purpose-built for kitchen remodellers — the targeting, copy, and funnel are all specific to your niche. Book a call and we'll walk through exactly what went wrong last time.</p>
+      </details>
+
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">How much do I need to spend on ads?</summary>
+        <p class="faq-inline-answer">It depends on your local market, how competitive your area is, and your monthly client targets. We agree on the right figure together during the discovery call — nothing is set without your sign-off. Your ad spend is paid directly to Meta by you. We don't hold the budget, take a cut, or mark it up.</p>
+      </details>
+
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">What results can I realistically expect?</summary>
+        <p class="faq-inline-answer">Multiple qualified, booked kitchen clients per month, each with a high project value. We don't count enquiries or unqualified leads as results. We count booked consultations with homeowners who have a real budget and a real project. Our guarantee: 2 per month minimum within 60 days, or your management fee is waived.</p>
+      </details>
+
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">How much of my time does this take?</summary>
+        <p class="faq-inline-answer">Minimal. You'll spend 30 minutes on the discovery call, then a short review session when we present the campaign before launch. After that, the only time you spend is on the consultations we book into your calendar. We handle reporting, optimisation, and all communication with leads.</p>
+      </details>
+
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">Why do you only work with one remodeller per area?</summary>
+        <p class="faq-inline-answer">Because we'd be competing against ourselves if we didn't. Running the same system for two kitchen remodellers in the same town would drive up costs, dilute results, and put us in the uncomfortable position of deciding whose campaign to favour. One client per area means our interests are fully aligned with yours. Once you sign, no other remodeller in your local market gets access to this.</p>
+      </details>
+
+    </div>
   </div>
 </section>
 
-<!-- ─── FOOTER ─── -->
+<section class="final-cta" id="contact">
+  <h2>Your Competitors Are Running Ads Right Now.<br>Your Area Might Still Be Available.</h2>
+  <p>Book a free 30-minute strategy call. An honest look at what's achievable for your business in your area — no pitch, no pressure.</p>
+  <div class="final-cta-btns">
+    <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-white" target="_blank" rel="noopener">Book Your Free Kitchen Lead Audit</a>
+    <a href="mailto:rahaid@kaizenevol.com" class="btn-outline" style="border-color:rgba(255,255,255,0.4);color:#fff;">Email Us Directly</a>
+  </div>
+</section>
+
+</main>
+
 <footer class="footer">
   <div class="container">
     <div class="footer-inner">
       <a class="footer-logo" href="#">
-        <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+        <img src="logo.png" alt="KaizenEvol" width="28" height="28" onerror="this.style.display='none'">
         <span class="footer-logo-text">KaizenEvol</span>
       </a>
       <ul class="footer-nav">
@@ -1137,19 +1101,21 @@
   mobileClose.addEventListener('click', closeMenu);
   mobileOverlay.addEventListener('click', closeMenu);
   mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && mobilePanel.classList.contains('open')) closeMenu(); });
 
-  /* ── Staggered scroll reveals ── */
-  const revealEls = document.querySelectorAll('[data-reveal]');
-  const revealObserver = new IntersectionObserver((entries) => {
+  // Step-card stagger: add .will-animate synchronously so cards start hidden,
+  // then remove it when each card enters the viewport.
+  const stepCards = document.querySelectorAll('.step-card');
+  stepCards.forEach(el => el.classList.add('will-animate'));
+  const staggerObs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const delay = parseInt(entry.target.dataset.delay || '0', 10);
-        setTimeout(() => entry.target.classList.add('revealed'), delay);
-        revealObserver.unobserve(entry.target);
+        entry.target.classList.remove('will-animate');
+        staggerObs.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
-  revealEls.forEach(el => revealObserver.observe(el));
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  stepCards.forEach(el => staggerObs.observe(el));
 
   /* ── Active nav link on scroll ── */
   const sections = document.querySelectorAll('section[id]');
