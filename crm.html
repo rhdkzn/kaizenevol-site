@@ -650,7 +650,7 @@ async function showApp(){
 }
 
 /* ── DATA ── */
-const DEFAULTS={clients:[{id:'nav',name:'Navpreet Singh',status:'trial',terms:'20% commission of job value',adSpend:'£300–500',retainerValue:3500,trialDays:60,trialStartDate:''}],metrics:{nav:{cpr:'',ctr:'',bookedCalls:'',spend:'',updated:''}},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
+const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
 function load(){try{const r=localStorage.getItem(DATA_KEY);return r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);}catch(e){return structuredClone(DEFAULTS);}}
 function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));_cloudPush(DATA_KEY,data);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -808,7 +808,7 @@ function renderCommission(data){
   document.getElementById('commissionContainer').innerHTML=`<div class="card">
     <div class="comm-add-row">
       <input type="date" class="comm-inp" id="commDate" style="max-width:160px" />
-      <input type="text" class="comm-inp" id="commClient" placeholder="Client name" value="Navpreet Singh" style="max-width:180px" />
+      <input type="text" class="comm-inp" id="commClient" placeholder="Client name" style="max-width:180px" />
       <input type="number" class="comm-inp" id="commValue" placeholder="Job value (£)" min="0" style="max-width:160px" />
       <button class="add-btn" onclick="addJob()">+ Log Job</button>
     </div>
@@ -821,7 +821,7 @@ function renderCommission(data){
       <div class="comm-total-val ${pending===0&&jobs.length?'paid':''}">£${pending.toLocaleString()}</div>
     </div>
   </div>`;}
-function addJob(){const date=document.getElementById('commDate').value;const clientName=document.getElementById('commClient').value.trim()||'Navpreet Singh';const jobValue=parseFloat(document.getElementById('commValue').value);if(!jobValue||jobValue<=0)return;const commission=Math.round(jobValue*0.2*100)/100;const d=load();if(!d.commission)d.commission={jobs:[]};d.commission.jobs.unshift({date,clientName,jobValue,commission,status:'pending'});save(d);renderCommission(d);document.getElementById('commValue').value='';document.getElementById('commDate').value='';}
+function addJob(){const date=document.getElementById('commDate').value;const clientName=document.getElementById('commClient').value.trim();const jobValue=parseFloat(document.getElementById('commValue').value);if(!jobValue||jobValue<=0)return;const commission=Math.round(jobValue*0.2*100)/100;const d=load();if(!d.commission)d.commission={jobs:[]};d.commission.jobs.unshift({date,clientName,jobValue,commission,status:'pending'});save(d);renderCommission(d);document.getElementById('commValue').value='';document.getElementById('commDate').value='';}
 function toggleCommStatus(i){const d=load();if(!d.commission||!d.commission.jobs[i])return;d.commission.jobs[i].status=d.commission.jobs[i].status==='paid'?'pending':'paid';save(d);renderCommission(d);}
 function delJob(i){const d=load();if(!d.commission)return;d.commission.jobs.splice(i,1);save(d);renderCommission(d);}
 
