@@ -3,35 +3,56 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const key = process.env.HUNTER_API_KEY;
-  if (!key) {
-    return res.status(200).json({ email: '' });
-  }
-
   const { website } = req.body;
   if (!website) {
     return res.status(200).json({ email: '' });
   }
 
-  let domain;
+  let url;
   try {
-    domain = new URL(website.startsWith('http') ? website : 'https://' + website).hostname.replace(/^www\./, '');
+    url = new URL(website.startsWith('http') ? website : 'https://' + website).href;
   } catch {
     return res.status(200).json({ email: '' });
   }
 
-  try {
-    const resp = await fetch(
-      `https://api.hunter.io/v2/domain-search?domain=${encodeURIComponent(domain)}&api_key=${key}&limit=5`
-    );
-    if (!resp.ok) return res.status(200).json({ email: '' });
+  // Pages most likely to have a visible email
+  const pagesToTry = [url, url.replace(/\/$/, '') + '/contact', url.replace(/\/$/, '') + '/contact-us'];
 
-    const d = await resp.json();
-    const emails = (d.data?.emails || []).sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
-    const best = emails[0]?.value || '';
+  const EMAIL_RE = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
+  // Skip obviously non-contact addresses
+  const SKIP = /noreply|no-reply|donotreply|example\.|sentry\.|privacy@|unsubscribe/i;
 
-    return res.status(200).json({ email: best });
-  } catch (e) {
-    return res.status(200).json({ email: '' });
+  for (const page of pagesToTry) {
+    try {
+      const resp = await fetch(page, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; emailfinder/1.0)' },
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!resp.ok) continue;
+
+      const html = await resp.text();
+
+      // mailto: links first — highest confidence
+      const mailtoMatches = [...html.matchAll(/mailto:([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/g)]
+        .map(m => m[1])
+        .filter(e => !SKIP.test(e));
+
+      if (mailtoMatches.length) {
+        return res.status(200).json({ email: mailtoMatches[0] });
+      }
+
+      // Fallback: raw email pattern in HTML
+      const rawMatches = [...html.matchAll(EMAIL_RE)]
+        .map(m => m[0])
+        .filter(e => !SKIP.test(e));
+
+      if (rawMatches.length) {
+        return res.status(200).json({ email: rawMatches[0] });
+      }
+    } catch {
+      continue;
+    }
   }
+
+  return res.status(200).json({ email: '' });
 }
