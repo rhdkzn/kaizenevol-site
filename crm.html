@@ -804,7 +804,7 @@ function renderCommission(data){
   const pending=jobs.filter(j=>j.status==='pending').reduce((s,j)=>s+(j.commission||0),0);
   const totalPaid=jobs.filter(j=>j.status==='paid').reduce((s,j)=>s+(j.commission||0),0);
   const rows=jobs.length?jobs.map((j,i)=>`<tr>
-    <td>${esc(j.date||'—')}</td><td>${esc(j.clientName||'Nav')}</td>
+    <td>${esc(j.date||'—')}</td><td>${esc(j.clientName||'—')}</td>
     <td>£${Number(j.jobValue||0).toLocaleString()}</td>
     <td style="color:var(--amber);font-weight:700">£${Number(j.commission||0).toLocaleString()}</td>
     <td><button class="comm-status ${j.status==='paid'?'cs-paid':'cs-pending'}" onclick="toggleCommStatus(${i})">${j.status==='paid'?'Paid':'Pending'}</button></td>
