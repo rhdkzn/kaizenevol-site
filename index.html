@@ -647,6 +647,10 @@
           <input class="lf-input" type="email" id="lf-email" name="email" placeholder="you@business.co.uk" required autocomplete="email" />
         </div>
         <div class="lf-group">
+          <label class="lf-label" for="lf-phone">Phone Number</label>
+          <input class="lf-input" type="tel" id="lf-phone" name="phone" placeholder="07700 900 123" autocomplete="tel" />
+        </div>
+        <div class="lf-group">
           <label class="lf-label" for="lf-url">Business Website</label>
           <input class="lf-input" type="url" id="lf-url" name="businessUrl" placeholder="https://yourkitchens.co.uk" autocomplete="url" />
         </div>
@@ -796,6 +800,7 @@
 
       const businessName  = document.getElementById('lf-name').value.trim();
       const email         = document.getElementById('lf-email').value.trim();
+      const phone         = document.getElementById('lf-phone').value.trim();
       const businessUrl   = document.getElementById('lf-url').value.trim();
       const monthlyBudget = document.getElementById('lf-budget').value;
 
@@ -817,7 +822,7 @@
         const res  = await fetch('/api/submit-lead', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ businessName, email, businessUrl, monthlyBudget }),
+          body:    JSON.stringify({ businessName, email, phone, businessUrl, monthlyBudget }),
         });
         const data = await res.json();
         if (res.ok && data.ok) {

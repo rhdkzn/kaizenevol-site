@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { businessName, email, businessUrl, monthlyBudget } = req.body || {};
+  const { businessName, email, phone, businessUrl, monthlyBudget } = req.body || {};
 
   if (!businessName || !email || !email.includes('@')) {
     return res.status(400).json({ error: 'Business name and a valid email are required.' });
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     name: businessName.trim(),
     email: email.trim().toLowerCase(),
     website: (businessUrl || '').trim(),
-    phone: '',
+    phone: (phone || '').trim(),
     owner: '',
     area: '',
     source: 'Website',
@@ -88,6 +88,7 @@ export default async function handler(req, res) {
           ``,
           `Business: ${businessName.trim()}`,
           `Email: ${email.trim()}`,
+          `Phone: ${phone || 'Not provided'}`,
           `Website: ${businessUrl || 'Not provided'}`,
           `Ad budget: ${monthlyBudget || 'Not specified'}`,
           ``,
