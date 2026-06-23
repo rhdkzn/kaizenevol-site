@@ -409,6 +409,13 @@
     .ns-inp{flex:1;background:none;border:none;border-bottom:1px solid transparent;color:var(--text);font-size:12px;font-weight:500;font-family:inherit;padding:1px 0;outline:none;transition:border-color .15s;}
     .ns-inp:focus{border-bottom-color:var(--purple);}
     .ns-inp::placeholder{color:var(--muted);font-weight:400;}
+    /* ── Design Upgrade ── */
+    .section-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+    .section-label::before{content:'';width:3px;height:14px;background:var(--purple);border-radius:3px;display:block;flex-shrink:0;}
+    .stat-card{background:var(--surface);border-radius:var(--radius);padding:18px 20px;border:1px solid var(--border);box-shadow:var(--shadow),inset 3px 0 0 rgba(139,92,246,0.5);transition:transform .18s ease,box-shadow .18s ease;}
+    .stat-card:hover:not(.highlight){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 3px 0 0 var(--purple);}
+    .stat-card.highlight{background:linear-gradient(135deg,#6d28d9 0%,var(--purple) 55%,#a78bfa 100%);border:none;box-shadow:0 6px 32px rgba(139,92,246,0.45);}
+    .card,.pipe-client,.checklist-client{box-shadow:0 4px 24px rgba(0,0,0,0.45);}
   </style>
 </head>
 <body>
@@ -429,7 +436,6 @@
       <nav class="dash-nav">
         <a href="dashboard.html" class="dash-nav-link">Dashboard</a>
         <a href="crm.html" class="dash-nav-link active">CRM</a>
-        <a href="reports.html" class="dash-nav-link">Reports</a>
       </nav>
       <div class="dash-header-right">
         <span class="dash-date" id="headerDate"></span>
