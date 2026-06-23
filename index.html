@@ -249,6 +249,37 @@
     .footer-right a { font-size:13px; color:var(--purple-light); text-decoration:none; }
     .footer-copy { font-size:12px; color:var(--muted); margin-top:4px; }
 
+    /* INDUSTRIES WE SERVE */
+    .ind-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .ind-card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-card); padding:28px 24px; transition:border-color 0.2s,transform 0.2s var(--ease-out-quart); }
+    .ind-card:hover { border-color:var(--border-hover); transform:translateY(-4px); }
+    .ind-icon { width:40px; height:40px; border-radius:10px; background:rgba(109,63,192,0.18); border:1px solid rgba(109,63,192,0.3); display:flex; align-items:center; justify-content:center; margin-bottom:18px; }
+    .ind-icon svg { width:20px; height:20px; stroke:var(--purple-light); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .ind-card h3 { font-size:17px; font-weight:700; margin-bottom:14px; letter-spacing:-0.02em; }
+    .ind-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .ind-list li { font-size:14px; color:var(--muted); line-height:1.6; padding-left:18px; position:relative; }
+    .ind-list li::before { content:''; position:absolute; left:0; top:8px; width:6px; height:6px; border-radius:50%; background:var(--purple); flex-shrink:0; }
+
+    /* LEAD FORM */
+    .lead-form { max-width:520px; margin:0 auto 0; text-align:left; }
+    .lf-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+    .lf-group { display:flex; flex-direction:column; gap:6px; }
+    .lf-label { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.5); }
+    .lf-input,.lf-select { width:100%; padding:13px 16px; border:1.5px solid rgba(255,255,255,0.12); border-radius:10px; background:rgba(255,255,255,0.06); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; outline:none; transition:border-color 0.2s,background 0.2s; }
+    .lf-input::placeholder { color:rgba(255,255,255,0.28); }
+    .lf-input:focus,.lf-select:focus { border-color:var(--purple-bright); background:rgba(255,255,255,0.09); }
+    .lf-select option { background:#1a0f3c; color:#fff; }
+    .lf-submit { width:100%; padding:15px; background:var(--purple); color:#fff; border:none; border-radius:var(--radius-pill); font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:background 0.15s,transform 0.2s var(--ease-out-expo); margin-top:6px; }
+    .lf-submit:hover:not(:disabled) { background:var(--purple-bright); transform:translateY(-2px); }
+    .lf-submit:active:not(:disabled) { transform:translateY(0) scale(0.98); }
+    .lf-submit:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+    .lf-status { margin-top:16px; font-size:14px; font-weight:600; min-height:22px; text-align:center; }
+    .lf-status.ok { color:#86efac; }
+    .lf-status.err { color:#fca5a5; }
+    .cta-divider { display:flex; align-items:center; gap:16px; margin:32px auto; max-width:520px; }
+    .cta-divider::before,.cta-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.1); }
+    .cta-divider span { font-size:11px; color:rgba(255,255,255,0.35); font-weight:700; letter-spacing:0.1em; text-transform:uppercase; }
+
     /* ANIMATIONS */
     @keyframes hero-rise { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
     .step-card.will-animate { opacity:0; transform:translateY(24px); transition:opacity 0.55s var(--ease-out-expo),transform 0.55s var(--ease-out-expo); transition-delay:calc(var(--i,0)*0.1s); }
@@ -262,8 +293,11 @@
     @media(max-width:900px) {
       .ai-grid{grid-template-columns:repeat(2,1fr)}
       .steps-grid{grid-template-columns:repeat(2,1fr)}
+      .ind-grid{grid-template-columns:repeat(2,1fr)}
     }
     @media(max-width:768px) {
+      .ind-grid{grid-template-columns:1fr}
+      .lf-grid{grid-template-columns:1fr}
       .nav-links,.nav-cta{display:none}
       .hamburger{display:flex}
       .problem-card{grid-template-columns:1fr;gap:8px}
@@ -556,12 +590,88 @@
   </div>
 </section>
 
+<section class="section section-surface" id="industries">
+  <div class="container">
+    <div class="section-header">
+      <h2>Industries We Serve</h2>
+      <p>One niche. Done properly. Built for the kitchen trade — not a generic agency template with your logo swapped in.</p>
+    </div>
+    <div class="ind-grid">
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <h3>Full Kitchen Renovations</h3>
+        <ul class="ind-list">
+          <li>Meta campaigns targeting homeowners planning a full refurb in your area</li>
+          <li>Lead qualification that filters out tyre-kickers and low-budget enquiries</li>
+          <li>Booked consultations with homeowners who have a real project and real budget</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>Kitchen Extensions</h3>
+        <ul class="ind-list">
+          <li>Ads targeting homeowners planning open-plan living and kitchen expansions</li>
+          <li>Higher-value projects filtered from the start by intent and budget signals</li>
+          <li>Conversion-focused messaging built around the extension buyer journey</li>
+        </ul>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Bespoke Fitted Kitchens</h3>
+        <ul class="ind-list">
+          <li>Audiences who understand quality and are actively searching for a specialist</li>
+          <li>Creative positioning that separates you from big-box competitors</li>
+          <li>Premium lead flow for high-ticket projects where margins justify ad spend</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="final-cta" id="contact">
   <div class="final-cta-inner">
-    <h2>Your Competitors Are Running Ads Right Now.<br>Your Area Might Still Be Available.</h2>
-    <p>Book a free 30-minute strategy call. An honest look at what's achievable for your business in your area.</p>
+    <h2>Ready to Grow?</h2>
+    <p>Tell us about your business and we'll be in touch within 24 hours to book your free strategy call.</p>
+
+    <form class="lead-form" id="leadForm" novalidate>
+      <div class="lf-grid">
+        <div class="lf-group">
+          <label class="lf-label" for="lf-name">Business Name *</label>
+          <input class="lf-input" type="text" id="lf-name" name="businessName" placeholder="e.g. Johnson Kitchens" required autocomplete="organization" />
+        </div>
+        <div class="lf-group">
+          <label class="lf-label" for="lf-email">Email Address *</label>
+          <input class="lf-input" type="email" id="lf-email" name="email" placeholder="you@business.co.uk" required autocomplete="email" />
+        </div>
+        <div class="lf-group">
+          <label class="lf-label" for="lf-url">Business Website</label>
+          <input class="lf-input" type="url" id="lf-url" name="businessUrl" placeholder="https://yourkitchens.co.uk" autocomplete="url" />
+        </div>
+        <div class="lf-group">
+          <label class="lf-label" for="lf-budget">Monthly Ad Budget</label>
+          <select class="lf-select" id="lf-budget" name="monthlyBudget">
+            <option value="">Select a range</option>
+            <option value="Under £500">Under £500</option>
+            <option value="£500–£1K">£500 – £1,000</option>
+            <option value="£1K–£5K">£1,000 – £5,000</option>
+            <option value="£5K+">£5,000+</option>
+          </select>
+        </div>
+      </div>
+      <button class="lf-submit" type="submit" id="lfSubmit">Book a Strategy Call</button>
+      <div class="lf-status" id="lfStatus" role="alert" aria-live="polite"></div>
+    </form>
+
+    <div class="cta-divider"><span>or</span></div>
+
     <div class="final-cta-btns">
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-white" target="_blank" rel="noopener">Book Your Free Strategy Call</a>
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-white" target="_blank" rel="noopener">Book Directly on Calendly</a>
       <a href="mailto:rahaid@kaizenevol.com" class="btn-ghost" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.75);">Email Us Directly</a>
     </div>
     <p class="final-scarcity">4 client slots available per quarter. One per area.</p>
@@ -676,6 +786,61 @@
       a.style.background = active ? 'var(--surface-2)' : '';
     });
   }, { passive: true });
+
+  /* Lead form */
+  (function () {
+    const form   = document.getElementById('leadForm');
+    const btn    = document.getElementById('lfSubmit');
+    const status = document.getElementById('lfStatus');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      status.textContent = '';
+      status.className   = 'lf-status';
+
+      const businessName  = document.getElementById('lf-name').value.trim();
+      const email         = document.getElementById('lf-email').value.trim();
+      const businessUrl   = document.getElementById('lf-url').value.trim();
+      const monthlyBudget = document.getElementById('lf-budget').value;
+
+      if (!businessName) {
+        status.textContent = 'Business name is required.';
+        status.className   = 'lf-status err';
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        status.textContent = 'A valid email address is required.';
+        status.className   = 'lf-status err';
+        return;
+      }
+
+      btn.disabled     = true;
+      btn.textContent  = 'Sending…';
+
+      try {
+        const res  = await fetch('/api/submit-lead', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ businessName, email, businessUrl, monthlyBudget }),
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          status.textContent = "Done — we'll be in touch within 24 hours.";
+          status.className   = 'lf-status ok';
+          form.reset();
+          btn.textContent = 'Sent ✓';
+        } else {
+          throw new Error(data.error || 'Something went wrong.');
+        }
+      } catch (err) {
+        status.textContent = err.message || 'Something went wrong. Please email us directly.';
+        status.className   = 'lf-status err';
+        btn.disabled       = false;
+        btn.textContent    = 'Book a Strategy Call';
+      }
+    });
+  })();
 </script>
 </body>
 </html>
