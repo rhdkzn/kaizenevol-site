@@ -264,6 +264,7 @@ const SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',LOCKOUT_K
 const STAGE_COLORS={new:'#94a3b8',contacted:'#3b82f6',call:'#a855f7',proposal:'#f59e0b',won:'#22c55e',lost:'#ef4444'};
 const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
 const STAGE_ORDER=['new','contacted','call','proposal','won','lost'];
+const STAGE_PROB={new:.05,contacted:.15,call:.35,proposal:.60,won:1,lost:0};
 function getLockout(){try{return JSON.parse(localStorage.getItem(LOCKOUT_KEY)||'{}');}catch(e){return {};}}
 function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
 function remainingLockout(){const l=getLockout();return Math.max(0,Math.ceil((l.until-Date.now())/60000));}
@@ -322,12 +323,13 @@ function renderCommandCenter(leads){
   const followUps=leads.filter(l=>l.followUp===today).length;
   const stale=leads.filter(l=>l.stage!=='won'&&l.stage!=='lost'&&(!l.lastContact||l.lastContact<cutoff)).length;
   const pipeline=leads.reduce((s,l)=>l.stage!=='won'&&l.stage!=='lost'?s+(Number(l.estimatedValue)||0):s,0);
+  const weighted=Math.round(leads.reduce((s,l)=>{const p=STAGE_PROB[l.stage]||0;return s+(Number(l.estimatedValue)||0)*p;},0));
   const contacted=leads.filter(l=>l.lastContact).length;
   const callBooked=leads.filter(l=>l.stage==='call').length;
   const gr=document.getElementById('ccGreeting');if(gr)gr.textContent=getGreeting()+', Rahaid';
   const dt=document.getElementById('ccDate');if(dt)dt.textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
   const sm=document.getElementById('ccSummary');if(sm)sm.innerHTML='<strong>'+followUps+'</strong> follow-up'+(followUps!==1?'s':'')+' due &nbsp;&middot;&nbsp; <strong>'+stale+'</strong> lead'+(stale!==1?'s':'')+' going stale &nbsp;&middot;&nbsp; <strong>£'+pipeline.toLocaleString()+'</strong> in open pipeline';
-  const pr=document.getElementById('prospectRow');if(pr)pr.innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+leads.length+'</div><div class="stat-s">in the pipeline</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+contacted+'</div><div class="stat-s">have last contact date</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v" style="color:var(--purple)">'+callBooked+'</div><div class="stat-s">call stage leads</div></div><div class="stat-card"><div class="stat-l">Open Pipeline</div><div class="stat-v" style="color:var(--green)">£'+pipeline.toLocaleString()+'</div><div class="stat-s">estimated value</div></div>';
+  const pr=document.getElementById('prospectRow');if(pr)pr.innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+leads.length+'</div><div class="stat-s">in the pipeline</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+contacted+'</div><div class="stat-s">have last contact date</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v" style="color:var(--purple)">'+callBooked+'</div><div class="stat-s">call stage leads</div></div><div class="stat-card"><div class="stat-l">Weighted Forecast</div><div class="stat-v" style="color:var(--green)">£'+weighted.toLocaleString()+'</div><div class="stat-s">of £'+pipeline.toLocaleString()+' open pipeline</div></div>';
   renderStageChart(leads);
 }
 function renderStageChart(leads){const counts=STAGE_ORDER.map(s=>leads.filter(l=>l.stage===s).length);const labels=STAGE_ORDER.map(s=>STAGE_LABEL[s]);const colors=STAGE_ORDER.map(s=>STAGE_COLORS[s]);const canvas=document.getElementById('stageChart');if(!canvas||typeof Chart==='undefined')return;if(_stageChart){_stageChart.destroy();_stageChart=null;}_stageChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:counts,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.raw+' lead'+(ctx.raw!==1?'s':'');}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#948abf',font:{family:'Poppins',size:11}}},y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#948abf',font:{family:'Poppins',size:11},stepSize:1}}}}});}
