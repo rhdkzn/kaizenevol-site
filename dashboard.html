@@ -133,8 +133,17 @@
     @media(max-width:900px){.bottom-grid{grid-template-columns:1fr 1fr;}.rev-retainer-grid{grid-template-columns:repeat(5,1fr);}}
     @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 12px;}.stat-v{font-size:24px;}.rev-current{font-size:24px;}.rev-retainer-grid{grid-template-columns:repeat(5,1fr);}.dash-date{display:none;}.dash-nav-link{padding:5px 9px;font-size:12px;}.btn-logout{padding:5px 10px;font-size:11px;}.dash-header-inner{gap:8px;}.rev-milestone{font-size:9px;}.revenue-card{padding:22px 18px;}}
     @media(max-width:380px){.rev-milestone:nth-child(2),.rev-milestone:nth-child(4){display:none;}}
+    .cmd-center{padding:32px 0 20px;}
+    .cmd-greeting{font-size:14px;font-weight:600;color:var(--purple);margin-bottom:8px;letter-spacing:.3px;}
+    .cmd-title{font-size:36px;font-weight:800;line-height:1.1;margin-bottom:6px;}
+    .cmd-date{font-size:15px;color:var(--muted);font-weight:500;margin-bottom:14px;}
+    .cmd-summary{font-size:13px;color:var(--muted);font-weight:500;padding:10px 16px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);display:inline-block;}
+    .cmd-summary strong{color:var(--text);font-weight:700;}
+    .chart-card{background:var(--surface);border-radius:var(--radius);padding:24px 28px;box-shadow:var(--shadow);border:1px solid var(--border);}
+    @media(max-width:640px){.cmd-title{font-size:26px;}.cmd-summary{font-size:12px;}}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     window.onerror=function(msg,src,line){console.error('JS Error:',msg,'(line '+line+')');return false;};
     window.onunhandledrejection=function(e){console.error('Unhandled rejection:',e.reason);};
@@ -169,6 +178,22 @@
     </div>
   </header>
   <main class="dash-main">
+    <div class="cmd-center">
+      <div class="cmd-greeting" id="ccGreeting"></div>
+      <h1 class="cmd-title">Command Center</h1>
+      <div class="cmd-date" id="ccDate"></div>
+      <div class="cmd-summary" id="ccSummary"></div>
+    </div>
+    <section>
+      <div class="section-label">Prospect Pipeline</div>
+      <div class="stats-row" id="prospectRow"></div>
+    </section>
+    <section>
+      <div class="section-label">Leads per Stage</div>
+      <div class="chart-card">
+        <canvas id="stageChart" height="160"></canvas>
+      </div>
+    </section>
     <section>
       <div class="section-label">Overview</div>
       <div class="stats-row" id="statsRow"></div>
@@ -235,7 +260,10 @@
   </main>
 </div>
 <script>
-const SESSION_KEY='ke_session',DATA_KEY='ke_data',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=3,LOCKOUT_TTL=18e5;
+const SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=3,LOCKOUT_TTL=18e5;
+const STAGE_COLORS={new:'#94a3b8',contacted:'#3b82f6',call:'#a855f7',proposal:'#f59e0b',won:'#22c55e',lost:'#ef4444'};
+const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
+const STAGE_ORDER=['new','contacted','call','proposal','won','lost'];
 function getLockout(){try{return JSON.parse(localStorage.getItem(LOCKOUT_KEY)||'{}');}catch(e){return {};}}
 function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
 function remainingLockout(){const l=getLockout();return Math.max(0,Math.ceil((l.until-Date.now())/60000));}
@@ -285,7 +313,25 @@ let notesTimer=null;
 function _saveNotes(){const d=load();d.notes=document.getElementById('notesArea').value;save(d);const el=document.getElementById('notesSaved');el.textContent='Saved.';setTimeout(()=>{el.textContent='';},1800);}
 function scheduleNoteSave(){clearTimeout(notesTimer);notesTimer=setTimeout(_saveNotes,700);}
 function flushNoteSave(){clearTimeout(notesTimer);_saveNotes();}
-function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';}
+async function loadLeads(){try{const{data,error}=await _sb.from('app_data').select('data').eq('id',LEADS_KEY).single();if(!error&&data&&Array.isArray(data.data)){localStorage.setItem(LEADS_KEY,JSON.stringify(data.data));return data.data;}}catch(e){}try{const local=localStorage.getItem(LEADS_KEY);return local?JSON.parse(local):[];}catch{return[];}}
+function getGreeting(){const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening';}
+let _stageChart=null;
+function renderCommandCenter(leads){
+  const today=new Date().toISOString().slice(0,10);
+  const cutoff=new Date(Date.now()-7*864e5).toISOString().slice(0,10);
+  const followUps=leads.filter(l=>l.followUp===today).length;
+  const stale=leads.filter(l=>l.stage!=='won'&&l.stage!=='lost'&&(!l.lastContact||l.lastContact<cutoff)).length;
+  const pipeline=leads.reduce((s,l)=>l.stage!=='won'&&l.stage!=='lost'?s+(Number(l.estimatedValue)||0):s,0);
+  const contacted=leads.filter(l=>l.lastContact).length;
+  const callBooked=leads.filter(l=>l.stage==='call').length;
+  const gr=document.getElementById('ccGreeting');if(gr)gr.textContent=getGreeting()+', Rahaid';
+  const dt=document.getElementById('ccDate');if(dt)dt.textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  const sm=document.getElementById('ccSummary');if(sm)sm.innerHTML='<strong>'+followUps+'</strong> follow-up'+(followUps!==1?'s':'')+' due &nbsp;&middot;&nbsp; <strong>'+stale+'</strong> lead'+(stale!==1?'s':'')+' going stale &nbsp;&middot;&nbsp; <strong>£'+pipeline.toLocaleString()+'</strong> in open pipeline';
+  const pr=document.getElementById('prospectRow');if(pr)pr.innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+leads.length+'</div><div class="stat-s">in the pipeline</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+contacted+'</div><div class="stat-s">have last contact date</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v" style="color:var(--purple)">'+callBooked+'</div><div class="stat-s">call stage leads</div></div><div class="stat-card"><div class="stat-l">Open Pipeline</div><div class="stat-v" style="color:var(--green)">£'+pipeline.toLocaleString()+'</div><div class="stat-s">estimated value</div></div>';
+  renderStageChart(leads);
+}
+function renderStageChart(leads){const counts=STAGE_ORDER.map(s=>leads.filter(l=>l.stage===s).length);const labels=STAGE_ORDER.map(s=>STAGE_LABEL[s]);const colors=STAGE_ORDER.map(s=>STAGE_COLORS[s]);const canvas=document.getElementById('stageChart');if(!canvas||typeof Chart==='undefined')return;if(_stageChart){_stageChart.destroy();_stageChart=null;}_stageChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:counts,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.raw+' lead'+(ctx.raw!==1?'s':'');}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#948abf',font:{family:'Poppins',size:11}}},y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#948abf',font:{family:'Poppins',size:11},stepSize:1}}}}});}
+async function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';const leads=await loadLeads();renderCommandCenter(leads);}
 checkSession();
 </script>
 </body>

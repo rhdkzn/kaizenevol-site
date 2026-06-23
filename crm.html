@@ -682,9 +682,15 @@
         <input type="date" class="km-inp" id="kmFollowUp" />
       </div>
     </div>
-    <div class="km-field">
-      <div class="km-label">Next Step</div>
-      <input type="text" class="km-inp" id="kmNextStep" placeholder="e.g. Call Monday to discuss proposal" />
+    <div class="km-row">
+      <div class="km-field">
+        <div class="km-label">Next Step</div>
+        <input type="text" class="km-inp" id="kmNextStep" placeholder="e.g. Call Monday to discuss proposal" />
+      </div>
+      <div class="km-field">
+        <div class="km-label">Est. Value (£)</div>
+        <input type="number" class="km-inp" id="kmEstValue" placeholder="0" min="0" />
+      </div>
     </div>
     <div class="km-field">
       <div class="km-label">Notes</div>
@@ -979,7 +985,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
 const STAGE_CLS={new:'sg-new',contacted:'sg-contacted',call:'sg-call',proposal:'sg-proposal',won:'sg-won',lost:'sg-lost'};
 function toggleForm(){const f=document.getElementById('addForm'),b=document.getElementById('toggleFormBtn');const open=f.style.display==='none'||!f.style.display;f.style.display=open?'block':'none';b.textContent=open?'− Cancel':'+ New Lead';}
-function saveLead(){const biz=document.getElementById('fBusiness').value.trim();if(!biz){document.getElementById('fBusiness').focus();return;}const lead={id:uid(),business:biz,owner:document.getElementById('fOwner').value.trim(),area:document.getElementById('fArea').value.trim(),phone:document.getElementById('fPhone').value.trim(),email:document.getElementById('fEmail').value.trim(),source:document.getElementById('fSource').value,stage:document.getElementById('fStage').value,notes:document.getElementById('fNotes').value.trim(),lastContact:'',followUp:'',nextStep:'',priority:'medium',createdAt:Date.now()};const arr=loadLeads();arr.unshift(lead);saveLeads(arr);['fBusiness','fOwner','fArea','fPhone','fEmail','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStage').value='new';toggleForm();renderLeadStats();renderLeads();}
+function saveLead(){const biz=document.getElementById('fBusiness').value.trim();if(!biz){document.getElementById('fBusiness').focus();return;}const lead={id:uid(),business:biz,owner:document.getElementById('fOwner').value.trim(),area:document.getElementById('fArea').value.trim(),phone:document.getElementById('fPhone').value.trim(),email:document.getElementById('fEmail').value.trim(),source:document.getElementById('fSource').value,stage:document.getElementById('fStage').value,notes:document.getElementById('fNotes').value.trim(),lastContact:'',followUp:'',nextStep:'',priority:'medium',estimatedValue:0,createdAt:Date.now()};const arr=loadLeads();arr.unshift(lead);saveLeads(arr);['fBusiness','fOwner','fArea','fPhone','fEmail','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStage').value='new';toggleForm();renderLeadStats();renderLeads();}
 function deleteLead(id){if(!confirm('Delete this lead?'))return;saveLeads(loadLeads().filter(l=>l.id!==id));renderLeadStats();renderLeads();}
 function updateLeadField(id,field,val){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(l){l[field]=val;l.updatedAt=Date.now();saveLeads(arr);}if(field==='stage'){renderLeadStats();renderLeads();renderFollowupAlerts();if(val==='won'&&l)showWinReview(l);}if(field==='followUp')renderFollowupAlerts();}
 const _noteTimers={};
@@ -1060,9 +1066,9 @@ function handleDragEnd(){_dragId=null;document.querySelectorAll('.kb-card').forE
 function handleDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over');}
 function handleDragLeave(e){e.currentTarget.classList.remove('drag-over');}
 function handleDrop(e,stage){e.preventDefault();e.currentTarget.classList.remove('drag-over');if(!_dragId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_dragId);if(l&&l.stage!==stage){l.stage=stage;l.updatedAt=Date.now();saveLeads(arr);renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Moved '+l.business+' to '+STAGE_LABEL[stage]);if(stage==='won')showWinReview(l);}_dragId=null;}
-function openKanbanModal(id){_kModalId=id;const l=loadLeads().find(x=>x.id===id);if(!l)return;document.getElementById('kmTitle').textContent=l.business;const info=[l.phone?'📞 '+l.phone:'',l.email?'✉ '+l.email:'',l.area?'📍 '+l.area:'',l.website?'🌐 '+l.website:''].filter(Boolean).join('  ·  ');document.getElementById('kmInfo').textContent=info||'No contact details on file.';document.getElementById('kmStage').value=l.stage||'new';document.getElementById('kmPriority').value=l.priority||'medium';document.getElementById('kmLastContact').value=l.lastContact||'';document.getElementById('kmFollowUp').value=l.followUp||'';document.getElementById('kmNextStep').value=l.nextStep||'';document.getElementById('kmNotes').value=l.notes||'';document.getElementById('kModal').classList.add('open');}
+function openKanbanModal(id){_kModalId=id;const l=loadLeads().find(x=>x.id===id);if(!l)return;document.getElementById('kmTitle').textContent=l.business;const info=[l.phone?'📞 '+l.phone:'',l.email?'✉ '+l.email:'',l.area?'📍 '+l.area:'',l.website?'🌐 '+l.website:''].filter(Boolean).join('  ·  ');document.getElementById('kmInfo').textContent=info||'No contact details on file.';document.getElementById('kmStage').value=l.stage||'new';document.getElementById('kmPriority').value=l.priority||'medium';document.getElementById('kmLastContact').value=l.lastContact||'';document.getElementById('kmFollowUp').value=l.followUp||'';document.getElementById('kmNextStep').value=l.nextStep||'';document.getElementById('kmEstValue').value=l.estimatedValue||'';document.getElementById('kmNotes').value=l.notes||'';document.getElementById('kModal').classList.add('open');}
 function closeKanbanModal(){document.getElementById('kModal').classList.remove('open');_kModalId=null;}
-function saveKanbanModal(){if(!_kModalId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_kModalId);if(!l)return;const oldStage=l.stage;l.stage=document.getElementById('kmStage').value;l.priority=document.getElementById('kmPriority').value;l.lastContact=document.getElementById('kmLastContact').value;l.followUp=document.getElementById('kmFollowUp').value;l.nextStep=document.getElementById('kmNextStep').value.trim();l.notes=document.getElementById('kmNotes').value;l.updatedAt=Date.now();saveLeads(arr);closeKanbanModal();renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Saved ✓');if(l.stage==='won'&&oldStage!=='won')showWinReview(l);}
+function saveKanbanModal(){if(!_kModalId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_kModalId);if(!l)return;const oldStage=l.stage;l.stage=document.getElementById('kmStage').value;l.priority=document.getElementById('kmPriority').value;l.lastContact=document.getElementById('kmLastContact').value;l.followUp=document.getElementById('kmFollowUp').value;l.nextStep=document.getElementById('kmNextStep').value.trim();l.estimatedValue=Number(document.getElementById('kmEstValue').value)||0;l.notes=document.getElementById('kmNotes').value;l.updatedAt=Date.now();saveLeads(arr);closeKanbanModal();renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Saved ✓');if(l.stage==='won'&&oldStage!=='won')showWinReview(l);}
 function init(){
   purgeUSLeads();
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
