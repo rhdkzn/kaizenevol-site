@@ -758,7 +758,7 @@ async function attemptLogin(){
 }
 function logout(){if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);_realtimeChannel=null;}clearInterval(_syncInterval);stopIdle();localStorage.removeItem(SESSION_KEY);showGate();}
 let _syncInterval=null,_realtimeChannel=null;
-async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);if(Array.isArray(remote)&&remote.length>0){const local=loadLeads();if(remote.length!==local.length||JSON.stringify(remote)!==JSON.stringify(local)){localStorage.setItem(LEADS_KEY,JSON.stringify(remote));if(!document.activeElement?.classList.contains('lead-notes-inp')){renderLeads();renderLeadStats();renderOutreachQueue();}}}}
+async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);if(Array.isArray(remote)&&remote.length>0){const local=loadLeads();if(remote.length!==local.length||JSON.stringify(remote)!==JSON.stringify(local)){localStorage.setItem(LEADS_KEY,JSON.stringify(remote));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}}}
 async function showApp(){
   document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();
   init();
@@ -780,7 +780,7 @@ async function showApp(){
   }catch(e){console.warn('Cloud sync:',e);}
   if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);}
   _realtimeChannel=_sb.channel('crm_sync')
-    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));if(!document.activeElement?.classList.contains('lead-notes-inp')){renderLeads();renderLeadStats();renderOutreachQueue();}}})
+    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}})
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));const u=load();renderClientPipeline(u);renderClientChecklist(u);renderClients(u);renderCommission(u);}})
     .subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});
 }
