@@ -827,7 +827,7 @@
           form.reset();
           btn.textContent = 'Sent ✓';
         } else {
-          throw new Error(data.error || 'Something went wrong.');
+          throw new Error((data.error || 'Something went wrong.') + (data.detail ? ' [' + data.detail + ']' : ''));
         }
       } catch (err) {
         status.textContent = err.message || 'Something went wrong. Please email us directly.';
