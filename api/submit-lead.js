@@ -57,10 +57,10 @@ export default async function handler(req, res) {
 
   leads.push(newLead);
 
-  // Upsert back to Supabase
-  const upsertRes = await fetch(`${SUPABASE_URL}/rest/v1/app_data`, {
+  // Upsert back to Supabase — ?on_conflict=id required for REST API (SDK adds this automatically)
+  const upsertRes = await fetch(`${SUPABASE_URL}/rest/v1/app_data?on_conflict=id`, {
     method: 'POST',
-    headers: { ...sbHeaders, 'Prefer': 'resolution=merge-duplicates' },
+    headers: { ...sbHeaders, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
     body: JSON.stringify({
       id: 'ke_leads',
       data: leads,
@@ -70,8 +70,8 @@ export default async function handler(req, res) {
 
   if (!upsertRes.ok) {
     const errText = await upsertRes.text();
-    console.error('Supabase upsert error:', errText);
-    return res.status(500).json({ error: 'Failed to save. Please email us directly.' });
+    console.error('Supabase upsert error:', upsertRes.status, errText);
+    return res.status(500).json({ error: 'Failed to save. Please email us directly.', detail: errText });
   }
 
   // Fire-and-forget email notification via Resend
