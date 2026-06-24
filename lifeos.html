@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Life OS</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/x-icon" href="favicon.ico"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;}
+a{text-decoration:none;color:inherit;}
+button{font-family:'Inter',sans-serif;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+:root{
+  --bg:#F9FAFB;--surface:#FFFFFF;--surface-2:#F3F4F6;
+  --border:#E5E7EB;--text:#111827;--muted:#6B7280;--muted-l:#9CA3AF;
+  --accent:#7C3AED;--accent-l:rgba(124,58,237,0.08);--accent-m:rgba(124,58,237,0.18);
+  --green:#10B981;--green-l:rgba(16,185,129,0.1);
+  --amber:#F59E0B;--amber-l:rgba(245,158,11,0.1);
+  --red:#EF4444;--red-l:rgba(239,68,68,0.1);
+  --blue:#3B82F6;--blue-l:rgba(59,130,246,0.1);
+  --radius:12px;--radius-sm:8px;--radius-lg:16px;--radius-pill:9999px;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 4px 16px rgba(0,0,0,0.05);
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* ── GATE ── */
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px;}
+.gate-card{background:var(--surface);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,0.10);border:1px solid var(--border);text-align:center;}
+.gate-icon{width:52px;height:52px;background:var(--accent-l);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:24px;}
+.gate-title{font-size:20px;font-weight:800;margin-bottom:6px;}
+.gate-sub{font-size:14px;color:var(--muted);margin-bottom:28px;}
+.gate-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:15px;outline:none;transition:border-color .2s;margin-bottom:12px;background:var(--bg);color:var(--text);}
+.gate-input:focus{border-color:var(--accent);}
+.gate-input.error{border-color:var(--red);}
+.gate-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-pill);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .15s;}
+.gate-btn:hover{opacity:.88;transform:translateY(-1px);}
+.gate-err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px;}
+
+/* ── APP SHELL ── */
+#app{display:none;}
+.app-header{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;}
+.app-header-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;gap:16px;}
+.app-logo{font-size:15px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;}
+.app-logo-badge{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+.life-score-pill{background:var(--accent);color:#fff;border-radius:var(--radius-pill);padding:4px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;}
+.life-score-pill .score-num{font-size:16px;font-weight:800;}
+.app-nav{display:flex;align-items:center;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.app-nav::-webkit-scrollbar{display:none;}
+.nav-tab{font-size:13px;font-weight:600;color:var(--muted);padding:6px 14px;border-radius:var(--radius-pill);cursor:pointer;border:none;background:none;transition:color .2s,background .2s;white-space:nowrap;}
+.nav-tab:hover{color:var(--text);background:var(--surface-2);}
+.nav-tab.active{color:var(--accent);background:var(--accent-l);}
+.app-header-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.btn-logout{font-size:12px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:5px 12px;cursor:pointer;transition:color .2s,border-color .2s;}
+.btn-logout:hover{color:var(--red);border-color:var(--red);}
+
+/* ── LAYOUT ── */
+.app-main{max-width:1280px;margin:0 auto;padding:28px 24px 80px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ── CARDS / SHARED ── */
+.card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);}
+.card-p{padding:24px;}
+.section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.gap-20{display:flex;flex-direction:column;gap:20px;}
+
+/* ── SCORE HEADER ── */
+.domain-score-header{display:flex;align-items:center;gap:20px;margin-bottom:24px;flex-wrap:wrap;}
+.domain-score-circle{width:72px;height:72px;border-radius:50%;background:var(--accent-l);border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.domain-score-num{font-size:22px;font-weight:800;color:var(--accent);}
+.domain-score-info{flex:1;}
+.domain-score-title{font-size:20px;font-weight:800;margin-bottom:6px;}
+.domain-score-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;max-width:320px;}
+.domain-score-fill{height:100%;border-radius:3px;background:var(--accent);transition:width .5s ease;}
+
+/* ── METRIC CARDS ── */
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;box-shadow:var(--shadow-sm);}
+.metric-label{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;}
+.metric-val{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.metric-sub{font-size:12px;color:var(--muted);}
+.trend-up{color:var(--green);font-size:11px;font-weight:600;}
+.trend-down{color:var(--red);font-size:11px;font-weight:600;}
+.trend-flat{color:var(--muted);font-size:11px;font-weight:600;}
+
+/* ── ADVISOR CARD ── */
+.advisor-card{background:var(--accent-l);border:1px solid var(--accent-m);border-radius:var(--radius);padding:20px 22px;}
+.advisor-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.advisor-icon{font-size:16px;}
+.advisor-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);}
+.advisor-text{font-size:14px;font-weight:500;color:var(--text);line-height:1.6;margin-bottom:14px;}
+.advisor-deadline{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:14px;}
+.btn-task{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-pill);font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s;}
+.btn-task:hover{opacity:.88;}
+.btn-task.done{background:var(--green);pointer-events:none;}
+
+/* ── LOG ── */
+.log-list{display:flex;flex-direction:column;gap:10px;}
+.log-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface-2);border-radius:var(--radius-sm);}
+.log-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;}
+.log-date{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:2px;}
+.log-text{font-size:13px;color:var(--text);}
+.log-form{display:flex;gap:10px;margin-top:14px;}
+.log-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:'Inter',sans-serif;font-size:14px;background:var(--surface);color:var(--text);outline:none;transition:border-color .2s;}
+.log-input:focus{border-color:var(--accent);}
+.btn-log{padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-pill);font-size:13px;font-weight:600;cursor:pointer;}
+
+/* ── BALANCE WHEEL ── */
+.wheel-wrap{display:flex;align-items:center;justify-content:center;padding:16px 0;}
+.wheel-canvas-wrap{position:relative;width:280px;height:280px;}
+
+/* ── HOME ── */
+.home-grid{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;}
+.what-matters-cards{display:flex;flex-direction:column;gap:12px;}
+.wm-card{border-radius:var(--radius);padding:18px 20px;border:1px solid var(--border);}
+.wm-card.priority{background:#FEF3C7;border-color:#FCD34D;}
+.wm-card.risk{background:var(--red-l);border-color:#FCA5A5;}
+.wm-card.opportunity{background:var(--green-l);border-color:#6EE7B7;}
+.wm-type{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px;}
+.wm-card.priority .wm-type{color:#92400E;}
+.wm-card.risk .wm-type{color:var(--red);}
+.wm-card.opportunity .wm-type{color:#065F46;}
+.wm-text{font-size:14px;font-weight:600;color:var(--text);}
+.domain-tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:20px;}
+.domain-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.domain-tile:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.tile-emoji{font-size:20px;margin-bottom:8px;}
+.tile-name{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.tile-val{font-size:18px;font-weight:800;color:var(--text);}
+.tile-trend{font-size:11px;margin-top:2px;}
+.this-week-list{display:flex;flex-direction:column;gap:8px;}
+.week-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);}
+.week-day{font-size:11px;font-weight:700;color:var(--muted);width:30px;flex-shrink:0;}
+.week-text{font-size:13px;color:var(--text);}
+.week-badge{margin-left:auto;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--radius-pill);}
+.week-badge.health{background:var(--green-l);color:var(--green);}
+.week-badge.mind{background:var(--blue-l);color:var(--blue);}
+.week-badge.pro{background:var(--accent-l);color:var(--accent);}
+.week-badge.fin{background:var(--amber-l);color:var(--amber);}
+
+/* ── RELATIONSHIPS ── */
+.people-tier{margin-bottom:24px;}
+.tier-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.tier-line{flex:1;height:1px;background:var(--border);}
+.person-list{display:flex;flex-direction:column;gap:8px;}
+.person-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:border-color .2s;}
+.person-card:hover{border-color:var(--accent);}
+.person-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+.person-name{font-size:14px;font-weight:600;color:var(--text);}
+.person-meta{font-size:12px;color:var(--muted);}
+.person-cadence{margin-left:auto;text-align:right;}
+.cadence-val{font-size:13px;font-weight:700;}
+.cadence-label{font-size:11px;color:var(--muted);}
+.cadence-ok{color:var(--green);}
+.cadence-warn{color:var(--amber);}
+.cadence-late{color:var(--red);}
+
+/* ── MIND ── */
+.values-list{display:flex;flex-wrap:wrap;gap:8px;}
+.value-chip{padding:6px 14px;background:var(--accent-l);border:1px solid var(--accent-m);border-radius:var(--radius-pill);font-size:13px;font-weight:600;color:var(--accent);}
+.reading-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
+.book-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.book-cover{height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.book-info{padding:10px 12px;}
+.book-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.book-status{font-size:11px;color:var(--muted);}
+.considering-list{display:flex;flex-direction:column;gap:10px;}
+.considering-card{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--surface-2);border-radius:var(--radius-sm);}
+.considering-text{font-size:13px;font-weight:500;color:var(--text);}
+.considering-age{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ── FINANCES ── */
+.fin-subtabs{display:flex;gap:6px;margin-bottom:20px;}
+.fin-subtab{padding:6px 14px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;}
+.fin-subtab.active{color:var(--accent);border-color:var(--accent);background:var(--accent-l);}
+.fin-subtab-panel{display:none;}
+.fin-subtab-panel.active{display:block;}
+.pnl-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.pnl-row:last-child{border-bottom:none;}
+.pnl-label{font-size:14px;color:var(--text);}
+.pnl-val{font-size:14px;font-weight:700;}
+.pnl-positive{color:var(--green);}
+.pnl-negative{color:var(--red);}
+.money-map-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface-2);border-radius:var(--radius-sm);margin-bottom:8px;}
+.money-map-icon{font-size:18px;width:32px;text-align:center;}
+.money-map-label{font-size:13px;font-weight:600;color:var(--text);flex:1;}
+.money-map-amount{font-size:14px;font-weight:700;}
+
+/* ── TASKS ── */
+.tasks-empty{text-align:center;padding:48px;color:var(--muted);}
+.tasks-empty-icon{font-size:40px;margin-bottom:12px;}
+.tasks-empty-text{font-size:15px;font-weight:500;}
+.task-list{display:flex;flex-direction:column;gap:10px;}
+.task-item{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-sm);transition:opacity .3s,transform .3s;}
+.task-item.done-anim{opacity:0;transform:translateX(20px);}
+.task-domain-badge{padding:3px 10px;border-radius:var(--radius-pill);font-size:11px;font-weight:700;}
+.task-text{font-size:14px;font-weight:500;color:var(--text);flex:1;}
+.task-deadline{font-size:12px;color:var(--accent);font-weight:600;margin-top:4px;}
+.task-actions{display:flex;gap:8px;flex-shrink:0;}
+.btn-accept{padding:6px 14px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-pill);font-size:12px;font-weight:600;cursor:pointer;}
+.btn-dismiss{padding:6px 12px;background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;}
+.btn-dismiss:hover{border-color:var(--red);color:var(--red);}
+
+/* ── CHART AREA ── */
+.chart-wrap{height:180px;position:relative;margin:14px 0;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:28px;right:28px;background:var(--text);color:#fff;padding:12px 20px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;box-shadow:0 4px 24px rgba(0,0,0,0.18);transform:translateY(80px);opacity:0;transition:all .3s;z-index:9999;}
+#toast.show{transform:translateY(0);opacity:1;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .home-grid{grid-template-columns:1fr;}
+  .domain-tiles{grid-template-columns:repeat(3,1fr);}
+  .grid-4{grid-template-columns:repeat(2,1fr);}
+  .grid-5{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:640px){
+  .app-main{padding:16px 16px 80px;}
+  .domain-tiles{grid-template-columns:repeat(2,1fr);}
+  .grid-3{grid-template-columns:1fr 1fr;}
+  .gate-card{padding:32px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ GATE ═══════════ -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-icon">🧠</div>
+    <div class="gate-title">Life OS</div>
+    <div class="gate-sub">Your personal command centre.</div>
+    <input class="gate-input" id="gate-pw" type="password" placeholder="Password" autocomplete="current-password"/>
+    <button class="gate-btn" id="gate-btn" onclick="gateSubmit()">Enter</button>
+    <div class="gate-err" id="gate-err"></div>
+  </div>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
+<div id="app">
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="app-logo">
+        <div class="app-logo-badge">R</div>
+        Life OS
+      </div>
+      <nav class="app-nav" id="app-nav">
+        <button class="nav-tab active" onclick="switchTab('home',this)">Home</button>
+        <button class="nav-tab" onclick="switchTab('finances',this)">Finances</button>
+        <button class="nav-tab" onclick="switchTab('professional',this)">Professional</button>
+        <button class="nav-tab" onclick="switchTab('relationships',this)">Relationships</button>
+        <button class="nav-tab" onclick="switchTab('health',this)">Health</button>
+        <button class="nav-tab" onclick="switchTab('mind',this)">Mind</button>
+        <button class="nav-tab" onclick="switchTab('tasks',this)">Tasks <span id="task-badge" style="display:none;background:var(--accent);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-left:4px;" id="task-count-badge">0</span></button>
+      </nav>
+      <div class="app-header-right">
+        <div class="life-score-pill">
+          <span>Score</span>
+          <span class="score-num" id="life-score-display">56</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ═══ HOME ═══ -->
+    <div class="tab-panel active" id="tab-home">
+      <div class="gap-20">
+        <div class="home-grid">
+          <!-- Balance Wheel -->
+          <div class="card card-p">
+            <div class="section-label">Balance Wheel</div>
+            <div class="wheel-wrap">
+              <div class="wheel-canvas-wrap">
+                <canvas id="wheel-chart"></canvas>
+              </div>
+            </div>
+            <div style="text-align:center;margin-top:8px;">
+              <div style="font-size:36px;font-weight:800;color:var(--accent)" id="life-score-big">56</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:2px;">Life Score — lowest spoke: <strong id="lowest-spoke">Professional</strong></div>
+            </div>
+          </div>
+          <!-- Right column -->
+          <div class="gap-20">
+            <div class="card card-p">
+              <div class="section-label">What Matters Now</div>
+              <div class="what-matters-cards">
+                <div class="wm-card priority">
+                  <div class="wm-type">🎯 Top Priority</div>
+                  <div class="wm-text">Close first retainer client — Diego starts cold outreach this week</div>
+                </div>
+                <div class="wm-card risk">
+                  <div class="wm-type">⚠️ Biggest Risk</div>
+                  <div class="wm-text">Pipeline at zero — no active prospects, no booked calls</div>
+                </div>
+                <div class="wm-card opportunity">
+                  <div class="wm-type">💡 Biggest Opportunity</div>
+                  <div class="wm-text">PPL program just started — build the training habit before it slips</div>
+                </div>
+              </div>
+            </div>
+            <div class="card card-p">
+              <div class="section-label">This Week</div>
+              <div class="this-week-list" id="this-week-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain Tiles -->
+        <div>
+          <div class="section-label">Domains</div>
+          <div class="domain-tiles" id="domain-tiles"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ FINANCES ═══ -->
+    <div class="tab-panel" id="tab-finances">
+      <div class="gap-20">
+        <div class="domain-score-header">
+          <div class="domain-score-circle"><div class="domain-score-num">40</div></div>
+          <div class="domain-score-info">
+            <div class="domain-score-title">Finances</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">Target: 70 · Gap: 30 points</div>
+            <div class="domain-score-bar"><div class="domain-score-fill" style="width:40%"></div></div>
+          </div>
+        </div>
+        <div class="fin-subtabs">
+          <button class="fin-subtab active" onclick="switchFinTab('overview',this)">Overview</button>
+          <button class="fin-subtab" onclick="switchFinTab('pnl',this)">P&L</button>
+          <button class="fin-subtab" onclick="switchFinTab('moneymap',this)">Money Map</button>
+        </div>
+        <div class="fin-subtab-panel active" id="fin-overview">
+          <div class="grid-4" style="margin-bottom:20px;">
+            <div class="metric-card"><div class="metric-label">Net Worth</div><div class="metric-val">£2,400</div><div class="metric-sub trend-flat">→ Building</div></div>
+            <div class="metric-card"><div class="metric-label">Monthly P&L</div><div class="metric-val">-£0</div><div class="metric-sub trend-flat">→ Pre-revenue</div></div>
+            <div class="metric-card"><div class="metric-label">Runway</div><div class="metric-val">~3 mo</div><div class="metric-sub trend-down">↓ Close clients fast</div></div>
+            <div class="metric-card"><div class="metric-label">Savings Rate</div><div class="metric-val">0%</div><div class="metric-sub" style="color:var(--muted);">Target: 20%</div></div>
+          </div>
+          <div class="advisor-card">
+            <div class="advisor-header"><span class="advisor-icon">🤖</span><span class="advisor-label">AI Advisor</span></div>
+            <div class="advisor-text">Open a halal savings account (Al Rayan or Gatehouse) and set a standing order of £100/mo — even pre-revenue, building the habit now matters.</div>
+            <div class="advisor-deadline">Deadline: 2026-07-07</div>
+            <button class="btn-task" onclick="createTask('Open halal savings — Al Rayan/Gatehouse, £100/mo standing order','Finances','2026-07-07',this)">+ Create Task</button>
+          </div>
+          <div style="margin-top:20px;">
+            <div class="section-label">Log</div>
+            <div class="log-list" id="fin-log"></div>
+            <div class="log-form"><input class="log-input" id="fin-log-input" placeholder="Log a financial entry..." onkeydown="if(event.key==='Enter')addLog('fin-log','fin-log-input')"/><button class="btn-log" onclick="addLog('fin-log','fin-log-input')">Add</button></div>
+          </div>
+        </div>
+        <div class="fin-subtab-panel" id="fin-pnl">
+          <div class="card card-p">
+            <div class="section-label">June 2026 P&L</div>
+            <div class="pnl-row"><span class="pnl-label">Revenue (retainer)</span><span class="pnl-val">£0</span></div>
+            <div class="pnl-row"><span class="pnl-label">Revenue (commission)</span><span class="pnl-val">£0</span></div>
+            <div class="pnl-row"><span class="pnl-label">Tools & software</span><span class="pnl-val pnl-negative">-£180</span></div>
+            <div class="pnl-row"><span class="pnl-label">Ads (own testing)</span><span class="pnl-val pnl-negative">-£0</span></div>
+            <div class="pnl-row" style="font-weight:700;"><span class="pnl-label">Net</span><span class="pnl-val pnl-negative">-£180</span></div>
+          </div>
+        </div>
+        <div class="fin-subtab-panel" id="fin-moneymap">
+          <div>
+            <div class="money-map-item"><div class="money-map-icon">🏦</div><div class="money-map-label">Current Account (Monzo)</div><div class="money-map-amount">£1,200</div></div>
+            <div class="money-map-item"><div class="money-map-icon">💷</div><div class="money-map-label">Savings (target: Al Rayan)</div><div class="money-map-amount">£0</div></div>
+            <div class="money-map-item"><div class="money-map-icon">📈</div><div class="money-map-label">Investments (Wahed)</div><div class="money-map-amount">£1,200</div></div>
+            <div class="money-map-item"><div class="money-map-icon">🏠</div><div class="money-map-label">Emergency Fund (target: 3mo)</div><div class="money-map-amount">£0</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PROFESSIONAL ═══ -->
+    <div class="tab-panel" id="tab-professional">
+      <div class="gap-20">
+        <div class="domain-score-header">
+          <div class="domain-score-circle"><div class="domain-score-num">35</div></div>
+          <div class="domain-score-info">
+            <div class="domain-score-title">Professional</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">Target: 80 · Gap: 45 points</div>
+            <div class="domain-score-bar"><div class="domain-score-fill" style="width:35%"></div></div>
+          </div>
+        </div>
+        <div class="grid-4">
+          <div class="metric-card"><div class="metric-label">MRR</div><div class="metric-val">£0</div><div class="metric-sub trend-flat">→ Target £3,500</div></div>
+          <div class="metric-card"><div class="metric-label">Active Clients</div><div class="metric-val">0</div><div class="metric-sub trend-flat">→ Target 10 by EOY</div></div>
+          <div class="metric-card"><div class="metric-label">Pipeline</div><div class="metric-val">0</div><div class="metric-sub trend-down">↓ Empty</div></div>
+          <div class="metric-card"><div class="metric-label">KaizenDesk</div><div class="metric-val">Build</div><div class="metric-sub" style="color:var(--muted);">In progress</div></div>
+        </div>
+        <div class="advisor-card">
+          <div class="advisor-header"><span class="advisor-icon">🤖</span><span class="advisor-label">AI Advisor</span></div>
+          <div class="advisor-text">Diego needs to start cold outreach this week. Set a daily call target of 30 calls and log each session in the pipeline. First booked discovery call = the score moves.</div>
+          <div class="advisor-deadline">Deadline: 2026-06-28</div>
+          <button class="btn-task" onclick="createTask('Diego: 30 cold calls daily — log in pipeline/Index.md by EOD each day','Professional','2026-06-28',this)">+ Create Task</button>
+        </div>
+        <div>
+          <div class="section-label">Log</div>
+          <div class="log-list" id="pro-log"></div>
+          <div class="log-form"><input class="log-input" id="pro-log-input" placeholder="Log a win, decision, or update..." onkeydown="if(event.key==='Enter')addLog('pro-log','pro-log-input')"/><button class="btn-log" onclick="addLog('pro-log','pro-log-input')">Add</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RELATIONSHIPS ═══ -->
+    <div class="tab-panel" id="tab-relationships">
+      <div class="gap-20">
+        <div class="domain-score-header">
+          <div class="domain-score-circle"><div class="domain-score-num">55</div></div>
+          <div class="domain-score-info">
+            <div class="domain-score-title">Relationships</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">Target: 75 · Gap: 20 points</div>
+            <div class="domain-score-bar"><div class="domain-score-fill" style="width:55%"></div></div>
+          </div>
+        </div>
+        <div class="advisor-card">
+          <div class="advisor-header"><span class="advisor-icon">🤖</span><span class="advisor-label">AI Advisor — Harvard #1 Area</span></div>
+          <div class="advisor-text">Call a family member this week — schedule it now, don't leave it to chance. Strong relationships absorb business shocks. The Harvard data is unambiguous on this.</div>
+          <div class="advisor-deadline">Deadline: 2026-06-29 (Sunday)</div>
+          <button class="btn-task" onclick="createTask('Schedule call with family — calendar block, Sunday before noon','Relationships','2026-06-29',this)">+ Create Task</button>
+        </div>
+        <div id="people-directory"></div>
+        <div>
+          <div class="section-label">Log</div>
+          <div class="log-list" id="rel-log"></div>
+          <div class="log-form"><input class="log-input" id="rel-log-input" placeholder="Log a call, meeting, or connection..." onkeydown="if(event.key==='Enter')addLog('rel-log','rel-log-input')"/><button class="btn-log" onclick="addLog('rel-log','rel-log-input')">Add</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ HEALTH ═══ -->
+    <div class="tab-panel" id="tab-health">
+      <div class="gap-20">
+        <div class="domain-score-header">
+          <div class="domain-score-circle"><div class="domain-score-num">65</div></div>
+          <div class="domain-score-info">
+            <div class="domain-score-title">Health &amp; Fitness</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">Target: 80 · Gap: 15 points</div>
+            <div class="domain-score-bar"><div class="domain-score-fill" style="width:65%"></div></div>
+          </div>
+        </div>
+        <div class="grid-4">
+          <div class="metric-card"><div class="metric-label">Sleep</div><div class="metric-val">7.0h</div><div class="metric-sub trend-up">↑ Target 7.5h</div></div>
+          <div class="metric-card"><div class="metric-label">Weight</div><div class="metric-val">66kg</div><div class="metric-sub trend-up">↑ Target 70kg</div></div>
+          <div class="metric-card"><div class="metric-label">Sessions / wk</div><div class="metric-val">0</div><div class="metric-sub trend-flat">→ Just started</div></div>
+          <div class="metric-card"><div class="metric-label">Program</div><div class="metric-val">PPL</div><div class="metric-sub" style="color:var(--muted);">Started 2026-06-22</div></div>
+        </div>
+        <div class="advisor-card">
+          <div class="advisor-header"><span class="advisor-icon">🤖</span><span class="advisor-label">AI Advisor</span></div>
+          <div class="advisor-text">Complete 4 PPL sessions this week (Mon Push A, Tue Pull, Thu Legs, Sat Push B). Log each session immediately after. First week of consistency is the hardest — protect the 11am window.</div>
+          <div class="advisor-deadline">Deadline: 2026-06-28 (Saturday)</div>
+          <button class="btn-task" onclick="createTask('Complete all 4 PPL sessions this week — log each by EOD on training days','Health','2026-06-28',this)">+ Create Task</button>
+        </div>
+        <div>
+          <div class="section-label">Training Log</div>
+          <div class="log-list" id="hlt-log"></div>
+          <div class="log-form"><input class="log-input" id="hlt-log-input" placeholder="Log a session (e.g. Push A — incline 40kg × 5)..." onkeydown="if(event.key==='Enter')addLog('hlt-log','hlt-log-input')"/><button class="btn-log" onclick="addLog('hlt-log','hlt-log-input')">Add</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ MIND ═══ -->
+    <div class="tab-panel" id="tab-mind">
+      <div class="gap-20">
+        <div class="domain-score-header">
+          <div class="domain-score-circle"><div class="domain-score-num">72</div></div>
+          <div class="domain-score-info">
+            <div class="domain-score-title">Mind</div>
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">Target: 85 · Gap: 13 points</div>
+            <div class="domain-score-bar"><div class="domain-score-fill" style="width:72%"></div></div>
+          </div>
+        </div>
+        <div class="advisor-card">
+          <div class="advisor-header"><span class="advisor-icon">🤖</span><span class="advisor-label">AI Advisor</span></div>
+          <div class="advisor-text">Read 10 pages before Fajr each morning this week. Compound learning over one week = 70 pages. Stack the reading habit with the prayer habit — they reinforce each other.</div>
+          <div class="advisor-deadline">Deadline: 2026-06-29 (7 days)</div>
+          <button class="btn-task" onclick="createTask('Read 10 pages before Fajr each morning — 7-day streak','Mind','2026-06-29',this)">+ Create Task</button>
+        </div>
+
+        <!-- Values -->
+        <div class="card card-p">
+          <div class="section-label">Values</div>
+          <div class="values-list">
+            <div class="value-chip">Taqwa</div>
+            <div class="value-chip">Discipline</div>
+            <div class="value-chip">Excellence</div>
+            <div class="value-chip">Honesty</div>
+            <div class="value-chip">Family</div>
+            <div class="value-chip">Learning</div>
+            <div class="value-chip">Ownership</div>
+            <div class="value-chip">Patience</div>
+          </div>
+        </div>
+
+        <!-- Journal -->
+        <div class="card card-p">
+          <div class="section-label">Journal</div>
+          <div class="log-list" id="mind-journal"></div>
+          <div class="log-form" style="margin-top:14px;"><input class="log-input" id="mind-journal-input" placeholder="1-line entry — mood word + 1 sentence..." onkeydown="if(event.key==='Enter')addLog('mind-journal','mind-journal-input')"/><button class="btn-log" onclick="addLog('mind-journal','mind-journal-input')">Add</button></div>
+        </div>
+
+        <!-- Reading -->
+        <div class="card card-p">
+          <div class="section-label">Reading</div>
+          <div class="reading-grid" id="reading-grid"></div>
+        </div>
+
+        <!-- Considering -->
+        <div class="card card-p">
+          <div class="section-label">Considering</div>
+          <div class="considering-list" id="considering-list"></div>
+          <div class="log-form" style="margin-top:14px;"><input class="log-input" id="considering-input" placeholder="A decision you're sitting on..." onkeydown="if(event.key==='Enter')addConsidering()"/><button class="btn-log" onclick="addConsidering()">Add</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TASKS ═══ -->
+    <div class="tab-panel" id="tab-tasks">
+      <div class="gap-20">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <div>
+            <div class="section-label">Tasks</div>
+            <div style="font-size:20px;font-weight:800;">Action Queue</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">One click to accept or dismiss. Done cards never come back.</div>
+          </div>
+          <button onclick="clearDoneTasks()" style="font-size:12px;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:6px 14px;cursor:pointer;">Clear done</button>
+        </div>
+        <div id="task-list-wrap"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const SCORES = {
+  finances: 40,
+  professional: 35,
+  relationships: 55,
+  health: 65,
+  mind: 72
+};
+
+const DOMAIN_META = [
+  { id:'finances',     label:'Finances',     emoji:'💰', val:'£2,400 net worth', trend:'→', color:'#F59E0B' },
+  { id:'professional', label:'Professional', emoji:'💼', val:'£0 MRR',           trend:'↑', color:'#7C3AED' },
+  { id:'relationships',label:'Relationships',emoji:'🤝', val:'5 people tracked',  trend:'→', color:'#10B981' },
+  { id:'health',       label:'Health',       emoji:'🏋️', val:'66kg / 7.0h sleep', trend:'↑', color:'#3B82F6' },
+  { id:'mind',         label:'Mind',         emoji:'🧠', val:'8 values defined',  trend:'↑', color:'#8B5CF6' }
+];
+
+const PEOPLE = [
+  { tier:'Inner Circle', color:'#7C3AED', bg:'#EDE9FE', people:[
+    { name:'Mum', emoji:'👩', role:'Family', daysSince:8, cadence:7 },
+    { name:'Dad', emoji:'👨', role:'Family', daysSince:12, cadence:7 },
+  ]},
+  { tier:'Close', color:'#10B981', bg:'#D1FAE5', people:[
+    { name:'Diego', emoji:'🧑', role:'Head of Sales', daysSince:2, cadence:7 },
+    { name:'Friend (Ahmed)', emoji:'🧑', role:'Close friend', daysSince:21, cadence:14 },
+  ]},
+  { tier:'Network', color:'#6B7280', bg:'#F3F4F6', people:[
+    { name:'Rodrigo K.', emoji:'🧑', role:'AI Advertiser mentor', daysSince:0, cadence:30 },
+  ]}
+];
+
+const BOOKS = [
+  { title:'The Boron Letters', emoji:'📜', status:'Reading' },
+  { title:'Breakthrough Advertising', emoji:'📗', status:'Queue' },
+  { title:'Traction', emoji:'📘', status:'Queue' },
+  { title:'Can\'t Hurt Me', emoji:'💪', status:'Done' },
+];
+
+const CONSIDERING = [
+  { text:'Should KaizenDesk launch with a white-label or own-brand positioning?', days:5 },
+  { text:'Raise daily calorie target to 2,800 given new training load?', days:2 },
+];
+
+const THIS_WEEK = [
+  { day:'Mon', text:'Push A — PPL (11am)', badge:'health' },
+  { day:'Tue', text:'Pull — PPL (11am)', badge:'health' },
+  { day:'Wed', text:'Easy run (optional)', badge:'health' },
+  { day:'Thu', text:'Legs — PPL (11am)', badge:'health' },
+  { day:'Fri', text:'Rest', badge:null },
+  { day:'Sat', text:'Push B — PPL (11am) + 2km run', badge:'health' },
+  { day:'Sun', text:'Weekly review — 15 min', badge:'mind' },
+];
+
+// ═══════════════════════════════════════════════════════
+// STORE — localStorage tasks
+// ═══════════════════════════════════════════════════════
+function loadTasks() {
+  try { return JSON.parse(localStorage.getItem('lifeos_tasks') || '[]'); } catch { return []; }
+}
+function saveTasks(tasks) {
+  localStorage.setItem('lifeos_tasks', JSON.stringify(tasks));
+}
+function loadLogs() {
+  try { return JSON.parse(localStorage.getItem('lifeos_logs') || '{}'); } catch { return {}; }
+}
+function saveLogs(logs) {
+  localStorage.setItem('lifeos_logs', JSON.stringify(logs));
+}
+function loadConsidering() {
+  try { return JSON.parse(localStorage.getItem('lifeos_considering') || 'null'); } catch { return null; }
+}
+function saveConsidering(list) {
+  localStorage.setItem('lifeos_considering', JSON.stringify(list));
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════
+const PW = 'demo';
+function gateSubmit() {
+  const input = document.getElementById('gate-pw');
+  const err   = document.getElementById('gate-err');
+  if (input.value === PW) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display  = 'block';
+    initApp();
+  } else {
+    input.classList.add('error');
+    err.textContent = 'Incorrect password.';
+    setTimeout(() => { input.classList.remove('error'); err.textContent=''; }, 2000);
+  }
+}
+document.getElementById('gate-pw').addEventListener('keydown', e => { if(e.key==='Enter') gateSubmit(); });
+function logout() {
+  document.getElementById('app').style.display  = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('gate-pw').value = '';
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+function initApp() {
+  renderLifeScore();
+  initWheel();
+  renderDomainTiles();
+  renderThisWeek();
+  renderPeopleDirectory();
+  renderReading();
+  renderConsidering();
+  renderTasks();
+  initLogs();
+  maybeAutoTask();
+}
+
+// ═══════════════════════════════════════════════════════
+// LIFE SCORE
+// ═══════════════════════════════════════════════════════
+function getLifeScore() {
+  const vals = Object.values(SCORES);
+  return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+}
+function getLowestSpoke() {
+  let min = Infinity, name = '';
+  for (const [k,v] of Object.entries(SCORES)) if(v<min){min=v;name=k;}
+  return name.charAt(0).toUpperCase()+name.slice(1);
+}
+function renderLifeScore() {
+  const score = getLifeScore();
+  document.getElementById('life-score-display').textContent = score;
+  document.getElementById('life-score-big').textContent     = score;
+  document.getElementById('lowest-spoke').textContent       = getLowestSpoke();
+}
+
+// ═══════════════════════════════════════════════════════
+// BALANCE WHEEL
+// ═══════════════════════════════════════════════════════
+let wheelChart;
+function initWheel() {
+  const ctx = document.getElementById('wheel-chart').getContext('2d');
+  wheelChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Finances','Professional','Relationships','Health','Mind'],
+      datasets: [{
+        data: [SCORES.finances, SCORES.professional, SCORES.relationships, SCORES.health, SCORES.mind],
+        backgroundColor: 'rgba(124,58,237,0.12)',
+        borderColor: '#7C3AED',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#7C3AED',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { display: false, stepSize: 25 },
+          grid: { color: 'rgba(0,0,0,0.07)', circular: false },
+          angleLines: { color: 'rgba(0,0,0,0.07)' },
+          pointLabels: {
+            font: { size: 12, weight: '700', family: "'Inter',sans-serif" },
+            color: '#374151'
+          }
+        }
+      },
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ` ${ctx.raw}/100` }
+      }}
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// DOMAIN TILES
+// ═══════════════════════════════════════════════════════
+function renderDomainTiles() {
+  const wrap = document.getElementById('domain-tiles');
+  wrap.innerHTML = DOMAIN_META.map(d => `
+    <div class="domain-tile" onclick="switchTab('${d.id}',null)">
+      <div class="tile-emoji">${d.emoji}</div>
+      <div class="tile-name">${d.label}</div>
+      <div class="tile-val">${SCORES[d.id]}<span style="font-size:12px;font-weight:500;color:var(--muted)">/100</span></div>
+      <div class="tile-trend ${d.trend==='↑'?'trend-up':d.trend==='↓'?'trend-down':'trend-flat'}">${d.trend} ${d.val}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// THIS WEEK
+// ═══════════════════════════════════════════════════════
+function renderThisWeek() {
+  document.getElementById('this-week-list').innerHTML = THIS_WEEK.map(w => `
+    <div class="week-item">
+      <span class="week-day">${w.day}</span>
+      <span class="week-text">${w.text}</span>
+      ${w.badge ? `<span class="week-badge ${w.badge}">${w.badge}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// PEOPLE DIRECTORY
+// ═══════════════════════════════════════════════════════
+function cadenceStatus(daysSince, cadence) {
+  if (daysSince <= cadence) return { cls:'cadence-ok', label:'On schedule' };
+  if (daysSince <= cadence * 1.5) return { cls:'cadence-warn', label:'Due soon' };
+  return { cls:'cadence-late', label:'Overdue' };
+}
+function renderPeopleDirectory() {
+  const wrap = document.getElementById('people-directory');
+  wrap.innerHTML = PEOPLE.map(tier => `
+    <div class="people-tier">
+      <div class="tier-label" style="color:${tier.color}">
+        ${tier.tier} <div class="tier-line"></div>
+      </div>
+      <div class="person-list">
+        ${tier.people.map(p => {
+          const s = cadenceStatus(p.daysSince, p.cadence);
+          return `
+            <div class="person-card">
+              <div class="person-avatar" style="background:${tier.bg};color:${tier.color}">${p.emoji}</div>
+              <div>
+                <div class="person-name">${p.name}</div>
+                <div class="person-meta">${p.role}</div>
+              </div>
+              <div class="person-cadence">
+                <div class="cadence-val ${s.cls}">${p.daysSince}d ago</div>
+                <div class="cadence-label">${s.label}</div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// READING
+// ═══════════════════════════════════════════════════════
+function renderReading() {
+  document.getElementById('reading-grid').innerHTML = BOOKS.map(b => `
+    <div class="book-card">
+      <div class="book-cover" style="background:var(--surface-2)">${b.emoji}</div>
+      <div class="book-info">
+        <div class="book-title">${b.title}</div>
+        <div class="book-status" style="color:${b.status==='Reading'?'var(--accent)':b.status==='Done'?'var(--green)':'var(--muted)'}">${b.status}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// CONSIDERING
+// ═══════════════════════════════════════════════════════
+let consideringData;
+function renderConsidering() {
+  consideringData = loadConsidering() || CONSIDERING;
+  const el = document.getElementById('considering-list');
+  el.innerHTML = consideringData.length ? consideringData.map((c,i) => `
+    <div class="considering-card">
+      <div style="font-size:18px;flex-shrink:0">🔄</div>
+      <div style="flex:1">
+        <div class="considering-text">${c.text}</div>
+        <div class="considering-age">${c.days} day${c.days!==1?'s':''} open</div>
+      </div>
+      <button onclick="removeConsidering(${i})" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:0 0 0 8px;">✕</button>
+    </div>
+  `).join('') : '<div style="color:var(--muted);font-size:13px;padding:12px 0;">No open decisions.</div>';
+}
+function addConsidering() {
+  const input = document.getElementById('considering-input');
+  if (!input.value.trim()) return;
+  consideringData = consideringData || [];
+  consideringData.unshift({ text: input.value.trim(), days: 0 });
+  saveConsidering(consideringData);
+  input.value = '';
+  renderConsidering();
+  toast('Decision logged');
+}
+function removeConsidering(i) {
+  consideringData.splice(i,1);
+  saveConsidering(consideringData);
+  renderConsidering();
+  toast('Decision closed');
+}
+
+// ═══════════════════════════════════════════════════════
+// LOGS
+// ═══════════════════════════════════════════════════════
+function initLogs() {
+  const logs = loadLogs();
+  const today = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+  const defaults = {
+    'fin-log': [{ date:'24 Jun', text:'Reviewed monthly tools spend — £180' }],
+    'pro-log': [{ date:'24 Jun', text:'Ingested AI Advertiser Lessons 5.18 & 5.19' }],
+    'rel-log': [{ date:'22 Jun', text:'Nav Singh — closed out, archived' }],
+    'hlt-log': [{ date:'22 Jun', text:'PPL program started — first session due Monday' }],
+    'mind-journal': [{ date:'24 Jun', text:'Focused — vault clean, files digested, building forward' }],
+  };
+  for (const [id, defaultItems] of Object.entries(defaults)) {
+    const items = logs[id] || defaultItems;
+    renderLogItems(id, items);
+  }
+}
+function addLog(logId, inputId) {
+  const input = document.getElementById(inputId);
+  if (!input.value.trim()) return;
+  const logs = loadLogs();
+  if (!logs[logId]) logs[logId] = [];
+  const date = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+  logs[logId].unshift({ date, text: input.value.trim() });
+  saveLogs(logs);
+  renderLogItems(logId, logs[logId]);
+  input.value = '';
+  toast('Logged ✓');
+}
+function renderLogItems(id, items) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = items.slice(0,6).map(item => `
+    <div class="log-item">
+      <div class="log-dot"></div>
+      <div><div class="log-date">${item.date}</div><div class="log-text">${item.text}</div></div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// TASKS
+// ═══════════════════════════════════════════════════════
+const DOMAIN_COLORS = {
+  Finances:'#F59E0B', Professional:'#7C3AED', Relationships:'#10B981',
+  Health:'#3B82F6', Mind:'#8B5CF6'
+};
+function createTask(text, domain, deadline, btn) {
+  const tasks = loadTasks();
+  if (tasks.find(t => t.text === text && !t.done)) { toast('Task already in queue'); return; }
+  tasks.unshift({ id: Date.now(), text, domain, deadline, done: false });
+  saveTasks(tasks);
+  if (btn) { btn.textContent = '✓ Added'; btn.classList.add('done'); }
+  renderTasks();
+  updateTaskBadge();
+  toast(`Task added → ${domain}`);
+  playPop();
+}
+function acceptTask(id) {
+  const tasks = loadTasks();
+  const t = tasks.find(t=>t.id===id);
+  if (t) { t.done = true; t.acceptedAt = new Date().toISOString(); }
+  saveTasks(tasks);
+  animateTask(id, () => { renderTasks(); updateTaskBadge(); });
+  toast('Done ✓');
+  playPop();
+}
+function dismissTask(id) {
+  const tasks = loadTasks();
+  const idx = tasks.findIndex(t=>t.id===id);
+  if (idx > -1) tasks.splice(idx,1);
+  saveTasks(tasks);
+  animateTask(id, () => { renderTasks(); updateTaskBadge(); });
+  toast('Dismissed');
+}
+function animateTask(id, cb) {
+  const el = document.getElementById('task-'+id);
+  if (el) { el.classList.add('done-anim'); setTimeout(cb, 320); } else { cb(); }
+}
+function clearDoneTasks() {
+  const tasks = loadTasks().filter(t => !t.done);
+  saveTasks(tasks);
+  renderTasks();
+  updateTaskBadge();
+  toast('Done tasks cleared');
+}
+function renderTasks() {
+  const tasks = loadTasks();
+  const wrap = document.getElementById('task-list-wrap');
+  const active = tasks.filter(t => !t.done);
+  const done   = tasks.filter(t => t.done);
+  if (!tasks.length) {
+    wrap.innerHTML = `<div class="tasks-empty"><div class="tasks-empty-icon">✅</div><div class="tasks-empty-text">No tasks yet. Create one from any AI Advisor card.</div></div>`;
+    return;
+  }
+  let html = '';
+  if (active.length) {
+    html += `<div class="section-label" style="margin-bottom:10px">Active (${active.length})</div><div class="task-list">`;
+    html += active.map(t => `
+      <div class="task-item" id="task-${t.id}">
+        <span class="task-domain-badge" style="background:${DOMAIN_COLORS[t.domain]||'var(--accent)'}22;color:${DOMAIN_COLORS[t.domain]||'var(--accent)'}">${t.domain}</span>
+        <div style="flex:1"><div class="task-text">${t.text}</div><div class="task-deadline">Due: ${t.deadline}</div></div>
+        <div class="task-actions">
+          <button class="btn-accept" onclick="acceptTask(${t.id})">Done</button>
+          <button class="btn-dismiss" onclick="dismissTask(${t.id})">Dismiss</button>
+        </div>
+      </div>`).join('');
+    html += '</div>';
+  }
+  if (done.length) {
+    html += `<div class="section-label" style="margin-top:24px;margin-bottom:10px">Completed (${done.length})</div><div class="task-list">`;
+    html += done.map(t => `
+      <div class="task-item" id="task-${t.id}" style="opacity:0.45;">
+        <span class="task-domain-badge" style="background:var(--surface-2);color:var(--muted)">${t.domain}</span>
+        <div style="flex:1"><div class="task-text" style="text-decoration:line-through;color:var(--muted)">${t.text}</div></div>
+        <span style="font-size:18px">✓</span>
+      </div>`).join('');
+    html += '</div>';
+  }
+  wrap.innerHTML = html;
+}
+function updateTaskBadge() {
+  const count = loadTasks().filter(t=>!t.done).length;
+  const badge = document.getElementById('task-count-badge');
+  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline-flex' : 'none'; }
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTO TASK — monthly P&L on 30th
+// ═══════════════════════════════════════════════════════
+function maybeAutoTask() {
+  const day = new Date().getDate();
+  if (day !== 30) return;
+  const tasks = loadTasks();
+  const key = 'pnl-auto-' + new Date().toISOString().slice(0,7);
+  if (!tasks.find(t => t.id === key)) {
+    tasks.unshift({ id: key, text: `Log expenses and close ${new Date().toLocaleDateString('en-GB',{month:'long',year:'numeric'})} P&L`, domain:'Finances', deadline: new Date().toISOString().slice(0,10), done:false });
+    saveTasks(tasks);
+    renderTasks();
+    updateTaskBadge();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById('tab-'+id);
+  if (panel) panel.classList.add('active');
+  if (btn) { btn.classList.add('active'); }
+  else {
+    document.querySelectorAll('.nav-tab').forEach(t => {
+      if (t.textContent.toLowerCase().startsWith(id.toLowerCase())) t.classList.add('active');
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// FINANCES SUB-TABS
+// ═══════════════════════════════════════════════════════
+function switchFinTab(id, btn) {
+  document.querySelectorAll('.fin-subtab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.fin-subtab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('fin-'+id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+// TOAST + SOUND
+// ═══════════════════════════════════════════════════════
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+function playPop() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(600, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.05);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.15);
+  } catch {}
+}
+</script>
+</body>
+</html>
