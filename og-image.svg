@@ -32,8 +32,8 @@
   <text x="162" y="120" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#111111" letter-spacing="-0.5">KaizenEvol</text>
 
   <!-- Eyebrow pill -->
-  <rect x="80" y="186" width="362" height="36" rx="18" fill="#f0eeff"/>
-  <text x="261" y="210" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#6D3FC0" text-anchor="middle" letter-spacing="1.2">UK KITCHEN CLIENT ACQUISITION</text>
+  <rect x="80" y="186" width="430" height="36" rx="18" fill="#f0eeff"/>
+  <text x="295" y="210" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#6D3FC0" text-anchor="middle" letter-spacing="1.2">UK HOME RENOVATION CLIENT ENGINE</text>
 
   <!-- Main headline line 1 -->
   <text x="80" y="308" font-family="Arial Black, Arial, sans-serif" font-size="72" font-weight="900" fill="#111111" letter-spacing="-2">Stop Waiting for</text>
@@ -42,7 +42,7 @@
   <text x="80" y="396" font-family="Arial Black, Arial, sans-serif" font-size="72" font-weight="900" fill="#6D3FC0" letter-spacing="-2">Referrals.</text>
 
   <!-- Sub text -->
-  <text x="80" y="464" font-family="Arial, sans-serif" font-size="26" fill="#555555">Done-for-you Meta ads for UK kitchen remodellers.</text>
+  <text x="80" y="464" font-family="Arial, sans-serif" font-size="26" fill="#555555">Done-for-you Meta ads for UK renovation specialists.</text>
   <text x="80" y="498" font-family="Arial, sans-serif" font-size="26" fill="#555555">Multiple booked clients per month. Live in 7 days.</text>
 
   <!-- Bottom accent pill -->

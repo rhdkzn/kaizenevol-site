@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { businessName, email, phone, businessUrl, monthlyBudget } = req.body || {};
+  const { businessName, email, phone, businessUrl, trade, monthlyBudget } = req.body || {};
 
   if (!businessName || !email || !email.includes('@')) {
     return res.status(400).json({ error: 'Business name and a valid email are required.' });
@@ -43,10 +43,14 @@ export default async function handler(req, res) {
     phone: (phone || '').trim(),
     owner: '',
     area: '',
+    niche: (trade || '').trim(),
     source: 'Website',
     stage: 'new',
     score: 0,
-    notes: monthlyBudget ? `Ad budget: ${monthlyBudget}` : '',
+    notes: [
+      trade ? `Trade: ${trade}` : '',
+      monthlyBudget ? `Ad budget: ${monthlyBudget}` : '',
+    ].filter(Boolean).join(' · '),
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };
@@ -87,6 +91,7 @@ export default async function handler(req, res) {
           `New lead from the website.`,
           ``,
           `Business: ${businessName.trim()}`,
+          `Trade: ${trade || 'Not specified'}`,
           `Email: ${email.trim()}`,
           `Phone: ${phone || 'Not provided'}`,
           `Website: ${businessUrl || 'Not provided'}`,
