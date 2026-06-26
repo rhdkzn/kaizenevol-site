@@ -18,8 +18,9 @@
     Email ............. Rockylandscapes360@gmail.com
     Area .............. Bristol & South West
     Hours ............. Mon–Sat 08:00–18:00, Sun closed
-    Rating ............ 5.0 from 11 verified Google reviews
+    Rating ............ 5.0 from 12 Google reviews (Landscape Gardener)
     Team .............. Leon (founder), Alfie, + the crew
+    Type .............. service-area business — serves Bristol & nearby (no public address)
     Voice ............. "Built with precision. Made to last."
 
   STILL TO ADD BEFORE LAUNCH:
@@ -30,6 +31,42 @@
     • Wire the quote form to an email/CRM endpoint (see TODO in <script>).
   =========================================================================
 -->
+
+<!-- TODO: set canonical + og:url to the real live domain once known -->
+<link rel="canonical" href="/">
+<meta property="og:title" content="Rocky Landscapes | Landscaping, Paving & Stonemasonry — Bristol">
+<meta property="og:description" content="Premium landscaping, paving and stonemasonry across Bristol and the South West. Built with precision. Made to last. 5.0 on Google.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0C0C0C">
+
+<!-- Local-business structured data (from the Google Business Profile) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LandscapingBusiness",
+  "name": "Rocky Landscapes",
+  "description": "Premium landscaping, paving and stonemasonry across Bristol and the South West. Built with precision. Made to last.",
+  "telephone": "+447895838999",
+  "email": "Rockylandscapes360@gmail.com",
+  "priceRange": "££",
+  "areaServed": [
+    { "@type": "City", "name": "Bristol" },
+    { "@type": "AdministrativeArea", "name": "South West England" }
+  ],
+  "address": { "@type": "PostalAddress", "addressLocality": "Bristol", "addressRegion": "South West", "addressCountry": "GB" },
+  "knowsAbout": ["Landscaping", "Garden design", "Paving", "Patios", "Stonemasonry", "Driveways", "Fencing", "Turfing"],
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "08:00", "closes": "18:00" }
+  ],
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5.0", "reviewCount": "12", "bestRating": "5" },
+  "review": {
+    "@type": "Review",
+    "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+    "author": { "@type": "Person", "name": "Sarah Williams" },
+    "reviewBody": "Leon transformed my garden and I could not recommend him enough. Great communication, attention to detail, really tidy and happy to deal with any of my design curveballs."
+  }
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -425,7 +462,7 @@ footer { background: var(--ink); color: var(--white-70); padding: 4.5rem 0 2rem;
     </div>
     <div class="hero-meta">
       <span class="stars">★★★★★</span>
-      <span class="hero-meta-txt"><strong>5.0 on Google</strong> &middot; 11 verified reviews</span>
+      <span class="hero-meta-txt"><strong>5.0 on Google</strong> &middot; 12 reviews</span>
       <span class="hero-meta-sep"></span>
       <span class="hero-meta-txt">A decade on the tools &middot; Free quotes</span>
     </div>
@@ -452,7 +489,7 @@ footer { background: var(--ink); color: var(--white-70); padding: 4.5rem 0 2rem;
         <div class="about-stats">
           <div class="stat"><div class="num"><em>10</em>+</div><div class="lab">Years on the tools in Bristol</div></div>
           <div class="stat"><div class="num">5.0<em>★</em></div><div class="lab">Average rating on Google</div></div>
-          <div class="stat"><div class="num"><em>11</em></div><div class="lab">Verified customer reviews</div></div>
+          <div class="stat"><div class="num"><em>12</em></div><div class="lab">5-star Google reviews</div></div>
           <div class="stat"><div class="num">100<em>%</em></div><div class="lab">In-house — no subcontractors</div></div>
         </div>
       </div>
@@ -662,7 +699,7 @@ footer { background: var(--ink); color: var(--white-70); padding: 4.5rem 0 2rem;
       <div class="reviews-score">
         <span class="big">5.0</span>
         <span class="stars">★★★★★</span>
-        <span class="sub">11 verified reviews</span>
+        <span class="sub">12 reviews on Google</span>
       </div>
     </div>
     <div class="reviews-grid">
