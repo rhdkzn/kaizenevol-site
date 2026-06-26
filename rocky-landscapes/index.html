@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rocky Landscapes | Premium Landscaping, Paving &amp; Stonemasonry — Bristol</title>
+<meta name="description" content="Rocky Landscapes — premium landscaping, paving and stonemasonry across Bristol and the South West. Built with precision. Made to last. In-house crew, free quotes, 5.0 on Google. Get a free quote.">
+
+<!--
+  =========================================================================
+  ROCKY LANDSCAPES — full redesign by KaizenEvol
+  Faithful to the brand: stark black/white editorial, heavy Archivo uppercase
+  display, photography-led, WhatsApp-green used sparingly as accent.
+  Single self-contained file, no build step, Vercel-ready.
+
+  BAKED-IN REAL FACTS (from the live site):
+    Phone / WhatsApp .. 07895 838999  (wa.me/447895838999)
+    Email ............. Rockylandscapes360@gmail.com
+    Area .............. Bristol & South West
+    Hours ............. Mon–Sat 08:00–18:00, Sun closed
+    Rating ............ 5.0 from 11 verified Google reviews
+    Team .............. Leon (founder), Alfie, + the crew
+    Voice ............. "Built with precision. Made to last."
+
+  STILL TO ADD BEFORE LAUNCH:
+    • Real photos — hero + every .tile / .about-img / .ba-img is a styled
+      placeholder. Drop project photos in (see PHOTO notes) for the finished article.
+    • Reviews — Sarah Williams is a REAL review; the other two are clearly
+      marked placeholders. Swap them for your other Google reviews.
+    • Wire the quote form to an email/CRM endpoint (see TODO in <script>).
+  =========================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #0C0C0C;
+  --ink-2:      #151515;
+  --ink-3:      #232323;
+  --paper:      #FFFFFF;
+  --paper-2:    #F5F5F2;
+  --paper-3:    #ECECE6;
+  --line:       #E3E3DD;
+  --line-dark:  rgba(255,255,255,.12);
+  --text:       #161616;
+  --text-light: #66665F;
+  --text-muted: #9C9C95;
+  --green:      #2DB14B;
+  --green-dark: #1F8B39;
+  --wa:         #25D366;
+  --white-70:   rgba(255,255,255,.70);
+  --white-50:   rgba(255,255,255,.50);
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--text); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+h1, h2, h3, h4 { font-family: 'Archivo', sans-serif; font-weight: 800; line-height: .96; letter-spacing: -.02em; text-transform: uppercase; color: var(--ink); }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+::selection { background: var(--ink); color: #fff; }
+
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+/* ===== BUTTONS ===== */
+.btn { display: inline-flex; align-items: center; gap: .6rem; font-family: 'Archivo', sans-serif; font-size: .85rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 1.05rem 2rem; border-radius: 4px; transition: all .25s; border: 1.5px solid transparent; cursor: pointer; }
+.btn svg { width: 17px; height: 17px; }
+.btn-dark { background: var(--ink); color: #fff; }
+.btn-dark:hover { background: var(--ink-3); transform: translateY(-2px); }
+.btn-white { background: #fff; color: var(--ink); }
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+.btn-line-dark { color: var(--ink); border-color: var(--line); background: transparent; }
+.btn-line-dark:hover { border-color: var(--ink); }
+.btn-line-light { color: #fff; border-color: rgba(255,255,255,.4); background: transparent; }
+.btn-line-light:hover { background: rgba(255,255,255,.1); border-color: #fff; }
+
+/* ===== NAV ===== */
+nav { position: fixed; inset: 0 0 auto 0; z-index: 100; transition: background .3s, box-shadow .3s, border-color .3s; border-bottom: 1px solid transparent; }
+nav .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; height: 78px; display: flex; align-items: center; justify-content: space-between; }
+nav.scrolled { background: rgba(255,255,255,.93); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--line); box-shadow: 0 4px 30px rgba(0,0,0,.05); }
+.nav-logo { display: flex; align-items: center; gap: .7rem; }
+.nav-mark { width: 38px; height: 38px; border-radius: 6px; background: var(--ink); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .3s; }
+.nav-mark svg { width: 21px; height: 21px; }
+.nav-name { font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 1.12rem; letter-spacing: .005em; text-transform: uppercase; color: var(--ink); transition: color .3s; }
+nav:not(.scrolled).over-dark .nav-name { color: #fff; }
+nav:not(.scrolled).over-dark .nav-mark { background: rgba(255,255,255,.12); }
+nav:not(.scrolled).over-dark .nav-links a { color: var(--white-70); }
+nav:not(.scrolled).over-dark .nav-links a:hover { color: #fff; }
+nav:not(.scrolled).over-dark .nav-mobile-btn span { background: #fff; }
+.nav-links { display: flex; align-items: center; gap: 2.1rem; list-style: none; }
+.nav-links a { font-size: .8rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--text); transition: color .2s; }
+.nav-links a:hover { color: var(--green); }
+.nav-call { display: inline-flex; align-items: center; gap: .5rem; background: var(--ink) !important; color: #fff !important; padding: .62rem 1.25rem !important; border-radius: 4px; font-size: .8rem; font-weight: 700; letter-spacing: .03em; transition: background .25s, transform .25s; }
+.nav-call:hover { background: var(--green); transform: translateY(-1px); }
+.nav-call svg { width: 15px; height: 15px; }
+.nav-mobile-btn { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; }
+.nav-mobile-btn span { width: 26px; height: 2px; background: var(--ink); border-radius: 2px; transition: all .3s; }
+
+#mobileMenu { display: none; position: fixed; top: 78px; left: 0; right: 0; background: var(--ink); z-index: 99; padding: 1.2rem 2rem 2rem; }
+#mobileMenu ul { list-style: none; }
+#mobileMenu a { display: block; padding: .95rem .2rem; font-family: 'Archivo', sans-serif; font-size: 1.15rem; font-weight: 700; text-transform: uppercase; color: #fff; border-bottom: 1px solid var(--line-dark); }
+#mobileMenu .mm-call { margin-top: 1.2rem; text-align: center; background: var(--green); border-radius: 5px; border: none; }
+
+/* ===== HERO ===== */
+.hero { position: relative; min-height: 100vh; display: flex; align-items: flex-end; color: #fff; overflow: hidden; }
+/* PHOTO: replace gradient with → background: url('img/hero.jpg') center/cover no-repeat; */
+.hero-bg { position: absolute; inset: 0; background: linear-gradient(125deg, #2C2C2C 0%, #161616 55%, #0A0A0A 100%); z-index: 0; }
+.hero-bg::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.022) 0 2px, transparent 2px 24px); }
+.hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(0,0,0,.4) 0%, rgba(0,0,0,.15) 35%, rgba(0,0,0,.55) 75%, rgba(0,0,0,.85) 100%); }
+.hero-inner { position: relative; z-index: 2; width: 100%; max-width: 1280px; margin: 0 auto; padding: 9rem 2rem 4.5rem; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: .7rem; font-family: 'Archivo', sans-serif; font-size: .76rem; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; color: #fff; margin-bottom: 1.7rem; }
+.hero-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.hero h1 { font-family: 'Archivo', sans-serif; font-weight: 900; font-size: clamp(2.9rem, 8.6vw, 6.7rem); line-height: .9; letter-spacing: -.035em; color: #fff; max-width: 15ch; margin-bottom: 1.7rem; }
+.hero h1 em { font-style: normal; -webkit-text-stroke: 1.5px #fff; color: transparent; }
+.hero-sub { font-size: 1.13rem; color: var(--white-70); max-width: 540px; line-height: 1.65; margin-bottom: 2.4rem; }
+.hero-actions { display: flex; gap: .9rem; flex-wrap: wrap; align-items: center; }
+.hero-meta { display: flex; align-items: center; gap: 1.4rem; margin-top: 3rem; flex-wrap: wrap; }
+.hero-meta .stars { color: var(--green); font-size: 1rem; letter-spacing: 1px; }
+.hero-meta-txt { font-size: .85rem; color: var(--white-70); }
+.hero-meta-txt strong { color: #fff; font-weight: 700; }
+.hero-meta-sep { width: 1px; height: 26px; background: rgba(255,255,255,.2); }
+.hero-scroll { position: absolute; bottom: 1.8rem; left: 50%; transform: translateX(-50%); z-index: 2; color: var(--white-50); font-size: .66rem; letter-spacing: .25em; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+.hero-scroll .bar { width: 1px; height: 34px; background: linear-gradient(var(--green), transparent); }
+
+/* ===== STRIP ===== */
+.strip { background: var(--ink); overflow: hidden; padding: 1.1rem 0; border-top: 1px solid var(--ink-3); border-bottom: 1px solid var(--ink-3); }
+.strip-track { display: flex; width: max-content; white-space: nowrap; animation: marquee 32s linear infinite; }
+.strip-item { font-family: 'Archivo', sans-serif; font-size: .9rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #fff; display: inline-flex; align-items: center; }
+.strip-item::after { content: '✦'; color: var(--green); margin: 0 2.2rem; font-size: .7rem; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ===== SECTION BASICS ===== */
+section { padding: 7rem 0; }
+.s-label { display: inline-flex; align-items: center; gap: .6rem; font-family: 'Archivo', sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--green); margin-bottom: 1.3rem; }
+.s-label::before { content: ''; width: 26px; height: 2px; background: var(--green); }
+.s-title { font-size: clamp(2.1rem, 4.8vw, 3.8rem); font-weight: 900; line-height: .94; letter-spacing: -.028em; margin-bottom: 1.2rem; }
+.s-title em { font-style: normal; -webkit-text-stroke: 1.4px var(--ink); color: transparent; }
+.s-desc { font-size: 1.05rem; color: var(--text-light); max-width: 580px; line-height: 1.7; }
+.s-head { margin-bottom: 3.6rem; }
+.s-head.center { text-align: center; }
+.s-head.center .s-label { justify-content: center; }
+.s-head.center .s-desc { margin: 0 auto; }
+.s-head.row { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+.s-head.row .s-desc { margin-bottom: .4rem; }
+
+/* ===== ABOUT / DECADE ===== */
+.about { background: var(--ink); color: #fff; }
+.about .s-title, .about .s-desc { color: #fff; }
+.about .s-desc { color: var(--white-70); }
+.about-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 4.5rem; align-items: center; }
+/* PHOTO: set background:url('img/team.jpg') center/cover on .about-img */
+.about-img { aspect-ratio: 4/3.5; border-radius: 10px; background: linear-gradient(150deg, #333 0%, #181818 100%); position: relative; overflow: hidden; }
+.about-img::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 2px, transparent 2px 18px); }
+.about-img-tag { position: absolute; left: 1.4rem; bottom: 1.4rem; z-index: 2; font-family: 'Archivo', sans-serif; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--white-70); }
+.about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4rem 2rem; margin-top: 2.8rem; padding-top: 2.4rem; border-top: 1px solid var(--line-dark); }
+.stat .num { font-family: 'Archivo', sans-serif; font-size: 2.9rem; font-weight: 900; line-height: 1; color: #fff; letter-spacing: -.03em; }
+.stat .num em { font-style: normal; color: var(--green); }
+.stat .lab { font-size: .82rem; color: var(--white-70); margin-top: .5rem; }
+
+/* ===== VALUES ===== */
+.values { background: var(--paper); }
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3rem; }
+.val-card { border: 1px solid var(--line); border-radius: 10px; padding: 2.4rem 2rem; transition: all .3s; }
+.val-card:hover { background: var(--ink); border-color: var(--ink); transform: translateY(-4px); }
+.val-card:hover h3, .val-card:hover .val-no { color: #fff; }
+.val-card:hover p { color: var(--white-70); }
+.val-card:hover .val-ico { background: rgba(45,177,75,.2); color: var(--green); }
+.val-no { font-family: 'Archivo', sans-serif; font-size: .82rem; font-weight: 800; letter-spacing: .1em; color: var(--text-muted); transition: color .3s; }
+.val-ico { width: 52px; height: 52px; border-radius: 11px; background: var(--paper-2); color: var(--ink); display: flex; align-items: center; justify-content: center; margin: 1.2rem 0 1.3rem; transition: all .3s; }
+.val-ico svg { width: 25px; height: 25px; }
+.val-card h3 { font-size: 1.45rem; font-weight: 800; margin-bottom: .6rem; transition: color .3s; }
+.val-card p { font-size: .92rem; color: var(--text-light); line-height: 1.65; transition: color .3s; }
+
+/* ===== SERVICES ===== */
+.services { background: var(--paper-2); }
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3rem; }
+.svc { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 2.2rem 1.9rem; transition: all .3s; position: relative; overflow: hidden; }
+.svc::before { content: ''; position: absolute; inset: auto 0 0 0; height: 3px; background: var(--green); transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+.svc:hover { transform: translateY(-5px); box-shadow: 0 22px 50px -24px rgba(0,0,0,.28); border-color: transparent; }
+.svc:hover::before { transform: scaleX(1); }
+.svc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.3rem; }
+.svc-ico { width: 54px; height: 54px; border-radius: 11px; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; }
+.svc-ico svg { width: 26px; height: 26px; }
+.svc-no { font-family: 'Archivo', sans-serif; font-size: .9rem; font-weight: 800; color: var(--text-muted); }
+.svc h3 { font-size: 1.32rem; font-weight: 800; margin-bottom: .6rem; }
+.svc p { font-size: .9rem; color: var(--text-light); line-height: 1.65; margin-bottom: 1.2rem; }
+.svc-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+.svc-tag { font-size: .7rem; font-weight: 600; color: var(--text-light); background: var(--paper-2); border: 1px solid var(--line); padding: .25rem .65rem; border-radius: 100px; }
+
+/* ===== ALSO OFFERING ===== */
+.also { background: var(--ink); color: #fff; padding-top: 0; margin-top: -1px; }
+.also-inner { border-top: 1px solid var(--ink-3); padding-top: 7rem; }
+.also .s-title { color: #fff; }
+.also-list { columns: 4; column-gap: 2.5rem; margin-top: 1rem; }
+.also-list .item { break-inside: avoid; display: flex; align-items: center; gap: .6rem; padding: .55rem 0; font-size: .92rem; color: var(--white-70); border-bottom: 1px solid var(--line-dark); }
+.also-list .item svg { width: 13px; height: 13px; color: var(--green); flex-shrink: 0; }
+
+/* ===== PROJECTS ===== */
+.projects { background: var(--paper); }
+.proj-filters { display: flex; gap: .55rem; flex-wrap: wrap; margin-bottom: 2.2rem; }
+.pf { font-family: 'Archivo', sans-serif; font-size: .74rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: .6rem 1.2rem; border-radius: 100px; border: 1.5px solid var(--line); background: transparent; color: var(--text-light); cursor: pointer; transition: all .22s; }
+.pf:hover { border-color: var(--ink); color: var(--ink); }
+.pf.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+.proj-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 210px; gap: 1rem; }
+/* PHOTO: set style="background:url('img/...') center/cover" on each .tile and delete its caption */
+.tile { border-radius: 10px; position: relative; overflow: hidden; background-size: cover; background-position: center; transition: transform .35s; }
+.tile:hover { transform: scale(.985); }
+.tile.wide { grid-column: span 2; }
+.tile.tall { grid-row: span 2; }
+.tile::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 42%, rgba(0,0,0,.72) 100%); z-index: 1; }
+.tile-1 { background: linear-gradient(150deg,#3a3a3a,#121212); }
+.tile-2 { background: linear-gradient(150deg,#2c4a35,#0c0c0c); }
+.tile-3 { background: linear-gradient(150deg,#46413a,#15130f); }
+.tile-4 { background: linear-gradient(150deg,#2f5740,#0a0a0a); }
+.tile-5 { background: linear-gradient(150deg,#3d3d3d,#0e0e0e); }
+.tile-6 { background: linear-gradient(150deg,#4a463f,#141210); }
+.tile-cap { position: absolute; left: 1.1rem; bottom: 1rem; z-index: 2; }
+.tile-cap span { display: block; font-family: 'Archivo', sans-serif; font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--green); margin-bottom: .2rem; }
+.tile-cap strong { font-family: 'Archivo', sans-serif; font-size: .92rem; font-weight: 700; text-transform: uppercase; letter-spacing: -.01em; color: #fff; }
+
+/* ===== BEFORE / AFTER ===== */
+.ba { background: var(--paper-2); }
+.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+/* PHOTO: set background:url('img/before.jpg' / 'after.jpg') center/cover on .ba-img */
+.ba-img { aspect-ratio: 4/3; border-radius: 10px; position: relative; overflow: hidden; }
+.ba-before { background: linear-gradient(150deg, #5a5249, #2a2620); }
+.ba-after { background: linear-gradient(150deg, #2f5740, #16281d); }
+.ba-img::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 2px, transparent 2px 18px); }
+.ba-pin { position: absolute; top: 1rem; left: 1rem; z-index: 2; font-family: 'Archivo', sans-serif; font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #fff; background: rgba(0,0,0,.55); backdrop-filter: blur(4px); padding: .4rem .9rem; border-radius: 100px; }
+.ba-pin.after { background: var(--green); }
+
+/* ===== TEAM ===== */
+.team { background: var(--paper); }
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3rem; }
+.tm { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.tm-img { aspect-ratio: 4/3.3; background: linear-gradient(150deg, #333, #161616); position: relative; }
+.tm-img::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 2px, transparent 2px 18px); }
+.tm-body { padding: 1.5rem 1.6rem; }
+.tm-role { font-family: 'Archivo', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--green); margin-bottom: .35rem; }
+.tm-name { font-size: 1.3rem; font-weight: 800; margin-bottom: .5rem; }
+.tm-body p { font-size: .88rem; color: var(--text-light); line-height: 1.6; }
+
+/* ===== REVIEWS ===== */
+.reviews { background: var(--ink); color: #fff; }
+.reviews .s-title { color: #fff; }
+.reviews-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; margin-bottom: 3rem; }
+.reviews-score { text-align: right; }
+.reviews-score .big { font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 3.4rem; line-height: 1; color: #fff; }
+.reviews-score .stars { color: var(--green); letter-spacing: 2px; font-size: 1.1rem; display: block; margin: .4rem 0 .3rem; }
+.reviews-score .sub { font-size: .8rem; color: var(--white-70); letter-spacing: .04em; }
+.reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3rem; }
+.rev { background: var(--ink-2); border: 1px solid var(--ink-3); border-radius: 10px; padding: 2rem; display: flex; flex-direction: column; }
+.rev-stars { color: var(--green); letter-spacing: 1px; font-size: 1rem; margin-bottom: 1.1rem; }
+.rev-quote { font-size: 1rem; line-height: 1.7; color: #fff; margin-bottom: 1.6rem; flex: 1; }
+.rev-author { display: flex; align-items: center; gap: .8rem; }
+.rev-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 1.05rem; flex-shrink: 0; }
+.rev-name { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: .9rem; text-transform: uppercase; color: #fff; }
+.rev-loc { font-size: .76rem; color: var(--white-70); }
+.rev.placeholder { border-style: dashed; }
+
+/* ===== CTA ===== */
+.cta { position: relative; overflow: hidden; background: var(--ink); color: #fff; }
+.cta::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 2px, transparent 2px 26px); }
+.cta-inner { position: relative; z-index: 1; text-align: center; max-width: 840px; margin: 0 auto; }
+.cta .s-label { color: var(--green); justify-content: center; }
+.cta h2 { color: #fff; font-size: clamp(2.4rem, 6vw, 4.6rem); font-weight: 900; letter-spacing: -.035em; line-height: .94; margin-bottom: 1.2rem; }
+.cta h2 em { font-style: normal; -webkit-text-stroke: 1.4px #fff; color: transparent; }
+.cta p { color: var(--white-70); font-size: 1.1rem; line-height: 1.65; margin-bottom: 2.3rem; }
+.cta-actions { display: flex; gap: .9rem; justify-content: center; flex-wrap: wrap; }
+
+/* ===== CONTACT ===== */
+.contact { background: var(--paper-2); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4.5rem; align-items: start; }
+.contact-info .s-desc { margin-bottom: 2.4rem; }
+.c-row { display: flex; gap: 1rem; margin-bottom: 1.4rem; align-items: center; }
+.c-ico { width: 48px; height: 48px; border-radius: 11px; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.c-ico svg { width: 21px; height: 21px; }
+.c-row .lab { font-family: 'Archivo', sans-serif; font-size: .66rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--green); margin-bottom: .2rem; }
+.c-row .val { font-size: 1.04rem; font-weight: 600; color: var(--ink); }
+.c-row .val.sm { font-size: .92rem; font-weight: 500; color: var(--text-light); }
+.c-hours { background: var(--paper); border: 1px solid var(--line); border-radius: 11px; padding: 1.5rem; margin-top: 2rem; }
+.c-hours .lab { font-family: 'Archivo', sans-serif; font-size: .66rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--green); margin-bottom: .9rem; }
+.c-hours .hrow { display: flex; justify-content: space-between; font-size: .87rem; padding: .32rem 0; color: var(--text-light); }
+.c-hours .hrow strong { color: var(--ink); font-weight: 600; }
+
+.qform { background: var(--ink); border-radius: 14px; padding: 2.7rem; color: #fff; }
+.qform h3 { color: #fff; font-size: 1.7rem; font-weight: 800; margin-bottom: .45rem; }
+.qform > p { font-size: .92rem; color: var(--white-70); margin-bottom: 2rem; }
+.fr { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.fg { margin-bottom: 1.1rem; }
+.fg label { display: block; font-family: 'Archivo', sans-serif; font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--white-70); margin-bottom: .45rem; }
+.fg input, .fg select, .fg textarea { width: 100%; padding: .9rem 1rem; border: 1.5px solid var(--ink-3); border-radius: 7px; font-family: 'Inter', sans-serif; font-size: .92rem; color: #fff; background: var(--ink-2); transition: border-color .2s, box-shadow .2s; appearance: none; -webkit-appearance: none; }
+.fg input::placeholder, .fg textarea::placeholder { color: var(--text-muted); }
+.fg select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239C9C95' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.4rem; }
+.fg select option { color: #fff; background: var(--ink-2); }
+.fg input:focus, .fg select:focus, .fg textarea:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(45,177,75,.18); }
+.fg textarea { resize: none; height: 96px; }
+.qsubmit { width: 100%; padding: 1.1rem; background: var(--green); color: #fff; border: none; border-radius: 7px; font-family: 'Archivo', sans-serif; font-size: .9rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; transition: background .25s; display: inline-flex; align-items: center; justify-content: center; gap: .55rem; }
+.qsubmit:hover { background: var(--green-dark); }
+.qsubmit svg { width: 17px; height: 17px; }
+.qnote { font-size: .76rem; color: var(--text-muted); text-align: center; margin-top: .9rem; }
+.qsuccess { display: none; text-align: center; padding: 2rem 1rem; }
+.qsuccess.show { display: block; }
+.qsuccess .check { width: 62px; height: 62px; border-radius: 50%; background: rgba(45,177,75,.18); color: var(--green); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.3rem; }
+.qsuccess .check svg { width: 32px; height: 32px; }
+.qsuccess h3 { color: #fff; margin-bottom: .5rem; }
+.qsuccess p { font-size: .92rem; color: var(--white-70); }
+
+/* ===== FOOTER ===== */
+footer { background: var(--ink); color: var(--white-70); padding: 4.5rem 0 2rem; }
+.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1.3fr; gap: 3rem; padding-bottom: 3rem; margin-bottom: 2.2rem; border-bottom: 1px solid var(--line-dark); }
+.footer-brand .nav-logo { margin-bottom: 1.2rem; }
+.footer-brand .nav-name { color: #fff; }
+.footer-brand .nav-mark { background: rgba(255,255,255,.12); }
+.footer-brand p { font-size: .88rem; line-height: 1.75; max-width: 300px; color: var(--white-70); }
+.footer-col h4 { font-family: 'Archivo', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.1rem; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
+.footer-col ul a { font-size: .88rem; color: var(--white-70); transition: color .2s; }
+.footer-col ul a:hover { color: var(--green); }
+.fci { display: flex; align-items: center; gap: .6rem; font-size: .88rem; margin-bottom: .8rem; color: #fff; }
+.fci svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.footer-bottom p { font-size: .76rem; color: var(--text-muted); }
+.footer-bottom .credit { color: var(--green); }
+
+/* ===== WHATSAPP FLOAT ===== */
+.wa-float { position: fixed; right: 1.4rem; bottom: 1.4rem; z-index: 90; display: inline-flex; align-items: center; gap: .6rem; background: var(--wa); color: #fff; padding: .85rem 1.3rem; border-radius: 100px; font-family: 'Archivo', sans-serif; font-size: .82rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; box-shadow: 0 10px 30px rgba(37,211,102,.4); transition: transform .25s, box-shadow .25s; }
+.wa-float:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(37,211,102,.5); }
+.wa-float svg { width: 21px; height: 21px; }
+
+/* ===== REVEAL ===== */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .reveal { opacity: 1; transform: none; }
+  .strip-track { animation: none !important; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .values-grid, .services-grid, .team-grid, .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .proj-grid { grid-template-columns: repeat(2, 1fr); }
+  .also-list { columns: 2; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+}
+@media (max-width: 820px) {
+  .nav-links { display: none; }
+  .nav-mobile-btn { display: flex; }
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .hero h1 { font-size: clamp(2.8rem, 13vw, 4.6rem); }
+}
+@media (max-width: 600px) {
+  .wrap { padding: 0 1.4rem; }
+  section { padding: 4.8rem 0; }
+  .also-inner { padding-top: 4.8rem; }
+  .hero-inner { padding: 7.5rem 1.4rem 3.5rem; }
+  .values-grid, .services-grid, .team-grid, .reviews-grid, .ba-grid { grid-template-columns: 1fr; }
+  .about-stats { gap: 1.8rem 1.5rem; }
+  .proj-grid { grid-template-columns: 1fr; grid-auto-rows: 220px; }
+  .tile.wide, .tile.tall { grid-column: auto; grid-row: auto; }
+  .also-list { columns: 1; }
+  .fr { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+  .qform { padding: 2rem 1.5rem; }
+  .reviews-top { justify-content: flex-start; }
+  .reviews-score { text-align: left; }
+  .wa-float span { display: none; }
+  .wa-float { padding: .95rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav id="nav" class="over-dark">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">
+      <span class="nav-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#2DB14B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M5 20 9 8l4 7 3-5 3 10"/></svg></span>
+      <span class="nav-name">Rocky Landscapes</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="tel:07895838999" class="nav-call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>07895 838999</a></li>
+    </ul>
+    <div class="nav-mobile-btn" id="menuBtn"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<div id="mobileMenu">
+  <ul>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="tel:07895838999" class="mm-call">Call 07895 838999</a></li>
+  </ul>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="dot"></span>Bristol &amp; the South West</div>
+    <h1>Transforming outdoor spaces with <em>precision</em></h1>
+    <p class="hero-sub">Premium landscaping, paving and stonemasonry — built with precision, made to last. One in-house Bristol crew, from first sketch to final sweep. No subcontractors, no shortcuts.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-white">Get a Free Quote
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#projects" class="btn btn-line-light">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>
+        See Our Work</a>
+    </div>
+    <div class="hero-meta">
+      <span class="stars">★★★★★</span>
+      <span class="hero-meta-txt"><strong>5.0 on Google</strong> &middot; 11 verified reviews</span>
+      <span class="hero-meta-sep"></span>
+      <span class="hero-meta-txt">A decade on the tools &middot; Free quotes</span>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Scroll</span><span class="bar"></span></div>
+</section>
+
+<!-- ===== STRIP ===== -->
+<div class="strip">
+  <div class="strip-track">
+    <span class="strip-item">Landscaping</span><span class="strip-item">Paving &amp; Patios</span><span class="strip-item">Stonemasonry</span><span class="strip-item">Garden Design</span><span class="strip-item">Driveways</span><span class="strip-item">Fencing</span><span class="strip-item">Hardscaping</span>
+    <span class="strip-item">Landscaping</span><span class="strip-item">Paving &amp; Patios</span><span class="strip-item">Stonemasonry</span><span class="strip-item">Garden Design</span><span class="strip-item">Driveways</span><span class="strip-item">Fencing</span><span class="strip-item">Hardscaping</span>
+  </div>
+</div>
+
+<!-- ===== ABOUT / A DECADE ===== -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-content reveal">
+        <span class="s-label">Built on craft. Driven by detail.</span>
+        <h2 class="s-title">A decade of dirt, stone <em>&amp; sweat</em></h2>
+        <p class="s-desc">Rocky Landscapes is a Bristol crew that treats every garden like it's our own. The difference is in the bits you don't see — foundations, drainage, levels — done properly so the finish lasts for years, not seasons. Premium landscaping, paving and stonemasonry across Bristol and the South West. Built with precision. Made to last.</p>
+        <div class="about-stats">
+          <div class="stat"><div class="num"><em>10</em>+</div><div class="lab">Years on the tools in Bristol</div></div>
+          <div class="stat"><div class="num">5.0<em>★</em></div><div class="lab">Average rating on Google</div></div>
+          <div class="stat"><div class="num"><em>11</em></div><div class="lab">Verified customer reviews</div></div>
+          <div class="stat"><div class="num">100<em>%</em></div><div class="lab">In-house — no subcontractors</div></div>
+        </div>
+      </div>
+      <div class="about-visual reveal">
+        <div class="about-img"><span class="about-img-tag">// Rocky Landscapes &middot; on site in Bristol</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VALUES ===== -->
+<section class="values">
+  <div class="wrap">
+    <div class="s-head center reveal">
+      <span class="s-label">What we stand for</span>
+      <h2 class="s-title">Three things, <em>non-negotiable</em></h2>
+    </div>
+    <div class="values-grid">
+      <div class="val-card reveal">
+        <span class="val-no">01</span>
+        <div class="val-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.1 2.1-1.8-.3-.3-1.8 2.1-2.1Z"/></svg></div>
+        <h3>Craftsmanship</h3>
+        <p>We build like it carries our name — because it does. Proper foundations, clean lines, and a finish that holds up to real life and real weather.</p>
+      </div>
+      <div class="val-card reveal">
+        <span class="val-no">02</span>
+        <div class="val-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+        <h3>Honesty</h3>
+        <p>Clear quotes, no vague extras, no surprises at the end. If something needs saying, we say it — straight, and before the digging starts.</p>
+      </div>
+      <div class="val-card reveal">
+        <span class="val-no">03</span>
+        <div class="val-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
+        <h3>Respect</h3>
+        <p>Your home, your time, your space. Tidy site every evening, spotless on the day we leave, and a crew you're glad you let through the gate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="s-head row reveal">
+      <div>
+        <span class="s-label">Everything from soil to stone</span>
+        <h2 class="s-title">Our <em>services</em></h2>
+      </div>
+      <p class="s-desc">One team, one standard. Every service is delivered in-house by our own crew — no chains of subcontractors.</p>
+    </div>
+    <div class="services-grid">
+
+      <div class="svc reveal">
+        <div class="svc-top"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 4-3.5 7-7 11C8.5 16 5 13 5 9a7 7 0 0 1 7-7Z"/><path d="M12 9h.01"/></svg></div><span class="svc-no">01</span></div>
+        <h3>Landscaping &amp; Garden Design</h3>
+        <p>Full garden transformations from concept to completion — design, levelling, planting and groundskeeping, handled end to end.</p>
+        <div class="svc-tags"><span class="svc-tag">Bespoke design</span><span class="svc-tag">Project management</span><span class="svc-tag">Planting &amp; lawns</span></div>
+      </div>
+
+      <div class="svc reveal">
+        <div class="svc-top"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></div><span class="svc-no">02</span></div>
+        <h3>Paving &amp; Patios</h3>
+        <p>Porcelain, natural stone and block paving laid on proper foundations — level, draining right, and built to stay that way.</p>
+        <div class="svc-tags"><span class="svc-tag">Porcelain</span><span class="svc-tag">Natural stone</span><span class="svc-tag">Block paving</span></div>
+      </div>
+
+      <div class="svc reveal">
+        <div class="svc-top"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="14" width="6" height="6"/><rect x="15" y="14" width="6" height="6"/><rect x="9" y="8" width="6" height="6"/><path d="M3 14h18"/></svg></div><span class="svc-no">03</span></div>
+        <h3>Stonemasonry</h3>
+        <p>Retaining walls, raised beds, steps and feature stonework — engineered to hold ground and finished to match the house.</p>
+        <div class="svc-tags"><span class="svc-tag">Retaining walls</span><span class="svc-tag">Steps</span><span class="svc-tag">Concrete masonry</span></div>
+      </div>
+
+      <div class="svc reveal">
+        <div class="svc-top"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5M12 21V5M20 21V5"/><path d="M2 8h20M2 13h20"/></svg></div><span class="svc-no">04</span></div>
+        <h3>Fencing &amp; Decking</h3>
+        <p>Closeboard, feather-edge and composite fencing, plus hardwood and composite decking built square, solid and rot-resistant.</p>
+        <div class="svc-tags"><span class="svc-tag">Composite</span><span class="svc-tag">Closeboard</span><span class="svc-tag">Decking</span></div>
+      </div>
+
+      <div class="svc reveal">
+        <div class="svc-top"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h18"/><path d="M5 19V9l7-5 7 5v10"/><path d="M9 19v-6h6v6"/></svg></div><span class="svc-no">05</span></div>
+        <h3>Driveways &amp; Paths</h3>
+        <p>Block paving, resin-bound and gravel driveways and paths with drainage and sub-base done properly — SuDS compliant.</p>
+        <div class="svc-tags"><span class="svc-tag">Resin-bound</span><span class="svc-tag">Block paving</span><span class="svc-tag">Gravel</span></div>
+      </div>
+
+      <div class="svc reveal">
+        <div class="svc-top"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12c0-3 2-5 5-5 0 3-2 5-5 5Z"/><path d="M12 14c0-3-2-5-5-5 0 3 2 5 5 5Z"/></svg></div><span class="svc-no">06</span></div>
+        <h3>Turfing &amp; Maintenance</h3>
+        <p>Quality turf and premium artificial grass, plus ongoing groundskeeping to keep it all looking sharp, year-round.</p>
+        <div class="svc-tags"><span class="svc-tag">Real turf</span><span class="svc-tag">Artificial grass</span><span class="svc-tag">Groundskeeping</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== ALSO OFFERING ===== -->
+<section class="also">
+  <div class="wrap">
+    <div class="also-inner reveal">
+      <span class="s-label">Also offering</span>
+      <h2 class="s-title">A full list of <em>what we do</em></h2>
+      <div class="also-list">
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Outdoor water features</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Pool landscaping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Retaining walls</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Rock landscaping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Stone landscaping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Stonemasonry</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Tree landscaping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Path landscaping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Garden drainage</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Garden levelling</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Paving &amp; patios</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Grading &amp; resloping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Groundskeeping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Hardscaping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Landscape installations</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Landscape management</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Lawn landscaping</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Outdoor step construction</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Concrete masonry</div>
+        <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>Garden decorating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJECTS ===== -->
+<section class="projects" id="projects">
+  <div class="wrap">
+    <div class="s-head row reveal">
+      <div>
+        <span class="s-label">Recent transformations</span>
+        <h2 class="s-title">Our work, <em>our word</em></h2>
+      </div>
+      <p class="s-desc">A few recent gardens, driveways and patios across Bristol. Picture yours next.</p>
+    </div>
+    <div class="proj-filters reveal">
+      <button class="pf active">All</button>
+      <button class="pf">Landscaping</button>
+      <button class="pf">Paving</button>
+      <button class="pf">Stonemasonry</button>
+      <button class="pf">Fencing</button>
+      <button class="pf">Hardscaping</button>
+    </div>
+    <div class="proj-grid reveal">
+      <div class="tile tall tile-2"><div class="tile-cap"><span>Landscaping</span><strong>Rear garden transformation</strong></div></div>
+      <div class="tile wide tile-3"><div class="tile-cap"><span>Paving</span><strong>Cream porcelain patio</strong></div></div>
+      <div class="tile tile-1"><div class="tile-cap"><span>Fencing</span><strong>Composite screen</strong></div></div>
+      <div class="tile tile-4"><div class="tile-cap"><span>Landscaping</span><strong>New lawn &amp; edging</strong></div></div>
+      <div class="tile wide tile-5"><div class="tile-cap"><span>Hardscaping</span><strong>Full rear redesign</strong></div></div>
+      <div class="tile tile-6"><div class="tile-cap"><span>Stonemasonry</span><strong>Raised beds &amp; steps</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BEFORE / AFTER ===== -->
+<section class="ba">
+  <div class="wrap">
+    <div class="s-head center reveal">
+      <span class="s-label">Before &amp; after</span>
+      <h2 class="s-title">From rubble <em>to refined</em></h2>
+      <p class="s-desc">Same garden, six weeks apart. This is what precision groundwork and a proper crew get you.</p>
+    </div>
+    <div class="ba-grid reveal">
+      <div class="ba-img ba-before"><span class="ba-pin">Before</span></div>
+      <div class="ba-img ba-after"><span class="ba-pin after">After</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TEAM ===== -->
+<section class="team">
+  <div class="wrap">
+    <div class="s-head center reveal">
+      <span class="s-label">Hands you can trust on site</span>
+      <h2 class="s-title">Meet the <em>crew</em></h2>
+    </div>
+    <div class="team-grid">
+      <div class="tm reveal">
+        <div class="tm-img"></div>
+        <div class="tm-body"><div class="tm-role">Founder &amp; lead landscaper</div><div class="tm-name">Leon</div><p>The name on the van. A decade of building Bristol gardens, on every site from first measure to final sign-off.</p></div>
+      </div>
+      <div class="tm reveal">
+        <div class="tm-img"></div>
+        <div class="tm-body"><div class="tm-role">Landscaper</div><div class="tm-name">Alfie</div><p>Sharp eye, steady hands. Alfie keeps the detail tight — the cuts, the lines and the finish you actually notice.</p></div>
+      </div>
+      <div class="tm reveal">
+        <div class="tm-img"></div>
+        <div class="tm-body"><div class="tm-role">On the tools</div><div class="tm-name">The Crew</div><p>One in-house team, no rotating subcontractors. The same faces you met at the quote are the ones doing the work.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REVIEWS ===== -->
+<section class="reviews" id="reviews">
+  <div class="wrap">
+    <div class="reviews-top reveal">
+      <div>
+        <span class="s-label">Earned, not bought</span>
+        <h2 class="s-title">5.0 stars on <em>Google</em></h2>
+      </div>
+      <div class="reviews-score">
+        <span class="big">5.0</span>
+        <span class="stars">★★★★★</span>
+        <span class="sub">11 verified reviews</span>
+      </div>
+    </div>
+    <div class="reviews-grid">
+      <!-- REAL review (Sarah Williams, Google) -->
+      <div class="rev reveal">
+        <div class="rev-stars">★★★★★</div>
+        <p class="rev-quote">"Leon transformed my garden and I could not recommend him enough. Great communication, attention to detail, really tidy and happy to deal with any of my design curveballs. So grateful to him for getting it done in great time even during the heatwave!"</p>
+        <div class="rev-author"><div class="rev-avatar">S</div><div><div class="rev-name">Sarah Williams</div><div class="rev-loc">Google review &middot; Bristol</div></div></div>
+      </div>
+      <!-- PLACEHOLDER — swap for a real Google review -->
+      <div class="rev placeholder reveal">
+        <div class="rev-stars">★★★★★</div>
+        <p class="rev-quote">"Quoted, turned up when they said, and finished on time. The patio and new driveway look superb and the drainage is spot on. Proper tradesmen who take real pride in the work."</p>
+        <div class="rev-author"><div class="rev-avatar">J</div><div><div class="rev-name">[ Add review ]</div><div class="rev-loc">Google review &middot; Bristol</div></div></div>
+      </div>
+      <!-- PLACEHOLDER — swap for a real Google review -->
+      <div class="rev placeholder reveal">
+        <div class="rev-stars">★★★★★</div>
+        <p class="rev-quote">"We'd been let down by another company who left the job half done. Rocky Landscapes came in, sorted everything and delivered exactly what was promised. Such a relief."</p>
+        <div class="rev-author"><div class="rev-avatar">D</div><div><div class="rev-name">[ Add review ]</div><div class="rev-loc">Google review &middot; Bristol</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta">
+  <div class="wrap">
+    <div class="cta-inner reveal">
+      <span class="s-label">Let's build your outdoor space</span>
+      <h2>Let's earn <em>yours next</em></h2>
+      <p>Tell us what you're thinking and we'll arrange a free, no-pressure site visit. Honest advice, a clear price, and no obligation to go ahead. We usually reply within 24 hours.</p>
+      <div class="cta-actions">
+        <a href="#contact" class="btn btn-white">Get a Free Quote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="tel:07895838999" class="btn btn-line-light">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+          Call 07895 838999</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <span class="s-label">Get a free quote</span>
+        <h2 class="s-title">Direct <em>lines</em></h2>
+        <p class="s-desc">Tell us about your project and we'll arrange a free site visit. Quotes are always free, with no pressure. Prefer to talk? Call, WhatsApp or email — whatever's easiest.</p>
+        <div class="c-row">
+          <div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg></div>
+          <div><div class="lab">Call or text</div><div class="val"><a href="tel:07895838999">07895 838999</a></div></div>
+        </div>
+        <div class="c-row">
+          <div class="c-ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.413c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.043z"/></svg></div>
+          <div><div class="lab">WhatsApp</div><div class="val"><a href="https://wa.me/447895838999" target="_blank" rel="noopener">07895 838999</a></div></div>
+        </div>
+        <div class="c-row">
+          <div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg></div>
+          <div><div class="lab">Email</div><div class="val sm"><a href="mailto:Rockylandscapes360@gmail.com">Rockylandscapes360@gmail.com</a></div></div>
+        </div>
+        <div class="c-row">
+          <div class="c-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="lab">Service area</div><div class="val sm">Bristol &amp; the South West</div></div>
+        </div>
+        <div class="c-hours">
+          <div class="lab">Hours</div>
+          <div class="hrow"><span>Monday – Saturday</span><strong>08:00 – 18:00</strong></div>
+          <div class="hrow"><span>Sunday</span><strong>Closed</strong></div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="qform">
+          <form id="quoteForm" novalidate>
+            <h3>Request your free quote</h3>
+            <p>We usually reply within 24 hours.</p>
+            <div class="fr">
+              <div class="fg"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Your name" required></div>
+              <div class="fg"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" placeholder="Best number" required></div>
+            </div>
+            <div class="fg"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="you@email.com"></div>
+            <div class="fg"><label for="service">Service</label>
+              <select id="service" name="service">
+                <option value="">Select a service…</option>
+                <option>Landscaping &amp; garden design</option>
+                <option>Paving / patio</option>
+                <option>Stonemasonry</option>
+                <option>Fencing / decking</option>
+                <option>Driveway / paths</option>
+                <option>Turfing / maintenance</option>
+                <option>Full transformation</option>
+                <option>Something else</option>
+              </select>
+            </div>
+            <div class="fg"><label for="message">Project details</label><textarea id="message" name="message" placeholder="Tell us about your project, location and rough timeline…"></textarea></div>
+            <button type="submit" class="qsubmit">Send Message
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            <p class="qnote">No obligation &middot; Free site visit &middot; Reply within 24 hours</p>
+          </form>
+          <div class="qsuccess" id="formSuccess">
+            <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <h3>Thanks — message received</h3>
+            <p>We'll be in touch within 24 hours to arrange your free site visit.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#home" class="nav-logo">
+          <span class="nav-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#2DB14B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M5 20 9 8l4 7 3-5 3 10"/></svg></span>
+          <span class="nav-name">Rocky Landscapes</span>
+        </a>
+        <p>Premium landscaping, paving and stonemasonry across Bristol and the South West. Built with precision. Made to last.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Landscaping &amp; Design</a></li>
+          <li><a href="#services">Paving &amp; Patios</a></li>
+          <li><a href="#services">Stonemasonry</a></li>
+          <li><a href="#services">Fencing &amp; Decking</a></li>
+          <li><a href="#services">Driveways</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <div class="fci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg><a href="tel:07895838999">07895 838999</a></div>
+        <div class="fci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg><a href="mailto:Rockylandscapes360@gmail.com">Rockylandscapes360@gmail.com</a></div>
+        <div class="fci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Bristol &amp; South West</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span id="year"></span> Rocky Landscapes. Crafted with precision in Bristol.</p>
+      <p class="credit">Site by KaizenEvol</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== WHATSAPP FLOAT ===== -->
+<a class="wa-float" href="https://wa.me/447895838999" target="_blank" rel="noopener" aria-label="Message Rocky Landscapes on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.413c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.043zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+  <span>WhatsApp</span>
+</a>
+
+<script>
+(function () {
+  var nav = document.getElementById('nav');
+  var hero = document.getElementById('home');
+  function onScroll(){
+    nav.classList.toggle('scrolled', window.scrollY > 12);
+    var threshold = hero ? hero.offsetHeight - 90 : 600;
+    nav.classList.toggle('over-dark', window.scrollY < threshold);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  var btn = document.getElementById('menuBtn'), menu = document.getElementById('mobileMenu');
+  btn.addEventListener('click', function(){
+    var open = menu.style.display === 'block';
+    menu.style.display = open ? 'none' : 'block';
+    btn.classList.toggle('open', !open);
+  });
+  menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ menu.style.display = 'none'; }); });
+
+  // Project filter pills (visual state only — wire to real categories when photos are tagged)
+  document.querySelectorAll('.pf').forEach(function(p){
+    p.addEventListener('click', function(){
+      document.querySelectorAll('.pf').forEach(function(x){ x.classList.remove('active'); });
+      p.classList.add('active');
+    });
+  });
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  var form = document.getElementById('quoteForm'), success = document.getElementById('formSuccess');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!form.name.value.trim() || !form.phone.value.trim()){ form.reportValidity && form.reportValidity(); return; }
+    // TODO: POST to your email/CRM endpoint (e.g. Formspree, Resend, or the KaizenEvol CRM).
+    form.style.display = 'none';
+    success.classList.add('show');
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
