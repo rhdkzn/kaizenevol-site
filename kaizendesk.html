@@ -321,25 +321,29 @@
   </style>
 
 <style>
-.cmp{max-width:680px;margin:0 auto;border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden;}
-.cmp-row{display:grid;grid-template-columns:1.3fr 1fr 1fr;border-top:1px solid var(--border);}
-.cmp-row:first-child{border-top:none;}
-.cmp-row>div{padding:15px 14px;font-size:14px;}
-.cmp-head{background:var(--surface-2);font-weight:700;color:var(--text);font-size:12px;text-transform:uppercase;letter-spacing:.04em;text-align:center;}
-.cmp-row .lbl{color:var(--muted);font-weight:600;}
-.cmp-row .bad{color:rgba(238,232,255,0.5);text-align:center;}
-.cmp-row .good{color:var(--purple-light);font-weight:700;background:rgba(109,63,192,0.10);text-align:center;}
-.cmp-head.gh{color:var(--purple-light);background:rgba(109,63,192,0.10);}
+.cmp{max-width:680px;margin:0 auto;}
+.cmp-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;align-items:center;border-bottom:1px solid var(--border);}
+.cmp-row:last-child{border-bottom:none;}
+.cmp-row>div{padding:20px 14px;}
+.cmp-row .lbl{font-weight:700;color:var(--text);font-size:16px;line-height:1.25;}
+.cmp-row .bad{color:var(--muted);font-size:18px;font-weight:600;}
+.cmp-row .good{color:var(--purple-light);font-size:18px;font-weight:800;}
+.cmp-pill{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:5px 12px;border-radius:9999px;}
+.cmp-pill.h{background:var(--surface-2);color:var(--muted);}
+.cmp-pill.a{background:rgba(109,63,192,0.15);color:var(--purple-light);border:1px solid rgba(109,63,192,0.4);}
+.cmp-sum{text-align:center;margin-top:30px;font-size:15px;color:var(--muted);}
+.cmp-sum strong{color:var(--purple-light);font-weight:700;}
 .chat{width:100%;max-width:420px;margin:0 auto;background:var(--surface-2);border:1px solid var(--border);border-radius:18px;padding:20px;}
 .bub{max-width:80%;padding:11px 15px;border-radius:16px;margin:8px 0;font-size:14px;line-height:1.5;}
 .bub.them{background:#241d40;color:var(--text);border-bottom-left-radius:4px;}
 .bub.ai{background:var(--purple);color:#fff;margin-left:auto;border-bottom-right-radius:4px;}
 .chat-tag{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;font-weight:700;}
 @media(max-width:600px){
-  .cmp-row{grid-template-columns:1.2fr 0.9fr 0.9fr;}
-  .cmp-row>div{padding:11px 8px;font-size:12px;}
-  .cmp-head{font-size:9.5px;padding:10px 6px;}
-  .cmp-row .lbl{font-size:12px;}
+  .cmp-row{grid-template-columns:1.3fr 0.85fr 0.85fr;}
+  .cmp-row>div{padding:16px 6px;}
+  .cmp-row .lbl{font-size:14px;}
+  .cmp-row .bad,.cmp-row .good{font-size:15px;}
+  .cmp-pill{font-size:9.5px;padding:4px 9px;}
 }
 </style>
 </head>
@@ -414,14 +418,15 @@
       <h2>The Difference, Side by Side</h2>
     </div>
     <div class="cmp">
-      <div class="cmp-row head"><div class="cmp-head">&nbsp;</div><div class="cmp-head">Without</div><div class="cmp-head gh">With KaizenDesk</div></div>
-      <div class="cmp-row"><div class="lbl">After-hours calls</div><div class="bad">Missed</div><div class="good">Answered</div></div>
-      <div class="cmp-row"><div class="lbl">Response time</div><div class="bad">Hours</div><div class="good">Under 1 min</div></div>
-      <div class="cmp-row"><div class="lbl">Availability</div><div class="bad">~8 hrs/day</div><div class="good">24 / 7 / 365</div></div>
+      <div class="cmp-row"><div>&nbsp;</div><div><span class="cmp-pill h">Without</span></div><div><span class="cmp-pill a">KaizenDesk</span></div></div>
+      <div class="cmp-row"><div class="lbl">After-hours calls answered</div><div class="bad">0%</div><div class="good">100%</div></div>
+      <div class="cmp-row"><div class="lbl">Response time</div><div class="bad">Hours</div><div class="good">&lt;1 min</div></div>
+      <div class="cmp-row"><div class="lbl">Availability</div><div class="bad">8 hrs/day</div><div class="good">24 / 7 / 365</div></div>
       <div class="cmp-row"><div class="lbl">Review requests</div><div class="bad">Rarely</div><div class="good">Every job</div></div>
-      <div class="cmp-row"><div class="lbl">Cold leads</div><div class="bad">Forgotten</div><div class="good">Revived</div></div>
+      <div class="cmp-row"><div class="lbl">Cold leads revived</div><div class="bad">Never</div><div class="good">Always</div></div>
       <div class="cmp-row"><div class="lbl">Your admin time</div><div class="bad">Constant</div><div class="good">Almost none</div></div>
     </div>
+    <p class="cmp-sum"><strong>Set up in days, not months.</strong> &nbsp;·&nbsp; Works <strong>24 / 7 / 365</strong>.</p>
   </div>
 </section>
 
