@@ -471,7 +471,7 @@
 
     <!-- COMMISSION TRACKER -->
     <section>
-      <div class="section-label">Commission Tracker</div>
+      <div class="section-label">Bonus Tracker</div>
       <div id="commissionContainer"></div>
     </section>
 
@@ -807,35 +807,25 @@ async function showApp(){
 }
 
 /* ── DATA ── */
-const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
-function load(){try{const r=localStorage.getItem(DATA_KEY);return r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);}catch(e){return structuredClone(DEFAULTS);}}
+const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:2500}};
+function load(){try{const r=localStorage.getItem(DATA_KEY);const d=r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);(d.clients||[]).forEach(c=>{if(c.status==='trial'||c.status==='retainer')c.status='active';if(!c.liveDate&&c.trialStartDate)c.liveDate=c.trialStartDate;});return d;}catch(e){return structuredClone(DEFAULTS);}}
 function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));_cloudPush(DATA_KEY,data);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function safeId(s){return String(s||'').replace(/[^a-zA-Z0-9_-]/g,'');}
-function trialDays(startStr,total){if(!startStr)return null;const diff=Math.floor((Date.now()-new Date(startStr))/86400000);return{day:Math.max(1,diff+1),total};}
+function daysSince(startStr){if(!startStr)return null;const diff=Math.floor((Date.now()-new Date(startStr))/86400000);return Math.max(1,diff+1);}
 function getClientStage(c){
-  if(c.status==='inactive')return{key:'inactive',label:'Inactive',day:0,daysLeft:0,pct:0};
-  if(c.status==='retainer')return{key:'retainer',label:'Retainer',day:60,daysLeft:0,pct:100};
-  if(!c.trialStartDate)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};
-  const t=trialDays(c.trialStartDate,c.trialDays||60);
-  if(!t)return{key:'onboarding',label:'Onboarding',day:0,daysLeft:60,pct:0};
-  const day=t.day;const total=t.total;const left=Math.max(0,total-day+1);
-  const pct=Math.min(100,Math.round(day/total*100));
-  if(day>=55)return{key:'conversion',label:'Conversion Due',day,daysLeft:left,pct};
-  if(day>=31)return{key:'optimising',label:'Optimising',day,daysLeft:left,pct};
-  return{key:'live',label:'Campaign Live',day,daysLeft:left,pct};
+  if(c.status==='inactive')return{key:'inactive',label:'Inactive',day:0};
+  if(!c.liveDate)return{key:'onboarding',label:'Onboarding',day:0};
+  return{key:'live',label:'Live',day:daysSince(c.liveDate)||1};
 }
 
 /* ── CLIENT PIPELINE ── */
-const PIPE_STAGES=[{key:'onboarding',label:'Onboarding'},{key:'live',label:'Campaign Live'},{key:'optimising',label:'Optimising'},{key:'conversion',label:'Conversion Due'},{key:'retainer',label:'Retainer'}];
-function getNextAction(stageKey,daysLeft,clientName){
+const PIPE_STAGES=[{key:'onboarding',label:'Onboarding'},{key:'live',label:'Live'}];
+function getNextAction(stageKey,day,clientName){
   const n=clientName.split(' ')[0];
   switch(stageKey){
-    case 'onboarding':return{text:`Set ${n}'s trial start date to begin campaign tracking.`,cls:''};
-    case 'live':return{text:`Campaign running. Monitor daily spend and early lead quality. ${daysLeft} days to optimisation phase.`,cls:''};
-    case 'optimising':return{text:`Cut underperformers, scale winners. Start building retainer case. ${daysLeft} days to conversion conversation.`,cls:''};
-    case 'conversion':return{text:`Book retainer conversion call with ${n} — ${daysLeft} day(s) remaining on trial.`,cls:'alert-action'};
-    case 'retainer':return{text:`${n} is on retainer. Focus on results, retention, and case study.`,cls:'green-action'};
+    case 'onboarding':return{text:`Run ${n} through the 7-day onboarding sprint, then set the go-live date.`,cls:''};
+    case 'live':return{text:`${n} is live on £2,500/mo. Deliver the booked jobs, log any bonus jobs, build the case study.`,cls:'green-action'};
     default:return{text:'',cls:''};
   }
 }
@@ -846,20 +836,18 @@ function renderClientPipeline(data){
   el.innerHTML=active.map(c=>{
     const s=getClientStage(c);
     const stageIdx=PIPE_STAGES.findIndex(p=>p.key===s.key);
-    const action=getNextAction(s.key,s.daysLeft,c.name);
-    const fillCls=s.key==='conversion'?'alert':s.key==='retainer'?'done':'normal';
+    const action=getNextAction(s.key,s.day,c.name);
     const stageLabelCls=`psl-${s.key}`;
     const nodes=PIPE_STAGES.map((p,i)=>{
       let dotCls='';let nodeCls='';
       if(i<stageIdx){dotCls='done';nodeCls='done-node';}
       else if(i===stageIdx){
-        if(s.key==='conversion'){dotCls='alert';nodeCls='alert-node';}
-        else if(s.key==='retainer'){dotCls='retainer-dot';nodeCls='retainer-node';}
+        if(s.key==='live'){dotCls='retainer-dot';nodeCls='retainer-node';}
         else{dotCls='active';nodeCls='active';}
       }
       return`<div class="pipe-stage-node ${nodeCls}"><div class="pipe-node-dot ${dotCls}"></div><div class="pipe-stage-name">${p.label}</div></div>`;
     }).join('');
-    const progressRow=s.key!=='onboarding'&&s.key!=='inactive'?`<div class="pipe-progress-row"><div class="pipe-progress-bar"><div class="pipe-progress-fill ${fillCls}" style="width:${s.pct}%"></div></div><div class="pipe-progress-meta">${s.key==='retainer'?'Converted ✓':`Day ${s.day} / ${c.trialDays||60} &mdash; ${s.daysLeft} days left`}</div></div>`:'';
+    const progressRow=s.key==='live'?`<div class="pipe-progress-row"><div class="pipe-progress-meta">Live since ${esc(c.liveDate)} &mdash; day ${s.day}</div></div>`:'';
     return`<div class="pipe-client">
       <div class="pipe-client-header"><div class="pipe-client-name">${esc(c.name)}</div><span class="pipe-stage-label ${stageLabelCls}">${s.label}</span></div>
       <div class="pipe-stages">${nodes}</div>
@@ -872,36 +860,23 @@ function renderClientPipeline(data){
 /* ── CLIENT CHECKLIST ── */
 const CLIENT_TASKS=[
   {id:'ob1',phase:'onboarding',text:'Discovery call completed'},
-  {id:'ob2',phase:'onboarding',text:'Facebook Business Manager access granted'},
-  {id:'ob3',phase:'onboarding',text:'Meta Pixel installed and verified'},
-  {id:'ob4',phase:'onboarding',text:'Custom audiences created'},
-  {id:'ob5',phase:'onboarding',text:'Ad copy and creatives approved by client'},
-  {id:'ob6',phase:'onboarding',text:'Campaign structure reviewed'},
-  {id:'ob7',phase:'onboarding',text:'Campaign live ✓'},
-  {id:'tr1',phase:'trial',text:'Week 1 — performance review'},
-  {id:'tr2',phase:'trial',text:'Week 1 — report sent to client'},
-  {id:'tr3',phase:'trial',text:'Week 2 — cut underperformers, scale winners'},
-  {id:'tr4',phase:'trial',text:'Week 2 — report sent to client'},
-  {id:'tr5',phase:'trial',text:'Week 3 — performance review'},
-  {id:'tr6',phase:'trial',text:'Week 3 — report sent to client'},
-  {id:'tr7',phase:'trial',text:'Week 4 — creative refresh if CTR declining'},
-  {id:'tr8',phase:'trial',text:'Week 4 — report sent to client'},
-  {id:'op1',phase:'optimising',text:'Week 5–6 — scale best performing ads'},
-  {id:'op2',phase:'optimising',text:'Week 6 — report sent to client'},
-  {id:'op3',phase:'optimising',text:'Build retainer case — document results to date'},
-  {id:'op4',phase:'optimising',text:'Week 7–8 — report sent to client'},
-  {id:'cv1',phase:'conversion',text:'Retainer conversion call booked'},
-  {id:'cv2',phase:'conversion',text:'Retainer agreement sent'},
-  {id:'cv3',phase:'conversion',text:'Retainer agreement signed'},
-  {id:'cv4',phase:'conversion',text:'First retainer invoice raised'},
-  {id:'rt1',phase:'retainer',text:'Monthly report — Month 1'},
-  {id:'rt2',phase:'retainer',text:'Monthly report — Month 2'},
-  {id:'rt3',phase:'retainer',text:'Monthly report — Month 3'},
-  {id:'rt4',phase:'retainer',text:'Case study / testimonial requested'},
+  {id:'ob2',phase:'onboarding',text:'Retainer agreement signed (£2,500/mo)'},
+  {id:'ob3',phase:'onboarding',text:'First invoice raised and paid'},
+  {id:'ob4',phase:'onboarding',text:'Facebook Business Manager access granted'},
+  {id:'ob5',phase:'onboarding',text:'Meta Pixel installed and verified'},
+  {id:'ob6',phase:'onboarding',text:'Ad copy and creatives approved by client'},
+  {id:'ob7',phase:'onboarding',text:'Campaign live — go-live date set ✓'},
+  {id:'lv1',phase:'live',text:'Weekly performance review'},
+  {id:'lv2',phase:'live',text:'Weekly report sent to client'},
+  {id:'lv3',phase:'live',text:'Monthly strategy call held'},
+  {id:'lv4',phase:'live',text:'Booked-jobs target tracked vs agreed monthly target'},
+  {id:'lv5',phase:'live',text:'Bonus jobs logged + verified (signed acceptance / deposit invoice)'},
+  {id:'lv6',phase:'live',text:'Creative refreshed when CTR declining'},
+  {id:'lv7',phase:'live',text:'Case study / testimonial requested'},
 ];
-const PHASE_ORDER=['onboarding','trial','optimising','conversion','retainer'];
-const PHASE_LABELS={onboarding:'Onboarding',trial:'Trial — Weeks 1–4',optimising:'Optimising — Weeks 5–8',conversion:'Conversion',retainer:'Retainer'};
-function activePhaseForStage(stageKey){const map={onboarding:'onboarding',live:'trial',optimising:'optimising',conversion:'conversion',retainer:'retainer'};return map[stageKey]||'onboarding';}
+const PHASE_ORDER=['onboarding','live'];
+const PHASE_LABELS={onboarding:'Onboarding — 7-Day Sprint',live:'Live — Ongoing Delivery'};
+function activePhaseForStage(stageKey){return stageKey==='live'?'live':'onboarding';}
 function renderClientChecklist(data){
   const el=document.getElementById('checklistContainer');
   const active=data.clients.filter(c=>c.status!=='inactive');
@@ -943,11 +918,11 @@ function renderClientChecklist(data){
 function toggleClientTask(clientId,taskId){const d=load();if(!d.clientTasks)d.clientTasks={};if(!d.clientTasks[clientId])d.clientTasks[clientId]={};d.clientTasks[clientId][taskId]=!d.clientTasks[clientId][taskId];save(d);renderClientChecklist(d);}
 
 /* ── CLIENTS ── */
-function stClass(s){return{trial:'st-trial',retainer:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
-function stLabel(s){return{trial:'⏱ Trial',retainer:'✓ Retainer',inactive:'○ Inactive'}[s]||s;}
-function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const t=c.status==='trial'?trialDays(c.trialStartDate,c.trialDays||60):null;const pct=t?Math.min(100,Math.round(t.day/t.total*100)):0;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="trial" ${c.status==='trial'?'selected':''}>Trial</option><option value="retainer" ${c.status==='retainer'?'selected':''}>Retainer</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer Value</div><div class="cf-v">£${(c.retainerValue||3500).toLocaleString()}/mo</div></div></div>${c.status==='trial'?`<div class="trial-section"><div class="trial-bar"><div class="trial-fill" style="width:${pct}%"></div></div><div class="trial-meta"><span>${t?`Day ${t.day} of ${t.total}`:'Set start date below'}</span><span>${t?`${Math.max(0,t.total-t.day+1)} days remaining`:''}</span></div></div><div class="date-row"><span class="date-lbl">Trial start date:</span><input type="date" class="date-inp" value="${c.trialStartDate||''}" onchange="setTrialStart('${c.id}',this.value)" /></div>`:''}</div>`;}).join('');}
+function stClass(s){return{active:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
+function stLabel(s){return{active:'✓ Active',inactive:'○ Inactive'}[s]||s;}
+function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer Value</div><div class="cf-v">£${(c.retainerValue||2500).toLocaleString()}/mo</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}</div>`;}).join('');}
 function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
-function setTrialStart(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.trialStartDate=date;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
+function setLiveDate(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.liveDate=date;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
 
 /* ── COMMISSION ── */
 function renderCommission(data){
@@ -959,10 +934,12 @@ function renderCommission(data){
     <td>${esc(j.date||'—')}</td><td>${esc(j.clientName||'—')}</td>
     <td>£${Number(j.jobValue||0).toLocaleString()}</td>
     <td style="color:var(--amber);font-weight:700">£${Number(j.commission||0).toLocaleString()}</td>
+    <td><button class="comm-status ${j.verified?'cs-paid':'cs-pending'}" onclick="toggleVerified(${i})">${j.verified?'Verified':'Unverified'}</button></td>
     <td><button class="comm-status ${j.status==='paid'?'cs-paid':'cs-pending'}" onclick="toggleCommStatus(${i})">${j.status==='paid'?'Paid':'Pending'}</button></td>
     <td><button class="t-del" onclick="delJob(${i})">×</button></td>
-  </tr>`).join(''):'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px 0;">No jobs logged yet.</td></tr>';
+  </tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:20px 0;">No jobs logged yet.</td></tr>';
   document.getElementById('commissionContainer').innerHTML=`<div class="card">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">10% of total agreed job value, on every closed job above the agreed monthly target. Only collect once a job is verified by a signed acceptance email or a deposit invoice from the homeowner.</div>
     <div class="comm-add-row">
       <input type="date" class="comm-inp" id="commDate" style="max-width:160px" />
       <input type="text" class="comm-inp" id="commClient" placeholder="Client name" style="max-width:180px" />
@@ -970,15 +947,16 @@ function renderCommission(data){
       <button class="add-btn" onclick="addJob()">+ Log Job</button>
     </div>
     <table class="comm-table">
-      <thead><tr><th>Date</th><th>Client</th><th>Job Value</th><th>Commission (20%)</th><th>Status</th><th></th></tr></thead>
+      <thead><tr><th>Date</th><th>Client</th><th>Job Value</th><th>Bonus (10%)</th><th>Verified</th><th>Status</th><th></th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
     <div class="comm-total-row">
-      <div><div class="comm-total-label">Commission Owed</div><div style="font-size:11px;color:var(--muted);margin-top:2px">£${totalPaid.toLocaleString()} paid to date</div></div>
+      <div><div class="comm-total-label">Bonus to Collect</div><div style="font-size:11px;color:var(--muted);margin-top:2px">£${totalPaid.toLocaleString()} collected to date</div></div>
       <div class="comm-total-val ${pending===0&&jobs.length?'paid':''}">£${pending.toLocaleString()}</div>
     </div>
   </div>`;}
-function addJob(){const date=document.getElementById('commDate').value;const clientName=document.getElementById('commClient').value.trim();const jobValue=parseFloat(document.getElementById('commValue').value);if(!jobValue||jobValue<=0)return;const commission=Math.round(jobValue*0.2*100)/100;const d=load();if(!d.commission)d.commission={jobs:[]};d.commission.jobs.unshift({date,clientName,jobValue,commission,status:'pending'});save(d);renderCommission(d);document.getElementById('commValue').value='';document.getElementById('commDate').value='';}
+function addJob(){const date=document.getElementById('commDate').value;const clientName=document.getElementById('commClient').value.trim();const jobValue=parseFloat(document.getElementById('commValue').value);if(!jobValue||jobValue<=0)return;const commission=Math.round(jobValue*0.1*100)/100;const d=load();if(!d.commission)d.commission={jobs:[]};d.commission.jobs.unshift({date,clientName,jobValue,commission,verified:false,status:'pending'});save(d);renderCommission(d);document.getElementById('commValue').value='';document.getElementById('commDate').value='';document.getElementById('commClient').value='';}
+function toggleVerified(i){const d=load();if(!d.commission||!d.commission.jobs[i])return;d.commission.jobs[i].verified=!d.commission.jobs[i].verified;save(d);renderCommission(d);}
 function toggleCommStatus(i){const d=load();if(!d.commission||!d.commission.jobs[i])return;d.commission.jobs[i].status=d.commission.jobs[i].status==='paid'?'pending':'paid';save(d);renderCommission(d);}
 function delJob(i){const d=load();if(!d.commission)return;d.commission.jobs.splice(i,1);save(d);renderCommission(d);}
 
