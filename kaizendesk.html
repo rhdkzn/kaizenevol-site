@@ -329,12 +329,22 @@
 .cmp-row .lbl{color:var(--muted);font-weight:600;}
 .cmp-row .bad{color:rgba(238,232,255,0.55);}
 .cmp-row .good{color:var(--purple-light);font-weight:600;background:rgba(109,63,192,0.08);}
-.chat{max-width:420px;margin:0 auto;background:var(--surface-2);border:1px solid var(--border);border-radius:18px;padding:20px;}
+.chat{width:100%;max-width:420px;margin:0 auto;background:var(--surface-2);border:1px solid var(--border);border-radius:18px;padding:20px;}
 .bub{max-width:80%;padding:11px 15px;border-radius:16px;margin:8px 0;font-size:14px;line-height:1.5;}
 .bub.them{background:#241d40;color:var(--text);border-bottom-left-radius:4px;}
 .bub.ai{background:var(--purple);color:#fff;margin-left:auto;border-bottom-right-radius:4px;}
 .chat-tag{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;font-weight:700;}
-@media(max-width:600px){.cmp-row{grid-template-columns:1fr;} .cmp-row .lbl{background:var(--surface-2);}}
+@media(max-width:600px){
+  .cmp{border:none;}
+  .cmp-row.head{display:none;}
+  .cmp-row{display:block;border:1px solid var(--border);border-radius:var(--radius-card);margin-bottom:12px;padding:14px 16px;}
+  .cmp-row>div{padding:0;}
+  .cmp-row .lbl{display:block;color:var(--text);font-weight:700;margin-bottom:8px;font-size:15px;}
+  .cmp-row .bad{display:block;color:rgba(238,232,255,0.55);}
+  .cmp-row .bad::before{content:"✗  ";color:#f87171;font-weight:700;}
+  .cmp-row .good{display:block;background:none;margin-top:4px;}
+  .cmp-row .good::before{content:"✓  ";color:var(--purple-light);font-weight:700;}
+}
 </style>
 </head>
 <body>
@@ -408,7 +418,7 @@
       <h2>The Difference, Side by Side</h2>
     </div>
     <div class="cmp">
-      <div class="cmp-row"><div class="cmp-head">&nbsp;</div><div class="cmp-head">Without KaizenDesk</div><div class="cmp-head">With KaizenDesk</div></div>
+      <div class="cmp-row head"><div class="cmp-head">&nbsp;</div><div class="cmp-head">Without KaizenDesk</div><div class="cmp-head">With KaizenDesk</div></div>
       <div class="cmp-row"><div class="lbl">After-hours calls</div><div class="bad">Go to voicemail (or a rival)</div><div class="good">Answered, 24/7</div></div>
       <div class="cmp-row"><div class="lbl">Response time</div><div class="bad">Hours — sometimes never</div><div class="good">Under 1 minute</div></div>
       <div class="cmp-row"><div class="lbl">Availability</div><div class="bad">~8 hours a day</div><div class="good">24 / 7 / 365</div></div>
