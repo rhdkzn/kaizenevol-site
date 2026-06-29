@@ -32,28 +32,33 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What if I've tried Meta ads before and they didn't work?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Most failed ads share the same causes: generic copy, wrong audience, no qualification funnel, and no one watching the data. This system is purpose-built for your trade — whether you fit kitchens, renovate bathrooms, or build loft conversions, the targeting, copy, and funnel are all niche-specific." }
+        "name": "Will my customers know they're talking to an AI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. KaizenDesk introduces itself as your business's assistant — it never pretends to be a person. It sounds natural, answers their questions, books the job, and hands the real ones straight to you. Customers get a fast, helpful reply instead of a missed call." }
       },
       {
         "@type": "Question",
-        "name": "How much do I need to spend on ads?",
-        "acceptedAnswer": { "@type": "Answer", "text": "It depends on your local market and monthly client targets. We agree the figure together on the discovery call. Ad spend is paid directly to Meta by you — we don't hold it, take a cut, or mark it up." }
+        "name": "Do I need to change my phone number or learn any software?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. KaizenDesk connects to your existing number and email. You don't install anything or change how you work. Your phone only buzzes when there's a genuine job to take." }
       },
       {
         "@type": "Question",
-        "name": "What results can I realistically expect?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Multiple qualified, booked renovation clients per month, each with a high project value. Our guarantee: your agreed monthly target delivered within 60 days, or your management fee is waived." }
+        "name": "How quickly can it be up and running?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Days, not weeks. A 15-minute chat about your business, services and opening hours is all we need. We switch it on, and you carry on working." }
       },
       {
         "@type": "Question",
-        "name": "How much of my time does this take?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Minimal. A 30-minute discovery call and a short review before launch. After that, your only time is on the consultations we book. We handle reporting, optimisation, and all lead communication." }
+        "name": "What happens if a customer asks something it can't handle?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It answers what it can, qualifies the enquiry, and flags anything that needs you straight to your phone. You stay in control of every real job — KaizenDesk just makes sure none of them slip through." }
       },
       {
         "@type": "Question",
-        "name": "Why do you only work with one specialist per niche per area?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Running the same system for two kitchen remodellers in the same town would drive up costs and dilute results. One client per niche per area keeps our interests fully aligned with yours. A kitchen specialist and a bathroom specialist in the same postcode aren't competitors — each gets their own exclusive territory." }
+        "name": "Is my customer data safe?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. KaizenDesk is UK-based and fully GDPR-compliant, with your data held in the EU. You keep your number, your reviews, and your customer relationships — nothing is locked away from you." }
+      },
+      {
+        "@type": "Question",
+        "name": "Which businesses is KaizenDesk for?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Any local business that takes enquiries by phone, text or email — plumbers, electricians, builders, dentists, salons, gyms, garages, restaurants and more. If you lose work to missed calls and slow replies, it's built for you." }
       }
     ]
   }
@@ -371,8 +376,33 @@
       <img src="logo.png" alt="KaizenEvol" width="32" height="32" onerror="this.style.display='none'">
       <span class="nav-logo-text">KaizenDesk</span>
     </a>
+    <ul class="nav-links">
+      <li><a href="kaizenreach.html">KaizenReach</a></li>
+      <li><a href="kaizendesk.html" class="active">KaizenDesk</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
     <a class="btn-primary nav-cta" href="#contact">Book a Call</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+</div>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-panel-header">
+    <div class="nav-logo">
+      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'" style="height:28px;width:auto;">
+      <span class="nav-logo-text">KaizenDesk</span>
+    </div>
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
+  </div>
+  <a href="kaizenreach.html">KaizenReach — Ads</a>
+  <a href="kaizendesk.html">KaizenDesk — AI Front Office</a>
+  <a href="about.html">About</a>
+  <a href="faq.html">FAQ</a>
+  <a href="#contact" class="btn-primary">Book a Call</a>
 </div>
 
 <main id="main-content">
@@ -514,6 +544,38 @@
   </div>
 </section>
 
+<section class="section section-bg" id="faq">
+  <div class="container">
+    <div class="section-header" style="text-align:center;"><h2>Questions, Answered</h2></div>
+    <div class="faq-inline">
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">Will my customers know they're talking to an AI?</summary>
+        <div class="faq-inline-answer">Yes. KaizenDesk introduces itself as your business's assistant — it never pretends to be a person. It sounds natural, answers their questions, books the job, and hands the real ones straight to you. Customers get a fast, helpful reply instead of a missed call.</div>
+      </details>
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">Do I need to change my phone number or learn any software?</summary>
+        <div class="faq-inline-answer">No. KaizenDesk connects to your existing number and email. You don't install anything or change how you work. Your phone only buzzes when there's a genuine job to take.</div>
+      </details>
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">How quickly can it be up and running?</summary>
+        <div class="faq-inline-answer">Days, not weeks. A 15-minute chat about your business, services and opening hours is all we need. We switch it on, and you carry on working.</div>
+      </details>
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">What happens if a customer asks something it can't handle?</summary>
+        <div class="faq-inline-answer">It answers what it can, qualifies the enquiry, and flags anything that needs you straight to your phone. You stay in control of every real job — KaizenDesk just makes sure none of them slip through.</div>
+      </details>
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">Is my customer data safe?</summary>
+        <div class="faq-inline-answer">Yes. KaizenDesk is UK-based and fully GDPR-compliant, with your data held in the EU. You keep your number, your reviews, and your customer relationships — nothing is locked away from you.</div>
+      </details>
+      <details class="faq-inline-item">
+        <summary class="faq-inline-summary">Which businesses is KaizenDesk for?</summary>
+        <div class="faq-inline-answer">Any local business that takes enquiries by phone, text or email — plumbers, electricians, builders, dentists, salons, gyms, garages, restaurants and more. If you lose work to missed calls and slow replies, it's built for you.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
 
 <section class="final-cta" id="contact">
   <div class="final-cta-inner">
@@ -521,6 +583,7 @@
     <p>Tell us a little about your business and we'll book a quick call to show you exactly how KaizenDesk would work for you.</p>
     <form class="lead-form" id="leadForm" novalidate>
       <div class="lf-grid">
+        <div class="lf-group"><label class="lf-label" for="lf-contact">Your Name *</label><input class="lf-input" type="text" id="lf-contact" name="contactName" placeholder="e.g. John Smith" required autocomplete="name" /></div>
         <div class="lf-group"><label class="lf-label" for="lf-name">Business Name *</label><input class="lf-input" type="text" id="lf-name" name="businessName" placeholder="e.g. Smith Plumbing" required autocomplete="organization" /></div>
         <div class="lf-group"><label class="lf-label" for="lf-email">Email Address *</label><input class="lf-input" type="email" id="lf-email" name="email" placeholder="you@business.co.uk" required autocomplete="email" /></div>
         <div class="lf-group"><label class="lf-label" for="lf-phone">Phone Number</label><input class="lf-input" type="tel" id="lf-phone" name="phone" placeholder="07700 900 123" autocomplete="tel" /></div>
@@ -563,6 +626,12 @@
         <img src="logo.png" alt="KaizenEvol" width="28" height="28" onerror="this.style.display='none'">
         <span class="footer-logo-text">KaizenDesk by KaizenEvol</span>
       </a>
+      <ul class="footer-nav">
+        <li><a href="kaizenreach.html">KaizenReach</a></li>
+        <li><a href="kaizendesk.html">KaizenDesk</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+      </ul>
       <div class="footer-right">
         <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a>
         <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
@@ -572,6 +641,15 @@
 </footer>
 
 <script>
+  /* Mobile menu */
+  const hamburgerBtn=document.getElementById('hamburgerBtn');
+  const mobileOverlay=document.getElementById('mobileOverlay');
+  const mobilePanel=document.getElementById('mobilePanel');
+  const mobileClose=document.getElementById('mobileClose');
+  function openMenu(){mobileOverlay.style.display='block';mobilePanel.style.display='flex';requestAnimationFrame(()=>{mobileOverlay.classList.add('open');mobilePanel.classList.add('open');});document.body.style.overflow='hidden';}
+  function closeMenu(){mobileOverlay.classList.remove('open');mobilePanel.classList.remove('open');document.body.style.overflow='';setTimeout(()=>{mobileOverlay.style.display='none';mobilePanel.style.display='none';},300);}
+  if(hamburgerBtn){hamburgerBtn.addEventListener('click',openMenu);mobileClose.addEventListener('click',closeMenu);mobileOverlay.addEventListener('click',closeMenu);mobilePanel.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mobilePanel.classList.contains('open'))closeMenu();});}
+
   /* ROI calculator */
   const ids=["leads","value","closeRate","missed"];
   const el=id=>document.getElementById(id);
@@ -598,16 +676,18 @@
     if(!form)return;
     form.addEventListener('submit',async function(e){
       e.preventDefault(); status.textContent=''; status.className='lf-status';
+      const contactName=document.getElementById('lf-contact').value.trim();
       const businessName=document.getElementById('lf-name').value.trim();
       const email=document.getElementById('lf-email').value.trim();
       const phone=document.getElementById('lf-phone').value.trim();
       const trade=document.getElementById('lf-trade').value;
       const monthlyBudget=document.getElementById('lf-budget').value;
+      if(!contactName){status.textContent='Your name is required.';status.className='lf-status err';return;}
       if(!businessName){status.textContent='Business name is required.';status.className='lf-status err';return;}
       if(!email||!email.includes('@')){status.textContent='A valid email is required.';status.className='lf-status err';return;}
       btn.disabled=true; btn.textContent='Sending…';
       try{
-        const res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({businessName,email,phone,trade,monthlyBudget,businessUrl:''})});
+        const res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contactName,businessName,email,phone,trade,monthlyBudget,businessUrl:''})});
         const data=await res.json();
         if(res.ok&&data.ok){status.textContent="Done — we'll be in touch within 24 hours to book your call.";status.className='lf-status ok';form.reset();btn.textContent='Sent ✓';}
         else{throw new Error(data.error||'Something went wrong.');}
