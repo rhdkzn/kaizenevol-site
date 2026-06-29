@@ -383,7 +383,26 @@
       <li><a href="faq.html">FAQ</a></li>
     </ul>
     <a class="btn-primary nav-cta" href="#contact">Book a Call</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+</div>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mobile-panel-header">
+    <div class="nav-logo">
+      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'" style="height:28px;width:auto;">
+      <span class="nav-logo-text">KaizenDesk</span>
+    </div>
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
+  </div>
+  <a href="kaizenreach.html">KaizenReach — Ads</a>
+  <a href="kaizendesk.html">KaizenDesk — AI Front Office</a>
+  <a href="about.html">About</a>
+  <a href="faq.html">FAQ</a>
+  <a href="#contact" class="btn-primary">Book a Call</a>
 </div>
 
 <main id="main-content">
@@ -621,6 +640,15 @@
 </footer>
 
 <script>
+  /* Mobile menu */
+  const hamburgerBtn=document.getElementById('hamburgerBtn');
+  const mobileOverlay=document.getElementById('mobileOverlay');
+  const mobilePanel=document.getElementById('mobilePanel');
+  const mobileClose=document.getElementById('mobileClose');
+  function openMenu(){mobileOverlay.style.display='block';mobilePanel.style.display='flex';requestAnimationFrame(()=>{mobileOverlay.classList.add('open');mobilePanel.classList.add('open');});document.body.style.overflow='hidden';}
+  function closeMenu(){mobileOverlay.classList.remove('open');mobilePanel.classList.remove('open');document.body.style.overflow='';setTimeout(()=>{mobileOverlay.style.display='none';mobilePanel.style.display='none';},300);}
+  if(hamburgerBtn){hamburgerBtn.addEventListener('click',openMenu);mobileClose.addEventListener('click',closeMenu);mobileOverlay.addEventListener('click',closeMenu);mobilePanel.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mobilePanel.classList.contains('open'))closeMenu();});}
+
   /* ROI calculator */
   const ids=["leads","value","closeRate","missed"];
   const el=id=>document.getElementById(id);
