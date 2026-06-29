@@ -644,6 +644,10 @@
     <form class="lead-form" id="leadForm" novalidate>
       <div class="lf-grid">
         <div class="lf-group">
+          <label class="lf-label" for="lf-contact">Your Name *</label>
+          <input class="lf-input" type="text" id="lf-contact" name="contactName" placeholder="e.g. John Smith" required autocomplete="name" />
+        </div>
+        <div class="lf-group">
           <label class="lf-label" for="lf-name">Business Name *</label>
           <input class="lf-input" type="text" id="lf-name" name="businessName" placeholder="e.g. Johnson Renovations" required autocomplete="organization" />
         </div>
@@ -814,6 +818,7 @@
       status.textContent = '';
       status.className   = 'lf-status';
 
+      const contactName   = document.getElementById('lf-contact').value.trim();
       const businessName  = document.getElementById('lf-name').value.trim();
       const email         = document.getElementById('lf-email').value.trim();
       const phone         = document.getElementById('lf-phone').value.trim();
@@ -821,6 +826,11 @@
       const trade         = document.getElementById('lf-trade').value;
       const monthlyBudget = document.getElementById('lf-budget').value;
 
+      if (!contactName) {
+        status.textContent = 'Your name is required.';
+        status.className   = 'lf-status err';
+        return;
+      }
       if (!businessName) {
         status.textContent = 'Business name is required.';
         status.className   = 'lf-status err';
@@ -839,7 +849,7 @@
         const res  = await fetch('/api/submit-lead', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ businessName, email, phone, businessUrl, trade, monthlyBudget }),
+          body:    JSON.stringify({ contactName, businessName, email, phone, businessUrl, trade, monthlyBudget }),
         });
         const data = await res.json();
         if (res.ok && data.ok) {

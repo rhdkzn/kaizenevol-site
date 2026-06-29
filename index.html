@@ -426,6 +426,10 @@
     <form class="lead-form" id="leadForm" novalidate>
       <div class="lf-grid">
         <div class="lf-group">
+          <label class="lf-label" for="lf-contact">Your Name *</label>
+          <input class="lf-input" type="text" id="lf-contact" name="contactName" placeholder="e.g. John Smith" required autocomplete="name" />
+        </div>
+        <div class="lf-group">
           <label class="lf-label" for="lf-name">Business Name *</label>
           <input class="lf-input" type="text" id="lf-name" name="businessName" placeholder="e.g. Johnson Renovations" required autocomplete="organization" />
         </div>
@@ -514,15 +518,17 @@
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       status.textContent = ''; status.className = 'lf-status';
+      const contactName = document.getElementById('lf-contact').value.trim();
       const businessName = document.getElementById('lf-name').value.trim();
       const email = document.getElementById('lf-email').value.trim();
       const phone = document.getElementById('lf-phone').value.trim();
       const trade = document.getElementById('lf-trade').value;
+      if (!contactName) { status.textContent = 'Your name is required.'; status.className = 'lf-status err'; return; }
       if (!businessName) { status.textContent = 'Business name is required.'; status.className = 'lf-status err'; return; }
       if (!email || !email.includes('@')) { status.textContent = 'A valid email address is required.'; status.className = 'lf-status err'; return; }
       btn.disabled = true; btn.textContent = 'Sending…';
       try {
-        const res = await fetch('/api/submit-lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ businessName, email, phone, businessUrl: '', trade, monthlyBudget: '' }) });
+        const res = await fetch('/api/submit-lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contactName, businessName, email, phone, businessUrl: '', trade, monthlyBudget: '' }) });
         const data = await res.json();
         if (res.ok && data.ok) { status.textContent = "Done — we'll be in touch within 24 hours."; status.className = 'lf-status ok'; form.reset(); btn.textContent = 'Sent ✓'; }
         else { throw new Error(data.error || 'Something went wrong.'); }

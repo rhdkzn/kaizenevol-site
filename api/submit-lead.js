@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { businessName, email, phone, businessUrl, trade, monthlyBudget } = req.body || {};
+  const { contactName, businessName, email, phone, businessUrl, trade, monthlyBudget } = req.body || {};
 
   if (!businessName || !email || !email.includes('@')) {
     return res.status(400).json({ error: 'Business name and a valid email are required.' });
@@ -38,10 +38,11 @@ export default async function handler(req, res) {
   const newLead = {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
     name: businessName.trim(),
+    contactName: (contactName || '').trim(),
     email: email.trim().toLowerCase(),
     website: (businessUrl || '').trim(),
     phone: (phone || '').trim(),
-    owner: '',
+    owner: (contactName || '').trim(),
     area: '',
     niche: (trade || '').trim(),
     source: 'Website',
@@ -86,10 +87,11 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         from: 'KaizenEvol Site <noreply@mail.kaizenevol.com>',
         to: ['rahaid@kaizenevol.com'],
-        subject: `New inbound lead: ${businessName.trim()}`,
+        subject: `New inbound lead: ${businessName.trim()}${(contactName || '').trim() ? ` (${contactName.trim()})` : ''}`,
         text: [
           `New lead from the website.`,
           ``,
+          `Contact: ${contactName ? contactName.trim() : 'Not provided'}`,
           `Business: ${businessName.trim()}`,
           `Trade: ${trade || 'Not specified'}`,
           `Email: ${email.trim()}`,
