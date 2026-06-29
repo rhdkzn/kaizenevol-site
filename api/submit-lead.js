@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   // Build lead matching CRM data structure
   const newLead = {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-    name: businessName.trim(),
+    business: businessName.trim(),
     contactName: (contactName || '').trim(),
     email: email.trim().toLowerCase(),
     website: (businessUrl || '').trim(),
