@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The KaizenEvol Agent Sanctum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root { --accent:#6d5cff; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; background:#05070f; overflow:hidden; font-family:'Inter',system-ui,sans-serif; color:#e6e9f2; }
+  #wrap { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
+  canvas { display:block; image-rendering:auto; }
+  #topbar {
+    position:fixed; top:0; left:0; right:0; height:54px; z-index:5;
+    display:flex; align-items:center; gap:14px; padding:0 22px;
+    font-family:'Cinzel',serif; font-weight:900; letter-spacing:.18em; font-size:17px;
+    color:#f3efe6; text-shadow:0 2px 10px #000;
+    background:linear-gradient(180deg, rgba(5,7,15,.85), rgba(5,7,15,0));
+    pointer-events:none;
+  }
+  .pill { font-family:'Inter'; font-weight:600; font-size:11px; letter-spacing:.15em;
+    padding:3px 10px; border-radius:999px; background:rgba(120,230,160,.15);
+    color:#8ae3b8; display:inline-flex; align-items:center; gap:6px; }
+  .pill::before { content:""; width:7px; height:7px; border-radius:50%; background:#8ae3b8;
+    box-shadow:0 0 8px #8ae3b8; animation:bp 1.6s ease-in-out infinite; }
+  @keyframes bp { 0%,100%{opacity:.4} 50%{opacity:1} }
+  #hint { position:fixed; bottom:14px; left:0; right:0; text-align:center; z-index:5;
+    font-size:12px; color:#7b8094; pointer-events:none; text-shadow:0 1px 6px #000; }
+  #dash {
+    position:fixed; top:70px; right:-480px; width:440px; max-width:92vw; z-index:6;
+    background:rgba(10,14,22,.92); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:22px;
+    box-shadow:0 24px 60px rgba(0,0,0,.6); transition:right .35s cubic-bezier(.2,.8,.2,1);
+  }
+  #dash.open { right:18px; }
+  #dash .head { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+  #dash .sigil { width:46px; height:46px; border-radius:12px; flex:none;
+    display:flex; align-items:center; justify-content:center; font-family:'Cinzel'; font-weight:900; font-size:20px; color:#0a0e16; }
+  #dash h2 { font-family:'Cinzel'; font-size:22px; letter-spacing:.04em; }
+  #dash .role { font-size:12px; color:#9aa0b4; }
+  #dash .chip { margin-left:auto; font-size:11px; padding:4px 10px; border-radius:999px; font-weight:600; }
+  #dash .stats { display:flex; gap:10px; margin:16px 0; }
+  #dash .stat { flex:1; background:rgba(255,255,255,.04); border-radius:10px; padding:10px 12px; }
+  #dash .stat .n { font-size:20px; font-weight:600; }
+  #dash .stat .l { font-size:10px; color:#7b8094; text-transform:uppercase; letter-spacing:.12em; }
+  #dash .sec { font-size:10px; text-transform:uppercase; letter-spacing:.16em; color:#7b8094; margin:16px 0 8px; }
+  #dash .task { font-size:13px; margin-bottom:10px; }
+  #dash .bar { height:5px; border-radius:3px; background:rgba(255,255,255,.08); margin-top:5px; overflow:hidden; }
+  #dash .bar > span { display:block; height:100%; border-radius:3px; transition:width .4s; }
+  #dash .q { font-size:12.5px; color:#aeb4c6; margin-bottom:5px; }
+  #dash .x { position:absolute; top:14px; right:16px; cursor:pointer; color:#7b8094; font-size:18px; }
+  #dash .x:hover { color:#fff; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<div id="topbar">THE KAIZENEVOL AGENT SANCTUM <span class="pill">LIVE</span></div>
+<div id="wrap"><canvas id="stage"></canvas></div>
+<div id="hint">Click an agent to open their live dashboard</div>
+<div id="dash"></div>
+
+<script>
+const DW = 1920, DH = 1080;           // design space
+const FLOOR_TOP = 720, FLOOR_BOT = 1040;
+const cv = document.getElementById('stage');
+const ctx = cv.getContext('2d');
+let scale = 1, offX = 0, offY = 0;
+
+function resize(){
+  const w = innerWidth, h = innerHeight;
+  scale = Math.min(w/DW, h/DH);
+  cv.width = Math.round(DW*scale); cv.height = Math.round(DH*scale);
+  cv.style.position='absolute';
+}
+addEventListener('resize', resize); resize();
+
+// ── Agents: the KaizenEvol squad ────────────────────────────────────────────
+const STATIONS = {
+  bar:     {x:760,  y:840},
+  rune:    {x:960,  y:900},
+  library: {x:1560, y:860},   // Stratos / strategy shelves
+  grove:   {x:470,  y:800},   // Vortex / creative
+  alchemy: {x:600,  y:880},   // Nexus / tracking bench
+  command: {x:1200, y:870},   // Aurelius / command rune
+};
+function task(t,p){ return {t, p}; }
+const AGENTS = [
+  { name:'AURELIUS', role:'Traffic Commander', accent:'#ffd86a', home:'command',
+    tasks:{ active:[task('Aligning campaign architecture',62), task('Briefing the squad',28)],
+            queued:['Approve Week-3 scale plan','Reallocate budget to winners'],
+            done:['Launched kitchen campaign','Killed 2 fatigued ad sets'] } },
+  { name:'ZENITH', role:'Metrics Analyst', accent:'#8ae3b8', home:'rune',
+    tasks:{ active:[task('Scanning CPA across 3 accounts',74), task('Kill/scale pass',41)],
+            queued:['Flag campaigns over target CPA','Weekly performance digest'],
+            done:['Scaled bathroom ad set +20%','Diagnosed CTR drop'] } },
+  { name:'VORTEX', role:'Creative Architect', accent:'#ff9bd0', home:'grove',
+    tasks:{ active:[task('Generating 12 hooks',55), task('Drafting DSL script',33)],
+            queued:['Refresh fatigued loft creative','Brief the editor'],
+            done:['Shipped 9 hook variants','New angle set for kitchens'] } },
+  { name:'NEXUS', role:'Tracking Specialist', accent:'#9fb8ff', home:'alchemy',
+    tasks:{ active:[task('Auditing pixel + CAPI',48), task('Checking match rate',67)],
+            queued:['Verify lead events fire','Fix attribution window'],
+            done:['CAPI live for 2 clients','EMQ raised to 7.4'] } },
+  { name:'STRATOS', role:'Strategy Advisor', accent:'#c8b6ff', home:'library',
+    tasks:{ active:[task('Modelling LTV / CAC',58), task('Funnel-offer fit review',26)],
+            queued:['Scale-readiness check','Unit economics for new offer'],
+            done:['Picked challenge funnel','Set target ROAS 3.2x'] } },
+];
+
+// runtime state per agent
+const rng = (a,b)=>a+Math.random()*(b-a);
+AGENTS.forEach(a=>{
+  const s = STATIONS[a.home];
+  a.x = s.x + rng(-30,30); a.y = s.y; a.facing = 1;
+  a.state='working'; a.timer = rng(2,5); a.tx=a.x; a.ty=a.y; a.bob=Math.random()*6;
+  a.emote=0; a.emoteT=rng(1.2,2.2); a.station=a.home;
+});
+
+function walkTo(a, pt){ a.state='walking'; a.tx=pt.x+rng(-26,26); a.ty=pt.y; }
+function pickWander(a){
+  const r=Math.random();
+  if(r<0.25){ walkTo(a, STATIONS.bar); a.next='drinking'; }     // bar visit
+  else { const keys=Object.keys(STATIONS); const k=keys[(Math.random()*keys.length)|0];
+         walkTo(a, STATIONS[k]); a.next='working'; a.station=k; }
+}
+
+function update(dt){
+  AGENTS.forEach(a=>{
+    a.bob += dt*6;
+    a.emoteT -= dt; if(a.emoteT<=0){ a.emote=(a.emote+1)%4; a.emoteT=rng(1.2,2.2); }
+    if(a.state==='walking'){
+      const dx=a.tx-a.x, dy=a.ty-a.y, d=Math.hypot(dx,dy);
+      if(d<4){ a.state=a.next||'working'; a.timer=(a.state==='drinking')?rng(2.5,4):rng(3,7); }
+      else { const sp=120*dt; a.x+=dx/d*sp; a.y+=dy/d*sp; a.facing = dx<0?-1:1; }
+    } else {
+      a.timer-=dt;
+      // advance live task progress
+      a.tasks.active.forEach(t=>{ t.p += dt*rng(0.4,1.6); if(t.p>=100){ t.p=rng(8,22); } });
+      if(a.timer<=0) pickWander(a);
+    }
+  });
+}
+
+// ── Drawing ─────────────────────────────────────────────────────────────────
+function bg(t){
+  // walls
+  let g=ctx.createLinearGradient(0,0,0,DH);
+  g.addColorStop(0,'#0a0d18'); g.addColorStop(.62,'#171019'); g.addColorStop(1,'#241a16');
+  ctx.fillStyle=g; ctx.fillRect(0,0,DW,DH);
+  // warm hollow-tree vignette glow
+  let rg=ctx.createRadialGradient(DW/2,DH*0.42,80, DW/2,DH*0.42,DW*0.7);
+  rg.addColorStop(0,'rgba(255,170,80,.10)'); rg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=rg; ctx.fillRect(0,0,DW,DH);
+  // floor
+  let fg=ctx.createLinearGradient(0,FLOOR_TOP,0,DH);
+  fg.addColorStop(0,'#2a2018'); fg.addColorStop(1,'#140f0b');
+  ctx.fillStyle=fg; ctx.fillRect(0,FLOOR_TOP,DW,DH-FLOOR_TOP);
+  // fireplace (far left) glow + flames
+  const fx=110, fy=820;
+  let fl=ctx.createRadialGradient(fx,fy,10,fx,fy,260);
+  fl.addColorStop(0,'rgba(255,140,40,.5)'); fl.addColorStop(1,'rgba(255,80,20,0)');
+  ctx.fillStyle=fl; ctx.fillRect(fx-260,fy-260,520,520);
+  for(let i=0;i<3;i++){ ctx.beginPath();
+    const h=70+20*Math.sin(t*4+i); ctx.fillStyle=['#ffb24d','#ff7a2d','#ffd98a'][i];
+    ctx.globalAlpha=.7; ctx.ellipse(fx+(i-1)*16, fy-20-h/2, 18-i*4, h, 0,0,7); ctx.fill(); }
+  ctx.globalAlpha=1;
+  // bar counter
+  ctx.fillStyle='#3a2517'; rr(700,800,300,70,8); ctx.fill();
+  ctx.fillStyle='#5a3a22'; rr(700,790,300,16,6); ctx.fill();
+  for(let i=0;i<5;i++){ ctx.fillStyle='#caa46a'; ctx.beginPath(); ctx.arc(730+i*55,800,7,0,7); ctx.fill(); }
+  // bookshelves right
+  ctx.fillStyle='#2b1d12'; rr(1480,560,360,300,6); ctx.fill();
+  for(let r=0;r<4;r++) for(let c=0;c<7;c++){
+    ctx.fillStyle=['#7b5cff','#5a8de0','#caa46a','#8ae3b8'][(r+c)%4];
+    ctx.globalAlpha=.7; rr(1500+c*48, 580+r*70, 30, 46, 2); ctx.fill(); }
+  ctx.globalAlpha=1;
+  // rune circle center
+  const cx=960, cy=900;
+  ctx.save(); ctx.globalCompositeOperation='lighter';
+  const pulse=.45+.25*Math.sin(t*1.6);
+  let rgc=ctx.createRadialGradient(cx,cy,10,cx,cy,210);
+  rgc.addColorStop(0,`rgba(80,150,255,${pulse})`); rgc.addColorStop(1,'rgba(40,80,255,0)');
+  ctx.fillStyle=rgc; ctx.beginPath(); ctx.ellipse(cx,cy,210,72,0,0,7); ctx.fill();
+  ctx.strokeStyle=`rgba(120,180,255,${.5+.3*Math.sin(t*2)})`; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.ellipse(cx,cy,170,56,0,0,7); ctx.stroke();
+  for(let i=0;i<10;i++){ const an=t*0.6+i*Math.PI/5; ctx.fillStyle='rgba(160,200,255,.8)';
+    ctx.beginPath(); ctx.arc(cx+Math.cos(an)*170, cy+Math.sin(an)*56, 3,0,7); ctx.fill(); }
+  ctx.restore();
+  // cyan mushrooms on walls
+  for(const m of MUSH){ const p=.6+.4*Math.sin(t*1.4+m.i);
+    ctx.save(); ctx.globalCompositeOperation='lighter';
+    ctx.fillStyle=`rgba(80,230,220,${.5*p})`; ctx.beginPath(); ctx.arc(m.x,m.y,14,0,7); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle='#2fae9e'; ctx.beginPath(); ctx.ellipse(m.x,m.y,9,6,0,0,7); ctx.fill();
+    ctx.fillStyle='#1d6b62'; ctx.fillRect(m.x-2,m.y,4,10); }
+}
+const MUSH = Array.from({length:8}, (_,i)=>({x:rng(120,1820), y:rng(560,690), i}));
+const FIRE = Array.from({length:30}, ()=>({x:rng(0,DW), y:rng(400,DH), s:rng(.4,1), ph:rng(0,7)}));
+
+function rr(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+
+function drawAgent(a,t){
+  const bob = Math.sin(a.bob)* (a.state==='walking'?5:2);
+  const x=a.x, y=a.y+bob;
+  // floor aura
+  ctx.save(); ctx.globalCompositeOperation='lighter';
+  let au=ctx.createRadialGradient(a.x,a.y+34,4,a.x,a.y+34,70);
+  au.addColorStop(0,a.accent+'66'); au.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=au; ctx.beginPath(); ctx.ellipse(a.x,a.y+34,60,18,0,0,7); ctx.fill();
+  ctx.restore();
+  // ground shadow
+  ctx.fillStyle='rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(a.x,a.y+36,26,8,0,0,7); ctx.fill();
+  // body (robe)
+  ctx.save(); ctx.translate(x,y); ctx.scale(a.facing,1);
+  // dark halo
+  ctx.shadowColor=a.accent; ctx.shadowBlur=22;
+  ctx.fillStyle=a.accent; rr(-20,-6,40,46,12); ctx.fill();
+  ctx.shadowBlur=0;
+  // robe shading
+  ctx.fillStyle='rgba(0,0,0,.18)'; rr(0,-6,20,46,12); ctx.fill();
+  // head
+  ctx.fillStyle='#f3d9b8'; ctx.beginPath(); ctx.arc(0,-22,15,0,7); ctx.fill();
+  // hood hint
+  ctx.fillStyle=a.accent; ctx.beginPath(); ctx.arc(0,-26,16,Math.PI,0); ctx.fill();
+  ctx.restore();
+  // outline pass
+  ctx.strokeStyle='rgba(0,0,0,.5)'; ctx.lineWidth=2;
+  ctx.strokeRect(x-20,y-6,40,46);
+  // emote while working
+  if(a.state==='working'){ const e=['*','?','!','~'][a.emote];
+    ctx.fillStyle='#fff'; ctx.font='bold 22px Inter'; ctx.textAlign='center';
+    ctx.globalAlpha=.8; ctx.fillText(e, x, y-46); ctx.globalAlpha=1; }
+  else if(a.state==='drinking'){ ctx.fillStyle='#caa46a'; rr(x+12,y-4,10,12,2); ctx.fill(); }
+  // name tag
+  ctx.fillStyle=a.accent; ctx.font='700 13px Cinzel, serif'; ctx.textAlign='center';
+  ctx.shadowColor='#000'; ctx.shadowBlur=6; ctx.fillText(a.name, x, y+58); ctx.shadowBlur=0;
+}
+
+function fx(t){
+  ctx.save(); ctx.globalCompositeOperation='lighter';
+  for(const f of FIRE){ f.y-=f.s*0.6; if(f.y<380){ f.y=DH+10; f.x=rng(0,DW); }
+    const tw=.4+.4*Math.sin(t*3+f.ph); ctx.fillStyle=`rgba(255,210,120,${tw*0.8})`;
+    ctx.beginPath(); ctx.arc(f.x,f.y,1.6*f.s,0,7); ctx.fill(); }
+  ctx.restore();
+  // vignette
+  let v=ctx.createRadialGradient(DW/2,DH/2,DH*0.3,DW/2,DH/2,DW*0.7);
+  v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(0,0,0,.55)');
+  ctx.fillStyle=v; ctx.fillRect(0,0,DW,DH);
+}
+
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(.05,(now-last)/1000); last=now;
+  update(dt);
+  ctx.setTransform(scale,0,0,scale,0,0);
+  ctx.clearRect(0,0,DW,DH);
+  bg(now/1000);
+  AGENTS.slice().sort((a,b)=>a.y-b.y).forEach(a=>drawAgent(a,now/1000));
+  fx(now/1000);
+  if(openAgent) refreshDash(openAgent);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+// ── Click -> dashboard ──────────────────────────────────────────────────────
+const dash=document.getElementById('dash');
+let openAgent=null;
+cv.addEventListener('click', e=>{
+  const r=cv.getBoundingClientRect();
+  const mx=(e.clientX-r.left)/scale, my=(e.clientY-r.top)/scale;
+  let hit=null, best=60;
+  AGENTS.forEach(a=>{ const d=Math.hypot(a.x-mx, a.y-my); if(d<best){best=d; hit=a;} });
+  if(hit){ openAgent=hit; renderDash(hit); dash.classList.add('open'); }
+});
+function statusOf(a){ return a.state==='working'?'Working':a.state==='drinking'?'At the bar':'Walking'; }
+function renderDash(a){
+  dash.innerHTML = `
+    <span class="x" onclick="closeDash()">✕</span>
+    <div class="head">
+      <div class="sigil" style="background:${a.accent}">${a.name[0]}</div>
+      <div><h2>${a.name}</h2><div class="role">${a.role}</div></div>
+      <span class="chip" id="chip" style="background:${a.accent}22;color:${a.accent}">${statusOf(a)}</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n" style="color:${a.accent}">${(96+Math.random()*4).toFixed(1)}%</div><div class="l">Uptime</div></div>
+      <div class="stat"><div class="n">${a.tasks.done.length}</div><div class="l">Completed</div></div>
+      <div class="stat"><div class="n">${a.tasks.queued.length}</div><div class="l">Queue</div></div>
+    </div>
+    <div class="sec">In Progress</div>
+    <div id="active"></div>
+    <div class="sec">Queued</div>
+    ${a.tasks.queued.map(q=>`<div class="q">• ${q}</div>`).join('')}
+    <div class="sec">Recently Completed</div>
+    ${a.tasks.done.map(d=>`<div class="q" style="text-decoration:line-through;color:#6b7184">${d}</div>`).join('')}
+  `;
+  refreshDash(a);
+}
+function refreshDash(a){
+  const chip=document.getElementById('chip'); if(chip) chip.textContent=statusOf(a);
+  const box=document.getElementById('active'); if(!box) return;
+  box.innerHTML=a.tasks.active.map(t=>`
+    <div class="task">${t.t} <span style="float:right;color:${a.accent}">${Math.round(t.p)}%</span>
+      <div class="bar"><span style="width:${Math.round(t.p)}%;background:${a.accent}"></span></div></div>`).join('');
+}
+function closeDash(){ dash.classList.remove('open'); openAgent=null; }
+window.closeDash=closeDash;
+</script>
+</body>
+</html>
