@@ -179,8 +179,6 @@
     .stat-s{font-size:11px;color:var(--muted);margin-top:3px;}
     .scraper-setup{display:flex;flex-direction:column;gap:14px;}
     .scraper-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
-    .api-key-wrap{display:flex;gap:8px;}
-    .api-key-wrap .f-input{flex:1;}
     .scraper-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
     .toggle-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;}
     .toggle-wrap input[type=checkbox]{width:16px;height:16px;accent-color:var(--purple);cursor:pointer;}
@@ -967,9 +965,9 @@ async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key
 async function _cloudPull(key){try{const{data,error}=await _sb.from('app_data').select('data').eq('id',key).single();if(!error&&data){const val=data.data;const isEmpty=Array.isArray(val)?val.length===0:(val===null||val===undefined||(typeof val==='object'&&Object.keys(val).length===0));if(!isEmpty){localStorage.setItem(key,JSON.stringify(val));}return val;}}catch(e){}return null;}
 function loadScraper(){try{return JSON.parse(localStorage.getItem(SCRAPER_KEY)||'{}')}catch(e){return{}}}
 function saveScraper(s){localStorage.setItem(SCRAPER_KEY,JSON.stringify(s));_cloudPush(SCRAPER_KEY,s);}
-function saveApiKey(){const s=loadScraper();s.serperKey=(document.getElementById('scraperKey')||{}).value?.trim()||'';saveScraper(s);}
-function saveGoogleKey(){const s=loadScraper();s.googleKey=document.getElementById('googleKey').value.trim();saveScraper(s);setScraperStatus('Google key saved.','done');setTimeout(()=>updateScraperStatus(),2000);}
-function saveMetaToken(){const s=loadScraper();s.metaToken=document.getElementById('metaToken').value.trim();saveScraper(s);setScraperStatus('Meta token saved.','done');setTimeout(()=>updateScraperStatus(),2000);}
+// API keys (Places, Meta) live as Vercel environment variables read server-side
+// in /api/*; the old client-side key fields were removed. saveApiKey/saveGoogleKey/
+// saveMetaToken were orphaned (no inputs, no callers) and have been deleted.
 function saveScraperField(field,val){const s=loadScraper();s[field]=val;saveScraper(s);}
 function initScraper(){const s=loadScraper();if(!s.googleKey)s.googleKey='';if(!s.metaToken)s.metaToken='';if(!s.interval)s.interval='20';if(!s.niche)s.niche='kitchen fitters';
   // Normalise any saved niche to one of the three dropdown values
