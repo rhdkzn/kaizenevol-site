@@ -156,6 +156,20 @@
     /* Base cards */
     .card{background:var(--surface);border-radius:var(--radius);padding:22px 24px;box-shadow:0 4px 24px rgba(0,0,0,0.45);border:1px solid var(--border);}
     @media(max-width:640px){.cmd-title{font-size:28px;}.cmd-summary{font-size:12px;}.cmd-center{padding:24px 20px 20px;}}
+    /* Ambient gradient orbs — colour as light, not fill (Forge signature, restrained) */
+    .orb{position:fixed;border-radius:50%;filter:blur(120px);opacity:.4;z-index:0;pointer-events:none;}
+    .orb--cool{top:-12%;right:-8%;width:46vw;height:46vw;max-width:620px;max-height:620px;background:radial-gradient(circle,rgba(139,92,246,0.55),transparent 70%);}
+    .orb--warm{bottom:-14%;left:-10%;width:40vw;height:40vw;max-width:540px;max-height:540px;background:radial-gradient(circle,rgba(244,114,182,0.30),transparent 70%);}
+    .dash-main{position:relative;z-index:1;}
+    /* Scroll-reveal — staggered entrances (Standard tier motion) */
+    [data-reveal]{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(0.16,1,0.3,1),transform .6s cubic-bezier(0.16,1,0.3,1);}
+    [data-reveal].visible{opacity:1;transform:translateY(0);}
+    /* Respect reduced-motion: content fully visible, no animation */
+    @media(prefers-reduced-motion:reduce){
+      [data-reveal]{opacity:1!important;transform:none!important;transition:none!important;}
+      html{scroll-behavior:auto;}
+      *{animation-duration:.001ms!important;transition-duration:.001ms!important;}
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -178,6 +192,8 @@
   </div>
 </div>
 <div id="dashboard">
+  <div class="orb orb--cool" aria-hidden="true"></div>
+  <div class="orb orb--warm" aria-hidden="true"></div>
   <header class="dash-header">
     <div class="dash-header-inner">
       <div class="dash-logo"><img src="logo.png" alt="KaizenEvol" class="dash-badge" />KaizenEvol</div>
@@ -192,27 +208,27 @@
     </div>
   </header>
   <main class="dash-main">
-    <div class="cmd-center">
+    <div class="cmd-center" data-reveal>
       <div class="cmd-greeting" id="ccGreeting"></div>
       <h1 class="cmd-title">Command Center</h1>
       <div class="cmd-date" id="ccDate"></div>
       <div class="cmd-summary" id="ccSummary"></div>
     </div>
-    <section>
+    <section data-reveal>
       <div class="section-label">Prospect Pipeline</div>
       <div class="stats-row" id="prospectRow"></div>
     </section>
-    <section>
+    <section data-reveal>
       <div class="section-label">Leads per Stage</div>
       <div class="chart-card">
         <canvas id="stageChart" height="160"></canvas>
       </div>
     </section>
-    <section>
+    <section data-reveal>
       <div class="section-label">Overview</div>
       <div class="stats-row" id="statsRow"></div>
     </section>
-    <section>
+    <section data-reveal>
       <div class="section-label">Revenue Target</div>
       <div class="revenue-card">
         <div class="rev-header">
@@ -238,11 +254,11 @@
         <div class="rev-retainer-grid" id="retainerGrid"></div>
       </div>
     </section>
-    <section>
+    <section data-reveal>
       <div class="section-label">Clients</div>
       <div class="snapshot-list" id="snapshotList"></div>
     </section>
-    <div class="bottom-grid">
+    <div class="bottom-grid" data-reveal>
       <div class="card">
         <div class="section-label">Tasks</div>
         <div class="task-row">
@@ -312,7 +328,13 @@ function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{cons
 let _dashChannel=null;
 function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
 function renderAll(d){renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);const notesEl=document.getElementById('notesArea');if(notesEl&&document.activeElement!==notesEl)notesEl.value=d.notes||'';}
-async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();try{const remote=await _cloudPull(DATA_KEY);if(remote&&typeof remote==='object'&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};if(!Array.isArray(remote.clients)||remote.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);const _ni=merged.clients.findIndex(c=>c.id==='nav');if(_ni!==-1){merged.clients.splice(_ni,1);if(merged.metrics)delete merged.metrics.nav;_cloudPush(DATA_KEY,merged);}localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}else if(!remote){_cloudPush(DATA_KEY,load());}}catch(e){console.warn('Initial sync:',e);}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}}).subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});}
+function initReveal(){
+  const els=document.querySelectorAll('[data-reveal]');
+  if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion:reduce)').matches){els.forEach(el=>el.classList.add('visible'));return;}
+  const obs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);obs.unobserve(e.target);}});},{threshold:0.08});
+  els.forEach(el=>obs.observe(el));
+}
+async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();initReveal();try{const remote=await _cloudPull(DATA_KEY);if(remote&&typeof remote==='object'&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};if(!Array.isArray(remote.clients)||remote.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);const _ni=merged.clients.findIndex(c=>c.id==='nav');if(_ni!==-1){merged.clients.splice(_ni,1);if(merged.metrics)delete merged.metrics.nav;_cloudPush(DATA_KEY,merged);}localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}else if(!remote){_cloudPush(DATA_KEY,load());}}catch(e){console.warn('Initial sync:',e);}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}}).subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});}
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
 const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
 async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){console.warn('Supabase push:',e);}}
