@@ -4,25 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reformer Pilates Bristol | Kavita | Book Your Class</title>
-    <meta name="description" content="Boutique Reformer Pilates in Bristol. Small group classes, expert instruction, all levels welcome. Book your free taster class today.">
+    <meta name="description" content="Boutique Reformer Pilates in Bristol. Small classes of five, expert instruction, all levels welcome. Stronger body. Clearer mind. Better you.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --cream: #FAF7F2;
-            --warm-white: #FDFBF8;
-            --charcoal: #1E1E1E;
-            --text: #2A2A2A;
-            --text-light: #6B6B6B;
-            --gold: #C4A882;
-            --gold-dark: #A8895F;
-            --blush: #EDE0D4;
-            --blush-light: #F5EDE6;
-            --sage: #8B9E8A;
-            --border: #E8DDD4;
-            --shadow: rgba(0,0,0,0.08);
+            --cream: #EFEDE8;
+            --warm-white: #F7F6F2;
+            --charcoal: #35332E;
+            --text: #3B3934;
+            --text-light: #767268;
+            --gold: #C0A05C;
+            --gold-dark: #A0813E;
+            --blush: #E4E0D6;
+            --blush-light: #EDEAE2;
+            --sage: #8C8577;
+            --border: #DBD6CB;
+            --shadow: rgba(53,51,46,0.09);
         }
 
         html { scroll-behavior: smooth; }
@@ -49,7 +49,7 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 100;
-            background: rgba(253, 251, 248, 0.96);
+            background: rgba(247, 246, 242, 0.96);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             transition: box-shadow 0.3s;
@@ -65,7 +65,9 @@
             justify-content: space-between;
         }
 
-        .nav-logo { display: flex; flex-direction: column; gap: 2px; }
+        .nav-logo { display: flex; align-items: center; gap: 0.75rem; }
+        .nav-monogram { width: 42px; height: 42px; flex-shrink: 0; border: 1.5px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 500; color: var(--gold); letter-spacing: 0.04em; }
+        .nav-logo-text { display: flex; flex-direction: column; gap: 2px; }
         .nav-logo-main { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; letter-spacing: 0.02em; color: var(--charcoal); }
         .nav-logo-sub { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); }
 
@@ -87,7 +89,7 @@
         /* === HERO === */
         .hero {
             min-height: 100vh;
-            background: linear-gradient(160deg, #EDE0D4 0%, #FAF7F2 45%, #E8DDD4 100%);
+            background: linear-gradient(160deg, #E3E0D9 0%, #F3F1EC 45%, #DAD5CA 100%);
             display: flex;
             align-items: center;
             position: relative;
@@ -100,7 +102,7 @@
             position: absolute;
             top: -20%; right: -10%;
             width: 60vw; height: 80vw;
-            background: radial-gradient(ellipse, rgba(196,168,130,0.15) 0%, transparent 70%);
+            background: radial-gradient(ellipse, rgba(192,160,92,0.16) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -109,7 +111,7 @@
             position: absolute;
             bottom: -10%; left: -5%;
             width: 40vw; height: 40vw;
-            background: radial-gradient(ellipse, rgba(139,158,138,0.1) 0%, transparent 70%);
+            background: radial-gradient(ellipse, rgba(140,133,119,0.12) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -129,8 +131,8 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(196,168,130,0.15);
-            border: 1px solid rgba(196,168,130,0.35);
+            background: rgba(192,160,92,0.14);
+            border: 1px solid rgba(192,160,92,0.4);
             padding: 0.4rem 1rem;
             border-radius: 100px;
             font-size: 0.72rem;
@@ -174,7 +176,7 @@
         .hero-visual { position: relative; }
 
         .hero-image-card {
-            background: linear-gradient(145deg, #D4C4B4 0%, #C4A882 50%, #B8956A 100%);
+            background: linear-gradient(145deg, #ABA69C 0%, #948F84 55%, #7E7A6E 100%);
             border-radius: 4px;
             aspect-ratio: 4/5;
             position: relative;
@@ -226,14 +228,14 @@
 
         .about-visual { position: relative; }
         .about-img-main {
-            background: linear-gradient(135deg, #C9B5A0 0%, #D4C4B4 100%);
+            background: linear-gradient(135deg, #B3AEA4 0%, #C8C3B9 100%);
             aspect-ratio: 3/4; border-radius: 4px; position: relative; overflow: hidden;
         }
-        .about-img-main::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(196,168,130,0.2) 0%, transparent 60%); }
+        .about-img-main::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(192,160,92,0.22) 0%, transparent 60%); }
         .about-img-accent {
             position: absolute; bottom: -2rem; right: -2rem;
             width: 55%; aspect-ratio: 1;
-            background: linear-gradient(135deg, #8B9E8A 0%, #6E8A6D 100%);
+            background: linear-gradient(135deg, #C9AA62 0%, #A0813E 100%);
             border-radius: 4px; border: 4px solid var(--cream);
         }
 
@@ -254,9 +256,9 @@
         .class-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px var(--shadow); }
 
         .class-card-header { height: 210px; position: relative; display: flex; align-items: flex-end; padding: 1.5rem; }
-        .class-card-header.beginner { background: linear-gradient(145deg, #D4C4B4, #C9A882); }
-        .class-card-header.intermediate { background: linear-gradient(145deg, #8B9E8A, #6E8A6D); }
-        .class-card-header.advanced { background: linear-gradient(145deg, #2C2C2C, #4A4A4A); }
+        .class-card-header.beginner { background: linear-gradient(145deg, #CDB578, #B29148); }
+        .class-card-header.intermediate { background: linear-gradient(145deg, #A29C8F, #837D6F); }
+        .class-card-header.advanced { background: linear-gradient(145deg, #35332E, #55524A); }
 
         .class-level-badge {
             background: rgba(255,255,255,0.2);
@@ -300,7 +302,7 @@
         }
 
         /* === TASTER CTA === */
-        .taster-cta { background: linear-gradient(135deg, var(--charcoal) 0%, #2A2A2A 100%); padding: 4.5rem 2rem; text-align: center; }
+        .taster-cta { background: linear-gradient(135deg, var(--charcoal) 0%, #45423B 100%); padding: 4.5rem 2rem; text-align: center; }
         .taster-cta-inner { max-width: 680px; margin: 0 auto; }
         .taster-cta .section-label { color: var(--gold); }
         .taster-cta h2 { color: #fff; font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin-bottom: 1rem; }
@@ -317,7 +319,7 @@
 
         /* === PRICING === */
         .pricing { background: var(--cream); }
-        .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; align-items: start; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: start; max-width: 980px; margin: 0 auto; }
 
         .pricing-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 2rem 1.5rem; position: relative; transition: all 0.3s; }
         .pricing-card:hover { box-shadow: 0 12px 40px var(--shadow); }
@@ -354,22 +356,6 @@
         .why-number { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; color: var(--blush); line-height: 1; margin-bottom: 1rem; }
         .why-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.75rem; }
         .why-text { font-size: 0.83rem; color: var(--text-light); line-height: 1.7; }
-
-        /* === TESTIMONIALS === */
-        .testimonials { background: var(--cream); }
-        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-
-        .testimonial-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 2rem; }
-        .testimonial-stars { display: flex; gap: 2px; margin-bottom: 1rem; }
-        .testimonial-stars span { color: var(--gold); font-size: 0.88rem; }
-
-        .testimonial-quote { font-family: 'Playfair Display', serif; font-size: 0.93rem; font-style: italic; line-height: 1.75; color: var(--text); margin-bottom: 1.5rem; }
-        .testimonial-quote::before { content: '"'; font-size: 3rem; color: var(--blush); font-family: 'Playfair Display', serif; line-height: 0; vertical-align: -0.8rem; margin-right: 0.2rem; }
-
-        .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
-        .testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--blush), var(--gold)); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 0.9rem; color: #fff; font-weight: 600; flex-shrink: 0; }
-        .testimonial-name { font-weight: 600; font-size: 0.83rem; }
-        .testimonial-detail { font-size: 0.72rem; color: var(--text-light); }
 
         /* === FAQ === */
         .faq { background: var(--warm-white); }
@@ -487,8 +473,11 @@
 <nav id="navbar">
     <div class="nav-inner">
         <a href="#home" class="nav-logo">
-            <span class="nav-logo-main">Reformer Pilates</span>
-            <span class="nav-logo-sub">by Kavita &middot; Bristol</span>
+            <span class="nav-monogram">RP</span>
+            <span class="nav-logo-text">
+                <span class="nav-logo-main">Reformer Pilates</span>
+                <span class="nav-logo-sub">by Kavita &middot; Bristol</span>
+            </span>
         </a>
         <ul class="nav-links">
             <li><a href="#classes">Classes</a></li>
@@ -519,16 +508,16 @@
     <div class="hero-inner">
         <div class="hero-content">
             <div class="hero-badge">Bristol's Boutique Reformer Studio</div>
-            <h1>Move better.<br><em>Feel stronger.</em><br>Live fully.</h1>
-            <p class="hero-subtitle">Expert-led Reformer Pilates classes in Bristol. Small groups, personalised attention, and real results — from your very first session.</p>
+            <h1>Move.<br><em>Strengthen.</em><br>Transform.</h1>
+            <p class="hero-subtitle">Stronger body. Clearer mind. Better you. Expert-led Reformer Pilates in Bristol — just five beds per class, personalised attention, and real results from your very first session.</p>
             <div class="hero-actions">
-                <a href="#contact" class="btn-primary">Book Free Taster &rarr;</a>
+                <a href="#contact" class="btn-primary">Book a Class &rarr;</a>
                 <a href="#classes" class="btn-secondary">View Classes</a>
             </div>
             <div class="hero-stats">
                 <div class="hero-stat">
-                    <div class="hero-stat-num">8</div>
-                    <div class="hero-stat-label">Max per class</div>
+                    <div class="hero-stat-num">5</div>
+                    <div class="hero-stat-label">Beds per class</div>
                 </div>
                 <div class="hero-stat">
                     <div class="hero-stat-num">3</div>
@@ -545,14 +534,14 @@
                 <div class="hero-image-pattern"></div>
                 <div class="hero-image-overlay"></div>
                 <div class="hero-image-text">
-                    <p>"Reformer Pilates changed how I move through life."</p>
-                    <span>&mdash; Sarah M., member since 2024</span>
+                    <p>Stronger body &middot; Clearer mind &middot; Better you</p>
+                    <span>Reformer Pilates &middot; Bristol</span>
                 </div>
             </div>
             <div class="hero-floating-card">
                 <div class="floating-card-label">Drop-in from</div>
                 <div class="floating-card-value">&pound;20</div>
-                <div class="floating-card-sub">Free taster available</div>
+                <div class="floating-card-sub">No commitment needed</div>
             </div>
         </div>
     </div>
@@ -562,9 +551,9 @@
 <div class="trust-bar">
     <div class="trust-bar-inner">
         <div class="trust-item">Expert Instructors</div>
-        <div class="trust-item">Maximum 8 Per Class</div>
+        <div class="trust-item">Just 5 Beds Per Class</div>
         <div class="trust-item">All Levels Welcome</div>
-        <div class="trust-item">Free Taster Class</div>
+        <div class="trust-item">Wellness &amp; Beauty Together</div>
         <div class="trust-item">Part of the Bonjour Belle Family</div>
     </div>
 </div>
@@ -578,11 +567,11 @@
                 <div class="about-img-accent"></div>
             </div>
             <div class="about-content">
-                <span class="section-label">About Kavita</span>
-                <h2 class="section-title">Pilates with purpose, led with heart</h2>
-                <p class="about-quote">"I built this studio because I believe everyone deserves to feel at home in their body."</p>
-                <p class="about-text">Welcome to Reformer Pilates Bristol — a boutique studio rooted in expertise, warmth, and genuine results. Founded by Kavita, the award-winning practitioner behind Bonjour Belle Salon in Clifton, this studio brings the same ethos of quality and care to your movement practice.</p>
-                <p class="about-text">Our Reformer machines offer a full-body, low-impact workout that builds deep core strength, improves posture, increases flexibility, and leaves you feeling genuinely brilliant — not wrecked.</p>
+                <span class="section-label">About Us</span>
+                <h2 class="section-title">Wellness and self care, hand in hand</h2>
+                <p class="about-quote">"Our goal is for you to leave feeling stronger, uplifted and empowered — every single time."</p>
+                <p class="about-text">At Reformer Pilates and Bonjour Belle, we believe wellness and self care go hand in hand. Our studio is designed to help you feel strong, confident, and refreshed through a combination of Reformer Pilates and professional beauty treatments.</p>
+                <p class="about-text">Whether you're looking to improve strength and posture, unwind and recharge, or enhance your natural beauty, we offer a welcoming space focused on balance, confidence and wellbeing.</p>
                 <div class="about-pillars">
                     <div class="pillar">
                         <div class="pillar-icon">🌿</div>
@@ -592,7 +581,7 @@
                     <div class="pillar">
                         <div class="pillar-icon">👥</div>
                         <div class="pillar-title">Truly small groups</div>
-                        <div class="pillar-text">Max 8 per class. Your instructor knows your name.</div>
+                        <div class="pillar-text">Just 5 beds per class. Your instructor knows your name.</div>
                     </div>
                     <div class="pillar">
                         <div class="pillar-icon">✦</div>
@@ -633,7 +622,7 @@
                         </div>
                         <div class="class-meta-item">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            Max 8
+                            Max 5
                         </div>
                     </div>
                     <div class="class-price">&pound;20 <span>drop-in</span></div>
@@ -653,7 +642,7 @@
                         </div>
                         <div class="class-meta-item">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            Max 8
+                            Max 5
                         </div>
                     </div>
                     <div class="class-price">&pound;20 <span>drop-in</span></div>
@@ -673,7 +662,7 @@
                         </div>
                         <div class="class-meta-item">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            Max 8
+                            Max 5
                         </div>
                     </div>
                     <div class="class-price">&pound;20 <span>drop-in</span></div>
@@ -695,13 +684,13 @@
     </div>
 </section>
 
-<!-- TASTER CTA -->
+<!-- BOOK CTA -->
 <div class="taster-cta">
     <div class="taster-cta-inner">
-        <span class="section-label">New to Pilates?</span>
-        <h2>Your first class is on us.</h2>
-        <p>Not sure if Reformer Pilates is for you? Come and try it, completely free. No commitment, no awkwardness — just an honest introduction to what your body is capable of.</p>
-        <a href="#contact" class="btn-gold">Claim Your Free Taster &rarr;</a>
+        <span class="section-label">Ready When You Are</span>
+        <h2>Stronger body. Clearer mind. Better you.</h2>
+        <p>Just five beds per class means spaces go quickly. Book your first session and discover what your body is capable of — no experience needed, no commitment required.</p>
+        <a href="#contact" class="btn-gold">Book Your First Class &rarr;</a>
     </div>
 </div>
 
@@ -722,7 +711,7 @@
                 <ul class="pricing-features">
                     <li>Any class, any level</li>
                     <li>Book session by session</li>
-                    <li>No membership needed</li>
+                    <li>No commitment</li>
                     <li>Online booking</li>
                 </ul>
                 <a href="#contact" class="pricing-btn">Book a Class</a>
@@ -755,21 +744,8 @@
                 </ul>
                 <a href="#contact" class="pricing-btn">Buy 10 Classes</a>
             </div>
-            <div class="pricing-card">
-                <div class="pricing-name">Monthly Unlimited</div>
-                <div class="pricing-price">&pound;120</div>
-                <div class="pricing-period">per month &mdash; cancel anytime</div>
-                <div class="pricing-divider"></div>
-                <ul class="pricing-features">
-                    <li>Unlimited classes</li>
-                    <li>All levels included</li>
-                    <li>Priority booking</li>
-                    <li>Rolling monthly</li>
-                </ul>
-                <a href="#contact" class="pricing-btn">Get Unlimited</a>
-            </div>
         </div>
-        <p style="text-align:center; margin-top:1.5rem; font-size:0.78rem; color:var(--text-light);">All new members receive a complimentary onboarding consultation. Prices include VAT.</p>
+        <p style="text-align:center; margin-top:1.5rem; font-size:0.78rem; color:var(--text-light);">Prices include VAT. Book online — spaces limited to 5 per class.</p>
     </div>
 </section>
 
@@ -779,13 +755,13 @@
         <div class="section-header center">
             <span class="section-label">Why Choose Us</span>
             <h2 class="section-title">The Reformer Pilates difference</h2>
-            <p class="section-desc">Six reasons our members stay, progress, and bring their friends.</p>
+            <p class="section-desc">Six reasons to make this your studio.</p>
         </div>
         <div class="why-grid">
             <div class="why-card">
                 <div class="why-number">01</div>
                 <h3 class="why-title">Truly small classes</h3>
-                <p class="why-text">Maximum 8 people per class &mdash; not 15, not 20. Your instructor can see you, correct you, and actually help you progress. That's the point.</p>
+                <p class="why-text">Just 5 beds per class &mdash; not 15, not 20. Your instructor can see you, correct you, and actually help you progress. That's the point.</p>
             </div>
             <div class="why-card">
                 <div class="why-number">02</div>
@@ -809,59 +785,8 @@
             </div>
             <div class="why-card">
                 <div class="why-number">06</div>
-                <h3 class="why-title">Free taster, zero pressure</h3>
-                <p class="why-text">We're confident you'll love it &mdash; so your first session is completely free. Try it before you commit to anything. No hard sell, ever.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials">
-    <div class="section-inner">
-        <div class="section-header center">
-            <span class="section-label">Testimonials</span>
-            <h2 class="section-title">What our members say</h2>
-        </div>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
-                </div>
-                <p class="testimonial-quote">I'd never done Reformer before and was genuinely nervous. The beginner class was so welcoming &mdash; the instructor explained everything clearly and I felt completely at ease. I've booked three more classes already.</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">S</div>
-                    <div>
-                        <div class="testimonial-name">Sarah M.</div>
-                        <div class="testimonial-detail">Beginner Flow member</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
-                </div>
-                <p class="testimonial-quote">I've tried other studios in Bristol but nothing compares to the intimacy here. With only 8 in a class, you actually get better. My posture has completely transformed in just six weeks.</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">J</div>
-                    <div>
-                        <div class="testimonial-name">Jess T.</div>
-                        <div class="testimonial-detail">Open Flow member</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
-                </div>
-                <p class="testimonial-quote">The private 1:1 was a game changer. I had a back injury and was worried about group classes &mdash; Kavita tailored everything perfectly. I feel stronger than I have in years.</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">R</div>
-                    <div>
-                        <div class="testimonial-name">Rachel K.</div>
-                        <div class="testimonial-detail">Private sessions member</div>
-                    </div>
-                </div>
+                <h3 class="why-title">Wellness and beauty, together</h3>
+                <p class="why-text">Strengthen in the studio, then treat yourself at Bonjour Belle. One philosophy of self care &mdash; leave feeling stronger, uplifted and empowered.</p>
             </div>
         </div>
     </div>
@@ -934,14 +859,14 @@
             </div>
             <div class="faq-visual">
                 <div class="faq-promo-card">
-                    <span class="section-label">New Members</span>
-                    <h3>Start with a free taster class</h3>
-                    <p>Not sure if it&rsquo;s for you? Come and try it on us. No commitment, no pressure &mdash; just 50 minutes that might change how you think about exercise.</p>
-                    <a href="#contact" class="btn-gold">Book Free Taster &rarr;</a>
+                    <span class="section-label">New Here?</span>
+                    <h3>Book your first class</h3>
+                    <p>No experience needed. Start with Beginner Flow &mdash; 50 minutes that might change how you think about exercise. Just 5 beds, so book early.</p>
+                    <a href="#contact" class="btn-gold">Book a Class &rarr;</a>
                 </div>
                 <div class="faq-contact-card">
                     <p>Still have questions? We&rsquo;re happy to chat.</p>
-                    <div class="faq-contact-link">&#128231; hello@reformerpilatesbristol.co.uk</div>
+                    <div class="faq-contact-link">&#128231; kavfit78@gmail.com</div>
                     <div class="faq-contact-link">&#128205; Bristol, UK</div>
                 </div>
             </div>
@@ -956,7 +881,7 @@
             <div class="contact-info">
                 <span class="section-label">Get In Touch</span>
                 <h2 class="section-title">Book your first class</h2>
-                <p style="font-size:0.94rem; color:var(--text-light); line-height:1.75; margin-bottom:2.5rem;">Whether you're claiming your free taster, booking a drop-in, or asking about memberships &mdash; we'd love to hear from you.</p>
+                <p style="font-size:0.94rem; color:var(--text-light); line-height:1.75; margin-bottom:2.5rem;">Whether you're booking your first class, a drop-in, or asking about class packs &mdash; we'd love to hear from you.</p>
                 <div class="contact-detail">
                     <div class="contact-detail-icon">&#128205;</div>
                     <div>
@@ -968,7 +893,7 @@
                     <div class="contact-detail-icon">&#128231;</div>
                     <div>
                         <div class="contact-detail-label">Email</div>
-                        <div class="contact-detail-value">hello@reformerpilatesbristol.co.uk</div>
+                        <div class="contact-detail-value">kavfit78@gmail.com</div>
                     </div>
                 </div>
                 <div class="contact-detail">
@@ -1009,12 +934,11 @@
                         <label for="interest">I&rsquo;m interested in</label>
                         <select id="interest">
                             <option value="">Select an option&hellip;</option>
-                            <option>Free Taster Class</option>
                             <option>Beginner Flow</option>
                             <option>Open Flow</option>
                             <option>Advanced Flow</option>
                             <option>Private 1:1 Session</option>
-                            <option>Class pack or membership</option>
+                            <option>Class packs</option>
                             <option>General enquiry</option>
                         </select>
                     </div>
