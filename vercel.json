@@ -1,4 +1,7 @@
 {
+  "crons": [
+    { "path": "/api/welcome-flow", "schedule": "0 9 * * *" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

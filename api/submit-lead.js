@@ -1,3 +1,5 @@
+import { buildWelcomeEmail, isWelcomeEligible, WELCOME_FROM, WELCOME_REPLY_TO } from './_welcome-emails.js';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -54,7 +56,40 @@ export default async function handler(req, res) {
     ].filter(Boolean).join(' · '),
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    // Welcome nurture flow state — advanced by /api/welcome-flow (cron)
+    welcome: { step: 0, lastSentAt: 0, done: false },
   };
+
+  // Email 1 of the welcome flow goes out instantly; steps 2-5 run on the cron.
+  // KaizenDesk-only enquiries are excluded (ads pitch doesn't fit) — cron skips them too.
+  const RESEND_KEY_WELCOME = process.env.RESEND_API_KEY;
+  if (RESEND_KEY_WELCOME && isWelcomeEligible(newLead)) {
+    try {
+      const welcomeEmail = buildWelcomeEmail(1, newLead);
+      const welcomeRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_KEY_WELCOME}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: WELCOME_FROM,
+          reply_to: WELCOME_REPLY_TO,
+          to: [newLead.email],
+          subject: welcomeEmail.subject,
+          text: welcomeEmail.text,
+        }),
+      });
+      if (welcomeRes.ok) {
+        newLead.welcome = { step: 1, lastSentAt: Date.now(), done: false };
+      }
+    } catch (_) {
+      // Non-fatal — cron picks up step 1 on its next run
+    }
+  } else if (!isWelcomeEligible(newLead)) {
+    newLead.welcome.done = true;
+    newLead.welcome.stoppedReason = 'ineligible';
+  }
 
   leads.push(newLead);
 

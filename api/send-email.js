@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Email service not configured' });
   }
 
-  const { to, subject, text, from } = req.body;
+  const { to, subject, text, from, reply_to } = req.body;
   if (!to || !subject || !text) {
     return res.status(400).json({ error: 'Missing required fields: to, subject, text' });
   }
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         'Authorization': 'Bearer ' + key,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ from, to: [to], subject, text }),
+      body: JSON.stringify({ from, to: [to], subject, text, ...(reply_to ? { reply_to } : {}) }),
     });
 
     const data = await resp.json();
