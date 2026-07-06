@@ -158,6 +158,34 @@
     }
     @media(min-width:769px){.mobile-overlay,.mobile-panel{display:none !important}}
     @media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+  
+    /* === POLISH PASS: depth + motion === */
+    @keyframes hero-rise { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+      background:radial-gradient(1000px 620px at 85% -10%,rgba(109,63,192,.10),transparent 62%),
+                 radial-gradient(800px 560px at -12% 50%,rgba(139,92,246,.06),transparent 62%); }
+    body::after { content:''; position:fixed; inset:0; z-index:2000; pointer-events:none; opacity:.04;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    .hero { isolation:isolate; }
+    .hero::after { content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+      background-image:linear-gradient(rgba(139,92,246,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.055) 1px,transparent 1px);
+      background-size:54px 54px;
+      -webkit-mask-image:radial-gradient(ellipse 75% 65% at 50% 28%,#000,transparent 72%);
+      mask-image:radial-gradient(ellipse 75% 65% at 50% 28%,#000,transparent 72%); }
+    .hero-inner { animation:none; }
+    .hero-inner>* { opacity:0; animation:hero-rise .8s var(--ease-out-expo) forwards; }
+    .hero-inner>*:nth-child(1){animation-delay:.05s}
+    .hero-inner>*:nth-child(2){animation-delay:.16s}
+    .hero-inner>*:nth-child(3){animation-delay:.30s}
+    .hero-inner>*:nth-child(4){animation-delay:.44s}
+    .hero-inner>*:nth-child(5){animation-delay:.56s}
+    .hero-inner>*:nth-child(6){animation-delay:.68s}
+    .rv { opacity:0; transform:translateY(22px); transition:opacity .6s var(--ease-out-expo),transform .6s var(--ease-out-expo); transition-delay:calc(var(--rv,0)*90ms); }
+    .rv.in { opacity:1; transform:translateY(0); }
+    @media(prefers-reduced-motion:reduce){
+      .hero-inner>*{animation:none;opacity:1}
+      .rv{opacity:1;transform:none;transition:none}
+    }
   </style>
 </head>
 <body>
@@ -370,6 +398,25 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   }
+</script>
+
+<script>
+  /* polish: scroll reveal */
+  (function(){
+    var sels='.svc-card,.ind-card,.price-card,.problem-card,.cmp-row,.faq-inline-item,.problem-callout,.guarantee-callout,.calc-wrap,.section-header,.team-card,.chat';
+    var els=Array.prototype.slice.call(document.querySelectorAll(sels)).filter(function(el){return !el.classList.contains('step-card');});
+    var byParent=[];
+    els.forEach(function(el){
+      var g=null;
+      for(var i=0;i<byParent.length;i++){ if(byParent[i].p===el.parentElement){ g=byParent[i]; break; } }
+      if(!g){ g={p:el.parentElement,items:[]}; byParent.push(g); }
+      g.items.push(el);
+    });
+    byParent.forEach(function(g){ g.items.forEach(function(el,i){ el.classList.add('rv'); el.style.setProperty('--rv',String(Math.min(i,6))); }); });
+    if(!('IntersectionObserver' in window)){ els.forEach(function(el){ el.classList.add('in'); }); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:0.1,rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(el){ io.observe(el); });
+  })();
 </script>
 </body>
 </html>
