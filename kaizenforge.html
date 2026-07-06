@@ -261,11 +261,7 @@
     /* ANIMATIONS */
     @keyframes hero-rise { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
     .step-card.will-animate { opacity:0; transform:translateY(24px); transition:opacity 0.55s var(--ease-out-expo),transform 0.55s var(--ease-out-expo); transition-delay:calc(var(--i,0)*0.1s); }
-    @media(prefers-reduced-motion:reduce) {
-      .hero-inner{animation:none}
-      .step-card.will-animate{opacity:1;transform:none;transition:none}
-      .marquee-inner{animation-play-state:paused}
-    }
+    
 
     /* RESPONSIVE */
     @media(max-width:900px) {
@@ -315,10 +311,7 @@
     .hero-inner>*:nth-child(6){animation-delay:.68s}
     .rv { opacity:0; transform:translateY(22px); transition:opacity .6s var(--ease-out-expo),transform .6s var(--ease-out-expo); transition-delay:calc(var(--rv,0)*90ms); }
     .rv.in { opacity:1; transform:translateY(0); }
-    @media(prefers-reduced-motion:reduce){
-      .hero-inner>*{animation:none;opacity:1}
-      .rv{opacity:1;transform:none;transition:none}
-    }
+    
   
     /* mockup self-build */
     .bw-hero,.bw-line,.bw-cta { transform-origin:left center; transform:scaleX(0); transition:transform .55s var(--ease-out-expo); }
@@ -329,10 +322,7 @@
     .browser.built .bw-cta { transform:scaleX(1); transition-delay:.72s; }
     .bw-badge { opacity:0; transform:scale(.6); transition:opacity .3s ease,transform .45s var(--ease-out-expo); transition-delay:1.05s; }
     .browser.built .bw-badge { opacity:1; transform:scale(1); }
-    @media(prefers-reduced-motion:reduce){
-      .bw-hero,.bw-line,.bw-cta { transform:none; transition:none; }
-      .bw-badge { opacity:1; transform:none; transition:none; }
-    }
+    
   </style>
 </head>
 <body>
@@ -712,7 +702,6 @@
     var url=document.getElementById('bwUrl'); var full='yourbusiness.co.uk'; var played=false;
     function play(){
       if(played) return; played=true;
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ br.classList.add('built'); return; }
       url.textContent='';
       var i=0;
       var t=setInterval(function(){
