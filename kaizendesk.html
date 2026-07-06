@@ -288,11 +288,7 @@
     /* ANIMATIONS */
     @keyframes hero-rise { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
     .step-card.will-animate { opacity:0; transform:translateY(24px); transition:opacity 0.55s var(--ease-out-expo),transform 0.55s var(--ease-out-expo); transition-delay:calc(var(--i,0)*0.1s); }
-    @media(prefers-reduced-motion:reduce) {
-      .hero-inner{animation:none}
-      .step-card.will-animate{opacity:1;transform:none;transition:none}
-      .marquee-inner{animation-play-state:paused}
-    }
+    
 
     /* RESPONSIVE */
     @media(max-width:900px) {
@@ -374,10 +370,7 @@
     .hero-inner>*:nth-child(6){animation-delay:.68s}
     .rv { opacity:0; transform:translateY(22px); transition:opacity .6s var(--ease-out-expo),transform .6s var(--ease-out-expo); transition-delay:calc(var(--rv,0)*90ms); }
     .rv.in { opacity:1; transform:translateY(0); }
-    @media(prefers-reduced-motion:reduce){
-      .hero-inner>*{animation:none;opacity:1}
-      .rv{opacity:1;transform:none;transition:none}
-    }
+    
   
     /* chat plays like a real conversation */
     .chat .bub { opacity:0; transform:translateY(10px) scale(.97); transition:opacity .3s ease,transform .4s var(--ease-out-quart); }
@@ -387,7 +380,7 @@
     .bub.typing i:nth-child(2){ animation-delay:.15s; }
     .bub.typing i:nth-child(3){ animation-delay:.3s; }
     @keyframes tdot { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
-    @media(prefers-reduced-motion:reduce){ .chat .bub { opacity:1; transform:none; transition:none; } }
+    
   </style>
 </head>
 <body>
@@ -767,7 +760,6 @@
     function showAll(){ bubs.forEach(function(b){ b.classList.add('show'); }); }
     function play(){
       if(played) return; played=true;
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ showAll(); return; }
       var delays=[350,1200,2700,3600];
       bubs.forEach(function(b,i){
         var at=delays[i]||(i*900+400);
@@ -793,7 +785,6 @@
     var done=false;
     var io=new IntersectionObserver(function(es){ es.forEach(function(e){
       if(!e.isIntersecting||done) return; done=true; io.disconnect();
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       ['recMonth','recYear'].forEach(function(id){
         var el=document.getElementById(id); if(!el) return;
         var final=parseInt(el.textContent.replace(/[^0-9]/g,''),10)||0; var t0=null;

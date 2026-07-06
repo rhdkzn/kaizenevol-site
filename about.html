@@ -140,10 +140,8 @@
     .footer-copy{font-size:12px;color:var(--muted);margin-top:4px}
 
     /* REVEAL */
-    @media(prefers-reduced-motion:no-preference){
-      .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s var(--ease-out-quart),transform 0.5s var(--ease-out-quart)}
-      .reveal.visible{opacity:1;transform:translateY(0)}
-    }
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s var(--ease-out-quart),transform 0.5s var(--ease-out-quart)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
 
     /* RESPONSIVE */
     @media(max-width:768px){
@@ -157,7 +155,7 @@
       .footer-nav{justify-content:center}
     }
     @media(min-width:769px){.mobile-overlay,.mobile-panel{display:none !important}}
-    @media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+    
   
     /* === POLISH PASS: depth + motion === */
     @keyframes hero-rise { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
@@ -182,10 +180,7 @@
     .hero-inner>*:nth-child(6){animation-delay:.68s}
     .rv { opacity:0; transform:translateY(22px); transition:opacity .6s var(--ease-out-expo),transform .6s var(--ease-out-expo); transition-delay:calc(var(--rv,0)*90ms); }
     .rv.in { opacity:1; transform:translateY(0); }
-    @media(prefers-reduced-motion:reduce){
-      .hero-inner>*{animation:none;opacity:1}
-      .rv{opacity:1;transform:none;transition:none}
-    }
+    
   </style>
 </head>
 <body>
@@ -392,7 +387,7 @@
   mobileOverlay.addEventListener('click', closeMenu);
   mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && mobilePanel.classList.contains('open')) closeMenu(); });
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (true) {
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
     }, { threshold: 0.1 });
