@@ -42,7 +42,7 @@
       --white:          #ffffff;
       --radius-card:    14px;
       --radius-pill:    9999px;
-      --max-w:          960px;
+      --max-w:          1080px;
       --ease-out-expo:  cubic-bezier(0.16,1,0.3,1);
       --ease-out-quart: cubic-bezier(0.25,1,0.5,1);
     }
@@ -82,7 +82,7 @@
 
     /* NAVBAR */
     .nav-wrap { position:fixed; top:max(16px,env(safe-area-inset-top)); left:0; right:0; z-index:999; display:flex; justify-content:center; pointer-events:none; }
-    .navbar { pointer-events:all; display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 8px 0 20px; background:rgba(13,11,26,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:var(--radius-pill); max-width:900px; width:calc(100% - 48px); transition:border-color 0.2s; }
+    .navbar { pointer-events:all; display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 8px 0 20px; background:rgba(13,11,26,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:var(--radius-pill); max-width:980px; width:calc(100% - 48px); transition:border-color 0.2s; }
     .navbar:hover { border-color:var(--border-hover); }
     .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
     .nav-logo img { height:28px; width:auto; }
@@ -298,6 +298,39 @@
     .svc-list li::after { content:''; position:absolute; left:5px; top:5px; width:5px; height:8px; border:solid var(--purple-light); border-width:0 2px 2px 0; transform:rotate(45deg); }
     .svc-card .btn-primary { margin-top:auto; align-self:flex-start; }
     @media(max-width:900px){ .svc-grid{ grid-template-columns:1fr; max-width:480px; margin:0 auto; } }
+  
+    /* === POLISH PASS: depth + motion === */
+    @keyframes hero-rise { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+      background:radial-gradient(1000px 620px at 85% -10%,rgba(109,63,192,.10),transparent 62%),
+                 radial-gradient(800px 560px at -12% 50%,rgba(139,92,246,.06),transparent 62%); }
+    body::after { content:''; position:fixed; inset:0; z-index:2000; pointer-events:none; opacity:.04;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    .hero { isolation:isolate; }
+    .hero::after { content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+      background-image:linear-gradient(rgba(139,92,246,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.055) 1px,transparent 1px);
+      background-size:54px 54px;
+      -webkit-mask-image:radial-gradient(ellipse 75% 65% at 50% 28%,#000,transparent 72%);
+      mask-image:radial-gradient(ellipse 75% 65% at 50% 28%,#000,transparent 72%); }
+    .hero-inner { animation:none; }
+    .hero-inner>* { opacity:0; animation:hero-rise .8s var(--ease-out-expo) forwards; }
+    .hero-inner>*:nth-child(1){animation-delay:.05s}
+    .hero-inner>*:nth-child(2){animation-delay:.16s}
+    .hero-inner>*:nth-child(3){animation-delay:.30s}
+    .hero-inner>*:nth-child(4){animation-delay:.44s}
+    .hero-inner>*:nth-child(5){animation-delay:.56s}
+    .hero-inner>*:nth-child(6){animation-delay:.68s}
+    .rv { opacity:0; transform:translateY(22px); transition:opacity .6s var(--ease-out-expo),transform .6s var(--ease-out-expo); transition-delay:calc(var(--rv,0)*90ms); }
+    .rv.in { opacity:1; transform:translateY(0); }
+    @media(prefers-reduced-motion:reduce){
+      .hero-inner>*{animation:none;opacity:1}
+      .rv{opacity:1;transform:none;transition:none}
+    }
+  
+    /* bento why-section */
+    .bento .ind-card:first-child { grid-column:span 2; background:rgba(109,63,192,0.10); border-color:rgba(109,63,192,0.32); }
+    .bento .ind-card:last-child { grid-column:span 2; }
+    @media(max-width:768px){ .bento .ind-card:first-child,.bento .ind-card:last-child { grid-column:auto; } }
   </style>
 </head>
 <body>
@@ -429,7 +462,7 @@
       <h2>Why <em>KaizenEvol</em></h2>
       <p>Three services, one team, the same standards behind all of them.</p>
     </div>
-    <div class="ind-grid">
+    <div class="ind-grid bento">
       <div class="ind-card"><h3>Built for your trade</h3><ul class="ind-list"><li>Specialists in home renovation and local service businesses, never a generic agency template with your logo swapped in</li></ul></div>
       <div class="ind-card"><h3>You own everything</h3><ul class="ind-list"><li>Your ad account, your number, your reviews, your customer data &mdash; always yours, never locked away</li></ul></div>
       <div class="ind-card"><h3>Straight to the founders</h3><ul class="ind-list"><li>You work with Rahaid and Diego directly. No account managers, no junior assigned to your account, no ticket queue</li></ul></div>
@@ -556,6 +589,25 @@
         else { throw new Error(data.error || 'Something went wrong.'); }
       } catch (err) { status.textContent = err.message || 'Something went wrong. Please email us directly.'; status.className = 'lf-status err'; btn.disabled = false; btn.textContent = 'Send'; }
     });
+  })();
+</script>
+
+<script>
+  /* polish: scroll reveal */
+  (function(){
+    var sels='.svc-card,.ind-card,.price-card,.problem-card,.cmp-row,.faq-inline-item,.problem-callout,.guarantee-callout,.calc-wrap,.section-header,.team-card,.chat';
+    var els=Array.prototype.slice.call(document.querySelectorAll(sels)).filter(function(el){return !el.classList.contains('step-card');});
+    var byParent=[];
+    els.forEach(function(el){
+      var g=null;
+      for(var i=0;i<byParent.length;i++){ if(byParent[i].p===el.parentElement){ g=byParent[i]; break; } }
+      if(!g){ g={p:el.parentElement,items:[]}; byParent.push(g); }
+      g.items.push(el);
+    });
+    byParent.forEach(function(g){ g.items.forEach(function(el,i){ el.classList.add('rv'); el.style.setProperty('--rv',String(Math.min(i,6))); }); });
+    if(!('IntersectionObserver' in window)){ els.forEach(function(el){ el.classList.add('in'); }); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:0.1,rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(el){ io.observe(el); });
   })();
 </script>
 </body>
