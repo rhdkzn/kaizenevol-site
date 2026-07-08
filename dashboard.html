@@ -156,6 +156,33 @@
     /* Base cards */
     .card{background:var(--surface);border-radius:var(--radius);padding:22px 24px;box-shadow:0 4px 24px rgba(0,0,0,0.45);border:1px solid var(--border);}
     @media(max-width:640px){.cmd-title{font-size:28px;}.cmd-summary{font-size:12px;}.cmd-center{padding:24px 20px 20px;}}
+    /* Client Results — delivery proof */
+    .res-gate{display:flex;align-items:center;gap:11px;padding:12px 15px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);font-size:13px;}
+    .res-gate .rg-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+    .res-gate.on{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08);}
+    .res-gate.on .rg-dot{background:var(--green);box-shadow:0 0 9px var(--green);}
+    .res-row{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid var(--border);transition:border-color .2s;flex-wrap:wrap;}
+    .res-row:hover{border-color:var(--purple-m);}
+    .res-name{font-size:14px;font-weight:700;}
+    .res-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--radius-pill);background:var(--purple-l);color:#a78bfa;text-transform:uppercase;letter-spacing:.5px;}
+    .res-nums{font-size:13px;color:var(--muted);font-weight:600;margin-left:auto;font-variant-numeric:tabular-nums;white-space:nowrap;}
+    .res-nums b{color:var(--text);}
+    .res-act{font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;background:none;border:none;font-family:'Poppins',sans-serif;padding:4px 5px;}
+    .res-act:hover{opacity:.75;}
+    .res-act.del:hover{color:var(--red);}
+    .res-claim{width:100%;font-size:12.5px;color:rgba(240,238,255,.82);line-height:1.55;padding:10px 13px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);margin-top:2px;}
+    .res-claim b{color:#c4b5fd;font-weight:700;}
+    dialog.res-modal{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:0;max-width:430px;width:92vw;box-shadow:0 12px 54px rgba(0,0,0,.6);}
+    dialog.res-modal::backdrop{background:rgba(4,2,12,.66);}
+    .res-modal-body{padding:24px;}
+    .res-modal-body h3{font-size:16px;margin-bottom:16px;}
+    .res-field{margin-bottom:12px;}
+    .res-field label{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+    .res-field input,.res-field select{width:100%;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+    .res-field input:focus,.res-field select:focus{border-color:var(--purple);}
+    .res-two{display:flex;gap:11px;}
+    .res-two>*{flex:1;}
+    #resToast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--purple);color:#fff;padding:10px 18px;border-radius:var(--radius-pill);font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s;z-index:200;box-shadow:0 6px 24px rgba(139,92,246,.4);}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -184,6 +211,7 @@
       <nav class="dash-nav">
         <a href="dashboard.html" class="dash-nav-link active" aria-current="page">Dashboard</a>
         <a href="crm.html" class="dash-nav-link">CRM</a>
+        <a href="#resultsSection" class="dash-nav-link">Results</a>
       </nav>
       <div class="dash-header-right">
         <span class="dash-date" id="headerDate"></span>
@@ -242,6 +270,18 @@
       <div class="section-label">Clients</div>
       <div class="snapshot-list" id="snapshotList"></div>
     </section>
+    <section id="resultsSection">
+      <div class="section-label">Client Results &mdash; delivery proof</div>
+      <div class="stats-row" id="resultsStatsRow"></div>
+      <div class="card" style="margin-top:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div style="font-size:12.5px;color:var(--muted);max-width:640px;">Jobs won &amp; revenue our ads generated for each client &mdash; the numbers that substantiate every claim (FIN-UEC-001) and gate the Forge Pro raise. Log what each client actually won; Diego copies the claim straight into outreach.</div>
+          <button class="add-btn" onclick="openResult(null)">+ Add result</button>
+        </div>
+        <div class="res-gate" id="resGate" style="margin-top:16px;"></div>
+        <div class="snapshot-list" id="resultsList" style="margin-top:14px;"></div>
+      </div>
+    </section>
     <div class="bottom-grid">
       <div class="card">
         <div class="section-label">Tasks</div>
@@ -271,6 +311,18 @@
       </div>
     </div>
   </main>
+  <dialog id="resDlg" class="res-modal">
+    <form method="dialog" class="res-modal-body">
+      <h3 id="resDlgTitle">Add client result</h3>
+      <div class="res-field"><label>Client name</label><input id="res_name" placeholder="e.g. Anderson Kitchens" required /></div>
+      <div class="res-field"><label>Niche</label><select id="res_niche" onchange="resNicheChange()"><option value="kitchen">Kitchen remodelling</option><option value="bathroom">Bathroom renovation</option><option value="loft">Loft conversion</option><option value="other">Other</option></select></div>
+      <div class="res-two"><div class="res-field"><label>Ad spend &pound;</label><input id="res_spend" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Avg job value &pound;</label><input id="res_job" type="number" min="0" /></div></div>
+      <div class="res-two"><div class="res-field"><label>Leads</label><input id="res_leads" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Booked</label><input id="res_booked" type="number" min="0" placeholder="0" /></div></div>
+      <div class="res-two"><div class="res-field"><label>Jobs won</label><input id="res_won" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Client margin %</label><input id="res_margin" type="number" min="0" max="100" value="25" /></div></div>
+      <div class="res-two" style="margin-top:6px;"><button value="save" class="add-btn" style="flex:1;" onclick="saveResult(event)">Save</button><button value="cancel" class="btn-logout" style="flex:1;">Cancel</button></div>
+    </form>
+  </dialog>
+  <div id="resToast" role="status" aria-live="polite"></div>
 </div>
 <script>
 const SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=3,LOCKOUT_TTL=3e5;
@@ -311,10 +363,10 @@ function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Ar
 function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){clearLockout();showDashboard();return;}else{localStorage.removeItem(SESSION_KEY);}}catch(e){console.warn('Session check:',e);}}initGateUI();applyLockoutUI();}
 let _dashChannel=null;
 function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
-function renderAll(d){renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);const notesEl=document.getElementById('notesArea');if(notesEl&&document.activeElement!==notesEl)notesEl.value=d.notes||'';}
+function renderAll(d){renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl&&document.activeElement!==notesEl)notesEl.value=d.notes||'';}
 async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();try{const remote=await _cloudPull(DATA_KEY);if(remote&&typeof remote==='object'&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};if(!Array.isArray(remote.clients)||remote.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);const _ni=merged.clients.findIndex(c=>c.id==='nav');if(_ni!==-1){merged.clients.splice(_ni,1);if(merged.metrics)delete merged.metrics.nav;_cloudPush(DATA_KEY,merged);}localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}else if(!remote){_cloudPush(DATA_KEY,load());}}catch(e){console.warn('Initial sync:',e);}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}}).subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});}
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
-const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:3500}};
+const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:3500}};
 async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){console.warn('Supabase push:',e);}}
 async function _cloudPull(key){try{const{data,error}=await _sb.from('app_data').select('data').eq('id',key).single();if(!error&&data){localStorage.setItem(key,JSON.stringify(data.data));return data.data;}}catch(e){}return null;}
 function load(){try{const r=localStorage.getItem(DATA_KEY);return r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);}catch(e){return structuredClone(DEFAULTS);}}
@@ -352,7 +404,63 @@ function renderCommandCenter(leads){
   renderStageChart(leads);
 }
 function renderStageChart(leads){const counts=STAGE_ORDER.map(s=>leads.filter(l=>l.stage===s).length);const labels=STAGE_ORDER.map(s=>STAGE_LABEL[s]);const colors=STAGE_ORDER.map(s=>STAGE_COLORS[s]);const canvas=document.getElementById('stageChart');if(!canvas||typeof Chart==='undefined')return;if(_stageChart){_stageChart.destroy();_stageChart=null;}_stageChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:counts,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.raw+' lead'+(ctx.raw!==1?'s':'');}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#948abf',font:{family:'Poppins',size:11}}},y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#948abf',font:{family:'Poppins',size:11},stepSize:1}}}}});}
-async function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';const leads=await loadLeads();renderCommandCenter(leads);}
+async function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';const leads=await loadLeads();renderCommandCenter(leads);}
+
+/* ---- Client Results (delivery proof) ---- */
+const RES_NICHE={kitchen:{label:'Kitchen',job:8000,sensCPL:60,ceilCPL:180},bathroom:{label:'Bathroom',job:6000,sensCPL:45,ceilCPL:135},loft:{label:'Loft',job:30000,sensCPL:225,ceilCPL:680},other:{label:'Other',job:5000,sensCPL:null,ceilCPL:null}};
+function resGBP(n){return '£'+Math.round(n||0).toLocaleString();}
+function resMx(r){const job=r.job||(RES_NICHE[r.niche]&&RES_NICHE[r.niche].job)||0;const rev=(r.won||0)*job;const margin=(r.margin==null?25:r.margin);const profit=rev*margin/100;return{job,rev,profit,cpl:r.leads?r.spend/r.leads:0,cac:r.won?r.spend/r.won:0,cpb:r.booked?r.spend/r.booked:0,roas:r.spend?rev/r.spend:0};}
+function resClaim(r){const m=resMx(r);const B=v=>'<b>'+v+'</b>';const spendT=r.spend?' from '+resGBP(r.spend)+' in ad spend':'';const spendH=r.spend?' from '+B(resGBP(r.spend))+' in ad spend':'';const roasT=(r.spend&&m.rev)?' — '+resGBP(m.roas)+' of booked work for every £1 spent':'';const roasH=(r.spend&&m.rev)?' — '+B(resGBP(m.roas)+' of booked work')+' for every £1 spent':'';
+  if(r.won){const text=(r.name||'This client')+' won '+r.won+' '+(r.won==1?'job':'jobs')+' worth '+resGBP(m.rev)+' (≈'+resGBP(m.profit)+' profit)'+spendT+roasT+'.';const html=esc(r.name||'This client')+' won '+B(r.won+' '+(r.won==1?'job':'jobs'))+' worth '+B(resGBP(m.rev))+' (≈'+B(resGBP(m.profit))+' profit)'+spendH+roasH+'.';return{text,html};}
+  if(r.booked){const text=(r.name||'This client')+' booked '+r.booked+' qualified consult'+(r.booked==1?'':'s')+spendT+'.';const html=esc(r.name||'This client')+' booked '+B(r.booked+' qualified consult'+(r.booked==1?'':'s'))+spendH+'.';return{text,html};}
+  return{text:'',html:''};}
+function renderResults(data){const results=(data.results||[]);
+  const totalWon=results.reduce((s,r)=>s+(r.won||0),0);
+  const totalRev=results.reduce((s,r)=>s+resMx(r).rev,0);
+  const totalSpend=results.reduce((s,r)=>s+(r.spend||0),0);
+  const proof=results.filter(r=>(r.won||0)>=1&&resMx(r).rev>0).length;
+  const roas=totalSpend?totalRev/totalSpend:0;
+  const sr=document.getElementById('resultsStatsRow');
+  if(sr)sr.innerHTML='<div class="stat-card"><div class="stat-l">Jobs Won</div><div class="stat-v">'+totalWon+'</div><div class="stat-s">across '+results.length+' client'+(results.length==1?'':'s')+'</div></div>'+
+    '<div class="stat-card"><div class="stat-l">Revenue Won</div><div class="stat-v" style="color:var(--green)">'+resGBP(totalRev)+'</div><div class="stat-s">client-side value delivered</div></div>'+
+    '<div class="stat-card"><div class="stat-l">Blended ROAS</div><div class="stat-v">'+(totalSpend?roas.toFixed(1)+'×':'—')+'</div><div class="stat-s">'+resGBP(totalRev)+' / '+resGBP(totalSpend)+' spend</div></div>'+
+    '<div class="stat-card'+(proof?' highlight':'')+'"><div class="stat-l">Proof Clients</div><div class="stat-v">'+proof+'</div><div class="stat-s">with a tracked won job</div></div>';
+  const gate=document.getElementById('resGate');
+  if(gate){const on=proof>=1;gate.className='res-gate'+(on?' on':'');gate.innerHTML='<span class="rg-dot"></span><div>'+(on?'<b>Tracked result banked.</b> Forge Pro founding raise unlocked (£999 → £1,250) — trigger is a tracked client result (SAL-FRG-001).':'<span style="color:var(--muted)">Forge Pro raise gate: needs <b style="color:var(--text)">1 tracked won job</b> with revenue. Not met yet.</span>')+'</div>';}
+  const list=document.getElementById('resultsList');
+  if(list){if(!results.length){list.innerHTML='<div class="empty-msg">No client results yet. Add one to turn &ldquo;we sent 40 leads&rdquo; into &ldquo;&pound;X in jobs won&rdquo;.</div>';return;}
+    list.innerHTML=results.map(r=>{const m=resMx(r);const c=resClaim(r);const n=RES_NICHE[r.niche]||RES_NICHE.other;
+      return '<div class="res-row">'+
+        '<span class="res-name">'+esc(r.name||'Untitled')+'</span>'+
+        '<span class="res-tag">'+esc(n.label)+'</span>'+
+        '<span class="res-nums"><b>'+(r.won||0)+'w</b> · <b>'+resGBP(m.rev)+'</b>'+(r.spend?' · <b>'+(m.roas?m.roas.toFixed(1):'0')+'×</b>':'')+'</span>'+
+        '<button class="res-act" onclick="copyResClaim(\''+r.id+'\')">Copy claim</button>'+
+        '<button class="res-act" onclick="openResult(\''+r.id+'\')">Edit</button>'+
+        '<button class="res-act del" onclick="delResult(\''+r.id+'\')">Delete</button>'+
+        (c.html?'<div class="res-claim">'+c.html+'</div>':'')+
+      '</div>';}).join('');}
+}
+let _resToastT=null;function resToast(m){const t=document.getElementById('resToast');if(!t)return;t.textContent=m;t.style.opacity='1';clearTimeout(_resToastT);_resToastT=setTimeout(()=>{t.style.opacity='0';},1500);}
+function copyResClaim(id){const d=load();const r=(d.results||[]).find(x=>x.id===id);if(!r)return;const c=resClaim(r);if(c.text&&navigator.clipboard){navigator.clipboard.writeText(c.text);resToast('Claim copied');}else if(c.text){resToast('Copy unavailable');}else{resToast('Log a booked/won job first');}}
+let _resEditId=null;
+function openResult(id){const d=load();_resEditId=id;const r=id?(d.results||[]).find(x=>x.id===id):null;
+  document.getElementById('resDlgTitle').textContent=r?'Edit client result':'Add client result';
+  const g=f=>document.getElementById('res_'+f);
+  g('name').value=r?(r.name||''):'';g('niche').value=r?r.niche:'kitchen';
+  g('spend').value=r&&r.spend?r.spend:'';g('leads').value=r&&r.leads?r.leads:'';
+  g('booked').value=r&&r.booked?r.booked:'';g('won').value=r&&r.won?r.won:'';
+  g('job').value=r?(r.job||RES_NICHE[r.niche].job):RES_NICHE.kitchen.job;
+  g('margin').value=r?(r.margin==null?25:r.margin):25;
+  document.getElementById('resDlg').showModal();}
+function resNicheChange(){const sel=document.getElementById('res_niche').value;const n=RES_NICHE[sel];const jobEl=document.getElementById('res_job');if(n&&(!_resEditId||!jobEl.value))jobEl.value=n.job;}
+function saveResult(e){const name=document.getElementById('res_name').value.trim();if(!name){if(e)e.preventDefault();document.getElementById('res_name').focus();return;}
+  const num=f=>Math.max(0,Number(document.getElementById('res_'+f).value)||0);const niche=document.getElementById('res_niche').value;
+  const d=load();d.results=d.results||[];
+  const rec={name,niche,spend:num('spend'),leads:num('leads'),booked:num('booked'),won:num('won'),job:num('job')||RES_NICHE[niche].job,margin:Number(document.getElementById('res_margin').value)||25};
+  if(_resEditId){const i=d.results.findIndex(x=>x.id===_resEditId);if(i>-1)d.results[i]={...d.results[i],...rec};}
+  else{rec.id='r'+Math.random().toString(36).slice(2,9);d.results.push(rec);}
+  save(d);renderResults(d);resToast('Saved');}
+function delResult(id){if(!confirm('Delete this client result?'))return;const d=load();d.results=(d.results||[]).filter(x=>x.id!==id);save(d);renderResults(d);}
 checkSession();
 </script>
 </body>
