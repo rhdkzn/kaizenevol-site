@@ -275,8 +275,8 @@
       <div class="stats-row" id="resultsStatsRow"></div>
       <div class="card" style="margin-top:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
-          <div style="font-size:12.5px;color:var(--muted);max-width:640px;">Jobs won &amp; revenue our ads generated for each client &mdash; the numbers that substantiate every claim (FIN-UEC-001) and gate the Forge Pro raise. Log what each client actually won; Diego copies the claim straight into outreach.</div>
-          <button class="add-btn" onclick="openResult(null)">+ Add result</button>
+          <div style="font-size:12.5px;color:var(--muted);max-width:660px;">Jobs won &amp; revenue pull live from the CRM&rsquo;s <b style="color:var(--text)">Commission log</b>, grouped per client &mdash; the numbers that substantiate every claim (FIN-UEC-001) and gate the Forge Pro raise. Add a client&rsquo;s ad spend to unlock ROAS &amp; CPL; Diego copies the claim straight into outreach.</div>
+          <button class="add-btn" onclick="openResult(null)">+ Add spend</button>
         </div>
         <div class="res-gate" id="resGate" style="margin-top:16px;"></div>
         <div class="snapshot-list" id="resultsList" style="margin-top:14px;"></div>
@@ -313,13 +313,13 @@
   </main>
   <dialog id="resDlg" class="res-modal">
     <form method="dialog" class="res-modal-body">
-      <h3 id="resDlgTitle">Add client result</h3>
-      <div class="res-field"><label>Client name</label><input id="res_name" placeholder="e.g. Anderson Kitchens" required /></div>
-      <div class="res-field"><label>Niche</label><select id="res_niche" onchange="resNicheChange()"><option value="kitchen">Kitchen remodelling</option><option value="bathroom">Bathroom renovation</option><option value="loft">Loft conversion</option><option value="other">Other</option></select></div>
-      <div class="res-two"><div class="res-field"><label>Ad spend &pound;</label><input id="res_spend" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Avg job value &pound;</label><input id="res_job" type="number" min="0" /></div></div>
-      <div class="res-two"><div class="res-field"><label>Leads</label><input id="res_leads" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Booked</label><input id="res_booked" type="number" min="0" placeholder="0" /></div></div>
-      <div class="res-two"><div class="res-field"><label>Jobs won</label><input id="res_won" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Client margin %</label><input id="res_margin" type="number" min="0" max="100" value="25" /></div></div>
-      <div class="res-two" style="margin-top:6px;"><button value="save" class="add-btn" style="flex:1;" onclick="saveResult(event)">Save</button><button value="cancel" class="btn-logout" style="flex:1;">Cancel</button></div>
+      <h3 id="resDlgTitle">Add client spend</h3>
+      <div class="res-field"><label>Client (match the Commission log name)</label><input id="res_name" list="resClientList" placeholder="e.g. Anderson Kitchens" required autocomplete="off" /><datalist id="resClientList"></datalist></div>
+      <div class="res-field"><label>Niche</label><select id="res_niche"><option value="kitchen">Kitchen remodelling</option><option value="bathroom">Bathroom renovation</option><option value="loft">Loft conversion</option><option value="other">Other</option></select></div>
+      <div class="res-two"><div class="res-field"><label>Ad spend &pound;</label><input id="res_spend" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Client margin %</label><input id="res_margin" type="number" min="0" max="100" value="25" /></div></div>
+      <div class="res-two"><div class="res-field"><label>Leads (optional)</label><input id="res_leads" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Booked (optional)</label><input id="res_booked" type="number" min="0" placeholder="0" /></div></div>
+      <div style="font-size:11.5px;color:var(--muted);margin:2px 0 12px;line-height:1.5;">Jobs won &amp; revenue pull automatically from the Commission log &mdash; you don&rsquo;t enter them here. Ad spend unlocks ROAS, CPL and the full claim.</div>
+      <div class="res-two" style="margin-top:2px;"><button value="save" class="add-btn" style="flex:1;" onclick="saveResult(event)">Save</button><button value="cancel" class="btn-logout" style="flex:1;">Cancel</button></div>
     </form>
   </dialog>
   <div id="resToast" role="status" aria-live="polite"></div>
@@ -406,61 +406,74 @@ function renderCommandCenter(leads){
 function renderStageChart(leads){const counts=STAGE_ORDER.map(s=>leads.filter(l=>l.stage===s).length);const labels=STAGE_ORDER.map(s=>STAGE_LABEL[s]);const colors=STAGE_ORDER.map(s=>STAGE_COLORS[s]);const canvas=document.getElementById('stageChart');if(!canvas||typeof Chart==='undefined')return;if(_stageChart){_stageChart.destroy();_stageChart=null;}_stageChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:counts,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.raw+' lead'+(ctx.raw!==1?'s':'');}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#948abf',font:{family:'Poppins',size:11}}},y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#948abf',font:{family:'Poppins',size:11},stepSize:1}}}}});}
 async function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';const leads=await loadLeads();renderCommandCenter(leads);}
 
-/* ---- Client Results (delivery proof) ---- */
-const RES_NICHE={kitchen:{label:'Kitchen',job:8000,sensCPL:60,ceilCPL:180},bathroom:{label:'Bathroom',job:6000,sensCPL:45,ceilCPL:135},loft:{label:'Loft',job:30000,sensCPL:225,ceilCPL:680},other:{label:'Other',job:5000,sensCPL:null,ceilCPL:null}};
+/* ---- Client Results (delivery proof — won jobs & revenue pull live from the Commission log) ---- */
+const RES_NICHE={kitchen:{label:'Kitchen'},bathroom:{label:'Bathroom'},loft:{label:'Loft'},other:{label:'Other'}};
 function resGBP(n){return '£'+Math.round(n||0).toLocaleString();}
-function resMx(r){const job=r.job||(RES_NICHE[r.niche]&&RES_NICHE[r.niche].job)||0;const rev=(r.won||0)*job;const margin=(r.margin==null?25:r.margin);const profit=rev*margin/100;return{job,rev,profit,cpl:r.leads?r.spend/r.leads:0,cac:r.won?r.spend/r.won:0,cpb:r.booked?r.spend/r.booked:0,roas:r.spend?rev/r.spend:0};}
-function resClaim(r){const m=resMx(r);const B=v=>'<b>'+v+'</b>';const spendT=r.spend?' from '+resGBP(r.spend)+' in ad spend':'';const spendH=r.spend?' from '+B(resGBP(r.spend))+' in ad spend':'';const roasT=(r.spend&&m.rev)?' — '+resGBP(m.roas)+' of booked work for every £1 spent':'';const roasH=(r.spend&&m.rev)?' — '+B(resGBP(m.roas)+' of booked work')+' for every £1 spent':'';
-  if(r.won){const text=(r.name||'This client')+' won '+r.won+' '+(r.won==1?'job':'jobs')+' worth '+resGBP(m.rev)+' (≈'+resGBP(m.profit)+' profit)'+spendT+roasT+'.';const html=esc(r.name||'This client')+' won '+B(r.won+' '+(r.won==1?'job':'jobs'))+' worth '+B(resGBP(m.rev))+' (≈'+B(resGBP(m.profit))+' profit)'+spendH+roasH+'.';return{text,html};}
-  if(r.booked){const text=(r.name||'This client')+' booked '+r.booked+' qualified consult'+(r.booked==1?'':'s')+spendT+'.';const html=esc(r.name||'This client')+' booked '+B(r.booked+' qualified consult'+(r.booked==1?'':'s'))+spendH+'.';return{text,html};}
+function resNorm(s){return String(s||'').trim().toLowerCase();}
+/* Build one row per client: won + revenue aggregated from commission.jobs (the CRM's closed-job log),
+   with an optional spend/leads/booked/margin/niche overlay from data.results keyed by client name. */
+function resClients(data){
+  const jobs=(data.commission&&data.commission.jobs)||[];
+  const overlays=(data.results||[]);
+  const map={};
+  jobs.forEach(j=>{const k=resNorm(j.clientName);if(!k)return;if(!map[k])map[k]={name:j.clientName,won:0,revenue:0};map[k].won++;map[k].revenue+=Number(j.jobValue||0);});
+  overlays.forEach(o=>{const k=resNorm(o.name);if(!k)return;if(!map[k])map[k]={name:o.name,won:0,revenue:0};map[k].overlay=o;});
+  return Object.keys(map).map(k=>({key:k,...map[k]})).sort((a,b)=>b.revenue-a.revenue);
+}
+function resMx(c){const o=c.overlay||{};const margin=(o.margin==null?25:Number(o.margin));const spend=Number(o.spend||0);const leads=Number(o.leads||0);const booked=Number(o.booked||0);const revenue=c.revenue||0;return{revenue,profit:revenue*margin/100,margin,spend,leads,booked,roas:spend?revenue/spend:0,cpl:leads?spend/leads:0,cac:c.won?spend/c.won:0};}
+function resClaim(c){const m=resMx(c);const B=v=>'<b>'+v+'</b>';const spendT=m.spend?' from '+resGBP(m.spend)+' in ad spend':'';const spendH=m.spend?' from '+B(resGBP(m.spend))+' in ad spend':'';const roasT=(m.spend&&m.revenue)?' — '+resGBP(m.roas)+' of work won for every £1 spent':'';const roasH=(m.spend&&m.revenue)?' — '+B(resGBP(m.roas)+' of work won')+' for every £1 spent':'';
+  if(c.won){const text=c.name+' won '+c.won+' '+(c.won==1?'job':'jobs')+' worth '+resGBP(m.revenue)+' (≈'+resGBP(m.profit)+' profit)'+spendT+roasT+'.';const html=esc(c.name)+' won '+B(c.won+' '+(c.won==1?'job':'jobs'))+' worth '+B(resGBP(m.revenue))+' (≈'+B(resGBP(m.profit))+' profit)'+spendH+roasH+'.';return{text,html};}
+  if(m.booked){const text=c.name+' booked '+m.booked+' qualified consult'+(m.booked==1?'':'s')+spendT+'.';const html=esc(c.name)+' booked '+B(m.booked+' qualified consult'+(m.booked==1?'':'s'))+spendH+'.';return{text,html};}
   return{text:'',html:''};}
-function renderResults(data){const results=(data.results||[]);
-  const totalWon=results.reduce((s,r)=>s+(r.won||0),0);
-  const totalRev=results.reduce((s,r)=>s+resMx(r).rev,0);
-  const totalSpend=results.reduce((s,r)=>s+(r.spend||0),0);
-  const proof=results.filter(r=>(r.won||0)>=1&&resMx(r).rev>0).length;
-  const roas=totalSpend?totalRev/totalSpend:0;
+function renderResults(data){
+  const clients=resClients(data);
+  const totalWon=clients.reduce((s,c)=>s+c.won,0);
+  const totalRev=clients.reduce((s,c)=>s+c.revenue,0);
+  const totalSpend=clients.reduce((s,c)=>s+resMx(c).spend,0);
+  const revWithSpend=clients.reduce((s,c)=>resMx(c).spend>0?s+c.revenue:s,0);
+  const proof=clients.filter(c=>c.won>=1&&c.revenue>0).length;
+  const roas=totalSpend?revWithSpend/totalSpend:0;
   const sr=document.getElementById('resultsStatsRow');
-  if(sr)sr.innerHTML='<div class="stat-card"><div class="stat-l">Jobs Won</div><div class="stat-v">'+totalWon+'</div><div class="stat-s">across '+results.length+' client'+(results.length==1?'':'s')+'</div></div>'+
+  if(sr)sr.innerHTML='<div class="stat-card"><div class="stat-l">Jobs Won</div><div class="stat-v">'+totalWon+'</div><div class="stat-s">across '+clients.length+' client'+(clients.length==1?'':'s')+' · from Commission log</div></div>'+
     '<div class="stat-card"><div class="stat-l">Revenue Won</div><div class="stat-v" style="color:var(--green)">'+resGBP(totalRev)+'</div><div class="stat-s">client-side value delivered</div></div>'+
-    '<div class="stat-card"><div class="stat-l">Blended ROAS</div><div class="stat-v">'+(totalSpend?roas.toFixed(1)+'×':'—')+'</div><div class="stat-s">'+resGBP(totalRev)+' / '+resGBP(totalSpend)+' spend</div></div>'+
+    '<div class="stat-card"><div class="stat-l">Blended ROAS</div><div class="stat-v">'+(totalSpend?roas.toFixed(1)+'×':'—')+'</div><div class="stat-s">'+(totalSpend?resGBP(revWithSpend)+' / '+resGBP(totalSpend)+' spend':'add ad spend to unlock')+'</div></div>'+
     '<div class="stat-card'+(proof?' highlight':'')+'"><div class="stat-l">Proof Clients</div><div class="stat-v">'+proof+'</div><div class="stat-s">with a tracked won job</div></div>';
   const gate=document.getElementById('resGate');
-  if(gate){const on=proof>=1;gate.className='res-gate'+(on?' on':'');gate.innerHTML='<span class="rg-dot"></span><div>'+(on?'<b>Tracked result banked.</b> Forge Pro founding raise unlocked (£999 → £1,250) — trigger is a tracked client result (SAL-FRG-001).':'<span style="color:var(--muted)">Forge Pro raise gate: needs <b style="color:var(--text)">1 tracked won job</b> with revenue. Not met yet.</span>')+'</div>';}
+  if(gate){const on=proof>=1;gate.className='res-gate'+(on?' on':'');gate.innerHTML='<span class="rg-dot"></span><div>'+(on?'<b>Tracked result banked.</b> Forge Pro founding raise unlocked (£999 → £1,250) — trigger is a tracked client result (SAL-FRG-001).':'<span style="color:var(--muted)">Forge Pro raise gate: needs <b style="color:var(--text)">1 won job</b> in the Commission log. Not met yet.</span>')+'</div>';}
   const list=document.getElementById('resultsList');
-  if(list){if(!results.length){list.innerHTML='<div class="empty-msg">No client results yet. Add one to turn &ldquo;we sent 40 leads&rdquo; into &ldquo;&pound;X in jobs won&rdquo;.</div>';return;}
-    list.innerHTML=results.map(r=>{const m=resMx(r);const c=resClaim(r);const n=RES_NICHE[r.niche]||RES_NICHE.other;
+  if(list){if(!clients.length){list.innerHTML='<div class="empty-msg">No won jobs yet. Log closed jobs in the CRM&rsquo;s <b>Commission</b> tab &mdash; they appear here automatically, per client. Add ad spend to unlock ROAS &amp; the full claim.</div>';}
+    else{list.innerHTML=clients.map(c=>{const m=resMx(c);const cl=resClaim(c);const o=c.overlay;const n=o&&o.niche?RES_NICHE[o.niche]:null;const enc=encodeURIComponent(c.name);
       return '<div class="res-row">'+
-        '<span class="res-name">'+esc(r.name||'Untitled')+'</span>'+
-        '<span class="res-tag">'+esc(n.label)+'</span>'+
-        '<span class="res-nums"><b>'+(r.won||0)+'w</b> · <b>'+resGBP(m.rev)+'</b>'+(r.spend?' · <b>'+(m.roas?m.roas.toFixed(1):'0')+'×</b>':'')+'</span>'+
-        '<button class="res-act" onclick="copyResClaim(\''+r.id+'\')">Copy claim</button>'+
-        '<button class="res-act" onclick="openResult(\''+r.id+'\')">Edit</button>'+
-        '<button class="res-act del" onclick="delResult(\''+r.id+'\')">Delete</button>'+
-        (c.html?'<div class="res-claim">'+c.html+'</div>':'')+
-      '</div>';}).join('');}
+        '<span class="res-name">'+esc(c.name)+'</span>'+
+        (n?'<span class="res-tag">'+esc(n.label)+'</span>':'')+
+        '<span class="res-nums"><b>'+c.won+'w</b> · <b>'+resGBP(m.revenue)+'</b>'+(m.spend?' · <b>'+(m.roas?m.roas.toFixed(1):'0')+'×</b>':'')+'</span>'+
+        '<button class="res-act" onclick="copyResClaim(\''+enc+'\')">Copy claim</button>'+
+        '<button class="res-act" onclick="openResult(\''+enc+'\')">'+(o?'Spend':'+ Spend')+'</button>'+
+        (o?'<button class="res-act del" onclick="delResult(\''+enc+'\')">Clear</button>':'')+
+        (cl.html?'<div class="res-claim">'+cl.html+'</div>':'')+
+      '</div>';}).join('');}}
+  const dl=document.getElementById('resClientList');
+  if(dl){const names=[...new Set(((data.commission&&data.commission.jobs)||[]).map(j=>j.clientName).filter(Boolean))];dl.innerHTML=names.map(nm=>'<option value="'+esc(nm)+'"></option>').join('');}
 }
 let _resToastT=null;function resToast(m){const t=document.getElementById('resToast');if(!t)return;t.textContent=m;t.style.opacity='1';clearTimeout(_resToastT);_resToastT=setTimeout(()=>{t.style.opacity='0';},1500);}
-function copyResClaim(id){const d=load();const r=(d.results||[]).find(x=>x.id===id);if(!r)return;const c=resClaim(r);if(c.text&&navigator.clipboard){navigator.clipboard.writeText(c.text);resToast('Claim copied');}else if(c.text){resToast('Copy unavailable');}else{resToast('Log a booked/won job first');}}
-let _resEditId=null;
-function openResult(id){const d=load();_resEditId=id;const r=id?(d.results||[]).find(x=>x.id===id):null;
-  document.getElementById('resDlgTitle').textContent=r?'Edit client result':'Add client result';
+function copyResClaim(enc){const name=decodeURIComponent(enc);const d=load();const c=resClients(d).find(x=>resNorm(x.name)===resNorm(name));if(!c)return;const cl=resClaim(c);if(cl.text&&navigator.clipboard){navigator.clipboard.writeText(cl.text);resToast('Claim copied');}else if(cl.text){resToast('Copy unavailable');}else{resToast('Log a won job in Commission first');}}
+let _resEditName=null;
+function openResult(enc){const name=enc?decodeURIComponent(enc):'';const d=load();const o=name?(d.results||[]).find(x=>resNorm(x.name)===resNorm(name)):null;_resEditName=o?o.name:(name||null);
+  document.getElementById('resDlgTitle').textContent=o?'Edit ad spend — '+esc(name):(name?'Add ad spend — '+esc(name):'Add client spend');
   const g=f=>document.getElementById('res_'+f);
-  g('name').value=r?(r.name||''):'';g('niche').value=r?r.niche:'kitchen';
-  g('spend').value=r&&r.spend?r.spend:'';g('leads').value=r&&r.leads?r.leads:'';
-  g('booked').value=r&&r.booked?r.booked:'';g('won').value=r&&r.won?r.won:'';
-  g('job').value=r?(r.job||RES_NICHE[r.niche].job):RES_NICHE.kitchen.job;
-  g('margin').value=r?(r.margin==null?25:r.margin):25;
+  g('name').value=name||(o?o.name:'');g('niche').value=o&&o.niche?o.niche:'other';
+  g('spend').value=o&&o.spend?o.spend:'';g('leads').value=o&&o.leads?o.leads:'';
+  g('booked').value=o&&o.booked?o.booked:'';g('margin').value=o&&o.margin!=null?o.margin:25;
   document.getElementById('resDlg').showModal();}
-function resNicheChange(){const sel=document.getElementById('res_niche').value;const n=RES_NICHE[sel];const jobEl=document.getElementById('res_job');if(n&&(!_resEditId||!jobEl.value))jobEl.value=n.job;}
 function saveResult(e){const name=document.getElementById('res_name').value.trim();if(!name){if(e)e.preventDefault();document.getElementById('res_name').focus();return;}
   const num=f=>Math.max(0,Number(document.getElementById('res_'+f).value)||0);const niche=document.getElementById('res_niche').value;
   const d=load();d.results=d.results||[];
-  const rec={name,niche,spend:num('spend'),leads:num('leads'),booked:num('booked'),won:num('won'),job:num('job')||RES_NICHE[niche].job,margin:Number(document.getElementById('res_margin').value)||25};
-  if(_resEditId){const i=d.results.findIndex(x=>x.id===_resEditId);if(i>-1)d.results[i]={...d.results[i],...rec};}
-  else{rec.id='r'+Math.random().toString(36).slice(2,9);d.results.push(rec);}
+  const rec={name,niche,spend:num('spend'),leads:num('leads'),booked:num('booked'),margin:Number(document.getElementById('res_margin').value)||25};
+  if(_resEditName&&resNorm(_resEditName)!==resNorm(name)){d.results=d.results.filter(x=>resNorm(x.name)!==resNorm(_resEditName));}
+  const i=d.results.findIndex(x=>resNorm(x.name)===resNorm(name));
+  if(i>-1)d.results[i]={...d.results[i],...rec};else{rec.id='r'+Math.random().toString(36).slice(2,9);d.results.push(rec);}
   save(d);renderResults(d);resToast('Saved');}
-function delResult(id){if(!confirm('Delete this client result?'))return;const d=load();d.results=(d.results||[]).filter(x=>x.id!==id);save(d);renderResults(d);}
+function delResult(enc){const name=decodeURIComponent(enc);if(!confirm('Clear the ad-spend overlay for '+name+'? Won jobs stay in the Commission log.'))return;const d=load();d.results=(d.results||[]).filter(x=>resNorm(x.name)!==resNorm(name));save(d);renderResults(d);}
 checkSession();
 </script>
 </body>
