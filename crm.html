@@ -805,7 +805,7 @@ async function showApp(){
 }
 
 /* ── DATA ── */
-const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',settings:{goalRetainers:10,retainerValue:2500}};
+const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:2500}};
 function load(){try{const r=localStorage.getItem(DATA_KEY);const d=r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);(d.clients||[]).forEach(c=>{if(c.status==='trial'||c.status==='retainer')c.status='active';if(!c.liveDate&&c.trialStartDate)c.liveDate=c.trialStartDate;});return d;}catch(e){return structuredClone(DEFAULTS);}}
 function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));_cloudPush(DATA_KEY,data);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -937,7 +937,7 @@ function renderCommission(data){
     <td><button class="t-del" onclick="delJob(${i})">×</button></td>
   </tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:20px 0;">No jobs logged yet.</td></tr>';
   document.getElementById('commissionContainer').innerHTML=`<div class="card">
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">10% of total agreed job value, on every closed job above the agreed monthly target. Only collect once a job is verified by a signed acceptance email or a deposit invoice from the homeowner.</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Log <strong>every closed job we won a client</strong> here &mdash; this is the delivery-proof record that feeds the dashboard Results section. The 10% bonus applies only to jobs above the agreed monthly target; collect it once verified by a signed acceptance email or a deposit invoice from the homeowner.</div>
     <div class="comm-add-row">
       <input type="date" class="comm-inp" id="commDate" style="max-width:160px" />
       <input type="text" class="comm-inp" id="commClient" placeholder="Client name" style="max-width:180px" />
