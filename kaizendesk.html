@@ -536,8 +536,8 @@
           <div><div class="calc-result-amount" id="recYear">£60,000</div><div class="calc-result-period">Per Year</div></div>
         </div>
         <div class="calc-fee">
-          <div class="calc-fee-stat"><div class="n"><em id="deskCover">2</em> jobs</div><div class="l">A month covers the £750 KaizenDesk fee</div></div>
-          <div class="calc-fee-stat"><div class="n">£<em id="deskReturn">7</em></div><div class="l">Back for every £1 of the fee, on the work it recovers</div></div>
+          <div class="calc-fee-stat"><div class="n"><em>A fraction</em></div><div class="l">of the work it recovers — KaizenDesk more than pays for itself</div></div>
+          <div class="calc-fee-stat"><div class="n">Runs <em>24/7</em></div><div class="l">Catching the jobs you'd lose while you're on the tools or asleep</div></div>
         </div>
       </div>
     </div>
@@ -727,8 +727,6 @@
     el('closeVal').textContent=el('closeRate').value; el('missedVal').textContent=el('missed').value;
     const month=leads*missed*close*value;
     el('recMonth').textContent=fmt(month); el('recYear').textContent=fmt(month*12);
-    el('deskCover').textContent=Math.max(1,Math.ceil(750/value));
-    el('deskReturn').textContent=Math.round(month/750).toLocaleString('en-GB');
     ids.forEach(id=>track(el(id)));
   }
   ids.forEach(id=>el(id).addEventListener('input',calc)); calc();

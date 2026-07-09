@@ -465,8 +465,8 @@
           </div>
         </div>
         <div class="calc-fee">
-          <div class="calc-fee-stat"><div class="n"><em id="feeCover">2×</em></div><div class="l">One job covers our £2,500 fee</div></div>
-          <div class="calc-fee-stat"><div class="n">£<em id="feeReturn">4</em></div><div class="l">Back for every £1 in fee when we win those jobs back</div></div>
+          <div class="calc-fee-stat"><div class="n"><em>Just one job</em></div><div class="l">more than covers a month with us — our fee is a fraction of a single project</div></div>
+          <div class="calc-fee-stat"><div class="n">Pay <em>only when it works</em></div><div class="l">Your fee kicks in once we hit the target we agree, not before</div></div>
         </div>
       </div>
     </div>
@@ -828,9 +828,6 @@
   const missedJobsDisplay = document.getElementById('missedJobsDisplay');
   const monthlyLossEl     = document.getElementById('monthlyLoss');
   const annualLossEl      = document.getElementById('annualLoss');
-  const feeCoverEl        = document.getElementById('feeCover');
-  const feeReturnEl       = document.getElementById('feeReturn');
-  const FEE = 2500;
 
   function fmt(n) { return '£' + n.toLocaleString('en-GB'); }
 
@@ -846,9 +843,6 @@
     missedJobsDisplay.textContent = missed;
     monthlyLossEl.textContent     = fmt(job * missed);
     annualLossEl.textContent      = fmt(job * missed * 12);
-    const cover = job / FEE;
-    feeCoverEl.textContent        = (cover >= 10 ? Math.round(cover) : cover.toFixed(1).replace(/\.0$/,'')) + '×';
-    feeReturnEl.textContent       = Math.round((job * missed) / FEE).toLocaleString('en-GB');
     updateTrack(jobValueInput);
     updateTrack(missedJobsInput);
   }
