@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>You're Booked · KaizenEvol</title>
+  <meta name="robots" content="noindex" />
+  <meta name="description" content="Your call with KaizenEvol is confirmed. Here's how to get the most from it." />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;src:url('/fraunces.woff2') format('woff2');}
+    @font-face{font-family:'Fraunces';font-style:italic;font-weight:400 700;font-display:swap;src:url('/fraunces-italic.woff2') format('woff2');}
+    :root{
+      --bg:#0D0B1A; --surface:#141228; --surface-2:#1C1836;
+      --purple:#6D3FC0; --purple-bright:#8B5CF6; --purple-light:#A78BFA;
+      --text:#EEE8FF; --muted:rgba(238,232,255,0.62); --white:#fff;
+      --border:rgba(109,63,192,0.18); --border-hover:rgba(109,63,192,0.42);
+      --radius-card:14px; --radius-pill:9999px; --ease:cubic-bezier(0.16,1,0.3,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);
+      line-height:1.6;min-height:100vh;display:flex;flex-direction:column;align-items:center;
+      padding:32px 24px;-webkit-font-smoothing:antialiased;
+      background-image:radial-gradient(900px 500px at 50% -10%,rgba(109,63,192,0.28),transparent 65%);}
+    h1,h2{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:-0.02em;line-height:1.08;}
+    em{font-style:italic;color:var(--purple-light);}
+    .brand{font-weight:800;font-size:17px;letter-spacing:-0.01em;margin:8px 0 40px;color:var(--white);}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;
+      max-width:600px;width:100%;padding:44px 40px;box-shadow:0 8px 40px rgba(109,63,192,0.25);text-align:center;}
+    .tick{width:64px;height:64px;border-radius:50%;background:rgba(109,63,192,0.16);border:1px solid var(--border-hover);
+      display:flex;align-items:center;justify-content:center;margin:0 auto 24px;}
+    .tick svg{width:30px;height:30px;stroke:var(--purple-light);stroke-width:2.5;fill:none;}
+    h1{font-size:clamp(28px,5vw,38px);margin-bottom:12px;}
+    .lede{color:var(--muted);font-size:16px;max-width:44ch;margin:0 auto 32px;}
+    .kicker{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-light);margin-bottom:18px;}
+    .prep{text-align:left;display:flex;flex-direction:column;gap:14px;margin-bottom:34px;}
+    .prep-item{display:flex;gap:14px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--border);
+      border-radius:var(--radius-card);padding:16px 18px;}
+    .prep-item .n{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:var(--purple-light);min-width:22px;}
+    .prep-item .t{font-size:14px;color:var(--text);}
+    .prep-item .t b{font-weight:700;}
+    .prep-item .t span{color:var(--muted);}
+    .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    .btn{display:inline-block;text-decoration:none;font-weight:700;font-size:15px;padding:13px 26px;border-radius:var(--radius-pill);transition:all 0.2s var(--ease);}
+    .btn-primary{background:var(--purple);color:#fff;}
+    .btn-primary:hover{background:var(--purple-bright);transform:translateY(-2px);}
+    .btn-ghost{border:1px solid var(--border-hover);color:var(--muted);}
+    .btn-ghost:hover{color:var(--text);border-color:var(--purple-light);}
+    .note{margin-top:26px;font-size:13px;color:var(--muted);}
+    .note a{color:var(--purple-light);}
+  </style>
+</head>
+<body>
+  <div class="brand">KaizenEvol</div>
+  <div class="card">
+    <div class="tick"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></div>
+    <div class="kicker">You're booked</div>
+    <h1>Your call is <em>confirmed</em></h1>
+    <p class="lede">Check your inbox for the calendar invite and video link. Here's how to make the fifteen minutes count.</p>
+
+    <div class="prep">
+      <div class="prep-item"><div class="n">1</div><div class="t"><b>Know your numbers.</b> <span>Roughly how many enquiries you get a month, your average job value, and what you close. We'll show you what a full diary is worth.</span></div></div>
+      <div class="prep-item"><div class="n">2</div><div class="t"><b>Come as you are.</b> <span>No prep, no deck to sit through. We diagnose the real problem before suggesting anything — this is a conversation, not a pitch.</span></div></div>
+      <div class="prep-item"><div class="n">3</div><div class="t"><b>Bring your questions.</b> <span>Whatever's made you wary of agencies before. Straight answers, and a clear yes or no on whether we can help.</span></div></div>
+    </div>
+
+    <div class="btns">
+      <a class="btn btn-primary" href="/">Back to KaizenEvol</a>
+      <a class="btn btn-ghost" href="mailto:rahaid@kaizenevol.com">Email us a question</a>
+    </div>
+    <p class="note">Need to reschedule? Use the link in your confirmation email, or <a href="mailto:rahaid@kaizenevol.com">drop us a line</a>. See you soon.</p>
+  </div>
+</body>
+</html>

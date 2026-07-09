@@ -168,6 +168,10 @@
     .calc-result-amounts { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
     .calc-result-amount { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(30px,5vw,44px); color:var(--purple-light); line-height:1; margin-bottom:4px; letter-spacing:-0.03em; }
     .calc-result-period { font-size:12px; color:var(--muted); font-weight:500; letter-spacing:0.04em; }
+    .calc-fee { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px; padding-top:20px; border-top:1px dashed rgba(109,63,192,0.3); }
+    .calc-fee-stat .n { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(22px,3.5vw,30px); color:var(--white); line-height:1; letter-spacing:-0.02em; }
+    .calc-fee-stat .n em { color:var(--purple-light); font-style:normal; }
+    .calc-fee-stat .l { font-size:11px; color:var(--muted); font-weight:500; margin-top:7px; line-height:1.45; }
 
     .hero-ctas { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
     .hero-note { margin-top:20px; font-size:13px; color:var(--muted); }
@@ -531,6 +535,10 @@
           <div><div class="calc-result-amount" id="recMonth">£5,000</div><div class="calc-result-period">Per Month</div></div>
           <div><div class="calc-result-amount" id="recYear">£60,000</div><div class="calc-result-period">Per Year</div></div>
         </div>
+        <div class="calc-fee">
+          <div class="calc-fee-stat"><div class="n"><em id="deskCover">2</em> jobs</div><div class="l">A month covers the £750 KaizenDesk fee</div></div>
+          <div class="calc-fee-stat"><div class="n">£<em id="deskReturn">7</em></div><div class="l">Back for every £1 of the fee, on the work it recovers</div></div>
+        </div>
       </div>
     </div>
     <p class="pricing-note" style="text-align:center;max-width:520px;margin:14px auto 0;">An estimate from your own numbers — the jobs you currently lose, captured at your stated close rate.</p>
@@ -617,6 +625,20 @@
   </div>
 </section>
 
+
+<section class="section section-surface" id="your-call">
+  <div class="container">
+    <div class="section-header" style="text-align:center;">
+      <h2>What Happens <em>On Your Call</em></h2>
+      <p style="margin:0 auto;">Fifteen minutes, no hard sell. Here's exactly how it goes.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;max-width:960px;margin:0 auto;">
+      <div class="step-card" style="--i:0"><h3>1 · We listen</h3><p>You tell us how enquiries reach you now and where they slip through. We find the real leak before suggesting anything.</p></div>
+      <div class="step-card" style="--i:1"><h3>2 · We show you</h3><p>A live look at the Desk answering a customer, qualifying them and booking the job — on your kind of business.</p></div>
+      <div class="step-card" style="--i:2"><h3>3 · You decide</h3><p>A straight answer on whether it fits and what it costs. No pressure, no follow-up spam. Cancel anytime if you start.</p></div>
+    </div>
+  </div>
+</section>
 
 <section class="final-cta" id="contact">
   <div class="final-cta-inner">
@@ -705,6 +727,8 @@
     el('closeVal').textContent=el('closeRate').value; el('missedVal').textContent=el('missed').value;
     const month=leads*missed*close*value;
     el('recMonth').textContent=fmt(month); el('recYear').textContent=fmt(month*12);
+    el('deskCover').textContent=Math.max(1,Math.ceil(750/value));
+    el('deskReturn').textContent=Math.round(month/750).toLocaleString('en-GB');
     ids.forEach(id=>track(el(id)));
   }
   ids.forEach(id=>el(id).addEventListener('input',calc)); calc();
