@@ -164,6 +164,15 @@
     .calc-result-amount { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(30px,5vw,44px); color:var(--purple-light); line-height:1; margin-bottom:4px; letter-spacing:-0.03em; }
     .calc-result-period { font-size:12px; color:var(--muted); font-weight:500; letter-spacing:0.04em; }
 
+    .calc-niche { display:flex; gap:8px; margin-bottom:28px; }
+    .calc-niche button { flex:1; font-family:inherit; font-size:13px; font-weight:700; padding:9px 6px; cursor:pointer; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--muted); transition:all 0.18s; }
+    .calc-niche button:hover { border-color:rgba(109,63,192,0.5); color:var(--white); }
+    .calc-niche button.on { background:var(--purple); border-color:var(--purple); color:#fff; box-shadow:0 0 0 3px rgba(109,63,192,0.28); }
+    .calc-fee { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px; padding-top:20px; border-top:1px dashed rgba(109,63,192,0.3); }
+    .calc-fee-stat .n { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(22px,3.5vw,30px); color:var(--white); line-height:1; letter-spacing:-0.02em; }
+    .calc-fee-stat .n em { color:var(--purple-light); font-style:normal; }
+    .calc-fee-stat .l { font-size:11px; color:var(--muted); font-weight:500; margin-top:7px; line-height:1.45; }
+
     .hero-ctas { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
     .hero-note { margin-top:20px; font-size:13px; color:var(--muted); }
     .hero-note strong { color:var(--purple-light); }
@@ -423,6 +432,12 @@
 
     <div class="calc-wrap">
       <div class="calc-label">Your numbers. Your potential.</div>
+      <div class="calc-niche" id="calcNiche" role="group" aria-label="Choose your trade to set a typical job value">
+        <button type="button" data-v="30000">Loft</button>
+        <button type="button" data-v="8000">Kitchen</button>
+        <button type="button" data-v="6000">Bathroom</button>
+        <button type="button" data-v="12000">Other</button>
+      </div>
       <div class="calc-row">
         <div class="calc-row-header">
           <label for="jobValue">Average Job Value</label>
@@ -448,6 +463,10 @@
             <div class="calc-result-amount" id="annualLoss">£120,000</div>
             <div class="calc-result-period">Per Year</div>
           </div>
+        </div>
+        <div class="calc-fee">
+          <div class="calc-fee-stat"><div class="n"><em id="feeCover">2×</em></div><div class="l">One job covers our £2,500 fee</div></div>
+          <div class="calc-fee-stat"><div class="n">£<em id="feeReturn">4</em></div><div class="l">Back for every £1 in fee when we win those jobs back</div></div>
         </div>
       </div>
     </div>
@@ -795,6 +814,9 @@
   const missedJobsDisplay = document.getElementById('missedJobsDisplay');
   const monthlyLossEl     = document.getElementById('monthlyLoss');
   const annualLossEl      = document.getElementById('annualLoss');
+  const feeCoverEl        = document.getElementById('feeCover');
+  const feeReturnEl       = document.getElementById('feeReturn');
+  const FEE = 2500;
 
   function fmt(n) { return '£' + n.toLocaleString('en-GB'); }
 
@@ -810,9 +832,21 @@
     missedJobsDisplay.textContent = missed;
     monthlyLossEl.textContent     = fmt(job * missed);
     annualLossEl.textContent      = fmt(job * missed * 12);
+    const cover = job / FEE;
+    feeCoverEl.textContent        = (cover >= 10 ? Math.round(cover) : cover.toFixed(1).replace(/\.0$/,'')) + '×';
+    feeReturnEl.textContent       = Math.round((job * missed) / FEE).toLocaleString('en-GB');
     updateTrack(jobValueInput);
     updateTrack(missedJobsInput);
   }
+
+  document.querySelectorAll('#calcNiche button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#calcNiche button').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      jobValueInput.value = b.dataset.v;
+      updateCalc();
+    });
+  });
 
   jobValueInput.addEventListener('input', updateCalc);
   missedJobsInput.addEventListener('input', updateCalc);
