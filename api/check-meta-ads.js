@@ -3,6 +3,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Internal endpoint — only our own site may call it (protects your Meta token/quota).
+  const ALLOWED = (process.env.ALLOWED_ORIGINS || 'https://kaizenevol.com,https://www.kaizenevol.com')
+    .split(',').map((s) => s.trim());
+  const origin = req.headers.origin || '';
+  if (!(ALLOWED.includes(origin) || /^http:\/\/localhost(:\d+)?$/.test(origin))) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   const token = process.env.META_ACCESS_TOKEN;
   if (!token) {
     return res.status(200).json({ running_ads: false, ad_count: 0, ad_quality: 'unknown' });
