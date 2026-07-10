@@ -3,6 +3,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Internal endpoint — only our own site may call it (prevents SSRF/quota abuse).
+  const ALLOWED = (process.env.ALLOWED_ORIGINS || 'https://kaizenevol.com,https://www.kaizenevol.com')
+    .split(',').map((s) => s.trim());
+  const origin = req.headers.origin || '';
+  if (!(ALLOWED.includes(origin) || /^http:\/\/localhost(:\d+)?$/.test(origin))) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   const { website } = req.body;
   if (!website) {
     return res.status(200).json({ email: '' });

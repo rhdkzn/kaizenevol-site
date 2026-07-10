@@ -11,10 +11,14 @@ export default async function handler(req, res) {
 
   const SUPABASE_URL = 'https://otxinjuuflyfsoltodam.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4';
+  // Use the SERVICE ROLE key when present (set it in Vercel env BEFORE enabling RLS on app_data).
+  // This lets the public lead form keep writing after the table is locked to authenticated users.
+  // Falls back to the anon key so nothing breaks before the migration.
+  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON_KEY;
 
   const sbHeaders = {
-    'apikey': SUPABASE_ANON_KEY,
-    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   };

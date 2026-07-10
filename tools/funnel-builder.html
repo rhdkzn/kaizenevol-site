@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaizenForge Funnel Builder</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D0B1A'/%3E%3Cpath d='M20 44V20l12 10 12-10v24' fill='none' stroke='%238B5CF6' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<!--
+  ============================================================================
+  KaizenForge Funnel Builder  ·  v1.0  ·  2026-07-10
+  A visual, no-code builder for the KaizenForge Funnel Engine. Add/edit/reorder
+  steps, set brand + tracking, watch a live phone preview, then export a single
+  standalone .html funnel. The preview iframe runs the SAME engine that exports,
+  so what you see is exactly what ships. Self-contained, no dependencies.
+  Keep the engine in #engineTpl in sync with forge/tools/funnel-engine.html.
+  ============================================================================
+-->
+<style>
+  :root{ --b:#0D0B1A; --s:#141228; --s2:#1B1836; --line:rgba(255,255,255,.10);
+         --pri:#8B5CF6; --pri-dim:rgba(139,92,246,.16); --txt:#EEE8FF; --mut:#9A93C4;
+         --ok:#3FB984; --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--b);color:var(--txt);font-family:var(--font);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  header{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--s)}
+  header h1{font-size:15px;font-weight:800;letter-spacing:-.01em}
+  header .sp{flex:1}
+  header .dirty{font-size:12px;color:var(--mut)}
+  button{font-family:var(--font);cursor:pointer}
+  .btn{background:var(--pri);color:#fff;border:0;border-radius:9px;padding:9px 14px;font-size:13px;font-weight:700}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--txt)}
+  .btn:active{transform:scale(.98)}
+  main{flex:1;display:grid;grid-template-columns:230px 1fr 320px;min-height:0}
+  aside,.mid{overflow-y:auto;min-height:0}
+  aside{border-right:1px solid var(--line);padding:14px}
+  aside.insp{border-right:0;border-left:1px solid var(--line)}
+  .mid{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:22px;background:radial-gradient(circle at 50% 0,rgba(139,92,246,.08),transparent 60%)}
+  h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin-bottom:10px}
+  /* step list */
+  .step-item{display:flex;align-items:center;gap:8px;background:var(--s);border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;margin-bottom:7px;cursor:pointer}
+  .step-item.sel{border-color:var(--pri);background:var(--pri-dim)}
+  .step-item .t{flex:1;min-width:0}
+  .step-item .t b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .step-item .t span{font-size:11px;color:var(--mut)}
+  .step-item .ops{display:flex;gap:2px;flex:0 0 auto}
+  .icobtn{background:none;border:0;color:var(--mut);width:22px;height:22px;border-radius:6px;font-size:13px;line-height:1}
+  .icobtn:hover{background:var(--s2);color:var(--txt)}
+  .add{margin-top:8px;display:flex;gap:6px}
+  .add select{flex:1;background:var(--s);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:12px;font-family:var(--font)}
+  /* preview phone */
+  .phone{width:390px;max-width:100%;height:750px;max-height:78vh;border:10px solid #000;border-radius:38px;overflow:hidden;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.5);flex:0 0 auto}
+  .phone iframe{width:100%;height:100%;border:0;background:#000}
+  .previewhint{color:var(--mut);font-size:12px;margin-top:12px;text-align:center}
+  /* inspector */
+  .fld{margin-bottom:13px}
+  .fld label{display:block;font-size:12px;color:var(--mut);margin-bottom:5px;font-weight:600}
+  .fld input,.fld textarea,.fld select{width:100%;background:var(--s);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:13px;font-family:var(--font)}
+  .fld textarea{resize:vertical;min-height:56px}
+  .fld input[type=color]{height:34px;padding:3px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .opt-row{display:grid;grid-template-columns:38px 1fr 46px 26px;gap:5px;margin-bottom:6px;align-items:center}
+  .opt-row input{padding:7px 8px;font-size:12px}
+  .mini{background:var(--s2);border:1px dashed var(--line);color:var(--mut);border-radius:8px;padding:7px;font-size:12px;width:100%;margin-top:4px}
+  .sect{border-top:1px solid var(--line);margin:14px -14px 0;padding:14px 14px 0}
+  .sect summary{cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:700;list-style:none}
+  .hint{font-size:11px;color:var(--mut);margin-top:4px;line-height:1.4}
+  .empty{color:var(--mut);font-size:13px;padding:20px 0;text-align:center}
+  /* mobile tab bar (hidden on desktop) */
+  .tabs{display:none}
+  @media (max-width:900px){
+    header{flex-wrap:wrap;padding:10px 14px;gap:8px}
+    header h1{font-size:14px;width:100%}
+    header .sp{display:none}
+    header .btn{flex:1;padding:10px 8px}
+    .tabs{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--s);position:sticky;top:0;z-index:6}
+    .tabs button{flex:1;background:var(--s2);border:1px solid var(--line);color:var(--mut);border-radius:9px;padding:10px;font-size:13px;font-weight:700}
+    .tabs button.active{background:var(--pri);border-color:var(--pri);color:#fff}
+    main{display:block}
+    aside,.mid{display:none;border:0;height:auto;max-height:none}
+    aside{padding:14px}
+    body[data-view=steps] .steps{display:block}
+    body[data-view=preview] .mid{display:flex}
+    body[data-view=edit] .insp{display:block}
+    .mid{padding:14px}
+    .phone{width:100%;height:72vh;border-width:8px;border-radius:28px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>KaizenForge Funnel Builder</h1>
+  <span class="dirty" id="saved">saved</span>
+  <span class="sp"></span>
+  <button class="btn ghost" id="copyBtn">Copy HTML</button>
+  <button class="btn ghost" id="resetBtn">Reset</button>
+  <button class="btn" id="exportBtn">Export .html</button>
+</header>
+<nav class="tabs" id="tabs">
+  <button data-view="steps" class="active">Steps</button>
+  <button data-view="preview">Preview</button>
+  <button data-view="edit">Edit</button>
+</nav>
+<main>
+  <aside class="steps">
+    <h2>Steps</h2>
+    <div id="stepList"></div>
+    <div class="add">
+      <select id="addType">
+        <option value="single">Single select</option>
+        <option value="image">Image cards</option>
+        <option value="multi">Multi select</option>
+        <option value="slider">Slider</option>
+        <option value="proof">Social proof</option>
+        <option value="loader">Loader</option>
+        <option value="contact">Contact form</option>
+      </select>
+      <button class="btn" id="addBtn">+ Add</button>
+    </div>
+  </aside>
+
+  <div class="mid">
+    <div class="phone"><iframe id="preview" title="Funnel preview"></iframe></div>
+    <div class="previewhint" id="pvHint">Live preview — showing the selected step</div>
+  </div>
+
+  <aside class="insp">
+    <div id="inspector"><div class="empty">Select a step to edit it, or add one.</div></div>
+  </aside>
+</main>
+
+<!-- =========================== THE ENGINE TEMPLATE ===========================
+     Same engine as forge/tools/funnel-engine.html. Placeholders __TITLE__,
+     __TOKENS__, __CONFIG__ are filled at build; <%SCRIPT%>/<%/SCRIPT%> become
+     real script tags (kept split so this text/plain block doesn't self-close).
+-->
+<script type="text/plain" id="engineTpl"><!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>__TITLE__</title>
+<style>
+  :root{ --bg:#0D0B1A; --surface:#141228; --surface-2:#1B1836; --accent:#8B5CF6; --accent-ink:#fff;
+    --accent-dim:color-mix(in srgb,var(--accent) 16%,transparent); --accent-line:color-mix(in srgb,var(--accent) 45%,transparent);
+    --text:#EEE8FF; --text-muted:#9A93C4; --border:rgba(255,255,255,.10); --ok:#3FB984; --err:#E5484D; --radius:16px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --ease:cubic-bezier(.22,.61,.36,1); }
+  __TOKENS__
+  *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100dvh;display:flex;flex-direction:column}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 18px;display:flex;align-items:center;gap:12px}
+  .back{background:none;border:0;color:var(--text-muted);font-size:22px;line-height:1;width:32px;height:32px;border-radius:8px;cursor:pointer;flex:0 0 auto;visibility:hidden}
+  .back.show{visibility:visible}
+  .track{flex:1;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+  .fill{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .45s var(--ease)}
+  .count{flex:0 0 auto;font-size:12px;color:var(--text-muted);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
+  .stage{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 20px 24px;max-width:560px;width:100%;margin:0 auto}
+  .step{animation:slideIn .4s var(--ease) both}
+  @keyframes slideIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .eyebrow{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:10px}
+  h1{font-size:clamp(1.5rem,1.2rem + 2.2vw,2rem);line-height:1.15;font-weight:800;letter-spacing:-.02em}
+  .sub{color:var(--text-muted);margin-top:10px;font-size:15px}
+  .opts{display:grid;gap:10px;margin-top:22px}.opts.grid2{grid-template-columns:1fr 1fr}
+  .opt{display:flex;align-items:center;gap:12px;text-align:left;background:var(--surface);border:1.5px solid var(--border);color:var(--text);border-radius:var(--radius);padding:16px;font-size:16px;font-weight:600;font-family:var(--font);cursor:pointer;transition:border-color .15s,background .15s,transform .06s;width:100%}
+  .opt:hover{border-color:var(--accent-line);background:var(--surface-2)}.opt:active{transform:scale(.99)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-dim)}
+  .opt .ico{font-size:22px;flex:0 0 auto;width:26px;text-align:center}
+  .opt .tick{margin-left:auto;width:22px;height:22px;border-radius:99px;border:1.5px solid var(--border);flex:0 0 auto;display:grid;place-items:center;font-size:13px;color:transparent}
+  .opt.sel .tick{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .opts.grid2 .opt{flex-direction:column;text-align:center;padding:20px 12px;gap:8px}.opts.grid2 .opt .tick{display:none}
+  .field{margin-top:20px}.field label{display:block;font-size:14px;color:var(--text-muted);margin-bottom:7px;font-weight:600}
+  .field input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:15px 16px;font-size:16px;color:var(--text);font-family:var(--font)}
+  .field input:focus{outline:none;border-color:var(--accent)}.field input.bad{border-color:var(--err)}
+  .field .msg{color:var(--err);font-size:13px;margin-top:6px;min-height:16px}
+  .slider{margin-top:26px}.slider .val{font-size:1.6rem;font-weight:800;color:var(--accent);text-align:center;margin-bottom:6px}
+  .slider input[type=range]{width:100%;accent-color:var(--accent);height:32px}.slider .ends{display:flex;justify-content:space-between;color:var(--text-muted);font-size:12px}
+  .cta{margin-top:24px;width:100%;background:var(--accent);color:var(--accent-ink);border:0;border-radius:99px;padding:17px;font-size:16px;font-weight:800;font-family:var(--font);cursor:pointer;transition:opacity .15s,transform .06s}
+  .cta:disabled{opacity:.4;cursor:not-allowed}.cta:not(:disabled):active{transform:scale(.99)}
+  .reassure{text-align:center;color:var(--text-muted);font-size:12.5px;margin-top:14px}.reassure b{color:var(--text)}
+  .loader{text-align:center;padding:20px 0}.spinner{width:54px;height:54px;border:4px solid var(--surface-2);border-top-color:var(--accent);border-radius:99px;margin:0 auto 22px;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}.loader .lmsg{font-size:17px;font-weight:600;min-height:24px}
+  .proof{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:22px}
+  .proof .stars{color:var(--accent);letter-spacing:2px}.proof blockquote{margin:10px 0 0;font-size:15px}.proof cite{display:block;margin-top:8px;color:var(--text-muted);font-size:13px;font-style:normal}
+  .done{text-align:center}.done .big{width:72px;height:72px;border-radius:99px;background:var(--accent-dim);color:var(--accent);display:grid;place-items:center;font-size:36px;margin:0 auto 20px}
+  .summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:20px;text-align:left;font-size:14px}
+  .summary div{display:flex;justify-content:space-between;gap:12px;padding:5px 0}.summary div span:first-child{color:var(--text-muted)}.summary div span:last-child{font-weight:600;text-align:right}
+  @media (prefers-reduced-motion:reduce){.step{animation:none}.fill{transition:none}.spinner{animation-duration:2s}}
+</style></head>
+<body>
+  <div class="bar"><button class="back" id="back" aria-label="Go back">&#8592;</button>
+    <div class="track" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pb"><div class="fill" id="fill"></div></div>
+    <div class="count" id="count"></div></div>
+  <main class="stage" id="stage" aria-live="polite"></main>
+<%SCRIPT%>
+const FUNNEL = __CONFIG__;
+(function(){
+  const stage=document.getElementById('stage'),fill=document.getElementById('fill'),pb=document.getElementById('pb'),count=document.getElementById('count'),backBtn=document.getElementById('back');
+  const KEY='kf_funnel_'+(FUNNEL.meta.business||'x').replace(/\W+/g,'').toLowerCase();
+  const preview=!!(FUNNEL.meta&&FUNNEL.meta._preview);
+  const utm={};new URLSearchParams(location.search).forEach((v,k)=>{if(/^utm_|gclid|fbclid/i.test(k))utm[k]=v;});
+  let state={i:0,answers:{},score:0};
+  try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.i<FUNNEL.steps.length)state=s;}catch(e){}
+  if(preview)state={i:FUNNEL.meta._previewStep||0,answers:{},score:0};
+  function persist(){if(preview)return;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  function px(ev,d){try{if(window.fbq)window.fbq('trackCustom',ev,d||{});}catch(e){}}
+  function pxLead(){try{if(window.fbq)window.fbq('track','Lead');}catch(e){}}
+  function pipe(s){return(s||'').replace(/\{\{answers\.(\w+)\}\}/g,(_,k)=>state.answers[k]??'');}
+  const countable=FUNNEL.steps.filter(s=>!['loader','proof'].includes(s.type)).length;
+  function progress(){const a=FUNNEL.steps.slice(0,state.i).filter(s=>!['loader','proof'].includes(s.type)).length;return countable?Math.round(a/countable*100):0;}
+  function render(){
+    persist();
+    if(state.i>=FUNNEL.steps.length)return done();
+    const step=FUNNEL.steps[state.i],p=progress();
+    fill.style.width=p+'%';pb.setAttribute('aria-valuenow',p);
+    const shown=FUNNEL.steps.slice(0,state.i+1).filter(s=>!['loader','proof'].includes(s.type)).length;
+    count.textContent=['loader','proof'].includes(step.type)?'':shown+'/'+countable;
+    backBtn.classList.toggle('show',state.i>0);
+    px('FunnelStep',{step:step.id,index:state.i});
+    const el=document.createElement('section');el.className='step';el.innerHTML=head(step)+body(step);
+    stage.innerHTML='';stage.appendChild(el);wire(step,el);
+    const f=el.querySelector('.opt,input,.cta');if(f)f.focus({preventScroll:true});
+  }
+  function head(s){return(s.eyebrow?'<div class="eyebrow">'+pipe(s.eyebrow)+'</div>':'')+(s.title?'<h1>'+pipe(s.title)+'</h1>':'')+(s.sub?'<p class="sub">'+pipe(s.sub)+'</p>':'');}
+  function body(step){
+    switch(step.type){
+      case 'single':case 'image':{const g=step.grid?' grid2':'';return '<div class="opts'+g+'" role="radiogroup">'+step.options.map((o,i)=>'<button class="opt" role="radio" aria-checked="false" data-idx="'+i+'">'+(o.icon?'<span class="ico">'+o.icon+'</span>':'')+'<span>'+o.label+'</span><span class="tick">✓</span></button>').join('')+'</div>';}
+      case 'multi':return '<div class="opts" role="group">'+step.options.map((o,i)=>'<button class="opt" data-idx="'+i+'" aria-pressed="false">'+(o.icon?'<span class="ico">'+o.icon+'</span>':'')+'<span>'+o.label+'</span><span class="tick">✓</span></button>').join('')+'</div><button class="cta" data-continue disabled>Continue</button>';
+      case 'slider':{const v=step.defaultVal??step.min;return '<div class="slider"><div class="val" id="sv">'+(step.prefix||'')+v+(step.unit||'')+'</div><input type="range" min="'+step.min+'" max="'+step.max+'" step="'+(step.step||1)+'" value="'+v+'" aria-label="'+(step.title||'')+'"><div class="ends"><span>'+(step.prefix||'')+step.min+(step.unit||'')+'</span><span>'+(step.prefix||'')+step.max+(step.unit||'')+'+</span></div></div><button class="cta" data-continue>Continue</button>';}
+      case 'contact':return '<form novalidate>'+step.fields.map(f=>'<div class="field"><label for="f_'+f.name+'">'+f.label+(f.required?'':' <span style="opacity:.6">(optional)</span>')+'</label><input id="f_'+f.name+'" name="'+f.name+'" type="'+(f.type||'text')+'" '+(f.required?'required':'')+'><div class="msg" data-msg-for="'+f.name+'"></div></div>').join('')+'<button class="cta" type="submit">'+(step.submitLabel||'Submit')+'</button>'+(step.reassure?'<p class="reassure">'+step.reassure+'</p>':'')+'</form>';
+      case 'loader':return '<div class="loader"><div class="spinner"></div><div class="lmsg" id="lm">'+(step.messages&&step.messages[0]||'')+'</div></div>';
+      case 'proof':return '<div class="proof"><div class="stars">'+'★'.repeat(step.stars||5)+'</div><blockquote>'+(step.quote||'')+'</blockquote><cite>'+(step.cite||'')+'</cite></div><button class="cta" data-continue>'+(step.cta||'Continue')+'</button>';
+      default:return '';
+    }
+  }
+  function advance(sc,goto){if(typeof sc==='number')state.score+=sc;state.i=(goto!=null)?FUNNEL.steps.findIndex(s=>s.id===goto):state.i+1;if(state.i<0)state.i=FUNNEL.steps.length;render();}
+  function wire(step,el){
+    if(step.type==='single'||step.type==='image'){el.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{const o=step.options[+b.dataset.idx];state.answers[step.id]=o.label;b.classList.add('sel');b.setAttribute('aria-checked','true');setTimeout(()=>advance(o.score||0,o.goto),140);}));}
+    if(step.type==='multi'){const ch=new Set(),c=el.querySelector('[data-continue]');el.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.idx;if(ch.has(i)){ch.delete(i);b.classList.remove('sel');b.setAttribute('aria-pressed','false');}else{ch.add(i);b.classList.add('sel');b.setAttribute('aria-pressed','true');}c.disabled=ch.size===0;}));c.addEventListener('click',()=>{state.answers[step.id]=[...ch].map(i=>step.options[i].label).join(', ');advance([...ch].reduce((a,i)=>a+(step.options[i].score||0),0));});}
+    if(step.type==='slider'){const inp=el.querySelector('input[type=range]'),val=el.querySelector('#sv'),fmt=v=>(step.prefix||'')+v+(step.unit||'');inp.addEventListener('input',()=>val.textContent=fmt(inp.value));el.querySelector('[data-continue]').addEventListener('click',()=>{const v=+inp.value;state.answers[step.id]=fmt(v);const bands=(step.scoreBands||[]).slice().sort((a,b)=>b.min-a.min),hit=bands.find(b=>v>=b.min);advance(hit?hit.score:0);});}
+    if(step.type==='contact'){const form=el.querySelector('form');form.addEventListener('submit',e=>{e.preventDefault();let ok=true;step.fields.forEach(f=>{const inp=form.querySelector('[name="'+f.name+'"]'),msg=form.querySelector('[data-msg-for="'+f.name+'"]'),v=inp.value.trim();let er='';if(f.required&&!v)er='Required';else if(f.type==='tel'&&v&&!/^[0-9 +()-]{7,}$/.test(v))er='Enter a valid number';else if(f.name==='postcode'&&v&&!/^[A-Za-z]{1,2}\d/.test(v))er='Enter a valid postcode';inp.classList.toggle('bad',!!er);msg.textContent=er;if(er)ok=false;state.answers[f.name]=v;});if(ok)submit();});}
+    if(step.type==='loader'){let k=0;const lm=el.querySelector('#lm'),red=matchMedia('(prefers-reduced-motion:reduce)').matches,tot=red?900:(step.ms||2400);const iv=setInterval(()=>{k=(k+1)%step.messages.length;if(lm)lm.textContent=step.messages[k];},tot/step.messages.length);setTimeout(()=>{clearInterval(iv);advance(0);},tot);}
+    if(step.type==='proof'){el.querySelector('[data-continue]').addEventListener('click',()=>advance(0));}
+  }
+  function submit(){const band=state.score>=12?'hot':state.score>=8?'warm':'nurture';const payload={...state.answers,_score:state.score,_band:band,_business:FUNNEL.meta.business,...utm};pxLead();px('FunnelComplete',{band,score:state.score});if(FUNNEL.meta.endpoint&&!preview){fetch(FUNNEL.meta.endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});}else{console.log('[funnel] lead payload:',payload);}state.i=FUNNEL.steps.length;persist();done();}
+  function done(){if(!preview){try{localStorage.removeItem(KEY);}catch(e){}}fill.style.width='100%';pb.setAttribute('aria-valuenow',100);count.textContent='';backBtn.classList.remove('show');const a=state.answers;const rows=[['Looking to add',a.project],['Timeline',a.timeline],['Budget',a.budget],['Postcode',a.postcode]].filter(r=>r[1]).map(r=>'<div><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('');stage.innerHTML='<section class="step done"><div class="big">✓</div><h1>You\'re all set'+(a.name?', '+a.name.split(' ')[0]:'')+'.</h1><p class="sub">'+(FUNNEL.meta.thankYou||'')+'</p>'+(rows?'<div class="summary">'+rows+'</div>':'')+'</section>';}
+  backBtn.addEventListener('click',()=>{if(state.i>0){state.i=Math.max(0,state.i-1);render();}});
+  render();
+})();
+<%/SCRIPT%>
+</body></html></script>
+
+<script>
+/* ===================== BUILDER APP ===================== */
+(function(){
+  const RAW = document.getElementById('engineTpl').textContent;
+  const $ = s => document.querySelector(s);
+  const stepList=$('#stepList'), inspector=$('#inspector'), preview=$('#preview'), savedTag=$('#saved');
+  const KEY='kf_builder_v1';
+  let sel = 0, refreshTimer=null;
+
+  const DEFAULT = {
+    meta:{ title:"Get your free assessment", business:"Your Business", pixelId:"", endpoint:"",
+           thankYou:"Thanks — we'll be in touch within one working day." },
+    brand:{ bg:"#0D0B1A", surface:"#141228", surface2:"#1B1836", accent:"#8B5CF6", text:"#EEE8FF" },
+    steps:[
+      { id:"project", type:"single", eyebrow:"Free assessment", title:"What are you looking for?",
+        sub:"Pick the closest.", options:[{label:"Option one",icon:"✨",score:2},{label:"Option two",icon:"⭐",score:2},{label:"Not sure yet",icon:"🤔",score:1}] },
+      { id:"contact", type:"contact", eyebrow:"Almost done", title:"Where shall we send it?",
+        sub:"No obligation, no spam.", submitLabel:"Get it →", reassure:"🔒 Your details are safe.",
+        fields:[{name:"name",label:"Your name",type:"text",required:true},{name:"phone",label:"Mobile number",type:"tel",required:true}] }
+    ]
+  };
+
+  const NEW_STEP = {
+    single:()=>({id:uid('step'),type:"single",title:"New question",options:[{label:"Option",icon:"",score:1}]}),
+    image:()=>({id:uid('step'),type:"image",title:"Pick one",grid:true,options:[{label:"A",icon:"🅰️",score:1},{label:"B",icon:"🅱️",score:1}]}),
+    multi:()=>({id:uid('step'),type:"multi",title:"Select all that apply",options:[{label:"Option",icon:"",score:1}]}),
+    slider:()=>({id:uid('step'),type:"slider",title:"Your budget?",min:10,max:100,step:5,unit:"k",prefix:"£",defaultVal:40,scoreBands:[{min:40,score:3},{min:20,score:2},{min:0,score:1}]}),
+    proof:()=>({id:uid('step'),type:"proof",title:"You're in good hands",quote:"They were brilliant.",cite:"— A happy customer",stars:5,cta:"Continue"}),
+    loader:()=>({id:uid('step'),type:"loader",ms:2400,messages:["Working on it…","Almost there…"]}),
+    contact:()=>({id:uid('step'),type:"contact",title:"Where shall we send it?",submitLabel:"Submit",fields:[{name:"name",label:"Your name",type:"text",required:true},{name:"phone",label:"Mobile number",type:"tel",required:true}]})
+  };
+  function uid(p){ return p+'_'+Math.floor(performance.now()*1000%1e7); }
+
+  let cfg = load() || structuredClone(DEFAULT);
+
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(cfg)); savedTag.textContent='saved ✓'; }catch(e){} }
+
+  /* ---- build a standalone funnel HTML from a config ---- */
+  function tokensCSS(b){ return ':root{--bg:'+b.bg+';--surface:'+b.surface+';--surface-2:'+b.surface2+';--accent:'+b.accent+';--text:'+b.text+';}'; }
+  function esc(s){ return String(s==null?'':s).replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function buildHTML(config){
+    return RAW
+      .replace('__TITLE__', esc(config.meta.title||config.meta.business||'Get started'))
+      .replace('__TOKENS__', tokensCSS(config.brand))
+      .replace('__CONFIG__', JSON.stringify(config,null,2))
+      .replace(/<%SCRIPT%>/g,'<script>').replace(/<%\/SCRIPT%>/g,'<\/script>');
+  }
+
+  function refreshPreview(){
+    const pv = structuredClone(cfg);
+    pv.meta._preview = true; pv.meta._previewStep = Math.min(sel, cfg.steps.length-1);
+    preview.srcdoc = buildHTML(pv);
+  }
+  function touch(){ save(); clearTimeout(refreshTimer); refreshTimer=setTimeout(refreshPreview,250); savedTag.textContent='saving…'; }
+
+  /* ---- step list ---- */
+  function renderSteps(){
+    stepList.innerHTML='';
+    cfg.steps.forEach((s,i)=>{
+      const d=document.createElement('div'); d.className='step-item'+(i===sel?' sel':'');
+      d.innerHTML='<div class="t"><b>'+esc(s.title||s.type)+'</b><span>'+s.type+'</span></div>'+
+        '<div class="ops"><button class="icobtn" data-up title="Move up">↑</button><button class="icobtn" data-down title="Move down">↓</button><button class="icobtn" data-dup title="Duplicate">⧉</button><button class="icobtn" data-del title="Delete">✕</button></div>';
+      d.addEventListener('click',e=>{ if(e.target.closest('.icobtn'))return; sel=i; renderSteps(); renderInspector(); refreshPreview(); if(mob())setView('edit'); });
+      d.querySelector('[data-up]').onclick=e=>{e.stopPropagation();move(i,-1);};
+      d.querySelector('[data-down]').onclick=e=>{e.stopPropagation();move(i,1);};
+      d.querySelector('[data-dup]').onclick=e=>{e.stopPropagation();const c=structuredClone(cfg.steps[i]);c.id=uid('step');cfg.steps.splice(i+1,0,c);sel=i+1;afterStructural();};
+      d.querySelector('[data-del]').onclick=e=>{e.stopPropagation();if(cfg.steps.length<=1)return;cfg.steps.splice(i,1);sel=Math.max(0,sel-(i<=sel?1:0));afterStructural();};
+      stepList.appendChild(d);
+    });
+  }
+  function move(i,dir){ const j=i+dir; if(j<0||j>=cfg.steps.length)return; const t=cfg.steps[i];cfg.steps[i]=cfg.steps[j];cfg.steps[j]=t; if(sel===i)sel=j; else if(sel===j)sel=i; afterStructural(); }
+  function afterStructural(){ renderSteps(); renderInspector(); save(); refreshPreview(); }
+
+  /* ---- inspector ---- */
+  function F(label,html){ return '<div class="fld"><label>'+label+'</label>'+html+'</div>'; }
+  function inp(field,val,ph){ return '<input data-f="'+field+'" value="'+esc(val)+'" placeholder="'+(ph||'')+'">'; }
+  function renderInspector(){
+    const s=cfg.steps[sel];
+    if(!s){ inspector.innerHTML='<div class="empty">No step selected.</div>'; return; }
+    let h='<h2>'+s.type+' step</h2>';
+    if('eyebrow' in s || ['single','image','multi','slider','contact'].includes(s.type)) h+=F('Eyebrow (small label)', inp('eyebrow',s.eyebrow,'optional'));
+    if(s.type!=='loader') h+=F('Title', inp('title',s.title));
+    if(['single','image','multi','slider','contact'].includes(s.type)) h+=F('Subtitle', '<textarea data-f="sub">'+esc(s.sub||'')+'</textarea>');
+
+    if(['single','image','multi'].includes(s.type)){
+      h+='<h2 style="margin-top:14px">Options</h2><div id="optWrap">';
+      s.options.forEach((o,i)=>{ h+='<div class="opt-row"><input data-opt="'+i+'" data-of="icon" value="'+esc(o.icon)+'" placeholder="😀"><input data-opt="'+i+'" data-of="label" value="'+esc(o.label)+'"><input data-opt="'+i+'" data-of="score" type="number" value="'+(o.score??1)+'" title="lead score"><button class="icobtn" data-optdel="'+i+'">✕</button></div>'; });
+      h+='</div><button class="mini" id="addOpt">+ add option</button>';
+      if(s.type==='image') h+=F('Layout', '<label style="font-weight:400;color:var(--txt)"><input type="checkbox" data-f="grid" '+(s.grid?'checked':'')+' style="width:auto;margin-right:6px">2-column grid</label>');
+    }
+    if(s.type==='slider'){
+      h+='<div class="row2">'+F('Min',inp('min',s.min))+F('Max',inp('max',s.max))+'</div>';
+      h+='<div class="row2">'+F('Prefix',inp('prefix',s.prefix))+F('Unit',inp('unit',s.unit))+'</div>';
+      h+='<div class="row2">'+F('Step',inp('step',s.step))+F('Default',inp('defaultVal',s.defaultVal))+'</div>';
+      h+='<div class="hint">Lead scoring: value ≥ min gets that score (highest match wins).</div>';
+    }
+    if(s.type==='loader'){
+      h+=F('Messages (one per line)', '<textarea data-f="messages" style="min-height:80px">'+esc((s.messages||[]).join('\n'))+'</textarea>');
+      h+=F('Duration (ms)', inp('ms',s.ms));
+    }
+    if(s.type==='proof'){
+      h+=F('Quote', '<textarea data-f="quote">'+esc(s.quote||'')+'</textarea>');
+      h+='<div class="row2">'+F('Attribution',inp('cite',s.cite))+F('Stars',inp('stars',s.stars))+'</div>';
+      h+=F('Button label', inp('cta',s.cta));
+    }
+    if(s.type==='contact'){
+      h+='<h2 style="margin-top:14px">Fields</h2><div id="fldWrap">';
+      s.fields.forEach((f,i)=>{ h+='<div class="opt-row" style="grid-template-columns:1fr 60px 24px 26px"><input data-fld="'+i+'" data-ff="label" value="'+esc(f.label)+'"><input data-fld="'+i+'" data-ff="name" value="'+esc(f.name)+'" title="field key"><input type="checkbox" data-fld="'+i+'" data-ff="required" '+(f.required?'checked':'')+' title="required" style="width:auto"><button class="icobtn" data-flddel="'+i+'">✕</button></div>'; });
+      h+='</div><button class="mini" id="addFld">+ add field</button>';
+      h+=F('Submit button', inp('submitLabel',s.submitLabel));
+      h+=F('Reassurance line', inp('reassure',s.reassure));
+    }
+
+    // brand + settings
+    h+='<details class="sect" open><summary>Brand &amp; tracking</summary>';
+    h+='<div class="row2" style="margin-top:10px">'+F('Accent','<input type="color" data-b="accent" value="'+cfg.brand.accent+'">')+F('Background','<input type="color" data-b="bg" value="'+cfg.brand.bg+'">')+'</div>';
+    h+='<div class="row2">'+F('Surface','<input type="color" data-b="surface" value="'+cfg.brand.surface+'">')+F('Text','<input type="color" data-b="text" value="'+cfg.brand.text+'">')+'</div>';
+    h+=F('Business name', '<input data-m="business" value="'+esc(cfg.meta.business)+'">');
+    h+=F('Page title', '<input data-m="title" value="'+esc(cfg.meta.title)+'">');
+    h+=F('Thank-you message', '<textarea data-m="thankYou">'+esc(cfg.meta.thankYou)+'</textarea>');
+    h+=F('Meta Pixel ID', '<input data-m="pixelId" value="'+esc(cfg.meta.pixelId)+'" placeholder="leave blank for none">');
+    h+=F('Form endpoint (POST URL)', '<input data-m="endpoint" value="'+esc(cfg.meta.endpoint)+'" placeholder="leave blank = demo mode">');
+    h+='<div class="hint">Set a real endpoint before launch — a funnel with nowhere to send the lead is worth £0.</div></details>';
+
+    inspector.innerHTML=h;
+    wireInspector(s);
+  }
+
+  function wireInspector(s){
+    inspector.querySelectorAll('[data-f]').forEach(el=>{
+      const f=el.dataset.f;
+      el.addEventListener('input',()=>{
+        if(el.type==='checkbox'){ s[f]=el.checked; }
+        else if(f==='messages'){ s.messages=el.value.split('\n').filter(x=>x.trim()); }
+        else if(['min','max','step','defaultVal','ms','stars'].includes(f)){ s[f]=el.value===''?'':Number(el.value); }
+        else { s[f]=el.value; }
+        if(f==='title') renderSteps();
+        touch();
+      });
+    });
+    inspector.querySelectorAll('[data-opt]').forEach(el=>{
+      el.addEventListener('input',()=>{ const i=+el.dataset.opt,of=el.dataset.of; s.options[i][of]= of==='score'?Number(el.value):el.value; touch(); });
+    });
+    inspector.querySelectorAll('[data-optdel]').forEach(el=>el.addEventListener('click',()=>{ s.options.splice(+el.dataset.optdel,1); renderInspector(); touch(); }));
+    const ao=inspector.querySelector('#addOpt'); if(ao)ao.addEventListener('click',()=>{ s.options.push({label:'New option',icon:'',score:1}); renderInspector(); touch(); });
+    inspector.querySelectorAll('[data-fld]').forEach(el=>{
+      el.addEventListener('input',()=>{ const i=+el.dataset.fld,ff=el.dataset.ff; s.fields[i][ff]= ff==='required'?el.checked:el.value; touch(); });
+    });
+    inspector.querySelectorAll('[data-flddel]').forEach(el=>el.addEventListener('click',()=>{ s.fields.splice(+el.dataset.flddel,1); renderInspector(); touch(); }));
+    const af=inspector.querySelector('#addFld'); if(af)af.addEventListener('click',()=>{ s.fields.push({name:'field'+s.fields.length,label:'New field',type:'text',required:false}); renderInspector(); touch(); });
+    inspector.querySelectorAll('[data-b]').forEach(el=>el.addEventListener('input',()=>{ cfg.brand[el.dataset.b]=el.value; touch(); }));
+    inspector.querySelectorAll('[data-m]').forEach(el=>el.addEventListener('input',()=>{ cfg.meta[el.dataset.m]=el.value; touch(); }));
+  }
+
+  /* ---- toolbar ---- */
+  const tabs=$('#tabs');
+  function mob(){ return matchMedia('(max-width:900px)').matches; }
+  function setView(v){ document.body.dataset.view=v; tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.view===v)); if(v==='preview')refreshPreview(); }
+  tabs.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+
+  $('#addBtn').addEventListener('click',()=>{ const t=$('#addType').value; cfg.steps.push(NEW_STEP[t]()); sel=cfg.steps.length-1; afterStructural(); if(mob())setView('edit'); });
+  $('#exportBtn').addEventListener('click',()=>{
+    const clean=structuredClone(cfg); const html=buildHTML(clean);
+    const blob=new Blob([html],{type:'text/html'}); const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download='funnel-'+(cfg.meta.business||'kaizenforge').replace(/\W+/g,'-').toLowerCase()+'.html';
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+  $('#copyBtn').addEventListener('click',async()=>{
+    try{ await navigator.clipboard.writeText(buildHTML(structuredClone(cfg))); $('#copyBtn').textContent='Copied ✓'; setTimeout(()=>$('#copyBtn').textContent='Copy HTML',1500);}catch(e){ alert('Copy failed — use Export instead.'); }
+  });
+  $('#resetBtn').addEventListener('click',()=>{ if(confirm('Reset to the starter funnel? Your current build will be lost.')){ cfg=structuredClone(DEFAULT); sel=0; save(); renderSteps(); renderInspector(); refreshPreview(); } });
+
+  document.body.dataset.view='steps';
+  renderSteps(); renderInspector(); refreshPreview(); save();
+})();
+</script>
+</body>
+</html>
