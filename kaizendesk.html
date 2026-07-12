@@ -516,12 +516,12 @@
     <div class="calc-wrap">
       <div class="calc-label">Your numbers</div>
       <div class="calc-row">
-        <div class="calc-row-header"><label for="leads">Enquiries a month</label><span class="calc-row-value" id="leadsVal">15</span></div>
-        <input type="range" id="leads" min="5" max="300" step="5" value="15">
+        <div class="calc-row-header"><label for="leads">Enquiries a month</label><span class="calc-row-value" id="leadsVal">40</span></div>
+        <input type="range" id="leads" min="5" max="500" step="5" value="40">
       </div>
       <div class="calc-row">
-        <div class="calc-row-header"><label for="value">Average job value</label><span class="calc-row-value">£<span id="valueVal">6,000</span></span></div>
-        <input type="range" id="value" min="500" max="50000" step="500" value="6000">
+        <div class="calc-row-header"><label for="value">Average job or sale value</label><span class="calc-row-value">£<span id="valueVal">500</span></span></div>
+        <input type="range" id="value" min="0" max="100" step="1" value="41" aria-valuetext="£500">
       </div>
       <div class="calc-row">
         <div class="calc-row-header"><label for="closeRate">Your close rate</label><span class="calc-row-value"><span id="closeVal">30</span>%</span></div>
@@ -534,17 +534,17 @@
       <div class="calc-result" aria-live="polite" aria-atomic="true">
         <div class="calc-result-label">Revenue you could recover</div>
         <div class="calc-result-amounts">
-          <div><div class="calc-result-amount" id="recMonth">£6,750</div><div class="calc-result-period">Per Month</div></div>
-          <div><div class="calc-result-amount" id="recYear">£81,000</div><div class="calc-result-period">Per Year</div></div>
+          <div><div class="calc-result-amount" id="recMonth">£1,500</div><div class="calc-result-period">Per Month</div></div>
+          <div><div class="calc-result-amount" id="recYear">£18,000</div><div class="calc-result-period">Per Year</div></div>
         </div>
         <div class="calc-fee">
-          <div class="calc-fee-stat"><div class="n"><em id="jobsBack">1.1</em> jobs</div><div class="l">Won back a month, closed at your own stated rate. Even one pays for the Desk many times over.</div></div>
-          <div class="calc-fee-stat"><div class="n">Runs <em>24/7</em></div><div class="l">Catching the jobs you'd lose while you're on the tools or asleep</div></div>
+          <div class="calc-fee-stat"><div class="n"><em id="jobsBack">3</em> bookings</div><div class="l">Won back a month, closed at your own stated rate. Business you'd never know you'd lost.</div></div>
+          <div class="calc-fee-stat"><div class="n">Runs <em>24/7</em></div><div class="l">Catching the enquiries you'd lose while you're with a customer, on a job, or closed for the night</div></div>
         </div>
         <div class="calc-guarantee"><b>And you can't lose:</b> any month it doesn't catch you business you'd otherwise have missed, the next month's on us. Cancel anytime.</div>
       </div>
     </div>
-    <p class="pricing-note" style="text-align:center;max-width:520px;margin:14px auto 0;">An estimate from your own numbers, the jobs you currently lose, captured at your stated close rate.</p>
+    <p class="pricing-note" style="text-align:center;max-width:520px;margin:14px auto 0;">An estimate from your own numbers, the enquiries you currently lose, captured at your stated close rate.</p>
   </div>
 </section>
 
@@ -724,9 +724,20 @@
   const el=id=>document.getElementById(id);
   function fmt(n){return '£'+Math.round(n).toLocaleString('en-GB');}
   function track(i){const p=((+i.value-+i.min)/(+i.max-+i.min))*100;i.style.background='linear-gradient(to right,#6D3FC0 '+p+'%,#181430 '+p+'%)';}
+  /* Job value uses a log scale: the Desk serves every local business, so the
+     slider must span a £20 haircut and a £50,000 loft on one track. */
+  const VMIN=20, VMAX=50000;
+  function jobValue(p){
+    const raw=VMIN*Math.pow(VMAX/VMIN,p/100);
+    if(raw<100) return Math.round(raw/5)*5;
+    if(raw<1000) return Math.round(raw/25)*25;
+    if(raw<10000) return Math.round(raw/100)*100;
+    return Math.round(raw/500)*500;
+  }
   function calc(){
-    const leads=+el('leads').value, value=+el('value').value, close=+el('closeRate').value/100, missed=+el('missed').value/100;
+    const leads=+el('leads').value, value=jobValue(+el('value').value), close=+el('closeRate').value/100, missed=+el('missed').value/100;
     el('leadsVal').textContent=leads; el('valueVal').textContent=value.toLocaleString('en-GB');
+    el('value').setAttribute('aria-valuetext','£'+value.toLocaleString('en-GB'));
     el('closeVal').textContent=el('closeRate').value; el('missedVal').textContent=el('missed').value;
     const month=leads*missed*close*value, jobsBack=leads*missed*close;
     el('recMonth').textContent=fmt(month); el('recYear').textContent=fmt(month*12);
