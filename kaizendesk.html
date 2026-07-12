@@ -172,6 +172,8 @@
     .calc-fee-stat .n { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(22px,3.5vw,30px); color:var(--white); line-height:1; letter-spacing:-0.02em; }
     .calc-fee-stat .n em { color:var(--purple-light); font-style:normal; }
     .calc-fee-stat .l { font-size:11px; color:var(--muted); font-weight:500; margin-top:7px; line-height:1.45; }
+    .calc-guarantee { margin-top:20px; padding:14px 16px; border-radius:12px; background:rgba(109,63,192,0.12); border:1px solid rgba(109,63,192,0.4); font-size:13.5px; color:var(--purple-light); line-height:1.6; }
+    .calc-guarantee b { color:var(--white); }
 
     .hero-ctas { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
     .hero-note { margin-top:20px; font-size:13px; color:var(--muted); }
@@ -514,31 +516,32 @@
     <div class="calc-wrap">
       <div class="calc-label">Your numbers</div>
       <div class="calc-row">
-        <div class="calc-row-header"><label for="leads">Enquiries a month</label><span class="calc-row-value" id="leadsVal">100</span></div>
-        <input type="range" id="leads" min="5" max="400" step="5" value="100">
+        <div class="calc-row-header"><label for="leads">Enquiries a month</label><span class="calc-row-value" id="leadsVal">15</span></div>
+        <input type="range" id="leads" min="5" max="300" step="5" value="15">
       </div>
       <div class="calc-row">
-        <div class="calc-row-header"><label for="value">Average job value</label><span class="calc-row-value">£<span id="valueVal">500</span></span></div>
-        <input type="range" id="value" min="50" max="50000" step="50" value="500">
+        <div class="calc-row-header"><label for="value">Average job value</label><span class="calc-row-value">£<span id="valueVal">6,000</span></span></div>
+        <input type="range" id="value" min="500" max="50000" step="500" value="6000">
       </div>
       <div class="calc-row">
-        <div class="calc-row-header"><label for="closeRate">Your close rate</label><span class="calc-row-value"><span id="closeVal">25</span>%</span></div>
-        <input type="range" id="closeRate" min="5" max="60" step="1" value="25">
+        <div class="calc-row-header"><label for="closeRate">Your close rate</label><span class="calc-row-value"><span id="closeVal">30</span>%</span></div>
+        <input type="range" id="closeRate" min="5" max="80" step="1" value="30">
       </div>
       <div class="calc-row">
-        <div class="calc-row-header"><label for="missed">Enquiries you miss or answer too late</label><span class="calc-row-value"><span id="missedVal">40</span>%</span></div>
-        <input type="range" id="missed" min="5" max="70" step="1" value="40">
+        <div class="calc-row-header"><label for="missed">Enquiries you miss or answer too late</label><span class="calc-row-value"><span id="missedVal">25</span>%</span></div>
+        <input type="range" id="missed" min="5" max="70" step="1" value="25">
       </div>
       <div class="calc-result" aria-live="polite" aria-atomic="true">
         <div class="calc-result-label">Revenue you could recover</div>
         <div class="calc-result-amounts">
-          <div><div class="calc-result-amount" id="recMonth">£5,000</div><div class="calc-result-period">Per Month</div></div>
-          <div><div class="calc-result-amount" id="recYear">£60,000</div><div class="calc-result-period">Per Year</div></div>
+          <div><div class="calc-result-amount" id="recMonth">£6,750</div><div class="calc-result-period">Per Month</div></div>
+          <div><div class="calc-result-amount" id="recYear">£81,000</div><div class="calc-result-period">Per Year</div></div>
         </div>
         <div class="calc-fee">
-          <div class="calc-fee-stat"><div class="n"><em>A fraction</em></div><div class="l">of the work it recovers, KaizenDesk more than pays for itself</div></div>
+          <div class="calc-fee-stat"><div class="n"><em id="jobsBack">1.1</em> jobs</div><div class="l">Won back a month, closed at your own stated rate. Even one pays for the Desk many times over.</div></div>
           <div class="calc-fee-stat"><div class="n">Runs <em>24/7</em></div><div class="l">Catching the jobs you'd lose while you're on the tools or asleep</div></div>
         </div>
+        <div class="calc-guarantee"><b>And you can't lose:</b> any month it doesn't catch you business you'd otherwise have missed, the next month's on us. Cancel anytime.</div>
       </div>
     </div>
     <p class="pricing-note" style="text-align:center;max-width:520px;margin:14px auto 0;">An estimate from your own numbers, the jobs you currently lose, captured at your stated close rate.</p>
@@ -725,8 +728,9 @@
     const leads=+el('leads').value, value=+el('value').value, close=+el('closeRate').value/100, missed=+el('missed').value/100;
     el('leadsVal').textContent=leads; el('valueVal').textContent=value.toLocaleString('en-GB');
     el('closeVal').textContent=el('closeRate').value; el('missedVal').textContent=el('missed').value;
-    const month=leads*missed*close*value;
+    const month=leads*missed*close*value, jobsBack=leads*missed*close;
     el('recMonth').textContent=fmt(month); el('recYear').textContent=fmt(month*12);
+    el('jobsBack').textContent=jobsBack<10?jobsBack.toFixed(1):Math.round(jobsBack);
     ids.forEach(id=>track(el(id)));
   }
   ids.forEach(id=>el(id).addEventListener('input',calc)); calc();
