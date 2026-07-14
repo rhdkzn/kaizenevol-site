@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { contactName, businessName, email, phone, businessUrl, trade, monthlyBudget } = req.body || {};
+  const { contactName, businessName, email, phone, businessUrl, trade, monthlyBudget, message } = req.body || {};
 
   if (!businessName || !email || !email.includes('@')) {
     return res.status(400).json({ error: 'Business name and a valid email are required.' });
@@ -53,8 +53,9 @@ export default async function handler(req, res) {
     stage: 'new',
     score: 0,
     notes: [
-      trade ? `Trade: ${trade}` : '',
+      trade ? `Service: ${trade}` : '',
       monthlyBudget ? `Ad budget: ${monthlyBudget}` : '',
+      message ? `Message: ${message.trim()}` : '',
     ].filter(Boolean).join(' · '),
     createdAt: Date.now(),
     updatedAt: Date.now(),
@@ -102,6 +103,7 @@ export default async function handler(req, res) {
           `Phone: ${phone || 'Not provided'}`,
           `Website: ${businessUrl || 'Not provided'}`,
           `Ad budget: ${monthlyBudget || 'Not specified'}`,
+          message ? `\nMessage:\n${message.trim()}` : '',
           ``,
           `View in CRM: https://kaizenevol.com/crm.html`,
         ].join('\n'),

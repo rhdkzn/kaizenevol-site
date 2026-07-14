@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/(index|about|services|faq|poster|kitchen|bathroom|loft|kaizendesk|kaizenreach|kaizenforge).html",
+      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizenreach|kaizenforge).html",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -48,6 +48,18 @@
     {
       "source": "/kaizendesk/compare",
       "destination": "/kaizendesk/compare.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/faq.html",
+      "destination": "/contact.html",
+      "permanent": true
+    },
+    {
+      "source": "/faq",
+      "destination": "/contact.html",
+      "permanent": true
     }
   ]
 }
