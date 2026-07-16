@@ -477,5 +477,9 @@ function saveResult(e){const name=document.getElementById('res_name').value.trim
 function delResult(enc){const name=decodeURIComponent(enc);if(!confirm('Clear the ad-spend overlay for '+name+'? Won jobs stay in the Commission log.'))return;const d=load();d.results=(d.results||[]).filter(x=>resNorm(x.name)!==resNorm(name));save(d);renderResults(d);}
 checkSession();
 </script>
+<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>

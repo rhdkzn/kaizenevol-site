@@ -1,0 +1,13 @@
+{
+  "name": "kaizenevol-site",
+  "version": "1.0.0",
+  "description": "KaizenEvol - Growth agency for local trades",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Static site - open index.html in browser'",
+    "build": "echo 'Static site - no build required'"
+  },
+  "dependencies": {
+    "@vercel/speed-insights": "^1.1.0"
+  }
+}
