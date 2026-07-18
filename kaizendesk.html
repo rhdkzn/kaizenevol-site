@@ -147,12 +147,6 @@
     .bub.typing i:nth-child(3){ animation-delay:.3s; }
     @keyframes tdot { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
 
-    /* ============ TICKER STRIP (was marquee) ============ */
-    .ticker-strip { border-top:1px solid var(--hairline); border-bottom:1px solid var(--hairline); padding:18px 0; background:var(--void); }
-    .ticker-strip .container { display:flex; justify-content:space-between; gap:14px 26px; flex-wrap:wrap; }
-    .ticker-strip span { font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:rgba(238,232,255,0.4); }
-    .ticker-dot { color:var(--accent); }
-
     /* ============ SECTIONS ============ */
     .section { padding:100px 0; }
     .bg-void { background:var(--void); }
@@ -332,7 +326,6 @@
       .footer-right { text-align:center; }
       .fc-row { justify-content:center; }
       .footer-nav { justify-content:center; }
-      .ticker-strip .container { justify-content:center; }
     }
     @media(max-width:480px) {
       .hero-ctas { flex-direction:column; align-items:stretch; }
@@ -351,8 +344,7 @@
   }
     /* Phone: the ticker separator dots dangle at wrapped line-ends — hide them, space with gaps */
   @media (max-width: 768px) {
-    .ticker-dot { display:none; }
-    .ticker-strip, .ticker-strip .container { row-gap:7px; column-gap:20px; }
+    .ticker-strip,
   }
   </style>
 </head>
@@ -408,20 +400,6 @@
     <p class="hero-note"><strong>No setup fee. Cancel anytime.</strong> You keep your number, reviews &amp; customers.</p>
   </div>
 </header>
-
-<div class="ticker-strip" aria-hidden="true">
-  <div class="container">
-    <span>Never Miss A Call</span>
-    <span class="ticker-dot">·</span>
-    <span>Answers 24/7</span>
-    <span class="ticker-dot">·</span>
-    <span>Books Your Jobs</span>
-    <span class="ticker-dot">·</span>
-    <span>Chases Your Reviews</span>
-    <span class="ticker-dot">·</span>
-    <span>For Any Local Business</span>
-  </div>
-</div>
 
 <section class="section bg-void2" id="problem">
   <div class="container">

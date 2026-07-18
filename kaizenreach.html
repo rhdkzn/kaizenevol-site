@@ -116,12 +116,8 @@
     .mobile-menu.open { display:flex; }
     .mobile-menu a { font-size:16px; font-weight:500; color:var(--text); text-decoration:none; padding:13px 0; border-bottom:1px solid var(--hairline); }
     .mobile-menu a.btn-solid { color:var(--void); text-align:center; margin-top:16px; border-bottom:none; }
-
-    /* ============ TICKER STRIP (was marquee) ============ */
-    .strip { border-bottom:1px solid var(--hairline); background:var(--void-2); padding:12px 0; }
     .strip-inner { display:flex; flex-wrap:wrap; justify-content:center; column-gap:8px; row-gap:6px; }
     .strip-inner span { font-size:10.5px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); }
-    .strip-dot { color:var(--accent); }
 
     /* ============ HERO ============ */
     .hero { position:relative; min-height:70vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; background:var(--void); }
@@ -342,8 +338,6 @@
   }
     /* Phone: the ticker separator dots dangle at wrapped line-ends — hide them, space with gaps */
   @media (max-width: 768px) {
-    .strip-dot { display:none; }
-    .strip .container, .strip { row-gap:7px; column-gap:20px; }
   }
   </style>
 </head>
@@ -378,20 +372,6 @@
     <a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
   </div>
 </nav>
-
-<div class="strip" aria-hidden="true">
-  <div class="container strip-inner">
-    <span>Kitchen Remodelling <span class="strip-dot">·</span></span>
-    <span>Bathroom Renovation <span class="strip-dot">·</span></span>
-    <span>Loft Conversion <span class="strip-dot">·</span></span>
-    <span>7 Days to Live <span class="strip-dot">·</span></span>
-    <span>One Specialist Per Niche, Per Area <span class="strip-dot">·</span></span>
-    <span>Meta Ads + Managed Social <span class="strip-dot">·</span></span>
-    <span>Exclusive UK Territories <span class="strip-dot">·</span></span>
-    <span>Your First 60 Days Free <span class="strip-dot">·</span></span>
-    <span>No Shared Leads</span>
-  </div>
-</div>
 
 <main id="main-content">
 

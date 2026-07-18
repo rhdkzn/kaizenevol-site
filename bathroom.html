@@ -99,12 +99,6 @@
       padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
     .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
 
-    /* ============ TICKER STRIP (static) ============ */
-    .strip { background:var(--void-2); border-bottom:1px solid var(--hairline); padding:12px 0; }
-    .strip .container { display:flex; flex-wrap:wrap; justify-content:center; row-gap:6px; }
-    .strip span { font-size:10.5px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
-    .strip span + span::before { content:'·'; color:var(--accent); margin:0 13px; }
-
     /* ============ NAV ============ */
     nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
     .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
@@ -285,8 +279,6 @@
       .why-item, .why-item:nth-child(even) { padding-left:0; padding-right:0; border-right:none !important; }
       .lf-grid { grid-template-columns:1fr; }
       .calc-wrap { padding:26px 22px; }
-      .strip .container { flex-wrap:nowrap; overflow-x:auto; justify-content:flex-start; scrollbar-width:none; -ms-overflow-style:none; }
-      .strip .container::-webkit-scrollbar { display:none; }
       .footer-inner { flex-direction:column; text-align:center; }
       .footer-right { text-align:center; }
       .fc-row { justify-content:center; }
@@ -304,28 +296,12 @@
   }
     /* Phone: the ticker separator dots dangle at wrapped line-ends — hide them, space with gaps */
   @media (max-width: 768px) {
-    .strip span + span::before { content:none !important; margin:0 !important; }
-    .strip .container { row-gap:7px; column-gap:20px; }
   }
   </style>
 </head>
 <body>
 
 <a href="#main-content" class="skip-link">Skip to content</a>
-
-<div class="strip">
-  <div class="container">
-    <span>Kitchen Remodelling</span>
-    <span>Bathroom Renovation</span>
-    <span>Loft Conversion</span>
-    <span>7 Days to Live</span>
-    <span>One Specialist Per Niche, Per Area</span>
-    <span>Meta Ads + Managed Social</span>
-    <span>Exclusive UK Territories</span>
-    <span>Your First 60 Days Free</span>
-    <span>No Shared Leads</span>
-  </div>
-</div>
 
 <nav>
   <div class="container nav-inner">

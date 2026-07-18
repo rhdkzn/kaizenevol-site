@@ -67,11 +67,6 @@
       padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
     .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
 
-    /* ============ TICKER STRIP ============ */
-    .ticker { background:var(--void-2); border-bottom:1px solid var(--hairline); padding:11px 16px; display:flex; flex-wrap:wrap; justify-content:center; row-gap:4px; }
-    .ticker span { font-size:10.5px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); padding:0 6px; white-space:nowrap; }
-    .ticker i { font-style:normal; color:var(--accent); padding:0 4px; }
-
     /* ============ NAV ============ */
     nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
     .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
@@ -330,8 +325,6 @@
   }
     /* Phone: the ticker separator dots dangle at wrapped line-ends — hide them, space with gaps */
   @media (max-width: 768px) {
-    .ticker i { display:none; }
-    .ticker { row-gap:7px; column-gap:20px; }
   }
   </style>
   <script type="application/ld+json">
@@ -353,10 +346,6 @@
 <body>
 
 <a href="#main-content" class="skip-link">Skip to content</a>
-
-<div class="ticker" aria-hidden="true">
-  <span>Live In 24 Hours<i> &middot; </i></span><span>Pay Once, Own It<i> &middot; </i></span><span>See It Before You Pay<i> &middot; </i></span><span>Year One Hosting Included<i> &middot; </i></span><span>Built To Sell, Not Just Sit There</span>
-</div>
 
 <nav>
   <div class="container nav-inner">
