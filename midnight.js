@@ -10,8 +10,8 @@
 
   /* ---------- Particle field in the hero (bespoke, no libraries) ---------- */
   function particles() {
-    /* Reduce Motion: draw the constellation once, static — never skip it */
-    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* Owner rule (2026-07-18): animations always run — device motion
+       settings do not change the look of the site. */
     var hero = document.querySelector('.hero');
     if (!hero) return;
     var canvas = document.createElement('canvas');
@@ -70,7 +70,6 @@
         ctx.fillStyle = 'rgba(' + ACCENT + ',1)';
         ctx.beginPath(); ctx.arc(px, py, p.r + 0.4, 0, 6.283); ctx.fill();
       }
-      if (reduced) { running = false; return; } /* static single frame */
       raf = requestAnimationFrame(step);
     }
     window.addEventListener('resize', function () { cancelAnimationFrame(raf); resize(); running = true; step(); }, { passive: true });
