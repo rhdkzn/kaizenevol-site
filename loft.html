@@ -24,7 +24,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -59,367 +59,296 @@
   }
   </script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
+    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
     :root {
-      --bg:             #0D0B1A;
-      --surface:        #141228;
-      --surface-2:      #1C1836;
-      --border:         rgba(109,63,192,0.18);
-      --border-hover:   rgba(109,63,192,0.42);
-      --purple:         #6D3FC0;
-      --purple-bright:  #8B5CF6;
-      --purple-light:   #A78BFA;
-      --text:           #EEE8FF;
-      --muted:          rgba(238,232,255,0.62);
-      --white:          #ffffff;
-      --radius-card:    14px;
-      --radius-pill:    9999px;
-      --max-w:          1080px;
-      --ease-out-expo:  cubic-bezier(0.16,1,0.3,1);
-      --ease-out-quart: cubic-bezier(0.25,1,0.5,1);
+      --void:      #0C0618;
+      --void-2:    #120A24;
+      --text:      #EEE8FF;
+      --muted:     rgba(238,232,255,0.56);
+      --hairline:  rgba(238,232,255,0.1);
+      --accent:    #8B5CF6;
+      --accent-2:  #A78BFA;
+      --serif:     'Fraunces', Georgia, 'Times New Roman', serif;
+      --sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+      --max-w:     1140px;
     }
 
-    html { scroll-behavior: smooth; }
-    body { background:var(--bg); color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; line-height:1.65; overflow-x:hidden; }
-    p { text-wrap: pretty; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
+    p { text-wrap:pretty; }
+    .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
 
-    .skip-link { position:absolute; left:-9999px; top:0; background:var(--purple); color:#fff; padding:8px 16px; border-radius:0 0 var(--radius-card) 0; font-size:14px; font-weight:700; text-decoration:none; z-index:9999; }
+    h1,h2,h3 { font-family:var(--serif); font-weight:500; letter-spacing:-0.01em; line-height:1.06; text-wrap:balance; }
+    em { font-style:italic; color:var(--accent-2); }
+
+    .skip-link { position:absolute; left:-9999px; top:0; background:var(--accent); color:#fff; padding:8px 16px; font-size:14px; font-weight:700; text-decoration:none; z-index:9999; }
     .skip-link:focus { left:0; }
-    :focus-visible { outline:2px solid var(--purple-bright); outline-offset:3px; }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 
-    em { color:var(--purple-light); font-style:normal; }
-    .container { max-width:var(--max-w); margin:0 auto; padding-left:max(24px,env(safe-area-inset-left)); padding-right:max(24px,env(safe-area-inset-right)); }
+    .smallcaps { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+    .smallcaps.accent { color:var(--accent); }
 
-    h1,h2,h3,h4 { font-weight:700; line-height:1.2; letter-spacing:-0.02em; text-wrap:balance; color:var(--text); }
-    h1,h2 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; letter-spacing:-0.03em; line-height:1.08; }
+    .btn-solid { display:inline-block; background:var(--text); color:var(--void); font-weight:600; font-size:15px;
+      padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--text); transition:background .18s,color .18s; cursor:pointer; }
+    .btn-solid:hover { background:transparent; color:var(--text); }
+    .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:15px;
+      padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
+    .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
 
-    .btn-primary { display:inline-block; background:var(--purple); color:#fff; border-radius:var(--radius-pill); font-weight:700; font-size:15px; padding:14px 28px; text-decoration:none; transition:background 0.15s,transform 0.2s var(--ease-out-expo); border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; }
-    .btn-primary:hover { background:var(--purple-bright); transform:translateY(-2px); }
-    .btn-primary:active { transform:translateY(0) scale(0.98); }
+    /* ============ TICKER STRIP (static) ============ */
+    .strip { background:var(--void-2); border-bottom:1px solid var(--hairline); padding:12px 0; }
+    .strip .container { display:flex; flex-wrap:wrap; justify-content:center; row-gap:6px; }
+    .strip span { font-size:10.5px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+    .strip span + span::before { content:'·'; color:var(--accent); margin:0 13px; }
 
-    .btn-ghost { display:inline-block; background:transparent; color:rgba(238,232,255,0.65); border-radius:var(--radius-pill); font-weight:600; font-size:15px; padding:14px 28px; text-decoration:none; border:1px solid var(--border); transition:border-color 0.15s,color 0.15s,transform 0.2s var(--ease-out-expo); cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; }
-    .btn-ghost:hover { border-color:var(--border-hover); color:var(--text); transform:translateY(-2px); }
-    .btn-ghost:active { transform:translateY(0) scale(0.98); }
+    /* ============ NAV ============ */
+    nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
+    .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
+    .nav-logo img { height:30px; width:auto; }
+    .nav-logo b { font-weight:700; font-size:17px; letter-spacing:-0.02em; }
+    .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
+    .nav-links a { font-size:14.5px; font-weight:500; color:var(--muted); text-decoration:none; padding:8px 14px; transition:color .15s; }
+    .nav-links a:hover { color:var(--text); }
+    .nav-links a.btn-solid { font-size:14px; padding:11px 24px; margin-left:14px; color:var(--void); }
+    .nav-links a.btn-solid:hover { color:var(--text); }
+    .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:10px; }
+    .burger span { width:22px; height:2px; background:var(--text); display:block; }
+    .mobile-menu { display:none; flex-direction:column; padding:8px 28px 24px; border-top:1px solid var(--hairline); }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu a { font-size:16px; font-weight:500; color:var(--text); text-decoration:none; padding:13px 0; border-bottom:1px solid var(--hairline); }
+    .mobile-menu a.btn-solid { color:var(--void); text-align:center; margin-top:16px; border-bottom:none; }
 
-    .btn-white { display:inline-block; background:#fff; color:var(--purple); border-radius:var(--radius-pill); font-weight:700; font-size:15px; padding:14px 28px; text-decoration:none; transition:opacity 0.15s,transform 0.2s var(--ease-out-expo); border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; }
-    .btn-white:hover { opacity:0.9; transform:translateY(-2px); }
-    .btn-white:active { transform:translateY(0) scale(0.98); }
+    /* ============ HERO ============ */
+    .hero { position:relative; min-height:70vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; background:var(--void); }
+    .mid-particles { position:absolute; inset:0; z-index:0; pointer-events:none; }
+    .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding:92px 0 104px; }
+    .hero-kicker { margin-bottom:28px; }
+    .hero h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin:0 auto 26px; }
+    .hero-sub { font-size:17px; color:var(--muted); max-width:640px; margin:0 auto 44px; }
+    .hero-sub strong { color:var(--text); font-weight:600; }
+    .hero-ctas { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .hero-note { margin-top:22px; font-size:13px; color:var(--muted); }
+    .hero-note strong { color:var(--accent-2); font-weight:600; }
 
-    /* MARQUEE */
-    .marquee-band { background:var(--surface); border-bottom:1px solid var(--border); padding:10px 0; overflow:hidden; white-space:nowrap; }
-    .marquee-inner { display:inline-flex; animation:marquee 40s linear infinite; }
-    .marquee-inner span { color:var(--muted); font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:0 20px; }
-    .marquee-dot { color:var(--purple-bright); margin:0 4px; }
-    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-
-    /* NAVBAR */
-    .nav-wrap { position:fixed; top:max(16px,env(safe-area-inset-top)); left:0; right:0; z-index:999; display:flex; justify-content:center; pointer-events:none; }
-    .navbar { pointer-events:all; display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 8px 0 20px; background:rgba(13,11,26,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:var(--radius-pill); max-width:980px; width:calc(100% - 48px); transition:border-color 0.2s; }
-    .navbar:hover { border-color:var(--border-hover); }
-    .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
-    .nav-logo img { height:28px; width:auto; }
-    .nav-logo-text { font-weight:700; font-size:16px; color:var(--text); letter-spacing:-0.02em; }
-    .nav-links { display:flex; gap:4px; list-style:none; }
-    .nav-links a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; padding:7px 14px; border-radius:var(--radius-pill); transition:color 0.15s,background 0.15s; }
-    .nav-links a:hover,.nav-links a.active { color:var(--text); background:var(--surface-2); }
-    .nav-cta { flex-shrink:0; font-size:14px; padding:9px 20px; }
-
-    .hamburger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; min-width:44px; min-height:44px; align-items:center; justify-content:center; }
-    .hamburger span { display:block; width:22px; height:2px; background:var(--muted); border-radius:2px; transition:all 0.25s; }
-    .mobile-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1100; opacity:0; transition:opacity 0.3s; }
-    .mobile-overlay.open { opacity:1; }
-    .mobile-panel { position:fixed; top:0; right:-100%; width:min(320px,85vw); height:100dvh; background:var(--surface); border-left:1px solid var(--border); z-index:1200; padding:24px 20px; transition:right 0.3s var(--ease-out-quart); display:flex; flex-direction:column; gap:4px; }
-    .mobile-panel.open { right:0; }
-    .mobile-panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
-    .mobile-close { font-size:24px; background:none; border:none; cursor:pointer; color:var(--muted); width:44px; height:44px; display:flex; align-items:center; justify-content:center; }
-    .mobile-panel a { font-size:16px; font-weight:500; color:var(--muted); padding:14px 12px; border-radius:var(--radius-card); transition:background 0.15s,color 0.15s; display:block; text-decoration:none; }
-    .mobile-panel a:hover { background:var(--surface-2); color:var(--text); }
-    .mobile-panel .btn-primary { margin-top:12px; text-align:center; }
-
-    /* HERO */
-    .hero { position:relative; padding:160px 0 100px; overflow:hidden; background:var(--bg); }
-    .hero::before { content:''; position:absolute; top:-10%; left:50%; transform:translateX(-50%); width:900px; height:600px; background:radial-gradient(ellipse at center,rgba(109,63,192,0.2) 0%,transparent 65%); pointer-events:none; z-index:0; }
-    .hero-inner { position:relative; z-index:1; text-align:center; animation:hero-rise 0.9s var(--ease-out-expo) both; }
-    .hero h1 { font-size:clamp(34px,5.5vw,58px); margin-bottom:20px; }
-    .hero-sub { font-size:clamp(16px,2vw,18px); color:var(--muted); max-width:540px; margin:0 auto 44px; line-height:1.7; }
-    .hero-sub strong { color:var(--text); font-weight:700; }
-
-    /* CALCULATOR */
-    .calc-wrap { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:36px 40px; max-width:600px; margin:0 auto 40px; text-align:left; }
-    .calc-label { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:32px; }
-    .calc-row { margin-bottom:28px; }
+    /* ============ CALCULATOR (logic untouched, shell restyled) ============ */
+    .calc-wrap { background:rgba(18,10,36,0.72); border:1px solid var(--hairline); border-radius:6px; padding:34px 38px; max-width:620px; margin:0 auto 44px; text-align:left; }
+    .calc-label { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:30px; }
+    .calc-row { margin-bottom:26px; }
     .calc-row-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
     .calc-row-header label { font-size:14px; font-weight:600; color:rgba(238,232,255,0.8); }
-    .calc-row-value { font-size:16px; font-weight:700; color:var(--purple-light); }
+    .calc-row-value { font-family:var(--serif); font-size:19px; font-weight:500; color:var(--accent-2); }
 
-    input[type="range"] { -webkit-appearance:none; appearance:none; width:100%; height:3px; border-radius:2px; background:var(--surface-2); outline:none; cursor:pointer; }
-    input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:20px; height:20px; border-radius:50%; background:var(--white); cursor:pointer; box-shadow:0 0 0 3px rgba(109,63,192,0.4),0 2px 8px rgba(0,0,0,0.4); transition:box-shadow 0.15s; }
-    input[type="range"]::-webkit-slider-thumb:hover { box-shadow:0 0 0 5px rgba(109,63,192,0.5),0 2px 8px rgba(0,0,0,0.4); }
-    input[type="range"]::-moz-range-thumb { width:20px; height:20px; border-radius:50%; background:var(--white); cursor:pointer; border:none; box-shadow:0 0 0 3px rgba(109,63,192,0.4); }
+    input[type="range"] { -webkit-appearance:none; appearance:none; width:100%; height:2px; border-radius:1px; background:rgba(238,232,255,0.12); outline:none; cursor:pointer; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%; background:var(--text); cursor:pointer; border:none; box-shadow:0 0 0 3px rgba(139,92,246,0.35); transition:box-shadow .15s; }
+    input[type="range"]::-webkit-slider-thumb:hover { box-shadow:0 0 0 5px rgba(139,92,246,0.45); }
+    input[type="range"]::-moz-range-thumb { width:18px; height:18px; border-radius:50%; background:var(--text); cursor:pointer; border:none; box-shadow:0 0 0 3px rgba(139,92,246,0.35); }
 
-    .calc-result { background:var(--surface-2); border:1px solid rgba(109,63,192,0.25); border-radius:14px; padding:24px 28px; margin-top:4px; }
-    .calc-result-label { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+    .calc-result { border-top:1px solid var(--hairline); padding-top:24px; margin-top:6px; }
+    .calc-result-label { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
     .calc-result-amounts { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-    .calc-result-amount { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(30px,5vw,44px); color:var(--purple-light); line-height:1; margin-bottom:4px; letter-spacing:-0.03em; }
-    .calc-result-period { font-size:12px; color:var(--muted); font-weight:500; letter-spacing:0.04em; }
+    .calc-result-amount { font-family:var(--serif); font-weight:500; font-size:clamp(32px,4.5vw,46px); color:var(--accent-2); line-height:1.1; margin-bottom:4px; letter-spacing:-0.01em; }
+    .calc-result-period { font-size:11px; color:var(--muted); font-weight:700; letter-spacing:0.14em; text-transform:uppercase; }
 
-    .hero-ctas { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
-    .hero-note { margin-top:20px; font-size:13px; color:var(--muted); }
-    .hero-note strong { color:var(--purple-light); }
+    /* ============ SECTIONS ============ */
+    .section { padding:100px 0; }
+    .bg-void { background:var(--void); }
+    .bg-void2 { background:var(--void-2); }
+    .hairline-top { border-top:1px solid var(--hairline); }
+    .section-head { margin-bottom:52px; }
+    .section-head h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); margin-bottom:16px; }
+    .section-head p { font-size:15.5px; color:var(--muted); max-width:560px; }
 
-    /* SECTIONS */
-    .section { padding:96px 0; }
-    .section-surface { background:var(--surface); }
-    .section-bg { background:var(--bg); }
-    .section-header { margin-bottom:56px; }
-    .section-header h2 { font-size:clamp(28px,4vw,42px); margin-bottom:14px; }
-    .section-header p { font-size:17px; color:var(--muted); max-width:560px; line-height:1.7; }
+    /* Editorial rows (index svc-row vocabulary) */
+    .svc-row { display:grid; grid-template-columns:110px 0.9fr 1.1fr; gap:36px; padding:52px 0; border-top:1px solid var(--hairline); align-items:start; }
+    .svc-row.last { border-bottom:1px solid var(--hairline); }
+    .svc-num { font-family:var(--serif); font-style:italic; font-size:46px; color:var(--accent); line-height:1; }
+    .svc-main .smallcaps { display:block; margin-bottom:12px; }
+    .svc-main h3 { font-size:clamp(24px, 1.1rem + 1.7vw, 36px); margin-bottom:14px; }
+    .svc-main p { font-size:15.5px; color:var(--muted); max-width:420px; }
+    .svc-copy { font-size:15.5px; color:var(--muted); padding-top:8px; }
+    .svc-list { list-style:none; display:flex; flex-direction:column; gap:12px; padding-top:8px; }
+    .svc-list li { font-size:14.5px; color:var(--muted); padding-left:22px; position:relative; line-height:1.55; }
+    .svc-list li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
 
-    /* GUARANTEE */
-    .guarantee-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
-    .guarantee-copy h2 { font-size:clamp(28px,3.5vw,42px); margin-bottom:20px; }
-    .guarantee-copy p { color:var(--muted); font-size:16px; margin-bottom:32px; line-height:1.75; max-width:420px; }
-    .guarantee-list { list-style:none; counter-reset:g; display:flex; flex-direction:column; gap:22px; padding:0; margin:0; }
-    .guarantee-list li { counter-increment:g; display:flex; align-items:flex-start; gap:16px; font-size:15px; color:var(--muted); line-height:1.65; }
-    .guarantee-list li::before { content:counter(g,'0' decimal); font-size:11px; font-weight:700; letter-spacing:0.06em; color:var(--purple-bright); padding-top:2px; flex-shrink:0; min-width:26px; }
-    .faq-border-top { border-top:1px solid var(--border); }
+    /* Problem rows */
+    .prob-row { display:grid; grid-template-columns:90px 0.9fr 1.1fr; gap:32px; padding:36px 0; border-top:1px solid var(--hairline); align-items:baseline; }
+    .prob-row.last { border-bottom:1px solid var(--hairline); }
+    .prob-num { font-family:var(--serif); font-style:italic; font-size:28px; color:var(--accent); line-height:1; }
+    .prob-row h3 { font-size:clamp(20px, 1rem + 1vw, 26px); }
+    .prob-row p { font-size:15px; color:var(--muted); }
+    .callout { margin:60px auto 0; max-width:800px; text-align:center; padding-top:44px; border-top:1px solid var(--hairline); }
+    .callout p { font-family:var(--serif); font-weight:500; font-size:clamp(20px, 1.1rem + 1.2vw, 26px); line-height:1.5; color:rgba(238,232,255,0.85); }
 
-    /* PROBLEM */
-    .problem-grid { border-top:1px solid var(--border); }
-    .problem-card { display:grid; grid-template-columns:220px 1fr; gap:12px 48px; padding:28px 0; align-items:baseline; border-bottom:1px solid var(--border); }
-    .problem-card h3 { font-size:18px; font-weight:700; }
-    .problem-card p { font-size:15px; color:var(--muted); line-height:1.6; }
-    .problem-callout { margin-top:32px; background:var(--surface); border:1px solid rgba(109,63,192,0.28); border-radius:var(--radius-card); padding:28px 32px; text-align:center; }
-    .problem-callout p { font-size:18px; font-weight:500; line-height:1.65; color:rgba(238,232,255,0.85); }
+    /* Why grid (index vocabulary) */
+    .why-grid { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--hairline); }
+    .why-item { padding:36px 44px 36px 0; border-bottom:1px solid var(--hairline); }
+    .why-item:nth-child(odd) { border-right:1px solid var(--hairline); }
+    .why-item:nth-child(even) { padding-left:44px; padding-right:0; }
+    .why-item b { display:block; font-family:var(--serif); font-weight:500; font-size:21px; margin-bottom:8px; }
+    .why-item p { font-size:14.5px; color:var(--muted); }
 
-    /* STEPS */
-    .steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-    .step-card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-card); padding:32px 28px 28px; transition:border-color 0.2s,transform 0.2s var(--ease-out-quart); }
-    .step-card:hover { border-color:var(--border-hover); transform:translateY(-4px); }
-    .step-badge { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:var(--purple); color:#fff; font-size:13px; font-weight:700; margin-bottom:20px; }
-    .step-tag { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--purple-light); margin-bottom:10px; display:block; }
-    .step-card h3 { font-size:19px; margin-bottom:10px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; letter-spacing:-0.02em; }
-    .step-card p { font-size:14px; color:var(--muted); line-height:1.7; }
-
-    /* WHY IT WORKS */
-    .ai-grid-wrap { display:flex; flex-direction:column; gap:20px; }
-    .ai-featured-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-    .ai-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
-    .ai-card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-card); padding:24px 20px; }
-    .ai-card--featured { background:rgba(109,63,192,0.1); border-color:rgba(109,63,192,0.35); padding:36px 32px; }
-    .ai-card--featured h3 { font-size:20px; }
-    .ai-card h3 { font-size:15px; font-weight:700; margin-bottom:8px; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.01em; }
-    .ai-card p { font-size:14px; color:var(--muted); line-height:1.6; }
-
-    /* PRICING */
-    .pricing-center { max-width:560px; margin:0 auto; text-align:center; }
-    .pricing-center > p:first-of-type { font-size:17px; color:var(--muted); line-height:1.75; margin-bottom:32px; }
+    /* Pricing */
+    .pricing-center { max-width:660px; margin:0 auto; text-align:center; }
+    .pricing-center h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); margin-bottom:28px; }
+    .pricing-center > p:first-of-type { font-size:16.5px; color:var(--muted); line-height:1.75; }
     .pricing-center strong { color:var(--text); font-weight:600; }
-    .pricing-note { margin-top:14px; font-size:13px; color:var(--muted); }
+    .pricing-note { margin-top:18px; font-size:13px; color:var(--muted); }
+
+    /* Guarantee */
+    .guarantee-grid { display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; }
+    .guarantee-copy h2 { font-size:clamp(30px, 1.4rem + 2.4vw, 52px); margin-bottom:20px; }
+    .guarantee-copy p { color:var(--muted); font-size:15.5px; margin-bottom:32px; line-height:1.75; max-width:440px; }
+    .guarantee-list { list-style:none; counter-reset:g; display:flex; flex-direction:column; padding:0; margin:0; border-top:1px solid var(--hairline); }
+    .guarantee-list li { counter-increment:g; display:flex; align-items:flex-start; gap:18px; font-size:14.5px; color:var(--muted); line-height:1.6; padding:18px 0; border-bottom:1px solid var(--hairline); }
+    .guarantee-list li::before { content:counter(g, decimal-leading-zero); font-family:var(--serif); font-style:italic; font-size:17px; color:var(--accent); flex-shrink:0; min-width:30px; line-height:1.5; }
 
     /* FAQ */
-    .faq-inline { border-top:1px solid var(--border); }
-    .faq-inline-item { border-bottom:1px solid var(--border); }
-    .faq-inline-summary { list-style:none; display:flex; justify-content:space-between; align-items:center; gap:24px; padding:22px 0; cursor:pointer; font-weight:600; font-size:16px; color:var(--text); }
+    .faq-inline { border-top:1px solid var(--hairline); }
+    .faq-inline-item { border-bottom:1px solid var(--hairline); }
+    .faq-inline-summary { list-style:none; display:flex; justify-content:space-between; align-items:center; gap:24px; padding:24px 0; cursor:pointer; font-family:var(--serif); font-weight:500; font-size:19px; color:var(--text); }
     .faq-inline-summary::-webkit-details-marker { display:none; }
-    .faq-inline-summary::after { content:'+'; font-size:22px; font-weight:300; color:var(--purple-bright); flex-shrink:0; transition:transform 0.2s var(--ease-out-quart); }
+    .faq-inline-summary::after { content:'+'; font-size:24px; font-weight:300; color:var(--accent); flex-shrink:0; transition:transform 0.2s; }
     details[open] > .faq-inline-summary::after { transform:rotate(45deg); }
-    .faq-inline-answer { font-size:15px; color:var(--muted); line-height:1.75; padding-bottom:24px; max-width:720px; }
+    .faq-inline-answer { font-size:15px; color:var(--muted); line-height:1.75; padding-bottom:26px; max-width:720px; }
 
-    /* FINAL CTA */
-    .final-cta { padding:100px 24px; text-align:center; background:linear-gradient(135deg,#150930 0%,#2a1260 50%,#150930 100%); position:relative; overflow:hidden; }
-    .final-cta::before { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:700px; height:400px; background:radial-gradient(ellipse at center,rgba(109,63,192,0.35) 0%,transparent 70%); pointer-events:none; }
-    .final-cta-inner { position:relative; z-index:1; }
-    .final-cta h2 { font-size:clamp(28px,4vw,44px); color:#fff; margin-bottom:18px; max-width:640px; margin-left:auto; margin-right:auto; }
-    .final-cta p { color:rgba(255,255,255,0.72); font-size:17px; margin-bottom:36px; max-width:460px; margin-left:auto; margin-right:auto; }
-    .final-cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
-    .final-scarcity { margin-top:24px; font-size:13px; color:rgba(255,255,255,0.58); }
+    /* ============ CLOSING ============ */
+    .closing { padding:110px 0; }
+    .closing-grid { display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; }
+    .closing h2 { font-size:clamp(34px, 1.5rem + 3vw, 58px); margin-bottom:20px; }
+    .closing-copy > p { font-size:16px; color:var(--muted); max-width:420px; margin-bottom:32px; }
+    .closing-or { display:block; margin-bottom:14px; }
+    .closing-alt { display:flex; flex-direction:column; gap:12px; }
+    .closing-alt a { color:var(--text); font-size:14.5px; text-decoration:none; border-bottom:1px solid rgba(238,232,255,0.3); align-self:flex-start; padding-bottom:2px; }
+    .closing-alt a:hover { border-color:var(--text); }
+    .closing-scarcity { margin-top:32px; font-size:13px; color:var(--muted); }
+    .lf-label { display:block; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+    .lf-input, .lf-select { width:100%; padding:13px 14px; background:transparent; border:1px solid rgba(238,232,255,0.22); border-radius:4px;
+      color:var(--text); font-family:var(--sans); font-size:15px; outline:none; transition:border-color .18s; }
+    .lf-input:focus, .lf-select:focus { border-color:var(--accent); }
+    .lf-input::placeholder { color:rgba(238,232,255,0.25); }
+    .lf-select option { background:var(--void); }
+    .lf-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .lf-submit { width:100%; padding:15px; background:var(--text); color:var(--void); border:none; border-radius:4px;
+      font-size:15.5px; font-weight:700; cursor:pointer; transition:background .18s; margin-top:6px; font-family:var(--sans); }
+    .lf-submit:hover:not(:disabled) { background:#D8CDF5; }
+    .lf-submit:disabled { opacity:0.6; cursor:not-allowed; }
+    .lf-status { margin-top:14px; font-size:14px; font-weight:600; min-height:20px; }
+    .lf-status.ok { color:#9BE8B0; } .lf-status.err { color:#F0A8A8; }
 
-    /* FOOTER */
-    .footer { background:var(--surface); border-top:1px solid var(--border); padding:40px 0 max(40px,calc(24px + env(safe-area-inset-bottom))); }
-    .footer-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
-    .footer-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
-    .footer-logo img { height:24px; width:auto; }
-    .footer-logo-text { font-weight:700; font-size:15px; color:var(--text); letter-spacing:-0.02em; }
-    .footer-nav { display:flex; gap:4px; list-style:none; flex-wrap:wrap; }
-    .footer-nav a { font-size:13px; color:var(--muted); text-decoration:none; padding:4px 10px; border-radius:var(--radius-pill); transition:color 0.15s; }
+    /* Consent banner (injected by midnight.js) */
+    .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
+    .mid-consent.show { display:flex; }
+    .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(18,10,36,0.97); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:16px 20px; }
+    .mid-consent-inner p { font-size:13px; line-height:1.55; color:rgba(238,232,255,0.85); margin:0; flex:1 1 320px; }
+    .mid-consent-inner strong { color:#EEE8FF; }
+    .mid-consent-btns { display:flex; gap:10px; align-items:center; }
+    .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
+    .mid-consent-accept { background:#EEE8FF; color:#0C0618; }
+    .mid-consent-decline { background:transparent; color:rgba(238,232,255,0.6); border:1px solid rgba(238,232,255,0.2) !important; }
+    .mid-consent-inner a { color:#A78BFA; font-size:12px; }
+
+    /* ============ FOOTER ============ */
+    footer { padding:44px 0; border-top:1px solid var(--hairline); background:var(--void); }
+    .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+    .footer-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+    .footer-logo img { height:24px; }
+    .footer-logo b { font-weight:700; font-size:15px; }
+    .footer-nav { display:flex; gap:22px; list-style:none; flex-wrap:wrap; }
+    .footer-nav a { font-size:13.5px; color:var(--muted); text-decoration:none; }
     .footer-nav a:hover { color:var(--text); }
-    .footer-right { text-align:right; }
-    .footer-right a { font-size:13px; color:var(--purple-light); text-decoration:none; }
+    .footer-right { font-size:12.5px; color:var(--muted); text-align:right; }
+    .fc-head { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+    .fc-row { display:flex; align-items:center; gap:8px; justify-content:flex-end; margin-bottom:7px; font-size:13px; text-decoration:none; color:var(--text); }
+    .fc-row:hover { color:var(--accent-2); }
+    .fc-wa { color:#25D366 !important; }
     .footer-copy { font-size:12px; color:var(--muted); margin-top:4px; }
 
-    /* INDUSTRIES WE SERVE */
-    .ind-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-    .ind-card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-card); padding:28px 24px; transition:border-color 0.2s,transform 0.2s var(--ease-out-quart); }
-    .ind-card:hover { border-color:var(--border-hover); transform:translateY(-4px); }
-    .ind-icon { width:40px; height:40px; border-radius:10px; background:rgba(109,63,192,0.18); border:1px solid rgba(109,63,192,0.3); display:flex; align-items:center; justify-content:center; margin-bottom:18px; }
-    .ind-icon svg { width:20px; height:20px; stroke:var(--purple-light); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-    .ind-card h3 { font-size:17px; font-weight:700; margin-bottom:14px; letter-spacing:-0.02em; }
-    .ind-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
-    .ind-list li { font-size:14px; color:var(--muted); line-height:1.6; padding-left:18px; position:relative; }
-    .ind-list li::before { content:''; position:absolute; left:0; top:8px; width:6px; height:6px; border-radius:50%; background:var(--purple); flex-shrink:0; }
-
-    /* LEAD FORM */
-    .lead-form { max-width:520px; margin:0 auto 0; text-align:left; }
-    .lf-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
-    .lf-group { display:flex; flex-direction:column; gap:6px; }
-    .lf-label { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.5); }
-    .lf-input,.lf-select { width:100%; padding:13px 16px; border:1.5px solid rgba(255,255,255,0.12); border-radius:10px; background:rgba(255,255,255,0.06); color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; outline:none; transition:border-color 0.2s,background 0.2s; }
-    .lf-input::placeholder { color:rgba(255,255,255,0.28); }
-    .lf-input:focus,.lf-select:focus { border-color:var(--purple-bright); background:rgba(255,255,255,0.09); }
-    .lf-select option { background:#1a0f3c; color:#fff; }
-    .lf-submit { width:100%; padding:15px; background:var(--purple); color:#fff; border:none; border-radius:var(--radius-pill); font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:background 0.15s,transform 0.2s var(--ease-out-expo); margin-top:6px; }
-    .lf-submit:hover:not(:disabled) { background:var(--purple-bright); transform:translateY(-2px); }
-    .lf-submit:active:not(:disabled) { transform:translateY(0) scale(0.98); }
-    .lf-submit:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
-    .lf-status { margin-top:16px; font-size:14px; font-weight:600; min-height:22px; text-align:center; }
-    .lf-status.ok { color:#86efac; }
-    .lf-status.err { color:#fca5a5; }
-    .cta-divider { display:flex; align-items:center; gap:16px; margin:32px auto; max-width:520px; }
-    .cta-divider::before,.cta-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.1); }
-    .cta-divider span { font-size:11px; color:rgba(255,255,255,0.35); font-weight:700; letter-spacing:0.1em; text-transform:uppercase; }
-
-    /* ANIMATIONS */
-    @keyframes hero-rise { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
-    .step-card.will-animate { opacity:0; transform:translateY(24px); transition:opacity 0.55s var(--ease-out-expo),transform 0.55s var(--ease-out-expo); transition-delay:calc(var(--i,0)*0.1s); }
-    
-
-    /* RESPONSIVE */
-    @media(max-width:900px) {
-      .ai-grid{grid-template-columns:repeat(2,1fr)}
-      .steps-grid{grid-template-columns:repeat(2,1fr)}
-      .ind-grid{grid-template-columns:repeat(2,1fr)}
+    /* ============ RESPONSIVE ============ */
+    @media(max-width:960px) {
+      .svc-row { grid-template-columns:60px 1fr; }
+      .svc-list, .svc-copy { grid-column:2; padding-top:0; }
+      .prob-row { grid-template-columns:60px 1fr; }
+      .prob-row p { grid-column:2; }
+      .guarantee-grid { grid-template-columns:1fr; gap:44px; }
+      .closing-grid { grid-template-columns:1fr; gap:48px; }
     }
     @media(max-width:768px) {
-      .ind-grid{grid-template-columns:1fr}
-      .lf-grid{grid-template-columns:1fr}
-      .nav-links,.nav-cta{display:none}
-      .hamburger{display:flex}
-      .problem-card{grid-template-columns:1fr;gap:8px}
-      .steps-grid{grid-template-columns:1fr}
-      .ai-featured-row{grid-template-columns:1fr}
-      .ai-grid{grid-template-columns:1fr}
-      .guarantee-inner{grid-template-columns:1fr;gap:40px}
-      .footer-inner{flex-direction:column;text-align:center}
-      .footer-right{text-align:center}
-      .footer-nav{justify-content:center}
-      .calc-wrap{padding:28px 24px}
-      .section{padding:64px 0}
+      .nav-links { display:none; } .burger { display:flex; }
+      .hero-inner { padding:72px 0 90px; }
+      .section { padding:72px 0; }
+      .why-grid { grid-template-columns:1fr; }
+      .why-item, .why-item:nth-child(even) { padding-left:0; padding-right:0; border-right:none !important; }
+      .lf-grid { grid-template-columns:1fr; }
+      .calc-wrap { padding:26px 22px; }
+      .strip .container { flex-wrap:nowrap; overflow-x:auto; justify-content:flex-start; scrollbar-width:none; -ms-overflow-style:none; }
+      .strip .container::-webkit-scrollbar { display:none; }
+      .footer-inner { flex-direction:column; text-align:center; }
+      .footer-right { text-align:center; }
+      .fc-row { justify-content:center; }
     }
-    @media(min-width:769px){.mobile-overlay,.mobile-panel{display:none !important}}
     @media(max-width:480px) {
-      .hero-ctas{flex-direction:column;align-items:stretch}
-      .hero-ctas a{text-align:center}
-      .final-cta-btns{flex-direction:column;align-items:stretch;max-width:320px;margin-left:auto;margin-right:auto}
-      .calc-result-amounts{grid-template-columns:1fr}
+      .hero-ctas { flex-direction:column; align-items:stretch; }
+      .hero-ctas a { text-align:center; }
+      .calc-result-amounts { grid-template-columns:1fr; }
     }
-  
-    /* === POLISH PASS: depth + motion === */
-    @keyframes hero-rise { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
-    body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
-      background:radial-gradient(1000px 620px at 85% -10%,rgba(109,63,192,.10),transparent 62%),
-                 radial-gradient(800px 560px at -12% 50%,rgba(139,92,246,.06),transparent 62%); }
-    body::after { content:''; position:fixed; inset:0; z-index:2000; pointer-events:none; opacity:.04;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-    .hero { isolation:isolate; }
-    .hero::after { content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
-      background-image:linear-gradient(rgba(139,92,246,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.055) 1px,transparent 1px);
-      background-size:54px 54px;
-      -webkit-mask-image:radial-gradient(ellipse 75% 65% at 50% 28%,#000,transparent 72%);
-      mask-image:radial-gradient(ellipse 75% 65% at 50% 28%,#000,transparent 72%); }
-    .hero-inner { animation:none; }
-    .hero-inner>* { opacity:0; animation:hero-rise .8s var(--ease-out-expo) forwards; }
-    .hero-inner>*:nth-child(1){animation-delay:.05s}
-    .hero-inner>*:nth-child(2){animation-delay:.16s}
-    .hero-inner>*:nth-child(3){animation-delay:.30s}
-    .hero-inner>*:nth-child(4){animation-delay:.44s}
-    .hero-inner>*:nth-child(5){animation-delay:.56s}
-    .hero-inner>*:nth-child(6){animation-delay:.68s}
-    .rv { opacity:0; transform:translateY(22px); transition:opacity .6s var(--ease-out-expo),transform .6s var(--ease-out-expo); transition-delay:calc(var(--rv,0)*90ms); }
-    .rv.in { opacity:1; transform:translateY(0); }
-    
   </style>
-  <style id="ke-fraunces">
-    @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;src:url('/fraunces.woff2') format('woff2');}
-    @font-face{font-family:'Fraunces';font-style:italic;font-weight:400 700;font-display:swap;src:url('/fraunces-italic.woff2') format('woff2');}
-    h1,h2{font-family:'Fraunces',Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:-0.01em;}
-    h1 em,h2 em{font-style:italic;}
-  </style>
-  <link rel="stylesheet" href="/midnight.css?v=6">
 </head>
 <body>
 
 <a href="#main-content" class="skip-link">Skip to content</a>
 
-<div class="marquee-band" aria-hidden="true">
-  <div class="marquee-inner">
-    <span>Kitchen Remodelling<span class="marquee-dot"> · </span></span>
-    <span>Bathroom Renovation<span class="marquee-dot"> · </span></span>
-    <span>Loft Conversion<span class="marquee-dot"> · </span></span>
-    <span>7 Days to Live<span class="marquee-dot"> · </span></span>
-    <span>One Specialist Per Niche, Per Area<span class="marquee-dot"> · </span></span>
-    <span>Meta Ads + Managed Social<span class="marquee-dot"> · </span></span>
-    <span>Exclusive UK Territories<span class="marquee-dot"> · </span></span>
-    <span>Your First 60 Days Free<span class="marquee-dot"> · </span></span>
-    <span>No Shared Leads<span class="marquee-dot"> · </span></span>
-    <span>Kitchen Remodelling<span class="marquee-dot"> · </span></span>
-    <span>Bathroom Renovation<span class="marquee-dot"> · </span></span>
-    <span>Loft Conversion<span class="marquee-dot"> · </span></span>
-    <span>7 Days to Live<span class="marquee-dot"> · </span></span>
-    <span>One Specialist Per Niche, Per Area<span class="marquee-dot"> · </span></span>
-    <span>Meta Ads + Managed Social<span class="marquee-dot"> · </span></span>
-    <span>Exclusive UK Territories<span class="marquee-dot"> · </span></span>
-    <span>Your First 60 Days Free<span class="marquee-dot"> · </span></span>
-    <span>No Shared Leads<span class="marquee-dot"> · </span></span>
+<div class="strip">
+  <div class="container">
+    <span>Kitchen Remodelling</span>
+    <span>Bathroom Renovation</span>
+    <span>Loft Conversion</span>
+    <span>7 Days to Live</span>
+    <span>One Specialist Per Niche, Per Area</span>
+    <span>Meta Ads + Managed Social</span>
+    <span>Exclusive UK Territories</span>
+    <span>Your First 60 Days Free</span>
+    <span>No Shared Leads</span>
   </div>
 </div>
 
-<div class="nav-wrap">
-  <nav class="navbar">
+<nav>
+  <div class="container nav-inner">
     <a class="nav-logo" href="index.html">
-      <img src="logo.png" alt="KaizenEvol" width="32" height="32" onerror="this.style.display='none'">
-      <span class="nav-logo-text">KaizenReach</span>
+      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <b>KaizenEvol</b>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
       <li><a href="kaizenreach.html">KaizenReach</a></li>
       <li><a href="kaizendesk.html">KaizenDesk</a></li>
       <li><a href="kaizenforge.html">KaizenForge</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li><a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a></li>
     </ul>
-    <a class="btn-primary nav-cta" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-</div>
-
-<div class="mobile-overlay" id="mobileOverlay"></div>
-<div class="mobile-panel" id="mobilePanel">
-  <div class="mobile-panel-header">
-    <div class="nav-logo">
-      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'" style="height:28px;width:auto;">
-      <span class="nav-logo-text">KaizenReach</span>
-    </div>
-    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
+    <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
-  <a href="index.html">Home</a>
-  <a href="kaizenreach.html">KaizenReach — Ads + Social</a>
-  <a href="kaizendesk.html">KaizenDesk — AI Front Office</a>
-  <a href="kaizenforge.html">KaizenForge — Websites</a>
-  <a href="about.html">About</a>
-  <a href="contact.html">Contact</a>
-  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book a Call</a>
-</div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="kaizenreach.html">KaizenReach</a>
+    <a href="kaizendesk.html">KaizenDesk</a>
+    <a href="kaizenforge.html">KaizenForge</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
+  </div>
+</nav>
 
 <main id="main-content">
 
-<section class="hero" id="home">
+<header class="hero" id="home">
   <div class="hero-inner container">
-    <div style="display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--purple-light);background:rgba(109,63,192,0.12);border:1px solid rgba(109,63,192,0.3);padding:6px 16px;border-radius:9999px;margin-bottom:24px;">KaizenReach · for UK Loft Conversion Specialists</div>
-    <h1>More Loft Conversions,<br>Booked Straight Into Your Diary</h1>
+    <div class="hero-kicker"><span class="smallcaps accent">KaizenReach · for UK Loft Conversion Specialists</span></div>
+    <h1>More Loft Conversions,<br><em>Booked</em> Straight Into Your Diary</h1>
     <p class="hero-sub">Done-for-you Meta ads and fully-managed social, built only for loft conversion specialists. No shared leads, no competing on price — just homeowners with a real loft project and the budget for it, booked straight into your calendar. Exclusive to your area, live in 7 days, and <strong>your first 60 days are free, our first 5 founding clients only.</strong></p>
 
     <div class="calc-wrap">
@@ -454,131 +383,112 @@
     </div>
 
     <div class="hero-ctas">
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Book Your Free Strategy Call</a>
-      <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-solid" target="_blank" rel="noopener">Book Your Free Strategy Call</a>
+      <a href="#how-it-works" class="btn-quiet">See How It Works</a>
     </div>
     <p class="hero-note"><strong>4 client slots per quarter.</strong> One specialist per niche, per area. Your territory, your leads.</p>
   </div>
-</section>
+</header>
 
-<section class="section section-surface" id="problem">
+<section class="section bg-void2 hairline-top" id="problem">
   <div class="container">
-    <div class="section-header">
+    <div class="section-head">
       <h2>Why Your Pipeline Feels Like<br><em>Feast or Famine</em></h2>
       <p>Most renovation specialists are brilliant at their craft. Their marketing is a different story.</p>
     </div>
-    <div class="problem-grid">
-      <div class="problem-card">
-        <h3>Shared Leads: A Race to the Bottom</h3>
-        <p>Checkatrade and MyBuilder sell the same enquiry to 4–6 competitors. You're not competing on quality — you're competing on price. And you'll lose that war every time.</p>
-      </div>
-      <div class="problem-card">
-        <h3>Past Ads That Burned Money, Not Leads</h3>
-        <p>You tried boosted posts. Maybe a generic agency. They delivered reports, not booked jobs. The distrust is earned — but the problem isn't ads. It's the wrong ads, built by the wrong people.</p>
-      </div>
-      <div class="problem-card">
-        <h3>No Predictability</h3>
-        <p>Word of mouth is uncontrollable. One quiet month means payroll anxiety, crew concerns, and sleepless nights. You can't scale something you can't predict.</p>
-      </div>
-      <div class="problem-card">
-        <h3>Wasted Estimates on Wrong Clients</h3>
-        <p>You drive out, measure up, spend two hours, and they wanted a budget patch-up job. There's no filter. Every enquiry costs you time you can't get back.</p>
-      </div>
+    <div class="prob-row">
+      <div class="prob-num">01</div>
+      <h3>Shared Leads: A Race to the Bottom</h3>
+      <p>Checkatrade and MyBuilder sell the same enquiry to 4–6 competitors. You're not competing on quality — you're competing on price. And you'll lose that war every time.</p>
     </div>
-    <div class="problem-callout">
+    <div class="prob-row">
+      <div class="prob-num">02</div>
+      <h3>Past Ads That Burned Money, Not Leads</h3>
+      <p>You tried boosted posts. Maybe a generic agency. They delivered reports, not booked jobs. The distrust is earned — but the problem isn't ads. It's the wrong ads, built by the wrong people.</p>
+    </div>
+    <div class="prob-row">
+      <div class="prob-num">03</div>
+      <h3>No Predictability</h3>
+      <p>Word of mouth is uncontrollable. One quiet month means payroll anxiety, crew concerns, and sleepless nights. You can't scale something you can't predict.</p>
+    </div>
+    <div class="prob-row last">
+      <div class="prob-num">04</div>
+      <h3>Wasted Estimates on Wrong Clients</h3>
+      <p>You drive out, measure up, spend two hours, and they wanted a budget patch-up job. There's no filter. Every enquiry costs you time you can't get back.</p>
+    </div>
+    <div class="callout">
       <p>Just 2 renovation jobs a month at £5,000 each is <em>£120,000 a year</em> left on the table — and for loft conversions, a single missed job can be £25,000. That's not a craft problem. That's a marketing problem — and it's fixable.</p>
     </div>
   </div>
 </section>
 
-<section class="section section-bg" id="how-it-works">
+<section class="section bg-void hairline-top" id="how-it-works">
   <div class="container">
-    <div class="section-header">
+    <div class="section-head">
       <h2>From Strategy Call to <em>Booked Jobs</em><br>in 7 Days</h2>
       <p>Simple, fast, and built entirely around your trade — kitchen, bathroom, or loft. We know these niches inside out.</p>
     </div>
-    <div class="steps-grid">
-      <div class="step-card" style="--i:0">
-        <div class="step-badge">1</div>
-        <span class="step-tag">Day 1</span>
+    <div class="svc-row">
+      <div class="svc-num">01</div>
+      <div class="svc-main">
+        <span class="smallcaps accent">Day 1</span>
         <h3>Strategy Call</h3>
-        <p>We learn your business, area, current pipeline, average project value, and goals. 30 minutes on the phone — a clear picture of what's achievable in your local area.</p>
       </div>
-      <div class="step-card" style="--i:1">
-        <div class="step-badge">2</div>
-        <span class="step-tag">Days 2–7</span>
+      <p class="svc-copy">We learn your business, area, current pipeline, average project value, and goals. 30 minutes on the phone — a clear picture of what's achievable in your local area.</p>
+    </div>
+    <div class="svc-row">
+      <div class="svc-num">02</div>
+      <div class="svc-main">
+        <span class="smallcaps accent">Days 2–7</span>
         <h3>Campaign Build</h3>
-        <p>AI-assisted copy, targeting, and 5 ad variations built specifically for your area. Lead filter installed. Tracking set up. You approve everything before anything goes live.</p>
       </div>
-      <div class="step-card" style="--i:2">
-        <div class="step-badge">3</div>
-        <span class="step-tag">Ongoing</span>
+      <p class="svc-copy">AI-assisted copy, targeting, and 5 ad variations built specifically for your area. Lead filter installed. Tracking set up. You approve everything before anything goes live.</p>
+    </div>
+    <div class="svc-row last">
+      <div class="svc-num">03</div>
+      <div class="svc-main">
+        <span class="smallcaps accent">Ongoing</span>
         <h3>Launch, Optimise &amp; Post</h3>
-        <p>Live campaigns with daily monitoring, plus your social handled for you: weekly reels and posts from your real jobs, comments and DMs answered, your Google profile and reviews built. Weekly plain-English reports. We run the whole pipeline; you focus on the projects.</p>
       </div>
+      <p class="svc-copy">Live campaigns with daily monitoring, plus your social handled for you: weekly reels and posts from your real jobs, comments and DMs answered, your Google profile and reviews built. Weekly plain-English reports. We run the whole pipeline; you focus on the projects.</p>
     </div>
   </div>
 </section>
 
-<section class="section section-surface" id="why-it-works">
+<section class="section bg-void2 hairline-top" id="why-it-works">
   <div class="container">
-    <div class="section-header">
+    <div class="section-head">
       <h2>The <em>Home Renovation Client Engine</em> —<br>Built Differently</h2>
       <p>Here's why this works when everything else hasn't.</p>
     </div>
-    <div class="ai-grid-wrap">
-      <div class="ai-featured-row">
-        <div class="ai-card ai-card--featured">
-          <h3>Exclusive UK Territory</h3>
-          <p>We take one specialist per niche, per area. Your direct competitor cannot use this system in your postcode. The territory is yours for as long as we work together.</p>
-        </div>
-        <div class="ai-card ai-card--featured">
-          <h3>7 Days to Live</h3>
-          <p>Because we work exclusively with home renovation specialists, there's no learning curve. We know your trade, your buyers, your objections. Campaigns are live in a week, not months.</p>
-        </div>
-      </div>
-      <div class="ai-grid">
-        <div class="ai-card">
-          <h3>Hyper-Local Targeting</h3>
-          <p>We only target homeowners actively researching your type of renovation within your specific service area. Your local area, locked to you.</p>
-        </div>
-        <div class="ai-card">
-          <h3>Built-In Lead Filter</h3>
-          <p>Price-shoppers and tyre-kickers are screened out before they reach your phone. Every lead has been pre-qualified against your minimum project value.</p>
-        </div>
-        <div class="ai-card">
-          <h3>AI Creative Testing</h3>
-          <p>We run 5+ ad variations simultaneously. The AI identifies what converts in your specific market, fast. No guesswork, no wasted budget on hunches.</p>
-        </div>
-        <div class="ai-card">
-          <h3>Plain-English Reports</h3>
-          <p>Cost per lead, cost per booked visit, cost per signed job. You always know exactly what your pipeline costs and what it's worth. Zero jargon.</p>
-        </div>
-      </div>
+    <div class="why-grid">
+      <div class="why-item"><b>Exclusive UK Territory</b><p>We take one specialist per niche, per area. Your direct competitor cannot use this system in your postcode. The territory is yours for as long as we work together.</p></div>
+      <div class="why-item"><b>7 Days to Live</b><p>Because we work exclusively with home renovation specialists, there's no learning curve. We know your trade, your buyers, your objections. Campaigns are live in a week, not months.</p></div>
+      <div class="why-item"><b>Hyper-Local Targeting</b><p>We only target homeowners actively researching your type of renovation within your specific service area. Your local area, locked to you.</p></div>
+      <div class="why-item"><b>Built-In Lead Filter</b><p>Price-shoppers and tyre-kickers are screened out before they reach your phone. Every lead has been pre-qualified against your minimum project value.</p></div>
+      <div class="why-item"><b>AI Creative Testing</b><p>We run 5+ ad variations simultaneously. The AI identifies what converts in your specific market, fast. No guesswork, no wasted budget on hunches.</p></div>
+      <div class="why-item"><b>Plain-English Reports</b><p>Cost per lead, cost per booked visit, cost per signed job. You always know exactly what your pipeline costs and what it's worth. Zero jargon.</p></div>
     </div>
   </div>
 </section>
 
-<section class="section section-bg" id="pricing">
+<section class="section bg-void hairline-top" id="pricing">
   <div class="container">
-    <div class="section-header" style="text-align:center">
-      <h2>Pricing Is <em>Discussed on the Call</em></h2>
-    </div>
     <div class="pricing-center">
+      <h2>Pricing Is <em>Discussed on the Call</em></h2>
       <p>We structure every engagement around your situation: your trade, your area, your average project value, your current pipeline. A flat rate that works brilliantly for a bathroom fitter won't suit a loft converter.<br><br>What we can tell you: our first 5 founding clients get their <strong>first 60 days completely free</strong> — you cover ad spend only, paid directly to Meta, then it's a simple monthly service you can cancel anytime. You carry none of the risk while we prove it works.</p>
       <p class="pricing-note">30 minutes on a call and you'll leave with a clear picture of what's possible in your area.</p>
     </div>
   </div>
 </section>
 
-
-<section class="section section-surface" id="guarantee">
+<section class="section bg-void2 hairline-top" id="guarantee">
   <div class="container">
-    <div class="guarantee-inner">
+    <div class="guarantee-grid">
       <div class="guarantee-copy">
         <h2>Your First 60 Days,<br><em>On Us</em></h2>
         <p>Within 60 days of launch: your agreed number of qualified, booked renovation clients per month (typically 2–4 booked consultations per month depending on your trade, area, and ad spend), each with a real project and a real budget. Our first 5 founding clients get their first 60 days completely free, you cover ad spend only, paid directly to Meta, then it's a simple monthly service you can cancel anytime. The risk sits with us, not you.</p>
-        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-primary" target="_blank" rel="noopener">Claim Your Area</a>
+        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-solid" target="_blank" rel="noopener">Claim Your Area</a>
       </div>
       <ol class="guarantee-list">
         <li>Your first 60 days free: our first 5 founding clients cover ad spend only, then a simple monthly service you can cancel anytime</li>
@@ -592,9 +502,9 @@
   </div>
 </section>
 
-<section class="section section-bg faq-border-top" id="faq">
+<section class="section bg-void hairline-top" id="faq">
   <div class="container">
-    <div class="section-header">
+    <div class="section-head">
       <h2>Questions Worth Asking</h2>
       <p>The ones we'd expect before anyone books a call with us.</p>
     </div>
@@ -623,78 +533,83 @@
   </div>
 </section>
 
-<section class="section section-surface" id="industries">
+<section class="section bg-void2 hairline-top" id="industries">
   <div class="container">
-    <div class="section-header">
+    <div class="section-head">
       <h2>Niches We Serve</h2>
       <p>Three trades. Each done properly. Built around the homeowner who's buying a real renovation — not a generic agency template with your logo swapped in.</p>
     </div>
-    <div class="ind-grid">
-      <div class="ind-card">
-        <div class="ind-icon">
-          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
+    <div class="svc-row">
+      <div class="svc-num">01</div>
+      <div class="svc-main">
         <h3>Kitchen Remodelling</h3>
-        <ul class="ind-list">
-          <li>Meta campaigns targeting homeowners planning a full kitchen refurb in your area</li>
-          <li>Lead qualification that filters out tyre-kickers and flat-pack enquiries</li>
-          <li>Booked consultations with homeowners who have a real project and a £5,000+ budget</li>
-        </ul>
       </div>
-      <div class="ind-card">
-        <div class="ind-icon">
-          <svg viewBox="0 0 24 24"><path d="M4 12V6a2 2 0 012-2 2 2 0 012 2"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M4 12v3a4 4 0 004 4h8a4 4 0 004-4v-3"/><line x1="8" y1="19" x2="7" y2="21"/><line x1="16" y1="19" x2="17" y2="21"/></svg>
-        </div>
+      <ul class="svc-list">
+        <li>Meta campaigns targeting homeowners planning a full kitchen refurb in your area</li>
+        <li>Lead qualification that filters out tyre-kickers and flat-pack enquiries</li>
+        <li>Booked consultations with homeowners who have a real project and a £5,000+ budget</li>
+      </ul>
+    </div>
+    <div class="svc-row">
+      <div class="svc-num">02</div>
+      <div class="svc-main">
         <h3>Bathroom Renovation</h3>
-        <ul class="ind-list">
-          <li>Ads targeting homeowners planning full bathrooms, wetrooms, and en-suites</li>
-          <li>Messaging that wins on trust and finish quality — not lowest-price haggling</li>
-          <li>Pre-qualified leads with a real refurb in mind, screened before they reach your phone</li>
-        </ul>
       </div>
-      <div class="ind-card">
-        <div class="ind-icon">
-          <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/><path d="M9 21v-6h6v6"/></svg>
-        </div>
+      <ul class="svc-list">
+        <li>Ads targeting homeowners planning full bathrooms, wetrooms, and en-suites</li>
+        <li>Messaging that wins on trust and finish quality — not lowest-price haggling</li>
+        <li>Pre-qualified leads with a real refurb in mind, screened before they reach your phone</li>
+      </ul>
+    </div>
+    <div class="svc-row last">
+      <div class="svc-num">03</div>
+      <div class="svc-main">
         <h3>Loft Conversion</h3>
-        <ul class="ind-list">
-          <li>Premium lead flow for £20,000+ projects where margins justify the ad spend</li>
-          <li>Audiences actively researching dormers, velux conversions, and extra space</li>
-          <li>The highest-ticket niche we serve — built for specialists, not general builders</li>
-        </ul>
       </div>
+      <ul class="svc-list">
+        <li>Premium lead flow for £20,000+ projects where margins justify the ad spend</li>
+        <li>Audiences actively researching dormers, velux conversions, and extra space</li>
+        <li>The highest-ticket niche we serve — built for specialists, not general builders</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<section class="final-cta" id="contact">
-  <div class="final-cta-inner">
-    <h2>Ready to Grow?</h2>
-    <p>Tell us about your business and we'll be in touch within 24 hours to book your free strategy call.</p>
-
-    <form class="lead-form" id="leadForm" novalidate>
+<section class="closing bg-void hairline-top" id="contact">
+  <div class="container closing-grid">
+    <div class="closing-copy">
+      <h2>Ready to <em>Grow?</em></h2>
+      <p>Tell us about your business and we'll be in touch within 24 hours to book your free strategy call.</p>
+      <span class="closing-or smallcaps">or</span>
+      <div class="closing-alt">
+        <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book Directly on Calendly</a>
+        <a href="mailto:rahaid@kaizenevol.com">Email Us Directly</a>
+      </div>
+      <p class="closing-scarcity">4 client slots available per quarter. One per area.</p>
+    </div>
+    <form id="leadForm" novalidate>
       <div class="lf-grid">
-        <div class="lf-group">
+        <div>
           <label class="lf-label" for="lf-contact">Your Name *</label>
           <input class="lf-input" type="text" id="lf-contact" name="contactName" placeholder="e.g. John Smith" required autocomplete="name" />
         </div>
-        <div class="lf-group">
+        <div>
           <label class="lf-label" for="lf-name">Business Name *</label>
           <input class="lf-input" type="text" id="lf-name" name="businessName" placeholder="e.g. Johnson Renovations" required autocomplete="organization" />
         </div>
-        <div class="lf-group">
+        <div>
           <label class="lf-label" for="lf-email">Email Address *</label>
           <input class="lf-input" type="email" id="lf-email" name="email" placeholder="you@business.co.uk" required autocomplete="email" />
         </div>
-        <div class="lf-group">
+        <div>
           <label class="lf-label" for="lf-phone">Phone Number</label>
           <input class="lf-input" type="tel" id="lf-phone" name="phone" placeholder="07700 900 123" autocomplete="tel" />
         </div>
-        <div class="lf-group">
+        <div>
           <label class="lf-label" for="lf-url">Business Website</label>
           <input class="lf-input" type="url" id="lf-url" name="businessUrl" placeholder="https://yourbusiness.co.uk" autocomplete="url" />
         </div>
-        <div class="lf-group">
+        <div>
           <label class="lf-label" for="lf-trade">Your Trade</label>
           <select class="lf-select" id="lf-trade" name="trade">
             <option value="">Select your niche</option>
@@ -704,7 +619,7 @@
             <option value="Other Renovation">Other Renovation</option>
           </select>
         </div>
-        <div class="lf-group">
+        <div>
           <label class="lf-label" for="lf-budget">Monthly Ad Budget</label>
           <select class="lf-select" id="lf-budget" name="monthlyBudget">
             <option value="">Select a range</option>
@@ -718,78 +633,55 @@
       <button class="lf-submit" type="submit" id="lfSubmit">Book a Strategy Call</button>
       <div class="lf-status" id="lfStatus" role="alert" aria-live="polite"></div>
     </form>
-
-    <div class="cta-divider"><span>or</span></div>
-
-    <div class="final-cta-btns">
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-white" target="_blank" rel="noopener">Book Directly on Calendly</a>
-      <a href="mailto:rahaid@kaizenevol.com" class="btn-ghost" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.75);">Email Us Directly</a>
-    </div>
-    <p class="final-scarcity">4 client slots available per quarter. One per area.</p>
   </div>
 </section>
 
 </main>
 
-<footer class="footer">
-  <div class="container">
-    <div class="footer-inner">
-      <a class="footer-logo" href="index.html">
-        <img src="logo.png" alt="KaizenEvol" width="28" height="28" onerror="this.style.display='none'">
-        <span class="footer-logo-text">KaizenReach by KaizenEvol</span>
-      </a>
-      <ul class="footer-nav">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="kaizenreach.html">KaizenReach</a></li>
-        <li><a href="kaizendesk.html">KaizenDesk</a></li>
+<footer>
+  <div class="container footer-inner">
+    <a class="footer-logo" href="index.html">
+      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <b>KaizenReach by KaizenEvol</b>
+    </a>
+    <ul class="footer-nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="kaizenreach.html">KaizenReach</a></li>
+      <li><a href="kaizendesk.html">KaizenDesk</a></li>
       <li><a href="kaizenforge.html">KaizenForge</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="privacy.html">Privacy</a></li>
-      </ul>
-      <div class="footer-right">
-        <div class="fc-head">Contact Us</div>
-        <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
-        <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>WhatsApp Us</a>
-        <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
-      </div>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+    </ul>
+    <div class="footer-right">
+      <div class="fc-head">Contact Us</div>
+      <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
+      <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>WhatsApp Us</a>
+      <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
     </div>
   </div>
 </footer>
 
+<div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(8,6,15,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--void-2,#120A24);border:1px solid rgba(238,232,255,0.25);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+    <div style="font-weight:700;font-size:16px;margin-bottom:18px">Who would you like to message?</div>
+    <a href="https://wa.me/447423235232?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">Diego <span style="display:block;font-size:12px;font-weight:500;opacity:.8">New enquiries &amp; getting started</span></a>
+    <a href="https://wa.me/447364109609?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:rgba(37,211,102,0.14);color:#25D366;border:1px solid rgba(37,211,102,0.45);font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none">Rahaid <span style="display:block;font-size:12px;font-weight:500;opacity:.8">Projects &amp; everything else</span></a>
+    <button id="waClose" style="margin-top:16px;background:none;border:none;color:rgba(238,232,255,0.55);font-size:13px;cursor:pointer;font-family:inherit">Close</button>
+  </div>
+</div>
+
 <script>
-  const hamburgerBtn  = document.getElementById('hamburgerBtn');
-  const mobileOverlay = document.getElementById('mobileOverlay');
-  const mobilePanel   = document.getElementById('mobilePanel');
-  const mobileClose   = document.getElementById('mobileClose');
-
-  function openMenu() {
-    mobileOverlay.style.display = 'block';
-    mobilePanel.style.display   = 'flex';
-    requestAnimationFrame(() => {
-      mobileOverlay.classList.add('open');
-      mobilePanel.classList.add('open');
-    });
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu() {
-    mobileOverlay.classList.remove('open');
-    mobilePanel.classList.remove('open');
-    document.body.style.overflow = '';
-    setTimeout(() => {
-      mobileOverlay.style.display = 'none';
-      mobilePanel.style.display   = 'none';
-    }, 300);
-  }
-  hamburgerBtn.addEventListener('click', openMenu);
-  mobileClose.addEventListener('click', closeMenu);
-  mobileOverlay.addEventListener('click', closeMenu);
-  mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && mobilePanel.classList.contains('open')) closeMenu();
+(function () {
+  var b = document.getElementById('burgerBtn'), m = document.getElementById('mobileMenu');
+  b.addEventListener('click', function () {
+    var open = m.classList.toggle('open');
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
+})();
 
-  /* Calculator */
+/* Calculator — logic unchanged from the original page (track colours re-tokened only) */
+(function () {
   const jobValueInput     = document.getElementById('jobValue');
   const missedJobsInput   = document.getElementById('missedJobs');
   const jobValueDisplay   = document.getElementById('jobValueDisplay');
@@ -801,7 +693,7 @@
 
   function updateTrack(input) {
     const pct = ((+input.value - +input.min) / (+input.max - +input.min)) * 100;
-    input.style.background = 'linear-gradient(to right,#6D3FC0 ' + pct + '%,#181430 ' + pct + '%)';
+    input.style.background = 'linear-gradient(to right,#8B5CF6 ' + pct + '%,rgba(238,232,255,0.12) ' + pct + '%)';
   }
 
   function updateCalc() {
@@ -818,134 +710,78 @@
   jobValueInput.addEventListener('input', updateCalc);
   missedJobsInput.addEventListener('input', updateCalc);
   updateCalc();
+})();
 
-  /* Step stagger */
-  const stepCards = document.querySelectorAll('.step-card');
-  stepCards.forEach(el => el.classList.add('will-animate'));
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.remove('will-animate'); obs.unobserve(e.target); }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-  stepCards.forEach(el => obs.observe(el));
+/* Lead form — endpoint, payload and status logic unchanged */
+(function () {
+  const form   = document.getElementById('leadForm');
+  const btn    = document.getElementById('lfSubmit');
+  const status = document.getElementById('lfStatus');
+  if (!form) return;
 
-  /* Active nav */
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 140) current = s.id; });
-    navLinks.forEach(a => {
-      const active = a.getAttribute('href') === '#' + current;
-      a.style.color      = active ? 'var(--text)' : '';
-      a.style.background = active ? 'var(--surface-2)' : '';
-    });
-  }, { passive: true });
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    status.textContent = '';
+    status.className   = 'lf-status';
 
-  /* Lead form */
-  (function () {
-    const form   = document.getElementById('leadForm');
-    const btn    = document.getElementById('lfSubmit');
-    const status = document.getElementById('lfStatus');
-    if (!form) return;
+    const contactName   = document.getElementById('lf-contact').value.trim();
+    const businessName  = document.getElementById('lf-name').value.trim();
+    const email         = document.getElementById('lf-email').value.trim();
+    const phone         = document.getElementById('lf-phone').value.trim();
+    const businessUrl   = document.getElementById('lf-url').value.trim();
+    const trade         = document.getElementById('lf-trade').value;
+    const monthlyBudget = document.getElementById('lf-budget').value;
 
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      status.textContent = '';
-      status.className   = 'lf-status';
+    if (!contactName) {
+      status.textContent = 'Your name is required.';
+      status.className   = 'lf-status err';
+      return;
+    }
+    if (!businessName) {
+      status.textContent = 'Business name is required.';
+      status.className   = 'lf-status err';
+      return;
+    }
+    if (!email || !email.includes('@')) {
+      status.textContent = 'A valid email address is required.';
+      status.className   = 'lf-status err';
+      return;
+    }
 
-      const contactName   = document.getElementById('lf-contact').value.trim();
-      const businessName  = document.getElementById('lf-name').value.trim();
-      const email         = document.getElementById('lf-email').value.trim();
-      const phone         = document.getElementById('lf-phone').value.trim();
-      const businessUrl   = document.getElementById('lf-url').value.trim();
-      const trade         = document.getElementById('lf-trade').value;
-      const monthlyBudget = document.getElementById('lf-budget').value;
+    btn.disabled     = true;
+    btn.textContent  = 'Sending…';
 
-      if (!contactName) {
-        status.textContent = 'Your name is required.';
-        status.className   = 'lf-status err';
-        return;
+    try {
+      const res  = await fetch('/api/submit-lead', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ contactName, businessName, email, phone, businessUrl, trade, monthlyBudget }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        status.textContent = "Done — we'll be in touch within 24 hours.";
+        status.className   = 'lf-status ok';
+        form.reset();
+        btn.textContent = 'Sent ✓';
+      } else {
+        throw new Error(data.error || 'Something went wrong.');
       }
-      if (!businessName) {
-        status.textContent = 'Business name is required.';
-        status.className   = 'lf-status err';
-        return;
-      }
-      if (!email || !email.includes('@')) {
-        status.textContent = 'A valid email address is required.';
-        status.className   = 'lf-status err';
-        return;
-      }
+    } catch (err) {
+      status.textContent = err.message || 'Something went wrong. Please email us directly.';
+      status.className   = 'lf-status err';
+      btn.disabled       = false;
+      btn.textContent    = 'Book a Strategy Call';
+    }
+  });
+})();
 
-      btn.disabled     = true;
-      btn.textContent  = 'Sending…';
-
-      try {
-        const res  = await fetch('/api/submit-lead', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ contactName, businessName, email, phone, businessUrl, trade, monthlyBudget }),
-        });
-        const data = await res.json();
-        if (res.ok && data.ok) {
-          status.textContent = "Done — we'll be in touch within 24 hours.";
-          status.className   = 'lf-status ok';
-          form.reset();
-          btn.textContent = 'Sent ✓';
-        } else {
-          throw new Error(data.error || 'Something went wrong.');
-        }
-      } catch (err) {
-        status.textContent = err.message || 'Something went wrong. Please email us directly.';
-        status.className   = 'lf-status err';
-        btn.disabled       = false;
-        btn.textContent    = 'Book a Strategy Call';
-      }
-    });
-  })();
-</script>
-
-<script>
-  /* polish: scroll reveal */
-  (function(){
-    var sels='.svc-card,.ind-card,.price-card,.problem-card,.cmp-row,.faq-inline-item,.problem-callout,.guarantee-callout,.calc-wrap,.section-header,.team-card,.chat';
-    var els=Array.prototype.slice.call(document.querySelectorAll(sels)).filter(function(el){return !el.classList.contains('step-card');});
-    var byParent=[];
-    els.forEach(function(el){
-      var g=null;
-      for(var i=0;i<byParent.length;i++){ if(byParent[i].p===el.parentElement){ g=byParent[i]; break; } }
-      if(!g){ g={p:el.parentElement,items:[]}; byParent.push(g); }
-      g.items.push(el);
-    });
-    byParent.forEach(function(g){ g.items.forEach(function(el,i){ el.classList.add('rv'); el.style.setProperty('--rv',String(Math.min(i,6))); }); });
-    if(!('IntersectionObserver' in window)){ els.forEach(function(el){ el.classList.add('in'); }); return; }
-    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:0.1,rootMargin:'0px 0px -6% 0px'});
-    els.forEach(function(el){ io.observe(el); });
-  })();
-</script>
-  <script defer src="/_vercel/insights/script.js"></script>
-<div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(8,6,15,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
-  <div style="background:var(--surface,#141228);border:1px solid rgba(109,63,192,0.4);border-radius:18px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
-    <div style="font-weight:700;font-size:16px;margin-bottom:18px">Who would you like to message?</div>
-    <a href="https://wa.me/447423235232?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:12px;padding:13px 16px;text-decoration:none;margin-bottom:10px">Diego <span style="display:block;font-size:12px;font-weight:500;opacity:.8">New enquiries &amp; getting started</span></a>
-    <a href="https://wa.me/447364109609?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:rgba(37,211,102,0.14);color:#25D366;border:1px solid rgba(37,211,102,0.45);font-weight:700;border-radius:12px;padding:13px 16px;text-decoration:none">Rahaid <span style="display:block;font-size:12px;font-weight:500;opacity:.8">Projects &amp; everything else</span></a>
-    <button id="waClose" style="margin-top:16px;background:none;border:none;color:rgba(238,232,255,0.55);font-size:13px;cursor:pointer;font-family:inherit">Close</button>
-  </div>
-</div>
-<style>
-  .fc-head{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(238,232,255,0.45);margin-bottom:8px}
-  .fc-row{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:7px;font-size:13px;text-decoration:none}
-  .fc-wa{color:#25D366 !important}
-  @media(max-width:700px){.fc-row{justify-content:center}}
-</style>
-<script>
 (function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
 if(!o||!m)return;o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
 c.addEventListener('click',function(){m.style.display='none';});
 m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 <script src="/midnight.js?v=6" defer></script>
 </body>
 </html>
