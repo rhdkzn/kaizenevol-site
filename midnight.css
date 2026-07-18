@@ -57,6 +57,30 @@ body::after { content:''; position:fixed; inset:0; z-index:2000; pointer-events:
 .svc-card:hover, .step-card:hover, .ind-card:hover {
   box-shadow: var(--mid-shadow-lg); border-color: var(--border-hover); }
 
+/* Balanced feature grids — no orphan cards, no empty columns */
+.ai-grid:has(> .ai-card:nth-child(3):last-child) { grid-template-columns: repeat(3, 1fr); }
+.ai-grid > .ai-card:nth-child(4n+1):last-child { grid-column: 1 / -1; }
+@media (min-width: 769px) and (max-width: 900px) {
+  .ai-grid > .ai-card:nth-child(odd):last-child { grid-column: span 2; }
+}
+
+/* Founders — who you'll actually talk to (homepage). The avatar takes a
+   real photo via inline background-image when one is supplied; until
+   then it shows an honest monogram, never a stock face. */
+.mid-founders { display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:760px; margin:0 auto; }
+.mid-founder { background:var(--surface-2); border:1px solid var(--border); border-radius:22px;
+  padding:32px 28px; text-align:center; box-shadow:var(--mid-shadow-md); }
+.mid-founder-avatar { width:84px; height:84px; margin:0 auto 18px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Fraunces', Georgia, serif; font-style:italic; font-size:34px; color:#EEE8FF;
+  background:linear-gradient(135deg, #6D3FC0, #241553); border:1px solid var(--border-hover);
+  background-size:cover; background-position:center; }
+.mid-founder h3 { font-size:19px; margin-bottom:4px; }
+.mid-founder-role { font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--purple-light); margin-bottom:12px; }
+.mid-founder p { font-size:14.5px; color:var(--muted); line-height:1.65; }
+@media (max-width: 640px) { .mid-founders { grid-template-columns:1fr; } }
+
 /* Navbar + marquee sit above ambient layers */
 .nav-wrap { z-index: 999; }
 .marquee-band { position: relative; z-index: 1; }
