@@ -58,14 +58,15 @@
   .footer-right{text-align:right}
   .footer-copy{color:var(--muted);font-size:13px;margin-top:4px}
   @media(max-width:640px){.footer-inner{flex-direction:column;align-items:flex-start}.footer-right{text-align:left}}
-</style>
+  @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
+  </style>
   <style id="ke-fraunces">
     @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;src:url('/fraunces.woff2') format('woff2');}
     @font-face{font-family:'Fraunces';font-style:italic;font-weight:400 700;font-display:swap;src:url('/fraunces-italic.woff2') format('woff2');}
     h1,h2{font-family:'Fraunces',Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:-0.01em;}
     h1 em,h2 em{font-style:italic;}
   </style>
-  <link rel="stylesheet" href="/midnight.css?v=6">
+  <link rel="stylesheet" href="/midnight.css?v=7">
 </head>
 <body>
 
@@ -175,6 +176,6 @@ c.addEventListener('click',function(){m.style.display='none';});
 m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
-<script src="/midnight.js?v=6" defer></script>
+<script src="/midnight.js?v=7" defer></script>
 </body>
 </html>

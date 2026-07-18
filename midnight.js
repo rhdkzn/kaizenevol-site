@@ -19,6 +19,11 @@
     var canvas = document.createElement('canvas');
     canvas.className = 'mid-particles';
     canvas.setAttribute('aria-hidden', 'true');
+    /* Self-styled: pages must not need any CSS for this to render correctly.
+       Explicit style width/height also defeats the replaced-element rule that
+       makes inset:0 fall back to attribute size on high-DPR screens. */
+    canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;';
+    if (getComputedStyle(hero).position === 'static') hero.style.position = 'relative';
     hero.insertBefore(canvas, hero.firstChild);
     var ctx = canvas.getContext('2d');
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -33,7 +38,18 @@
       var r = hero.getBoundingClientRect();
       w = r.width; h = r.height;
       canvas.width = w * dpr; canvas.height = h * dpr;
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    /* Hero height changes when the display font loads — track it, not just window resizes */
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(function () {
+        var r = hero.getBoundingClientRect();
+        if (Math.abs(r.width - w) > 1 || Math.abs(r.height - h) > 1) resize();
+      });
+      ro.observe(hero);
+    } else if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { resize(); });
     }
     function draw() {
       if (!running) return;

@@ -82,7 +82,7 @@
 
     /* ============ HERO — signature ribbon ============ */
     .hero { position:relative; min-height:92vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; }
-    #ribbon { position:absolute; inset:0; z-index:0; }
+    #ribbon { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
     .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding:110px 0 130px; }
     .hero-kicker { margin-bottom:30px; }
     .hero h1 { font-size:clamp(52px, 2.4rem + 6.4vw, 128px); margin:0 auto 30px; max-width:14ch; }
@@ -166,6 +166,9 @@
     .mid-consent-accept { background:#EEE8FF; color:#0C0618; }
     .mid-consent-decline { background:transparent; color:rgba(238,232,255,0.6); border:1px solid rgba(238,232,255,0.2) !important; }
     .mid-consent-inner a { color:#A78BFA; font-size:12px; }
+
+    /* iOS zooms the page when focusing inputs under 16px — keep fields at 16px on touch widths */
+    @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
     /* ============ FOOTER ============ */
     footer { padding:44px 0; border-top:1px solid var(--hairline); background:var(--void); }
     .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
@@ -422,7 +425,16 @@
     var r = canvas.parentElement.getBoundingClientRect();
     w = r.width; h = r.height;
     canvas.width = w * dpr; canvas.height = h * dpr;
+    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  if (window.ResizeObserver) {
+    new ResizeObserver(function () {
+      var r = canvas.parentElement.getBoundingClientRect();
+      if (Math.abs(r.width - w) > 1 || Math.abs(r.height - h) > 1) resize();
+    }).observe(canvas.parentElement);
+  } else if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { resize(); });
   }
 
   /* Each ribbon: a band of many near-parallel strands, additively blended.
@@ -521,6 +533,6 @@
   });
 })();
 </script>
-<script src="/midnight.js?v=6" defer></script>
+<script src="/midnight.js?v=7" defer></script>
 </body>
 </html>
