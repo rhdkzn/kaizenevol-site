@@ -77,7 +77,7 @@
       --max-w:     1140px;
     }
 
-    html { scroll-behavior:smooth; }
+    html { scroll-behavior:smooth; overflow-x:clip; }
     body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
     p { text-wrap:pretty; }
     .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
@@ -126,7 +126,7 @@
     /* ============ HERO ============ */
     .hero { position:relative; min-height:70vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; background:var(--void); }
     .mid-particles { position:absolute; inset:0; z-index:0; pointer-events:none; }
-    .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding:92px 0 104px; }
+    .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding-top:92px; padding-bottom:104px; }
     .hero-kicker { margin-bottom:28px; }
     .hero h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin:0 auto 26px; }
     .hero-sub { font-size:17px; color:var(--muted); max-width:640px; margin:0 auto 44px; }
@@ -279,7 +279,7 @@
     }
     @media(max-width:768px) {
       .nav-links { display:none; } .burger { display:flex; }
-      .hero-inner { padding:72px 0 90px; }
+      .hero-inner { padding-top:72px; padding-bottom:90px; }
       .section { padding:72px 0; }
       .why-grid { grid-template-columns:1fr; }
       .why-item, .why-item:nth-child(even) { padding-left:0; padding-right:0; border-right:none !important; }
@@ -297,6 +297,11 @@
       .calc-result-amounts { grid-template-columns:1fr; }
     }
     @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
+    /* Phone display scale — keep display type inside the padded column on narrow screens */
+  @media (max-width: 520px) {
+    .hero h1, h1 { font-size: clamp(29px, 8.5vw, 42px); }
+    h2 { font-size: clamp(26px, 8vw, 36px); }
+  }
   </style>
 </head>
 <body>

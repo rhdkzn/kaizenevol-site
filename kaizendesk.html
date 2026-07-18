@@ -82,7 +82,7 @@
       --max-w:     1140px;
     }
 
-    html { scroll-behavior:smooth; }
+    html { scroll-behavior:smooth; overflow-x:clip; }
     body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
     p { text-wrap:pretty; }
     .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
@@ -124,7 +124,7 @@
 
     /* ============ HERO ============ */
     .hero { position:relative; min-height:70vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; }
-    .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding:90px 0 80px; }
+    .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding-top:90px; padding-bottom:80px; }
     .hero-kicker { margin-bottom:28px; }
     .hero h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin:0 auto 26px; max-width:16ch; }
     .hero-sub { font-size:17px; color:var(--muted); max-width:600px; margin:0 auto 44px; }
@@ -324,7 +324,7 @@
     @media(max-width:768px) {
       .nav-links { display:none; } .burger { display:flex; }
       .hero { min-height:0; }
-      .hero-inner { padding:70px 0 70px; }
+      .hero-inner { padding-top:70px; padding-bottom:70px; }
       .section { padding:70px 0; }
       .lf-grid { grid-template-columns:1fr; }
       .calc-wrap { padding:28px 22px; }
@@ -344,6 +344,11 @@
       .cmp-row .bad, .cmp-row .good { font-size:14px; }
     }
     @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
+    /* Phone display scale — keep display type inside the padded column on narrow screens */
+  @media (max-width: 520px) {
+    .hero h1, h1 { font-size: clamp(29px, 8.5vw, 42px); }
+    h2 { font-size: clamp(26px, 8vw, 36px); }
+  }
   </style>
 </head>
 <body>
