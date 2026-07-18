@@ -4,91 +4,200 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Honest Comparison — Ways to Stop Missing Enquiries | KaizenEvol</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kaizenevol.com/kaizendesk/compare.html" />
+  <meta property="og:title" content="The Honest Comparison — Ways to Stop Missing Enquiries" />
+  <meta property="og:image" content="https://kaizenevol.com/og-desk.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://kaizenevol.com/og-desk.png" />
+
 <meta name="description" content="Voicemail, answering services, a receptionist, DIY AI software, or a managed front office. What each really costs, what each really does — compared honestly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{ --bg:#0D0B1A; --surface:#141228; --surface-2:#1B1836; --border:rgba(109,63,192,0.18); --border-hover:rgba(109,63,192,0.42); --purple:#6D3FC0; --purple-bright:#8B5CF6; --purple-light:#A78BFA; --text:#EEE8FF; --muted:rgba(238,232,255,0.62); --white:#FFFFFF; --radius-pill:9999px; --green:#34D399; --amber:#FBBF24; }
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-  a{color:inherit}
-  .container{max-width:1000px;margin:0 auto;padding:0 20px}
-  .nav{position:sticky;top:0;z-index:50;background:rgba(13,11,26,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-  .nav-in{display:flex;align-items:center;justify-content:space-between;height:60px}
-  .logo{font-weight:800;font-size:17px;text-decoration:none}
-  .logo span{color:var(--purple-light)}
-  .nav a.cta{background:var(--purple);color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:9px 18px;border-radius:var(--radius-pill)}
-  header{padding:80px 0 30px;text-align:center}
-  h1{font-size:clamp(30px,5vw,46px);line-height:1.1;letter-spacing:-0.015em;max-width:22ch;margin:0 auto 16px}
-  h1 em{color:var(--purple-light);font-style:normal}
-  .lede{color:var(--muted);max-width:60ch;margin:0 auto;font-size:16.5px}
-  section{padding:40px 0 70px}
-  .tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:16px;background:var(--surface)}
-  table{width:100%;border-collapse:collapse;min-width:640px;font-size:13px}
-  th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
-  thead th{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
-  tbody tr:last-child td{border-bottom:none}
-  td b{color:var(--white)}
-  .opt{font-weight:700;color:var(--white);white-space:nowrap}
-  .cost{color:var(--purple-light);font-weight:600;white-space:nowrap}
-  .bad{color:var(--muted)}
-  tr.us{background:rgba(109,63,192,0.10)}
-  tr.us td{border-top:1px solid var(--border-hover)}
-  @media(max-width:700px){
-    .tbl-wrap{border:none;background:none;overflow:visible}
-    table{min-width:0}
-    thead{display:none}
-    table,tbody,tr,td{display:block;width:100%}
-    tr{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;padding:6px 2px}
-    tr.us{border-color:var(--border-hover);background:rgba(109,63,192,0.10)}
-    td{border-bottom:none;padding:8px 16px}
-    td.opt{font-size:16px;padding-top:14px;white-space:normal}
-    td[data-l="Typical cost"]::before,td[data-l="What actually happens"]::before,td[data-l="Honest fit"]::before{
-      content:attr(data-l);display:block;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
-    td:last-child{padding-bottom:14px}
+  @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
+  @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
+
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+  :root {
+    --void:      #0C0618;
+    --void-2:    #120A24;
+    --text:      #EEE8FF;
+    --muted:     rgba(238,232,255,0.56);
+    --hairline:  rgba(238,232,255,0.1);
+    --accent:    #8B5CF6;
+    --accent-2:  #A78BFA;
+    --serif:     'Fraunces', Georgia, 'Times New Roman', serif;
+    --sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+    --max-w:     1140px;
   }
-  .note{font-size:12.5px;color:var(--muted);margin-top:14px;max-width:70ch}
-  .verdict{margin-top:44px;background:var(--surface);border:1px solid var(--border-hover);border-radius:16px;padding:32px 30px}
-  .verdict h2{font-size:22px;margin-bottom:10px}
-  .verdict p{color:var(--muted);max-width:66ch}
-  .verdict b{color:var(--text)}
-  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
-  .btn{display:inline-block;background:var(--purple);color:#fff;font-weight:700;padding:13px 24px;border-radius:12px;text-decoration:none;font-size:15px}
-  .btn.ghost{background:transparent;border:1px solid var(--border-hover);color:var(--text)}
-.footer{background:var(--surface);border-top:1px solid var(--border);padding:40px 0 max(40px,calc(24px + env(safe-area-inset-bottom)))}
-.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
-.footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.footer-logo img{height:24px;width:auto}
-.footer-logo-text{font-weight:700;font-size:15px;color:var(--text);letter-spacing:-0.02em}
-.footer-nav{display:flex;gap:4px;list-style:none;flex-wrap:wrap}
-.footer-nav a{font-size:13px;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:var(--radius-pill);transition:color 0.15s}
-.footer-nav a:hover{color:var(--text)}
-.footer-right{text-align:right}
-.footer-right a{font-size:13px;color:var(--purple-light);text-decoration:none}
-.footer-copy{font-size:12px;color:var(--muted);margin-top:4px}
-.footer-inner{flex-direction:column;text-align:center}
-.footer-right{text-align:center}
-.footer-nav{justify-content:center}
-.fc-head{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(238,232,255,0.45);margin-bottom:8px}
-.fc-row{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:7px;font-size:13px;text-decoration:none}
-.fc-wa{color:#25D366 !important}
-.fc-row{justify-content:center}
+
+  html { scroll-behavior:smooth; overflow-x:clip; }
+  body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
+  p { text-wrap:pretty; }
+  .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
+
+  h1,h2,h3 { font-family:var(--serif); font-weight:500; letter-spacing:-0.01em; line-height:1.06; text-wrap:balance; }
+  h1 em, h2 em { font-style:italic; color:var(--accent-2); }
+
+  .smallcaps { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+  .smallcaps.accent { color:var(--accent); }
+
+  .btn-solid { display:inline-block; background:var(--text); color:var(--void); font-weight:600; font-size:15px;
+    padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--text); transition:background .18s,color .18s; cursor:pointer; }
+  .btn-solid:hover { background:transparent; color:var(--text); }
+  .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:15px;
+    padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
+  .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
+
+  /* ============ NAV ============ */
+  nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
+  .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
+  .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
+  .nav-logo img { height:30px; width:auto; }
+  .nav-logo b { font-weight:700; font-size:17px; letter-spacing:-0.02em; }
+  .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
+  .nav-links a { font-size:14.5px; font-weight:500; color:var(--muted); text-decoration:none; padding:8px 14px; transition:color .15s; }
+  .nav-links a:hover { color:var(--text); }
+  .nav-links a.btn-solid { font-size:14px; padding:11px 24px; margin-left:14px; color:var(--void); }
+  .nav-links a.btn-solid:hover { color:var(--text); }
+  .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:10px; }
+  .burger span { width:22px; height:2px; background:var(--text); display:block; }
+  .mobile-menu { display:none; flex-direction:column; padding:8px 28px 24px; border-top:1px solid var(--hairline); }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-size:16px; font-weight:500; color:var(--text); text-decoration:none; padding:13px 0; border-bottom:1px solid var(--hairline); }
+  .mobile-menu a.btn-solid { color:var(--void); text-align:center; margin-top:16px; border-bottom:none; }
+
+  /* ============ HERO ============ */
+  .hero { position:relative; min-height:70vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; }
+  .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding-top:100px; padding-bottom:90px; }
+  .hero h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin:0 auto 24px; max-width:22ch; }
+  .lede { color:var(--muted); max-width:60ch; margin:0 auto; font-size:17px; }
+  .hero-ctas { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:40px; }
+
+  /* ============ COMPARISON — hairline table / stacked rows ============ */
+  .compare { padding:90px 0 100px; background:var(--void-2); border-top:1px solid var(--hairline); }
+  table { width:100%; border-collapse:collapse; font-size:14px; border-top:1px solid var(--hairline); }
+  th, td { padding:20px 18px 20px 0; text-align:left; vertical-align:top; border-bottom:1px solid var(--hairline); }
+  thead th { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); padding-top:16px; padding-bottom:16px; }
+  td b { color:var(--text); font-weight:600; }
+  .opt { font-family:var(--serif); font-weight:500; font-size:19px; letter-spacing:-0.01em; line-height:1.25; color:var(--text); }
+  .cost { color:var(--accent-2); font-weight:600; }
+  .bad { color:var(--muted); }
+  tr.us td { border-bottom:1px solid rgba(139,92,246,0.4); border-top:1px solid rgba(139,92,246,0.4); }
+  tr.us td:first-child { box-shadow:inset 2px 0 0 var(--accent); padding-left:16px; }
+  .note { font-size:12.5px; color:var(--muted); margin-top:18px; max-width:70ch; }
+
+  /* ============ VERDICT ============ */
+  .verdict { margin-top:70px; border-top:1px solid var(--text); padding-top:36px; max-width:760px; }
+  .verdict h2 { font-size:clamp(26px, 1.2rem + 1.8vw, 40px); margin-bottom:16px; }
+  .verdict p { color:var(--muted); font-size:15.5px; }
+  .verdict b { color:var(--text); font-weight:600; }
+  .cta-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:32px; }
+
+  /* Consent banner (injected by midnight.js) */
+  .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
+  .mid-consent.show { display:flex; }
+  .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(18,10,36,0.97); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:16px 20px; }
+  .mid-consent-inner p { font-size:13px; line-height:1.55; color:rgba(238,232,255,0.85); margin:0; flex:1 1 320px; }
+  .mid-consent-inner strong { color:#EEE8FF; }
+  .mid-consent-btns { display:flex; gap:10px; align-items:center; }
+  .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
+  .mid-consent-accept { background:#EEE8FF; color:#0C0618; }
+  .mid-consent-decline { background:transparent; color:rgba(238,232,255,0.6); border:1px solid rgba(238,232,255,0.2) !important; }
+  .mid-consent-inner a { color:#A78BFA; font-size:12px; }
+
+  /* iOS zooms the page when focusing inputs under 16px — keep fields at 16px on touch widths */
   @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
-  </style>
-  <link rel="stylesheet" href="/midnight.css?v=8">
+
+  /* ============ FOOTER ============ */
+  footer { padding:44px 0; border-top:1px solid var(--hairline); background:var(--void); }
+  .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+  .footer-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+  .footer-logo img { height:24px; }
+  .footer-logo b { font-weight:700; font-size:15px; }
+  .footer-nav { display:flex; gap:22px; list-style:none; flex-wrap:wrap; }
+  .footer-nav a { font-size:13.5px; color:var(--muted); text-decoration:none; }
+  .footer-nav a:hover { color:var(--text); }
+  .footer-right { font-size:12.5px; color:var(--muted); }
+  .fc-head { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .fc-row { display:flex; align-items:center; gap:8px; justify-content:flex-end; margin-bottom:7px; font-size:13px; text-decoration:none; color:var(--muted); transition:color .15s; }
+  .fc-row:hover { color:var(--text); }
+  .fc-wa { color:#25D366 !important; }
+  .footer-copy { font-size:12.5px; color:var(--muted); margin-top:4px; }
+
+  @media (max-width: 520px) {
+    .hero h1 { font-size:clamp(32px, 9.6vw, 46px); }
+    .lede { font-size:16px; }
+  }
+  @media(max-width:768px) {
+    .nav-links { display:none; } .burger { display:flex; }
+    .hero-inner { padding-top:80px; padding-bottom:80px; }
+  }
+  /* Stacked hairline rows on narrow screens — the table never scrolls sideways */
+  @media(max-width:760px) {
+    table, tbody, tr, td { display:block; width:100%; }
+    table { border-top:none; }
+    thead { display:none; }
+    tr { border-top:1px solid var(--hairline); padding:26px 0; }
+    tr.us { border-top:1px solid rgba(139,92,246,0.4); border-bottom:1px solid rgba(139,92,246,0.4); }
+    td { border-bottom:none; padding:7px 0; }
+    tr.us td, tr.us td:first-child { border:none; box-shadow:none; padding-left:0; }
+    td.opt { font-size:21px; padding-bottom:10px; }
+    td[data-l="Typical cost"]::before, td[data-l="What actually happens"]::before, td[data-l="Honest fit"]::before {
+      content:attr(data-l); display:block; font-size:10px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+  }
+  @media(max-width:700px) {
+    .footer-inner { flex-direction:column; align-items:flex-start; }
+    .footer-right { text-align:left; }
+    .fc-row { justify-content:flex-start; }
+  }
+</style>
 </head>
 <body>
 
-<nav class="nav"><div class="container nav-in">
-  <a class="logo" href="/index.html">Kaizen<span>Evol</span></a>
-  <a class="cta" href="/kaizendesk.html">See KaizenDesk</a>
-</div></nav>
+<nav>
+  <div class="container nav-inner">
+    <a class="nav-logo" href="/index.html">
+      <img src="/logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <b>KaizenEvol</b>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/kaizenreach.html">KaizenReach</a></li>
+      <li><a href="/kaizendesk.html">KaizenDesk</a></li>
+      <li><a href="/kaizenforge.html">KaizenForge</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+      <li><a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a></li>
+    </ul>
+    <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/kaizenreach.html">KaizenReach</a>
+    <a href="/kaizendesk.html">KaizenDesk</a>
+    <a href="/kaizenforge.html">KaizenForge</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
+  </div>
+</nav>
 
-<header class="container">
-  <h1>Five ways to stop missing enquiries. <em>One honest comparison.</em></h1>
-  <p class="lede">Every option below genuinely works for somebody. Here's what each really costs, what it really does, and who it's really for — so you can pick with your eyes open.</p>
+<header class="hero">
+  <div class="hero-inner container">
+    <h1>Five ways to stop missing enquiries. <em>One honest comparison.</em></h1>
+    <p class="lede">Every option below genuinely works for somebody. Here's what each really costs, what it really does, and who it's really for — so you can pick with your eyes open.</p>
+    <div class="hero-ctas">
+      <a class="btn-solid" href="/kaizendesk.html">See KaizenDesk</a>
+    </div>
+  </div>
 </header>
 
-<section class="container">
-  <div class="tbl-wrap">
+<section class="compare">
+  <div class="container">
   <table>
     <thead><tr><th>Option</th><th>Typical cost</th><th>What actually happens</th><th>Honest fit</th></tr></thead>
     <tbody>
@@ -117,76 +226,71 @@
         <td data-l="Honest fit" class="bad">Owners who enjoy running software.</td>
       </tr>
       <tr class="us">
-        <td data-l="Option" class="opt">A managed front office<br><span style="color:var(--purple-light)">(KaizenDesk)</span></td>
+        <td data-l="Option" class="opt">A managed front office<br><span style="color:var(--accent-2)">(KaizenDesk)</span></td>
         <td data-l="Typical cost" class="cost">Quoted on a call</td>
         <td data-l="What actually happens">We install, tune and watch it for you. Every call, text and email answered 24/7, qualified and booked — <b>and any month it catches nothing you'd have missed, the next month's on us.</b> Cancel anytime.</td>
         <td data-l="Honest fit"><b>When one missed job costs more than the fix.</b></td>
       </tr>
     </tbody>
   </table>
-  </div>
   <p class="note">*Answering-service figures based on published per-minute rates (£1.10–£2.35/min), 24/7 surcharges and setup fees across the main UK providers, as of July 2026. Voicemail abandonment: Forbes/Hiya consumer research, widely cited. We'll happily show our working.</p>
 
   <div class="verdict">
     <h2>The honest verdict</h2>
     <p>We're never the cheapest row on that table — the £30 software is, and if you've got the evenings to run it, it's a fair buy. We're the only row that <b>puts its promise in writing</b>: any month the Desk doesn't catch you business you'd otherwise have missed, the next month's on us — and you can cancel anytime. Named people, nothing sent you wouldn't approve. If your average job is small, tell us — we'll say so if the maths doesn't work for you. That's the same honesty the guarantee runs on.</p>
     <div class="cta-row">
-      <a class="btn" href="/kaizendesk.html">See how KaizenDesk works</a>
-      <a class="btn ghost" href="/index.html#contact">Talk to us first</a>
+      <a class="btn-solid" href="/kaizendesk.html">See how KaizenDesk works</a>
+      <a class="btn-quiet" href="/index.html#contact">Talk to us first</a>
     </div>
+  </div>
   </div>
 </section>
 
-<footer class="footer">
-  <div class="container">
-    <div class="footer-inner">
-      <a class="footer-logo" href="/index.html">
-        <img src="/logo.png" alt="KaizenEvol" width="28" height="28" onerror="this.style.display='none'">
-        <span class="footer-logo-text">KaizenEvol</span>
-      </a>
-      <ul class="footer-nav">
-        <li><a href="/index.html">Home</a></li>
-        <li><a href="/kaizenreach.html">KaizenReach</a></li>
-        <li><a href="/kaizendesk.html">KaizenDesk</a></li>
+<footer>
+  <div class="container footer-inner">
+    <a class="footer-logo" href="/index.html"><img src="/logo.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
+    <ul class="footer-nav">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/kaizenreach.html">KaizenReach</a></li>
+      <li><a href="/kaizendesk.html">KaizenDesk</a></li>
       <li><a href="/kaizenforge.html">KaizenForge</a></li>
-        <li><a href="/about.html">About</a></li>
-        <li><a href="/faq.html">FAQ</a></li>
-        <li><a href="/privacy.html">Privacy</a></li>
-      </ul>
-      <div class="footer-right">
-        <div class="fc-head">Contact Us</div>
-        <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
-        <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>WhatsApp Us</a>
-        <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
-      </div>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/kaizendesk.html#faq">FAQ</a></li>
+      <li><a href="/privacy.html">Privacy</a></li>
+    </ul>
+    <div class="footer-right">
+      <div class="fc-head">Contact Us</div>
+      <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
+      <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>WhatsApp Us</a>
+      <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
     </div>
   </div>
 </footer>
 
-
-
-
-  <script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
 <div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(8,6,15,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
-  <div style="background:var(--surface,#141228);border:1px solid rgba(109,63,192,0.4);border-radius:18px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+  <div style="background:var(--void-2,#120A24);border:1px solid rgba(238,232,255,0.25);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
     <div style="font-weight:700;font-size:16px;margin-bottom:18px">Who would you like to message?</div>
-    <a href="https://wa.me/447423235232?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:12px;padding:13px 16px;text-decoration:none;margin-bottom:10px">Diego <span style="display:block;font-size:12px;font-weight:500;opacity:.8">New enquiries &amp; getting started</span></a>
-    <a href="https://wa.me/447364109609?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:rgba(37,211,102,0.14);color:#25D366;border:1px solid rgba(37,211,102,0.45);font-weight:700;border-radius:12px;padding:13px 16px;text-decoration:none">Rahaid <span style="display:block;font-size:12px;font-weight:500;opacity:.8">Projects &amp; everything else</span></a>
+    <a href="https://wa.me/447423235232?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">Diego <span style="display:block;font-size:12px;font-weight:500;opacity:.8">New enquiries &amp; getting started</span></a>
+    <a href="https://wa.me/447364109609?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:rgba(37,211,102,0.14);color:#25D366;border:1px solid rgba(37,211,102,0.45);font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none">Rahaid <span style="display:block;font-size:12px;font-weight:500;opacity:.8">Projects &amp; everything else</span></a>
     <button id="waClose" style="margin-top:16px;background:none;border:none;color:rgba(238,232,255,0.55);font-size:13px;cursor:pointer;font-family:inherit">Close</button>
   </div>
 </div>
-<style>
-  .fc-head{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(238,232,255,0.45);margin-bottom:8px}
-  .fc-row{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:7px;font-size:13px;text-decoration:none}
-  .fc-wa{color:#25D366 !important}
-  @media(max-width:700px){.fc-row{justify-content:center}}
-</style>
 <script>
 (function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
 if(!o||!m)return;o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
 c.addEventListener('click',function(){m.style.display='none';});
 m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
+</script>
+<script>
+(function () {
+  var b = document.getElementById('burgerBtn'), m = document.getElementById('mobileMenu');
+  b.addEventListener('click', function () {
+    var open = m.classList.toggle('open');
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
 </script>
 <script src="/midnight.js?v=8" defer></script>
 </body>

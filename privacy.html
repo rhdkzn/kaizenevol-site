@@ -14,167 +14,250 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0D0B1A; --surface:#141228; --border:rgba(109,63,192,0.18); --border-hover:rgba(109,63,192,0.42);
-    --purple:#6D3FC0; --purple-bright:#8B5CF6; --purple-light:#A78BFA;
-    --text:#EEE8FF; --muted:rgba(238,232,255,0.62); --white:#fff;
-    --radius-card:14px; --radius-pill:9999px; --max-w:1080px;
+  @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
+  @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
+
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+  :root {
+    --void:      #0C0618;
+    --void-2:    #120A24;
+    --text:      #EEE8FF;
+    --muted:     rgba(238,232,255,0.56);
+    --hairline:  rgba(238,232,255,0.1);
+    --accent:    #8B5CF6;
+    --accent-2:  #A78BFA;
+    --serif:     'Fraunces', Georgia, 'Times New Roman', serif;
+    --sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+    --max-w:     1140px;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
-  .container{max-width:var(--max-w);margin:0 auto;padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}
-  a{color:var(--purple-light);text-decoration:none;transition:color .2s}
-  a:hover{color:var(--purple-bright)}
-  /* top bar */
-  .topbar{border-bottom:1px solid var(--border);padding:18px 0;position:sticky;top:0;background:rgba(13,11,26,.82);backdrop-filter:blur(10px);z-index:10}
-  .topbar-inner{display:flex;align-items:center;justify-content:space-between}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--text)}
-  .brand img{border-radius:6px}
-  .back{font-size:14px;font-weight:600}
-  /* content */
-  main{padding:56px 0 72px}
-  .eyebrow{color:var(--purple-light);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-  h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.02em;line-height:1.05;margin-bottom:10px}
-  .updated{color:var(--muted);font-size:14px;margin-bottom:40px}
-  .intro{color:var(--muted);font-size:1.05rem;max-width:70ch;margin-bottom:44px}
-  section.block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);padding:26px 28px;margin-bottom:18px;max-width:80ch}
-  h2{font-size:1.25rem;font-weight:700;margin-bottom:12px;letter-spacing:-.01em}
-  p{color:var(--muted);margin-bottom:12px}
-  p:last-child{margin-bottom:0}
-  strong{color:var(--text);font-weight:600}
-  ul{list-style:none;margin:6px 0 12px}
-  li{color:var(--muted);padding-left:22px;position:relative;margin-bottom:8px}
-  li::before{content:'';position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--purple-bright)}
-  /* footer */
-  .footer{background:var(--surface);border-top:1px solid var(--border);padding:40px 0 max(40px,calc(24px + env(safe-area-inset-bottom)));margin-top:40px}
-  .footer-inner{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
-  .footer-logo{display:flex;align-items:center;gap:10px;color:var(--text);font-weight:700}
-  .footer-nav{display:flex;gap:4px;list-style:none;flex-wrap:wrap}
-  .footer-nav li{padding:0;margin:0}
-  .footer-nav li::before{display:none}
-  .footer-nav a{padding:6px 12px;font-size:14px;color:var(--muted);border-radius:var(--radius-pill)}
-  .footer-nav a:hover{color:var(--text);background:var(--border)}
-  .footer-right{text-align:right}
-  .footer-copy{color:var(--muted);font-size:13px;margin-top:4px}
-  @media(max-width:640px){.footer-inner{flex-direction:column;align-items:flex-start}.footer-right{text-align:left}}
+
+  html { scroll-behavior:smooth; overflow-x:clip; }
+  body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
+  p { text-wrap:pretty; }
+  .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
+
+  h1,h2,h3 { font-family:var(--serif); font-weight:500; letter-spacing:-0.01em; line-height:1.06; text-wrap:balance; }
+  h1 em, h2 em { font-style:italic; color:var(--accent-2); }
+
+  .smallcaps { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+  .smallcaps.accent { color:var(--accent); }
+
+  .btn-solid { display:inline-block; background:var(--text); color:var(--void); font-weight:600; font-size:15px;
+    padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--text); transition:background .18s,color .18s; cursor:pointer; }
+  .btn-solid:hover { background:transparent; color:var(--text); }
+  .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:15px;
+    padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
+  .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
+
+  /* ============ NAV ============ */
+  nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
+  .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
+  .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
+  .nav-logo img { height:30px; width:auto; }
+  .nav-logo b { font-weight:700; font-size:17px; letter-spacing:-0.02em; }
+  .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
+  .nav-links a { font-size:14.5px; font-weight:500; color:var(--muted); text-decoration:none; padding:8px 14px; transition:color .15s; }
+  .nav-links a:hover { color:var(--text); }
+  .nav-links a.btn-solid { font-size:14px; padding:11px 24px; margin-left:14px; color:var(--void); }
+  .nav-links a.btn-solid:hover { color:var(--text); }
+  .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:10px; }
+  .burger span { width:22px; height:2px; background:var(--text); display:block; }
+  .mobile-menu { display:none; flex-direction:column; padding:8px 28px 24px; border-top:1px solid var(--hairline); }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-size:16px; font-weight:500; color:var(--text); text-decoration:none; padding:13px 0; border-bottom:1px solid var(--hairline); }
+  .mobile-menu a.btn-solid { color:var(--void); text-align:center; margin-top:16px; border-bottom:none; }
+
+  /* ============ LEGAL — editorial article ============ */
+  .legal { padding:96px 0 110px; background:var(--void); }
+  .legal-measure { max-width:70ch; }
+  .back-link { display:inline-block; font-size:13.5px; font-weight:600; color:var(--muted); text-decoration:none; margin-bottom:34px; transition:color .15s; }
+  .back-link:hover { color:var(--text); }
+  .legal-head .smallcaps { display:block; margin-bottom:16px; }
+  .legal h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin-bottom:16px; }
+  .updated { color:var(--muted); font-size:14px; margin-bottom:40px; }
+  .intro { color:var(--muted); font-size:17px; margin-bottom:64px; }
+  .legal-block { border-top:1px solid var(--hairline); padding:44px 0; }
+  .legal-block:last-child { padding-bottom:0; }
+  .legal-block h2 { font-size:clamp(24px, 1.1rem + 1.4vw, 32px); margin-bottom:16px; }
+  .legal-block p { font-size:15.5px; color:var(--muted); margin-bottom:14px; }
+  .legal-block p:last-child { margin-bottom:0; }
+  .legal-block strong { color:var(--text); font-weight:600; }
+  .legal-block a { color:var(--accent-2); text-decoration:none; border-bottom:1px solid rgba(167,139,250,0.35); transition:color .15s,border-color .15s; }
+  .legal-block a:hover { color:var(--text); border-color:var(--text); }
+  .legal-block ul { list-style:none; display:flex; flex-direction:column; gap:10px; margin:8px 0 16px; }
+  .legal-block li { font-size:15px; color:var(--muted); padding-left:22px; position:relative; line-height:1.55; }
+  .legal-block li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
+
+  /* Consent banner (injected by midnight.js) */
+  .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
+  .mid-consent.show { display:flex; }
+  .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(18,10,36,0.97); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:16px 20px; }
+  .mid-consent-inner p { font-size:13px; line-height:1.55; color:rgba(238,232,255,0.85); margin:0; flex:1 1 320px; }
+  .mid-consent-inner strong { color:#EEE8FF; }
+  .mid-consent-btns { display:flex; gap:10px; align-items:center; }
+  .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
+  .mid-consent-accept { background:#EEE8FF; color:#0C0618; }
+  .mid-consent-decline { background:transparent; color:rgba(238,232,255,0.6); border:1px solid rgba(238,232,255,0.2) !important; }
+  .mid-consent-inner a { color:#A78BFA; font-size:12px; }
+
+  /* iOS zooms the page when focusing inputs under 16px — keep fields at 16px on touch widths */
   @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
-  </style>
-  <style id="ke-fraunces">
-    @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;src:url('/fraunces.woff2') format('woff2');}
-    @font-face{font-family:'Fraunces';font-style:italic;font-weight:400 700;font-display:swap;src:url('/fraunces-italic.woff2') format('woff2');}
-    h1,h2{font-family:'Fraunces',Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:-0.01em;}
-    h1 em,h2 em{font-style:italic;}
-  </style>
-  <link rel="stylesheet" href="/midnight.css?v=8">
+
+  /* ============ FOOTER ============ */
+  footer { padding:44px 0; border-top:1px solid var(--hairline); background:var(--void); }
+  .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+  .footer-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+  .footer-logo img { height:24px; }
+  .footer-logo b { font-weight:700; font-size:15px; }
+  .footer-nav { display:flex; gap:22px; list-style:none; flex-wrap:wrap; }
+  .footer-nav a { font-size:13.5px; color:var(--muted); text-decoration:none; }
+  .footer-nav a:hover { color:var(--text); }
+  .footer-right { font-size:12.5px; color:var(--muted); }
+  .fc-head { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .fc-row { display:flex; align-items:center; gap:8px; justify-content:flex-end; margin-bottom:7px; font-size:13px; text-decoration:none; color:var(--muted); transition:color .15s; }
+  .fc-row:hover { color:var(--text); }
+  .fc-wa { color:#25D366 !important; }
+  .footer-copy { font-size:12.5px; color:var(--muted); margin-top:4px; }
+
+  @media (max-width: 520px) {
+    .legal h1 { font-size:clamp(34px, 9.6vw, 48px); }
+  }
+  @media(max-width:768px) {
+    .nav-links { display:none; } .burger { display:flex; }
+    .legal { padding:72px 0 90px; }
+  }
+  @media(max-width:700px) {
+    .footer-inner { flex-direction:column; align-items:flex-start; }
+    .footer-right { text-align:left; }
+    .fc-row { justify-content:flex-start; }
+  }
+</style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="container topbar-inner">
-    <a class="brand" href="index.html">
-      <img src="logo.png" alt="KaizenEvol" width="28" height="28" onerror="this.style.display='none'">
-      <span>KaizenEvol</span>
+<nav>
+  <div class="container nav-inner">
+    <a class="nav-logo" href="index.html">
+      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <b>KaizenEvol</b>
     </a>
-    <a class="back" href="index.html">← Back to site</a>
+    <ul class="nav-links">
+      <li><a href="kaizenreach.html">KaizenReach</a></li>
+      <li><a href="kaizendesk.html">KaizenDesk</a></li>
+      <li><a href="kaizenforge.html">KaizenForge</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a></li>
+    </ul>
+    <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
-</div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="kaizenreach.html">KaizenReach</a>
+    <a href="kaizendesk.html">KaizenDesk</a>
+    <a href="kaizenforge.html">KaizenForge</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
+  </div>
+</nav>
 
-<main>
+<main class="legal">
   <div class="container">
-    <p class="eyebrow">Legal</p>
-    <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 7 July 2026</p>
-    <p class="intro">KaizenEvol ("we", "us") respects your privacy. This policy explains what we collect when you contact us through this website, why we collect it, and the rights you have over your data under UK GDPR.</p>
+    <div class="legal-measure">
+      <a class="back-link" href="index.html">← Back to site</a>
+      <div class="legal-head"><span class="smallcaps accent">Legal</span></div>
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: 7 July 2026</p>
+      <p class="intro">KaizenEvol ("we", "us") respects your privacy. This policy explains what we collect when you contact us through this website, why we collect it, and the rights you have over your data under UK GDPR.</p>
 
-    <section class="block">
-      <h2>What we collect</h2>
-      <p>When you submit an enquiry or lead form on this site, we collect the details you provide — typically your <strong>name, business name, email address, phone number, and any message</strong> you send us. We do not ask for sensitive personal information.</p>
-      <p>This site does <strong>not</strong> currently use advertising or analytics cookies, and sets no tracking cookies. Only essential cookies needed for the site to function may be used. If we add advertising measurement in future, we will ask for your consent first and update this policy.</p>
-    </section>
+      <section class="legal-block">
+        <h2>What we collect</h2>
+        <p>When you submit an enquiry or lead form on this site, we collect the details you provide — typically your <strong>name, business name, email address, phone number, and any message</strong> you send us. We do not ask for sensitive personal information.</p>
+        <p>This site does <strong>not</strong> currently use advertising or analytics cookies, and sets no tracking cookies. Only essential cookies needed for the site to function may be used. If we add advertising measurement in future, we will ask for your consent first and update this policy.</p>
+      </section>
 
-    <section class="block">
-      <h2>Why we collect it</h2>
-      <p>We use your details for one purpose: to <strong>respond to your enquiry</strong> — to reply, arrange a call, and provide a quote or proposal for our services (KaizenReach, KaizenDesk, KaizenForge).</p>
-      <p>Our lawful basis is <strong>legitimate interest</strong> (responding to an enquiry you initiated) and, where relevant in future, <strong>consent</strong> (for any advertising cookies).</p>
-    </section>
+      <section class="legal-block">
+        <h2>Why we collect it</h2>
+        <p>We use your details for one purpose: to <strong>respond to your enquiry</strong> — to reply, arrange a call, and provide a quote or proposal for our services (KaizenReach, KaizenDesk, KaizenForge).</p>
+        <p>Our lawful basis is <strong>legitimate interest</strong> (responding to an enquiry you initiated) and, where relevant in future, <strong>consent</strong> (for any advertising cookies).</p>
+      </section>
 
-    <section class="block">
-      <h2>Who we share it with</h2>
-      <p>We do not sell your data. Your enquiry is handled by KaizenEvol (Rahaid and Diego). We use a small number of trusted service providers to run the site and store enquiries securely:</p>
-      <ul>
-        <li><strong>Vercel</strong> — website hosting</li>
-        <li><strong>Supabase</strong> — secure storage of enquiry details</li>
-        <li><strong>Resend</strong> — email delivery of enquiry notifications to us</li>
-      </ul>
-      <p>These providers process data only on our instructions and under their own data-protection terms.</p>
-    </section>
+      <section class="legal-block">
+        <h2>Who we share it with</h2>
+        <p>We do not sell your data. Your enquiry is handled by KaizenEvol (Rahaid and Diego). We use a small number of trusted service providers to run the site and store enquiries securely:</p>
+        <ul>
+          <li><strong>Vercel</strong> — website hosting</li>
+          <li><strong>Supabase</strong> — secure storage of enquiry details</li>
+          <li><strong>Resend</strong> — email delivery of enquiry notifications to us</li>
+        </ul>
+        <p>These providers process data only on our instructions and under their own data-protection terms.</p>
+      </section>
 
-    <section class="block">
-      <h2>How long we keep it</h2>
-      <p>We keep enquiry details for up to <strong>12 months</strong> after your last contact with us, then delete them — unless you become a client, in which case we keep the records needed to provide our service and meet legal obligations.</p>
-    </section>
+      <section class="legal-block">
+        <h2>How long we keep it</h2>
+        <p>We keep enquiry details for up to <strong>12 months</strong> after your last contact with us, then delete them — unless you become a client, in which case we keep the records needed to provide our service and meet legal obligations.</p>
+      </section>
 
-    <section class="block">
-      <h2>Your rights</h2>
-      <p>Under UK GDPR you have the right to <strong>access, correct, delete, or object to</strong> our use of your personal data, and to withdraw consent at any time. To exercise any of these, email us at <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a> and we will respond within one month.</p>
-      <p>If you are unhappy with how we handle your data, you can complain to the UK Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
-    </section>
+      <section class="legal-block">
+        <h2>Your rights</h2>
+        <p>Under UK GDPR you have the right to <strong>access, correct, delete, or object to</strong> our use of your personal data, and to withdraw consent at any time. To exercise any of these, email us at <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a> and we will respond within one month.</p>
+        <p>If you are unhappy with how we handle your data, you can complain to the UK Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+      </section>
 
-    <section class="block">
-      <h2>Contact</h2>
-      <p>Questions about this policy or your data? Email <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a>.</p>
-    </section>
+      <section class="legal-block">
+        <h2>Contact</h2>
+        <p>Questions about this policy or your data? Email <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a>.</p>
+      </section>
+    </div>
   </div>
 </main>
 
-<footer class="footer">
-  <div class="container">
-    <div class="footer-inner">
-      <a class="footer-logo" href="index.html">
-        <img src="logo.png" alt="KaizenEvol" width="28" height="28" onerror="this.style.display='none'">
-        <span class="footer-logo-text">KaizenEvol</span>
-      </a>
-      <ul class="footer-nav">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="kaizenreach.html">KaizenReach</a></li>
-        <li><a href="kaizendesk.html">KaizenDesk</a></li>
-        <li><a href="kaizenforge.html">KaizenForge</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="privacy.html">Privacy</a></li>
-      </ul>
-      <div class="footer-right">
-        <div class="fc-head">Contact Us</div>
-        <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
-        <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>WhatsApp Us</a>
-        <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
-      </div>
+<footer>
+  <div class="container footer-inner">
+    <a class="footer-logo" href="index.html"><img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
+    <ul class="footer-nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="kaizenreach.html">KaizenReach</a></li>
+      <li><a href="kaizendesk.html">KaizenDesk</a></li>
+      <li><a href="kaizenforge.html">KaizenForge</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+    </ul>
+    <div class="footer-right">
+      <div class="fc-head">Contact Us</div>
+      <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
+      <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>WhatsApp Us</a>
+      <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
     </div>
   </div>
 </footer>
 
-  <script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
 <div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(8,6,15,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
-  <div style="background:var(--surface,#141228);border:1px solid rgba(109,63,192,0.4);border-radius:18px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+  <div style="background:var(--void-2,#120A24);border:1px solid rgba(238,232,255,0.25);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
     <div style="font-weight:700;font-size:16px;margin-bottom:18px">Who would you like to message?</div>
-    <a href="https://wa.me/447423235232?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:12px;padding:13px 16px;text-decoration:none;margin-bottom:10px">Diego <span style="display:block;font-size:12px;font-weight:500;opacity:.8">New enquiries &amp; getting started</span></a>
-    <a href="https://wa.me/447364109609?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:rgba(37,211,102,0.14);color:#25D366;border:1px solid rgba(37,211,102,0.45);font-weight:700;border-radius:12px;padding:13px 16px;text-decoration:none">Rahaid <span style="display:block;font-size:12px;font-weight:500;opacity:.8">Projects &amp; everything else</span></a>
+    <a href="https://wa.me/447423235232?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">Diego <span style="display:block;font-size:12px;font-weight:500;opacity:.8">New enquiries &amp; getting started</span></a>
+    <a href="https://wa.me/447364109609?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:rgba(37,211,102,0.14);color:#25D366;border:1px solid rgba(37,211,102,0.45);font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none">Rahaid <span style="display:block;font-size:12px;font-weight:500;opacity:.8">Projects &amp; everything else</span></a>
     <button id="waClose" style="margin-top:16px;background:none;border:none;color:rgba(238,232,255,0.55);font-size:13px;cursor:pointer;font-family:inherit">Close</button>
   </div>
 </div>
-<style>
-  .fc-head{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(238,232,255,0.45);margin-bottom:8px}
-  .fc-row{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:7px;font-size:13px;text-decoration:none}
-  .fc-wa{color:#25D366 !important}
-  @media(max-width:700px){.fc-row{justify-content:center}}
-</style>
 <script>
 (function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
 if(!o||!m)return;o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
 c.addEventListener('click',function(){m.style.display='none';});
 m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
+</script>
+<script>
+(function () {
+  var b = document.getElementById('burgerBtn'), m = document.getElementById('mobileMenu');
+  b.addEventListener('click', function () {
+    var open = m.classList.toggle('open');
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
 </script>
 <script src="/midnight.js?v=8" defer></script>
 </body>

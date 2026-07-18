@@ -11,70 +11,199 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;src:url('/fraunces.woff2') format('woff2');}
-    @font-face{font-family:'Fraunces';font-style:italic;font-weight:400 700;font-display:swap;src:url('/fraunces-italic.woff2') format('woff2');}
-    :root{
-      --bg:#0D0B1A; --surface:#141228; --surface-2:#1C1836;
-      --purple:#6D3FC0; --purple-bright:#8B5CF6; --purple-light:#A78BFA;
-      --text:#EEE8FF; --muted:rgba(238,232,255,0.62); --white:#fff;
-      --border:rgba(109,63,192,0.18); --border-hover:rgba(109,63,192,0.42);
-      --radius-card:14px; --radius-pill:9999px; --ease:cubic-bezier(0.16,1,0.3,1);
+    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
+    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+    :root {
+      --void:      #0C0618;
+      --void-2:    #120A24;
+      --text:      #EEE8FF;
+      --muted:     rgba(238,232,255,0.56);
+      --hairline:  rgba(238,232,255,0.1);
+      --accent:    #8B5CF6;
+      --accent-2:  #A78BFA;
+      --serif:     'Fraunces', Georgia, 'Times New Roman', serif;
+      --sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+      --max-w:     1140px;
     }
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);
-      line-height:1.6;min-height:100vh;display:flex;flex-direction:column;align-items:center;
-      padding:32px 24px;-webkit-font-smoothing:antialiased;
-      background-image:radial-gradient(900px 500px at 50% -10%,rgba(109,63,192,0.28),transparent 65%);}
-    h1,h2{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:-0.02em;line-height:1.08;}
-    em{font-style:italic;color:var(--purple-light);}
-    .brand{font-weight:800;font-size:17px;letter-spacing:-0.01em;margin:8px 0 40px;color:var(--white);}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:20px;
-      max-width:600px;width:100%;padding:44px 40px;box-shadow:0 8px 40px rgba(109,63,192,0.25);text-align:center;}
-    .tick{width:64px;height:64px;border-radius:50%;background:rgba(109,63,192,0.16);border:1px solid var(--border-hover);
-      display:flex;align-items:center;justify-content:center;margin:0 auto 24px;}
-    .tick svg{width:30px;height:30px;stroke:var(--purple-light);stroke-width:2.5;fill:none;}
-    h1{font-size:clamp(28px,5vw,38px);margin-bottom:12px;}
-    .lede{color:var(--muted);font-size:16px;max-width:44ch;margin:0 auto 32px;}
-    .kicker{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-light);margin-bottom:18px;}
-    .prep{text-align:left;display:flex;flex-direction:column;gap:14px;margin-bottom:34px;}
-    .prep-item{display:flex;gap:14px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--border);
-      border-radius:var(--radius-card);padding:16px 18px;}
-    .prep-item .n{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:var(--purple-light);min-width:22px;}
-    .prep-item .t{font-size:14px;color:var(--text);}
-    .prep-item .t b{font-weight:700;}
-    .prep-item .t span{color:var(--muted);}
-    .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-    .btn{display:inline-block;text-decoration:none;font-weight:700;font-size:15px;padding:13px 26px;border-radius:var(--radius-pill);transition:all 0.2s var(--ease);}
-    .btn-primary{background:var(--purple);color:#fff;}
-    .btn-primary:hover{background:var(--purple-bright);transform:translateY(-2px);}
-    .btn-ghost{border:1px solid var(--border-hover);color:var(--muted);}
-    .btn-ghost:hover{color:var(--text);border-color:var(--purple-light);}
-    .note{margin-top:26px;font-size:13px;color:var(--muted);}
-    .note a{color:var(--purple-light);}
+
+    html { scroll-behavior:smooth; overflow-x:clip; }
+    body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
+    p { text-wrap:pretty; }
+    .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
+
+    h1,h2,h3 { font-family:var(--serif); font-weight:500; letter-spacing:-0.01em; line-height:1.06; text-wrap:balance; }
+    h1 em, h2 em { font-style:italic; color:var(--accent-2); }
+
+    .smallcaps { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+    .smallcaps.accent { color:var(--accent); }
+
+    .btn-solid { display:inline-block; background:var(--text); color:var(--void); font-weight:600; font-size:15px;
+      padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--text); transition:background .18s,color .18s; cursor:pointer; }
+    .btn-solid:hover { background:transparent; color:var(--text); }
+    .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:15px;
+      padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
+    .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
+
+    /* ============ NAV ============ */
+    nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
+    .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
+    .nav-logo img { height:30px; width:auto; }
+    .nav-logo b { font-weight:700; font-size:17px; letter-spacing:-0.02em; }
+    .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
+    .nav-links a { font-size:14.5px; font-weight:500; color:var(--muted); text-decoration:none; padding:8px 14px; transition:color .15s; }
+    .nav-links a:hover { color:var(--text); }
+    .nav-links a.btn-solid { font-size:14px; padding:11px 24px; margin-left:14px; color:var(--void); }
+    .nav-links a.btn-solid:hover { color:var(--text); }
+    .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:10px; }
+    .burger span { width:22px; height:2px; background:var(--text); display:block; }
+    .mobile-menu { display:none; flex-direction:column; padding:8px 28px 24px; border-top:1px solid var(--hairline); }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu a { font-size:16px; font-weight:500; color:var(--text); text-decoration:none; padding:13px 0; border-bottom:1px solid var(--hairline); }
+    .mobile-menu a.btn-solid { color:var(--void); text-align:center; margin-top:16px; border-bottom:none; }
+
+    /* ============ HERO — confirmation ============ */
+    .hero { position:relative; min-height:70vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; }
+    .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding-top:100px; padding-bottom:90px; }
+    .tick { width:64px; height:64px; border-radius:50%; border:1px solid rgba(139,92,246,0.4);
+      display:flex; align-items:center; justify-content:center; margin:0 auto 26px; }
+    .tick svg { width:30px; height:30px; stroke:var(--accent-2); stroke-width:2.5; fill:none; }
+    .hero-kicker { display:block; margin-bottom:22px; }
+    .hero h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin:0 auto 22px; max-width:16ch; }
+    .lede { color:var(--muted); font-size:17px; max-width:44ch; margin:0 auto; }
+
+    /* ============ PREP — editorial rows ============ */
+    .prep { padding:90px 0 100px; background:var(--void-2); border-top:1px solid var(--hairline); }
+    .prep-measure { max-width:720px; margin:0 auto; }
+    .prep-item { display:grid; grid-template-columns:64px 1fr; gap:28px; padding:36px 0; border-top:1px solid var(--hairline); align-items:start; }
+    .prep-item:first-child { border-top:none; padding-top:0; }
+    .prep-item .n { font-family:var(--serif); font-style:italic; font-size:38px; color:var(--accent); line-height:1; }
+    .prep-item .t { font-size:15.5px; }
+    .prep-item .t b { display:block; font-family:var(--serif); font-weight:500; font-size:21px; letter-spacing:-0.01em; line-height:1.2; margin-bottom:6px; color:var(--text); }
+    .prep-item .t span { color:var(--muted); }
+    .btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:52px; }
+    .note { margin-top:30px; font-size:13.5px; color:var(--muted); text-align:center; }
+    .note a { color:var(--accent-2); }
+
+    /* Consent banner (injected by midnight.js) */
+    .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
+    .mid-consent.show { display:flex; }
+    .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(18,10,36,0.97); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:16px 20px; }
+    .mid-consent-inner p { font-size:13px; line-height:1.55; color:rgba(238,232,255,0.85); margin:0; flex:1 1 320px; }
+    .mid-consent-inner strong { color:#EEE8FF; }
+    .mid-consent-btns { display:flex; gap:10px; align-items:center; }
+    .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
+    .mid-consent-accept { background:#EEE8FF; color:#0C0618; }
+    .mid-consent-decline { background:transparent; color:rgba(238,232,255,0.6); border:1px solid rgba(238,232,255,0.2) !important; }
+    .mid-consent-inner a { color:#A78BFA; font-size:12px; }
+
+    /* iOS zooms the page when focusing inputs under 16px — keep fields at 16px on touch widths */
     @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
+
+    /* ============ FOOTER ============ */
+    footer { padding:44px 0; border-top:1px solid var(--hairline); background:var(--void); }
+    .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+    .footer-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+    .footer-logo img { height:24px; }
+    .footer-logo b { font-weight:700; font-size:15px; }
+    .footer-nav { display:flex; gap:22px; list-style:none; flex-wrap:wrap; }
+    .footer-nav a { font-size:13.5px; color:var(--muted); text-decoration:none; }
+    .footer-nav a:hover { color:var(--text); }
+    .footer-right { font-size:12.5px; color:var(--muted); }
+
+    @media (max-width: 520px) {
+      .hero h1 { font-size:clamp(34px, 10vw, 52px); }
+      .lede { font-size:16px; }
+    }
+    @media(max-width:768px) {
+      .nav-links { display:none; } .burger { display:flex; }
+      .hero-inner { padding-top:80px; padding-bottom:80px; }
+      .prep-item { grid-template-columns:44px 1fr; gap:18px; }
+      .prep-item .n { font-size:30px; }
+    }
   </style>
-  <link rel="stylesheet" href="/midnight.css?v=8">
 </head>
 <body>
-  <div class="brand">KaizenEvol</div>
-  <div class="card">
-    <div class="tick"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></div>
-    <div class="kicker">You're booked</div>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="nav-logo" href="index.html">
+      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <b>KaizenEvol</b>
+    </a>
+    <ul class="nav-links">
+      <li><a href="kaizenreach.html">KaizenReach</a></li>
+      <li><a href="kaizendesk.html">KaizenDesk</a></li>
+      <li><a href="kaizenforge.html">KaizenForge</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a></li>
+    </ul>
+    <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="kaizenreach.html">KaizenReach</a>
+    <a href="kaizendesk.html">KaizenDesk</a>
+    <a href="kaizenforge.html">KaizenForge</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner container">
+    <div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg></div>
+    <span class="smallcaps accent hero-kicker">You're booked</span>
     <h1>Your call is <em>confirmed</em></h1>
     <p class="lede">Check your inbox for the calendar invite and video link. Here's how to make the fifteen minutes count.</p>
+  </div>
+</header>
 
-    <div class="prep">
+<section class="prep">
+  <div class="container">
+    <div class="prep-measure">
       <div class="prep-item"><div class="n">1</div><div class="t"><b>Know your numbers.</b> <span>Roughly how many enquiries you get a month, your average job value, and what you close. We'll show you what a full diary is worth.</span></div></div>
       <div class="prep-item"><div class="n">2</div><div class="t"><b>Come as you are.</b> <span>No prep, no deck to sit through. We diagnose the real problem before suggesting anything — this is a conversation, not a pitch.</span></div></div>
       <div class="prep-item"><div class="n">3</div><div class="t"><b>Bring your questions.</b> <span>Whatever's made you wary of agencies before. Straight answers, and a clear yes or no on whether we can help.</span></div></div>
-    </div>
 
-    <div class="btns">
-      <a class="btn btn-primary" href="/">Back to KaizenEvol</a>
-      <a class="btn btn-ghost" href="mailto:rahaid@kaizenevol.com">Email us a question</a>
+      <div class="btns">
+        <a class="btn-solid" href="/">Back to KaizenEvol</a>
+        <a class="btn-quiet" href="mailto:rahaid@kaizenevol.com">Email us a question</a>
+      </div>
+      <p class="note">Need to reschedule? Use the link in your confirmation email, or <a href="mailto:rahaid@kaizenevol.com">drop us a line</a>. See you soon.</p>
     </div>
-    <p class="note">Need to reschedule? Use the link in your confirmation email, or <a href="mailto:rahaid@kaizenevol.com">drop us a line</a>. See you soon.</p>
   </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="footer-logo" href="index.html"><img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
+    <ul class="footer-nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="kaizenreach.html">KaizenReach</a></li>
+      <li><a href="kaizendesk.html">KaizenDesk</a></li>
+      <li><a href="kaizenforge.html">KaizenForge</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+    </ul>
+    <div class="footer-right">&copy; 2026 KaizenEvol. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var b = document.getElementById('burgerBtn'), m = document.getElementById('mobileMenu');
+  b.addEventListener('click', function () {
+    var open = m.classList.toggle('open');
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+</script>
 <script src="/midnight.js?v=8" defer></script>
 </body>
 </html>
