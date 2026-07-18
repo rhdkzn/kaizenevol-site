@@ -6,17 +6,31 @@
    ============================================================ */
 
 :root {
-  --bg:             #150930;
-  --surface:        #1c0f3d;
-  --surface-2:      #241553;
-  --border:         rgba(139,92,246,0.18);
-  --border-hover:   rgba(139,92,246,0.5);
+  --bg:             #0C0618;
+  --surface:        #120A24;
+  --surface-2:      #1A1130;
+  --border:         rgba(238,232,255,0.1);
+  --border-hover:   rgba(238,232,255,0.3);
   --purple:         #6D3FC0;
   --purple-bright:  #8B5CF6;
   --purple-light:   #A78BFA;
   --mid-shadow-md:  0 2px 4px rgba(0,0,0,0.3), 0 12px 32px rgba(0,0,0,0.4);
   --mid-shadow-lg:  0 4px 10px rgba(0,0,0,0.35), 0 24px 60px rgba(0,0,0,0.5);
 }
+
+/* Midnight II (2026-07-18): marquee band retired sitewide — approved direction has no marquee */
+.marquee-band { display: none; }
+
+/* Navbar: floating pill flattened to a full-width editorial bar */
+.nav-wrap { top: 0; }
+.navbar { max-width: 100%; width: 100%; border-radius: 0; border-left: none; border-right: none; border-top: none;
+  background: rgba(12,6,24,0.85); height: 64px; padding: 0 24px; }
+
+/* Buttons: rectangles, ink-on-light primary */
+.btn-primary { border-radius: 4px; background: #EEE8FF; color: #0C0618; box-shadow: none; }
+.btn-primary:hover { background: #ffffff; color: #0C0618; box-shadow: none; }
+.btn-ghost { border-radius: 4px; }
+.btn-white { border-radius: 4px; }
 
 /* Editorial display type — Fraunces, bigger, tighter */
 @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
@@ -31,31 +45,22 @@ h1 em, h2 em { font-style: italic; }
 
 /* Ambient depth: unified gradients + grain (overrides index's own) */
 body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
-  background:radial-gradient(1000px 620px at 85% -10%, rgba(139,92,246,.12), transparent 62%),
-             radial-gradient(800px 560px at -12% 50%, rgba(109,63,192,.09), transparent 62%); }
+  background:radial-gradient(1000px 620px at 85% -10%, rgba(139,92,246,.08), transparent 62%),
+             radial-gradient(800px 560px at -12% 50%, rgba(109,63,192,.06), transparent 62%); }
 body::after { content:''; position:fixed; inset:0; z-index:2000; pointer-events:none; opacity:.04;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
 /* Hero: blueprint grid mask + room for the particle field */
 .hero { isolation: isolate; position: relative; }
-.hero::after { content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
-  background-image:linear-gradient(rgba(139,92,246,.055) 1px, transparent 1px),
-                   linear-gradient(90deg, rgba(139,92,246,.055) 1px, transparent 1px);
-  background-size:54px 54px;
-  -webkit-mask-image:radial-gradient(ellipse 75% 65% at 50% 28%, #000, transparent 72%);
-  mask-image:radial-gradient(ellipse 75% 65% at 50% 28%, #000, transparent 72%); }
 .mid-particles { position:absolute; inset:0; z-index:0; pointer-events:none; }
 .hero > .container, .hero-inner { position:relative; z-index:1; }
 
-/* Buttons: Midnight glow */
-.btn-primary { box-shadow: 0 4px 18px rgba(109,63,192,0.35); }
-.btn-primary:hover { box-shadow: 0 6px 26px rgba(139,92,246,0.5); }
-
-/* Cards: deeper radius + shadow, glow on hover */
+/* Cards: quiet editorial surfaces — hairlines, small radius, no glow */
 .svc-card, .step-card, .ind-card, .ai-card, .calc-wrap, .problem-callout {
-  border-radius: 22px; box-shadow: var(--mid-shadow-md); }
+  border-radius: 8px; box-shadow: none; }
 .svc-card:hover, .step-card:hover, .ind-card:hover {
-  box-shadow: var(--mid-shadow-lg); border-color: var(--border-hover); }
+  box-shadow: none; border-color: var(--border-hover); transform: none; }
+.svc-tag, .step-tag { border-radius: 4px; }
 
 /* Balanced feature grids — no orphan cards, no empty columns */
 .ai-grid:has(> .ai-card:nth-child(3):last-child) { grid-template-columns: repeat(3, 1fr); }

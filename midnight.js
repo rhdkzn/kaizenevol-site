@@ -9,9 +9,11 @@
   'use strict';
 
   /* ---------- Particle field in the hero (bespoke, no libraries) ---------- */
+  /* ---------- Signature ribbon in the hero (Midnight II, replaces the constellation) ---------- */
   function particles() {
     /* Owner rule (2026-07-18): animations always run — device motion
        settings do not change the look of the site. */
+    if (document.getElementById('ribbon')) return; /* page draws its own (homepage) */
     var hero = document.querySelector('.hero');
     if (!hero) return;
     var canvas = document.createElement('canvas');
@@ -20,68 +22,62 @@
     hero.insertBefore(canvas, hero.firstChild);
     var ctx = canvas.getContext('2d');
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var w = 0, h = 0, ps = [], running = true, raf = 0;
-    var pointer = { x: 0, y: 0, tx: 0, ty: 0 };
-    var ACCENT = '139,92,246';
-    function count() {
-      var base = Math.round((w * h) / 16000);
-      return Math.max(24, Math.min(window.innerWidth < 640 ? 34 : 70, base));
-    }
+    var w = 0, h = 0, t = 0, raf = 0, running = true;
+    var pointer = { x: 0, tx: 0 };
+    var RIBBONS = [
+      { strands: 22, baseY: 0.72, amp: 0.16, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [139, 92, 246], alpha: 0.1, core: 0.5 },
+      { strands: 16, baseY: 0.78, amp: 0.11, freq: 1.9,  speed: 0.0016, thick: 1.0, hue: [109, 63, 192], alpha: 0.09, core: 0.4 },
+      { strands: 12, baseY: 0.66, amp: 0.19, freq: 0.9,  speed: 0.0029, thick: 1.2, hue: [196, 181, 253], alpha: 0.08, core: 0.65 }
+    ];
     function resize() {
       var r = hero.getBoundingClientRect();
       w = r.width; h = r.height;
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      build();
     }
-    function build() {
-      ps = [];
-      for (var i = 0, n = count(); i < n; i++) {
-        ps.push({ x: Math.random() * w, y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28,
-          r: Math.random() * 1.8 + 0.7, d: Math.random() * 0.6 + 0.4 });
-      }
-    }
-    function step() {
+    function draw() {
       if (!running) return;
       ctx.clearRect(0, 0, w, h);
-      pointer.x += (pointer.tx - pointer.x) * 0.05;
-      pointer.y += (pointer.ty - pointer.y) * 0.05;
-      var i, j, p, q, dx, dy, dist;
-      for (i = 0; i < ps.length; i++) {
-        p = ps[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < -20) p.x = w + 20; if (p.x > w + 20) p.x = -20;
-        if (p.y < -20) p.y = h + 20; if (p.y > h + 20) p.y = -20;
-      }
-      for (i = 0; i < ps.length; i++) {
-        p = ps[i];
-        var px = p.x + pointer.x * p.d, py = p.y + pointer.y * p.d;
-        for (j = i + 1; j < ps.length; j++) {
-          q = ps[j];
-          var qx = q.x + pointer.x * q.d, qy = q.y + pointer.y * q.d;
-          dx = px - qx; dy = py - qy; dist = dx * dx + dy * dy;
-          if (dist < 15000) {
-            ctx.strokeStyle = 'rgba(' + ACCENT + ',' + ((1 - dist / 15000) * 0.4) + ')';
-            ctx.lineWidth = 0.7;
-            ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(qx, qy); ctx.stroke();
+      ctx.globalCompositeOperation = 'lighter';
+      pointer.x += (pointer.tx - pointer.x) * 0.04;
+      for (var r = 0; r < RIBBONS.length; r++) {
+        var R = RIBBONS[r];
+        var phase = t * R.speed + r * 2.1;
+        for (var sIdx = 0; sIdx < R.strands; sIdx++) {
+          var off = (sIdx / R.strands - 0.5);
+          var isCore = sIdx === Math.floor(R.strands / 2);
+          ctx.beginPath();
+          ctx.strokeStyle = 'rgba(' + R.hue[0] + ',' + R.hue[1] + ',' + R.hue[2] + ',' + (isCore ? R.core : R.alpha) + ')';
+          ctx.lineWidth = isCore ? 1.7 : R.thick;
+          var steps = 80;
+          for (var i = 0; i <= steps; i++) {
+            var x = (i / steps) * (w + 200) - 100;
+            var u = i / steps;
+            var envelope = Math.sin(u * Math.PI);
+            var fold = Math.sin(u * Math.PI * R.freq + phase + off * 2.4)
+                     + 0.5 * Math.sin(u * Math.PI * R.freq * 2.7 - phase * 1.3 + off);
+            var y = h * R.baseY
+                  + fold * h * R.amp * envelope
+                  + off * 50 * envelope
+                  + pointer.x * 16 * envelope * (r + 1) / 3;
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
           }
+          ctx.stroke();
         }
-        ctx.fillStyle = 'rgba(' + ACCENT + ',0.85)';
-        ctx.beginPath(); ctx.arc(px, py, p.r, 0, 6.283); ctx.fill();
       }
-      raf = requestAnimationFrame(step);
+      ctx.globalCompositeOperation = 'source-over';
+      t++;
+      raf = requestAnimationFrame(draw);
     }
-    window.addEventListener('resize', function () { cancelAnimationFrame(raf); resize(); running = true; step(); }, { passive: true });
+    window.addEventListener('resize', function () { cancelAnimationFrame(raf); resize(); draw(); }, { passive: true });
+    window.addEventListener('pointermove', function (e) {
+      pointer.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+    }, { passive: true });
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { running = false; cancelAnimationFrame(raf); }
-      else if (!running) { running = true; step(); }
+      else { running = true; draw(); }
     });
-    window.addEventListener('pointermove', function (e) {
-      pointer.tx = (e.clientX / window.innerWidth - 0.5) * 40;
-      pointer.ty = (e.clientY / window.innerHeight - 0.5) * 40;
-    }, { passive: true });
-    resize(); step();
+    resize(); draw();
   }
 
   /* ---------- Magnetic primary CTAs (desktop pointers only) ---------- */
