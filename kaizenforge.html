@@ -328,6 +328,11 @@
     .hero h1, h1 { font-size: clamp(29px, 8.5vw, 42px); }
     h2 { font-size: clamp(26px, 8vw, 36px); }
   }
+    /* Phone: the ticker separator dots dangle at wrapped line-ends — hide them, space with gaps */
+  @media (max-width: 768px) {
+    .ticker i { display:none; }
+    .ticker { row-gap:7px; column-gap:20px; }
+  }
   </style>
   <script type="application/ld+json">
   {
