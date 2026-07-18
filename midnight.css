@@ -79,6 +79,5 @@ body::after { content:''; position:fixed; inset:0; z-index:2000; pointer-events:
 .mid-consent-decline:hover { color:#EEE8FF; border-color:var(--border-hover) !important; }
 .mid-consent-inner a { color:var(--purple-light); font-size:12px; }
 
-@media (prefers-reduced-motion: reduce) {
-  .mid-particles { display:none; }
-}
+/* Reduce Motion is honoured in midnight.js: the constellation renders
+   as a single static frame instead of animating — never hidden. */
