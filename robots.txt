@@ -2,3 +2,5 @@ User-agent: *
 Disallow: /dashboard.html
 Disallow: /crm.html
 Disallow: /reports.html
+
+Sitemap: https://kaizenevol.com/sitemap.xml

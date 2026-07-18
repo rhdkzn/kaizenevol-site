@@ -91,8 +91,14 @@
     }, { passive: true });
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { running = false; cancelAnimationFrame(raf); }
-      else { running = true; draw(); }
+      else if (onScreen) { running = true; draw(); }
     });
+    var onScreen = true;
+    new IntersectionObserver(function (entries) {
+      onScreen = entries[0].isIntersecting;
+      if (!onScreen) { running = false; cancelAnimationFrame(raf); }
+      else if (!document.hidden && !running) { running = true; draw(); }
+    }).observe(hero);
     resize(); draw();
   }
 
