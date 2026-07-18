@@ -24,8 +24,8 @@
     var pointer = { x: 0, y: 0, tx: 0, ty: 0 };
     var ACCENT = '139,92,246';
     function count() {
-      var base = Math.round((w * h) / 12000);
-      return Math.max(30, Math.min(window.innerWidth < 640 ? 46 : 80, base));
+      var base = Math.round((w * h) / 16000);
+      return Math.max(24, Math.min(window.innerWidth < 640 ? 34 : 70, base));
     }
     function resize() {
       var r = hero.getBoundingClientRect();
@@ -61,14 +61,14 @@
           q = ps[j];
           var qx = q.x + pointer.x * q.d, qy = q.y + pointer.y * q.d;
           dx = px - qx; dy = py - qy; dist = dx * dx + dy * dy;
-          if (dist < 16500) {
-            ctx.strokeStyle = 'rgba(' + ACCENT + ',' + ((1 - dist / 16500) * 0.6) + ')';
-            ctx.lineWidth = 0.9;
+          if (dist < 15000) {
+            ctx.strokeStyle = 'rgba(' + ACCENT + ',' + ((1 - dist / 15000) * 0.4) + ')';
+            ctx.lineWidth = 0.7;
             ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(qx, qy); ctx.stroke();
           }
         }
-        ctx.fillStyle = 'rgba(' + ACCENT + ',1)';
-        ctx.beginPath(); ctx.arc(px, py, p.r + 0.4, 0, 6.283); ctx.fill();
+        ctx.fillStyle = 'rgba(' + ACCENT + ',0.85)';
+        ctx.beginPath(); ctx.arc(px, py, p.r, 0, 6.283); ctx.fill();
       }
       raf = requestAnimationFrame(step);
     }
