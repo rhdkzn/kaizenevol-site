@@ -26,163 +26,166 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    :root{
-      --bg:#0D0B1A;--surface:#141228;--surface-2:#1C1836;
-      --border:rgba(109,63,192,0.18);--border-hover:rgba(109,63,192,0.42);
-      --purple:#6D3FC0;--purple-bright:#8B5CF6;--purple-light:#A78BFA;
-      --text:#EEE8FF;--muted:rgba(238,232,255,0.62);--white:#ffffff;
-      --radius-card:14px;--radius-pill:9999px;--max-w:960px;
-      --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
-      --ease-out-quart:cubic-bezier(0.25,1,0.5,1);
+    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
+    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+    :root {
+      --void:      #0C0618;
+      --void-2:    #120A24;
+      --text:      #EEE8FF;
+      --muted:     rgba(238,232,255,0.56);
+      --hairline:  rgba(238,232,255,0.1);
+      --accent:    #8B5CF6;
+      --accent-2:  #A78BFA;
+      --serif:     'Fraunces', Georgia, 'Times New Roman', serif;
+      --sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+      --max-w:     1140px;
     }
-    body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;line-height:1.65;overflow-x:hidden}
-    p{text-wrap:pretty}
-    a{text-decoration:none;color:inherit}
-    img{max-width:100%;display:block}
-    h1,h2{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:-0.03em;line-height:1.08;text-wrap:balance}
-    .container{max-width:var(--max-w);margin:0 auto;padding:0 24px}
+
+    html { scroll-behavior:smooth; }
+    body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
+    p { text-wrap:pretty; }
+    .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
+
+    h1,h2,h3 { font-family:var(--serif); font-weight:500; letter-spacing:-0.01em; line-height:1.06; text-wrap:balance; }
+    h1 em, h2 em { font-style:italic; color:var(--accent-2); }
+
+    .smallcaps { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+    .smallcaps.accent { color:var(--accent); }
+
+    .btn-solid { display:inline-block; background:var(--text); color:var(--void); font-weight:600; font-size:15px;
+      padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--text); transition:background .18s,color .18s; cursor:pointer; }
+    .btn-solid:hover { background:transparent; color:var(--text); }
+    .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:15px;
+      padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
+    .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
 
     /* SKIP LINK */
-    .skip-link{position:absolute;left:-9999px;top:0;background:var(--purple);color:#fff;padding:8px 16px;border-radius:0 0 var(--radius-card) 0;font-size:14px;font-weight:700;z-index:9999}
-    .skip-link:focus{left:0}
+    .skip-link { position:absolute; left:-9999px; top:0; background:var(--accent); color:#fff; padding:8px 16px; font-size:14px; font-weight:700; z-index:9999; text-decoration:none; }
+    .skip-link:focus { left:0; }
 
-    /* BUTTONS */
-    .btn-primary{display:inline-block;background:var(--purple);color:#fff;border-radius:var(--radius-pill);font-weight:700;font-size:15px;padding:14px 28px;text-decoration:none;transition:background 0.15s,transform 0.2s var(--ease-out-expo);border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
-    .btn-primary:hover{background:var(--purple-bright);transform:translateY(-2px)}
-    .btn-white{display:inline-block;background:#fff;color:var(--purple);border-radius:var(--radius-pill);font-weight:700;font-size:15px;padding:14px 28px;text-decoration:none;transition:opacity 0.15s,transform 0.2s var(--ease-out-expo);border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
-    .btn-white:hover{opacity:0.9;transform:translateY(-2px)}
-    .btn-ghost{display:inline-block;background:transparent;color:rgba(238,232,255,0.65);border-radius:var(--radius-pill);font-weight:600;font-size:15px;padding:14px 28px;text-decoration:none;border:1px solid var(--border);transition:border-color 0.15s,color 0.15s,transform 0.2s var(--ease-out-expo);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
-    .btn-ghost:hover{border-color:var(--border-hover);color:var(--text);transform:translateY(-2px)}
+    /* ============ NAV ============ */
+    nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
+    .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
+    .nav-logo img { height:30px; width:auto; }
+    .nav-logo b { font-weight:700; font-size:17px; letter-spacing:-0.02em; }
+    .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
+    .nav-links a { font-size:14.5px; font-weight:500; color:var(--muted); text-decoration:none; padding:8px 14px; transition:color .15s; }
+    .nav-links a:hover { color:var(--text); }
+    .nav-links a.btn-solid { font-size:14px; padding:11px 24px; margin-left:14px; color:var(--void); }
+    .nav-links a.btn-solid:hover { color:var(--text); }
+    .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:10px; }
+    .burger span { width:22px; height:2px; background:var(--text); display:block; }
+    .mobile-menu { display:none; flex-direction:column; padding:8px 28px 24px; border-top:1px solid var(--hairline); }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu a { font-size:16px; font-weight:500; color:var(--text); text-decoration:none; padding:13px 0; border-bottom:1px solid var(--hairline); }
+    .mobile-menu a.btn-solid { color:var(--void); text-align:center; margin-top:16px; border-bottom:none; }
 
-    /* NAV */
-    .nav-wrap{position:fixed;top:max(16px,env(safe-area-inset-top));left:0;right:0;z-index:999;display:flex;justify-content:center;pointer-events:none}
-    .navbar{pointer-events:all;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 8px 0 20px;background:rgba(13,11,26,0.88);border:1px solid var(--border);border-radius:var(--radius-pill);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);width:calc(100% - 48px);max-width:900px}
-    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
-    .nav-logo img{height:28px;width:auto}
-    .nav-logo-text{font-weight:700;font-size:16px;color:var(--text);letter-spacing:-0.02em}
-    .nav-links{display:flex;align-items:center;gap:4px;list-style:none}
-    .nav-links a{font-size:14px;font-weight:500;color:var(--muted);padding:7px 14px;border-radius:var(--radius-pill);transition:color 0.15s,background 0.15s}
-    .nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--surface-2)}
-    .nav-cta{font-size:14px;padding:10px 20px}
-    .hamburger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
-    .hamburger span{display:block;width:22px;height:2px;background:var(--muted);border-radius:2px;transition:all 0.25s}
+    /* ============ HERO ============ */
+    .hero { position:relative; min-height:70vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; }
+    .hero-inner { position:relative; z-index:2; text-align:center; width:100%; padding:90px 0 100px; }
+    .hero h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin:0 auto 26px; max-width:18ch; }
+    .hero-sub { font-size:17px; color:var(--muted); max-width:620px; margin:0 auto; }
 
-    /* MOBILE NAV */
-    .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1100;opacity:0;transition:opacity 0.3s}
-    .mobile-overlay.open{opacity:1}
-    .mobile-panel{position:fixed;top:0;right:-100%;width:min(320px,85vw);height:100dvh;background:var(--surface);border-left:1px solid var(--border);z-index:1200;padding:24px 20px;transition:right 0.3s var(--ease-out-quart);display:flex;flex-direction:column;gap:4px}
-    .mobile-panel.open{right:0}
-    .mobile-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-    .mobile-close{font-size:24px;background:none;border:none;cursor:pointer;color:var(--muted);line-height:1;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
-    .mobile-panel a{font-size:16px;font-weight:500;color:var(--muted);padding:14px 12px;border-radius:var(--radius-card);transition:background 0.15s,color 0.15s;display:block;text-decoration:none}
-    .mobile-panel a:hover{background:var(--surface-2);color:var(--text)}
-    .mobile-panel .btn-primary{margin-top:12px;text-align:center}
+    /* ============ EDITORIAL SECTION SHARED ============ */
+    .sect { padding:100px 0; }
+    .sect-head { display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:44px; }
+    .sect-head h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); }
+    .sect-head p { font-size:15px; color:var(--muted); max-width:360px; }
 
-    /* SECTIONS */
-    .section{padding:96px 0}
-    .section-surface{background:var(--surface)}
-    .section-bg{background:var(--bg)}
-    .section-header{margin-bottom:52px}
-    .section-header h2{font-size:clamp(26px,3.5vw,38px);margin-bottom:12px}
-    .section-header p{font-size:17px;color:var(--muted);max-width:520px;line-height:1.7}
+    /* ============ FOUNDERS ============ */
+    .team { background:var(--void-2); border-top:1px solid var(--hairline); }
+    .founders-grid { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
+    .founder-card { border-top:1px solid var(--text); padding-top:24px; }
+    .founder-avatar { width:76px; height:76px; border-radius:50%; margin-bottom:18px;
+      display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-style:italic; font-size:30px;
+      background:linear-gradient(135deg, #2a1260, #120A24); border:1px solid rgba(139,92,246,0.4);
+      background-size:cover; background-position:center; }
+    .founder-card h3 { font-size:24px; margin-bottom:2px; }
+    .founder-card .smallcaps { display:block; margin-bottom:14px; }
+    .founder-card p { font-size:14.5px; color:var(--muted); margin-bottom:12px; }
+    .founder-links { margin-top:20px; display:flex; flex-direction:column; gap:10px; }
+    .founder-links a { color:var(--text); font-size:14.5px; text-decoration:none; border-bottom:1px solid rgba(238,232,255,0.3); align-self:flex-start; padding-bottom:2px; transition:color .15s,border-color .15s; }
+    .founder-links a:hover { color:var(--accent-2); border-color:var(--accent-2); }
 
-    /* PAGE HERO */
-    .page-hero{padding:160px 24px 80px;text-align:center;position:relative;overflow:hidden;background:var(--bg)}
-    .page-hero::before{content:'';position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse at center,rgba(109,63,192,0.18) 0%,transparent 65%);pointer-events:none;z-index:0}
-    .page-hero-inner{position:relative;z-index:1;max-width:var(--max-w);margin:0 auto}
-    .page-hero h1{font-size:clamp(32px,5vw,52px);margin-bottom:16px}
-    .page-hero-sub{font-size:clamp(16px,2vw,18px);color:var(--muted);max-width:480px;margin:0 auto;line-height:1.7}
+    /* ============ COMMITMENTS — numbered rows ============ */
+    .commit { background:var(--void); border-top:1px solid var(--hairline); }
+    .commit-intro { margin-bottom:34px; max-width:620px; }
+    .commit-intro h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); margin-bottom:16px; }
+    .commit-intro p { font-size:15.5px; color:var(--muted); }
+    .commit-row { display:grid; grid-template-columns:110px 1fr; gap:36px; padding:44px 0; border-top:1px solid var(--hairline); align-items:start; }
+    .commit-row:last-of-type { border-bottom:1px solid var(--hairline); }
+    .commit-num { font-family:var(--serif); font-style:italic; font-size:46px; color:var(--accent); line-height:1; }
+    .commit-row h3 { font-size:clamp(22px, 1.1rem + 1.2vw, 30px); margin-bottom:12px; }
+    .commit-row p { font-size:15px; color:var(--muted); max-width:680px; }
 
-    /* TEAM */
-    .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-    .team-grid.svc3{grid-template-columns:repeat(3,1fr);gap:20px}
-    @media(max-width:900px){.team-grid.svc3{grid-template-columns:1fr}}
-    .team-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-card);padding:36px 32px}
-    .team-avatar{width:56px;height:56px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;margin-bottom:20px;letter-spacing:-0.02em;flex-shrink:0}
-    .team-name{font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-0.02em}
-    .team-role{font-size:13px;font-weight:600;color:var(--purple-light);margin-bottom:20px}
-    .team-bio{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:12px}
-    .team-links{margin-top:24px;display:flex;flex-direction:column;gap:8px}
-    .team-link{font-size:14px;font-weight:600;color:var(--purple-light);transition:color 0.15s}
-    .team-link:hover{color:var(--text)}
+    /* ============ WHAT WE DO — svc rows ============ */
+    .svc { background:var(--void-2); border-top:1px solid var(--hairline); }
+    .svc-row { display:grid; grid-template-columns:110px 1fr auto; gap:36px; padding:52px 0; border-top:1px solid var(--hairline); align-items:start; }
+    .svc-row:last-of-type { border-bottom:1px solid var(--hairline); }
+    .svc-num { font-family:var(--serif); font-style:italic; font-size:46px; color:var(--accent); line-height:1; }
+    .svc-main .smallcaps { display:block; margin-bottom:12px; }
+    .svc-main h3 { font-size:clamp(26px, 1.2rem + 1.8vw, 40px); margin-bottom:14px; }
+    .svc-main p { font-size:15.5px; color:var(--muted); max-width:640px; }
+    .svc-link { font-weight:600; font-size:14.5px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--text); padding-bottom:2px; white-space:nowrap; align-self:start; margin-top:8px; transition:color .15s,border-color .15s; }
+    .svc-link:hover { color:var(--accent-2); border-color:var(--accent-2); }
 
-    /* COMMITMENT */
-    .commitment-intro{max-width:580px;margin-bottom:52px}
-    .commitment-intro h2{font-size:clamp(26px,3.5vw,38px);margin-bottom:14px}
-    .commitment-intro p{font-size:16px;color:var(--muted);line-height:1.75}
-    .commitment-list{list-style:none;counter-reset:c;display:grid;grid-template-columns:1fr 1fr;gap:32px 56px;padding:0}
-    .commitment-list li{counter-increment:c;display:flex;gap:14px;align-items:flex-start}
-    .commitment-list li::before{content:counter(c,'0' decimal);font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--purple-bright);padding-top:3px;flex-shrink:0;min-width:26px}
-    .commitment-list li>div{min-width:0;flex:1}
-    .commitment-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px}
-    .commitment-desc{font-size:14px;color:var(--muted);line-height:1.65}
+    /* ============ CLOSING ============ */
+    .closing { padding:110px 0; background:var(--void); border-top:1px solid var(--hairline); text-align:center; }
+    .closing h2 { font-size:clamp(34px, 1.5rem + 3vw, 58px); margin:0 auto 20px; max-width:22ch; }
+    .closing p.closing-sub { font-size:16px; color:var(--muted); max-width:520px; margin:0 auto 38px; }
+    .closing-ctas { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .closing-note { margin-top:22px; font-size:13px; color:var(--muted); }
 
-    /* FINAL CTA */
-    .final-cta{padding:100px 24px;text-align:center;background:linear-gradient(135deg,#150930 0%,#2a1260 50%,#150930 100%);position:relative;overflow:hidden}
-    .final-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:400px;background:radial-gradient(ellipse at center,rgba(109,63,192,0.35) 0%,transparent 70%);pointer-events:none}
-    .final-cta-inner{position:relative;z-index:1}
-    .final-cta h2{font-size:clamp(26px,4vw,42px);color:#fff;margin-bottom:16px;max-width:640px;margin-left:auto;margin-right:auto}
-    .final-cta p{font-size:17px;color:rgba(255,255,255,0.72);margin-bottom:36px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7}
-    .final-cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-    .final-cta-note{margin-top:16px;font-size:13px;color:rgba(255,255,255,0.58)}
+    /* Consent banner (injected by midnight.js) */
+    .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
+    .mid-consent.show { display:flex; }
+    .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(18,10,36,0.97); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:16px 20px; }
+    .mid-consent-inner p { font-size:13px; line-height:1.55; color:rgba(238,232,255,0.85); margin:0; flex:1 1 320px; }
+    .mid-consent-inner strong { color:#EEE8FF; }
+    .mid-consent-btns { display:flex; gap:10px; align-items:center; }
+    .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
+    .mid-consent-accept { background:#EEE8FF; color:#0C0618; }
+    .mid-consent-decline { background:transparent; color:rgba(238,232,255,0.6); border:1px solid rgba(238,232,255,0.2) !important; }
+    .mid-consent-inner a { color:#A78BFA; font-size:12px; }
 
-    /* FOOTER */
-    .footer{background:var(--surface);border-top:1px solid var(--border);padding:40px 0 max(40px,calc(24px + env(safe-area-inset-bottom)))}
-    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
-    .footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .footer-logo img{height:24px;width:auto}
-    .footer-logo-text{font-weight:700;font-size:15px;color:var(--text);letter-spacing:-0.02em}
-    .footer-nav{display:flex;gap:4px;list-style:none;flex-wrap:wrap}
-    .footer-nav a{font-size:13px;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:var(--radius-pill);transition:color 0.15s}
-    .footer-nav a:hover{color:var(--text)}
-    .footer-right{text-align:right}
-    .footer-right a{font-size:13px;color:var(--purple-light);text-decoration:none}
-    .footer-copy{font-size:12px;color:var(--muted);margin-top:4px}
+    /* ============ FOOTER ============ */
+    footer { padding:44px 0; border-top:1px solid var(--hairline); background:var(--void); }
+    .footer-inner { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }
+    .footer-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+    .footer-logo img { height:24px; }
+    .footer-logo b { font-weight:700; font-size:15px; }
+    .footer-nav { display:flex; gap:22px; list-style:none; flex-wrap:wrap; }
+    .footer-nav a { font-size:13.5px; color:var(--muted); text-decoration:none; }
+    .footer-nav a:hover { color:var(--text); }
+    .footer-right { text-align:right; }
+    .fc-head { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+    .fc-row { display:flex; align-items:center; gap:8px; justify-content:flex-end; margin-bottom:7px; font-size:13px; text-decoration:none; color:var(--muted); }
+    .fc-row:hover { color:var(--text); }
+    .fc-wa { color:#25D366 !important; }
+    .footer-copy { font-size:12.5px; color:var(--muted); margin-top:4px; }
 
-    /* REVEAL */
-    .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s var(--ease-out-quart),transform 0.5s var(--ease-out-quart)}
-    .reveal.visible{opacity:1;transform:translateY(0)}
-
-    /* RESPONSIVE */
-    @media(max-width:768px){
-      .section{padding:64px 0}
-      .nav-links,.nav-cta{display:none}
-      .hamburger{display:flex}
-      .team-grid{grid-template-columns:1fr}
-      .commitment-list{grid-template-columns:1fr}
-      .footer-inner{flex-direction:column;text-align:center}
-      .footer-right{text-align:center}
-      .footer-nav{justify-content:center}
+    /* ============ RESPONSIVE ============ */
+    @media(max-width:960px) {
+      .founders-grid { grid-template-columns:1fr; gap:36px; }
+      .svc-row { grid-template-columns:60px 1fr; }
+      .svc-link { grid-column:2; }
+      .commit-row { grid-template-columns:60px 1fr; }
     }
-    @media(min-width:769px){.mobile-overlay,.mobile-panel{display:none !important}}
-    
-  
-    /* === POLISH PASS: depth + motion === */
-    @keyframes hero-rise { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
-    body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
-      background:radial-gradient(1000px 620px at 85% -10%,rgba(109,63,192,.10),transparent 62%),
-                 radial-gradient(800px 560px at -12% 50%,rgba(139,92,246,.06),transparent 62%); }
-    body::after { content:''; position:fixed; inset:0; z-index:2000; pointer-events:none; opacity:.04;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-    .hero { isolation:isolate; }
-    .hero::after { content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
-      background-image:linear-gradient(rgba(139,92,246,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.055) 1px,transparent 1px);
-      background-size:54px 54px;
-      -webkit-mask-image:radial-gradient(ellipse 75% 65% at 50% 28%,#000,transparent 72%);
-      mask-image:radial-gradient(ellipse 75% 65% at 50% 28%,#000,transparent 72%); }
-    .hero-inner { animation:none; }
-    .hero-inner>* { opacity:0; animation:hero-rise .8s var(--ease-out-expo) forwards; }
-    .hero-inner>*:nth-child(1){animation-delay:.05s}
-    .hero-inner>*:nth-child(2){animation-delay:.16s}
-    .hero-inner>*:nth-child(3){animation-delay:.30s}
-    .hero-inner>*:nth-child(4){animation-delay:.44s}
-    .hero-inner>*:nth-child(5){animation-delay:.56s}
-    .hero-inner>*:nth-child(6){animation-delay:.68s}
-    .rv { opacity:0; transform:translateY(22px); transition:opacity .6s var(--ease-out-expo),transform .6s var(--ease-out-expo); transition-delay:calc(var(--rv,0)*90ms); }
-    .rv.in { opacity:1; transform:translateY(0); }
-    
+    @media(max-width:768px) {
+      .nav-links { display:none; } .burger { display:flex; }
+      .hero { min-height:62vh; }
+      .hero-inner { padding:70px 0 90px; }
+      .sect { padding:72px 0; }
+      .sect-head { flex-direction:column; }
+      .footer-inner { flex-direction:column; align-items:center; text-align:center; }
+      .footer-right { text-align:center; }
+      .fc-row { justify-content:center; }
+      .footer-nav { justify-content:center; }
+    }
   </style>
   <script type="application/ld+json">
   {
@@ -198,94 +201,75 @@
     "founder": [ { "@type": "Person", "name": "Rahaid" }, { "@type": "Person", "name": "Diego" } ]
   }
   </script>
-  <style id="ke-fraunces">
-    @font-face{font-family:'Fraunces';font-style:normal;font-weight:400 700;font-display:swap;src:url('/fraunces.woff2') format('woff2');}
-    @font-face{font-family:'Fraunces';font-style:italic;font-weight:400 700;font-display:swap;src:url('/fraunces-italic.woff2') format('woff2');}
-    h1,h2{font-family:'Fraunces',Georgia,'Times New Roman',serif;font-weight:600;letter-spacing:-0.01em;}
-    h1 em,h2 em{font-style:italic;}
-  </style>
-  <link rel="stylesheet" href="/midnight.css?v=6">
 </head>
 <body>
 
 <a href="#main-content" class="skip-link">Skip to content</a>
 
-<div class="nav-wrap">
-  <nav class="navbar">
+<nav>
+  <div class="container nav-inner">
     <a class="nav-logo" href="index.html">
-      <img src="logo.png" alt="KaizenEvol" width="32" height="32" onerror="this.style.display='none'">
-      <span class="nav-logo-text">KaizenEvol</span>
+      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <b>KaizenEvol</b>
     </a>
     <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
       <li><a href="kaizenreach.html">KaizenReach</a></li>
       <li><a href="kaizendesk.html">KaizenDesk</a></li>
       <li><a href="kaizenforge.html">KaizenForge</a></li>
-      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li><a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a></li>
     </ul>
-    <a class="btn-primary nav-cta" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-</div>
-
-<div class="mobile-overlay" id="mobileOverlay"></div>
-<div class="mobile-panel" id="mobilePanel">
-  <div class="mobile-panel-header">
-    <div class="nav-logo">
-      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'" style="height:28px;width:auto">
-      <span class="nav-logo-text">KaizenEvol</span>
-    </div>
-    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
+    <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
-  <a href="index.html">Home</a>
-  <a href="kaizenreach.html">KaizenReach, Ads + Social</a>
-  <a href="kaizendesk.html">KaizenDesk, AI Front Office</a>
-  <a href="kaizenforge.html">KaizenForge, Websites</a>
-  <a href="about.html">About</a>
-  <a href="contact.html">Contact</a>
-  <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-primary">Book a Call</a>
-</div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="kaizenreach.html">KaizenReach, Ads + Social</a>
+    <a href="kaizendesk.html">KaizenDesk, AI Front Office</a>
+    <a href="kaizenforge.html">KaizenForge, Websites</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a class="btn-solid" href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a Call</a>
+  </div>
+</nav>
 
 <main id="main-content">
 
-<section class="page-hero">
-  <div class="page-hero-inner">
-    <h1 class="reveal">Who&rsquo;s Behind KaizenEvol</h1>
-    <p class="page-hero-sub reveal">Two founders, three services: KaizenReach brings the work in, KaizenDesk makes sure none of it slips through, KaizenForge makes sure your shopfront sells. All built around your results.</p>
+<header class="hero">
+  <div class="hero-inner container">
+    <h1>Who&rsquo;s Behind <em>KaizenEvol</em></h1>
+    <p class="hero-sub">Two founders, three services: KaizenReach brings the work in, KaizenDesk makes sure none of it slips through, KaizenForge makes sure your shopfront sells. All built around your results.</p>
   </div>
-</section>
+</header>
 
-<section class="section section-surface">
+<section class="sect team">
   <div class="container">
-    <div class="section-header reveal">
-      <h2>Meet the Team</h2>
+    <div class="sect-head">
+      <h2>Meet the <em>Team</em></h2>
       <p>Small by design. When you work with us, you work with us, not an account manager or a junior assigned to your account.</p>
     </div>
-    <div class="team-grid">
+    <div class="founders-grid">
 
-      <div class="team-card reveal">
-        <div class="team-avatar">R</div>
-        <h3 class="team-name">Rahaid</h3>
-        <div class="team-role">Co-Founder, Head of Growth &amp; Delivery</div>
-        <p class="team-bio">Every engine in this agency, the ads, the AI front office, the websites, was built by Rahaid, and he still runs them daily.</p>
-        <p class="team-bio">Cutting losing ads and scaling winners before you&rsquo;ve looked at your phone, teaching the AI your business, shipping your site in 24 hours. You&rsquo;re not buying software with a logo on it; you&rsquo;re working with the person who made it.</p>
-        <div class="team-links">
-          <a href="mailto:rahaid@kaizenevol.com" class="team-link">rahaid@kaizenevol.com</a>
-          <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="team-link">Book a call &rarr;</a>
+      <div class="founder-card">
+        <div class="founder-avatar" aria-hidden="true">R</div>
+        <h3>Rahaid</h3>
+        <span class="smallcaps accent">Co-Founder, Head of Growth &amp; Delivery</span>
+        <p>Every engine in this agency, the ads, the AI front office, the websites, was built by Rahaid, and he still runs them daily.</p>
+        <p>Cutting losing ads and scaling winners before you&rsquo;ve looked at your phone, teaching the AI your business, shipping your site in 24 hours. You&rsquo;re not buying software with a logo on it; you&rsquo;re working with the person who made it.</p>
+        <div class="founder-links">
+          <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a>
+          <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a call &rarr;</a>
         </div>
       </div>
 
-      <div class="team-card reveal">
-        <div class="team-avatar">D</div>
-        <h3 class="team-name">Diego</h3>
-        <div class="team-role">Co-Founder, Head of Sales &amp; Client Success</div>
-        <p class="team-bio">Diego is the first voice you&rsquo;ll hear and the one you&rsquo;ll keep hearing. He finds the businesses we can genuinely help, tells the rest the truth, and once you&rsquo;re in, he&rsquo;s your direct line, no ticket queue, no &ldquo;let me check with the team.&rdquo; He <em>is</em> the team.</p>
-        <p class="team-bio">Between the two of them, you get the builder and the closer under one roof. No account managers. No middlemen. Just the people who actually do the work.</p>
-        <div class="team-links">
-          <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="team-link">Book a call &rarr;</a>
+      <div class="founder-card">
+        <div class="founder-avatar" aria-hidden="true">D</div>
+        <h3>Diego</h3>
+        <span class="smallcaps accent">Co-Founder, Head of Sales &amp; Client Success</span>
+        <p>Diego is the first voice you&rsquo;ll hear and the one you&rsquo;ll keep hearing. He finds the businesses we can genuinely help, tells the rest the truth, and once you&rsquo;re in, he&rsquo;s your direct line, no ticket queue, no &ldquo;let me check with the team.&rdquo; He <em>is</em> the team.</p>
+        <p>Between the two of them, you get the builder and the closer under one roof. No account managers. No middlemen. Just the people who actually do the work.</p>
+        <div class="founder-links">
+          <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Book a call &rarr;</a>
         </div>
       </div>
 
@@ -293,173 +277,136 @@
   </div>
 </section>
 
-<section class="section section-bg">
+<section class="sect commit">
   <div class="container">
-    <div class="commitment-intro reveal">
-      <h2>We Only Win When You Win</h2>
+    <div class="commit-intro">
+      <h2>We Only Win When <em>You Win</em></h2>
       <p>None of our three services asks you to pay on faith. Here&rsquo;s exactly what we commit to when you come on board, whichever door you came through.</p>
     </div>
-    <ol class="commitment-list">
-      <li class="reveal">
-        <div>
-          <h3 class="commitment-title">Skin in the game, every service</h3>
-          <p class="commitment-desc">Ads: our first 5 founding clients get their first 60 days completely free, you cover ad spend only, then a simple monthly service you can cancel anytime. AI front office: if a real enquiry comes in and it fails to catch it in your first 30 days, that month&rsquo;s free. Websites: you see the finished site before you pay a penny. We carry the risk, not you.</p>
-        </div>
-      </li>
-      <li class="reveal">
-        <div>
-          <h3 class="commitment-title">Fast, with a deadline attached</h3>
-          <p class="commitment-desc">Campaigns live in 7 days. Websites live within 24 hours of approval. Your AI front desk answering in days, not months. Every promise has a date on it, and if we miss one, it costs us, not you.</p>
-        </div>
-      </li>
-      <li class="reveal">
-        <div>
-          <h3 class="commitment-title">Direct access, fast response</h3>
-          <p class="commitment-desc">You have direct access to us, not an account manager, not a junior. We reply within the same working day. Every time.</p>
-        </div>
-      </li>
-      <li class="reveal">
-        <div>
-          <h3 class="commitment-title">Aligned, not just hired</h3>
-          <p class="commitment-desc">Ad clients get an exclusive territory, your direct competition is locked out while you&rsquo;re with us. And across every service, you own what&rsquo;s yours: your ad account, your phone number, your reviews, your customer data, your website.</p>
-        </div>
-      </li>
-    </ol>
+
+    <div class="commit-row">
+      <div class="commit-num">01</div>
+      <div>
+        <h3>Skin in the game, every service</h3>
+        <p>Ads: our first 5 founding clients get their first 60 days completely free, you cover ad spend only, then a simple monthly service you can cancel anytime. AI front office: if a real enquiry comes in and it fails to catch it in your first 30 days, that month&rsquo;s free. Websites: you see the finished site before you pay a penny. We carry the risk, not you.</p>
+      </div>
+    </div>
+    <div class="commit-row">
+      <div class="commit-num">02</div>
+      <div>
+        <h3>Fast, with a deadline attached</h3>
+        <p>Campaigns live in 7 days. Websites live within 24 hours of approval. Your AI front desk answering in days, not months. Every promise has a date on it, and if we miss one, it costs us, not you.</p>
+      </div>
+    </div>
+    <div class="commit-row">
+      <div class="commit-num">03</div>
+      <div>
+        <h3>Direct access, fast response</h3>
+        <p>You have direct access to us, not an account manager, not a junior. We reply within the same working day. Every time.</p>
+      </div>
+    </div>
+    <div class="commit-row">
+      <div class="commit-num">04</div>
+      <div>
+        <h3>Aligned, not just hired</h3>
+        <p>Ad clients get an exclusive territory, your direct competition is locked out while you&rsquo;re with us. And across every service, you own what&rsquo;s yours: your ad account, your phone number, your reviews, your customer data, your website.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section section-surface">
+<section class="sect svc">
   <div class="container">
-    <div class="section-header reveal">
-      <h2>What We Do</h2>
+    <div class="sect-head">
+      <h2>What We <em>Do</em></h2>
       <p>Three services under one roof. Take one, or stack them.</p>
     </div>
-    <div class="team-grid svc3">
-      <div class="team-card reveal">
-        <h3 class="team-name">KaizenReach</h3>
-        <div class="team-role">Done-for-you Meta ads</div>
-        <p class="team-bio">Built only for home renovation specialists, kitchen, bathroom and loft. We handle the copy, creative, targeting and daily optimisation, and put homeowners with real projects straight into your diary. Exclusive territory, live in 7 days, and your first 60 days free, our first 5 founding clients only.</p>
-        <div class="team-links"><a href="kaizenreach.html" class="team-link">See KaizenReach &rarr;</a></div>
+
+    <div class="svc-row">
+      <div class="svc-num">01</div>
+      <div class="svc-main">
+        <span class="smallcaps accent">KaizenReach</span>
+        <h3>Done-for-you Meta ads</h3>
+        <p>Built only for home renovation specialists, kitchen, bathroom and loft. We handle the copy, creative, targeting and daily optimisation, and put homeowners with real projects straight into your diary. Exclusive territory, live in 7 days, and your first 60 days free, our first 5 founding clients only.</p>
       </div>
-      <div class="team-card reveal">
-        <h3 class="team-name">KaizenDesk</h3>
-        <div class="team-role">Your AI front office</div>
-        <p class="team-bio">For any local business. It answers every call, text and email the moment it arrives, qualifies the lead, books the job, and flags the hot ones to you. It collects your Google reviews and revives old leads, around the clock. UK-built and GDPR-compliant, and you keep your number.</p>
-        <div class="team-links"><a href="kaizendesk.html" class="team-link">See KaizenDesk &rarr;</a></div>
+      <a class="svc-link" href="kaizenreach.html">See KaizenReach &rarr;</a>
+    </div>
+
+    <div class="svc-row">
+      <div class="svc-num">02</div>
+      <div class="svc-main">
+        <span class="smallcaps accent">KaizenDesk</span>
+        <h3>Your AI front office</h3>
+        <p>For any local business. It answers every call, text and email the moment it arrives, qualifies the lead, books the job, and flags the hot ones to you. It collects your Google reviews and revives old leads, around the clock. UK-built and GDPR-compliant, and you keep your number.</p>
       </div>
-      <div class="team-card reveal">
-        <h3 class="team-name">KaizenForge</h3>
-        <div class="team-role">Websites that sell</div>
-        <p class="team-bio">For any local business. A conversion-built website designed by the team behind our ad pages, live within 24 hours of approval, one fair price, and you own it outright. You see the finished site before you pay a penny, and if you don&rsquo;t love it, you walk away owing nothing.</p>
-        <div class="team-links"><a href="kaizenforge.html" class="team-link">See KaizenForge &rarr;</a></div>
+      <a class="svc-link" href="kaizendesk.html">See KaizenDesk &rarr;</a>
+    </div>
+
+    <div class="svc-row">
+      <div class="svc-num">03</div>
+      <div class="svc-main">
+        <span class="smallcaps accent">KaizenForge</span>
+        <h3>Websites that sell</h3>
+        <p>For any local business. A conversion-built website designed by the team behind our ad pages, live within 24 hours of approval, one fair price, and you own it outright. You see the finished site before you pay a penny, and if you don&rsquo;t love it, you walk away owing nothing.</p>
       </div>
+      <a class="svc-link" href="kaizenforge.html">See KaizenForge &rarr;</a>
     </div>
   </div>
 </section>
 
-<section class="final-cta" id="contact">
-  <div class="final-cta-inner">
-    <h2 class="reveal">Your Area Might Still Be Available.<br>Find Out in 30 Minutes.</h2>
-    <p class="reveal">Free strategy call. No pitch, no hard sell. We&rsquo;ll confirm your territory and walk through exactly what&rsquo;s achievable for your business, whether we work together or not.</p>
-    <div class="final-cta-btns reveal">
-      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-white">Book a Free Strategy Call &rarr;</a>
-      <a href="mailto:rahaid@kaizenevol.com" class="btn-ghost" style="border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.75)">Email Us Directly</a>
+<section class="closing" id="contact">
+  <div class="container">
+    <h2>Your Area Might Still Be <em>Available</em>.<br>Find Out in 30 Minutes.</h2>
+    <p class="closing-sub">Free strategy call. No pitch, no hard sell. We&rsquo;ll confirm your territory and walk through exactly what&rsquo;s achievable for your business, whether we work together or not.</p>
+    <div class="closing-ctas">
+      <a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener" class="btn-solid">Book a Free Strategy Call &rarr;</a>
+      <a href="mailto:rahaid@kaizenevol.com" class="btn-quiet">Email Us Directly</a>
     </div>
-    <p class="final-cta-note reveal">4 client slots per quarter. One specialist per niche, per area.</p>
+    <p class="closing-note">4 client slots per quarter. One specialist per niche, per area.</p>
   </div>
 </section>
 
 </main>
 
-<footer class="footer">
-  <div class="container">
-    <div class="footer-inner">
-      <a class="footer-logo" href="index.html">
-        <img src="logo.png" alt="KaizenEvol" width="28" height="28" onerror="this.style.display='none'">
-        <span class="footer-logo-text">KaizenEvol</span>
-      </a>
-      <ul class="footer-nav">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="kaizenreach.html">KaizenReach</a></li>
-        <li><a href="kaizendesk.html">KaizenDesk</a></li>
+<footer>
+  <div class="container footer-inner">
+    <a class="footer-logo" href="index.html"><img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
+    <ul class="footer-nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="kaizenreach.html">KaizenReach</a></li>
+      <li><a href="kaizendesk.html">KaizenDesk</a></li>
       <li><a href="kaizenforge.html">KaizenForge</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="privacy.html">Privacy</a></li>
-      </ul>
-      <div class="footer-right">
-        <div class="fc-head">Contact Us</div>
-        <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
-        <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>WhatsApp Us</a>
-        <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
-      </div>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+    </ul>
+    <div class="footer-right">
+      <div class="fc-head">Contact Us</div>
+      <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
+      <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>WhatsApp Us</a>
+      <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
     </div>
   </div>
 </footer>
 
-<script>
-  const hamburgerBtn  = document.getElementById('hamburgerBtn');
-  const mobileOverlay = document.getElementById('mobileOverlay');
-  const mobilePanel   = document.getElementById('mobilePanel');
-  const mobileClose   = document.getElementById('mobileClose');
-  function openMenu() {
-    mobileOverlay.style.display = 'block';
-    mobilePanel.style.display   = 'flex';
-    requestAnimationFrame(() => { mobileOverlay.classList.add('open'); mobilePanel.classList.add('open'); });
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu() {
-    mobileOverlay.classList.remove('open');
-    mobilePanel.classList.remove('open');
-    document.body.style.overflow = '';
-    setTimeout(() => { mobileOverlay.style.display = 'none'; mobilePanel.style.display = 'none'; }, 300);
-  }
-  hamburgerBtn.addEventListener('click', openMenu);
-  mobileClose.addEventListener('click', closeMenu);
-  mobileOverlay.addEventListener('click', closeMenu);
-  mobilePanel.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && mobilePanel.classList.contains('open')) closeMenu(); });
-  if (true) {
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-  }
-</script>
-
-<script>
-  /* polish: scroll reveal */
-  (function(){
-    var sels='.svc-card,.ind-card,.price-card,.problem-card,.cmp-row,.faq-inline-item,.problem-callout,.guarantee-callout,.calc-wrap,.section-header,.team-card,.chat';
-    var els=Array.prototype.slice.call(document.querySelectorAll(sels)).filter(function(el){return !el.classList.contains('step-card');});
-    var byParent=[];
-    els.forEach(function(el){
-      var g=null;
-      for(var i=0;i<byParent.length;i++){ if(byParent[i].p===el.parentElement){ g=byParent[i]; break; } }
-      if(!g){ g={p:el.parentElement,items:[]}; byParent.push(g); }
-      g.items.push(el);
-    });
-    byParent.forEach(function(g){ g.items.forEach(function(el,i){ el.classList.add('rv'); el.style.setProperty('--rv',String(Math.min(i,6))); }); });
-    if(!('IntersectionObserver' in window)){ els.forEach(function(el){ el.classList.add('in'); }); return; }
-    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:0.1,rootMargin:'0px 0px -6% 0px'});
-    els.forEach(function(el){ io.observe(el); });
-  })();
-</script>
-  <script defer src="/_vercel/insights/script.js"></script>
 <div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(8,6,15,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
-  <div style="background:var(--surface,#141228);border:1px solid rgba(109,63,192,0.4);border-radius:18px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+  <div style="background:#120A24;border:1px solid rgba(139,92,246,0.4);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
     <div style="font-weight:700;font-size:16px;margin-bottom:18px">Who would you like to message?</div>
-    <a href="https://wa.me/447423235232?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:12px;padding:13px 16px;text-decoration:none;margin-bottom:10px">Diego <span style="display:block;font-size:12px;font-weight:500;opacity:.8">New enquiries &amp; getting started</span></a>
-    <a href="https://wa.me/447364109609?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:rgba(37,211,102,0.14);color:#25D366;border:1px solid rgba(37,211,102,0.45);font-weight:700;border-radius:12px;padding:13px 16px;text-decoration:none">Rahaid <span style="display:block;font-size:12px;font-weight:500;opacity:.8">Projects &amp; everything else</span></a>
+    <a href="https://wa.me/447423235232?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">Diego <span style="display:block;font-size:12px;font-weight:500;opacity:.8">New enquiries &amp; getting started</span></a>
+    <a href="https://wa.me/447364109609?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:rgba(37,211,102,0.14);color:#25D366;border:1px solid rgba(37,211,102,0.45);font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none">Rahaid <span style="display:block;font-size:12px;font-weight:500;opacity:.8">Projects &amp; everything else</span></a>
     <button id="waClose" style="margin-top:16px;background:none;border:none;color:rgba(238,232,255,0.55);font-size:13px;cursor:pointer;font-family:inherit">Close</button>
   </div>
 </div>
-<style>
-  .fc-head{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(238,232,255,0.45);margin-bottom:8px}
-  .fc-row{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:7px;font-size:13px;text-decoration:none}
-  .fc-wa{color:#25D366 !important}
-  @media(max-width:700px){.fc-row{justify-content:center}}
-</style>
+
+<script>
+(function () {
+  var b = document.getElementById('burgerBtn'), m = document.getElementById('mobileMenu');
+  b.addEventListener('click', function () {
+    var open = m.classList.toggle('open');
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+</script>
 <script>
 (function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
 if(!o||!m)return;o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
@@ -467,6 +414,7 @@ c.addEventListener('click',function(){m.style.display='none';});
 m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 <script src="/midnight.js?v=6" defer></script>
 </body>
 </html>
