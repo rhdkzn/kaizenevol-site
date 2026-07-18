@@ -3,10 +3,19 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { contactName, businessName, email, phone, businessUrl, trade, monthlyBudget, message } = req.body || {};
+  let { contactName, businessName, email, phone, businessUrl, trade, monthlyBudget, message } = req.body || {};
 
-  if (!businessName || !email || !email.includes('@')) {
-    return res.status(400).json({ error: 'Business name and a valid email are required.' });
+  // Homepage one-pager posts { name, trade, contact, message } — contact is a phone OR an email.
+  const { name, contact } = req.body || {};
+  if (name && !businessName) {
+    contactName = contactName || name;
+    businessName = name;
+    if (contact && contact.includes('@')) email = email || contact;
+    else if (contact) phone = phone || contact;
+  }
+
+  if (!businessName || !((email && email.includes('@')) || phone)) {
+    return res.status(400).json({ error: 'A name and a valid email or phone number are required.' });
   }
 
   const SUPABASE_URL = 'https://otxinjuuflyfsoltodam.supabase.co';
@@ -43,7 +52,7 @@ export default async function handler(req, res) {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
     business: businessName.trim(),
     contactName: (contactName || '').trim(),
-    email: email.trim().toLowerCase(),
+    email: (email || '').trim().toLowerCase(),
     website: (businessUrl || '').trim(),
     phone: (phone || '').trim(),
     owner: (contactName || '').trim(),
@@ -99,7 +108,7 @@ export default async function handler(req, res) {
           `Contact: ${contactName ? contactName.trim() : 'Not provided'}`,
           `Business: ${businessName.trim()}`,
           `Trade: ${trade || 'Not specified'}`,
-          `Email: ${email.trim()}`,
+          `Email: ${(email || '').trim() || 'Not provided'}`,
           `Phone: ${phone || 'Not provided'}`,
           `Website: ${businessUrl || 'Not provided'}`,
           `Ad budget: ${monthlyBudget || 'Not specified'}`,
