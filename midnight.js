@@ -91,6 +91,13 @@
     }, { passive: true });
     var scrollDrift = 0;
     window.addEventListener('scroll', function () { scrollDrift = window.scrollY * 0.0012; }, { passive: true });
+    /* Phone: the ribbon answers device tilt (where the browser allows it silently) and touch drag */
+    window.addEventListener('deviceorientation', function (e) {
+      if (e.gamma !== null) pointer.tx = Math.max(-1, Math.min(1, e.gamma / 30));
+    }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (e.touches && e.touches[0]) pointer.tx = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
+    }, { passive: true });
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { running = false; cancelAnimationFrame(raf); }
       else if (onScreen) { running = true; draw(); }
@@ -223,7 +230,38 @@
     }, { passive: true });
   }
 
-  function init() { particles(); magnetic(); consent(); reveals(); faqEase(); navHide(); }
+  /* ---------- Ghost numerals — the row numbers echoed huge and faint, drifting on scroll ---------- */
+  function ghosts() {
+    var rows = Array.prototype.filter.call(document.querySelectorAll('.svc-row'), function (r) {
+      return r.querySelector('.svc-num');
+    });
+    if (!rows.length) return;
+    var style = document.createElement('style');
+    style.textContent =
+      '.svc-row { position:relative; }' +
+      '.svc-row::before { content:attr(data-ghost) / ""; position:absolute; left:-14px; top:-30px; z-index:0;' +
+      ' font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; line-height:1;' +
+      ' font-size:clamp(120px, 16vw, 230px); color:rgba(139,92,246,0.055); pointer-events:none;' +
+      ' transform:translateY(var(--ghost-y, 0px)); will-change:transform; }' +
+      '.svc-row > * { position:relative; z-index:1; }';
+    document.head.appendChild(style);
+    rows.forEach(function (r) { r.setAttribute('data-ghost', r.querySelector('.svc-num').textContent.trim()); });
+    var ticking = false;
+    function drift() {
+      rows.forEach(function (r) {
+        var rect = r.getBoundingClientRect();
+        var off = (rect.top + rect.height / 2 - window.innerHeight / 2) * 0.07;
+        r.style.setProperty('--ghost-y', off.toFixed(1) + 'px');
+      });
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(drift); }
+    }, { passive: true });
+    drift();
+  }
+
+  function init() { particles(); magnetic(); consent(); reveals(); faqEase(); navHide(); ghosts(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();

@@ -95,14 +95,19 @@
     .hero-foot .container { display:flex; justify-content:space-between; gap:16px; }
     .hero-foot span { font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:rgba(238,232,255,0.4); }
 
-    /* Hero entrance — staggered rise on load */
+    /* Hero entrance — kicker/sub/CTAs rise as blocks; the headline rises line-by-line from masks */
     @keyframes mid-rise { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
-    .hero-kicker, .hero h1, .hero-sub, .hero-ctas, .hero-foot { opacity:0; animation:mid-rise .85s cubic-bezier(.16,1,.3,1) forwards; }
+    .hero-kicker, .hero-sub, .hero-ctas, .hero-foot { opacity:0; animation:mid-rise .85s cubic-bezier(.16,1,.3,1) forwards; }
     .hero-kicker { animation-delay:.05s; }
-    .hero h1 { animation-delay:.16s; }
-    .hero-sub { animation-delay:.32s; }
-    .hero-ctas { animation-delay:.46s; }
-    .hero-foot { animation-delay:.62s; }
+    .hero-sub { animation-delay:.5s; }
+    .hero-ctas { animation-delay:.64s; }
+    .hero-foot { animation-delay:.78s; }
+    @keyframes line-up { from { transform:translateY(112%); } to { transform:none; } }
+    .hero h1 .hl { display:block; overflow:hidden; padding-bottom:0.06em; margin-bottom:-0.06em; }
+    .hero h1 .hl > span { display:inline-block; transform:translateY(112%); animation:line-up .9s cubic-bezier(.16,1,.3,1) forwards; }
+    .hero h1 .hl:nth-child(1) > span { animation-delay:.12s; }
+    .hero h1 .hl:nth-child(2) > span { animation-delay:.24s; }
+    .hero h1 .hl:nth-child(3) > span { animation-delay:.36s; }
 
     /* ============ SERVICES — editorial rows ============ */
     .services { padding:110px 0 30px; background:var(--void); }
@@ -225,6 +230,9 @@
   .btn-solid:active, .btn-quiet:active, .lf-submit:active { transform:scale(.975); }
   nav { transition:transform .3s cubic-bezier(.16,1,.3,1); }
   nav.mid-nav-hidden { transform:translateY(-100%); }
+  .nav-logo img, .brand img { view-transition-name: ke-logo; }
+  @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
+  .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
   </style>
   <script type="application/ld+json">
   {
@@ -284,7 +292,7 @@
   <canvas id="ribbon" aria-hidden="true"></canvas>
   <div class="hero-inner container">
     <div class="hero-kicker"><span class="smallcaps accent">The growth agency for local trades</span></div>
-    <h1>Three Engines for a <em>Busier</em> Business</h1>
+    <h1><span class="hl"><span>Three Engines</span></span><span class="hl"><span>for a <em>Busier</em></span></span><span class="hl"><span>Business</span></span></h1>
     <p class="hero-sub"><strong>KaizenReach</strong> brings the work in with done-for-you Meta ads and fully-managed social. <strong>KaizenDesk</strong> answers every call, text and email around the clock so none of it slips through. <strong>KaizenForge</strong> builds you a website that sells. Win the work, never miss it, and look the part.</p>
     <div class="hero-ctas">
       <a href="#services" class="btn-solid">See the three engines</a>
@@ -515,6 +523,12 @@
   }, { passive: true });
   var scrollDrift = 0;
   window.addEventListener('scroll', function () { scrollDrift = window.scrollY * 0.0012; }, { passive: true });
+  window.addEventListener('deviceorientation', function (e) {
+    if (e.gamma !== null) pointer.tx = Math.max(-1, Math.min(1, e.gamma / 30));
+  }, { passive: true });
+  window.addEventListener('touchmove', function (e) {
+    if (e.touches && e.touches[0]) pointer.tx = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
+  }, { passive: true });
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) { running = false; cancelAnimationFrame(raf); }
     else if (onScreen) { running = true; draw(); }
@@ -569,6 +583,6 @@
   });
 })();
 </script>
-<script src="/midnight.js?v=10" defer></script>
+<script src="/midnight.js?v=11" defer></script>
 </body>
 </html>
