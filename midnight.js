@@ -58,7 +58,7 @@
       pointer.x += (pointer.tx - pointer.x) * 0.04;
       for (var r = 0; r < RIBBONS.length; r++) {
         var R = RIBBONS[r];
-        var phase = t * R.speed + r * 2.1;
+        var phase = t * R.speed + r * 2.1 + scrollDrift * (r + 1);
         for (var sIdx = 0; sIdx < R.strands; sIdx++) {
           var off = (sIdx / R.strands - 0.5);
           var isCore = sIdx === Math.floor(R.strands / 2);
@@ -89,6 +89,8 @@
     window.addEventListener('pointermove', function (e) {
       pointer.tx = (e.clientX / window.innerWidth - 0.5) * 2;
     }, { passive: true });
+    var scrollDrift = 0;
+    window.addEventListener('scroll', function () { scrollDrift = window.scrollY * 0.0012; }, { passive: true });
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { running = false; cancelAnimationFrame(raf); }
       else if (onScreen) { running = true; draw(); }
@@ -105,7 +107,7 @@
   /* ---------- Magnetic primary CTAs (desktop pointers only) ---------- */
   function magnetic() {
     if (!window.matchMedia('(hover:hover)').matches) return;
-    document.querySelectorAll('.btn-primary').forEach(function (btn) {
+    document.querySelectorAll('.btn-primary, .btn-solid').forEach(function (btn) {
       btn.addEventListener('pointermove', function (e) {
         var r = btn.getBoundingClientRect();
         var x = (e.clientX - r.left - r.width / 2) * 0.18;
@@ -158,7 +160,54 @@
     });
   }
 
-  function init() { particles(); magnetic(); consent(); }
+  /* ---------- Scroll reveals — editorial fade-rise with stagger ---------- */
+  function reveals() {
+    var els = document.querySelectorAll(
+      '.svc-row, .why-item, .founder-card, .founders-intro, .services-head, .section-header, ' +
+      '.step-row, .price-col, .ind-item, .prob-row, .closing-copy, .closing-grid form, ' +
+      '.faq-list details, details.faq-item, .build-card, .why-grid > *, .agent-row, .cmp-row'
+    );
+    if (!els.length) return;
+    var style = document.createElement('style');
+    style.textContent = '.mrv{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}.mrv.mrv-in{opacity:1;transform:none}';
+    document.head.appendChild(style);
+    els.forEach(function (el) { el.classList.add('mrv'); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.filter(function (e) { return e.isIntersecting; })
+        .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; })
+        .forEach(function (e, i) {
+          setTimeout(function () { e.target.classList.add('mrv-in'); }, i * 70);
+          io.unobserve(e.target);
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(function (el) { io.observe(el); });
+    /* anything already revealed-by-position at load shows immediately */
+    setTimeout(function () {
+      els.forEach(function (el) {
+        if (!el.classList.contains('mrv-in') && el.getBoundingClientRect().top < window.innerHeight * 0.95) {
+          el.classList.add('mrv-in');
+        }
+      });
+    }, 900);
+  }
+
+  /* ---------- Smooth FAQ opening — details content eases in ---------- */
+  function faqEase() {
+    document.querySelectorAll('details').forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (!d.open) return;
+        Array.prototype.slice.call(d.children).forEach(function (child) {
+          if (child.tagName === 'SUMMARY') return;
+          child.animate(
+            [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }],
+            { duration: 280, easing: 'cubic-bezier(.16,1,.3,1)' }
+          );
+        });
+      });
+    });
+  }
+
+  function init() { particles(); magnetic(); consent(); reveals(); faqEase(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();

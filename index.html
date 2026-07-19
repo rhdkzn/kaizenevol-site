@@ -95,6 +95,15 @@
     .hero-foot .container { display:flex; justify-content:space-between; gap:16px; }
     .hero-foot span { font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:rgba(238,232,255,0.4); }
 
+    /* Hero entrance — staggered rise on load */
+    @keyframes mid-rise { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+    .hero-kicker, .hero h1, .hero-sub, .hero-ctas, .hero-foot { opacity:0; animation:mid-rise .85s cubic-bezier(.16,1,.3,1) forwards; }
+    .hero-kicker { animation-delay:.05s; }
+    .hero h1 { animation-delay:.16s; }
+    .hero-sub { animation-delay:.32s; }
+    .hero-ctas { animation-delay:.46s; }
+    .hero-foot { animation-delay:.62s; }
+
     /* ============ SERVICES — editorial rows ============ */
     .services { padding:110px 0 30px; background:var(--void); }
     .services-head { display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:20px; }
@@ -463,7 +472,7 @@
 
     for (var r = 0; r < RIBBONS.length; r++) {
       var R = RIBBONS[r];
-      var phase = t * R.speed + r * 2.1;
+      var phase = t * R.speed + r * 2.1 + scrollDrift * (r + 1);
       for (var s = 0; s < R.strands; s++) {
         var off = (s / R.strands - 0.5);
         var isCore = s === Math.floor(R.strands / 2);   /* one bright core strand per band */
@@ -495,6 +504,8 @@
   window.addEventListener('pointermove', function (e) {
     pointer.tx = (e.clientX / window.innerWidth - 0.5) * 2;
   }, { passive: true });
+  var scrollDrift = 0;
+  window.addEventListener('scroll', function () { scrollDrift = window.scrollY * 0.0012; }, { passive: true });
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) { running = false; cancelAnimationFrame(raf); }
     else if (onScreen) { running = true; draw(); }
@@ -549,6 +560,6 @@
   });
 })();
 </script>
-<script src="/midnight.js?v=8" defer></script>
+<script src="/midnight.js?v=9" defer></script>
 </body>
 </html>
