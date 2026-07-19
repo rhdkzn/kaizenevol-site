@@ -29,6 +29,15 @@
     .brand { position:fixed; top:24px; left:0; right:0; display:flex; justify-content:center; }
     .brand a { display:flex; align-items:center; gap:10px; text-decoration:none; color:#EEE8FF; font-weight:700; font-size:16px; }
     .brand img { height:28px; width:auto; }
+    /* Cross-page transitions + FAQ height ease + press feedback (progressive, 2026 browsers) */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+  :root { interpolate-size: allow-keywords; }
+  details::details-content { block-size:0; overflow-y:clip; transition:content-visibility .32s allow-discrete, block-size .32s cubic-bezier(.16,1,.3,1); }
+  details[open]::details-content { block-size:auto; }
+  .btn-solid:active, .btn-quiet:active, .lf-submit:active { transform:scale(.975); }
+  nav { transition:transform .3s cubic-bezier(.16,1,.3,1); }
+  nav.mid-nav-hidden { transform:translateY(-100%); }
   </style>
 </head>
 <body>

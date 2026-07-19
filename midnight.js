@@ -207,7 +207,23 @@
     });
   }
 
-  function init() { particles(); magnetic(); consent(); reveals(); faqEase(); }
+  /* ---------- Self-hiding nav: away on scroll down, back on scroll up ---------- */
+  function navHide() {
+    var nav = document.querySelector('nav');
+    if (!nav) return;
+    var last = window.scrollY, acc = 0;
+    window.addEventListener('scroll', function () {
+      var y = window.scrollY;
+      var menu = document.querySelector('.mobile-menu.open');
+      if (menu) { nav.classList.remove('mid-nav-hidden'); last = y; return; }
+      var d = y - last; last = y;
+      acc = (d > 0) === (acc > 0) ? acc + d : d;
+      if (y < 120 || acc < -24) nav.classList.remove('mid-nav-hidden');
+      else if (acc > 90 && y > 240) nav.classList.add('mid-nav-hidden');
+    }, { passive: true });
+  }
+
+  function init() { particles(); magnetic(); consent(); reveals(); faqEase(); navHide(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
