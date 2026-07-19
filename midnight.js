@@ -61,6 +61,13 @@
     function tryWebGL() {
       var gl = canvas.getContext('webgl', { alpha: true, antialias: false, powerPreference: 'low-power' });
       if (!gl) return false;
+      /* Software GL (SwiftShader/llvmpipe) means no real GPU — the per-pixel
+         shader would burn the CPU. Use the cheap stroke ribbon instead. */
+      try {
+        var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+        var renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';
+        if (/swiftshader|llvmpipe|software/i.test(renderer)) return false;
+      } catch (e) {}
       var VS = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
       var FS =
         'precision mediump float;' +
