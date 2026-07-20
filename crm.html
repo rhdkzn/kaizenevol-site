@@ -420,6 +420,11 @@
     .stat-card:hover:not(.highlight){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 3px 0 0 var(--purple);}
     .stat-card.highlight{background:linear-gradient(135deg,#6d28d9 0%,var(--purple) 55%,#a78bfa 100%);border:none;box-shadow:0 6px 32px rgba(139,92,246,0.45);}
     .card,.pipe-client,.checklist-client{box-shadow:0 4px 24px rgba(0,0,0,0.45);}
+  
+  /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — smooth crossfade between pages ============ */
+  @view-transition { navigation: auto; }
+  ::view-transition-group(root) { animation-duration: 0.42s; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-timing-function: cubic-bezier(.16,1,.3,1); }
   </style>
 </head>
 <body>

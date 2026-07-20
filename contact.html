@@ -187,6 +187,11 @@
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
   @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
+  
+  /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — smooth crossfade between pages ============ */
+  @view-transition { navigation: auto; }
+  ::view-transition-group(root) { animation-duration: 0.42s; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-timing-function: cubic-bezier(.16,1,.3,1); }
   </style>
   <script type="application/ld+json">
   {
