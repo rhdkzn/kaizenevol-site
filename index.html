@@ -260,11 +260,6 @@
     }
   }
   </script>
-  <!-- Speculation Rules (Forge 2026-07-20): prefetch same-origin links on intent → near-instant navigation.
-       Prefetch only (not prerender), so no page JS/pixel pre-fires — consent-gating untouched. -->
-  <script type="speculationrules">
-  { "prefetch": [ { "where": { "href_matches": "/*" }, "eagerness": "moderate" } ] }
-  </script>
 </head>
 <body>
 

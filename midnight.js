@@ -8,6 +8,28 @@
 (function () {
   'use strict';
 
+  /* Spring easing — computed damped-spring curve (Framer-grade settle). Used on scroll reveals. */
+  var MID_SPRING = 'linear(0 0%,0.055 4%,0.189 8%,0.363 12%,0.547 17%,0.718 21%,0.863 25%,0.975 29%,1.053 33%,1.101 38%,1.123 42%,1.125 46%,1.114 50%,1.095 54%,1.072 58%,1.049 62%,1.028 67%,1.012 71%,0.999 75%,0.991 79%,0.986 83%,0.984 88%,0.985 92%,0.986 96%,0.989 100%)';
+
+  /* ---------- Web-craft layer (Forge 2026-07-20): a11y + typography + prefetch ----------
+     Injected sitewide via this runtime (loads on every marketing page). */
+  function craft() {
+    var s = document.createElement('style');
+    s.textContent =
+      'html{scroll-padding-top:84px;}' +               /* WCAG 2.2 SC 2.4.11: sticky nav no longer hides the focus ring */
+      'h1,h2,h3{text-wrap:balance;}' +                 /* even headline line-breaks, no orphan word */
+      'p,li{text-wrap:pretty;}';                       /* body orphan fix */
+    document.head.appendChild(s);
+    /* Speculation Rules: prefetch same-origin links on intent -> near-instant navigation.
+       Prefetch only (not prerender) so no page JS/pixel pre-fires; consent-gating untouched. */
+    if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
+      var sr = document.createElement('script');
+      sr.type = 'speculationrules';
+      sr.textContent = '{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}';
+      document.head.appendChild(sr);
+    }
+  }
+
   /* ---------- Signature silk — GPU shader ribbon with 2D fallback ----------
      Owner rule (2026-07-18): animations always run — device motion settings
      never change the look. WebGL renders per-pixel silk; devices without it
@@ -139,6 +161,7 @@
     /* ---- 2D fallback (the original stroke ribbon) ---- */
     function fall2D() {
       var ctx = canvas.getContext('2d');
+      if (!ctx) return; /* canvas already holds a WebGL context (software-GL path) — nothing to draw on; skip silently */
       var t = 0;
       var RIBBONS = [
         { strands: 22, baseY: 0.72, amp: 0.16, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [139, 92, 246], alpha: 0.1, core: 0.5 },
@@ -258,7 +281,7 @@
     );
     if (!els.length) return;
     var style = document.createElement('style');
-    style.textContent = '.mrv{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}.mrv.mrv-in{opacity:1;transform:none}';
+    style.textContent = '.mrv{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .8s ' + MID_SPRING + '}.mrv.mrv-in{opacity:1;transform:none}';
     document.head.appendChild(style);
     els.forEach(function (el) { el.classList.add('mrv'); });
     var io = new IntersectionObserver(function (entries) {
@@ -366,7 +389,13 @@
     });
   }
 
-  function init() { particles(); magnetic(); consent(); reveals(); faqEase(); navHide(); ghosts(); tilt(); }
+  /* Resilient init: run each module independently so one failure (e.g. a canvas/WebGL
+     quirk in particles()) can never abort the rest — reveals, consent, nav must still run. */
+  function init() {
+    [craft, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt].forEach(function (fn) {
+      try { fn(); } catch (e) { if (window.console) console.warn('midnight: ' + (fn.name || 'module') + ' skipped —', e && e.message); }
+    });
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
