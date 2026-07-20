@@ -317,6 +317,40 @@
   .why-item:hover::before { width:54px; }
   .why-item:hover .why-idx { opacity:1; color:var(--accent-2); }
   @media(max-width:768px){ .why-item:nth-child(even){ padding-left:0; } .why-item:nth-child(even)::before{ left:0; } }
+
+  /* ================================================================
+     PHASE 2 (2026-07-20) — carry the treatment through the whole page.
+     ================================================================ */
+  /* Consistent section eyebrows */
+  .sec-eyebrow { display:inline-block; margin-bottom:20px; }
+
+  /* Accent rule under the services heading (matches Why/Founders/Closing) */
+  .services-head { position:relative; padding-bottom:26px; }
+  .services-head::after { content:''; position:absolute; left:0; bottom:0; height:2px; width:66px;
+    background:linear-gradient(90deg,var(--accent-2),transparent); transform-origin:left; transform:scaleX(1); }
+  @supports (animation-timeline: view()) {
+    .services-head::after { transform:scaleX(0); animation:el-rule linear both; animation-timeline:view(); animation-range:entry 12% entry 62%; }
+  }
+
+  /* Service rows: interactive — the big numeral brightens, a whisper of tint */
+  .svc-row { transition:background .4s var(--el-ease); }
+  .svc-row:hover { background:rgba(139,92,246,0.03); }
+  .svc-num { transition:color .45s var(--el-ease); }
+  .svc-row:hover .svc-num { color:var(--accent-2); }
+
+  /* Founders: a violet-lit avatar + a subtle card lift */
+  .founder-avatar { position:relative; transition:transform .45s var(--el-ease), box-shadow .45s var(--el-ease);
+    box-shadow:0 0 0 1px rgba(139,92,246,0.28), 0 10px 34px -10px rgba(139,92,246,0.55); }
+  .founder-card { transition:transform .45s var(--el-ease); }
+  .founder-card:hover { transform:translateY(-4px); }
+  .founder-card:hover .founder-avatar { transform:translateY(-2px) scale(1.05); box-shadow:0 0 0 1px rgba(167,139,250,0.5), 0 14px 40px -8px rgba(139,92,246,0.7); }
+
+  /* Closing form: a defined surface card + accent focus glow + submit lift */
+  #leadForm { background:rgba(238,232,255,0.02); border:1px solid var(--hairline); border-radius:12px; padding:30px; }
+  .lf-input:focus, .lf-select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(139,92,246,0.16); }
+  .lf-submit { transition:background .18s, transform .4s var(--el-ease); }
+  .lf-submit:hover { transform:translateY(-2px); }
+  @media(max-width:600px){ #leadForm { padding:22px; } }
   </style>
   <script type="application/ld+json">
   {
@@ -394,6 +428,7 @@
 
 <section class="services" id="services">
   <div class="container">
+    <span class="smallcaps accent sec-eyebrow">The three engines</span>
     <div class="services-head">
       <h2>Three Ways We <em>Grow Your Business</em></h2>
       <p>Use one, or stack them. They are built to feed each other, a site that converts, more enquiries in, and none of them lost.</p>
@@ -466,6 +501,7 @@
   <div class="container">
     <div class="founders-grid">
       <div class="founders-intro">
+        <span class="smallcaps accent sec-eyebrow">The people</span>
         <h2>Who You'll <em>Actually</em> Talk To</h2>
         <p>No account managers, no call centre. Two founders, and one of them picks up.</p>
       </div>
@@ -488,6 +524,7 @@
 <section class="closing" id="contact">
   <div class="container closing-grid">
     <div class="closing-copy">
+      <span class="smallcaps accent sec-eyebrow">Get in touch</span>
       <h2>Tell Us Where You're <em>Losing Work</em></h2>
       <p>Not enough enquiries, or not catching the ones you get? Tell us and we'll point you to the right fix. We'll be in touch within 24 hours.</p>
       <div class="closing-alt">
