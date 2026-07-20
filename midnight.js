@@ -55,6 +55,47 @@
     document.body.appendChild(v); document.body.appendChild(g);
   }
 
+  /* ---------- Count-up — the big revenue figures tick from zero on first view ----------
+     Targets the shared .calc-result-amount cells. Reads the target at the moment the
+     element scrolls in (so it respects any slider changes already made), animates 0 -> target
+     once (easeOutCubic), preserving the £ prefix and en-GB grouping. Any slider 'input'
+     cancels a running count so it never fights the live calculator. */
+  function countUp() {
+    var els = [].slice.call(document.querySelectorAll('.calc-result-amount, [data-countup]'));
+    if (!els.length) return;
+    var active = [];
+    document.addEventListener('input', function () { active.forEach(function (t) { t.cancelled = true; }); active = []; }, { passive: true });
+    function fmt(c, n) { return c.prefix + Math.round(n).toLocaleString('en-GB') + c.suffix; }
+    function animate(el) {
+      var c = el._cu; if (!c || !(c.target > 0)) return;
+      var dur = 1100, start = null, tok = { cancelled: false };
+      active.push(tok);
+      function step(ts) {
+        if (tok.cancelled) return;
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = fmt(c, c.target * e);
+        if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(c, c.target);
+      }
+      requestAnimationFrame(step);
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target; io.unobserve(el); animate(el);
+      });
+    }, { threshold: 0.6 });
+    els.forEach(function (el) {
+      var raw = el.textContent, m = raw.match(/-?\d[\d,]*\.?\d*/);
+      if (!m) return;
+      var target = parseFloat(m[0].replace(/,/g, ''));
+      if (!isFinite(target) || target === 0) return;         // leave zero/blank cells untouched
+      el._cu = { prefix: raw.slice(0, m.index), suffix: raw.slice(m.index + m[0].length), target: target };
+      el.textContent = fmt(el._cu, 0);                        // pin to zero up front so the final value never flashes
+      io.observe(el);
+    });
+  }
+
   /* ---------- Signature silk — GPU shader ribbon with 2D fallback ----------
      Owner rule (2026-07-18): animations always run — device motion settings
      never change the look. WebGL renders per-pixel silk; devices without it
@@ -417,7 +458,7 @@
   /* Resilient init: run each module independently so one failure (e.g. a canvas/WebGL
      quirk in particles()) can never abort the rest — reveals, consent, nav must still run. */
   function init() {
-    [craft, grain, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt].forEach(function (fn) {
+    [craft, grain, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt, countUp].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn('midnight: ' + (fn.name || 'module') + ' skipped —', e && e.message); }
     });
   }
