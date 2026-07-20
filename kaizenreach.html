@@ -355,6 +355,19 @@
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
   @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
+
+  /* ============ ELEVATION LAYER — homepage signature ported across ============ */
+  /* Editorial accent rule that draws in beneath each section heading */
+  .section-header h2 { position:relative; padding-bottom:24px; }
+  .section-header h2::after {
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:64px;
+    background:linear-gradient(90deg, var(--accent-2), transparent);
+    transform-origin:left; transform:scaleX(1); }
+  @supports (animation-timeline: view()) {
+    .section-header h2::after {
+      transform:scaleX(0); animation:el-rule linear both; animation-timeline:view(); animation-range:entry 10% entry 60%; }
+    @keyframes el-rule { to { transform:scaleX(1); } }
+  }
   </style>
 </head>
 <body>
