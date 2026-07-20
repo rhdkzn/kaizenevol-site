@@ -32,6 +32,29 @@
     }
   }
 
+  /* ---------- Filmic grain + vignette — the 'expensive' texture ----------
+     A static SVG fractal-noise overlay at low opacity (soft-light blend) plus a
+     gentle radial vignette. Pure texture: pointer-events:none so it never
+     intercepts input, no animation (reads on large dark fields, invisible over
+     UI chrome). Sitewide via the loaded layer. */
+  function grain() {
+    var svg = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180">' +
+      '<filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>' +
+      '<feColorMatrix type="saturate" values="0"/></filter>' +
+      '<rect width="100%" height="100%" filter="url(#n)"/></svg>');
+    var st = document.createElement('style');
+    st.textContent =
+      '.mid-grain,.mid-vignette{position:fixed;inset:0;pointer-events:none;}' +
+      '.mid-vignette{z-index:9989;background:radial-gradient(125% 125% at 50% 40%,transparent 58%,rgba(6,3,14,0.30) 100%);}' +
+      '.mid-grain{z-index:9990;opacity:0.06;' +
+        'background-image:url("' + svg + '");background-size:170px 170px;}';
+    document.head.appendChild(st);
+    var v = document.createElement('div'); v.className = 'mid-vignette'; v.setAttribute('aria-hidden', 'true');
+    var g = document.createElement('div'); g.className = 'mid-grain'; g.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(v); document.body.appendChild(g);
+  }
+
   /* ---------- Signature silk — GPU shader ribbon with 2D fallback ----------
      Owner rule (2026-07-18): animations always run — device motion settings
      never change the look. WebGL renders per-pixel silk; devices without it
@@ -394,7 +417,7 @@
   /* Resilient init: run each module independently so one failure (e.g. a canvas/WebGL
      quirk in particles()) can never abort the rest — reveals, consent, nav must still run. */
   function init() {
-    [craft, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt].forEach(function (fn) {
+    [craft, grain, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn('midnight: ' + (fn.name || 'module') + ' skipped —', e && e.message); }
     });
   }
