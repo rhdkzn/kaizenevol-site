@@ -18,7 +18,9 @@
     s.textContent =
       'html{scroll-padding-top:84px;}' +               /* WCAG 2.2 SC 2.4.11: sticky nav no longer hides the focus ring */
       'h1,h2,h3{text-wrap:balance;}' +                 /* even headline line-breaks, no orphan word */
-      'p,li{text-wrap:pretty;}';                       /* body orphan fix */
+      'p,li{text-wrap:pretty;}' +                      /* body orphan fix */
+      'input[type=range]{min-block-size:24px;}' +      /* WCAG 2.2 SC 2.5.8 target size: the thin calc sliders were ~2px tall */
+      '.fc-row{min-block-size:24px;}';                 /* contact-row action links to a 24px hit area */
     document.head.appendChild(s);
     /* Speculation Rules: prefetch same-origin links on intent -> near-instant navigation.
        Prefetch only (not prerender) so no page JS/pixel pre-fires; consent-gating untouched. */
