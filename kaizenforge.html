@@ -239,6 +239,9 @@
     .price-list li { font-size:14.5px; color:var(--muted); line-height:1.55; padding-left:22px; position:relative; }
     .price-list li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
     .price-col .btn-solid, .price-col .btn-quiet { margin-top:auto; text-align:center; }
+    /* Highlight the recommended tier — subtle violet wash + accent top-bar, no boxing */
+    .price-col:has(.price-flag) { position:relative; background:linear-gradient(180deg, rgba(139,92,246,0.07), rgba(139,92,246,0.012) 55%, transparent); }
+    .price-col:has(.price-flag)::before { content:''; position:absolute; top:-1px; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--accent), var(--accent-2)); }
     .price-fine { text-align:center; margin:36px auto 0; font-size:13.5px; color:var(--muted); max-width:620px; line-height:1.7; }
     .price-fine strong { color:var(--accent-2); font-weight:600; }
     .guarantee { max-width:640px; margin:72px auto 0; text-align:center; padding-top:44px; border-top:1px solid var(--hairline); }

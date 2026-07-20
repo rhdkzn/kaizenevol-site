@@ -351,6 +351,14 @@
   .lf-submit { transition:background .18s, transform .4s var(--el-ease); }
   .lf-submit:hover { transform:translateY(-2px); }
   @media(max-width:600px){ #leadForm { padding:22px; } }
+
+  /* ============ AMBIENT SECTION GLOWS — soft violet washes for depth on the flat expanses ============ */
+  .services, .why, .closing { position:relative; isolation:isolate; }
+  .services > *, .why > *, .closing > * { position:relative; z-index:1; }
+  .services::before, .why::before, .closing::before { content:''; position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .services::before { background:radial-gradient(55% 45% at 84% 3%, rgba(139,92,246,0.10), transparent 72%); }
+  .why::before { background:radial-gradient(48% 62% at 6% 48%, rgba(139,92,246,0.07), transparent 70%); }
+  .closing::before { background:radial-gradient(58% 72% at 80% 94%, rgba(139,92,246,0.13), transparent 72%); }
   </style>
   <script type="application/ld+json">
   {
