@@ -338,6 +338,49 @@
     });
   }
 
+  /* ---------- Heading mask reveal — section H2s wipe up from a mask on scroll-in ----------
+     Deliberately NOT the hero H1 (that's the LCP element — animating it in reads as slow).
+     A clip-path rise on the heading text; composes with the container fade already running.
+     Negative bottom/right insets in the end state keep italic descenders and the accent
+     rule from being clipped. */
+  function headingReveal() {
+    var els = [].slice.call(document.querySelectorAll(
+      '.section-head h2, .sec-head h2, .section-header h2, .sect-head h2, ' +
+      '.services-head h2, .founders-intro h2, .closing h2, .why h2'));
+    if (!els.length) return;
+    var st = document.createElement('style');
+    st.textContent =
+      '.mh{clip-path:inset(-6% -10% 110% 0);transform:translateY(16px);' +
+      'transition:clip-path .9s ' + MID_SPRING + ',transform .9s ' + MID_SPRING + '}' +
+      '.mh.mh-in{clip-path:inset(-6% -10% -14% 0);transform:none}';
+    document.head.appendChild(st);
+    els.forEach(function (el) { el.classList.add('mh'); });
+    function reveal(el) { el.classList.add('mh-in'); }
+    /* Safety net: a heading must NEVER stay hidden. Sweep reveals any heading whose top
+       has entered the viewport; runs on scroll (rAF-throttled) and a few timed passes, so
+       even if the observer misses one it still shows. */
+    function sweep() {
+      var vh = window.innerHeight;
+      els.forEach(function (el) {
+        if (el.classList.contains('mh-in')) return;
+        var r = el.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) reveal(el);   // any pixel in the viewport => reveal (never leave one hidden)
+      });
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+      els.forEach(function (el) { io.observe(el); });
+    }
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () { sweep(); ticking = false; });
+    }, { passive: true });
+    sweep(); setTimeout(sweep, 400); setTimeout(sweep, 1200);
+  }
+
   /* ---------- Scroll reveals — editorial fade-rise with stagger ---------- */
   function reveals() {
     var els = document.querySelectorAll(
@@ -458,7 +501,7 @@
   /* Resilient init: run each module independently so one failure (e.g. a canvas/WebGL
      quirk in particles()) can never abort the rest — reveals, consent, nav must still run. */
   function init() {
-    [craft, grain, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt, countUp].forEach(function (fn) {
+    [craft, grain, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt, countUp, headingReveal].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn('midnight: ' + (fn.name || 'module') + ' skipped —', e && e.message); }
     });
   }
