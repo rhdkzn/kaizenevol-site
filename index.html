@@ -274,6 +274,49 @@
   /* Service links: an arrow eases out on hover */
   .svc-link::after { content:'\2009\2192'; display:inline-block; transition:transform .3s var(--el-ease); }
   .svc-link:hover::after { transform:translateX(5px); }
+
+  /* ================================================================
+     BOLD PASS (2026-07-20) — bigger visible moments: hero + Why redesign.
+     ================================================================ */
+  /* Hero: animated gradient on the accent word (supersedes the breathe) */
+  .hero h1 em {
+    background:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);
+    background-size:230% 100%; -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent; color:transparent;
+    animation:el-grad 6.5s linear infinite; }
+  @keyframes el-grad { to { background-position:230% 0; } }
+
+  /* Hero: a violet bloom behind the headline (above the shader, below the text) */
+  .hero::after { content:''; position:absolute; z-index:1; left:50%; top:40%; transform:translate(-50%,-50%);
+    width:min(940px,92vw); height:560px; pointer-events:none;
+    background:radial-gradient(ellipse at center, rgba(139,92,246,0.20), rgba(139,92,246,0.05) 40%, transparent 68%); }
+
+  /* Hero: eyebrow flanked by short accent rules */
+  .hero-kicker .smallcaps { display:inline-flex; align-items:center; gap:14px; }
+  .hero-kicker .smallcaps::before, .hero-kicker .smallcaps::after { content:''; width:26px; height:1px; background:currentColor; opacity:.45; }
+
+  /* Hero: animated scroll cue */
+  .hero-scroll { position:absolute; left:50%; bottom:88px; transform:translateX(-50%); z-index:2; width:1px; height:44px;
+    background:rgba(238,232,255,0.14); overflow:hidden; }
+  .hero-scroll::after { content:''; position:absolute; left:0; top:0; width:100%; height:14px; background:var(--accent-2);
+    animation:el-cue 1.9s cubic-bezier(.7,0,.3,1) infinite; }
+  @keyframes el-cue { 0%{transform:translateY(-14px);} 55%,100%{transform:translateY(44px);} }
+  @media(max-width:768px){ .hero-scroll{ display:none; } }
+
+  /* Why — redesigned into a numbered, interactive feature grid */
+  .why-eyebrow { display:inline-block; margin-bottom:16px; }
+  .why-item { position:relative; padding:42px 44px 42px 0; transition:background .4s var(--el-ease); }
+  .why-item:nth-child(even) { padding-left:44px; }
+  .why-idx { display:block; font-family:var(--serif); font-style:italic; font-size:34px; line-height:1;
+    color:var(--accent); opacity:.5; margin-bottom:16px; transition:opacity .4s var(--el-ease), color .4s; }
+  .why-item b { font-size:23px; }
+  .why-item::before { content:''; position:absolute; top:-1px; left:0; height:2px; width:0; background:var(--accent-2);
+    transition:width .5s var(--el-ease); }
+  .why-item:nth-child(even)::before { left:44px; }
+  .why-item:hover { background:rgba(139,92,246,0.05); }
+  .why-item:hover::before { width:54px; }
+  .why-item:hover .why-idx { opacity:1; color:var(--accent-2); }
+  @media(max-width:768px){ .why-item:nth-child(even){ padding-left:0; } .why-item:nth-child(even)::before{ left:0; } }
   </style>
   <script type="application/ld+json">
   {
@@ -339,6 +382,7 @@
       <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-quiet" target="_blank" rel="noopener">Book a Call</a>
     </div>
   </div>
+  <div class="hero-scroll" aria-hidden="true"></div>
   <div class="hero-foot">
     <div class="container">
       <span>Anywhere in the UK</span>
@@ -407,12 +451,13 @@
 
 <section class="why">
   <div class="container">
+    <span class="smallcaps accent why-eyebrow">Why work with us</span>
     <h2>Why <em>KaizenEvol</em></h2>
     <div class="why-grid">
-      <div class="why-item"><b>Built for your trade</b><p>Specialists in home renovation and local service businesses, never a generic agency template with your logo swapped in.</p></div>
-      <div class="why-item"><b>You own everything</b><p>Your ad account, your number, your reviews, your customer data, always yours, never locked away.</p></div>
-      <div class="why-item"><b>Straight to the founders</b><p>You work with Rahaid and Diego directly. No account managers, no junior assigned to your account, no ticket queue.</p></div>
-      <div class="why-item"><b>UK-built &amp; compliant</b><p>GDPR and PECR compliant by design, with EU data residency on the AI side.</p></div>
+      <div class="why-item"><span class="why-idx" aria-hidden="true">01</span><b>Built for your trade</b><p>Specialists in home renovation and local service businesses, never a generic agency template with your logo swapped in.</p></div>
+      <div class="why-item"><span class="why-idx" aria-hidden="true">02</span><b>You own everything</b><p>Your ad account, your number, your reviews, your customer data, always yours, never locked away.</p></div>
+      <div class="why-item"><span class="why-idx" aria-hidden="true">03</span><b>Straight to the founders</b><p>You work with Rahaid and Diego directly. No account managers, no junior assigned to your account, no ticket queue.</p></div>
+      <div class="why-item"><span class="why-idx" aria-hidden="true">04</span><b>UK-built &amp; compliant</b><p>GDPR and PECR compliant by design, with EU data residency on the AI side.</p></div>
     </div>
   </div>
 </section>
