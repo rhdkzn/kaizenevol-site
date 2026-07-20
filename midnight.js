@@ -8,6 +8,94 @@
 (function () {
   'use strict';
 
+  /* Spring easing — computed damped-spring curve (Framer-grade settle). Used on scroll reveals. */
+  var MID_SPRING = 'linear(0 0%,0.055 4%,0.189 8%,0.363 12%,0.547 17%,0.718 21%,0.863 25%,0.975 29%,1.053 33%,1.101 38%,1.123 42%,1.125 46%,1.114 50%,1.095 54%,1.072 58%,1.049 62%,1.028 67%,1.012 71%,0.999 75%,0.991 79%,0.986 83%,0.984 88%,0.985 92%,0.986 96%,0.989 100%)';
+
+  /* ---------- Web-craft layer (Forge 2026-07-20): a11y + typography + prefetch ----------
+     Injected sitewide via this runtime (loads on every marketing page). */
+  function craft() {
+    var s = document.createElement('style');
+    s.textContent =
+      'html{scroll-padding-top:84px;}' +               /* WCAG 2.2 SC 2.4.11: sticky nav no longer hides the focus ring */
+      'h1,h2,h3{text-wrap:balance;}' +                 /* even headline line-breaks, no orphan word */
+      'p,li{text-wrap:pretty;}' +                      /* body orphan fix */
+      'input[type=range]{min-block-size:24px;}' +      /* WCAG 2.2 SC 2.5.8 target size: the thin calc sliders were ~2px tall */
+      '.fc-row{min-block-size:24px;}';                 /* contact-row action links to a 24px hit area */
+    document.head.appendChild(s);
+    /* Speculation Rules: prefetch same-origin links on intent -> near-instant navigation.
+       Prefetch only (not prerender) so no page JS/pixel pre-fires; consent-gating untouched. */
+    if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
+      var sr = document.createElement('script');
+      sr.type = 'speculationrules';
+      sr.textContent = '{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}';
+      document.head.appendChild(sr);
+    }
+  }
+
+  /* ---------- Filmic grain + vignette — the 'expensive' texture ----------
+     A static SVG fractal-noise overlay at low opacity (soft-light blend) plus a
+     gentle radial vignette. Pure texture: pointer-events:none so it never
+     intercepts input, no animation (reads on large dark fields, invisible over
+     UI chrome). Sitewide via the loaded layer. */
+  function grain() {
+    var svg = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180">' +
+      '<filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>' +
+      '<feColorMatrix type="saturate" values="0"/></filter>' +
+      '<rect width="100%" height="100%" filter="url(#n)"/></svg>');
+    var st = document.createElement('style');
+    st.textContent =
+      '.mid-grain,.mid-vignette{position:fixed;inset:0;pointer-events:none;}' +
+      '.mid-vignette{z-index:9989;background:radial-gradient(125% 125% at 50% 40%,transparent 58%,rgba(6,3,14,0.30) 100%);}' +
+      '.mid-grain{z-index:9990;opacity:0.06;' +
+        'background-image:url("' + svg + '");background-size:170px 170px;}';
+    document.head.appendChild(st);
+    var v = document.createElement('div'); v.className = 'mid-vignette'; v.setAttribute('aria-hidden', 'true');
+    var g = document.createElement('div'); g.className = 'mid-grain'; g.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(v); document.body.appendChild(g);
+  }
+
+  /* ---------- Count-up — the big revenue figures tick from zero on first view ----------
+     Targets the shared .calc-result-amount cells. Reads the target at the moment the
+     element scrolls in (so it respects any slider changes already made), animates 0 -> target
+     once (easeOutCubic), preserving the £ prefix and en-GB grouping. Any slider 'input'
+     cancels a running count so it never fights the live calculator. */
+  function countUp() {
+    var els = [].slice.call(document.querySelectorAll('.calc-result-amount, [data-countup]'));
+    if (!els.length) return;
+    var active = [];
+    document.addEventListener('input', function () { active.forEach(function (t) { t.cancelled = true; }); active = []; }, { passive: true });
+    function fmt(c, n) { return c.prefix + Math.round(n).toLocaleString('en-GB') + c.suffix; }
+    function animate(el) {
+      var c = el._cu; if (!c || !(c.target > 0)) return;
+      var dur = 1100, start = null, tok = { cancelled: false };
+      active.push(tok);
+      function step(ts) {
+        if (tok.cancelled) return;
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = fmt(c, c.target * e);
+        if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(c, c.target);
+      }
+      requestAnimationFrame(step);
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target; io.unobserve(el); animate(el);
+      });
+    }, { threshold: 0.6 });
+    els.forEach(function (el) {
+      var raw = el.textContent, m = raw.match(/-?\d[\d,]*\.?\d*/);
+      if (!m) return;
+      var target = parseFloat(m[0].replace(/,/g, ''));
+      if (!isFinite(target) || target === 0) return;         // leave zero/blank cells untouched
+      el._cu = { prefix: raw.slice(0, m.index), suffix: raw.slice(m.index + m[0].length), target: target };
+      el.textContent = fmt(el._cu, 0);                        // pin to zero up front so the final value never flashes
+      io.observe(el);
+    });
+  }
+
   /* ---------- Signature silk — GPU shader ribbon with 2D fallback ----------
      Owner rule (2026-07-18): animations always run — device motion settings
      never change the look. WebGL renders per-pixel silk; devices without it
@@ -139,6 +227,7 @@
     /* ---- 2D fallback (the original stroke ribbon) ---- */
     function fall2D() {
       var ctx = canvas.getContext('2d');
+      if (!ctx) return; /* canvas already holds a WebGL context (software-GL path) — nothing to draw on; skip silently */
       var t = 0;
       var RIBBONS = [
         { strands: 22, baseY: 0.72, amp: 0.16, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [139, 92, 246], alpha: 0.1, core: 0.5 },
@@ -249,6 +338,49 @@
     });
   }
 
+  /* ---------- Heading mask reveal — section H2s wipe up from a mask on scroll-in ----------
+     Deliberately NOT the hero H1 (that's the LCP element — animating it in reads as slow).
+     A clip-path rise on the heading text; composes with the container fade already running.
+     Negative bottom/right insets in the end state keep italic descenders and the accent
+     rule from being clipped. */
+  function headingReveal() {
+    var els = [].slice.call(document.querySelectorAll(
+      '.section-head h2, .sec-head h2, .section-header h2, .sect-head h2, ' +
+      '.services-head h2, .founders-intro h2, .closing h2, .why h2'));
+    if (!els.length) return;
+    var st = document.createElement('style');
+    st.textContent =
+      '.mh{clip-path:inset(-6% -10% 110% 0);transform:translateY(16px);' +
+      'transition:clip-path .9s ' + MID_SPRING + ',transform .9s ' + MID_SPRING + '}' +
+      '.mh.mh-in{clip-path:inset(-6% -10% -14% 0);transform:none}';
+    document.head.appendChild(st);
+    els.forEach(function (el) { el.classList.add('mh'); });
+    function reveal(el) { el.classList.add('mh-in'); }
+    /* Safety net: a heading must NEVER stay hidden. Sweep reveals any heading whose top
+       has entered the viewport; runs on scroll (rAF-throttled) and a few timed passes, so
+       even if the observer misses one it still shows. */
+    function sweep() {
+      var vh = window.innerHeight;
+      els.forEach(function (el) {
+        if (el.classList.contains('mh-in')) return;
+        var r = el.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) reveal(el);   // any pixel in the viewport => reveal (never leave one hidden)
+      });
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+      els.forEach(function (el) { io.observe(el); });
+    }
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function () { sweep(); ticking = false; });
+    }, { passive: true });
+    sweep(); setTimeout(sweep, 400); setTimeout(sweep, 1200);
+  }
+
   /* ---------- Scroll reveals — editorial fade-rise with stagger ---------- */
   function reveals() {
     var els = document.querySelectorAll(
@@ -258,7 +390,7 @@
     );
     if (!els.length) return;
     var style = document.createElement('style');
-    style.textContent = '.mrv{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}.mrv.mrv-in{opacity:1;transform:none}';
+    style.textContent = '.mrv{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .8s ' + MID_SPRING + '}.mrv.mrv-in{opacity:1;transform:none}';
     document.head.appendChild(style);
     els.forEach(function (el) { el.classList.add('mrv'); });
     var io = new IntersectionObserver(function (entries) {
@@ -366,7 +498,13 @@
     });
   }
 
-  function init() { particles(); magnetic(); consent(); reveals(); faqEase(); navHide(); ghosts(); tilt(); }
+  /* Resilient init: run each module independently so one failure (e.g. a canvas/WebGL
+     quirk in particles()) can never abort the rest — reveals, consent, nav must still run. */
+  function init() {
+    [craft, grain, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt, countUp, headingReveal].forEach(function (fn) {
+      try { fn(); } catch (e) { if (window.console) console.warn('midnight: ' + (fn.name || 'module') + ' skipped —', e && e.message); }
+    });
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();

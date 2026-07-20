@@ -239,6 +239,9 @@
     .price-list li { font-size:14.5px; color:var(--muted); line-height:1.55; padding-left:22px; position:relative; }
     .price-list li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
     .price-col .btn-solid, .price-col .btn-quiet { margin-top:auto; text-align:center; }
+    /* Highlight the recommended tier — subtle violet wash + accent top-bar, no boxing */
+    .price-col:has(.price-flag) { position:relative; background:linear-gradient(180deg, rgba(139,92,246,0.07), rgba(139,92,246,0.012) 55%, transparent); }
+    .price-col:has(.price-flag)::before { content:''; position:absolute; top:-1px; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--accent), var(--accent-2)); }
     .price-fine { text-align:center; margin:36px auto 0; font-size:13.5px; color:var(--muted); max-width:620px; line-height:1.7; }
     .price-fine strong { color:var(--accent-2); font-weight:600; }
     .guarantee { max-width:640px; margin:72px auto 0; text-align:center; padding-top:44px; border-top:1px solid var(--hairline); }
@@ -354,6 +357,33 @@
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
   @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
+  
+  /* ============ ELEVATION LAYER — homepage signature ported across ============ */
+  .sec-head h2 { position:relative; padding-bottom:24px; }
+  .sec-head h2::after {
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:64px;
+    background:linear-gradient(90deg, var(--accent-2), transparent);
+    transform-origin:left; transform:scaleX(1); }
+  .sec-head.center h2::after {
+    left:50%; width:72px; transform:translateX(-50%) scaleX(1); transform-origin:center;
+    background:linear-gradient(90deg, transparent, var(--accent-2), transparent); }
+  @supports (animation-timeline: view()) {
+    .sec-head h2::after {
+      transform:scaleX(0); animation:el-rule linear both; animation-timeline:view(); animation-range:entry 10% entry 60%; }
+    .sec-head.center h2::after {
+      transform:translateX(-50%) scaleX(0); animation:el-rule-c linear both; animation-timeline:view(); animation-range:entry 10% entry 60%; }
+    @keyframes el-rule { to { transform:scaleX(1); } }
+    @keyframes el-rule-c { to { transform:translateX(-50%) scaleX(1); } }
+  }
+  
+  /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
+  @view-transition { navigation: auto; }
+  nav { view-transition-name: ke-nav; }
+  .nav-logo img, .brand img { view-transition-name: none; }
+  ::view-transition-old(root) { animation: ke-vt-out .26s cubic-bezier(.4,0,1,1) both; }
+  ::view-transition-new(root) { animation: ke-vt-in .5s cubic-bezier(.2,1.12,.34,1) both; }
+  @keyframes ke-vt-out { to { opacity:0; transform:translateY(-10px); } }
+  @keyframes ke-vt-in { from { opacity:0; transform:translateY(30px); } }
   </style>
   <script type="application/ld+json">
   {
@@ -366,7 +396,7 @@
       { "@type": "Question", "name": "What if I don't like what you build?", "acceptedAnswer": { "@type": "Answer", "text": "Then you don't pay, that's the whole point of building it first. You see the finished site before a penny changes hands. If it's close but not quite right, we'll revise it. If it's just not for you, you walk away owing nothing and we part as friends." } },
       { "@type": "Question", "name": "Do you write the words, or do I?", "acceptedAnswer": { "@type": "Answer", "text": "We do. Writing pages that turn visitors into enquiries is the core of what we do for our advertising clients. We'll take what you tell us in the 15-minute chat, your trade, your patch, what makes you the right choice, and turn it into copy that sounds like you and sells like us." } },
       { "@type": "Question", "name": "I already have a website. Can you replace it?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, that's most of our work. We build the new site, you approve it, and we switch your existing domain over with no downtime and nothing technical on your plate. Your old site stays live until the moment the new one takes over." } },
-      { "@type": "Question", "name": "Will it show up on Google?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, and here's the shift most businesses have missed. Google now answers roughly 6 in 10 searches right on the results page, so being found no longer wins the job on its own. Every KaizenForge site is built on the fast, clean, mobile-first code Google rewards, with proper titles and descriptions, and the monthly health check keeps it that way. But its real job is to convert the visitors who do reach you into booked work. Want to actively pull in more traffic on top? That's what our KaizenReach ad service is for." } }
+      { "@type": "Question", "name": "Will it show up on Google?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, and here's the shift most businesses have missed. Google now answers most searches right on the results page, so being found no longer wins the job on its own. Every KaizenForge site is built on the fast, clean, mobile-first code Google rewards, with proper titles and descriptions, and the monthly health check keeps it that way. But its real job is to convert the visitors who do reach you into booked work. Want to actively pull in more traffic on top? That's what our KaizenReach ad service is for." } }
     ]
   }
   </script>
@@ -441,14 +471,14 @@
       <p>Every site below was built by us, is live right now, and is owned outright by the business. Don't take our word for it, click through and see.</p>
     </div>
     <div class="lapwrap" id="lapdemo">
-      <div class="lap-screen"><div class="lap-view"><img src="showcase-home.jpg" alt="The kaizenevol.com homepage scrolling on a laptop screen" width="1000" height="3000" loading="lazy"></div></div>
+      <div class="lap-screen"><div class="lap-view"><picture><source srcset="showcase-home.avif" type="image/avif"><img src="showcase-home.jpg" alt="The kaizenevol.com homepage scrolling on a laptop screen" width="1000" height="3000" loading="lazy"></picture></div></div>
       <div class="lap-base"></div>
       <p class="lap-cap">You're looking at one right now — <strong>kaizenevol.com</strong> is a KaizenForge build, top to bottom.</p>
     </div>
     <div class="builds-grid">
       <a class="build-card" href="https://kavita-pilates.vercel.app" target="_blank" rel="noopener">
         <div class="build-frame"><span class="build-dot"></span><span class="build-dot"></span><span class="build-dot"></span><span class="build-url">kavita-pilates.vercel.app</span></div>
-        <img src="build-kavita.jpg" width="1280" height="800" loading="lazy" alt="Reformer Pilates by Kavita, boutique studio website built by KaizenForge" />
+        <picture><source srcset="build-kavita.avif" type="image/avif"><img src="build-kavita.jpg" width="1280" height="800" loading="lazy" alt="Reformer Pilates by Kavita, boutique studio website built by KaizenForge" /></picture>
         <div class="build-cap"><strong>Reformer Pilates by Kavita</strong><span>Bristol &middot; studio launch</span><span class="build-visit">Visit &rarr;</span></div>
       </a>
     </div>
@@ -618,7 +648,7 @@
     <p class="price-fine"><strong>Nothing until you approve it.</strong> Your domain is always yours, and so is the site, outright. Want it looked after? <strong>Forge Care, &pound;39/mo optional</strong> (founding 10 keep &pound;29/mo for life): hosting beyond year one, content edits with 48h turnaround, and a monthly health check. Cancel it anytime; the site stays yours.</p>
     <div class="guarantee">
       <h3>You don't pay until you <em>approve it</em></h3>
-      <p>We build your site first and show it to you. Love it, pay once and it goes live within 24 hours, whichever plan, or &pound;100 comes off. Don't love it, walk away owing nothing.</p>
+      <p>We build your site first and show it to you. Love it, pay once and it goes live within 24 hours, whichever plan. Don't love it, walk away owing nothing.</p>
     </div>
   </div>
 </section>
@@ -653,7 +683,7 @@
       </details>
       <details class="faq-inline-item">
         <summary class="faq-inline-summary">Will it show up on Google?</summary>
-        <div class="faq-inline-answer">Yes, and here's the shift most businesses have missed. Google now answers roughly 6 in 10 searches right on the results page, so being <em>found</em> no longer wins the job on its own. Every KaizenForge site is built on the fast, clean, mobile-first code Google rewards, with proper titles and descriptions, and the monthly health check keeps it that way. But its real job is to <em>convert</em> the visitors who do reach you into booked work, because those are the ones that count now. Want to actively pull in more traffic on top? That's exactly what our KaizenReach ad service is for.</div>
+        <div class="faq-inline-answer">Yes, and here's the shift most businesses have missed. Google now answers most searches right on the results page, so being <em>found</em> no longer wins the job on its own. Every KaizenForge site is built on the fast, clean, mobile-first code Google rewards, with proper titles and descriptions, and the monthly health check keeps it that way. But its real job is to <em>convert</em> the visitors who do reach you into booked work, because those are the ones that count now. Want to actively pull in more traffic on top? That's exactly what our KaizenReach ad service is for.</div>
       </details>
     </div>
   </div>
@@ -831,7 +861,7 @@ m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';})
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<script src="/midnight.js?v=13" defer></script>
+<script src="/midnight.js?v=16" defer></script>
 <script>
 (function(){
   var lap=document.getElementById('lapdemo'); if(!lap) return;

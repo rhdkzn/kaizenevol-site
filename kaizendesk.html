@@ -362,6 +362,33 @@
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
   @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
+  
+  /* ============ ELEVATION LAYER — homepage signature ported across ============ */
+  .section-head h2 { position:relative; padding-bottom:24px; }
+  .section-head h2::after {
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:64px;
+    background:linear-gradient(90deg, var(--accent-2), transparent);
+    transform-origin:left; transform:scaleX(1); }
+  .section-head.center h2::after {
+    left:50%; width:72px; transform:translateX(-50%) scaleX(1); transform-origin:center;
+    background:linear-gradient(90deg, transparent, var(--accent-2), transparent); }
+  @supports (animation-timeline: view()) {
+    .section-head h2::after {
+      transform:scaleX(0); animation:el-rule linear both; animation-timeline:view(); animation-range:entry 10% entry 60%; }
+    .section-head.center h2::after {
+      transform:translateX(-50%) scaleX(0); animation:el-rule-c linear both; animation-timeline:view(); animation-range:entry 10% entry 60%; }
+    @keyframes el-rule { to { transform:scaleX(1); } }
+    @keyframes el-rule-c { to { transform:translateX(-50%) scaleX(1); } }
+  }
+  
+  /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
+  @view-transition { navigation: auto; }
+  nav { view-transition-name: ke-nav; }
+  .nav-logo img, .brand img { view-transition-name: none; }
+  ::view-transition-old(root) { animation: ke-vt-out .26s cubic-bezier(.4,0,1,1) both; }
+  ::view-transition-new(root) { animation: ke-vt-in .5s cubic-bezier(.2,1.12,.34,1) both; }
+  @keyframes ke-vt-out { to { opacity:0; transform:translateY(-10px); } }
+  @keyframes ke-vt-in { from { opacity:0; transform:translateY(30px); } }
   </style>
 </head>
 <body>
@@ -428,7 +455,7 @@
       <div class="problem-row"><h3>Slow Replies Lose Customers</h3><p>A lead messages at 9pm. By the time you reply tomorrow, they've booked whoever answered first. Speed wins the job.</p></div>
       <div class="problem-row"><h3>Reviews Never Get Asked For</h3><p>Happy customers would leave 5 stars, if anyone asked. They don't, your rating stalls, and new customers pick a higher-rated rival.</p></div>
     </div>
-    <div class="problem-quote"><p>Leads contacted within 5 minutes are up to <em>21× more likely</em> to convert. KaizenDesk replies in under one, every time, around the clock.</p></div>
+    <div class="problem-quote"><p>Leads contacted within 5 minutes are up to <em>21× more likely to qualify</em>. KaizenDesk replies in under one, every time, around the clock.</p></div>
   </div>
 </section>
 
@@ -853,6 +880,6 @@ m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';})
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<script src="/midnight.js?v=13" defer></script>
+<script src="/midnight.js?v=16" defer></script>
 </body>
 </html>

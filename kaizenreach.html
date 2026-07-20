@@ -43,7 +43,7 @@
       {
         "@type": "Question",
         "name": "What results can I realistically expect?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Multiple qualified, booked renovation clients per month, each with a high project value. And your first 60 days are free: our first 5 founding clients get their first 60 days completely free, covering ad spend only, then a simple monthly service you can cancel anytime." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Multiple qualified, booked renovation clients per month, each with a high project value. We count booked consultations with homeowners who have a real budget and a real project, not enquiries or unqualified leads." }
       },
       {
         "@type": "Question",
@@ -355,6 +355,28 @@
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
   @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
+
+  /* ============ ELEVATION LAYER — homepage signature ported across ============ */
+  /* Editorial accent rule that draws in beneath each section heading */
+  .section-header h2 { position:relative; padding-bottom:24px; }
+  .section-header h2::after {
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:64px;
+    background:linear-gradient(90deg, var(--accent-2), transparent);
+    transform-origin:left; transform:scaleX(1); }
+  @supports (animation-timeline: view()) {
+    .section-header h2::after {
+      transform:scaleX(0); animation:el-rule linear both; animation-timeline:view(); animation-range:entry 10% entry 60%; }
+    @keyframes el-rule { to { transform:scaleX(1); } }
+  }
+  
+  /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
+  @view-transition { navigation: auto; }
+  nav { view-transition-name: ke-nav; }
+  .nav-logo img, .brand img { view-transition-name: none; }
+  ::view-transition-old(root) { animation: ke-vt-out .26s cubic-bezier(.4,0,1,1) both; }
+  ::view-transition-new(root) { animation: ke-vt-in .5s cubic-bezier(.2,1.12,.34,1) both; }
+  @keyframes ke-vt-out { to { opacity:0; transform:translateY(-10px); } }
+  @keyframes ke-vt-in { from { opacity:0; transform:translateY(30px); } }
   </style>
 </head>
 <body>
@@ -598,7 +620,7 @@
       </details>
       <details class="faq-inline-item">
         <summary class="faq-inline-summary">What results can I realistically expect?</summary>
-        <p class="faq-inline-answer">Multiple qualified, booked renovation clients per month, each with a high project value. We don't count enquiries or unqualified leads as results. We count booked consultations with homeowners who have a real budget and a real project. And your first 60 days are free: our first 5 founding clients get their first 60 days completely free, covering ad spend only, then it's a simple monthly service you can cancel anytime.</p>
+        <p class="faq-inline-answer">Multiple qualified, booked renovation clients per month, each with a high project value. We don't count enquiries or unqualified leads as results. We count booked consultations with homeowners who have a real budget and a real project.</p>
       </details>
       <details class="faq-inline-item">
         <summary class="faq-inline-summary">How much of my time does this take?</summary>
@@ -897,6 +919,6 @@ m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';})
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<script src="/midnight.js?v=13" defer></script>
+<script src="/midnight.js?v=16" defer></script>
 </body>
 </html>

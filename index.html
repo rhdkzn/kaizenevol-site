@@ -234,6 +234,140 @@
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
   @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
+
+  /* ================================================================
+     ELEVATION PASS (2026-07-20) — tasteful, visible lift; editorial restraint kept.
+     Verified over HTTP. Degrades cleanly where scroll-timelines aren't supported.
+     ================================================================ */
+  :root { --el-ease: cubic-bezier(.16,1,.3,1); }
+
+  /* Accent rule that draws in beneath the section headings — an editorial signature */
+  .why h2, .founders-intro h2, .closing h2 { position:relative; padding-bottom:26px; }
+  .why h2::after, .founders-intro h2::after, .closing h2::after {
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:66px;
+    background:linear-gradient(90deg, var(--accent-2), transparent);
+    transform-origin:left; transform:scaleX(1); }
+  @supports (animation-timeline: view()) {
+    .why h2::after, .founders-intro h2::after, .closing h2::after {
+      transform:scaleX(0); animation:el-rule linear both; animation-timeline:view(); animation-range:entry 12% entry 62%; }
+    @keyframes el-rule { to { transform:scaleX(1); } }
+  }
+
+  /* Hero content: gentle scroll parallax + fade for depth (desktop, progressive) */
+  @supports (animation-timeline: scroll()) {
+    @media (min-width:769px) {
+      .hero-inner { animation:el-hero linear both; animation-timeline:scroll(root); animation-range:0 78vh; will-change:transform; }
+      @keyframes el-hero { to { transform:translateY(44px); opacity:.55; } }
+    }
+  }
+
+  /* Why grid: subtle interactive lift — feels alive without a 'glow' */
+  .why-item { transition:background .35s var(--el-ease); }
+  .why-item:hover { background:rgba(139,92,246,0.045); }
+
+  /* Founder cards: an accent traces the top rule on hover */
+  .founder-card { position:relative; }
+  .founder-card::after { content:''; position:absolute; top:-1px; left:0; height:2px; width:0;
+    background:var(--accent-2); transition:width .45s var(--el-ease); }
+  .founder-card:hover::after { width:46px; }
+
+  /* Service links: an arrow eases out on hover */
+  .svc-link::after { content:'\2009\2192'; display:inline-block; transition:transform .3s var(--el-ease); }
+  .svc-link:hover::after { transform:translateX(5px); }
+
+  /* ================================================================
+     BOLD PASS (2026-07-20) — bigger visible moments: hero + Why redesign.
+     ================================================================ */
+  /* Hero: animated gradient on the accent word (supersedes the breathe) */
+  .hero h1 em {
+    background:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);
+    background-size:230% 100%; -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent; color:transparent;
+    animation:el-grad 6.5s linear infinite; }
+  @keyframes el-grad { to { background-position:230% 0; } }
+
+  /* Hero: a violet bloom behind the headline (above the shader, below the text) */
+  .hero::after { content:''; position:absolute; z-index:1; left:50%; top:40%; transform:translate(-50%,-50%);
+    width:min(940px,92vw); height:560px; pointer-events:none;
+    background:radial-gradient(ellipse at center, rgba(139,92,246,0.20), rgba(139,92,246,0.05) 40%, transparent 68%); }
+
+  /* Hero: eyebrow flanked by short accent rules */
+  .hero-kicker .smallcaps { display:inline-flex; align-items:center; gap:14px; }
+  .hero-kicker .smallcaps::before, .hero-kicker .smallcaps::after { content:''; width:26px; height:1px; background:currentColor; opacity:.45; }
+
+  /* Hero: animated scroll cue */
+  .hero-scroll { position:absolute; left:50%; bottom:88px; transform:translateX(-50%); z-index:2; width:1px; height:44px;
+    background:rgba(238,232,255,0.14); overflow:hidden; }
+  .hero-scroll::after { content:''; position:absolute; left:0; top:0; width:100%; height:14px; background:var(--accent-2);
+    animation:el-cue 1.9s cubic-bezier(.7,0,.3,1) infinite; }
+  @keyframes el-cue { 0%{transform:translateY(-14px);} 55%,100%{transform:translateY(44px);} }
+  @media(max-width:768px){ .hero-scroll{ display:none; } }
+
+  /* Why — redesigned into a numbered, interactive feature grid */
+  .why-eyebrow { display:inline-block; margin-bottom:16px; }
+  .why-item { position:relative; padding:42px 44px 42px 0; transition:background .4s var(--el-ease); }
+  .why-item:nth-child(even) { padding-left:44px; }
+  .why-idx { display:block; font-family:var(--serif); font-style:italic; font-size:34px; line-height:1;
+    color:var(--accent); opacity:.5; margin-bottom:16px; transition:opacity .4s var(--el-ease), color .4s; }
+  .why-item b { font-size:23px; }
+  .why-item::before { content:''; position:absolute; top:-1px; left:0; height:2px; width:0; background:var(--accent-2);
+    transition:width .5s var(--el-ease); }
+  .why-item:nth-child(even)::before { left:44px; }
+  .why-item:hover { background:rgba(139,92,246,0.05); }
+  .why-item:hover::before { width:54px; }
+  .why-item:hover .why-idx { opacity:1; color:var(--accent-2); }
+  @media(max-width:768px){ .why-item:nth-child(even){ padding-left:0; } .why-item:nth-child(even)::before{ left:0; } }
+
+  /* ================================================================
+     PHASE 2 (2026-07-20) — carry the treatment through the whole page.
+     ================================================================ */
+  /* Consistent section eyebrows */
+  .sec-eyebrow { display:inline-block; margin-bottom:20px; }
+
+  /* Accent rule under the services heading (matches Why/Founders/Closing) */
+  .services-head { position:relative; padding-bottom:26px; }
+  .services-head::after { content:''; position:absolute; left:0; bottom:0; height:2px; width:66px;
+    background:linear-gradient(90deg,var(--accent-2),transparent); transform-origin:left; transform:scaleX(1); }
+  @supports (animation-timeline: view()) {
+    .services-head::after { transform:scaleX(0); animation:el-rule linear both; animation-timeline:view(); animation-range:entry 12% entry 62%; }
+  }
+
+  /* Service rows: interactive — the big numeral brightens, a whisper of tint */
+  .svc-row { transition:background .4s var(--el-ease); }
+  .svc-row:hover { background:rgba(139,92,246,0.03); }
+  .svc-num { transition:color .45s var(--el-ease); }
+  .svc-row:hover .svc-num { color:var(--accent-2); }
+
+  /* Founders: a violet-lit avatar + a subtle card lift */
+  .founder-avatar { position:relative; transition:transform .45s var(--el-ease), box-shadow .45s var(--el-ease);
+    box-shadow:0 0 0 1px rgba(139,92,246,0.28), 0 10px 34px -10px rgba(139,92,246,0.55); }
+  .founder-card { transition:transform .45s var(--el-ease); }
+  .founder-card:hover { transform:translateY(-4px); }
+  .founder-card:hover .founder-avatar { transform:translateY(-2px) scale(1.05); box-shadow:0 0 0 1px rgba(167,139,250,0.5), 0 14px 40px -8px rgba(139,92,246,0.7); }
+
+  /* Closing form: a defined surface card + accent focus glow + submit lift */
+  #leadForm { background:rgba(238,232,255,0.02); border:1px solid var(--hairline); border-radius:12px; padding:30px; }
+  .lf-input:focus, .lf-select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(139,92,246,0.16); }
+  .lf-submit { transition:background .18s, transform .4s var(--el-ease); }
+  .lf-submit:hover { transform:translateY(-2px); }
+  @media(max-width:600px){ #leadForm { padding:22px; } }
+
+  /* ============ AMBIENT SECTION GLOWS — soft violet washes for depth on the flat expanses ============ */
+  .services, .why, .closing { position:relative; isolation:isolate; }
+  .services > *, .why > *, .closing > * { position:relative; z-index:1; }
+  .services::before, .why::before, .closing::before { content:''; position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .services::before { background:radial-gradient(55% 45% at 84% 3%, rgba(139,92,246,0.10), transparent 72%); }
+  .why::before { background:radial-gradient(48% 62% at 6% 48%, rgba(139,92,246,0.07), transparent 70%); }
+  .closing::before { background:radial-gradient(58% 72% at 80% 94%, rgba(139,92,246,0.13), transparent 72%); }
+  
+  /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
+  @view-transition { navigation: auto; }
+  nav { view-transition-name: ke-nav; }
+  .nav-logo img, .brand img { view-transition-name: none; }
+  ::view-transition-old(root) { animation: ke-vt-out .26s cubic-bezier(.4,0,1,1) both; }
+  ::view-transition-new(root) { animation: ke-vt-in .5s cubic-bezier(.2,1.12,.34,1) both; }
+  @keyframes ke-vt-out { to { opacity:0; transform:translateY(-10px); } }
+  @keyframes ke-vt-in { from { opacity:0; transform:translateY(30px); } }
   </style>
   <script type="application/ld+json">
   {
@@ -299,6 +433,7 @@
       <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-quiet" target="_blank" rel="noopener">Book a Call</a>
     </div>
   </div>
+  <div class="hero-scroll" aria-hidden="true"></div>
   <div class="hero-foot">
     <div class="container">
       <span>Anywhere in the UK</span>
@@ -310,6 +445,7 @@
 
 <section class="services" id="services">
   <div class="container">
+    <span class="smallcaps accent sec-eyebrow">The three engines</span>
     <div class="services-head">
       <h2>Three Ways We <em>Grow Your Business</em></h2>
       <p>Use one, or stack them. They are built to feed each other, a site that converts, more enquiries in, and none of them lost.</p>
@@ -367,12 +503,13 @@
 
 <section class="why">
   <div class="container">
+    <span class="smallcaps accent why-eyebrow">Why work with us</span>
     <h2>Why <em>KaizenEvol</em></h2>
     <div class="why-grid">
-      <div class="why-item"><b>Built for your trade</b><p>Specialists in home renovation and local service businesses, never a generic agency template with your logo swapped in.</p></div>
-      <div class="why-item"><b>You own everything</b><p>Your ad account, your number, your reviews, your customer data, always yours, never locked away.</p></div>
-      <div class="why-item"><b>Straight to the founders</b><p>You work with Rahaid and Diego directly. No account managers, no junior assigned to your account, no ticket queue.</p></div>
-      <div class="why-item"><b>UK-built &amp; compliant</b><p>GDPR and PECR compliant by design, with EU data residency on the AI side.</p></div>
+      <div class="why-item"><span class="why-idx" aria-hidden="true">01</span><b>Built for your trade</b><p>Specialists in home renovation and local service businesses, never a generic agency template with your logo swapped in.</p></div>
+      <div class="why-item"><span class="why-idx" aria-hidden="true">02</span><b>You own everything</b><p>Your ad account, your number, your reviews, your customer data, always yours, never locked away.</p></div>
+      <div class="why-item"><span class="why-idx" aria-hidden="true">03</span><b>Straight to the founders</b><p>You work with Rahaid and Diego directly. No account managers, no junior assigned to your account, no ticket queue.</p></div>
+      <div class="why-item"><span class="why-idx" aria-hidden="true">04</span><b>UK-built &amp; compliant</b><p>GDPR and PECR compliant by design, with EU data residency on the AI side.</p></div>
     </div>
   </div>
 </section>
@@ -381,6 +518,7 @@
   <div class="container">
     <div class="founders-grid">
       <div class="founders-intro">
+        <span class="smallcaps accent sec-eyebrow">The people</span>
         <h2>Who You'll <em>Actually</em> Talk To</h2>
         <p>No account managers, no call centre. Two founders, and one of them picks up.</p>
       </div>
@@ -403,6 +541,7 @@
 <section class="closing" id="contact">
   <div class="container closing-grid">
     <div class="closing-copy">
+      <span class="smallcaps accent sec-eyebrow">Get in touch</span>
       <h2>Tell Us Where You're <em>Losing Work</em></h2>
       <p>Not enough enquiries, or not catching the ones you get? Tell us and we'll point you to the right fix. We'll be in touch within 24 hours.</p>
       <div class="closing-alt">
@@ -491,6 +630,6 @@
   });
 })();
 </script>
-<script src="/midnight.js?v=13" defer></script>
+<script src="/midnight.js?v=16" defer></script>
 </body>
 </html>

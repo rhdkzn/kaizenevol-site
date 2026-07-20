@@ -313,6 +313,33 @@
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
   @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
+  
+  /* ============ ELEVATION LAYER — homepage signature ported across ============ */
+  .section-head h2 { position:relative; padding-bottom:24px; }
+  .section-head h2::after {
+    content:''; position:absolute; left:0; bottom:0; height:2px; width:64px;
+    background:linear-gradient(90deg, var(--accent-2), transparent);
+    transform-origin:left; transform:scaleX(1); }
+  .section-head.center h2::after {
+    left:50%; width:72px; transform:translateX(-50%) scaleX(1); transform-origin:center;
+    background:linear-gradient(90deg, transparent, var(--accent-2), transparent); }
+  @supports (animation-timeline: view()) {
+    .section-head h2::after {
+      transform:scaleX(0); animation:el-rule linear both; animation-timeline:view(); animation-range:entry 10% entry 60%; }
+    .section-head.center h2::after {
+      transform:translateX(-50%) scaleX(0); animation:el-rule-c linear both; animation-timeline:view(); animation-range:entry 10% entry 60%; }
+    @keyframes el-rule { to { transform:scaleX(1); } }
+    @keyframes el-rule-c { to { transform:translateX(-50%) scaleX(1); } }
+  }
+  
+  /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
+  @view-transition { navigation: auto; }
+  nav { view-transition-name: ke-nav; }
+  .nav-logo img, .brand img { view-transition-name: none; }
+  ::view-transition-old(root) { animation: ke-vt-out .26s cubic-bezier(.4,0,1,1) both; }
+  ::view-transition-new(root) { animation: ke-vt-in .5s cubic-bezier(.2,1.12,.34,1) both; }
+  @keyframes ke-vt-out { to { opacity:0; transform:translateY(-10px); } }
+  @keyframes ke-vt-in { from { opacity:0; transform:translateY(30px); } }
   </style>
 </head>
 <body>
@@ -366,19 +393,19 @@
       <div class="calc-row">
         <div class="calc-row-header">
           <label for="missedJobs">Jobs You Miss Each Month</label>
-          <span class="calc-row-value"><span id="missedJobsDisplay">2</span></span>
+          <span class="calc-row-value"><span id="missedJobsDisplay">1</span></span>
         </div>
-        <input type="range" id="missedJobs" min="1" max="20" step="1" value="2" aria-label="Jobs missed per month">
+        <input type="range" id="missedJobs" min="1" max="20" step="1" value="1" aria-label="Jobs missed per month">
       </div>
       <div class="calc-result" aria-live="polite" aria-atomic="true">
         <div class="calc-result-label">Revenue on the table</div>
         <div class="calc-result-amounts">
           <div>
-            <div class="calc-result-amount" id="monthlyLoss">£10,000</div>
+            <div class="calc-result-amount" id="monthlyLoss">£30,000</div>
             <div class="calc-result-period">Per Month</div>
           </div>
           <div>
-            <div class="calc-result-amount" id="annualLoss">£120,000</div>
+            <div class="calc-result-amount" id="annualLoss">£360,000</div>
             <div class="calc-result-period">Per Year</div>
           </div>
         </div>
@@ -420,7 +447,7 @@
       <p>You drive out, measure up, spend two hours, and they wanted a budget patch-up job. There's no filter. Every enquiry costs you time you can't get back.</p>
     </div>
     <div class="callout">
-      <p>Just 2 renovation jobs a month at £5,000 each is <em>£120,000 a year</em> left on the table — and for loft conversions, a single missed job can be £25,000. That's not a craft problem. That's a marketing problem — and it's fixable.</p>
+      <p>Just one loft conversion a month at £30,000 is <em>£360,000 a year</em> left on the table — a single high-ticket project, booked by someone else, because they found a different converter first. That's not a craft problem. That's a marketing problem — and it's fixable.</p>
     </div>
   </div>
 </section>
@@ -785,6 +812,6 @@ m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';})
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<script src="/midnight.js?v=13" defer></script>
+<script src="/midnight.js?v=16" defer></script>
 </body>
 </html>

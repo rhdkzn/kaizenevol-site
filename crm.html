@@ -420,6 +420,15 @@
     .stat-card:hover:not(.highlight){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 3px 0 0 var(--purple);}
     .stat-card.highlight{background:linear-gradient(135deg,#6d28d9 0%,var(--purple) 55%,#a78bfa 100%);border:none;box-shadow:0 6px 32px rgba(139,92,246,0.45);}
     .card,.pipe-client,.checklist-client{box-shadow:0 4px 24px rgba(0,0,0,0.45);}
+  
+  /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
+  @view-transition { navigation: auto; }
+  nav { view-transition-name: ke-nav; }
+  .nav-logo img, .brand img { view-transition-name: none; }
+  ::view-transition-old(root) { animation: ke-vt-out .26s cubic-bezier(.4,0,1,1) both; }
+  ::view-transition-new(root) { animation: ke-vt-in .5s cubic-bezier(.2,1.12,.34,1) both; }
+  @keyframes ke-vt-out { to { opacity:0; transform:translateY(-10px); } }
+  @keyframes ke-vt-in { from { opacity:0; transform:translateY(30px); } }
   </style>
 </head>
 <body>
