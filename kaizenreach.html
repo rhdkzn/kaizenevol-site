@@ -527,15 +527,18 @@
       <form class="fbnd-form" id="foundingForm" novalidate>
         <div class="fbnd-row">
           <input class="lf-input" type="text" id="fb-name" name="name" placeholder="Your name" required autocomplete="name">
-          <input class="lf-input" type="email" id="fb-email" name="email" placeholder="Email address" required autocomplete="email">
+          <input class="lf-input" type="text" id="fb-business" name="business" placeholder="Business name" required autocomplete="organization">
         </div>
-        <select class="lf-select" id="fb-trade" name="trade">
-          <option value="">Your trade</option>
-          <option>Kitchen Remodelling</option>
-          <option>Bathroom Renovation</option>
-          <option>Loft Conversion</option>
-          <option>Other Renovation</option>
-        </select>
+        <div class="fbnd-row">
+          <input class="lf-input" type="email" id="fb-email" name="email" placeholder="Email address" required autocomplete="email">
+          <select class="lf-select" id="fb-trade" name="trade">
+            <option value="">Your trade</option>
+            <option>Kitchen Remodelling</option>
+            <option>Bathroom Renovation</option>
+            <option>Loft Conversion</option>
+            <option>Other Renovation</option>
+          </select>
+        </div>
         <button class="fbnd-sub" type="submit" id="fbSubmit">Claim a founding place</button>
         <div class="fbnd-status" id="fbStatus" role="alert" aria-live="polite"></div>
         <p class="fbnd-fine">No obligation. Five places, first come first served &mdash; we'll be in touch within 24 hours.</p>
@@ -551,14 +554,16 @@
     e.preventDefault();
     st.textContent=''; st.className='fbnd-status';
     var name=document.getElementById('fb-name').value.trim();
+    var business=document.getElementById('fb-business').value.trim();
     var email=document.getElementById('fb-email').value.trim();
     var trade=document.getElementById('fb-trade').value;
     if(!name){st.textContent='Your name, please.';st.className='fbnd-status err';return;}
+    if(!business){st.textContent='Your business name, please.';st.className='fbnd-status err';return;}
     if(!email||email.indexOf('@')<0){st.textContent='A valid email is needed to hold your place.';st.className='fbnd-status err';return;}
     btn.disabled=true; btn.textContent='Holding your place…';
     try{
       var res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name:name,contactName:name,businessName:name,email:email,trade:trade,message:'FOUNDING SHORTLIST — wants one of the 5 founding places (first 60 days free)'})});
+        body:JSON.stringify({contactName:name,businessName:business,email:email,trade:trade,message:'FOUNDING SHORTLIST — wants one of the 5 founding places (first 60 days free)'})});
       var d=await res.json();
       if(res.ok&&d.ok){st.textContent="You're on the founding shortlist. We'll be in touch within 24 hours.";st.className='fbnd-status ok';f.reset();btn.textContent='Place held ✓';}
       else{throw new Error(d.error||'Something went wrong.');}
