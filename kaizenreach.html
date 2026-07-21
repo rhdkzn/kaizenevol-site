@@ -489,11 +489,88 @@
 
     <div class="hero-ctas">
       <a href="https://calendly.com/rahaid-kaizenevol/initial-call" class="btn-solid" target="_blank" rel="noopener">Book Your Free Strategy Call</a>
-      <a href="#how-it-works" class="btn-quiet">See How It Works</a>
+      <a href="/roi.html" class="btn-quiet">See What a Full Diary's Worth →</a>
     </div>
     <p class="hero-note"><strong>4 client slots per quarter.</strong> One specialist per niche, per area. Your territory, your leads.</p>
   </div>
 </header>
+
+<style>
+.fbnd{background:linear-gradient(180deg,var(--void-2),var(--void));border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:56px 0}
+.fbnd .container{max-width:var(--max-w);margin:0 auto;padding:0 24px}
+.fbnd-inner{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:center}
+.fbnd-tag{display:inline-flex;align-items:center;gap:9px;font:600 12px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2);margin-bottom:14px}
+.fbnd-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:fbpulse 2s infinite}
+@keyframes fbpulse{0%{box-shadow:0 0 0 0 rgba(139,92,246,.55)}70%{box-shadow:0 0 0 10px rgba(139,92,246,0)}100%{box-shadow:0 0 0 0 rgba(139,92,246,0)}}
+.fbnd h2{font:600 clamp(26px,3.4vw,38px)/1.06 var(--serif);color:var(--text);margin:0 0 12px}
+.fbnd h2 em{color:var(--accent-2);font-style:italic}
+.fbnd-copy p{font:400 16px/1.55 var(--sans);color:var(--muted);margin:0}
+.fbnd-form{display:flex;flex-direction:column;gap:12px;background:rgba(238,232,255,0.03);border:1px solid var(--hairline);border-radius:16px;padding:22px}
+.fbnd-row{display:flex;gap:12px}
+.fbnd-form .lf-input,.fbnd-form .lf-select{flex:1;min-width:0}
+.fbnd-sub{font:800 16px/1 var(--sans);background:var(--accent);color:#fff;border:0;border-radius:12px;padding:15px 18px;cursor:pointer;transition:background .2s}
+.fbnd-sub:hover{background:var(--accent-2)}
+.fbnd-sub:disabled{opacity:.6;cursor:default}
+.fbnd-status{font:500 14px/1.4 var(--sans);min-height:18px;color:var(--muted)}
+.fbnd-status.ok{color:#6EE7B7}.fbnd-status.err{color:#FCA5A5}
+.fbnd-fine{font:500 12px/1.45 var(--sans);color:var(--muted);opacity:.85;margin:2px 0 0}
+@media(max-width:820px){.fbnd-inner{grid-template-columns:1fr;gap:26px}.fbnd-row{flex-direction:column}}
+</style>
+<section class="fbnd" id="founding">
+  <div class="container">
+    <div class="fbnd-inner">
+      <div class="fbnd-copy">
+        <span class="fbnd-tag"><span class="fbnd-dot"></span>Founding places &mdash; 5 only</span>
+        <h2>Be one of our <em>first five</em></h2>
+        <p>The first five renovation firms we take on get their <strong>first 60 days free</strong> &mdash; you cover ad spend only, paid straight to Meta, then a simple monthly service you can cancel anytime. One specialist per niche, per area. When the five are gone, they're gone &mdash; leave your details and we'll hold your place at the front of the queue.</p>
+      </div>
+      <form class="fbnd-form" id="foundingForm" novalidate>
+        <div class="fbnd-row">
+          <input class="lf-input" type="text" id="fb-name" name="name" placeholder="Your name" required autocomplete="name">
+          <input class="lf-input" type="text" id="fb-business" name="business" placeholder="Business name" required autocomplete="organization">
+        </div>
+        <div class="fbnd-row">
+          <input class="lf-input" type="email" id="fb-email" name="email" placeholder="Email address" required autocomplete="email">
+          <select class="lf-select" id="fb-trade" name="trade">
+            <option value="">Your trade</option>
+            <option>Kitchen Remodelling</option>
+            <option>Bathroom Renovation</option>
+            <option>Loft Conversion</option>
+            <option>Other Renovation</option>
+          </select>
+        </div>
+        <button class="fbnd-sub" type="submit" id="fbSubmit">Claim a founding place</button>
+        <div class="fbnd-status" id="fbStatus" role="alert" aria-live="polite"></div>
+        <p class="fbnd-fine">No obligation. Five places, first come first served &mdash; we'll be in touch within 24 hours.</p>
+      </form>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var f=document.getElementById('foundingForm'); if(!f) return;
+  var btn=document.getElementById('fbSubmit'), st=document.getElementById('fbStatus');
+  f.addEventListener('submit', async function(e){
+    e.preventDefault();
+    st.textContent=''; st.className='fbnd-status';
+    var name=document.getElementById('fb-name').value.trim();
+    var business=document.getElementById('fb-business').value.trim();
+    var email=document.getElementById('fb-email').value.trim();
+    var trade=document.getElementById('fb-trade').value;
+    if(!name){st.textContent='Your name, please.';st.className='fbnd-status err';return;}
+    if(!business){st.textContent='Your business name, please.';st.className='fbnd-status err';return;}
+    if(!email||email.indexOf('@')<0){st.textContent='A valid email is needed to hold your place.';st.className='fbnd-status err';return;}
+    btn.disabled=true; btn.textContent='Holding your place…';
+    try{
+      var res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contactName:name,businessName:business,email:email,trade:trade,message:'FOUNDING SHORTLIST — wants one of the 5 founding places (first 60 days free)'})});
+      var d=await res.json();
+      if(res.ok&&d.ok){st.textContent="You're on the founding shortlist. We'll be in touch within 24 hours.";st.className='fbnd-status ok';f.reset();btn.textContent='Place held ✓';}
+      else{throw new Error(d.error||'Something went wrong.');}
+    }catch(err){st.textContent=(err.message||'Something went wrong')+' — or email rahaid@kaizenevol.com and we\'ll hold your place.';st.className='fbnd-status err';btn.disabled=false;btn.textContent='Claim a founding place';}
+  });
+})();
+</script>
 
 <section class="section sec-void2" id="problem">
   <div class="container">

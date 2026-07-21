@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What's a full diary worth? — KaizenReach</title>
+<meta name="description" content="Move the sliders to your own numbers and see what a booked calendar of qualified renovation jobs is worth to your business.">
+<link rel="icon" href="/favicon.ico">
+<style>
+@font-face{font-family:'Fraunces';src:url('/fraunces.woff2') format('woff2');font-weight:400 700;font-display:swap}
+@font-face{font-family:'Fraunces';src:url('/fraunces-italic.woff2') format('woff2');font-weight:400 700;font-style:italic;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/pjs-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/pjs-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/pjs-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/pjs-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/pjs-700.woff2') format('woff2');font-weight:800;font-display:swap}
+:root{--void:#0C0618;--void-2:#120A24;--surface:#1a1036;--text:#EEE8FF;--muted:rgba(238,232,255,0.6);--hairline:rgba(238,232,255,0.12);--accent:#8B5CF6;--accent-2:#A78BFA;--serif:'Fraunces',Georgia,serif;--sans:'Plus Jakarta Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;background-image:radial-gradient(1100px 500px at 80% -10%,rgba(139,92,246,.12),transparent 60%)}
+h1,h2,.sub,.foot p,.cap,label{overflow-wrap:break-word}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px}
+.topbar{padding:20px 0;border-bottom:1px solid var(--hairline)}
+.brand{display:inline-flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:600;font-size:19px;color:var(--text);text-decoration:none}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.card{margin:34px auto;background:var(--void-2);border:1px solid var(--hairline);border-radius:20px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(139,92,246,.5)}
+.head{padding:30px 30px 24px;border-bottom:1px solid var(--hairline)}
+.kick{font:800 11px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:var(--accent-2)}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(26px,4.5vw,40px);line-height:1.06;letter-spacing:-.01em;margin:12px 0 8px}
+h1 em{font-style:italic;color:var(--accent-2)}
+.sub{color:var(--muted);font-size:15px;max-width:62ch}
+.body{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:680px){.body{grid-template-columns:1fr}}
+.controls{padding:26px 30px;border-right:1px solid var(--hairline)}
+@media(max-width:680px){.controls{border-right:0;border-bottom:1px solid var(--hairline)}}
+.niche{display:flex;gap:8px;margin-bottom:24px}
+.niche button{flex:1;font:700 13px/1 var(--sans);padding:11px 6px;cursor:pointer;background:var(--surface);border:1.5px solid var(--hairline);border-radius:9px;color:var(--muted);transition:.2s}
+.niche button:hover{border-color:var(--accent-2);color:var(--text)}
+.niche button.on{border-color:var(--accent);color:#fff;background:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.16)}
+.field{margin-bottom:22px}
+.field label{display:flex;justify-content:space-between;align-items:baseline;font:600 13px/1.3 var(--sans);margin-bottom:11px}
+.field label .v{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--accent-2)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:linear-gradient(90deg,var(--accent) var(--pct,50%),#2c2058 var(--pct,50%));outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--void);border:2px solid var(--accent);box-shadow:0 0 0 4px rgba(139,92,246,.16);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--void);border:2px solid var(--accent);cursor:pointer}
+.hint{font-size:11.5px;color:var(--muted);margin-top:7px}
+.results{padding:26px 30px;background:var(--void);display:flex;flex-direction:column;justify-content:center}
+.hero-stat{text-align:center;padding:4px 0 18px;border-bottom:1px dashed var(--hairline);margin-bottom:18px}
+.hero-stat .big{font-family:var(--serif);font-weight:600;font-size:clamp(40px,9vw,56px);line-height:1;letter-spacing:-.02em;color:var(--text)}
+.hero-stat .big span{color:var(--accent-2);font-style:italic}
+.hero-stat .cap{font:700 11px/1.3 var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:var(--void-2);border:1px solid var(--hairline);border-radius:12px;padding:14px 15px}
+.stat .n{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--text)}
+.stat .l{font:600 11px/1.3 var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+.stat.full{grid-column:1/3;border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,92,246,.1)}
+.stat.full .n{color:var(--accent-2);font-size:26px}
+.foot{padding:26px 30px 30px;border-top:1px solid var(--hairline)}
+.foot h2{font-family:var(--serif);font-weight:600;font-size:22px;margin-bottom:6px}
+.foot h2 em{font-style:italic;color:var(--accent-2)}
+.foot p{font-size:13.5px;color:var(--muted);max-width:60ch}
+.lead{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+@media(max-width:560px){.lead{grid-template-columns:1fr}}
+.lead input,.lead select{width:100%;background:var(--surface);border:1px solid var(--hairline);border-radius:10px;color:var(--text);font:500 15px/1 var(--sans);padding:14px 14px}
+.lead input::placeholder{color:rgba(238,232,255,.4)}
+.lead .full{grid-column:1/-1}
+.btn{width:100%;font:800 16px/1 var(--sans);background:var(--accent);color:#fff;border:0;border-radius:12px;padding:16px;cursor:pointer;transition:background .2s;margin-top:12px}
+.btn:hover{background:var(--accent-2)}
+.btn:disabled{opacity:.6;cursor:default}
+.status{font:500 14px/1.4 var(--sans);min-height:18px;margin-top:10px;color:var(--muted)}
+.status.ok{color:#6EE7B7}.status.err{color:#FCA5A5}
+.calbox{display:none;margin-top:14px;text-align:center}
+.calbox a{display:inline-block;background:transparent;border:1px solid var(--accent);color:var(--accent-2);font:700 15px/1 var(--sans);text-decoration:none;padding:14px 24px;border-radius:11px}
+.fine{font-size:11.5px;color:var(--muted);opacity:.85;margin-top:14px}
+footer{text-align:center;padding:34px 0;color:var(--muted);font-size:13px;border-top:1px solid var(--hairline)}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap"><a class="brand" href="/"><span class="dot"></span>KaizenEvol</a></div></div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="head">
+      <div class="kick">KaizenReach · Client acquisition for renovation trades</div>
+      <h1>What's a full <em>diary</em> actually worth to you?</h1>
+      <div class="sub">Move the sliders to your own numbers. This is the revenue a booked calendar of qualified, exclusive renovation appointments puts into your business — every month.</div>
+    </div>
+
+    <div class="body">
+      <div class="controls">
+        <div class="niche" id="niche">
+          <button data-n="loft" data-v="30000" class="on">Loft</button>
+          <button data-n="kitchen" data-v="8000">Kitchen</button>
+          <button data-n="bathroom" data-v="6000">Bathroom</button>
+          <button data-n="other" data-v="12000">Other reno</button>
+        </div>
+        <div class="field">
+          <label>Your average job value <span class="v" id="jvLabel">£30,000</span></label>
+          <input type="range" id="jv" min="3000" max="50000" step="500" value="30000">
+          <div class="hint">Loft £20–50k · kitchen £5–15k · bathroom £5–12k · or set your own.</div>
+        </div>
+        <div class="field">
+          <label>Qualified appointments / month <span class="v" id="apLabel">8</span></label>
+          <input type="range" id="ap" min="2" max="20" step="1" value="8">
+          <div class="hint">Exclusive to you — never shared with other firms.</div>
+        </div>
+        <div class="field">
+          <label>Your close rate on those <span class="v" id="crLabel">40%</span></label>
+          <input type="range" id="cr" min="10" max="70" step="5" value="40">
+          <div class="hint">Pre-qualified on budget and project before they reach you.</div>
+        </div>
+      </div>
+
+      <div class="results">
+        <div class="hero-stat">
+          <div class="big" id="rev">£<span>96,000</span></div>
+          <div class="cap">new revenue every month</div>
+        </div>
+        <div class="grid">
+          <div class="stat"><div class="n" id="jobs">3.2</div><div class="l">Jobs won / month</div></div>
+          <div class="stat"><div class="n" id="appt">8</div><div class="l">Booked appts / month</div></div>
+          <div class="stat full"><div class="n" id="year">£1,152,000</div><div class="l">New revenue / year</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <h2>Want this mapped to <em>your area</em>?</h2>
+      <p>These are your numbers. On a 15-minute call we'll show you exactly how we'd fill that diary in your patch, your niche — and what it costs. Your first 60 days are free if you're one of our founding five.</p>
+      <form class="lead" id="roiForm" novalidate>
+        <input type="text" id="r-name" placeholder="Your name" autocomplete="name" required>
+        <input type="text" id="r-biz" placeholder="Business name" autocomplete="organization" required>
+        <input type="email" id="r-email" class="full" placeholder="Email address" autocomplete="email" required>
+        <select id="r-trade" class="full">
+          <option value="">Your trade</option>
+          <option>Kitchen Remodelling</option>
+          <option>Bathroom Renovation</option>
+          <option>Loft Conversion</option>
+          <option>Other Renovation</option>
+        </select>
+        <button class="btn full" type="submit" id="roiSubmit">Book my strategy call</button>
+        <div class="status full" id="roiStatus" role="alert" aria-live="polite"></div>
+        <div class="calbox full" id="calBox"><a href="https://calendly.com/rahaid-kaizenevol/initial-call" target="_blank" rel="noopener">Pick your time on Calendly →</a></div>
+      </form>
+      <p class="fine">Figures are illustrative and driven entirely by your own inputs. One specialist per trade, per area.</p>
+    </div>
+  </div>
+</div>
+
+<footer><div class="wrap"><a href="/kaizenreach.html">← Back to KaizenReach</a> · &copy; 2026 KaizenEvol</div></footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var gbp=function(n){return '£'+Math.round(n).toLocaleString('en-GB');};
+  var state={jv:30000,ap:8,cr:40};
+  function setPct(el){var min=+el.min,max=+el.max;el.style.setProperty('--pct',((el.value-min)/(max-min)*100)+'%');}
+  function calc(){
+    var jobs=state.ap*(state.cr/100), rev=jobs*state.jv;
+    $('jobs').textContent=jobs.toFixed(1).replace(/\.0$/,'');
+    $('appt').textContent=state.ap;
+    $('rev').innerHTML='£<span>'+Math.round(rev).toLocaleString('en-GB')+'</span>';
+    $('year').textContent=gbp(rev*12);
+    return rev;
+  }
+  ['jv','ap','cr'].forEach(function(id){var el=$(id);setPct(el);el.addEventListener('input',function(){state[id]=+el.value;setPct(el);$('jvLabel').textContent=gbp(state.jv);$('apLabel').textContent=state.ap;$('crLabel').textContent=state.cr+'%';calc();});});
+  document.querySelectorAll('#niche button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#niche button').forEach(function(x){x.classList.remove('on');});b.classList.add('on');var v=+b.dataset.v;state.jv=v;var jv=$('jv');jv.value=v;setPct(jv);$('jvLabel').textContent=gbp(v);calc();});});
+  calc();
+
+  var f=$('roiForm'), btn=$('roiSubmit'), st=$('roiStatus');
+  f.addEventListener('submit',async function(e){
+    e.preventDefault(); st.textContent=''; st.className='status full';
+    var name=$('r-name').value.trim(), biz=$('r-biz').value.trim(), email=$('r-email').value.trim(), trade=$('r-trade').value;
+    if(!name){st.textContent='Your name, please.';st.className='status full err';return;}
+    if(!biz){st.textContent='Your business name, please.';st.className='status full err';return;}
+    if(!email||email.indexOf('@')<0){st.textContent='A valid email is needed to book you in.';st.className='status full err';return;}
+    var rev=calc();
+    btn.disabled=true; btn.textContent='Booking you in…';
+    try{
+      var res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contactName:name,businessName:biz,email:email,trade:trade,message:'ROI CALCULATOR — value-first lead · est. '+gbp(rev)+'/mo revenue at '+state.ap+' appts · £'+state.jv+' job · '+state.cr+'% close'})});
+      var d=await res.json();
+      if(res.ok&&d.ok){st.textContent="You're in — we'll be in touch within 24 hours. Grab a time now if you'd like:";st.className='status full ok';$('calBox').style.display='block';f.reset();btn.textContent='Booked ✓';}
+      else{throw new Error(d.error||'Something went wrong.');}
+    }catch(err){st.textContent=(err.message||'Something went wrong')+' — or email rahaid@kaizenevol.com.';st.className='status full err';btn.disabled=false;btn.textContent='Book my strategy call';}
+  });
+})();
+</script>
+</body>
+</html>
