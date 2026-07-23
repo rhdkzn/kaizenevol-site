@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your KaizenEvol dashboard</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0618; --panel:#140a2a; --line:#2a1f47;
+    --accent:#8B5CF6; --accent2:#A78BFA; --lilac:#C4B5FD;
+    --ink:#EEE8FF; --mute:#9d90c4; --green:#25D366;
+    --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',-apple-system,Segoe UI,Arial,sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:var(--sans); color:var(--ink); font-size:15px; line-height:1.5;
+    background:radial-gradient(1100px 520px at 82% -6%, rgba(139,92,246,.20), transparent 60%), var(--bg);
+    min-height:100vh; }
+  .wrap{ max-width:960px; margin:0 auto; padding:28px 20px 48px; }
+
+  header{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px;
+    border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:22px; }
+  .mark{ font-weight:800; letter-spacing:.28em; text-transform:uppercase; font-size:11px; color:var(--accent2); }
+  header h1{ font-family:var(--serif); font-weight:600; font-size:30px; margin:6px 0 0; }
+  header .tag{ text-align:right; color:var(--mute); font-size:12px; text-transform:uppercase; letter-spacing:.14em; }
+
+  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:8px; }
+  .stat{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+  .stat .n{ font-family:var(--serif); font-weight:600; font-size:28px; color:#fff; line-height:1.05; overflow-wrap:anywhere; }
+  .stat .l{ color:var(--mute); font-size:12px; margin-top:6px; }
+
+  h2{ font-size:12px; text-transform:uppercase; letter-spacing:.16em; color:var(--accent2); font-weight:800; margin:26px 0 12px; }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+
+  .leads .lead{ display:grid; grid-template-columns:minmax(150px,210px) 1fr auto; gap:6px 16px;
+    align-items:center; padding:12px 16px; border-top:1px solid var(--line); }
+  .leads .lead:first-child{ border-top:none; }
+  .lead .who{ display:flex; align-items:center; gap:8px; min-width:0; }
+  .lead .who .mono{ font-size:14px; overflow-wrap:anywhere; }
+  .lead .why{ font-size:14px; color:var(--ink); }
+  .lead .when{ font-size:12px; color:var(--mute); white-space:nowrap; text-align:right; }
+  .mono{ font-variant-numeric:tabular-nums; }
+  .ch{ flex:0 0 auto; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:2px 8px;
+    border-radius:20px; background:rgba(167,139,250,.16); color:var(--lilac); }
+  .ch-voice{ background:rgba(37,211,102,.16); color:#7ee2a4; }
+
+  ul.appts{ list-style:none; margin:0; padding:6px 0; }
+  ul.appts li{ display:flex; align-items:center; gap:12px; padding:10px 16px; border-top:1px solid var(--line); }
+  ul.appts li:first-child{ border-top:none; }
+  ul.appts .dot{ width:9px; height:9px; border-radius:50%; background:linear-gradient(135deg,#A78BFA,#8B5CF6); flex:0 0 9px; }
+  ul.appts b{ color:#fff; }
+  ul.appts .mono{ color:var(--mute); margin-left:auto; }
+
+  .camps .camp{ display:flex; justify-content:space-between; align-items:center; gap:12px;
+    padding:13px 16px; border-top:1px solid var(--line); }
+  .camps .camp:first-child{ border-top:none; }
+  .camp .cname{ color:#fff; font-weight:600; }
+  .st{ flex:0 0 auto; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:3px 11px; border-radius:20px; }
+  .st-live{ background:rgba(37,211,102,.16); color:#7ee2a4; }
+  .st-testing{ background:rgba(245,158,11,.18); color:#f5c66b; }
+  .st-paused{ color:var(--mute); border:1px solid var(--line); }
+  .note{ background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--accent);
+    border-radius:8px; padding:13px 16px; color:var(--lilac); font-size:14px; margin-top:12px; }
+
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ font-size:12px; font-weight:600; padding:5px 12px; border-radius:20px; border:1px solid var(--line); }
+  .chip.on{ background:rgba(139,92,246,.16); color:var(--lilac); border-color:transparent; }
+  .chip.on::before{ content:"● "; color:var(--green); }
+  .chip.off{ color:var(--mute); }
+  .chip.off::before{ content:"○ "; }
+
+  .empty{ color:var(--mute); padding:14px 16px; margin:0; }
+  footer{ margin-top:34px; color:var(--mute); font-size:12px; text-align:center; letter-spacing:.04em; }
+  footer a{ color:var(--accent2); text-decoration:none; }
+
+  .state{ max-width:460px; margin:14vh auto; text-align:center; padding:0 20px; }
+  .state .mark{ margin-bottom:14px; }
+  .state h1{ font-family:var(--serif); font-weight:600; font-size:26px; color:#fff; margin:0 0 8px; }
+  .state p{ color:var(--mute); margin:0; }
+  .spin{ width:26px; height:26px; border:3px solid var(--line); border-top-color:var(--accent2);
+    border-radius:50%; margin:0 auto 16px; animation:sp 0.8s linear infinite; }
+  @keyframes sp{ to{ transform:rotate(360deg); } }
+
+  @media (max-width:640px){
+    .wrap{ padding:22px 16px 40px; }
+    .stats{ grid-template-columns:1fr 1fr; }
+    header{ flex-direction:column; align-items:flex-start; gap:10px; }
+    header h1{ font-size:26px; }
+    header .tag{ text-align:left; }
+    .leads .lead{ grid-template-columns:1fr; gap:4px; padding:14px 16px; }
+    .lead .who{ flex-wrap:wrap; }
+    .lead .when{ text-align:left; }
+    ul.appts li{ flex-wrap:wrap; gap:4px 10px; }
+    ul.appts .mono{ margin-left:0; width:100%; }
+  }
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="state"><div class="spin"></div><p>Loading your dashboard…</p></div>
+</div>
+
+<script>
+// ── Config ───────────────────────────────────────────────────────────────
+// Point this at the KaizenDesk backend's public URL (the Railway service).
+// Set it here, or override at deploy time with a <meta name="api-base"> tag.
+const API_BASE = (document.querySelector('meta[name="api-base"]')?.content
+  || "https://REPLACE-WITH-DESK-BACKEND-URL").replace(/\/$/, "");
+
+const root = document.getElementById("root");
+const qs = new URLSearchParams(location.search);
+const tenant = qs.get("tenant") || "";
+const key = qs.get("key") || "";
+
+// Safe element builder — text goes in as textContent, never HTML.
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = String(text);
+  return n;
+}
+function statGrid(items){
+  const g = el("div", "stats");
+  items.forEach(s => { const c = el("div","stat"); c.append(el("div","n",s.value), el("div","l",s.label)); g.append(c); });
+  return g;
+}
+function leadsCard(leads){
+  const card = el("div","card");
+  if (!leads || !leads.length){ card.append(el("p","empty","No hot leads yet. They'll appear here the moment one comes in.")); return card; }
+  const box = el("div","leads");
+  leads.forEach(l => {
+    const row = el("div","lead");
+    const who = el("div","who");
+    who.append(el("span","ch ch-"+l.channel, l.channel), el("span","mono", l.contact));
+    row.append(who, el("div","why", l.reason), el("div","when", l.when));
+    box.append(row);
+  });
+  card.append(box); return card;
+}
+function h2(t){ return el("h2", null, t); }
+
+function renderDesk(d){
+  const f = document.createDocumentFragment();
+  f.append(header(d.name, "Your front office", "Last 30 days"));
+  f.append(statGrid(d.stats));
+  f.append(h2("Hot leads the Desk caught"), leadsCard(d.leads));
+  const jobs = el("div","card");
+  if (d.appointments && d.appointments.length){
+    const ul = el("ul","appts");
+    d.appointments.forEach(a => { const li = el("li"); li.append(el("span","dot"), el("b",null,a.when), el("span","mono",a.contact)); ul.append(li); });
+    jobs.append(ul);
+  } else jobs.append(el("p","empty","No upcoming appointments on the calendar."));
+  f.append(h2("Upcoming jobs"), jobs);
+  const chips = el("div","chips");
+  (d.features||[]).forEach(ft => chips.append(el("span","chip "+(ft.on?"on":"off"), ft.label)));
+  f.append(h2("What's switched on"), chips);
+  f.append(foot("KaizenDesk"));
+  return f;
+}
+function renderReach(d){
+  const f = document.createDocumentFragment();
+  f.append(header(d.name, "Your growth", d.period));
+  f.append(statGrid(d.kpis));
+  f.append(h2("Your social"), statGrid(d.social));
+  const camps = el("div","card");
+  if (d.campaigns && d.campaigns.length){
+    const box = el("div","camps");
+    d.campaigns.forEach(c => { const row = el("div","camp"); row.append(el("span","cname",c.name), el("span","st st-"+c.status, c.status)); box.append(row); });
+    camps.append(box);
+  } else camps.append(el("p","empty","Your campaigns will be listed here once they're live."));
+  f.append(h2("What's running"), camps);
+  if (d.note) f.append(el("div","note", d.note));
+  if (d.leads && d.leads.length){ f.append(h2("Leads the Desk caught"), leadsCard(d.leads)); }
+  f.append(foot("KaizenReach"));
+  return f;
+}
+function header(name, tagTop, tagBot){
+  const h = el("header");
+  const left = el("div");
+  left.append(el("div","mark","KaizenEvol"), el("h1",null,name));
+  const tag = el("div","tag"); tag.append(document.createTextNode(tagTop), el("br"), document.createTextNode(tagBot));
+  h.append(left, tag); return h;
+}
+function foot(product){
+  const f = el("footer");
+  f.append(document.createTextNode("KaizenEvol · "+product+" · this view is read-only and private to your business · "));
+  const a = el("a", null, "kaizenevol.com"); a.href = "https://kaizenevol.com"; f.append(a);
+  return f;
+}
+function state(title, msg){
+  root.innerHTML = "";
+  const s = el("div","state");
+  s.append(el("div","mark","KaizenEvol"), el("h1",null,title), el("p",null,msg));
+  root.append(s);
+}
+
+async function load(){
+  if (!tenant || !key){ return state("Private dashboard", "This link is missing its access details. Please use the exact link we sent you."); }
+  try{
+    const r = await fetch(`${API_BASE}/api/portal/${encodeURIComponent(tenant)}?key=${encodeURIComponent(key)}`);
+    if (r.status === 403 || r.status === 404){ return state("Link not valid", "This dashboard link is invalid or has expired. Reach out and we'll send a fresh one."); }
+    if (!r.ok){ return state("Something went wrong", "We couldn't load your dashboard just now. Please try again in a moment."); }
+    const d = await r.json();
+    root.innerHTML = "";
+    const wrap = el("div","wrap");
+    wrap.append(d.view === "reach" ? renderReach(d) : renderDesk(d));
+    root.append(wrap);
+    document.title = `${d.name} · KaizenEvol`;
+  }catch(e){
+    state("Can't reach the dashboard", "Please check your connection and try again.");
+  }
+}
+load();
+</script>
+</body>
+</html>
