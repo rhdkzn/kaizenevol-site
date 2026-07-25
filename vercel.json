@@ -78,6 +78,10 @@
     {
       "source": "/kaizendesk/compare",
       "destination": "/kaizendesk/compare.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
     }
   ],
   "redirects": [
