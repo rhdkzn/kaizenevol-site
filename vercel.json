@@ -88,6 +88,14 @@
       "destination": "/kaizenreach.html"
     },
     {
+      "source": "/kaizendesk",
+      "destination": "/kaizendesk.html"
+    },
+    {
+      "source": "/kaizenforge",
+      "destination": "/kaizenforge.html"
+    },
+    {
       "source": "/kitchen-jobs",
       "destination": "/kitchen-jobs.html"
     },
