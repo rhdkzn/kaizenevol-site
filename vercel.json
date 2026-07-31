@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizengrowth|kaizenforge).html",
+      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizengrowth|kaizenforge|for).html",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -70,6 +70,15 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(for|send).html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
         }
       ]
     }

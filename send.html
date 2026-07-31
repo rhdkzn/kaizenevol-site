@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prospect link builder — internal</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="/favicon.ico" />
+<style>
+@font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
+@font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
+@font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
+@font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
+:root{
+  --void:#0C0618; --text:#EEE8FF; --muted:rgba(238,232,255,0.56);
+  --hairline:rgba(238,232,255,0.12); --accent:#8B5CF6;
+  --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;padding:40px 20px}
+.wrap{max-width:660px;margin:0 auto}
+h1{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:-0.02em;margin-bottom:8px}
+h1 em{font-style:italic;color:var(--accent)}
+.sub{color:var(--muted);font-size:15px;margin-bottom:32px}
+label{display:block;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--muted);margin:20px 0 7px}
+input,select{
+  width:100%;background:rgba(238,232,255,0.04);border:1px solid var(--hairline);
+  border-radius:10px;padding:13px 15px;color:var(--text);font-family:var(--sans);font-size:16px
+}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+option{background:#170E28;color:var(--text)}
+.out{margin-top:32px;border:1px solid var(--hairline);border-radius:12px;padding:20px;background:rgba(139,92,246,0.06)}
+.out .lbl{font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px}
+#url{word-break:break-all;font-size:14.5px;line-height:1.5;color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+button{
+  background:var(--accent);color:#fff;border:0;border-radius:9px;padding:12px 22px;
+  font-family:var(--sans);font-size:15px;font-weight:600;cursor:pointer
+}
+button.ghost{background:transparent;border:1px solid var(--hairline);color:var(--text)}
+button:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+.note{margin-top:28px;font-size:14px;color:var(--muted);border-top:1px solid var(--hairline);padding-top:20px}
+.note strong{color:var(--text);font-weight:600}
+.ok{color:#4ADE80;font-size:14px;margin-top:10px;min-height:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Prospect <em>link</em> builder</h1>
+  <p class="sub">Internal — Diego. Fill this in, copy the link, paste it into the email or DM. The page it opens is personalised to that firm and is not indexed by Google.</p>
+
+  <label for="firm">Business name</label>
+  <input id="firm" type="text" placeholder="Woodco Build" autocomplete="off" />
+
+  <label for="niche">Trade</label>
+  <select id="niche">
+    <option value="">Home renovation (general)</option>
+    <option value="kitchen">Kitchen remodelling</option>
+    <option value="bathroom">Bathroom renovation</option>
+    <option value="loft">Loft conversion</option>
+  </select>
+
+  <label for="town">Town or area <span style="text-transform:none;letter-spacing:0;font-weight:400">— optional, but it sharpens the exclusivity line</span></label>
+  <input id="town" type="text" placeholder="Bristol" autocomplete="off" />
+
+  <div class="out">
+    <div class="lbl">Link to send</div>
+    <div id="url">https://kaizenevol.com/for.html</div>
+    <div class="row">
+      <button id="copy" type="button">Copy link</button>
+      <button id="open" class="ghost" type="button">Preview it</button>
+    </div>
+    <div class="ok" id="ok"></div>
+  </div>
+
+  <div class="note">
+    <p><strong>What the prospect sees.</strong> Their firm name in the header and the close, their trade's headline, and their town in the exclusivity line. Everything else is the standard offer — ads, managed social, the front office, live in seven days.</p>
+    <p style="margin-top:12px"><strong>No price is on the page, on purpose.</strong> It says the founding terms honestly — 60 days free of our fee, they cover ad spend and £125/mo for the front office — and pushes the number to the call. Don't add a price to the link.</p>
+    <p style="margin-top:12px"><strong>The booking arrives labelled.</strong> The Calendly link carries the firm name and trade through, so you know who booked before you open it.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var firm=document.getElementById("firm"), niche=document.getElementById("niche"),
+      town=document.getElementById("town"), out=document.getElementById("url"),
+      ok=document.getElementById("ok");
+
+  function build(){
+    var p=[];
+    if(firm.value.trim())  p.push("firm="+encodeURIComponent(firm.value.trim()));
+    if(niche.value)        p.push("niche="+niche.value);
+    if(town.value.trim())  p.push("town="+encodeURIComponent(town.value.trim()));
+    var u="https://kaizenevol.com/for.html"+(p.length?"?"+p.join("&"):"");
+    out.textContent=u;
+    return u;
+  }
+  [firm,niche,town].forEach(function(el){
+    el.addEventListener("input",build); el.addEventListener("change",build);
+  });
+  build();
+
+  document.getElementById("copy").addEventListener("click",function(){
+    var u=build();
+    function done(){ ok.textContent="Copied — paste it into the email."; setTimeout(function(){ok.textContent="";},2600); }
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(u).then(done).catch(fallback);
+    } else { fallback(); }
+    function fallback(){
+      var t=document.createElement("textarea"); t.value=u; t.style.position="fixed"; t.style.opacity="0";
+      document.body.appendChild(t); t.select();
+      try{ document.execCommand("copy"); done(); }
+      catch(e){ ok.textContent="Copy failed — select the link above and copy it manually."; }
+      document.body.removeChild(t);
+    }
+  });
+
+  document.getElementById("open").addEventListener("click",function(){
+    window.open(build(),"_blank","noopener");
+  });
+})();
+</script>
+</body>
+</html>
