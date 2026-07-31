@@ -2,6 +2,10 @@ User-agent: *
 Disallow: /dashboard.html
 Disallow: /crm.html
 Disallow: /reports.html
-Disallow: /demos/
+# /demos/ is intentionally crawlable. Both demo builds carry
+# <meta name="robots" content="noindex, nofollow">, which is the real control.
+# Disallowing them here would stop Google reaching the page to SEE that noindex,
+# and a blocked-but-linked URL can still be indexed URL-only. Since 2026-07-31 the
+# homepage links both as our own work, so they must be crawlable to be excluded properly.
 
 Sitemap: https://kaizenevol.com/sitemap.xml
