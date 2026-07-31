@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizengrowth|kaizenforge|kitchen-jobs|bathroom-jobs|loft-jobs).html",
+      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizenreach|kaizenforge|kitchen-jobs|bathroom-jobs|loft-jobs).html",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -98,13 +98,13 @@
   ],
   "redirects": [
     {
-      "source": "/kaizenreach",
-      "destination": "/kaizengrowth.html",
+      "source": "/kaizengrowth",
+      "destination": "/kaizenreach.html",
       "permanent": true
     },
     {
-      "source": "/kaizenreach.html",
-      "destination": "/kaizengrowth.html",
+      "source": "/kaizengrowth.html",
+      "destination": "/kaizenreach.html",
       "permanent": true
     },
     {
