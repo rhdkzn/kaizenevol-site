@@ -1,14 +1,14 @@
 # KaizenEvol
 
-> KaizenEvol is the growth agency for UK local trades and service businesses. Three services, used on their own or stacked: KaizenReach brings the work in, KaizenDesk makes sure none of it slips through, and KaizenForge gives you a website that sells. Run by two founders, Rahaid and Diego, who do the work directly.
+> KaizenEvol is the growth agency for UK local trades and service businesses. Three services, used on their own or stacked: KaizenGrowth brings the work in, KaizenDesk makes sure none of it slips through, and KaizenForge gives you a website that sells. Run by two founders, Rahaid and Diego, who do the work directly.
 
 ## Services
 
-- [KaizenReach](https://kaizenevol.com/kaizenreach.html): Done-for-you Meta (Facebook/Instagram) ads plus fully-managed organic social, built only for UK home renovation specialists — kitchen, bathroom and loft. One specialist per niche per area (exclusive territory), campaigns live in 7 days, and clients own their ad account and leads.
+- [KaizenGrowth](https://kaizenevol.com/kaizengrowth.html): Done-for-you Meta (Facebook/Instagram) ads plus fully-managed organic social, built only for UK home renovation specialists — kitchen, bathroom and loft. One specialist per niche per area (exclusive territory), campaigns live in 7 days, and clients own their ad account and leads.
 - [KaizenDesk](https://kaizenevol.com/kaizendesk.html): An AI front office for any local business. It answers every call, text and email 24/7, qualifies the enquiry, books the job, collects Google reviews and revives cold leads. UK-based and GDPR-compliant; the client keeps their own phone number.
 - [KaizenForge](https://kaizenevol.com/kaizenforge.html): Conversion-first websites for local businesses. Live within 24 hours of approval, from £499 one-off, and you own the site outright — you don't pay until you approve it.
 
-## Niche pages (KaizenReach)
+## Niche pages (KaizenGrowth)
 
 - [Kitchen fitters](https://kaizenevol.com/kitchen.html): Meta ads for UK kitchen fitters and remodellers.
 - [Bathroom fitters](https://kaizenevol.com/bathroom.html): Meta ads for UK bathroom and wetroom fitters.
@@ -28,4 +28,4 @@
 
 - Service area: United Kingdom.
 - Contact: rahaid@kaizenevol.com
-- KaizenReach and KaizenDesk pricing is discussed on a call, not published. KaizenForge pricing is public, from £499.
+- KaizenGrowth and KaizenDesk pricing is discussed on a call, not published. KaizenForge pricing is public, from £499.
