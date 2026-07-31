@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizenreach|kaizenforge).html",
+      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizengrowth|kaizenforge).html",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -85,6 +85,16 @@
     }
   ],
   "redirects": [
+    {
+      "source": "/kaizenreach",
+      "destination": "/kaizengrowth.html",
+      "permanent": true
+    },
+    {
+      "source": "/kaizenreach.html",
+      "destination": "/kaizengrowth.html",
+      "permanent": true
+    },
     {
       "source": "/faq.html",
       "destination": "/contact.html",
