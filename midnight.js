@@ -112,7 +112,10 @@
     if (getComputedStyle(hero).position === 'static') hero.style.position = 'relative';
     hero.insertBefore(canvas, hero.firstChild);
 
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap DPR to 1 on phones: at 2x a 390px viewport renders ~1.14M px/frame
+    // through four band() calls each running exp() + two sin(). Visually
+    // indistinguishable at that size, quarter the fragment work.
+    var dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1 : 2);
     var w = 0, h = 0, raf = 0, running = true, onScreen = true;
     var pointer = { x: 0, tx: 0 }, scrollDrift = 0, t0 = performance.now();
 
