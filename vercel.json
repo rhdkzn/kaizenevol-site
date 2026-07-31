@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizengrowth|kaizenforge|for).html",
+      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizengrowth|kaizenforge|kitchen-jobs|bathroom-jobs|loft-jobs).html",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -72,15 +72,6 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
-    },
-    {
-      "source": "/(for|send).html",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
     }
   ],
   "rewrites": [
@@ -91,6 +82,18 @@
     {
       "source": "/privacy",
       "destination": "/privacy.html"
+    },
+    {
+      "source": "/kitchen-jobs",
+      "destination": "/kitchen-jobs.html"
+    },
+    {
+      "source": "/bathroom-jobs",
+      "destination": "/bathroom-jobs.html"
+    },
+    {
+      "source": "/loft-jobs",
+      "destination": "/loft-jobs.html"
     }
   ],
   "redirects": [
