@@ -847,7 +847,7 @@
       try{
         const res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contactName,businessName,email,phone,trade,monthlyBudget,businessUrl:''})});
         const data=await res.json();
-        if(res.ok&&data.ok){status.textContent="Done, we'll be in touch within 24 hours to book your call.";status.className='lf-status ok';form.reset();btn.textContent='Sent ✓';}
+        if(res.ok&&data.ok){window.keTrackLead&&window.keTrackLead();status.textContent="Done, we'll be in touch within 24 hours to book your call.";status.className='lf-status ok';form.reset();btn.textContent='Sent ✓';}
         else{throw new Error(data.error||'Something went wrong.');}
       }catch(err){status.textContent=err.message||'Something went wrong. Please email us directly.';status.className='lf-status err';btn.disabled=false;btn.textContent='Book a Call';}
     });
@@ -911,5 +911,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script src="/midnight.js?v=17" defer></script>
+<script defer src="/script.js"></script>
 </body>
 </html>

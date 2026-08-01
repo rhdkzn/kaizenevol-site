@@ -565,7 +565,7 @@
       var res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({contactName:name,businessName:business,email:email,trade:trade,message:'FOUNDING SHORTLIST — wants one of the 5 founding places (first 60 days free)'})});
       var d=await res.json();
-      if(res.ok&&d.ok){st.textContent="You're on the founding shortlist. We'll be in touch within 24 hours.";st.className='fbnd-status ok';f.reset();btn.textContent='Place held ✓';}
+      if(res.ok&&d.ok){window.keTrackLead&&window.keTrackLead();st.textContent="You're on the founding shortlist. We'll be in touch within 24 hours.";st.className='fbnd-status ok';f.reset();btn.textContent='Place held ✓';}
       else{throw new Error(d.error||'Something went wrong.');}
     }catch(err){st.textContent=(err.message||'Something went wrong')+' — or email rahaid@kaizenevol.com and we\'ll hold your place.';st.className='fbnd-status err';btn.disabled=false;btn.textContent='Claim a founding place';}
   });
@@ -1001,7 +1001,7 @@
         body:    JSON.stringify({ contactName, businessName, email, phone, businessUrl, trade, monthlyBudget }),
       });
       const data = await res.json();
-      if (res.ok && data.ok) {
+      if (res.ok && data.ok) {window.keTrackLead&&window.keTrackLead();
         status.textContent = "Done, we'll be in touch within 24 hours.";
         status.className   = 'lf-status ok';
         form.reset();
@@ -1027,5 +1027,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script src="/midnight.js?v=17" defer></script>
+<script defer src="/script.js"></script>
 </body>
 </html>
