@@ -414,6 +414,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
     try{
       var res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       if(!res.ok) throw new Error('bad');
+      window.keTrackLead&&window.keTrackLead();
       card.innerHTML='<div class="thanks"><h3>Thanks, '+ (payload.contactName.split(' ')[0]||'') +'.</h3><p>Your message is with us and we&rsquo;ll reply the same working day. In a hurry? Call us on WhatsApp or grab a time on the calendar.</p></div>';
     }catch(_){
       btn.disabled=false; btn.textContent='Send it over';
@@ -425,5 +426,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script src="/midnight.js?v=17" defer></script>
+<script defer src="/script.js"></script>
 </body>
 </html>

@@ -674,6 +674,7 @@
         body: JSON.stringify({ contactName: contactName, businessName: businessName, email: email, phone: phone, trade: trade })
       });
       if (!r.ok) throw 0;
+      window.keTrackLead && window.keTrackLead();
       status.textContent = "Got it. We'll be in touch within one working day."; status.className = 'lf-status ok';
       form.reset();
     } catch (err) {
@@ -684,5 +685,6 @@
 })();
 </script>
 <script src="/midnight.js?v=17" defer></script>
+<script defer src="/script.js"></script>
 </body>
 </html>

@@ -818,7 +818,7 @@
         body:    JSON.stringify({ contactName, businessName, email, phone, businessUrl, trade, monthlyBudget }),
       });
       const data = await res.json();
-      if (res.ok && data.ok) {
+      if (res.ok && data.ok) {window.keTrackLead&&window.keTrackLead();
         status.textContent = "Done — we'll be in touch within 24 hours.";
         status.className   = 'lf-status ok';
         form.reset();
@@ -843,5 +843,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script src="/midnight.js?v=17" defer></script>
+<script defer src="/script.js"></script>
 </body>
 </html>

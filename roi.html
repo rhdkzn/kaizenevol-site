@@ -180,11 +180,12 @@ footer a{color:var(--muted)}
       var res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({contactName:name,businessName:biz,email:email,trade:trade,message:'ROI CALCULATOR — value-first lead · est. '+gbp(rev)+'/mo revenue at '+state.ap+' appts · £'+state.jv+' job · '+state.cr+'% close'})});
       var d=await res.json();
-      if(res.ok&&d.ok){st.textContent="You're in — we'll be in touch within 24 hours. Grab a time now if you'd like:";st.className='status full ok';$('calBox').style.display='block';f.reset();btn.textContent='Booked ✓';}
+      if(res.ok&&d.ok){window.keTrackLead&&window.keTrackLead();st.textContent="You're in — we'll be in touch within 24 hours. Grab a time now if you'd like:";st.className='status full ok';$('calBox').style.display='block';f.reset();btn.textContent='Booked ✓';}
       else{throw new Error(d.error||'Something went wrong.');}
     }catch(err){st.textContent=(err.message||'Something went wrong')+' — or email rahaid@kaizenevol.com.';st.className='status full err';btn.disabled=false;btn.textContent='Book my strategy call';}
   });
 })();
 </script>
+<script defer src="/script.js"></script>
 </body>
 </html>
