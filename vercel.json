@@ -106,6 +106,10 @@
     {
       "source": "/loft-jobs",
       "destination": "/loft-jobs.html"
+    },
+    {
+      "source": "/diagnostic",
+      "destination": "/diagnostic.html"
     }
   ],
   "redirects": [
