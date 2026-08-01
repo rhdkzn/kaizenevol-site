@@ -60,6 +60,34 @@
     window.fbq('track', 'Lead', params || {});
   };
 
+  /* Withdrawal (UK GDPR Art 7(3): withdrawing must be as easy as giving).
+     Clears the stored answer, drops Meta's first-party _fbp cookie, and re-asks.
+     Meta's own third-party cookies are not ours to delete — the privacy notice says
+     so and points people at their Facebook/Instagram ad settings for those. An
+     already-running pixel is not unloaded mid-session; it simply never starts again. */
+  function forget() {
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    document.cookie = '_fbp=; Max-Age=0; path=/';
+    document.cookie = '_fbp=; Max-Age=0; path=/; domain=.' + location.hostname.replace(/^www\./, '');
+  }
+
+  window.keCookieChoices = function () {
+    forget();
+    if (!document.querySelector('.ke-consent')) banner();
+  };
+
+  /* The footer link. Injected rather than hand-added to nineteen footers, and only
+     when a pixel is configured — with no pixel there is no consent to withdraw. */
+  function footerLink() {
+    var host = document.querySelector('footer ul') || document.querySelector('footer');
+    if (!host) return;
+    var a = document.createElement('a');
+    a.href = '#'; a.textContent = 'Cookie choices';
+    a.addEventListener('click', function (e) { e.preventDefault(); window.keCookieChoices(); });
+    if (host.tagName === 'UL') { var li = document.createElement('li'); li.appendChild(a); host.appendChild(li); }
+    else { a.style.marginLeft = '12px'; host.appendChild(a); }
+  }
+
   function dismiss(el) {
     el.removeAttribute('data-open');
     setTimeout(function () { el.remove(); }, 260);
@@ -113,6 +141,7 @@
   }
 
   function start() {
+    footerLink();
     var state = read();
     if (state === 'granted') { loadPixel(); return; }
     if (state === 'denied') return;

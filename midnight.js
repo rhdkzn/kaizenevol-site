@@ -1,8 +1,9 @@
 /* ============================================================
    MIDNIGHT EDITORIAL — sitewide behaviour layer (2026-07-18)
    Injects: particle field into .hero, magnetic primary CTAs,
-   PECR consent banner + consent-gated Meta pixel (inert until
-   META_PIXEL_ID is a real numeric ID from Events Manager).
+   scroll reveals, nav behaviour and heading masks.
+   Cookie consent and the Meta pixel are NOT here — they live in
+   /script.js, which is the only consent gate on this site.
    No page markup is edited by hand — everything is injected.
    ============================================================ */
 (function () {
@@ -301,47 +302,22 @@
     });
   }
 
-  /* ---------- Consent banner + consent-gated Meta pixel ----------
-     PECR: nothing loads before explicit Accept. While META_PIXEL_ID
-     is the placeholder the loader stays inert even on Accept, so the
-     banner + stored choice ship ahead of the pixel itself. */
-  var META_PIXEL_ID = 'META_PIXEL_ID'; /* deploy: set real ID from Events Manager */
-  var KEY = 'ke-consent';
-  function loadPixel() {
-    if (!/^[0-9]{10,20}$/.test(META_PIXEL_ID)) return; /* inert until a real ID is set */
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', META_PIXEL_ID); fbq('track', 'PageView');
-  }
-  function consent() {
-    var choice = null;
-    try { choice = localStorage.getItem(KEY); } catch (e) {}
-    if (choice === 'accepted') { loadPixel(); return; }
-    if (choice === 'declined') return;
-    var wrap = document.createElement('div');
-    wrap.className = 'mid-consent';
-    wrap.innerHTML =
-      '<div class="mid-consent-inner">' +
-      '<p><strong>Cookies, briefly:</strong> we’d like to use one Meta advertising cookie to understand which of our ads brought you here. No consent, no cookie — the site works fully either way.</p>' +
-      '<div class="mid-consent-btns">' +
-      '<button type="button" class="mid-consent-accept">Accept</button>' +
-      '<button type="button" class="mid-consent-decline">No thanks</button>' +
-      '<a href="/privacy.html">Privacy</a>' +
-      '</div></div>';
-    document.body.appendChild(wrap);
-    wrap.classList.add('show');
-    wrap.querySelector('.mid-consent-accept').addEventListener('click', function () {
-      try { localStorage.setItem(KEY, 'accepted'); } catch (e) {}
-      wrap.classList.remove('show'); loadPixel();
-    });
-    wrap.querySelector('.mid-consent-decline').addEventListener('click', function () {
-      try { localStorage.setItem(KEY, 'declined'); } catch (e) {}
-      wrap.classList.remove('show');
-    });
-  }
+  /* ---------- Consent banner: REMOVED 2026-08-01 ----------
+     A second, independent consent implementation lived here from 2026-07-18. It was
+     replaced by /script.js, which is the single gate now. Deleted rather than left
+     dormant because two gates is not redundancy, it is a hazard:
+       - different storage keys ('ke-consent' here vs 'ke_consent' there), so neither
+         could see the other's answer and a returning visitor got asked twice;
+       - this one rendered its banner even while its pixel loader was inert, so visitors
+         were being asked about a Meta cookie that did not exist while privacy.html told
+         them the site set no tracking cookies. Both statements were wrong;
+       - its own comment invited the next person to set a real pixel ID, at which point
+         Decline over there plus Accept here would have loaded the pixel anyway — a PECR
+         Reg 6 breach wearing a consent banner;
+       - its Decline was 60%-opacity text on transparent against a solid Accept, which is
+         the visual imbalance the ICO's dark-pattern position actually bites on.
+     Found by a Mike Ross pre-launch review, 2026-08-01. Do not reintroduce a consent
+     mechanism here — /script.js owns it. ---------- */
 
   /* ---------- Heading mask reveal — section H2s wipe up from a mask on scroll-in ----------
      Deliberately NOT the hero H1 (that's the LCP element — animating it in reads as slow).
@@ -506,7 +482,7 @@
   /* Resilient init: run each module independently so one failure (e.g. a canvas/WebGL
      quirk in particles()) can never abort the rest — reveals, consent, nav must still run. */
   function init() {
-    [craft, grain, particles, magnetic, consent, reveals, faqEase, navHide, ghosts, tilt, countUp, headingReveal].forEach(function (fn) {
+    [craft, grain, particles, magnetic, reveals, faqEase, navHide, ghosts, tilt, countUp, headingReveal].forEach(function (fn) {
       try { fn(); } catch (e) { if (window.console) console.warn('midnight: ' + (fn.name || 'module') + ' skipped —', e && e.message); }
     });
   }
