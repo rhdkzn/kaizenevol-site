@@ -7,3 +7,13 @@
 *.pem
 node_modules/
 .DS_Store
+
+# Local QA tooling — deliberately NOT committed (2026-07-31).
+# `npm i -D playwright` for the Forge QA harness leaves a package.json behind. This is a
+# static site with no build step (see vercel.json — headers/rewrites/redirects only), and a
+# committed package.json is exactly the signal that makes Vercel start running an install on
+# every deploy: 19MB of node_modules pulled to serve HTML that never needed it.
+# Install playwright locally when the harness is needed; keep it out of the repo.
+package.json
+package-lock.json
+forge-qa-output/
