@@ -17,3 +17,11 @@ node_modules/
 package.json
 package-lock.json
 forge-qa-output/
+
+# QA tooling artifacts, not part of the site (added 2026-07-31).
+# package.json here is only playwright for forge-qa.mjs — do NOT commit it:
+# this is a static site with no build step, and a package.json is exactly the
+# signal that makes Vercel start looking for one.
+package.json
+package-lock.json
+forge-qa-output/
