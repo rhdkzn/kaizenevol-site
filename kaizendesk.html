@@ -246,6 +246,12 @@
     .svc-list { list-style:none; display:flex; flex-direction:column; gap:12px; padding-top:8px; }
     .svc-list li { font-size:14.5px; color:var(--muted); padding-left:22px; position:relative; line-height:1.55; }
     .svc-list li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
+    /* The relay — the five agents as one overnight chain (swipe #102 grammar,
+       every clause restates a claim already made in the rows above). */
+    .relay { border-top:1px solid var(--hairline); padding:44px 0 40px; }
+    .relay p { font-family:var(--serif); font-size:clamp(19px, 1rem + 1.3vw, 27px); line-height:1.5; letter-spacing:-0.01em; max-width:30em; }
+    .relay b { font-weight:600; color:var(--accent-2); }
+    .relay .relay-tail { font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:14px; max-width:none; letter-spacing:0; }
     .svc-coda { border-top:1px solid var(--hairline); border-bottom:1px solid var(--hairline); padding:40px 0; display:grid; grid-template-columns:110px 1fr; gap:36px; }
     .svc-coda h3 { font-size:clamp(20px, 1rem + 1vw, 26px); margin-bottom:10px; }
     .svc-coda p { font-size:14.5px; color:var(--muted); max-width:560px; }
@@ -633,6 +639,11 @@
         <li>Takes the caller's name and what they need, then texts a booking link</li>
         <li>Flags the genuine ones to you, the rest never interrupt your day</li>
       </ul>
+    </div>
+
+    <div class="relay">
+      <p><b>Sentinel</b> answers the 9pm call your competitor let ring out. <b>Swift</b> works out it&rsquo;s a real job and flags it to your phone. <b>Slate</b> books it in before breakfast. <b>Kudos</b> asks for the review once it&rsquo;s done. <b>Revival</b>, meanwhile, is waking the quote that went quiet in March.</p>
+      <p class="relay-tail">All of it happened while you slept.</p>
     </div>
 
     <div class="svc-coda">
