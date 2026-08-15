@@ -88,13 +88,10 @@
     #about p{color:var(--muted);margin-bottom:12px}
     #about p strong{color:var(--text)}
 
-    /* reduced-motion / no-JS: an ordinary page, no scrub */
+    /* reduced-motion: the walk still runs (it moves only with the user's own scroll);
+       self-moving effects (idle breath, entrance transitions) are disabled instead. */
     @media (prefers-reduced-motion: reduce){
-      #walk{height:auto}
-      #stage{position:relative;height:70vh}
-      .beat{position:relative;opacity:1;transform:none;bottom:auto;top:auto;padding:28px 24px}
-      #stage .beat{display:none}
-      #beats-static{display:block}
+      .beat{transition:none}
     }
     #beats-static{display:none}
   </style>
@@ -135,7 +132,7 @@
     <button id="tap" type="button">&#9654;&nbsp; Start the walk</button>
   </div>
 </section>
-<div id="dbg">v3</div>
+<div id="dbg">v4</div>
 
 <section id="close">
   <div class="inner">
@@ -167,10 +164,10 @@
 
   var dbg = document.getElementById('dbg');
   var tap = document.getElementById('tap');
-  function D(s){ if(dbg) dbg.textContent = 'v3 · ' + s; }
+  function D(s){ if(dbg) dbg.textContent = 'v4 · ' + s; }
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
-  if (reduced) { loading.classList.add('off'); D('reduced-motion static'); return; }   /* CSS fallback handles layout */
+  if (reduced) D('v4 reduced-motion: scrub on, auto-motion off');
 
   /* tier: phones / data-saver get the 540p encode (gotcha: heavy masters choke phone decoders) */
   var lite = matchMedia('(max-width: 768px)').matches || conn.saveData === true ||
