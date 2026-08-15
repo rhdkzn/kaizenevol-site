@@ -79,11 +79,26 @@
     .quiet{display:block;margin-top:18px;color:var(--muted);font-size:14px}
     .quiet a{color:var(--accent-2)}
 
-    /* ── crawlable copy / fallback ──────────── */
-    #about{max-width:760px;margin:0 auto;padding:72px 24px 96px;border-top:1px solid var(--hairline)}
-    #about h2{font-size:clamp(22px,1rem + 1.2vw,30px);margin-bottom:14px}
-    #about p{color:var(--muted);margin-bottom:12px}
-    #about p strong{color:var(--text)}
+    /* ── the three rooms, revisited ─────────── */
+    #about{max-width:1080px;margin:0 auto;padding:88px 24px 104px;border-top:1px solid var(--hairline)}
+    #about .eyebrow{text-align:center;margin-bottom:10px}
+    #about h2{font-size:clamp(26px,1.2rem + 1.8vw,40px);text-align:center;margin-bottom:14px}
+    #about > p.lede{color:var(--muted);text-align:center;max-width:640px;margin:0 auto 44px}
+    #about > p.lede strong{color:var(--text)}
+    .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    @media (max-width:840px){.svc-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}}
+    .svc-card{display:block;background:var(--void-2);border:1px solid var(--hairline);border-radius:18px;
+      overflow:hidden;text-decoration:none;color:inherit;transition:border-color .25s,transform .25s}
+    .svc-card:hover{border-color:rgba(139,92,246,.45);transform:translateY(-3px)}
+    .svc-card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;
+      border-bottom:1px solid var(--hairline)}
+    .svc-card .pad{padding:22px 22px 24px}
+    .svc-card .eyebrow{text-align:left;margin-bottom:8px}
+    .svc-card h3{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(19px,1rem + .6vw,23px);
+      letter-spacing:-0.02em;line-height:1.15;margin-bottom:8px}
+    .svc-card p{color:var(--muted);font-size:15px;margin-bottom:14px}
+    .svc-card p strong{color:var(--text)}
+    .svc-card .go{color:var(--accent-2);font-weight:600;font-size:14px}
 
     /* reduced-motion: the walk still runs (it moves only with the user's own scroll);
        self-moving effects (idle breath, entrance transitions) are disabled instead. */
@@ -141,9 +156,38 @@
 </section>
 
 <section id="about">
-  <h2>What you just walked through</h2>
-  <p><strong>KaizenEvol</strong> is a UK growth agency for home renovation businesses — kitchen fitters, bathroom installers, loft conversion specialists, and every renovation trade in between: extensions, driveways, roofing, landscaping, full refurbishments.</p>
-  <p><strong>KaizenForge</strong> builds websites that sell for UK home renovation businesses — bespoke, live within 24 hours, pay on approval, and you own the site outright. Kitchen fitters, bathroom installers, loft specialists, and every renovation trade in between.</p>
+  <div class="eyebrow">KaizenEvol</div>
+  <h2>The rooms you just <em class="grad">walked through</em></h2>
+  <p class="lede"><strong>KaizenEvol</strong> grows UK home renovation businesses — kitchen fitters, bathroom installers, loft specialists, and every renovation trade in between: extensions, driveways, roofing, landscaping, full refurbishments.</p>
+  <div class="svc-grid">
+    <a class="svc-card" href="/kaizenreach.html">
+      <img src="/showpiece/card-reach.jpg" alt="The kitchen from the walkthrough" loading="lazy" />
+      <div class="pad">
+        <div class="eyebrow">The Kitchen</div>
+        <h3>KaizenReach</h3>
+        <p>Done-for-you client acquisition: <strong>paid Meta ads plus fully-managed social</strong>, so the calendar fills while you build.</p>
+        <span class="go">How the jobs arrive →</span>
+      </div>
+    </a>
+    <a class="svc-card" href="/kaizendesk.html">
+      <img src="/showpiece/card-desk.jpg" alt="The bathroom from the walkthrough" loading="lazy" />
+      <div class="pad">
+        <div class="eyebrow">The Bathroom</div>
+        <h3>KaizenDesk</h3>
+        <p>The AI front office that <strong>answers and books enquiries around the clock</strong> — no call, form or message goes unanswered.</p>
+        <span class="go">How nothing gets missed →</span>
+      </div>
+    </a>
+    <a class="svc-card" href="/kaizenforge.html">
+      <img src="/showpiece/card-forge.jpg" alt="The loft from the walkthrough" loading="lazy" />
+      <div class="pad">
+        <div class="eyebrow">The Loft</div>
+        <h3>KaizenForge</h3>
+        <p>Websites that sell, not just sit there — <strong>live in 24 hours, pay on approval, own it outright</strong>.</p>
+        <span class="go">How the work gets sold →</span>
+      </div>
+    </a>
+  </div>
   <div id="beats-static"></div>
 </section>
 
