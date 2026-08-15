@@ -171,12 +171,21 @@
   var src = '/showpiece/walkthrough-v2-' + (lite ? '540' : '1080') + (webm ? '.webm' : '.mp4');
 
   /* fetch → blob so currentTime seeks work everywhere (byte-range gotcha) */
-  fetch(src).then(function(r){ return r.blob(); }).then(function(b){
-    vid.src = URL.createObjectURL(b);
-    vid.load();
-    prime();
-    setTimeout(function(){ if (!painted) { tap.classList.add('show'); } }, 4000);                     /* muted+playsinline autoplay is allowed: prime immediately */
-  }).catch(function(e){ loading.textContent = 'Walkthrough unavailable — scroll on.'; });
+  /* Direct URL first — the host serves byte ranges (verified), so the walk starts in
+     ~a second instead of after a full multi-MB download. Blob is the fallback only. */
+  var triedBlob = false;
+  function useBlob(){
+    if (triedBlob) { loading.textContent = 'Walkthrough unavailable — scroll on.'; return; }
+    triedBlob = true;
+    fetch(src).then(function(r){ return r.blob(); }).then(function(b){
+      vid.src = URL.createObjectURL(b); vid.load(); prime();
+    }).catch(function(){ loading.textContent = 'Walkthrough unavailable — scroll on.'; });
+  }
+  vid.addEventListener('error', function(){ useBlob(); });
+  vid.src = src;
+  vid.load();
+  prime();
+  setTimeout(function(){ if (!painted) { tap.classList.add('show'); } }, 4000);
 
   var painted = false, duration = 0;
   vid.addEventListener('loadedmetadata', function(){ duration = vid.duration; });
@@ -216,7 +225,7 @@
   });
 
   /* scrub: lerp toward target so fast flicks stay smooth; coalesce seeks */
-  var target = 0, current = 0, seeking = false;
+  var target = 0, current = 0, seeking = false, lastSeekAt = 0;
   vid.addEventListener('seeking', function(){ seeking = true; });
   vid.addEventListener('seeked',  function(){ seeking = false; });
 
@@ -230,8 +239,11 @@
     if (duration) {
       target = p * (duration - 0.05);
       current += (target - current) * 0.3;             /* ease toward target */
-      if (!seeking && Math.abs(vid.currentTime - current) > 1/60) {
-        try { vid.currentTime = current; } catch(e) {}
+      /* watchdog: a stuck 'seeking' (no seeked event — Safari under fast scrub) must not
+         freeze the walk; re-issue the seek after 300ms regardless */
+      if (Math.abs(vid.currentTime - current) > 1/60 &&
+          (!seeking || performance.now() - lastSeekAt > 300)) {
+        try { vid.currentTime = current; lastSeekAt = performance.now(); } catch(e) {}
       }
       if (!painted && !primed && p > 0) prime();
     }
