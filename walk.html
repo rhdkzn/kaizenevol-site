@@ -199,7 +199,11 @@
   if (reduced)
 
   /* tier: phones / data-saver get the 540p encode (gotcha: heavy masters choke phone decoders) */
-  var lite = matchMedia('(max-width: 768px)').matches || conn.saveData === true ||
+  /* pick by PHYSICAL pixels, not CSS px - a 3x retina phone fullscreens the video,
+     so 540p there is a ~4.7x upscale (Rahaid: "a bit pixely"). Modern phones decode
+     1080p H.264 fine; 540 is only for genuinely small/slow/data-saver devices. */
+  var phys = Math.max(screen.width, screen.height) * (window.devicePixelRatio || 1);
+  var lite = phys < 1000 || conn.saveData === true ||
              /2g/.test(conn.effectiveType || '');
   /* codec: VP9 webm preferred (smaller; Chrome/Firefox/Edge), H.264 mp4 fallback (Safari/iOS) */
   var webm = vid.canPlayType('video/webm; codecs="vp9"') !== '';
