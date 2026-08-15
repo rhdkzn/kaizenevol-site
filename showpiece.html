@@ -212,7 +212,8 @@
              /2g/.test(conn.effectiveType || '');
   /* codec: VP9 webm preferred (smaller; Chrome/Firefox/Edge), H.264 mp4 fallback (Safari/iOS) */
   var webm = vid.canPlayType('video/webm; codecs="vp9"') !== '';
-  var src = '/showpiece/walkthrough-v2-' + (lite ? '540' : '1080') + (webm ? '.webm' : '.mp4');
+  var tier = lite ? '540' : (phys < 2000 ? '1080' : '1440');
+  var src = '/showpiece/walkthrough-v3-' + tier + (webm ? '.webm' : '.mp4');
 
   /* fetch → blob so currentTime seeks work everywhere (byte-range gotcha) */
   /* Direct URL first — the host serves byte ranges (verified), so the walk starts in
@@ -291,8 +292,8 @@
       }
       if (!painted && !primed && p > 0) prime();
     }
-    /* beats: door 0-.2 · kitchen .24-.46 · bathroom .5-.72 · loft .76-.97 */
-    var w = [[0,.2],[.24,.46],[.5,.72],[.76,.97]];
+    /* beats (v3 master, seams at .255/.501/.746): door · kitchen · bathroom · loft */
+    var w = [[0,.21],[.28,.47],[.53,.71],[.78,.97]];
     for (var i=0;i<4;i++){
       beats[i].classList.toggle('on', p >= w[i][0] && p <= w[i][1]);
     }

@@ -120,7 +120,7 @@
     <div class="beat" id="beat-0">
       <div class="eyebrow">For Renovation Firms</div>
       <h1>Walk through your <em class="grad">next job</em>.</h1>
-      <p class="sub">Scroll. Thirty seconds, no reading.</p>
+      <p class="sub">Scroll. Thirty seconds, no reading. Whatever you renovate — kitchens, bathrooms, lofts, extensions, the lot — this walk is for you.</p>
     </div>
 
     <div class="beat" id="beat-1">
@@ -178,7 +178,8 @@
       </div>
     </div>
   </div>
-  <p class="lede" style="margin-top:28px"><strong>And the website comes free.</strong> Sign with us and we build you a site like this one — no extra cost, yours outright.</p>
+  <p class="lede" style="margin-top:26px">The rooms are just the tour. <strong>Every service works for every renovation trade</strong> — kitchens, bathrooms, lofts, extensions, driveways, roofing, landscaping, full refurbs.</p>
+  <p class="lede" style="margin-top:14px"><strong>And the website comes free.</strong> Sign with us and we build you a site like this one — no extra cost, yours outright.</p>
   <div style="text-align:center"><a class="btn-wa" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20just%20took%20the%20walkthrough.%20Keen%20to%20hear%20what%20you%27d%20fix%20first%20for%20my%20business." target="_blank" rel="noopener">Message us on WhatsApp</a><span class="quiet">We reply and call you back the same day — you just confirm the time.</span>
   <p style="color:var(--muted);font-size:14px;margin-top:14px">Fifteen minutes. We'll tell you which room is costing you — and exactly how we'd fix it.</p></div>
   <div id="beats-static"></div>
@@ -205,7 +206,8 @@
              /2g/.test(conn.effectiveType || '');
   /* codec: VP9 webm preferred (smaller; Chrome/Firefox/Edge), H.264 mp4 fallback (Safari/iOS) */
   var webm = vid.canPlayType('video/webm; codecs="vp9"') !== '';
-  var src = '/showpiece/walkthrough-v2-' + (lite ? '540' : '1080') + (webm ? '.webm' : '.mp4');
+  var tier = lite ? '540' : (phys < 2000 ? '1080' : '1440');
+  var src = '/showpiece/walkthrough-v3-' + tier + (webm ? '.webm' : '.mp4');
 
   /* fetch → blob so currentTime seeks work everywhere (byte-range gotcha) */
   /* Direct URL first — the host serves byte ranges (verified), so the walk starts in
@@ -284,8 +286,8 @@
       }
       if (!painted && !primed && p > 0) prime();
     }
-    /* beats: door 0-.2 · kitchen .24-.46 · bathroom .5-.72 · loft .76-.97 */
-    var w = [[0,.2],[.24,.46],[.5,.72],[.76,.97]];
+    /* beats (v3 master, seams at .255/.501/.746): door · kitchen · bathroom · loft */
+    var w = [[0,.21],[.28,.47],[.53,.71],[.78,.97]];
     for (var i=0;i<4;i++){
       beats[i].classList.toggle('on', p >= w[i][0] && p <= w[i][1]);
     }
