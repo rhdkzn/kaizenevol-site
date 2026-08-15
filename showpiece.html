@@ -96,7 +96,7 @@
 <section id="walk" aria-label="Scroll-driven walkthrough of a renovated house">
   <div id="stage">
     <img class="poster" src="/showpiece/poster.jpg?v=2" alt="Open double doors leading into a renovated home" />
-    <video id="vid" playsinline muted preload="none" aria-hidden="true"></video>
+    <video id="vid" playsinline muted preload="auto" aria-hidden="true"></video>
 
     <div class="beat" id="beat-0">
       <div class="eyebrow">A KaizenForge Showpiece</div>
@@ -170,6 +170,7 @@
   fetch(src).then(function(r){ return r.blob(); }).then(function(b){
     vid.src = URL.createObjectURL(b);
     vid.load();
+    prime();                     /* muted+playsinline autoplay is allowed: prime immediately */
   }).catch(function(){ loading.textContent = 'Walkthrough unavailable — scroll on.'; });
 
   var painted = false, duration = 0;
@@ -184,17 +185,23 @@
     setTimeout(function(){ hint.classList.remove('on'); }, 3200);
   }
   vid.addEventListener('seeked', markPainted);
-  vid.addEventListener('canplay', function(){ if (vid.currentTime > 0) markPainted(); });
+  vid.addEventListener('loadeddata', markPainted);
+  vid.addEventListener('canplay', function(){ markPainted(); });
 
-  /* iOS: a muted video that never played won't paint a seeked frame — prime on first touch */
+  /* iOS: a muted video that never played won't paint a seeked frame. Safari also honours
+     preload strictly, so we prime by playing (muted+playsinline autoplay is permitted) the
+     moment the blob lands, and keep touch/scroll fallbacks that RETRY until priming sticks
+     (Low Power Mode rejects the first play()). */
   var primed = false;
   function prime(){
     if (primed || !vid.src) return;
-    primed = true;
     var p = vid.play();
-    if (p && p.then) p.then(function(){ vid.pause(); }).catch(function(){});
+    if (p && p.then) p.then(function(){ primed = true; vid.pause(); })
+                      .catch(function(){ /* blocked (Low Power) — retry on next gesture */ });
+    else primed = true;
   }
-  addEventListener('touchstart', prime, {once:true, passive:true});
+  addEventListener('touchstart', prime, {passive:true});
+  addEventListener('scroll', prime, {passive:true});
 
   /* scrub: lerp toward target so fast flicks stay smooth; coalesce seeks */
   var target = 0, current = 0, seeking = false;
