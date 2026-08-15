@@ -132,6 +132,26 @@
       "source": "/faq",
       "destination": "/contact.html",
       "permanent": true
+    },
+    {
+      "source": "/walk-reach",
+      "destination": "/walk.html",
+      "permanent": true
+    },
+    {
+      "source": "/walk-reach.html",
+      "destination": "/walk.html",
+      "permanent": true
+    },
+    {
+      "source": "/walk-desk",
+      "destination": "/walk.html",
+      "permanent": true
+    },
+    {
+      "source": "/walk-desk.html",
+      "destination": "/walk.html",
+      "permanent": true
     }
   ]
 }
