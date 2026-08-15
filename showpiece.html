@@ -61,9 +61,6 @@
     #loading{position:absolute;z-index:4;bottom:4vh;left:0;right:0;text-align:center;color:var(--muted);font-size:12px;
       letter-spacing:.08em;text-transform:uppercase;transition:opacity .4s}
     #loading.off{opacity:0}
-    #dbg{position:fixed;z-index:9;left:8px;bottom:8px;font-size:10px;letter-spacing:.04em;
-      color:rgba(238,232,255,.45);background:rgba(12,6,24,.55);padding:3px 8px;border-radius:6px;
-      font-family:ui-monospace,monospace;pointer-events:none}
     #tap{position:absolute;z-index:5;inset:0;margin:auto;width:200px;height:56px;display:none;
       align-items:center;justify-content:center;gap:10px;border-radius:999px;border:1px solid var(--hairline);
       background:rgba(12,6,24,.8);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;
@@ -132,7 +129,6 @@
     <button id="tap" type="button">&#9654;&nbsp; Start the walk</button>
   </div>
 </section>
-<div id="dbg">v4</div>
 
 <section id="close">
   <div class="inner">
@@ -162,12 +158,10 @@
   var hint = document.getElementById('hint');
   var beats = [0,1,2,3].map(function(i){ return document.getElementById('beat-'+i); });
 
-  var dbg = document.getElementById('dbg');
   var tap = document.getElementById('tap');
-  function D(s){ if(dbg) dbg.textContent = 'v4 · ' + s; }
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
-  if (reduced) D('v4 reduced-motion: scrub on, auto-motion off');
+  if (reduced)
 
   /* tier: phones / data-saver get the 540p encode (gotcha: heavy masters choke phone decoders) */
   var lite = matchMedia('(max-width: 768px)').matches || conn.saveData === true ||
@@ -175,20 +169,18 @@
   /* codec: VP9 webm preferred (smaller; Chrome/Firefox/Edge), H.264 mp4 fallback (Safari/iOS) */
   var webm = vid.canPlayType('video/webm; codecs="vp9"') !== '';
   var src = '/showpiece/walkthrough-v2-' + (lite ? '540' : '1080') + (webm ? '.webm' : '.mp4');
-  D('fetching ' + (lite?'540':'1080') + (webm?' webm':' mp4'));
 
   /* fetch → blob so currentTime seeks work everywhere (byte-range gotcha) */
   fetch(src).then(function(r){ return r.blob(); }).then(function(b){
     vid.src = URL.createObjectURL(b);
     vid.load();
-    D('blob set, priming');
     prime();
-    setTimeout(function(){ if (!painted) { tap.classList.add('show'); D('not painted — tap shown'); } }, 4000);                     /* muted+playsinline autoplay is allowed: prime immediately */
-  }).catch(function(e){ loading.textContent = 'Walkthrough unavailable — scroll on.'; D('fetch FAILED ' + (e && e.message ? e.message.slice(0,40) : '')); });
+    setTimeout(function(){ if (!painted) { tap.classList.add('show'); } }, 4000);                     /* muted+playsinline autoplay is allowed: prime immediately */
+  }).catch(function(e){ loading.textContent = 'Walkthrough unavailable — scroll on.'; });
 
   var painted = false, duration = 0;
-  vid.addEventListener('loadedmetadata', function(){ duration = vid.duration; D('metadata ' + duration.toFixed(1) + 's'); });
-  vid.addEventListener('error', function(){ D('VIDEO ERROR code ' + (vid.error && vid.error.code)); });
+  vid.addEventListener('loadedmetadata', function(){ duration = vid.duration; });
+  vid.addEventListener('error', function(){ });
 
   function markPainted(){
     if (painted) return;
@@ -196,7 +188,6 @@
     stage.classList.add('painted');   /* poster fades only AFTER a frame exists (iOS gotcha) */
     loading.classList.add('off');
     tap.classList.remove('show');
-    D('painted · scrubbing');
     hint.classList.add('on');
     setTimeout(function(){ hint.classList.remove('on'); }, 3200);
   }
@@ -221,7 +212,7 @@
   tap.addEventListener('click', function(){
     var p2 = vid.play();
     if (p2 && p2.then) p2.then(function(){ primed = true; vid.pause(); markPainted(); })
-                        .catch(function(e){ D('play blocked: ' + (e && e.name)); });
+                        .catch(function(e){ });
   });
 
   /* scrub: lerp toward target so fast flicks stay smooth; coalesce seeks */
