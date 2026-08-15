@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Walk Through the House — A KaizenForge Showpiece</title>
+  <meta name="description" content="Scroll to walk through a renovated home — kitchen, bathroom, loft. A KaizenForge showpiece: bespoke sites for renovation firms, live in 24 hours, pay on approval." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://kaizenevol.com/showpiece.html" />
+  <meta property="og:title" content="Walk Through the House — A KaizenForge Showpiece" />
+  <meta property="og:description" content="Scroll to walk through a renovated home. Built the way we'd build yours." />
+  <meta property="og:image" content="https://kaizenevol.com/showpiece/poster.jpg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <!-- Photography: Pexels (free commercial licence) — Curtis Adams (entry, kitchen), Max Vakhtbovych (bathroom, loft). -->
+  <style>
+    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
+    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
+    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
+    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:500; font-display:swap; src:url('/pjs-500.woff2') format('woff2'); }
+    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
+    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
+
+    :root{
+      --void:#0C0618; --void-2:#120A24; --text:#EEE8FF;
+      --muted:rgba(238,232,255,0.56); --hairline:rgba(238,232,255,0.1);
+      --accent:#8B5CF6; --accent-2:#A78BFA;
+      --grad:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:auto}
+    body{background:var(--void);color:var(--text);font-family:'Plus Jakarta Sans',system-ui,sans-serif;line-height:1.6}
+    .eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2)}
+    h1,h2{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.08}
+    h1{font-size:clamp(34px,1.5rem + 3.2vw,60px);letter-spacing:-0.03em}
+    h2{font-size:clamp(30px,1.4rem + 2.4vw,48px);letter-spacing:-0.03em}
+    .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+    /* ── the walk ───────────────────────────── */
+    #walk{position:relative;height:560vh}
+    #stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--void)}
+    #stage video,#stage img.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    #stage img.poster{z-index:1;transition:opacity .4s}
+    #stage.painted img.poster{opacity:0}
+    /* scrim so type stays legible over bright rooms */
+    #stage::after{content:"";position:absolute;inset:0;z-index:2;
+      background:linear-gradient(180deg,rgba(12,6,24,.72) 0%,rgba(12,6,24,0) 34%,rgba(12,6,24,0) 52%,rgba(12,6,24,.72) 100%)}
+    .beat{position:absolute;z-index:3;left:0;right:0;bottom:10vh;text-align:center;padding:0 24px;
+      opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease;pointer-events:none}
+    .beat.on{opacity:1;transform:none}
+    .beat h1,.beat h2{text-shadow:0 2px 24px rgba(12,6,24,.85),0 1px 4px rgba(12,6,24,.7)}
+    .beat .eyebrow{text-shadow:0 1px 10px rgba(12,6,24,.95)}
+    .beat .sub{color:var(--muted);max-width:560px;margin:10px auto 0;font-size:clamp(15px,1rem + .2vw,18px)}
+    .beat .sub strong{color:var(--text)}
+    #beat-0{top:14vh;bottom:auto}
+    #hint{position:absolute;z-index:3;bottom:4vh;left:0;right:0;text-align:center;color:var(--muted);
+      font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:0;transition:opacity .5s}
+    #hint.on{opacity:1}
+    #loading{position:absolute;z-index:4;bottom:4vh;left:0;right:0;text-align:center;color:var(--muted);font-size:12px;
+      letter-spacing:.08em;text-transform:uppercase;transition:opacity .4s}
+    #loading.off{opacity:0}
+
+    /* ── close ──────────────────────────────── */
+    #close{min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;
+      padding:96px 24px;border-top:1px solid var(--hairline)}
+    #close .inner{max-width:660px}
+    #close p{color:var(--muted);margin:18px auto 0;max-width:560px}
+    #close p strong{color:var(--text)}
+    .btn-solid{display:inline-block;margin-top:32px;padding:15px 34px;border-radius:999px;background:var(--accent);
+      color:#fff;font-weight:600;text-decoration:none;transition:background .2s}
+    .btn-solid:hover{background:var(--accent-2)}
+    .quiet{display:block;margin-top:18px;color:var(--muted);font-size:14px}
+    .quiet a{color:var(--accent-2)}
+
+    /* ── crawlable copy / fallback ──────────── */
+    #about{max-width:760px;margin:0 auto;padding:72px 24px 96px;border-top:1px solid var(--hairline)}
+    #about h2{font-size:clamp(22px,1rem + 1.2vw,30px);margin-bottom:14px}
+    #about p{color:var(--muted);margin-bottom:12px}
+    #about p strong{color:var(--text)}
+
+    /* reduced-motion / no-JS: an ordinary page, no scrub */
+    @media (prefers-reduced-motion: reduce){
+      #walk{height:auto}
+      #stage{position:relative;height:70vh}
+      .beat{position:relative;opacity:1;transform:none;bottom:auto;top:auto;padding:28px 24px}
+      #stage .beat{display:none}
+      #beats-static{display:block}
+    }
+    #beats-static{display:none}
+  </style>
+</head>
+<body>
+
+<section id="walk" aria-label="Scroll-driven walkthrough of a renovated house">
+  <div id="stage">
+    <img class="poster" src="/showpiece/poster.jpg" alt="Open double doors leading into a renovated home" />
+    <video id="vid" playsinline muted preload="none" aria-hidden="true"></video>
+
+    <div class="beat" id="beat-0">
+      <div class="eyebrow">A KaizenForge Showpiece</div>
+      <h1>Step <em class="grad">inside</em>.</h1>
+      <p class="sub">Scroll. The site does the walking.</p>
+    </div>
+
+    <div class="beat" id="beat-1">
+      <div class="eyebrow">The Kitchen</div>
+      <h2>The job that books the next one.</h2>
+      <p class="sub"><strong>KaizenReach</strong> keeps the calendar full — done-for-you Meta ads and managed social for renovation firms.</p>
+    </div>
+
+    <div class="beat" id="beat-2">
+      <div class="eyebrow">The Bathroom</div>
+      <h2>The call you didn't miss.</h2>
+      <p class="sub"><strong>KaizenDesk</strong> answers and books enquiries around the clock, so the quote goes to you, not the next firm.</p>
+    </div>
+
+    <div class="beat" id="beat-3">
+      <div class="eyebrow">The Loft</div>
+      <h2>Room to grow.</h2>
+      <p class="sub"><strong>KaizenForge</strong> builds the site that sells the work — kitchens, bathrooms, lofts, <strong>and every renovation trade in between</strong>.</p>
+    </div>
+
+    <div id="hint">Scroll to walk through</div>
+    <div id="loading">Preparing the walkthrough…</div>
+  </div>
+</section>
+
+<section id="close">
+  <div class="inner">
+    <div class="eyebrow">KaizenForge</div>
+    <h2>Built the way we'd <em class="grad">build yours</em>.</h2>
+    <p>This page is the pitch: a bespoke site, designed to sell your work, <strong>live in 24 hours</strong>. You see the finished site before you pay a penny — <strong>pay on approval, own it outright</strong>.</p>
+    <a class="btn-solid" href="/kaizenforge.html#contact">Get My Website</a>
+    <span class="quiet">Prefer to look around first? <a href="/kaizenforge.html">See how KaizenForge works</a></span>
+  </div>
+</section>
+
+<section id="about">
+  <h2>What you just walked through</h2>
+  <p><strong>KaizenEvol</strong> is a UK growth agency for home renovation businesses — kitchen fitters, bathroom installers, loft conversion specialists, and every renovation trade in between: extensions, driveways, roofing, landscaping, full refurbishments.</p>
+  <p><strong>KaizenReach</strong> is done-for-you client acquisition: paid Meta advertising plus fully-managed organic social, run for you.</p>
+  <p><strong>KaizenDesk</strong> is an AI front office that answers and books your enquiries around the clock, so no call, form or message goes unanswered.</p>
+  <p><strong>KaizenForge</strong> builds websites that sell, not just sit there — live within 24 hours, pay on approval, and you own the site outright.</p>
+  <div id="beats-static"></div>
+</section>
+
+<script>
+(function(){
+  var walk = document.getElementById('walk');
+  var stage = document.getElementById('stage');
+  var vid = document.getElementById('vid');
+  var loading = document.getElementById('loading');
+  var hint = document.getElementById('hint');
+  var beats = [0,1,2,3].map(function(i){ return document.getElementById('beat-'+i); });
+
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var conn = navigator.connection || {};
+  if (reduced) { loading.classList.add('off'); return; }   /* CSS fallback handles layout */
+
+  /* tier: phones / data-saver get the 540p encode (gotcha: heavy masters choke phone decoders) */
+  var lite = matchMedia('(max-width: 768px)').matches || conn.saveData === true ||
+             /2g/.test(conn.effectiveType || '');
+  /* codec: VP9 webm preferred (smaller; Chrome/Firefox/Edge), H.264 mp4 fallback (Safari/iOS) */
+  var webm = vid.canPlayType('video/webm; codecs="vp9"') !== '';
+  var src = '/showpiece/walkthrough-' + (lite ? '540' : '1080') + (webm ? '.webm' : '.mp4');
+
+  /* fetch → blob so currentTime seeks work everywhere (byte-range gotcha) */
+  fetch(src).then(function(r){ return r.blob(); }).then(function(b){
+    vid.src = URL.createObjectURL(b);
+    vid.load();
+  }).catch(function(){ loading.textContent = 'Walkthrough unavailable — scroll on.'; });
+
+  var painted = false, duration = 0;
+  vid.addEventListener('loadedmetadata', function(){ duration = vid.duration; });
+
+  function markPainted(){
+    if (painted) return;
+    painted = true;
+    stage.classList.add('painted');   /* poster fades only AFTER a frame exists (iOS gotcha) */
+    loading.classList.add('off');
+    hint.classList.add('on');
+    setTimeout(function(){ hint.classList.remove('on'); }, 3200);
+  }
+  vid.addEventListener('seeked', markPainted);
+  vid.addEventListener('canplay', function(){ if (vid.currentTime > 0) markPainted(); });
+
+  /* iOS: a muted video that never played won't paint a seeked frame — prime on first touch */
+  var primed = false;
+  function prime(){
+    if (primed || !vid.src) return;
+    primed = true;
+    var p = vid.play();
+    if (p && p.then) p.then(function(){ vid.pause(); }).catch(function(){});
+  }
+  addEventListener('touchstart', prime, {once:true, passive:true});
+
+  /* scrub: lerp toward target so fast flicks stay smooth; coalesce seeks */
+  var target = 0, current = 0, seeking = false;
+  vid.addEventListener('seeking', function(){ seeking = true; });
+  vid.addEventListener('seeked',  function(){ seeking = false; });
+
+  function progress(){
+    var r = walk.getBoundingClientRect();
+    var total = r.height - innerHeight;
+    return Math.min(1, Math.max(0, -r.top / total));
+  }
+  function tick(){
+    var p = progress();
+    if (duration) {
+      target = p * (duration - 0.05);
+      current += (target - current) * 0.22;             /* ease toward target */
+      if (!seeking && Math.abs(vid.currentTime - current) > 1/60) {
+        try { vid.currentTime = current; } catch(e) {}
+      }
+      if (!painted && !primed && p > 0) prime();
+    }
+    /* beats: door 0-.2 · kitchen .24-.46 · bathroom .5-.72 · loft .76-.97 */
+    var w = [[0,.2],[.24,.46],[.5,.72],[.76,.97]];
+    for (var i=0;i<4;i++){
+      beats[i].classList.toggle('on', p >= w[i][0] && p <= w[i][1]);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
