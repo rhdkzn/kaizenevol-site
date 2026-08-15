@@ -95,7 +95,7 @@
 
 <section id="walk" aria-label="Scroll-driven walkthrough of a renovated house">
   <div id="stage">
-    <img class="poster" src="/showpiece/poster.jpg" alt="Open double doors leading into a renovated home" />
+    <img class="poster" src="/showpiece/poster.jpg?v=2" alt="Open double doors leading into a renovated home" />
     <video id="vid" playsinline muted preload="none" aria-hidden="true"></video>
 
     <div class="beat" id="beat-0">
@@ -164,7 +164,7 @@
              /2g/.test(conn.effectiveType || '');
   /* codec: VP9 webm preferred (smaller; Chrome/Firefox/Edge), H.264 mp4 fallback (Safari/iOS) */
   var webm = vid.canPlayType('video/webm; codecs="vp9"') !== '';
-  var src = '/showpiece/walkthrough-' + (lite ? '540' : '1080') + (webm ? '.webm' : '.mp4');
+  var src = '/showpiece/walkthrough-v2-' + (lite ? '540' : '1080') + (webm ? '.webm' : '.mp4');
 
   /* fetch → blob so currentTime seeks work everywhere (byte-range gotcha) */
   fetch(src).then(function(r){ return r.blob(); }).then(function(b){
