@@ -112,6 +112,23 @@
     .lf-submit { width:100%; padding:15px; background:var(--accent-2); color:var(--void); border:none; border-radius:4px;
       font-size:15.5px; font-weight:700; cursor:pointer; transition:background .18s; margin-top:6px; font-family:var(--sans); }
     .lf-submit:hover { background:#C4B5FD; }
+    /* Multi-step lead capture — one question at a time (2026-08-16). Replaces the 6-field form. */
+    .lf-prog { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+    .lf-stepno { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+    .lf-dots { display:flex; gap:6px; }
+    .lf-dots i { width:7px; height:7px; border-radius:50%; background:var(--hairline); transition:background .2s; }
+    .lf-dots i.on { background:var(--accent); }
+    .lf-step[hidden] { display:none; }
+    .lf-q { font-family:var(--serif); font-size:23px; line-height:1.25; color:var(--text); margin:0 0 16px; }
+    .lf-chips { display:flex; flex-direction:column; gap:9px; }
+    .lf-chip { width:100%; text-align:left; padding:15px 16px; background:transparent; color:var(--text);
+               border:1px solid var(--hairline); border-radius:4px; font-family:var(--sans); font-size:15px;
+               cursor:pointer; transition:border-color .15s, background .15s; }
+    .lf-chip:hover, .lf-chip:focus-visible { border-color:var(--accent); background:rgba(139,92,246,0.08); }
+    .lf-back { display:inline-block; margin-top:14px; font-size:13px; color:var(--muted); background:none;
+               border:none; padding:0; cursor:pointer; text-decoration:underline; font-family:var(--sans); }
+    .lf-alt { display:inline-block; margin-top:12px; font-size:13px; color:var(--muted); background:none;
+              border:none; padding:0; cursor:pointer; text-decoration:underline; font-family:var(--sans); }
     .form-note { font-size:12.5px; color:var(--muted); margin-top:12px; text-align:center; }
     .form-msg { font-size:14px; border-radius:4px; padding:12px 14px; margin-top:12px; display:none; }
     .form-msg.err { display:block; background:rgba(220,60,60,0.12); border:1px solid rgba(220,60,60,0.4); color:#F0A8A8; }
@@ -271,40 +288,50 @@
 
       <div class="lf-wrap">
         <form id="leadForm" novalidate>
-          <div class="field">
-            <label class="lf-label" for="cName">Your name <span class="req">*</span></label>
-            <input id="cName" name="contactName" type="text" autocomplete="name" required>
+          <div class="lf-prog">
+            <span class="lf-stepno" id="cStepNo">Step 1 of 3</span>
+            <span class="lf-dots"><i class="on"></i><i></i><i></i></span>
           </div>
-          <div class="field">
-            <label class="lf-label" for="cBiz">Business name <span class="req">*</span></label>
-            <input id="cBiz" name="businessName" type="text" autocomplete="organization" required>
+
+          <div class="lf-step" data-step="1">
+            <h3 class="lf-q">What do you need?</h3>
+            <div class="lf-chips">
+              <button type="button" class="lf-chip" data-trade="KaizenReach (Ads)">More leads from ads</button>
+              <button type="button" class="lf-chip" data-trade="KaizenDesk (AI Front Office)">My calls and messages answered</button>
+              <button type="button" class="lf-chip" data-trade="KaizenForge (Website)">A new website</button>
+              <button type="button" class="lf-chip" data-trade="Not sure yet">Not sure yet, point me the right way</button>
+            </div>
           </div>
-          <div class="field">
-            <label class="lf-label" for="cEmail">Email <span class="req">*</span></label>
-            <input id="cEmail" name="email" type="email" autocomplete="email" required>
+
+          <div class="lf-step" data-step="2" hidden>
+            <h3 class="lf-q">What&rsquo;s the business called?</h3>
+            <div class="field">
+              <input id="cBiz" name="businessName" type="text" autocomplete="organization" placeholder="Business name">
+            </div>
+            <div class="field">
+              <input id="cName" name="contactName" type="text" autocomplete="name" placeholder="And your name">
+            </div>
+            <button type="button" class="lf-submit" data-next>Continue</button>
+            <button type="button" class="lf-back" data-back>Back</button>
           </div>
-          <div class="field">
-            <label class="lf-label" for="cPhone">Phone</label>
-            <input id="cPhone" name="phone" type="tel" autocomplete="tel">
+
+          <div class="lf-step" data-step="3" hidden>
+            <h3 class="lf-q">Best number to text you on?</h3>
+            <div class="field">
+              <input id="cPhone" name="phone" type="tel" autocomplete="tel" placeholder="07700 900000">
+            </div>
+            <div class="field" id="cEmailWrap" hidden>
+              <input id="cEmail" name="email" type="email" autocomplete="email" placeholder="you@business.co.uk">
+            </div>
+            <button type="submit" class="lf-submit" id="cSubmit">Send it over</button>
+            <button type="button" class="lf-alt" id="cAlt">Rather give an email?</button>
+            <button type="button" class="lf-back" data-back>Back</button>
           </div>
-          <div class="field">
-            <label class="lf-label" for="cService">What are you after?</label>
-            <select id="cService" name="trade">
-              <option value="">Choose one, or not sure yet</option>
-              <option value="KaizenReach (Ads)">KaizenReach, more leads from ads</option>
-              <option value="KaizenDesk (AI Front Office)">KaizenDesk, an AI front office</option>
-              <option value="KaizenForge (Website)">KaizenForge, a new website</option>
-              <option value="Not sure yet">Not sure yet, point me the right way</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="lf-label" for="cMsg">Message</label>
-            <textarea id="cMsg" name="message" placeholder="A line or two about your business and what you need."></textarea>
-          </div>
+
           <div class="hp" aria-hidden="true">
             <label>Leave this empty<input type="text" name="company_url" tabindex="-1" autocomplete="off"></label>
           </div>
-          <button type="submit" class="lf-submit" id="cSubmit">Send it over</button>
+          <input type="hidden" name="trade" id="cTrade">
           <p class="form-note">We reply the same working day. No spam, no sales list.</p>
           <div class="form-msg" id="cErr"></div>
         </form>
@@ -397,6 +424,31 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 (function(){
   var f=document.getElementById('leadForm'); if(!f) return;
   var btn=document.getElementById('cSubmit'), err=document.getElementById('cErr'), card=f.parentElement;
+  var steps=[].slice.call(f.querySelectorAll('.lf-step')), dots=[].slice.call(f.querySelectorAll('.lf-dots i'));
+  var stepNo=document.getElementById('cStepNo'), at=0;
+
+  function show(i){
+    at=Math.max(0,Math.min(steps.length-1,i));
+    steps.forEach(function(s,n){ s.hidden = n!==at; });
+    dots.forEach(function(d,n){ d.classList.toggle('on', n<=at); });
+    stepNo.textContent='Step '+(at+1)+' of '+steps.length;
+    err.classList.remove('err');
+    var first=steps[at].querySelector('input'); if(first) first.focus();
+  }
+  f.querySelectorAll('.lf-chip').forEach(function(c){
+    c.addEventListener('click',function(){ document.getElementById('cTrade').value=c.dataset.trade; show(1); });
+  });
+  f.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click',function(){ show(at-1); }); });
+  f.querySelector('[data-next]').addEventListener('click',function(){
+    if(!f.businessName.value.trim()){
+      err.textContent='Just the business name and we can move on.'; err.classList.add('err'); return;
+    }
+    show(2);
+  });
+  document.getElementById('cAlt').addEventListener('click',function(){
+    document.getElementById('cEmailWrap').hidden=false; document.getElementById('cEmail').focus(); this.hidden=true;
+  });
+
   f.addEventListener('submit', async function(e){
     e.preventDefault();
     err.classList.remove('err');
@@ -404,17 +456,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
     var payload={
       contactName:f.contactName.value.trim(), businessName:f.businessName.value.trim(),
       email:f.email.value.trim(), phone:f.phone.value.trim(),
-      trade:f.trade.value, message:f.message.value.trim(), businessUrl:'', monthlyBudget:''
+      trade:f.trade.value, message:'', businessUrl:'', monthlyBudget:''
     };
-    if(!payload.contactName||!payload.businessName||!payload.email||payload.email.indexOf('@')<0){
-      err.textContent='Please add your name, business and a valid email.'; err.classList.add('err'); return;
+    if(!payload.businessName){
+      err.textContent='We just need the business name.'; err.classList.add('err'); show(1); return;
+    }
+    if(!payload.phone && payload.email.indexOf('@')<0){
+      err.textContent='Add a number we can text, or switch to email.'; err.classList.add('err'); return;
     }
     btn.disabled=true; btn.textContent='Sending...';
     try{
       var res=await fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       if(!res.ok) throw new Error('bad');
       window.keTrackLead&&window.keTrackLead();
-      card.innerHTML='<div class="thanks"><h3>Thanks, '+ (payload.contactName.split(' ')[0]||'') +'.</h3><p>Your message is with us and we&rsquo;ll reply the same working day. In a hurry? Call us on WhatsApp or grab a time on the calendar.</p></div>';
+      var first=payload.contactName.split(' ')[0]||'';
+      card.innerHTML='<div class="thanks"><h3>Thanks'+ (first?', '+first:'') +'.</h3><p>Your message is with us and we&rsquo;ll reply the same working day. In a hurry? Call us on WhatsApp or grab a time on the calendar.</p></div>';
     }catch(_){
       btn.disabled=false; btn.textContent='Send it over';
       err.innerHTML='Something went wrong sending that. Email us directly at <a href="mailto:rahaid@kaizenevol.com" style="color:#ffb4b4;text-decoration:underline">rahaid@kaizenevol.com</a> and we&rsquo;ll pick it straight up.';
