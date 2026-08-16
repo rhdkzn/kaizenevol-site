@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>We'll Build Your New Website. Free. — KaizenEvol</title>
+  <meta name="description" content="A one-page site built to convert, live within 24 hours. See it finished before you commit to anything — twenty minutes on a call, and it's yours either way." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://kaizenevol.com/walk-free.html" />
+  <meta property="og:title" content="We'll build your new website. Free." />
+  <meta property="og:description" content="See it finished before you commit to anything. Twenty minutes on a call, yours either way." />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <style>
+    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
+    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
+    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
+    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:500; font-display:swap; src:url('/pjs-500.woff2') format('woff2'); }
+    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
+    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
+
+    :root{
+      --void:#0C0618; --void-2:#120A24; --text:#EEE8FF;
+      --muted:rgba(238,232,255,0.56); --hairline:rgba(238,232,255,0.1);
+      --accent:#8B5CF6; --accent-2:#A78BFA;
+      --grad:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--void);color:var(--text);font-family:'Plus Jakarta Sans',system-ui,sans-serif;line-height:1.6}
+    .eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2)}
+    h1,h2{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.1}
+    h1{font-size:clamp(32px,1.4rem + 3vw,56px);letter-spacing:-0.03em}
+    h2{font-size:clamp(28px,1.3rem + 2.2vw,42px);letter-spacing:-0.03em}
+    .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+    p{color:var(--muted)}
+    p strong{color:var(--text)}
+
+    section{max-width:720px;margin:0 auto;padding:76px 24px}
+    section.wide{max-width:920px}
+
+    /* ── hero ───────────────────────────── */
+    #hero{padding-top:96px;text-align:center}
+    #hero .eyebrow{display:block;margin-bottom:16px}
+    #hero p.sub{max-width:520px;margin:18px auto 0;font-size:clamp(16px,1rem + .2vw,18px)}
+    #hero p.sub strong{color:var(--text)}
+
+    /* ── CTA button, used top + bottom (the one action) ──── */
+    .btn-wa{display:inline-block;margin-top:30px;padding:16px 36px;border-radius:999px;background:#25D366;
+      color:#08110b;font-weight:700;text-decoration:none;transition:filter .2s;font-size:16px}
+    .btn-wa:hover{filter:brightness(1.08)}
+    .quiet{display:block;margin-top:16px;color:var(--muted);font-size:13px}
+
+    /* ── body sections ─────────────────── */
+    .block{border-top:1px solid var(--hairline)}
+    .block .eyebrow{margin-bottom:12px}
+    .block h2{margin-bottom:16px}
+    .block p{max-width:560px}
+    .stat-row{display:flex;gap:28px;margin-top:26px;flex-wrap:wrap}
+    .stat{background:var(--void-2);border:1px solid var(--hairline);border-radius:14px;padding:16px 20px;flex:1;min-width:150px}
+    .stat .n{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:600;color:var(--text)}
+    .stat .l{font-size:13px;color:var(--muted);margin-top:2px}
+
+    /* ── proof cards ────────────────────── */
+    .proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px}
+    @media (max-width:720px){.proof-grid{grid-template-columns:1fr}}
+    .proof-card{background:var(--void-2);border:1px solid var(--hairline);border-radius:16px;overflow:hidden}
+    .proof-card img{width:100%;display:block;aspect-ratio:880/496;object-fit:cover;border-bottom:1px solid var(--hairline)}
+    .proof-card .cap{padding:14px 16px}
+    .proof-card .cap .t{font-weight:600;font-size:14px;color:var(--text)}
+    .proof-card .cap .d{font-size:13px;color:var(--muted);margin-top:2px}
+
+    /* ── final close ────────────────────── */
+    #close{text-align:center;padding-bottom:110px}
+    #close p{max-width:480px;margin:0 auto}
+
+    footer{border-top:1px solid var(--hairline);padding:34px 24px;text-align:center;color:var(--muted);font-size:13px}
+
+  </style>
+</head>
+<body>
+
+<section id="hero">
+  <div class="eyebrow">For renovation &amp; trade businesses</div>
+  <h1>We'll build your new website. <span class="grad">Free.</span></h1>
+  <p class="sub">See it finished before you commit to anything. <strong>Twenty minutes on a call, and it's yours to keep either way.</strong></p>
+  <a class="btn-wa" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%20saw%20the%20free%20website%20offer%20%E2%80%94%20I%27d%20like%20to%20grab%20my%2020%20minutes." target="_blank" rel="noopener">Message us on WhatsApp</a>
+  <span class="quiet">We reply and call you back the same day.</span>
+</section>
+
+<section class="block">
+  <div class="eyebrow">What you get</div>
+  <h2>A one-page site built to convert, not just to exist</h2>
+  <p>One page for your business — your work, presented properly, built with one job: turning the person looking at it into a call. It's the same build we sell as <strong>Forge One</strong>, live within 24 hours of approval.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="n">£499</div><div class="l">what this normally costs</div></div>
+    <div class="stat"><div class="n">£0</div><div class="l">to see yours finished</div></div>
+    <div class="stat"><div class="n">24h</div><div class="l">from approval to live</div></div>
+  </div>
+</section>
+
+<section class="block wide">
+  <div class="eyebrow">Proof, not promises</div>
+  <h2>This page is one of ours. So are these.</h2>
+  <p>The type, the motion, the way it's built to hold your attention — this is what we build for trade and renovation businesses. Two more, finished and live:</p>
+  <div class="proof-grid">
+    <div class="proof-card">
+      <img src="/demos/aldermere-proof.jpg" alt="Aldermere Lofts website — loft conversions, Bristol and Bath" loading="lazy" />
+      <div class="cap"><div class="t">Aldermere Lofts</div><div class="d">Loft conversions — Bristol &amp; Bath</div></div>
+    </div>
+    <div class="proof-card">
+      <img src="/demos/halfsix-proof.jpg" alt="Half Six Bakehouse website — bakery, Bristol" loading="lazy" />
+      <div class="cap"><div class="t">Half Six Bakehouse</div><div class="d">Bakery — Totterdown, Bristol</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="eyebrow">The catch</div>
+  <h2>Twenty minutes. That's it.</h2>
+  <p>We ask for twenty minutes on a call to walk you through it and hear what you'd change. <strong>You keep the site either way</strong> — whether we end up working together or not.</p>
+</section>
+
+<section class="block">
+  <div class="eyebrow">Why now</div>
+  <h2>Five founding firms. Not five a month.</h2>
+  <p>We're doing this for <strong>five founding firms, total</strong> — while we build out our own portfolio, not as a running monthly offer. Once those five are in, it goes back to being a paid build.</p>
+</section>
+
+<section id="close">
+  <div class="eyebrow">KaizenEvol</div>
+  <h2>Want to see yours?</h2>
+  <p>Twenty minutes, no pressure. Message us and we'll get it started.</p>
+  <a class="btn-wa" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%20saw%20the%20free%20website%20offer%20%E2%80%94%20I%27d%20like%20to%20grab%20my%2020%20minutes." target="_blank" rel="noopener">Message us on WhatsApp</a>
+  <span class="quiet">We reply and call you back the same day.</span>
+</section>
+
+<footer>KaizenEvol · +44 7405 472460</footer>
+
+</body>
+</html>
