@@ -392,7 +392,18 @@
   .footer-social a{display:inline-flex;align-items:center;color:var(--muted);transition:color .2s}
   .footer-social a:hover{color:var(--accent-2)}
   .footer-social svg{width:18px;height:18px;display:block}
-  </style>
+  
+    .lf-prog{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .lf-stepno{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+    .lf-dots{display:flex;gap:6px}.lf-dots i{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.18;transition:opacity .2s}.lf-dots i.on{opacity:.9}
+    .lf-step[hidden]{display:none}
+    .lf-q{font-size:21px;line-height:1.25;margin:0 0 14px;font-weight:600}
+    .lf-chips{display:flex;flex-direction:column;gap:9px}
+    .lf-chip{width:100%;text-align:left;padding:14px 16px;background:transparent;color:inherit;border:1px solid rgba(238,232,255,.22);border-radius:6px;font-family:inherit;font-size:15px;cursor:pointer;transition:border-color .15s,background .15s}
+    .lf-chip:hover,.lf-chip:focus-visible{border-color:#A78BFA;background:rgba(139,92,246,.08)}
+    .lf-back,.lf-alt{display:inline-block;margin-top:12px;margin-right:16px;font-size:13px;opacity:.65;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;color:inherit;font-family:inherit}
+    .lf-hide{display:none!important}
+</style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -601,22 +612,37 @@
       </div>
     </div>
     <form id="leadForm" novalidate>
-      <div class="lf-grid">
-        <div><label class="lf-label" for="lf-contact">Your Name *</label><input class="lf-input" type="text" id="lf-contact" name="contactName" placeholder="e.g. John Smith" required autocomplete="name" /></div>
-        <div><label class="lf-label" for="lf-name">Business Name *</label><input class="lf-input" type="text" id="lf-name" name="businessName" placeholder="e.g. Johnson Renovations" required autocomplete="organization" /></div>
-        <div><label class="lf-label" for="lf-email">Email Address *</label><input class="lf-input" type="email" id="lf-email" name="email" placeholder="you@business.co.uk" required autocomplete="email" /></div>
-        <div><label class="lf-label" for="lf-phone">Phone Number</label><input class="lf-input" type="tel" id="lf-phone" name="phone" placeholder="07700 900 123" autocomplete="tel" /></div>
+      <div class="lf-prog"><span class="lf-stepno" id="lfStepNo">Step 1 of 3</span><span class="lf-dots"><i class="on"></i><i></i><i></i></span></div>
+      <div class="lf-step" data-step="1">
+        <h3 class="lf-q">What do you need?</h3>
+        <div class="lf-chips">
+          <button type="button" class="lf-chip" data-trade="KaizenReach: more clients">More clients</button>
+          <button type="button" class="lf-chip" data-trade="KaizenDesk: never miss enquiries">Never miss an enquiry</button>
+          <button type="button" class="lf-chip" data-trade="KaizenForge: a website that sells">A website that sells</button>
+          <button type="button" class="lf-chip" data-trade="More than one service">More than one</button>
+          <button type="button" class="lf-chip" data-trade="Not sure yet">Not sure yet &mdash; point me the right way</button>
+        </div>
       </div>
-      <label class="lf-label" for="lf-trade">What Do You Need?</label>
-      <select class="lf-select" id="lf-trade" name="trade">
-        <option value="">Select</option>
-        <option value="KaizenReach: more clients">More clients (KaizenReach)</option>
-        <option value="KaizenDesk: never miss enquiries">Never miss enquiries (KaizenDesk)</option>
-        <option value="KaizenForge: a website that sells">A website that sells (KaizenForge)</option>
-        <option value="More than one service">More than one</option>
-        <option value="Not sure yet">Not sure yet</option>
-      </select>
-      <button class="lf-submit" type="submit" id="lfSubmit">Send</button>
+      <div class="lf-step" data-step="2" hidden>
+        <h3 class="lf-q">What&rsquo;s the business called?</h3>
+        <div><label class="lf-label" for="lf-name">Business Name *</label>
+        <input class="lf-input" type="text" id="lf-name" name="businessName" placeholder="e.g. Johnson Renovations" required autocomplete="organization" /></div>
+        <div style="margin-top:12px"><label class="lf-label" for="lf-contact">And your name</label>
+        <input class="lf-input" type="text" id="lf-contact" name="contactName" placeholder="e.g. John Smith" autocomplete="name" /></div>
+        <button class="lf-submit" type="button" data-next style="margin-top:16px">Continue</button>
+        <div><button type="button" class="lf-back" data-back>Back</button></div>
+      </div>
+      <div class="lf-step" data-step="3" hidden>
+        <h3 class="lf-q">Best number to text you on?</h3>
+        <div><label class="lf-label" for="lf-phone">Phone</label>
+        <input class="lf-input" type="tel" id="lf-phone" name="phone" placeholder="07700 900 123" autocomplete="tel" /></div>
+        <div id="lfEmailWrap" hidden style="margin-top:12px"><label class="lf-label" for="lf-email">Email</label>
+        <input class="lf-input" type="email" id="lf-email" name="email" placeholder="you@business.co.uk" autocomplete="email" /></div>
+        <input type="hidden" id="lf-trade" name="trade" value="" />
+        <button class="lf-submit" type="submit" id="lfSubmit" style="margin-top:16px">Send</button>
+        <div><button type="button" class="lf-alt" id="lfAlt">Rather give an email?</button>
+        <button type="button" class="lf-back" data-back>Back</button></div>
+      </div>
       <div class="lf-status" id="lfStatus" role="alert" aria-live="polite"></div>
     </form>
   </div>
@@ -663,8 +689,12 @@
     var email = document.getElementById('lf-email').value.trim();
     var phone = document.getElementById('lf-phone').value.trim();
     var trade = document.getElementById('lf-trade').value;
-    if (!contactName || !businessName || !email || email.indexOf('@') === -1) {
-      status.textContent = 'Please fill in your name, business name and a valid email.';
+    if (!businessName) {
+      status.textContent = 'We just need the business name.';
+      status.className = 'lf-status err'; return;
+    }
+    if (!phone && (!email || email.indexOf('@') === -1)) {
+      status.textContent = 'Add a number we can text, or switch to email.';
       status.className = 'lf-status err'; return;
     }
     btn.disabled = true; var label = btn.textContent; btn.textContent = 'Sending…';
@@ -686,5 +716,15 @@
 </script>
 <script src="/midnight.js?v=17" defer></script>
 <script defer src="/script.js"></script>
+<script>
+(function(){var f=document.getElementById('leadForm');if(!f)return;
+var steps=[].slice.call(f.querySelectorAll('.lf-step')),dots=[].slice.call(f.querySelectorAll('.lf-dots i')),no=document.getElementById('lfStepNo'),st=document.getElementById('lfStatus'),at=0;
+function show(i){at=Math.max(0,Math.min(steps.length-1,i));steps.forEach(function(s,n){s.hidden=n!==at});dots.forEach(function(d,n){d.classList.toggle('on',n<=at)});if(no)no.textContent='Step '+(at+1)+' of '+steps.length;if(st){st.textContent='';st.className='lf-status'}var fi=steps[at].querySelector('input');if(fi)fi.focus()}
+f.querySelectorAll('.lf-chip').forEach(function(c){c.addEventListener('click',function(){document.getElementById('lf-trade').value=c.getAttribute('data-trade');show(1)})});
+f.querySelectorAll('[data-back]').forEach(function(b){b.addEventListener('click',function(){show(at-1)})});
+f.querySelector('[data-next]').addEventListener('click',function(){var biz=document.getElementById('lf-name');if(!biz.value.trim()){st.textContent='Just the business name and we can move on.';st.className='lf-status err';return}show(2)});
+document.getElementById('lfAlt').addEventListener('click',function(){var w=document.getElementById('lfEmailWrap');w.hidden=false;document.getElementById('lf-email').focus();this.classList.add('lf-hide')});
+})();
+</script>
 </body>
 </html>
