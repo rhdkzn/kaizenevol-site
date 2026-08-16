@@ -154,3 +154,91 @@
     start();
   }
 })();
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Funnel measurement — step-level drop-off on the one-question-at-a-time
+   forms (MKT-FUN-002, 2026-08-16).
+
+   Why this exists: nine public pages were converted to multi-step forms and
+   none of it was instrumented, so we could not say whether the change did
+   anything. Submissions alone cannot answer "where do people leave?".
+
+   NO CONSENT GATE, deliberately — and this is the reason it is safe:
+   no cookie, no localStorage, no device storage of any kind, no identifier
+   sent, no personal data. It increments aggregate counters (how many reached
+   step 2 on /contact today). PECR governs storage on the device and there is
+   none; UK GDPR governs personal data and there is none. The Meta pixel above
+   IS gated because it sets cookies and identifies people — different thing,
+   correctly treated differently. Do not "tidy" this under the consent gate:
+   that would suppress our only conversion data for no legal gain.
+
+   Zero per-page edits by design — this file already loads on all nine form
+   pages, so the tracker finds the forms rather than each page calling it.
+   A tenth page gets measurement for free.
+   ───────────────────────────────────────────────────────────────────────── */
+(function () {
+  if (!document.querySelector('.lf-step')) return;   // no multi-step form here
+
+  var page = (location.pathname.replace(/\/$/, '').split('/').pop() || 'index').replace(/\.html$/, '');
+  var sent = {};                                      // per page-load dedupe: count a step once
+
+  function send(event, value) {
+    var key = event + (value || '');
+    if (sent[key]) return;                            // going Back must not double-count
+    sent[key] = 1;
+    var body = JSON.stringify({ page: page, event: event, value: value || '' });
+    try {
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/track-funnel', new Blob([body], { type: 'application/json' }));
+      } else {
+        fetch('/api/track-funnel', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: body, keepalive: true
+        }).catch(function () {});
+      }
+    } catch (e) {}                                    // never let measurement break a form
+  }
+
+  /* Step reached. The forms toggle [hidden] on .lf-step, so watching that
+     attribute catches every transition without knowing any page's inline JS. */
+  var stepsOf = function (form) { return [].slice.call(form.querySelectorAll('.lf-step')); };
+
+  [].slice.call(document.querySelectorAll('form')).forEach(function (form) {
+    var steps = stepsOf(form);
+    if (!steps.length) return;
+
+    send('view');                                     // form present and seen
+
+    steps.forEach(function (el, i) {
+      if (!el.hidden) send('step', String(i + 1));    // whichever starts visible
+    });
+
+    new MutationObserver(function (muts) {
+      muts.forEach(function (m) {
+        if (m.attributeName !== 'hidden') return;
+        var i = steps.indexOf(m.target);
+        if (i > -1 && !m.target.hidden) send('step', String(i + 1));
+      });
+    }).observe(form, { attributes: true, subtree: true, attributeFilter: ['hidden'] });
+  });
+
+  /* Which route people pick — the chip label is the intent signal. */
+  document.addEventListener('click', function (e) {
+    var chip = e.target.closest && e.target.closest('.lf-chip');
+    if (chip) send('chip', (chip.dataset.trade || chip.textContent || '').trim().slice(0, 60));
+  }, true);
+
+  /* Submitted. Every form on every page posts to /api/submit-lead, so wrapping
+     fetch catches the success on all of them without touching page JS. */
+  var origFetch = window.fetch;
+  if (origFetch) {
+    window.fetch = function (input, init) {
+      var url = (typeof input === 'string' ? input : (input && input.url)) || '';
+      var p = origFetch.apply(this, arguments);
+      if (url.indexOf('/api/submit-lead') > -1) {
+        p.then(function (res) { if (res && res.ok) send('submit'); }).catch(function () {});
+      }
+      return p;
+    };
+  }
+})();
