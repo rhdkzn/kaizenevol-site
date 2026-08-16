@@ -752,15 +752,7 @@
             <option>Garage / Auto</option><option>Restaurant / Hospitality</option><option>Other local business</option>
           </select>
         </div>
-        <div class="lf-group"><label class="lf-label" for="lf-budget">What's Your Biggest Headache?</label>
-          <select class="lf-select" id="lf-budget" name="monthlyBudget">
-            <option value="">Select</option>
-            <option value="KaizenDesk: Missing calls &amp; enquiries">Missing calls &amp; enquiries</option>
-            <option value="KaizenDesk: Slow to follow up leads">Slow to follow up leads</option>
-            <option value="KaizenDesk: Need more Google reviews">Need more Google reviews</option>
-            <option value="KaizenDesk: Show me everything">Not sure, show me everything</option>
-          </select>
-        </div>
+        
       </div>
       <button class="lf-submit" type="submit" id="lfSubmit">Book a Call</button>
       <div class="lf-status" id="lfStatus" role="alert" aria-live="polite"></div>
@@ -857,7 +849,7 @@
       const email=document.getElementById('lf-email').value.trim();
       const phone=document.getElementById('lf-phone').value.trim();
       const trade=document.getElementById('lf-trade').value;
-      const monthlyBudget=document.getElementById('lf-budget').value;
+      const monthlyBudget='';
       if(!contactName){status.textContent='Your name is required.';status.className='lf-status err';return;}
       if(!businessName){status.textContent='Business name is required.';status.className='lf-status err';return;}
       if(!email||!email.includes('@')){status.textContent='A valid email is required.';status.className='lf-status err';return;}

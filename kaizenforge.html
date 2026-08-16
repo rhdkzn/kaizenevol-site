@@ -731,16 +731,8 @@
         <div><label class="lf-label" for="lf-name">Business Name *</label><input class="lf-input" type="text" id="lf-name" name="businessName" placeholder="e.g. Smith Plumbing" required autocomplete="organization" /></div>
         <div><label class="lf-label" for="lf-email">Email Address *</label><input class="lf-input" type="email" id="lf-email" name="email" placeholder="you@business.co.uk" required autocomplete="email" /></div>
         <div><label class="lf-label" for="lf-phone">Phone Number</label><input class="lf-input" type="tel" id="lf-phone" name="phone" placeholder="07700 900 123" autocomplete="tel" /></div>
-        <div><label class="lf-label" for="lf-url">Current Website (if you have one)</label><input class="lf-input" type="url" id="lf-url" name="businessUrl" placeholder="www.yourbusiness.co.uk" autocomplete="url" /></div>
-        <div><label class="lf-label" for="lf-budget">What Do You Need?</label>
-          <select class="lf-select" id="lf-budget" name="monthlyBudget">
-            <option value="">Select</option>
-            <option value="KaizenForge: Replace my old website">Replace my old website</option>
-            <option value="KaizenForge: First website for my business">First website for my business</option>
-            <option value="KaizenForge: Mine doesn't bring in work">Mine doesn't bring in any work</option>
-            <option value="KaizenForge: Show me everything">Not sure, show me everything</option>
-          </select>
-        </div>
+        
+        
       </div>
       <button class="lf-submit" type="submit" id="lfSubmit">Show Me My New Website</button>
       <div class="lf-status" id="lfStatus" role="alert" aria-live="polite"></div>
@@ -810,8 +802,8 @@
       const businessName=document.getElementById('lf-name').value.trim();
       const email=document.getElementById('lf-email').value.trim();
       const phone=document.getElementById('lf-phone').value.trim();
-      const businessUrl=document.getElementById('lf-url').value.trim();
-      const monthlyBudget=document.getElementById('lf-budget').value;
+      const businessUrl='';
+      const monthlyBudget='';
       if(!contactName){status.textContent='Your name is required.';status.className='lf-status err';return;}
       if(!businessName){status.textContent='Business name is required.';status.className='lf-status err';return;}
       if(!email||!email.includes('@')){status.textContent='A valid email is required.';status.className='lf-status err';return;}

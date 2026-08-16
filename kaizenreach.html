@@ -828,10 +828,7 @@
           <label class="lf-label" for="lf-phone">Phone Number</label>
           <input class="lf-input" type="tel" id="lf-phone" name="phone" placeholder="07700 900 123" autocomplete="tel" />
         </div>
-        <div class="lf-group">
-          <label class="lf-label" for="lf-url">Business Website</label>
-          <input class="lf-input" type="url" id="lf-url" name="businessUrl" placeholder="https://yourbusiness.co.uk" autocomplete="url" />
-        </div>
+        
         <div class="lf-group">
           <label class="lf-label" for="lf-trade">Your Trade</label>
           <select class="lf-select" id="lf-trade" name="trade">
@@ -842,16 +839,7 @@
             <option value="Other Renovation">Other Renovation</option>
           </select>
         </div>
-        <div class="lf-group">
-          <label class="lf-label" for="lf-budget">Monthly Ad Budget</label>
-          <select class="lf-select" id="lf-budget" name="monthlyBudget">
-            <option value="">Select a range</option>
-            <option value="Under £500">Under £500</option>
-            <option value="£500–£1K">£500 – £1,000</option>
-            <option value="£1K–£5K">£1,000 – £5,000</option>
-            <option value="£5K+">£5,000+</option>
-          </select>
-        </div>
+        
       </div>
       <button class="lf-submit" type="submit" id="lfSubmit">Book a Strategy Call</button>
       <div class="lf-status" id="lfStatus" role="alert" aria-live="polite"></div>
@@ -970,9 +958,9 @@
     const businessName  = document.getElementById('lf-name').value.trim();
     const email         = document.getElementById('lf-email').value.trim();
     const phone         = document.getElementById('lf-phone').value.trim();
-    const businessUrl   = document.getElementById('lf-url').value.trim();
+    const businessUrl   = '';
     const trade         = document.getElementById('lf-trade').value;
-    const monthlyBudget = document.getElementById('lf-budget').value;
+    const monthlyBudget = '';
 
     if (!contactName) {
       status.textContent = 'Your name is required.';
