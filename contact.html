@@ -339,19 +339,11 @@
 
       <div class="contact-routes">
         <div class="route">
-          <div class="route-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
-          <div class="route-body">
-            <h4>Book a call</h4>
-            <p>Fifteen minutes, no pitch. We&rsquo;ll tell you straight if we can help.</p>
-            <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Message us to book &rarr;</a>
-          </div>
-        </div>
-        <div class="route">
           <div class="route-ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg></div>
           <div class="route-body">
             <h4>WhatsApp us</h4>
-            <p>Quickest for a fast question. Message Diego for new enquiries, or Rahaid for anything else.</p>
-            <a id="waBig">Open WhatsApp &rarr;</a>
+            <p>Quickest way to reach us &mdash; book a call or ask a question. We reply and call you back the same day.</p>
+            <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Open WhatsApp &rarr;</a>
           </div>
         </div>
         <div class="route">
@@ -414,8 +406,8 @@
 })();
 </script>
 <script>
-(function(){var o=document.getElementById('waOpen'),big=document.getElementById('waBig'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
-if(!m)return;[o,big].forEach(function(t){if(t)t.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});});
+(function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
+if(!m)return;if(o)o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
 c.addEventListener('click',function(){m.style.display='none';});
 m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
