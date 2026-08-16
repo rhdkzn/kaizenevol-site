@@ -74,6 +74,14 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .fine{font-size:11.5px;color:var(--muted);opacity:.85;margin-top:14px}
 footer{text-align:center;padding:34px 0;color:var(--muted);font-size:13px;border-top:1px solid var(--hairline)}
 footer a{color:var(--muted)}
+
+    .lf-prog{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .lf-stepno{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+    .lf-dots{display:flex;gap:6px}.lf-dots i{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.18;transition:opacity .2s}.lf-dots i.on{opacity:.9}
+    .lf-step[hidden]{display:none}
+    .lf-q{font-size:19px;line-height:1.25;margin:0 0 12px;font-weight:600}
+    .lf-back{display:inline-block;margin-top:10px;font-size:13px;opacity:.65;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;color:inherit;font-family:inherit}
+    .lf-hide{display:none!important}
 </style>
 </head>
 <body>
@@ -129,17 +137,26 @@ footer a{color:var(--muted)}
       <h2>Want this mapped to <em>your area</em>?</h2>
       <p>These are your numbers. On a 15-minute call we'll show you exactly how we'd fill that diary in your patch, your niche — and what it costs. Your first 60 days are free if you're one of our founding five.</p>
       <form class="lead" id="roiForm" novalidate>
-        <input type="text" id="r-name" placeholder="Your name" autocomplete="name" required>
-        <input type="text" id="r-biz" placeholder="Business name" autocomplete="organization" required>
-        <input type="email" id="r-email" class="full" placeholder="Email address" autocomplete="email" required>
-        <select id="r-trade" class="full">
+        <div class="lf-prog"><span class="lf-stepno" id="roiStepNo">Step 1 of 2</span><span class="lf-dots"><i class="on"></i><i></i></span></div>
+        <div class="lf-step" data-step="1">
+          <h3 class="lf-q">What&rsquo;s the business called?</h3>
+          <input type="text" id="r-biz" placeholder="Business name" autocomplete="organization" required>
+          <input type="text" id="r-name" placeholder="And your name" autocomplete="name">
+          <button class="btn full" type="button" data-next>Continue</button>
+        </div>
+        <div class="lf-step" data-step="2" hidden>
+          <h3 class="lf-q">Where do we send your numbers?</h3>
+          <input type="email" id="r-email" class="full" placeholder="Email address" autocomplete="email" required>
+          <div class="lf-hide"><select id="r-trade" class="full">
           <option value="">Your trade</option>
           <option>Kitchen Remodelling</option>
           <option>Bathroom Renovation</option>
           <option>Loft Conversion</option>
           <option>Other Renovation</option>
-        </select>
-        <button class="btn full" type="submit" id="roiSubmit">Book my strategy call</button>
+        </select></div>
+          <button class="btn full" type="submit" id="roiSubmit">Book my strategy call</button>
+          <button type="button" class="lf-back" data-back>Back</button>
+        </div>
         <div class="status full" id="roiStatus" role="alert" aria-live="polite"></div>
         <div class="calbox full" id="calBox"><a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Book a call on WhatsApp →</a></div>
       </form>
@@ -188,5 +205,13 @@ footer a{color:var(--muted)}
 })();
 </script>
 <script defer src="/script.js"></script>
+<script>
+(function(){var f=document.getElementById('roiForm');if(!f)return;
+var steps=[].slice.call(f.querySelectorAll('.lf-step')),dots=[].slice.call(f.querySelectorAll('.lf-dots i')),no=document.getElementById('roiStepNo'),st=document.getElementById('roiStatus'),at=0;
+function show(i){at=Math.max(0,Math.min(steps.length-1,i));steps.forEach(function(s,n){s.hidden=n!==at});dots.forEach(function(d,n){d.classList.toggle('on',n<=at)});if(no)no.textContent='Step '+(at+1)+' of '+steps.length;if(st)st.textContent='';var fi=steps[at].querySelector('input');if(fi)fi.focus()}
+f.querySelectorAll('[data-back]').forEach(function(b){b.addEventListener('click',function(){show(at-1)})});
+f.querySelector('[data-next]').addEventListener('click',function(){var b=document.getElementById('r-biz');if(!b.value.trim()){if(st)st.textContent='Just the business name and we can move on.';return}show(1)});
+})();
+</script>
 </body>
 </html>
