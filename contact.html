@@ -343,7 +343,7 @@
           <div class="route-body">
             <h4>Book a call</h4>
             <p>Fifteen minutes, no pitch. We&rsquo;ll tell you straight if we can help.</p>
-            <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Pick a time &rarr;</a>
+            <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Message us to book &rarr;</a>
           </div>
         </div>
         <div class="route">
@@ -470,7 +470,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
       if(!res.ok) throw new Error('bad');
       window.keTrackLead&&window.keTrackLead();
       var first=payload.contactName.split(' ')[0]||'';
-      card.innerHTML='<div class="thanks"><h3>Thanks'+ (first?', '+first:'') +'.</h3><p>Your message is with us and we&rsquo;ll reply the same working day. In a hurry? Call us on WhatsApp or grab a time on the calendar.</p></div>';
+      card.innerHTML='<div class="thanks"><h3>Thanks'+ (first?', '+first:'') +'.</h3><p>Your message is with us and we&rsquo;ll reply the same working day. In a hurry? Call us on WhatsApp or message us on WhatsApp.</p></div>';
     }catch(_){
       btn.disabled=false; btn.textContent='Send it over';
       err.innerHTML='Something went wrong sending that. Email us directly at <a href="mailto:rahaid@kaizenevol.com" style="color:#ffb4b4;text-decoration:underline">rahaid@kaizenevol.com</a> and we&rsquo;ll pick it straight up.';
