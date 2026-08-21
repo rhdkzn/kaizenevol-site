@@ -459,6 +459,35 @@
     .stat-card.highlight .stat-v{background:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
     .card,.pipe-client,.checklist-client{box-shadow:0 4px 24px rgba(0,0,0,0.45);}
   
+  /* ── SEQUENCE ENGINE (Diego's daily blocks — spec 2026-08-20) ── */
+  .seq-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media(max-width:900px){.seq-grid{grid-template-columns:1fr;}}
+  .seq-col{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px;}
+  .seq-col-hdr{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:0 2px;}
+  .seq-count{font-size:10px;opacity:.7;}
+  .seq-item{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px;margin-bottom:6px;}
+  .seq-item.fup{border-left:3px solid var(--purple);}
+  .seq-name{font-size:13px;font-weight:700;word-break:break-word;}
+  .seq-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+  .seq-touch{font-size:10px;font-weight:700;color:var(--purple);white-space:nowrap;}
+  .seq-acts{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}
+  .seq-btn{font-size:11px;font-weight:700;padding:7px 11px;border-radius:var(--radius-pill);border:1.5px solid var(--border);background:none;color:var(--text);cursor:pointer;font-family:var(--sans);transition:all .15s;min-height:32px;}
+  .seq-btn:hover{border-color:var(--purple);color:var(--purple);}
+  .seq-btn.good{border-color:rgba(34,197,94,.4);color:#4ade80;}
+  .seq-btn.bad{border-color:rgba(248,113,113,.4);color:#f87171;}
+  .seq-btn.stop{border-color:rgba(248,113,113,.55);color:#f87171;font-size:10px;}
+  .seq-empty{font-size:12px;color:var(--muted);padding:8px 2px;}
+  .seq-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+  .seq-week{font-size:12px;color:var(--muted);}
+  .seq-week b{color:var(--text);}
+  .seq-week .hit{color:#4ade80;}
+  .seq-side{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+  @media(max-width:900px){.seq-side{grid-template-columns:1fr;}}
+  .seq-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.3);}
+  .seq-badge.parked{background:rgba(245,158,11,.1);color:#f59e0b;border-color:rgba(245,158,11,.3);}
+  .seq-badge.dnc{background:rgba(248,113,113,.1);color:#f87171;border-color:rgba(248,113,113,.3);}
+  .seq-enrol-btn{font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);border:1.5px solid rgba(139,92,246,.4);color:var(--purple);background:none;cursor:pointer;font-family:var(--sans);}
+  .seq-enrol-btn:hover{background:rgba(139,92,246,.12);}
   /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
   @view-transition { navigation: auto; }
   nav { view-transition-name: ke-nav; }
@@ -521,6 +550,29 @@
     </section>
 
     <div class="section-divider"></div>
+
+    <!-- TODAY'S BLOCKS — the sequence engine (Diego's spec, 2026-08-20).
+         Every enrolled firm carries ONE next action: a channel + a date. These
+         three columns ARE the daily blocks: work top to bottom, tap the outcome,
+         done. Follow-ups sort above new firms (70–80% of replies live in touches
+         2+). A firm that enters the pipeline (any stage past New) drops out of
+         every cold view passively. -->
+    <section class="card">
+      <div class="seq-topbar">
+        <div class="section-label" style="margin:0">Today's Blocks</div>
+        <span class="seq-week" id="seqWeekStats"></span>
+        <button class="btn-save" style="padding:7px 16px;font-size:12px;" onclick="enrolNextFive()">⚡ Enrol next 5</button>
+      </div>
+      <div class="seq-grid">
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#a855f7;">📞 Calls due <span class="seq-count" id="seqCntCall"></span></div><div id="seqCalls"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#38bdf8;">✉ Emails due <span class="seq-count" id="seqCntEmail"></span></div><div id="seqEmails"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#4ade80;">💬 DMs due <span class="seq-count" id="seqCntDm"></span></div><div id="seqDms"></div></div>
+      </div>
+      <div class="seq-side">
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#f59e0b;">⏸ Parked — returning soon <span class="seq-count" id="seqCntPark"></span></div><div id="seqParked"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#f472b6;">↩ Replies owed <span class="seq-count" id="seqCntReply"></span></div><div id="seqReplies"></div></div>
+      </div>
+    </section>
 
     <!-- PROSPECT STATS -->
     <section>
@@ -695,6 +747,22 @@
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
+      </div>
+    </div>
+    <div class="km-row">
+      <div class="km-field">
+        <div class="km-label">Entity (routes the sequence)</div>
+        <select class="km-select" id="kmEntity">
+          <option value="">Not set — guessed from name</option>
+          <option value="Ltd">Ltd</option>
+          <option value="LLP">LLP</option>
+          <option value="Sole Trader">Sole Trader</option>
+          <option value="Unknown">Unknown</option>
+        </select>
+      </div>
+      <div class="km-field">
+        <div class="km-label">Parked until</div>
+        <div class="km-field-row"><input type="date" class="km-inp" id="kmParkUntil" /><button class="km-clr" title="Clear" onclick="document.getElementById('kmParkUntil').value=''">×</button></div>
       </div>
     </div>
     <div class="km-row">
@@ -1051,6 +1119,134 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 function tpsInfo(l){if(!l.phone)return null;if(l.tpsScreened==='y')return l.dialOk==='y'?{cls:'tps-ok',label:'Dial OK · '+(l.tpsScreenDate||'screened'),dial:true}:{cls:'tps-no',label:'DO NOT DIAL — TPS/CTPS',dial:false};return{cls:'tps-warn',label:'Unscreened — no cold calls',dial:true};}
 const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
 const STAGE_CLS={new:'sg-new',contacted:'sg-contacted',call:'sg-call',proposal:'sg-proposal',won:'sg-won',lost:'sg-lost'};
+
+/* ── SEQUENCE ENGINE (Diego's outreach spec, ratified 2026-08-20) ──
+   Ladders in day offsets. FULL = Ltd/LLP with email (8 touches / 14 days,
+   call-led). CALL_DM = sole trader / Unknown — NO cold email under PECR.
+   DM_ONLY = nothing safe to dial and no email lane.
+   Compliance hard line: a call touch only ever fires for a screened, clear
+   number (tpsScreened y + dialOk y). Anything else auto-skips the call leg —
+   TPS is a fine-category question, so this is not configurable. */
+const LADDERS={
+  FULL:[{d:1,ch:'call'},{d:3,ch:'email'},{d:5,ch:'call'},{d:6,ch:'dm'},{d:8,ch:'email'},{d:10,ch:'call'},{d:12,ch:'dm'},{d:14,ch:'email'}],
+  CALL_DM:[{d:1,ch:'call'},{d:3,ch:'dm'},{d:5,ch:'call'},{d:8,ch:'call'},{d:11,ch:'dm'}],
+  DM_ONLY:[{d:1,ch:'dm'},{d:4,ch:'dm'},{d:8,ch:'dm'},{d:12,ch:'dm'}]
+};
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function addDaysStr(n){return new Date(Date.now()+n*864e5).toISOString().slice(0,10);}
+function canCall(l){return !!l.phone&&l.tpsScreened==='y'&&l.dialOk==='y';}
+function canEmail(l){return !!(l.email&&l.email.trim())&&!l.emailDead;}
+function chanOk(l,ch){return ch==='call'?canCall(l):ch==='email'?canEmail(l):true;}
+function seqNextIdx(l,from){const lad=LADDERS[l.sequenceType]||[];for(let i=from;i<lad.length;i++){if(chanOk(l,lad[i].ch))return i;}return -1;}
+function entityGuess(name){const n=(name||'').toLowerCase();if(/\bltd\b|\blimited\b/.test(n))return 'Ltd';if(/\bllp\b/.test(n))return 'LLP';return 'Unknown';}
+function routeSequence(l){const ent=l.entityType||entityGuess(l.business);const corp=ent==='Ltd'||ent==='LLP';if(corp&&canEmail(l))return 'FULL';if(l.phone)return 'CALL_DM';return canEmail(l)?'FULL':'DM_ONLY';}
+function seqActive(l){return l.sequenceType&&l.sequenceType!=='NONE'&&!l.doNotContact;}
+function enrolLead(id,quiet){
+  const arr=loadLeads();const l=arr.find(x=>x.id===id);if(!l)return false;
+  if(l.doNotContact){if(!quiet)showToast('Do-not-contact — cannot enrol');return false;}
+  if(!l.entityType)l.entityType=entityGuess(l.business);
+  l.sequenceType=routeSequence(l);
+  const first=seqNextIdx(l,0);
+  if(first<0){l.sequenceType='';if(!quiet)showToast('No usable channel — add an email or screen the number');return false;}
+  l.sequenceStep=first;l.nextActionChannel=LADDERS[l.sequenceType][first].ch;l.nextActionDate=todayStr();
+  l.touchCount=l.touchCount||0;l.parkUntil='';l.parkReason='';l.updatedAt=Date.now();
+  saveLeads(arr);renderLeads();renderLeadStats();
+  if(!quiet)showToast('Enrolled '+l.business+' — '+l.sequenceType);
+  return true;
+}
+function enrolNextFive(){
+  const arr=loadLeads();
+  const cands=arr.filter(l=>l.stage==='new'&&!l.doNotContact&&!seqActive(l)&&!l.parkUntil)
+    .sort((a,b)=>{const ca=canCall(a)?1:0,cb=canCall(b)?1:0;if(cb!==ca)return cb-ca;return getScore(b.notes)-getScore(a.notes);})
+    .slice(0,5);
+  if(!cands.length){showToast('Nothing left to enrol');return;}
+  let n=0;cands.forEach(l=>{if(enrolLead(l.id,true))n++;});
+  showToast('Enrolled '+n+' firm'+(n!==1?'s':''));
+}
+/* Outcomes: no-answer · voicemail · sent (email/DM done) → advance the ladder.
+   reply / pickup-interest → pipeline same day (stage Contacted), sequence ends.
+   pickup-no → parked 30d (edit the date to whatever the prospect actually gave).
+   bounce → email leg dies, calls/DMs continue. stop → do_not_contact, forever.
+   Ladder exhausted → 90-day park. */
+function logTouch(id,outcome){
+  const arr=loadLeads();const l=arr.find(x=>x.id===id);if(!l)return;
+  const today=todayStr();const ch=l.nextActionChannel||'call';
+  l.touches=Array.isArray(l.touches)?l.touches:[];l.touches.push({d:today,ch,o:outcome});
+  l.touchCount=(l.touchCount||0)+1;l.lastTouchDate=today;l.lastTouchChannel=ch;l.lastOutcome=outcome;
+  l.lastContact=today;l.updatedAt=Date.now();
+  let msg='Logged';
+  if(outcome==='stop'){l.doNotContact=true;l.sequenceType='NONE';l.nextActionDate='';l.parkReason='STOP — do not contact, permanent';msg='STOP — never contacted again';}
+  else if(outcome==='reply'||outcome==='pickup-interest'){l.stage='contacted';l.sequenceType='NONE';l.nextActionDate='';if(!l.nextStep)l.nextStep='Reply owed — respond today';msg=l.business+' → pipeline. Work the reply today.';}
+  else if(outcome==='pickup-no'){l.sequenceType='NONE';l.nextActionDate='';l.parkUntil=addDaysStr(30);l.parkReason='Soft no — parked (edit date to what they gave)';msg='Parked 30 days — edit the date if they gave one';}
+  else{
+    if(outcome==='bounce'){l.emailDead=true;msg='Bounce — email leg dead, calls/DMs continue';}
+    const lad=LADDERS[l.sequenceType]||[];const cur=l.sequenceStep||0;
+    const nxt=seqNextIdx(l,cur+1);
+    if(nxt<0){l.sequenceType='NONE';l.nextActionDate='';l.parkUntil=addDaysStr(90);l.parkReason='No response — sequence done, 90-day park';msg='Sequence done — parked 90 days';}
+    else{const gap=Math.max(1,lad[nxt].d-lad[cur].d);l.sequenceStep=nxt;l.nextActionChannel=lad[nxt].ch;l.nextActionDate=addDaysStr(gap);if(msg==='Logged')msg='Next: '+lad[nxt].ch+' on '+l.nextActionDate;}
+  }
+  saveLeads(arr);renderLeads();renderLeadStats();renderFollowupAlerts();showToast(msg);
+}
+function resumePark(id){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(!l)return;l.parkUntil='';l.parkReason='';l.updatedAt=Date.now();saveLeads(arr);enrolLead(id);}
+function seqTouchNo(l){const lad=LADDERS[l.sequenceType]||[];return Math.min((l.touchCount||0)+1,lad.length)+'/'+lad.length;}
+function seqRowHtml(l){
+  if(l.doNotContact)return '<div style="margin-bottom:6px"><span class="seq-badge dnc">🛑 DO NOT CONTACT</span></div>';
+  if(seqActive(l))return '<div style="margin-bottom:6px"><span class="seq-badge">SEQ '+esc(l.sequenceType)+' · touch '+seqTouchNo(l)+' · next: '+esc(l.nextActionChannel||'')+' '+esc(l.nextActionDate||'')+'</span></div>';
+  if(l.parkUntil)return '<div style="margin-bottom:6px"><span class="seq-badge parked">⏸ parked → '+esc(l.parkUntil)+'</span> <button class="seq-enrol-btn" onclick="resumePark(\''+l.id+'\')">Resume</button></div>';
+  if(l.stage==='new')return '<div style="margin-bottom:6px"><button class="seq-enrol-btn" onclick="enrolLead(\''+l.id+'\')">⚡ Enrol in sequence</button></div>';
+  return '';
+}
+function seqWeekStats(arr){
+  const wk=addDaysStr(-7);let touches=0,convos=0;
+  arr.forEach(l=>{(l.touches||[]).forEach(t=>{if(t.d>=wk){touches++;if(['pickup-interest','pickup-no','reply'].includes(t.o))convos++;}});});
+  return {touches,convos};
+}
+function renderSequence(){
+  const el=document.getElementById('seqCalls');if(!el)return;
+  const arr=loadLeads();const today=todayStr();
+  const due=arr.filter(l=>seqActive(l)&&l.stage==='new'&&l.nextActionDate&&l.nextActionDate<=today)
+    .sort((a,b)=>((b.touchCount||0)-(a.touchCount||0))||String(a.nextActionDate).localeCompare(String(b.nextActionDate)));
+  const byCh={call:[],email:[],dm:[]};due.forEach(l=>{(byCh[l.nextActionChannel]||byCh.dm).push(l);});
+  const item=(l,acts)=>{
+    const fup=(l.touchCount||0)>0;
+    const contact=l.nextActionChannel==='call'?(l.phone?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':''):
+      l.nextActionChannel==='email'?(l.email?'<a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':''):
+      (l.website?'<a href="'+esc(l.website.startsWith('http')?l.website:'https://'+l.website)+'" target="_blank" rel="noopener">site ↗</a>':'');
+    return '<div class="seq-item'+(fup?' fup':'')+'"><div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">'
+      +'<div style="min-width:0"><div class="seq-name" onclick="openKanbanModal(\''+l.id+'\')" style="cursor:pointer">'+esc(l.business)+'</div>'
+      +'<div class="seq-sub">'+[l.owner,l.area,l.niche].filter(Boolean).map(esc).join(' · ')+(contact?' · '+contact:'')+'</div></div>'
+      +'<span class="seq-touch">'+(fup?'touch ':'new · touch ')+seqTouchNo(l)+'</span></div>'
+      +'<div class="seq-acts">'+acts.map(a=>'<button class="seq-btn '+(a[2]||'')+'" onclick="logTouch(\''+l.id+'\',\''+a[1]+'\')">'+a[0]+'</button>').join('')+'</div></div>';
+  };
+  const CALL_ACTS=[['No answer','no-answer'],['Voicemail','voicemail'],['Interest ✓','pickup-interest','good'],['Said no','pickup-no','bad'],['STOP','stop','stop']];
+  const EMAIL_ACTS=[['Sent ✓','sent'],['Reply ✓','reply','good'],['Bounced','bounce','bad']];
+  const DM_ACTS=[['Sent ✓','sent'],['Reply ✓','reply','good'],['Said no','pickup-no','bad'],['STOP','stop','stop']];
+  const fill=(elId,list,acts,empty)=>{const e=document.getElementById(elId);e.innerHTML=list.length?list.map(l=>item(l,acts)).join(''):'<div class="seq-empty">'+empty+'</div>';};
+  fill('seqCalls',byCh.call,CALL_ACTS,'No calls due. Only screened-clear numbers ever land here.');
+  fill('seqEmails',byCh.email,EMAIL_ACTS,'No emails due.');
+  fill('seqDms',byCh.dm,DM_ACTS,'No DMs due.');
+  document.getElementById('seqCntCall').textContent=byCh.call.length||'';
+  document.getElementById('seqCntEmail').textContent=byCh.email.length||'';
+  document.getElementById('seqCntDm').textContent=byCh.dm.length||'';
+  // Parked returning within 7 days
+  const soon=addDaysStr(7);
+  const parked=arr.filter(l=>l.parkUntil&&l.parkUntil<=soon&&!l.doNotContact&&l.stage==='new')
+    .sort((a,b)=>String(a.parkUntil).localeCompare(String(b.parkUntil)));
+  document.getElementById('seqParked').innerHTML=parked.length?parked.map(l=>'<div class="seq-item"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">'
+    +'<div style="min-width:0"><div class="seq-name">'+esc(l.business)+'</div><div class="seq-sub">'+esc(l.parkReason||'parked')+' · back '+esc(l.parkUntil)+'</div></div>'
+    +'<button class="seq-btn" onclick="resumePark(\''+l.id+'\')">Resume →</button></div></div>').join('')
+    :'<div class="seq-empty">Nothing returning this week.</div>';
+  document.getElementById('seqCntPark').textContent=parked.length||'';
+  // Replies owed — replied/interested and still sitting in Contacted untouched
+  const owed=arr.filter(l=>['reply','pickup-interest'].includes(l.lastOutcome)&&l.stage==='contacted');
+  document.getElementById('seqReplies').innerHTML=owed.length?owed.map(l=>'<div class="seq-item"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">'
+    +'<div style="min-width:0"><div class="seq-name" onclick="openKanbanModal(\''+l.id+'\')" style="cursor:pointer">'+esc(l.business)+'</div><div class="seq-sub">'+(l.lastOutcome==='reply'?'replied':'showed interest')+' '+esc(l.lastTouchDate||'')+(l.phone?' · <a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':'')+'</div></div>'
+    +'</div></div>').join('')
+    :'<div class="seq-empty">No replies waiting. Good.</div>';
+  document.getElementById('seqCntReply').textContent=owed.length||'';
+  const w=seqWeekStats(arr);
+  document.getElementById('seqWeekStats').innerHTML='This week: <b>'+w.touches+'</b> touches · <b class="'+(w.convos>=38?'hit':'')+'">'+w.convos+'</b> conversations <span style="opacity:.6">/ 38 target</span>';
+}
 function toggleForm(){const f=document.getElementById('addForm'),b=document.getElementById('toggleFormBtn');const open=f.style.display==='none'||!f.style.display;f.style.display=open?'block':'none';b.textContent=open?'− Cancel':'+ New Lead';}
 // Map any niche string (search term, label, or free text) to a clean niche tag
 function nicheKey(str){const t=(str||'').toLowerCase();if(t.includes('loft'))return 'Loft';if(t.includes('bathroom'))return 'Bathroom';if(t.includes('kitchen'))return 'Kitchen';return (str||'').trim();}
@@ -1063,8 +1259,8 @@ function scheduleLeadNoteSave(id){clearTimeout(_noteTimers[id]);_noteTimers[id]=
 function saveLeadNotes(id){clearTimeout(_noteTimers[id]);delete _noteTimers[id];const el=document.getElementById('ln_'+id);if(!el)return;updateLeadField(id,'notes',el.value);const ind=document.getElementById('lnb_'+id);if(ind){ind.textContent='Saved ✓';setTimeout(()=>{ind.textContent='';},1800);}}
 function flushNoteSaves(){Object.keys(_noteTimers).forEach(id=>{clearTimeout(_noteTimers[id]);const el=document.getElementById('ln_'+id);if(el){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(l&&el.value!==l.notes){l.notes=el.value;l.updatedAt=Date.now();saveLeads(arr);}}});Object.keys(_noteTimers).forEach(k=>delete _noteTimers[k]);}
 function setFilter(stage,el){activeFilter=stage;document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLeads();}
-function renderLeadStats(){const arr=loadLeads();const c={new:0,contacted:0,call:0,proposal:0,won:0,lost:0};arr.forEach(l=>{if(c[l.stage]!==undefined)c[l.stage]++;});const total=arr.length;const conv=total>0?Math.round(c.won/total*100):0;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+total+'</div><div class="stat-s">All time</div></div><div class="stat-card"><div class="stat-l">New</div><div class="stat-v">'+c.new+'</div><div class="stat-s">Awaiting contact</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+c.contacted+'</div><div class="stat-s">In conversation</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">'+c.call+'</div><div class="stat-s">Discovery scheduled</div></div><div class="stat-card'+(c.won>0?' highlight':'')+'"><div class="stat-l">Won</div><div class="stat-v">'+c.won+'</div><div class="stat-s">Closed clients</div></div><div class="stat-card"><div class="stat-l">Conv. Rate</div><div class="stat-v">'+conv+'%</div><div class="stat-s">Won / Total</div></div>';}
-function renderLeads(){flushNoteSaves();if(viewMode==='kanban'){renderKanban();return;}const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(activeScoreFilter>0)arr=arr.filter(l=>getScore(l.notes)===activeScoreFilter);arr=applySmartFilter(arr);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone+(l.niche||'')).toLowerCase().includes(search));if(sort==='updated')arr=[...arr].sort((a,b)=>(b.updatedAt||b.createdAt)-(a.updatedAt||a.createdAt));else if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});else arr=[...arr].sort((a,b)=>b.createdAt-a.createdAt);const el=document.getElementById('leadsList');const countEl=document.getElementById('leadsCount');if(countEl)countEl.textContent=arr.length+' lead'+(arr.length!==1?'s':'');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>'<div class="lead-card"><div class="lead-top"><div><div class="lead-name">'+(l.website?'<a href="'+esc(l.website.startsWith('http')?l.website:'https://'+l.website)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--purple)" title="'+esc(l.website)+'">'+esc(l.business||l.name||'')+'</a>':esc(l.business||l.name||''))+'</div></div><div class="lead-right"><span class="stage-badge '+(STAGE_CLS[l.stage]||'')+'">'+(STAGE_LABEL[l.stage]||l.stage)+'</span><select class="stage-sel" onchange="updateLeadField(\''+l.id+'\',\'stage\',this.value)">'+Object.entries(STAGE_LABEL).map(([v,lab])=>'<option value="'+v+'"'+(l.stage===v?' selected':'')+'>'+lab+'</option>').join('')+'</select><button class="lead-del" onclick="deleteLead(\''+l.id+'\')">×</button></div></div><div class="lead-meta"><div class="lm"><div class="lm-l">Owner / Director</div><div class="lm-v"><input type="text" class="lm-inp" value="'+esc(l.owner||'')+'" placeholder="Add owner name" onblur="updateLeadField(\''+l.id+'\',\'owner\',this.value)" /></div></div>'+(l.niche?'<div class="lm"><div class="lm-l">Niche</div><div class="lm-v"><span class="source-badge">'+esc(l.niche)+'</span></div></div>':'')+(l.area?'<div class="lm"><div class="lm-l">Area</div><div class="lm-v">'+esc(l.area)+'</div></div>':'')+(l.phone?(function(){const t=tpsInfo(l);return'<div class="lm"><div class="lm-l">Phone</div><div class="lm-v">'+(t.dial?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':esc(l.phone))+'</div></div><div class="lm"><div class="lm-l">Dial status</div><div class="lm-v"><span class="tps-badge '+t.cls+'">'+t.label+'</span></div></div>';})():'')+(l.email?'<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div></div>':'')+''+(l.websiteQuality?'<div class="lm"><div class="lm-l">Site Quality</div><div class="lm-v"><span class="wq-badge wq-'+esc(l.websiteQuality)+'">'+(l.websiteQuality==='ugly'?'Ugly — revamp':l.websiteQuality==='ok'?'OK':'Modern')+'</span></div></div>':'')+'<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">'+esc(l.source)+'</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">'+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="'+esc(l.lastContact)+'" onchange="updateLeadField(\''+l.id+'\',\'lastContact\',this.value)" /><button class="ld-clr" title="Clear" onclick="clearDateField(this,\''+l.id+'\',\'lastContact\')">×</button></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="'+esc(l.followUp)+'" onchange="updateLeadField(\''+l.id+'\',\'followUp\',this.value)" /><button class="ld-clr" title="Clear" onclick="clearDateField(this,\''+l.id+'\',\'followUp\')">×</button></div></div><div class="lead-nextstep-row"><span class="ns-label">Next step</span><input type="text" class="ns-inp" value="'+esc(l.nextStep||'')+'" placeholder="What\'s the next action?" onblur="updateLeadField(\''+l.id+'\',\'nextStep\',this.value)" /></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_'+l.id+'" placeholder="Notes..." oninput="scheduleLeadNoteSave(\''+l.id+'\')" onfocus="_notesFocused=true" onblur="_notesFocused=false;saveLeadNotes(\''+l.id+'\')">'+esc(l.notes)+'</textarea><span class="notes-saved-ind" id="lnb_'+l.id+'"></span></div>'+((['contacted','lost'].includes(l.stage))?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;"><button class="re-engage-btn" onclick="showReactivate(\''+l.id+'\')">Re-engage →</button><span style="font-size:11px;color:var(--muted);">Pre-merged WhatsApp &amp; phone scripts</span></div>':'')+'</div>').join('');}
+function renderLeadStats(){const arr=loadLeads();const c={new:0,contacted:0,call:0,proposal:0,won:0,lost:0};arr.forEach(l=>{if(c[l.stage]!==undefined)c[l.stage]++;});const total=arr.length;const conv=total>0?Math.round(c.won/total*100):0;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+total+'</div><div class="stat-s">All time</div></div><div class="stat-card"><div class="stat-l">New</div><div class="stat-v">'+c.new+'</div><div class="stat-s">Awaiting contact</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+c.contacted+'</div><div class="stat-s">In conversation</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">'+c.call+'</div><div class="stat-s">Discovery scheduled</div></div><div class="stat-card'+(c.won>0?' highlight':'')+'"><div class="stat-l">Won</div><div class="stat-v">'+c.won+'</div><div class="stat-s">Closed clients</div></div><div class="stat-card"><div class="stat-l">Conv. Rate</div><div class="stat-v">'+conv+'%</div><div class="stat-s">Won / Total</div></div>';renderSequence();}
+function renderLeads(){flushNoteSaves();if(viewMode==='kanban'){renderKanban();return;}const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(activeScoreFilter>0)arr=arr.filter(l=>getScore(l.notes)===activeScoreFilter);arr=applySmartFilter(arr);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone+(l.niche||'')).toLowerCase().includes(search));if(sort==='updated')arr=[...arr].sort((a,b)=>(b.updatedAt||b.createdAt)-(a.updatedAt||a.createdAt));else if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});else arr=[...arr].sort((a,b)=>b.createdAt-a.createdAt);const el=document.getElementById('leadsList');const countEl=document.getElementById('leadsCount');if(countEl)countEl.textContent=arr.length+' lead'+(arr.length!==1?'s':'');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>'<div class="lead-card"><div class="lead-top"><div><div class="lead-name">'+(l.website?'<a href="'+esc(l.website.startsWith('http')?l.website:'https://'+l.website)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--purple)" title="'+esc(l.website)+'">'+esc(l.business||l.name||'')+'</a>':esc(l.business||l.name||''))+'</div></div><div class="lead-right"><span class="stage-badge '+(STAGE_CLS[l.stage]||'')+'">'+(STAGE_LABEL[l.stage]||l.stage)+'</span><select class="stage-sel" onchange="updateLeadField(\''+l.id+'\',\'stage\',this.value)">'+Object.entries(STAGE_LABEL).map(([v,lab])=>'<option value="'+v+'"'+(l.stage===v?' selected':'')+'>'+lab+'</option>').join('')+'</select><button class="lead-del" onclick="deleteLead(\''+l.id+'\')">×</button></div></div><div class="lead-meta"><div class="lm"><div class="lm-l">Owner / Director</div><div class="lm-v"><input type="text" class="lm-inp" value="'+esc(l.owner||'')+'" placeholder="Add owner name" onblur="updateLeadField(\''+l.id+'\',\'owner\',this.value)" /></div></div>'+(l.niche?'<div class="lm"><div class="lm-l">Niche</div><div class="lm-v"><span class="source-badge">'+esc(l.niche)+'</span></div></div>':'')+(l.area?'<div class="lm"><div class="lm-l">Area</div><div class="lm-v">'+esc(l.area)+'</div></div>':'')+(l.phone?(function(){const t=tpsInfo(l);return'<div class="lm"><div class="lm-l">Phone</div><div class="lm-v">'+(t.dial?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':esc(l.phone))+'</div></div><div class="lm"><div class="lm-l">Dial status</div><div class="lm-v"><span class="tps-badge '+t.cls+'">'+t.label+'</span></div></div>';})():'')+(l.email?'<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div></div>':'')+''+(l.websiteQuality?'<div class="lm"><div class="lm-l">Site Quality</div><div class="lm-v"><span class="wq-badge wq-'+esc(l.websiteQuality)+'">'+(l.websiteQuality==='ugly'?'Ugly — revamp':l.websiteQuality==='ok'?'OK':'Modern')+'</span></div></div>':'')+'<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">'+esc(l.source)+'</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">'+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="'+esc(l.lastContact)+'" onchange="updateLeadField(\''+l.id+'\',\'lastContact\',this.value)" /><button class="ld-clr" title="Clear" onclick="clearDateField(this,\''+l.id+'\',\'lastContact\')">×</button></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="'+esc(l.followUp)+'" onchange="updateLeadField(\''+l.id+'\',\'followUp\',this.value)" /><button class="ld-clr" title="Clear" onclick="clearDateField(this,\''+l.id+'\',\'followUp\')">×</button></div></div>'+seqRowHtml(l)+'<div class="lead-nextstep-row"><span class="ns-label">Next step</span><input type="text" class="ns-inp" value="'+esc(l.nextStep||'')+'" placeholder="What\'s the next action?" onblur="updateLeadField(\''+l.id+'\',\'nextStep\',this.value)" /></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_'+l.id+'" placeholder="Notes..." oninput="scheduleLeadNoteSave(\''+l.id+'\')" onfocus="_notesFocused=true" onblur="_notesFocused=false;saveLeadNotes(\''+l.id+'\')">'+esc(l.notes)+'</textarea><span class="notes-saved-ind" id="lnb_'+l.id+'"></span></div>'+((['contacted','lost'].includes(l.stage))?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;"><button class="re-engage-btn" onclick="showReactivate(\''+l.id+'\')">Re-engage →</button><span style="font-size:11px;color:var(--muted);">Pre-merged WhatsApp &amp; phone scripts</span></div>':'')+'</div>').join('');}
 
 /* ── EMAIL OUTREACH (manual — Diego sends from his own inbox) ── */
 function loadEmail(){try{return JSON.parse(localStorage.getItem(EMAIL_KEY)||'{}')}catch(e){return{}}}
@@ -1075,11 +1271,11 @@ function emailStatusOf(l){return l.emailStatus||'not_contacted';}
 function emailStatusMeta(v){return EMAIL_STATUS.find(s=>s.v===v)||EMAIL_STATUS[0];}
 function setEmailStatus(id,val){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(!l)return;l.emailStatus=val;if(val!=='not_contacted'&&!l.lastContact)l.lastContact=new Date().toISOString().slice(0,10);l.updatedAt=Date.now();saveLeads(arr);renderOutreachQueue();renderLeads();}
 function copyEmailById(id,btn){const l=loadLeads().find(x=>x.id===id);if(!l||!l.email)return;const email=l.email.trim();navigator.clipboard.writeText(email).catch(()=>{const ta=document.createElement('textarea');ta.value=email;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});if(btn){btn.textContent='Copied ✓';setTimeout(()=>{btn.textContent='Copy';},1600);}}
-function renderOutreachQueue(){const order={not_contacted:0,contacted:1,replied:2};let leads=loadLeads().filter(l=>l.email&&l.email.trim()&&l.stage!=='won'&&l.stage!=='lost');leads.sort((a,b)=>(order[emailStatusOf(a)]-order[emailStatusOf(b)])||(b.createdAt-a.createdAt));const el=document.getElementById('outreachQueue');const countEl=document.getElementById('queueCount');if(countEl){const todo=leads.filter(l=>emailStatusOf(l)==='not_contacted').length;countEl.textContent=leads.length+' email'+(leads.length!==1?'s':'')+(todo?' · '+todo+' to contact':'');}if(!leads.length){el.innerHTML='<div class="empty-msg">No leads with emails yet. Run a scrape to pull leads with email addresses.</div>';return;}el.innerHTML=leads.map((l,i)=>{const col=OQ_COLORS[i%OQ_COLORS.length];const initial=(l.business||'?')[0].toUpperCase();const st=emailStatusOf(l);const meta=emailStatusMeta(st);const opts=EMAIL_STATUS.map(s=>'<option value="'+s.v+'"'+(st===s.v?' selected':'')+'>'+s.label+'</option>').join('');return'<div class="oq-row"><div class="oq-top"><div class="oq-avatar" style="background:'+col+'">'+initial+'</div><div class="oq-info"><div class="oq-name">'+esc(l.business)+'</div><div class="oq-meta">'+esc(l.area||'—')+'</div></div><span class="es-badge '+meta.cls+'">'+esc(meta.label)+'</span></div><div class="oq-bottom"><a class="oq-email-link" href="mailto:'+esc(l.email)+'" title="Open in your mail app">'+esc(l.email)+'</a><button class="oq-copy-btn" onclick="copyEmailById(\''+l.id+'\',this)">Copy</button><select class="es-select" onchange="setEmailStatus(\''+l.id+'\',this.value)">'+opts+'</select></div></div>';}).join('');}
+function renderOutreachQueue(){const order={not_contacted:0,contacted:1,replied:2};let leads=loadLeads().filter(l=>l.email&&l.email.trim()&&l.stage!=='won'&&l.stage!=='lost'&&!l.doNotContact&&!l.emailDead);leads.sort((a,b)=>(order[emailStatusOf(a)]-order[emailStatusOf(b)])||(b.createdAt-a.createdAt));const el=document.getElementById('outreachQueue');const countEl=document.getElementById('queueCount');if(countEl){const todo=leads.filter(l=>emailStatusOf(l)==='not_contacted').length;countEl.textContent=leads.length+' email'+(leads.length!==1?'s':'')+(todo?' · '+todo+' to contact':'');}if(!leads.length){el.innerHTML='<div class="empty-msg">No leads with emails yet. Run a scrape to pull leads with email addresses.</div>';return;}el.innerHTML=leads.map((l,i)=>{const col=OQ_COLORS[i%OQ_COLORS.length];const initial=(l.business||'?')[0].toUpperCase();const st=emailStatusOf(l);const meta=emailStatusMeta(st);const opts=EMAIL_STATUS.map(s=>'<option value="'+s.v+'"'+(st===s.v?' selected':'')+'>'+s.label+'</option>').join('');return'<div class="oq-row"><div class="oq-top"><div class="oq-avatar" style="background:'+col+'">'+initial+'</div><div class="oq-info"><div class="oq-name">'+esc(l.business)+'</div><div class="oq-meta">'+esc(l.area||'—')+'</div></div><span class="es-badge '+meta.cls+'">'+esc(meta.label)+'</span></div><div class="oq-bottom"><a class="oq-email-link" href="mailto:'+esc(l.email)+'" title="Open in your mail app">'+esc(l.email)+'</a><button class="oq-copy-btn" onclick="copyEmailById(\''+l.id+'\',this)">Copy</button><select class="es-select" onchange="setEmailStatus(\''+l.id+'\',this.value)">'+opts+'</select></div></div>';}).join('');}
 function initEmail(){renderOutreachQueue();}
 
 /* ── FOLLOW-UP ALERTS ── */
-function renderFollowupAlerts(){const today=new Date().toISOString().slice(0,10);const arr=loadLeads().filter(l=>l.followUp&&l.followUp<=today&&l.stage!=='won'&&l.stage!=='lost');const el=document.getElementById('fuAlerts');if(!el)return;if(!arr.length){el.innerHTML='';return;}el.innerHTML='<div class="fu-alerts"><div class="fu-hdr"><span class="fu-ttl">&#9873; '+arr.length+' Follow-up'+(arr.length!==1?'s':'')+' due</span></div><div class="fu-items">'+arr.map(l=>{const days=Math.round((new Date(today)-new Date(l.followUp))/86400000);const label=days===0?'Today':days+'d overdue';return'<div class="fu-item"><span class="fu-name">'+esc(l.business)+'</span><span class="fu-due">'+label+'</span>'+(l.phone&&tpsInfo(l).dial?'<a href="tel:'+esc(l.phone)+'" class="fu-btn call">Call</a>':'')+'<button class="fu-btn" onclick="showReactivate(\''+l.id+'\')">Templates</button></div>';}).join('')+'</div></div>';}
+function renderFollowupAlerts(){const today=new Date().toISOString().slice(0,10);const arr=loadLeads().filter(l=>l.followUp&&l.followUp<=today&&l.stage!=='won'&&l.stage!=='lost'&&!l.doNotContact);const el=document.getElementById('fuAlerts');if(!el)return;if(!arr.length){el.innerHTML='';return;}el.innerHTML='<div class="fu-alerts"><div class="fu-hdr"><span class="fu-ttl">&#9873; '+arr.length+' Follow-up'+(arr.length!==1?'s':'')+' due</span></div><div class="fu-items">'+arr.map(l=>{const days=Math.round((new Date(today)-new Date(l.followUp))/86400000);const label=days===0?'Today':days+'d overdue';return'<div class="fu-item"><span class="fu-name">'+esc(l.business)+'</span><span class="fu-due">'+label+'</span>'+(l.phone&&tpsInfo(l).dial?'<a href="tel:'+esc(l.phone)+'" class="fu-btn call">Call</a>':'')+'<button class="fu-btn" onclick="showReactivate(\''+l.id+'\')">Templates</button></div>';}).join('')+'</div></div>';}
 /* ── REACTIVATION MODAL ── */
 const REACT_TMPLS=[{name:'WhatsApp — Check-in',body:"Hi {{first_name}}, Rahaid here from KaizenEvol.\n\nJust checking in — are you still thinking about growing the business? We run the ads and an AI front office that answers your calls and messages 24/7, so nothing gets missed while you're on site.\n\nIf the timing's better now I'd love to show you what that looks like for {{business_name}}.\n\nReply here and I'll find a time that suits you.\n\n— Rahaid"},{name:'WhatsApp — Final Bump',body:"Hi {{first_name}},\n\nLast one from me — promise.\n\nWe're still only taking one specialist per trade per area, and {{area}} is open. No shared leads, no referral dependency — and the website is free while you're on a retainer.\n\nIf the timing's right, happy to walk you through it.\n\nReply here and I'll find a time that suits you.\n\n— Rahaid"},{name:'Phone Script',body:"Opening:\n\"Hi, is this {{first_name}} at {{business_name}}? It's Rahaid from KaizenEvol — we spoke a while back about the paid ads system for home renovation specialists.\"\n\nBridge:\n\"Just wanted to check in — has anything changed on your end? We're still only taking one specialist per trade per area, and {{area}} is open.\"\n\nClose:\n\"If the timing's right I'd love to book a quick 15-minute call. Are you free Thursday or Friday?\""}];
 let _reactId=null;
@@ -1105,9 +1301,9 @@ function handleDragEnd(){_dragId=null;document.querySelectorAll('.kb-card').forE
 function handleDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over');}
 function handleDragLeave(e){e.currentTarget.classList.remove('drag-over');}
 function handleDrop(e,stage){e.preventDefault();e.currentTarget.classList.remove('drag-over');if(!_dragId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_dragId);if(l&&l.stage!==stage){l.stage=stage;l.updatedAt=Date.now();saveLeads(arr);renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Moved '+l.business+' to '+STAGE_LABEL[stage]);if(stage==='won')showWinReview(l);}_dragId=null;}
-function openKanbanModal(id){_kModalId=id;const l=loadLeads().find(x=>x.id===id);if(!l)return;document.getElementById('kmTitle').textContent=l.business;const _t=l.phone?tpsInfo(l):null;const info=[l.phone?'📞 '+l.phone+(_t?' — '+_t.label:''):'',l.email?'✉ '+l.email:'',l.area?'📍 '+l.area:'',l.website?'🌐 '+l.website:''].filter(Boolean).join('  ·  ');document.getElementById('kmInfo').textContent=info||'No contact details on file.';document.getElementById('kmStage').value=l.stage||'new';document.getElementById('kmPriority').value=l.priority||'medium';document.getElementById('kmLastContact').value=l.lastContact||'';document.getElementById('kmFollowUp').value=l.followUp||'';document.getElementById('kmNextStep').value=l.nextStep||'';document.getElementById('kmEstValue').value=l.estimatedValue||'';document.getElementById('kmWebsite').value=l.website||'';document.getElementById('kmWebsiteQuality').value=l.websiteQuality||'';document.getElementById('kmNotes').value=l.notes||'';document.getElementById('kModal').classList.add('open');}
+function openKanbanModal(id){_kModalId=id;const l=loadLeads().find(x=>x.id===id);if(!l)return;document.getElementById('kmTitle').textContent=l.business;const _t=l.phone?tpsInfo(l):null;const info=[l.phone?'📞 '+l.phone+(_t?' — '+_t.label:''):'',l.email?'✉ '+l.email:'',l.area?'📍 '+l.area:'',l.website?'🌐 '+l.website:''].filter(Boolean).join('  ·  ');document.getElementById('kmInfo').textContent=info||'No contact details on file.';document.getElementById('kmStage').value=l.stage||'new';document.getElementById('kmPriority').value=l.priority||'medium';document.getElementById('kmEntity').value=l.entityType||'';document.getElementById('kmParkUntil').value=l.parkUntil||'';document.getElementById('kmLastContact').value=l.lastContact||'';document.getElementById('kmFollowUp').value=l.followUp||'';document.getElementById('kmNextStep').value=l.nextStep||'';document.getElementById('kmEstValue').value=l.estimatedValue||'';document.getElementById('kmWebsite').value=l.website||'';document.getElementById('kmWebsiteQuality').value=l.websiteQuality||'';document.getElementById('kmNotes').value=l.notes||'';document.getElementById('kModal').classList.add('open');}
 function closeKanbanModal(){document.getElementById('kModal').classList.remove('open');_kModalId=null;}
-function saveKanbanModal(){if(!_kModalId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_kModalId);if(!l)return;const oldStage=l.stage;l.stage=document.getElementById('kmStage').value;l.priority=document.getElementById('kmPriority').value;l.lastContact=document.getElementById('kmLastContact').value;l.followUp=document.getElementById('kmFollowUp').value;l.nextStep=document.getElementById('kmNextStep').value.trim();l.estimatedValue=Number(document.getElementById('kmEstValue').value)||0;l.website=document.getElementById('kmWebsite').value.trim();l.websiteQuality=document.getElementById('kmWebsiteQuality').value;l.notes=document.getElementById('kmNotes').value;l.updatedAt=Date.now();saveLeads(arr);closeKanbanModal();renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Saved ✓');if(l.stage==='won'&&oldStage!=='won')showWinReview(l);}
+function saveKanbanModal(){if(!_kModalId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_kModalId);if(!l)return;const oldStage=l.stage;l.stage=document.getElementById('kmStage').value;l.priority=document.getElementById('kmPriority').value;l.entityType=document.getElementById('kmEntity').value;l.parkUntil=document.getElementById('kmParkUntil').value;l.lastContact=document.getElementById('kmLastContact').value;l.followUp=document.getElementById('kmFollowUp').value;l.nextStep=document.getElementById('kmNextStep').value.trim();l.estimatedValue=Number(document.getElementById('kmEstValue').value)||0;l.website=document.getElementById('kmWebsite').value.trim();l.websiteQuality=document.getElementById('kmWebsiteQuality').value;l.notes=document.getElementById('kmNotes').value;l.updatedAt=Date.now();saveLeads(arr);closeKanbanModal();renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Saved ✓');if(l.stage==='won'&&oldStage!=='won')showWinReview(l);}
 function init(){
   purgeUSLeads();
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
