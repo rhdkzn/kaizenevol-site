@@ -462,6 +462,9 @@
   /* ── SEQUENCE ENGINE (Diego's daily blocks — spec 2026-08-20) ── */
   .seq-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
   @media(max-width:900px){.seq-grid{grid-template-columns:1fr;}}
+    /* One-thumb operation (Diego works this in the car): 44px minimum tap targets on touch. */
+    
+    }
   .seq-col{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px;}
   .seq-col-hdr{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:0 2px;}
   .seq-count{font-size:10px;opacity:.7;}
@@ -487,6 +490,13 @@
   .seq-badge.parked{background:rgba(245,158,11,.1);color:#f59e0b;border-color:rgba(245,158,11,.3);}
   .seq-badge.dnc{background:rgba(248,113,113,.1);color:#f87171;border-color:rgba(248,113,113,.3);}
   .seq-enrol-btn{font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);border:1.5px solid rgba(139,92,246,.4);color:var(--purple);background:none;cursor:pointer;font-family:var(--sans);}
+    @media(pointer:coarse){
+      .seq-btn{padding:13px 18px;font-size:13px;min-height:44px;}
+      .seq-item{padding:14px 14px;margin-bottom:10px;}
+      .seq-name{font-size:15px;}
+      .seq-sub{font-size:12.5px;}
+      .seq-item a{display:inline-block;padding:6px 2px;min-height:32px;}
+      .seq-enrol-btn{padding:10px 14px;min-height:40px;}
   .seq-enrol-btn:hover{background:rgba(139,92,246,.12);}
   /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
   @view-transition { navigation: auto; }
@@ -525,6 +535,31 @@
   </header>
   <main class="main">
 
+    <!-- TODAY'S BLOCKS — the sequence engine (Diego's spec, 2026-08-20).
+         Every enrolled firm carries ONE next action: a channel + a date. These
+         three columns ARE the daily blocks: work top to bottom, tap the outcome,
+         done. Follow-ups sort above new firms (70–80% of replies live in touches
+         2+). A firm that enters the pipeline (any stage past New) drops out of
+         every cold view passively. -->
+    <section class="card">
+      <div class="seq-topbar">
+        <div class="section-label" style="margin:0">Today's Blocks</div>
+        <span class="seq-week" id="seqWeekStats"></span>
+        <button class="btn-save" style="padding:7px 16px;font-size:12px;" onclick="enrolNextFive()">⚡ Enrol next 5</button>
+      </div>
+      <div class="seq-grid">
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#a855f7;">📞 Calls due <span class="seq-count" id="seqCntCall"></span></div><div id="seqCalls"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#38bdf8;">✉ Emails due <span class="seq-count" id="seqCntEmail"></span></div><div id="seqEmails"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#4ade80;">💬 DMs due <span class="seq-count" id="seqCntDm"></span></div><div id="seqDms"></div></div>
+      </div>
+      <div class="seq-side">
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#f59e0b;">⏸ Parked — returning soon <span class="seq-count" id="seqCntPark"></span></div><div id="seqParked"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#f472b6;">↩ Replies owed <span class="seq-count" id="seqCntReply"></span></div><div id="seqReplies"></div></div>
+      </div>
+    </section>
+
+    <!-- PROSPECT STATS -->
+    
     <!-- CLIENT PIPELINE -->
     <section>
       <div class="section-label">Client Pipeline</div>
@@ -551,30 +586,6 @@
 
     <div class="section-divider"></div>
 
-    <!-- TODAY'S BLOCKS — the sequence engine (Diego's spec, 2026-08-20).
-         Every enrolled firm carries ONE next action: a channel + a date. These
-         three columns ARE the daily blocks: work top to bottom, tap the outcome,
-         done. Follow-ups sort above new firms (70–80% of replies live in touches
-         2+). A firm that enters the pipeline (any stage past New) drops out of
-         every cold view passively. -->
-    <section class="card">
-      <div class="seq-topbar">
-        <div class="section-label" style="margin:0">Today's Blocks</div>
-        <span class="seq-week" id="seqWeekStats"></span>
-        <button class="btn-save" style="padding:7px 16px;font-size:12px;" onclick="enrolNextFive()">⚡ Enrol next 5</button>
-      </div>
-      <div class="seq-grid">
-        <div class="seq-col"><div class="seq-col-hdr" style="color:#a855f7;">📞 Calls due <span class="seq-count" id="seqCntCall"></span></div><div id="seqCalls"></div></div>
-        <div class="seq-col"><div class="seq-col-hdr" style="color:#38bdf8;">✉ Emails due <span class="seq-count" id="seqCntEmail"></span></div><div id="seqEmails"></div></div>
-        <div class="seq-col"><div class="seq-col-hdr" style="color:#4ade80;">💬 DMs due <span class="seq-count" id="seqCntDm"></span></div><div id="seqDms"></div></div>
-      </div>
-      <div class="seq-side">
-        <div class="seq-col"><div class="seq-col-hdr" style="color:#f59e0b;">⏸ Parked — returning soon <span class="seq-count" id="seqCntPark"></span></div><div id="seqParked"></div></div>
-        <div class="seq-col"><div class="seq-col-hdr" style="color:#f472b6;">↩ Replies owed <span class="seq-count" id="seqCntReply"></span></div><div id="seqReplies"></div></div>
-      </div>
-    </section>
-
-    <!-- PROSPECT STATS -->
     <section>
       <div class="section-label">Prospect Overview</div>
       <div class="stats-row" id="statsRow"></div>
