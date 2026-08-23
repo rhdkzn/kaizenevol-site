@@ -49,7 +49,9 @@
     .dash-header-inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px;}
     .dash-logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;}
     .dash-badge{width:32px;height:32px;border-radius:7px;object-fit:contain;}
-    .dash-nav{display:flex;align-items:center;gap:4px;}
+    .dash-nav{display:flex;align-items:center;gap:4px;min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .dash-nav::-webkit-scrollbar{display:none}
+    .dash-nav-link{white-space:nowrap;}
     .dash-nav-link{font-size:13px;font-weight:600;color:var(--muted);padding:6px 13px;border-radius:var(--radius-pill);transition:color .2s,background .2s;}
     .dash-nav-link:hover{color:var(--text);background:var(--purple-l);}
     .dash-nav-link.active{color:var(--purple);background:var(--purple-l);}
@@ -401,15 +403,19 @@ let _stageChart=null;
 function renderCommandCenter(leads){
   const today=new Date().toISOString().slice(0,10);
   const cutoff=new Date(Date.now()-7*864e5).toISOString().slice(0,10);
-  const followUps=leads.filter(l=>l.followUp===today).length;
+  /* "Due" reads the sequence spine (nextActionDate), not the legacy followUp field —
+     the engine writes nextActionDate and this counter ignored it, so the Command Center
+     said 0 while enrolled leads sat overdue (found 2026-08-23, 11 due vs "0 follow-ups"). */
+  const seqDue=leads.filter(l=>l.sequenceType&&l.sequenceType!=='NONE'&&!l.doNotContact&&l.nextActionDate&&l.nextActionDate<=today).length;
+  const followUps=seqDue+leads.filter(l=>l.followUp&&l.followUp<=today&&!(l.sequenceType&&l.sequenceType!=='NONE')&&l.stage!=='won'&&l.stage!=='lost').length;
   const stale=leads.filter(l=>l.stage!=='won'&&l.stage!=='lost'&&(!l.lastContact||l.lastContact<cutoff)).length;
   const pipeline=leads.reduce((s,l)=>l.stage!=='won'&&l.stage!=='lost'?s+(Number(l.estimatedValue)||0):s,0);
   const weighted=Math.round(leads.reduce((s,l)=>{const p=STAGE_PROB[l.stage]||0;return s+(Number(l.estimatedValue)||0)*p;},0));
   const contacted=leads.filter(l=>l.lastContact).length;
   const callBooked=leads.filter(l=>l.stage==='call').length;
-  const gr=document.getElementById('ccGreeting');if(gr)gr.textContent=getGreeting()+', Rahaid';
+  const gr=document.getElementById('ccGreeting');if(gr)gr.textContent=getGreeting();/* no name — shared login, Diego uses this too (2026-08-23) */
   const dt=document.getElementById('ccDate');if(dt)dt.textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
-  const sm=document.getElementById('ccSummary');if(sm)sm.innerHTML='<strong>'+followUps+'</strong> follow-up'+(followUps!==1?'s':'')+' due &nbsp;&middot;&nbsp; <strong>'+stale+'</strong> lead'+(stale!==1?'s':'')+' going stale &nbsp;&middot;&nbsp; <strong>£'+pipeline.toLocaleString()+'</strong> in open pipeline';
+  const sm=document.getElementById('ccSummary');if(sm)sm.innerHTML='<strong>'+followUps+'</strong> action'+(followUps!==1?'s':'')+' due &nbsp;&middot;&nbsp; <strong>'+stale+'</strong> lead'+(stale!==1?'s':'')+' going stale &nbsp;&middot;&nbsp; <strong>£'+pipeline.toLocaleString()+'</strong> in open pipeline';
   const pr=document.getElementById('prospectRow');if(pr)pr.innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+leads.length+'</div><div class="stat-s">in the pipeline</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+contacted+'</div><div class="stat-s">have last contact date</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v" style="color:var(--purple)">'+callBooked+'</div><div class="stat-s">call stage leads</div></div><div class="stat-card"><div class="stat-l">Weighted Forecast</div><div class="stat-v" style="color:var(--green)">£'+weighted.toLocaleString()+'</div><div class="stat-s">of £'+pipeline.toLocaleString()+' open pipeline</div></div>';
   renderStageChart(leads);
 }
