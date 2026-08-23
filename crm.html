@@ -898,10 +898,16 @@ async function attemptLogin(){
   // publicly readable AND writable to anyone who viewed source. Supabase auth
   // issues a real session; the `authenticated` RLS policies do the actual work.
   let authOk=false;
-  try{
-    const {error}=await _sb.auth.signInWithPassword({email:CRM_EMAIL,password:pw});
-    authOk=!error;
-  }catch(e){ authOk=false; }
+  /* One input, two accounts (2026-08-23, Rahaid's grant): the password typed decides
+     who signs in — Rahaid's account is tried first, then Levi's (Diego-side agent).
+     Separate accounts so Levi's access is revocable and auditable without touching
+     anyone else's password. */
+  for(const em of [CRM_EMAIL,'levi@kaizenevol.com']){
+    try{
+      const {error}=await _sb.auth.signInWithPassword({email:em,password:pw});
+      if(!error){authOk=true;break;}
+    }catch(e){}
+  }
   btn.textContent='Unlock →';btn.disabled=false;
   if(!authOk){
     const attempts=recordFailedAttempt();
