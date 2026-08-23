@@ -490,6 +490,15 @@
   .seq-badge.parked{background:rgba(245,158,11,.1);color:#f59e0b;border-color:rgba(245,158,11,.3);}
   .seq-badge.dnc{background:rgba(248,113,113,.1);color:#f87171;border-color:rgba(248,113,113,.3);}
   .seq-enrol-btn{font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);border:1.5px solid rgba(139,92,246,.4);color:var(--purple);background:none;cursor:pointer;font-family:var(--sans);}
+        .crm-tabs{position:sticky;top:57px;/* below the 58px sticky site header, else it slides underneath */z-index:90;display:flex;gap:6px;padding:10px 16px;background:rgba(12,6,24,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline);overflow-x:auto;scrollbar-width:none;}
+    .crm-tabs::-webkit-scrollbar{display:none}
+    .crm-tab{font-family:var(--sans);font-size:13px;font-weight:700;padding:9px 18px;border-radius:var(--radius-pill);border:1.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;white-space:nowrap;min-height:40px;}
+    .crm-tab.active{color:var(--accent);background:var(--purple-l);border-color:var(--purple-m);}
+    .seq-more{width:100%;font-family:var(--sans);font-size:12px;font-weight:700;padding:11px;margin-top:2px;border-radius:var(--radius-sm);border:1.5px dashed var(--border);background:none;color:var(--muted);cursor:pointer;}
+    .seq-more:hover{color:var(--accent);border-color:var(--purple-m);}
+    .seq-funnel{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 10px;}
+    .seq-funnel span{font-size:11px;font-weight:600;color:var(--muted);padding:4px 10px;border:1px solid var(--hairline);border-radius:var(--radius-pill);}
+    .seq-funnel b{color:var(--text);}
     @media(pointer:coarse){
       .seq-btn{padding:13px 18px;font-size:13px;min-height:44px;}
       .seq-item{padding:14px 14px;margin-bottom:10px;}
@@ -533,6 +542,14 @@
       </div>
     </div>
   </header>
+  <!-- View tabs (2026-08-23): 9 stacked sections became 4 views. With the live queue
+       (296 due) the old single scroll measured 83 phone-screens tall. -->
+  <nav class="crm-tabs" id="crmTabs">
+    <button class="crm-tab active" data-tab="today" onclick="showView('today')">Today</button>
+    <button class="crm-tab" data-tab="outreach" onclick="showView('outreach')">Outreach</button>
+    <button class="crm-tab" data-tab="leads" onclick="showView('leads')">Leads</button>
+    <button class="crm-tab" data-tab="clients" onclick="showView('clients')">Clients</button>
+  </nav>
   <main class="main">
 
     <!-- TODAY'S BLOCKS — the sequence engine (Diego's spec, 2026-08-20).
@@ -541,12 +558,13 @@
          done. Follow-ups sort above new firms (70–80% of replies live in touches
          2+). A firm that enters the pipeline (any stage past New) drops out of
          every cold view passively. -->
-    <section class="card">
+    <section class="card" data-view="today">
       <div class="seq-topbar">
         <div class="section-label" style="margin:0">Today's Blocks</div>
         <span class="seq-week" id="seqWeekStats"></span>
         <button class="btn-save" style="padding:7px 16px;font-size:12px;" onclick="enrolNextFive()">⚡ Enrol next 5</button>
       </div>
+      <div class="seq-funnel" id="seqFunnel"></div>
       <div class="seq-grid">
         <div class="seq-col"><div class="seq-col-hdr" style="color:#a855f7;">📞 Calls due <span class="seq-count" id="seqCntCall"></span></div><div id="seqCalls"></div></div>
         <div class="seq-col"><div class="seq-col-hdr" style="color:#38bdf8;">✉ Emails due <span class="seq-count" id="seqCntEmail"></span></div><div id="seqEmails"></div></div>
@@ -561,38 +579,38 @@
     <!-- PROSPECT STATS -->
     
     <!-- CLIENT PIPELINE -->
-    <section>
+    <section data-view="clients">
       <div class="section-label">Client Pipeline</div>
       <div class="pipeline-track" id="pipelineTrack"></div>
     </section>
 
     <!-- CLIENT CHECKLIST -->
-    <section>
+    <section data-view="clients">
       <div class="section-label">Client Checklist</div>
       <div class="checklist-clients" id="checklistContainer"></div>
     </section>
 
     <!-- CLIENTS -->
-    <section>
+    <section data-view="clients">
       <div class="section-label">Clients</div>
       <div id="clientsContainer"></div>
     </section>
 
     <!-- COMMISSION TRACKER -->
-    <section>
+    <section data-view="clients">
       <div class="section-label">Bonus Tracker</div>
       <div id="commissionContainer"></div>
     </section>
 
     <div class="section-divider"></div>
 
-    <section>
+    <section data-view="outreach">
       <div class="section-label">Prospect Overview</div>
       <div class="stats-row" id="statsRow"></div>
     </section>
 
     <!-- EMAIL OUTREACH -->
-    <section class="card">
+    <section class="card" data-view="outreach">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <div class="section-label" style="margin:0">Email Outreach</div>
         <span id="queueCount" style="font-size:11px;color:var(--muted)"></span>
@@ -602,7 +620,7 @@
     </section>
 
     <!-- LEAD SCRAPER -->
-    <section class="card">
+    <section class="card" data-view="leads">
       <div class="section-label">Lead Finder</div>
       <div class="scraper-setup">
         <div class="scraper-row">
@@ -651,7 +669,7 @@
     </section>
 
     <!-- ALL LEADS -->
-    <section class="card">
+    <section class="card" data-view="leads">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div class="section-label" style="margin:0">All Leads</div>
         <div style="display:flex;align-items:center;gap:12px;">
@@ -901,9 +919,16 @@ async function attemptLogin(){
 function logout(){if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);_realtimeChannel=null;}clearInterval(_syncInterval);stopIdle();localStorage.removeItem(SESSION_KEY);try{_sb.auth.signOut();}catch(e){}showGate();}
 let _syncInterval=null,_realtimeChannel=null;
 async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);if(Array.isArray(remote)&&remote.length>0){const local=loadLeads();if(remote.length!==local.length||JSON.stringify(remote)!==JSON.stringify(local)){localStorage.setItem(LEADS_KEY,JSON.stringify(remote));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}}}
+function showView(v){
+  document.querySelectorAll('#app section[data-view]').forEach(s=>{s.style.display=(s.dataset.view===v)?'':'none';});
+  document.querySelectorAll('.crm-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===v));
+  try{localStorage.setItem('crm_view',v);}catch(e){}
+  window.scrollTo({top:0});
+}
 async function showApp(){
   document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();
   init();
+  showView(localStorage.getItem('crm_view')||'today');
   clearInterval(_syncInterval);_syncInterval=setInterval(_liveSyncLeads,60000);
   try{
     const[remoteLeads,remoteScraper,remoteEmail,remoteData]=await Promise.all([_cloudPull(LEADS_KEY),_cloudPull(SCRAPER_KEY),_cloudPull(EMAIL_KEY),_cloudPull(DATA_KEY)]);
@@ -1232,7 +1257,14 @@ function renderSequence(){
   const CALL_ACTS=[['No answer','no-answer'],['Voicemail','voicemail'],['Interest ✓','pickup-interest','good'],['Said no','pickup-no','bad'],['STOP','stop','stop']];
   const EMAIL_ACTS=[['Sent ✓','sent'],['Reply ✓','reply','good'],['Bounced','bounce','bad']];
   const DM_ACTS=[['Sent ✓','sent'],['Reply ✓','reply','good'],['Said no','pickup-no','bad'],['STOP','stop','stop']];
-  const fill=(elId,list,acts,empty)=>{const e=document.getElementById(elId);e.innerHTML=list.length?list.map(l=>item(l,acts)).join(''):'<div class="seq-empty">'+empty+'</div>';};
+  const CAP=6; /* the queue is worked top-down; cap the render so 241 DMs due is not 51,000px of page (measured 83 phone-screens, 2026-08-23) */
+  window._seqShowAll=window._seqShowAll||{};
+  const fill=(elId,list,acts,empty)=>{const e=document.getElementById(elId);
+    if(!list.length){e.innerHTML='<div class="seq-empty">'+empty+'</div>';return;}
+    const all=window._seqShowAll[elId];const shown=all?list:list.slice(0,CAP);
+    e.innerHTML=shown.map(l=>item(l,acts)).join('')
+      +(list.length>CAP?'<button class="seq-more" onclick="window._seqShowAll[\''+elId+'\']='+(all?'false':'true')+';renderSequence()">'+(all?'Show top '+CAP+' only':'Show all '+list.length+' ('+(list.length-CAP)+' more)')+'</button>':'');
+  };
   fill('seqCalls',byCh.call,CALL_ACTS,'No calls due. Only screened-clear numbers ever land here.');
   fill('seqEmails',byCh.email,EMAIL_ACTS,'No emails due.');
   fill('seqDms',byCh.dm,DM_ACTS,'No DMs due.');
@@ -1257,6 +1289,10 @@ function renderSequence(){
   document.getElementById('seqCntReply').textContent=owed.length||'';
   const w=seqWeekStats(arr);
   document.getElementById('seqWeekStats').innerHTML='This week: <b>'+w.touches+'</b> touches · <b class="'+(w.convos>=38?'hit':'')+'">'+w.convos+'</b> conversations <span style="opacity:.6">/ 38 target</span>';
+  /* Funnel readout (Diego's spec item 4) on the stages that exist today */
+  const fEl=document.getElementById('seqFunnel');
+  if(fEl){const st=s=>arr.filter(l=>l.stage===s).length;
+    fEl.innerHTML='<span>New <b>'+st('new')+'</b></span><span>Contacted <b>'+st('contacted')+'</b></span><span>Call booked <b>'+st('call')+'</b></span><span>Proposal <b>'+st('proposal')+'</b></span><span>Won <b>'+st('won')+'</b></span>';}
 }
 function toggleForm(){const f=document.getElementById('addForm'),b=document.getElementById('toggleFormBtn');const open=f.style.display==='none'||!f.style.display;f.style.display=open?'block':'none';b.textContent=open?'− Cancel':'+ New Lead';}
 // Map any niche string (search term, label, or free text) to a clean niche tag
