@@ -898,16 +898,16 @@ async function attemptLogin(){
   // publicly readable AND writable to anyone who viewed source. Supabase auth
   // issues a real session; the `authenticated` RLS policies do the actual work.
   let authOk=false;
-  /* One input, two accounts (2026-08-23, Rahaid's grant): the password typed decides
-     who signs in — Rahaid's account is tried first, then Levi's (Diego-side agent).
-     Separate accounts so Levi's access is revocable and auditable without touching
-     anyone else's password. */
-  for(const em of [CRM_EMAIL,'diego@kaizenevol.com']){
-    try{
-      const {error}=await _sb.auth.signInWithPassword({email:em,password:pw});
-      if(!error){authOk=true;break;}
-    }catch(e){}
-  }
+  /* ONE shared account (Rahaid's ruling 2026-08-24, replacing the 2026-08-23
+     two-account split). Both sides — Rahaid/Law and Diego/Levi — sign in as
+     CRM_EMAIL. Levi gets the same CRM read/write Law has; Forge is not his.
+     Knowingly accepted: Supabase logs every session as one user, so there is no
+     per-person audit trail, and revoking one side means changing the password
+     for both. Simplicity chosen over separability. */
+  try{
+    const {error}=await _sb.auth.signInWithPassword({email:CRM_EMAIL,password:pw});
+    if(!error){authOk=true;}
+  }catch(e){}
   btn.textContent='Unlock →';btn.disabled=false;
   if(!authOk){
     const attempts=recordFailedAttempt();
