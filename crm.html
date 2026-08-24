@@ -902,7 +902,7 @@ async function attemptLogin(){
      who signs in — Rahaid's account is tried first, then Levi's (Diego-side agent).
      Separate accounts so Levi's access is revocable and auditable without touching
      anyone else's password. */
-  for(const em of [CRM_EMAIL,'levi@kaizenevol.com']){
+  for(const em of [CRM_EMAIL,'diego@kaizenevol.com']){
     try{
       const {error}=await _sb.auth.signInWithPassword({email:em,password:pw});
       if(!error){authOk=true;break;}
