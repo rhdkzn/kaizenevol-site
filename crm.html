@@ -1174,7 +1174,7 @@ function exportObsidian(){const arr=loadLeads();if(!arr.length){alert('No leads 
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 // TPS/CTPS dial gate (Mike Ross ruling 13 Aug; ICO/PECR): cold calls only to screened, clear numbers.
 // Screening happens in the vault (tools/tps-screen.py) - the CRM stores and shows the result per record.
-function tpsInfo(l){if(!l.phone)return null;if(l.tpsScreened==='y')return l.dialOk==='y'?{cls:'tps-ok',label:'Dial OK · '+(l.tpsScreenDate||'screened'),dial:true}:{cls:'tps-no',label:'DO NOT DIAL — TPS/CTPS',dial:false};return{cls:'tps-warn',label:'Unscreened — no cold calls',dial:true};}
+function tpsInfo(l){if(!l.phone)return null;if(l.tpsScreened==='y')return l.dialOk==='y'?{cls:'tps-ok',label:'Dial OK · '+(l.tpsScreenDate||'screened'),dial:true}:{cls:'tps-no',label:'DO NOT DIAL — TPS/CTPS',dial:false};return{cls:'tps-warn',label:'Unscreened — no cold calls',dial:false};}
 const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
 const STAGE_CLS={new:'sg-new',contacted:'sg-contacted',call:'sg-call',proposal:'sg-proposal',won:'sg-won',lost:'sg-lost'};
 
@@ -1361,7 +1361,10 @@ function renderSequence(){
   const byCh={call:[],email:[],dm:[]};due.forEach(l=>{(byCh[l.nextActionChannel]||byCh.dm).push(l);});
   const item=(l,acts)=>{
     const fup=(l.touchCount||0)>0;
-    const contact=l.nextActionChannel==='call'?(l.phone?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':''):
+    // A due CALL touch still only becomes a tappable number once the lead is
+    // screened and clear. canCall() is the same gate the ladder uses to decide
+    // whether a call leg fires at all — the card must not be looser than it.
+    const contact=l.nextActionChannel==='call'?(l.phone?(canCall(l)?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':esc(l.phone)+' <span class="tps-warn">unscreened</span>'):''):
       l.nextActionChannel==='email'?(l.email?'<a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a>':''):
       (l.website?'<a href="'+esc(l.website.startsWith('http')?l.website:'https://'+l.website)+'" target="_blank" rel="noopener">site ↗</a>':'');
     return '<div class="seq-item'+(fup?' fup':'')+'"><div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">'
