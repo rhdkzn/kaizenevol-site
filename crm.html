@@ -513,6 +513,14 @@
     .seq-funnel span{font-size:11px;font-weight:600;color:var(--muted);padding:4px 10px;border:1px solid var(--hairline);border-radius:var(--radius-pill);}
     .seq-funnel b{color:var(--text);}
     @media(pointer:coarse){
+      /* NESTED SCROLL PANES DO NOT WORK ON TOUCH. Diego could see his leads and
+       * could not scroll them: .leads-scroll caps at 600px with its own
+       * overflow-y, and a phone viewport is barely taller than that, so the
+       * browser hands the gesture to the PAGE and the inner list reads as stuck.
+       * On touch, unnest - let the list flow and let the page scroll, which is
+       * what a thumb expects anyway. Found by Diego's hand-test, 2026-08-26;
+       * pinned by test-crm-scroll.mjs so a third pane cannot reintroduce it. */
+      .leads-scroll,.oq-scroll{max-height:none;overflow-y:visible;padding-right:0;}
       .seq-btn{padding:13px 18px;font-size:13px;min-height:44px;}
       .seq-item{padding:14px 14px;margin-bottom:10px;}
       .seq-name{font-size:15px;}
