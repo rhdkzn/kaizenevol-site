@@ -972,8 +972,8 @@ async function showApp(){
   }catch(e){console.warn('Cloud sync:',e);}
   if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);}
   _realtimeChannel=_sb.channel('crm_sync')
-    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at)_ver[LEADS_KEY]=payload.new.updated_at;if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}})
-    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at)_ver[DATA_KEY]=payload.new.updated_at;if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));const u=load();renderClientPipeline(u);renderClientChecklist(u);renderClients(u);renderCommission(u);}})
+    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at){_ver[LEADS_KEY]=payload.new.updated_at;_base[LEADS_KEY]=payload.new.data;}if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}})
+    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at){_ver[DATA_KEY]=payload.new.updated_at;_base[DATA_KEY]=payload.new.data;}if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));const u=load();renderClientPipeline(u);renderClientChecklist(u);renderClients(u);renderCommission(u);}})
     .subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});
 }
 
@@ -1134,21 +1134,52 @@ function delJob(i){const d=load();if(!d.commission)return;d.commission.jobs.spli
 /* ── LEAD SCRAPER ── */
 const BAD_AD_SIGNALS=['boost post','call us','click here','limited time','act now'];
 const GOOD_AD_SIGNALS=['before','after','transform','free quote','free estimate','results','case study'];
-const _ver={};
+/* SYNC-CORE-START — extracted verbatim by test-crm-locking.mjs. Keep the markers. */
+/* A refused write means our VERSION was stale. That is only a CONFLICT if the
+ * CONTENT also moved. Four earlier fixes conflated the two: a missed realtime
+ * event, a key with no subscription, or a backgrounded phone all produce a stale
+ * version with identical content, and the guard shouted "another device changed
+ * the CRM" at every one of them. _base is what makes the distinction possible —
+ * it is the server content we last saw, so a refusal can be checked rather than
+ * assumed. (OPS-LRN-001, fifth instance; fixture: test-crm-locking.mjs) */
+const _ver={},_base={};
 function _syncConflict(){const el=document.getElementById('syncConflict');if(el)el.style.display='flex';}
-async function _cloudPush(key,val){const stamp=new Date().toISOString();try{
+function _isDup(e){return !!e&&(e.code==='23505'||/duplicate key/i.test(e.message||''));}
+function _sameVal(a,b){try{return JSON.stringify(a)===JSON.stringify(b);}catch(e){return false;}}
+async function _cloudPush(key,val,_retried){const stamp=new Date().toISOString();try{
   if(_ver[key]){
     const{data,error}=await _sb.from('app_data').update({data:val,updated_at:stamp}).eq('id',key).eq('updated_at',_ver[key]).select('updated_at');
     if(error){console.warn('Supabase push:',error);return;}
-    if(!data||!data.length){_syncConflict();return;}
-    _ver[key]=data[0].updated_at;
-  }else{
-    const{data,error}=await _sb.from('app_data').insert({id:key,data:val,updated_at:stamp}).select('updated_at');
-    if(error){console.warn('Supabase push:',error);_syncConflict();return;}
-    _ver[key]=data[0].updated_at;
+    if(!data||!data.length)return await _reconcile(key,val,_retried);
+    _ver[key]=data[0].updated_at;_base[key]=val;return;
   }
+  const{data,error}=await _sb.from('app_data').insert({id:key,data:val,updated_at:stamp}).select('updated_at');
+  if(error){
+    if(_isDup(error))return await _reconcile(key,val,_retried);
+    console.warn('Supabase push:',error);return;   /* a dropped request is not a conflict */
+  }
+  _ver[key]=data[0].updated_at;_base[key]=val;
 }catch(e){console.warn('Supabase push:',e);}}
-async function _cloudPull(key){try{const{data,error}=await _sb.from('app_data').select('data,updated_at').eq('id',key).single();if(!error&&data){_ver[key]=data.updated_at;const val=data.data;const isEmpty=Array.isArray(val)?val.length===0:(val===null||val===undefined||(typeof val==='object'&&Object.keys(val).length===0));if(!isEmpty){localStorage.setItem(key,JSON.stringify(val));}return val;}}catch(e){}return null;}
+async function _reconcile(key,val,retried){
+  if(retried){_syncConflict();return;}                       /* one retry, never a loop */
+  const fresh=await _cloudPullMeta(key);
+  if(!fresh){console.warn('Supabase push: could not re-read',key);return;}  /* unknown: never clobber, never cry wolf */
+  _ver[key]=fresh.updated_at;
+  const wasBase=_base[key];_base[key]=fresh.data;
+  if(!_sameVal(fresh.data,wasBase)){_syncConflict();return;} /* content really moved — refuse, this is the guard */
+  return await _cloudPush(key,val,true);                     /* version-only staleness — safe to repeat */
+}
+async function _cloudPullMeta(key){try{const{data,error}=await _sb.from('app_data').select('data,updated_at').eq('id',key).single();if(!error&&data)return data;}catch(e){}return null;}
+async function _cloudPull(key){const row=await _cloudPullMeta(key);if(row){_ver[key]=row.updated_at;_base[key]=row.data;const val=row.data;const isEmpty=Array.isArray(val)?val.length===0:(val===null||val===undefined||(typeof val==='object'&&Object.keys(val).length===0));if(!isEmpty){localStorage.setItem(key,JSON.stringify(val));}return val;}return null;}
+/* Only two of the four keys carry a realtime subscription, and a backgrounded
+ * phone misses events on the two that do. Both holes close the same way: on wake,
+ * re-read the version of every key this session has touched. */
+async function _syncWake(){const keys=Object.keys(_ver);for(const k of keys){const row=await _cloudPullMeta(k);if(row){_ver[k]=row.updated_at;_base[k]=row.data;}}}
+if(typeof document!=='undefined'&&document.addEventListener){
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)_syncWake();});
+  if(typeof window!=='undefined')window.addEventListener('focus',()=>_syncWake());
+}
+/* SYNC-CORE-END */
 function loadScraper(){try{return JSON.parse(localStorage.getItem(SCRAPER_KEY)||'{}')}catch(e){return{}}}
 function saveScraper(s){localStorage.setItem(SCRAPER_KEY,JSON.stringify(s));_cloudPush(SCRAPER_KEY,s);}
 // API keys (Places, Meta) live as Vercel environment variables read server-side
