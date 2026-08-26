@@ -240,6 +240,61 @@ const KEY = 'ke_leads';
         String(db.rows.get(KEY).data.length));
 }
 
+/* 12 — DIEGO'S ACTUAL CASE, four occurrences in. ke_scraper carries the
+      auto-scan's lastScan stamp and a background timer rewrites it every 20
+      minutes on whichever devices are open. The other device's version goes
+      stale, the content really has moved, and the guard fired correctly to tell
+      him his change was not saved - about a timestamp a machine wrote on another
+      phone. Settings and machine state are not work. Adopt and carry on. */
+{
+  const K = 'ke_scraper';
+  const db = makeDb({ [K]: { id: K, data: { niche: 'kitchen', lastScan: '14:15' }, updated_at: 't1' } });
+  const s = load(db);
+  s._bootDone();
+  await s._cloudPull(K);
+  db.rows.set(K, { id: K, data: { niche: 'kitchen', lastScan: '14:35' }, updated_at: 't2' }); // other device scanned
+  await s._cloudPush(K, { niche: 'loft conversion', lastScan: '14:15' });                     // he edits the niche
+  check('scraper conflict -> NO banner', !s.banner(), `banner=${s.banner()}`);
+  check('scraper conflict -> his edit still lands',
+        db.rows.get(K).data.niche === 'loft conversion', JSON.stringify(db.rows.get(K).data));
+}
+
+/* 13 — the same shape on ke_email, the other unguarded key. */
+{
+  const K = 'ke_email';
+  const db = makeDb({ [K]: { id: K, data: { tpl: 'a' }, updated_at: 't1' } });
+  const s = load(db); s._bootDone();
+  await s._cloudPull(K);
+  db.rows.set(K, { id: K, data: { tpl: 'b' }, updated_at: 't2' });
+  await s._cloudPush(K, { tpl: 'mine' });
+  check('email conflict -> NO banner', !s.banner(), `banner=${s.banner()}`);
+}
+
+/* 14 — AND THE LINE THAT MUST NOT MOVE. ke_leads is irreplaceable; a clobber
+      once wiped 34 leads and every outcome on them. Widening the quiet path to
+      cover it would be the data-loss bug returning under the banner of a fix. */
+{
+  const db = makeDb({ [KEY]: { id: KEY, data: [{ id: 'a' }], updated_at: 't1' } });
+  const s = load(db); s._bootDone();
+  await s._cloudPull(KEY);
+  db.rows.set(KEY, { id: KEY, data: [{ id: 'a' }, { id: 'FROM_DIEGO' }], updated_at: 't2' });
+  await s._cloudPush(KEY, [{ id: 'mine' }]);
+  check('leads conflict -> banner STILL raised', s.banner(), `banner=${s.banner()}`);
+  check("leads conflict -> other device's work survives",
+        db.rows.get(KEY).data.some(r => r.id === 'FROM_DIEGO'), JSON.stringify(db.rows.get(KEY).data));
+}
+
+/* 15 — ke_data holds clients, pipeline and commission. Guarded, same as leads. */
+{
+  const K = 'ke_data';
+  const db = makeDb({ [K]: { id: K, data: { clients: ['x'] }, updated_at: 't1' } });
+  const s = load(db); s._bootDone();
+  await s._cloudPull(K);
+  db.rows.set(K, { id: K, data: { clients: ['x','y'] }, updated_at: 't2' });
+  await s._cloudPush(K, { clients: ['mine'] });
+  check('data conflict -> banner raised', s.banner(), `banner=${s.banner()}`);
+}
+
 let failed = 0;
 for (const r of results) {
   if (!r.pass) failed++;
