@@ -63,7 +63,7 @@ function load(db) {
     console: { warn() {} },
     localStorage: { _m: new Map(), setItem(k, v) { this._m.set(k, v); }, getItem(k) { return this._m.get(k) ?? null; } },
   };
-  const fn = new Function(...Object.keys(scope), core + '\n;return {_cloudPush,_cloudPull,_ver,_syncWake:typeof _syncWake===\'function\'?_syncWake:undefined};');
+  const fn = new Function(...Object.keys(scope), core + '\n;return {_cloudPush,_cloudPull,_ver,_bootDone:typeof _bootDone===\'function\'?_bootDone:undefined,_syncWake:typeof _syncWake===\'function\'?_syncWake:undefined};');
   const api = fn(...Object.values(scope));
   return { ...api, banner: () => el.style.display === 'flex' };
 }
@@ -81,6 +81,7 @@ const KEY = 'ke_leads';
 {
   const db = makeDb({ [KEY]: { id: KEY, data: [{ id: 'a' }], updated_at: 't1' } });
   const s = load(db);
+  s._bootDone();                        // post-boot: a real user edit is in flight
   db.net = new Error('offline');
   await s._cloudPull(KEY);              // fails, records no base and no version
   db.net = null;
@@ -112,6 +113,7 @@ const KEY = 'ke_leads';
 {
   const db = makeDb({ [KEY]: { id: KEY, data: [{ id: 'a' }], updated_at: 't1' } });
   const s = load(db);
+  s._bootDone();                        // a user's stale write, not boot seeding
   await s._cloudPull(KEY);
   db.rows.set(KEY, { id: KEY, data: [{ id: 'a' }, { id: 'FROM_OTHER_DEVICE' }], updated_at: 't2' });
   await s._cloudPush(KEY, [{ id: 'a' }, { id: 'mine' }]);         // stale whole-blob write
@@ -174,6 +176,49 @@ const KEY = 'ke_leads';
           s._ver.ke_leads === 't9' && s._ver.ke_scraper === 't9',
           JSON.stringify(s._ver));
   } else check('wake refreshes every key version', false, 'no _syncWake');
+}
+
+/* 8 — THE ONE DIEGO HIT. At boot, one of four parallel pulls fails, so no base is
+      recorded; the seeding write hits a duplicate key. There is no user edit in
+      flight, so "your last change was not saved" is a false statement. Boot must
+      adopt the server's state and stay silent. */
+{
+  const db = makeDb({ [KEY]: { id: KEY, data: [{ id: 'server' }], updated_at: 't1' } });
+  const s = load(db);                   // _booting is true until _bootDone()
+  db.net = new Error('flaky 5G');
+  await s._cloudPull(KEY);              // one pull of four fails
+  db.net = null;
+  await s._cloudPush(KEY, [{ id: 'stale-local' }]);   // boot seeding push
+  check('boot with a failed pull -> NO banner', !s.banner(), `banner=${s.banner()}`);
+  check('boot with a failed pull -> server state kept',
+        JSON.stringify(db.rows.get(KEY).data) === JSON.stringify([{ id: 'server' }]),
+        JSON.stringify(db.rows.get(KEY).data));
+}
+
+/* 9 — the same shape AFTER boot must still banner. If this ever goes quiet, the
+      guard has been silenced rather than fixed. */
+{
+  const db = makeDb({ [KEY]: { id: KEY, data: [{ id: 'server' }], updated_at: 't1' } });
+  const s = load(db);
+  s._bootDone();
+  db.net = new Error('offline');
+  await s._cloudPull(KEY);
+  db.net = null;
+  await s._cloudPush(KEY, [{ id: 'mine' }]);
+  check('same shape after boot -> banner still raised', s.banner(), `banner=${s.banner()}`);
+  check('same shape after boot -> server not clobbered',
+        JSON.stringify(db.rows.get(KEY).data) === JSON.stringify([{ id: 'server' }]),
+        JSON.stringify(db.rows.get(KEY).data));
+}
+
+/* 10 — the boot window must not be able to stay open. If boot throws before
+      _bootDone() runs, a timeout closes it; otherwise every refused write would
+      silently adopt remote forever and the clobber returns by the side door. */
+{
+  const core = readFileSync(new URL('./crm.html', import.meta.url), 'utf8');
+  const block = core.slice(core.indexOf('/* SYNC-CORE-START'), core.indexOf('/* SYNC-CORE-END */'));
+  check('boot window has a timeout backstop',
+        /setTimeout\(\s*_bootDone/.test(block), 'no setTimeout(_bootDone) in the core');
 }
 
 let failed = 0;

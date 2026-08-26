@@ -975,6 +975,7 @@ async function showApp(){
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at){_ver[LEADS_KEY]=payload.new.updated_at;_base[LEADS_KEY]=payload.new.data;}if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}})
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at){_ver[DATA_KEY]=payload.new.updated_at;_base[DATA_KEY]=payload.new.data;}if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));const u=load();renderClientPipeline(u);renderClientChecklist(u);renderClients(u);renderCommission(u);}})
     .subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});
+  _bootDone();
 }
 
 /* ── DATA ── */
@@ -1143,6 +1144,17 @@ const GOOD_AD_SIGNALS=['before','after','transform','free quote','free estimate'
  * it is the server content we last saw, so a refusal can be checked rather than
  * assumed. (OPS-LRN-001, fifth instance; fixture: test-crm-locking.mjs) */
 const _ver={},_base={};
+/* Boot is not an edit. During the initial pull-and-seed there is no unsaved user
+ * change, so a refused write means "adopt what the server has" — never "your last
+ * change was not saved", which at boot is a false statement. Diego was getting the
+ * banner on a freshly loaded page because one flaky pull out of four left no base.
+ * (OPS-LRN-001, 2026-08-26, second pass.) */
+let _booting=true;
+function _bootDone(){_booting=false;}
+/* Backstop: if boot throws before _bootDone() runs, the window must still close.
+ * A permanently-open boot window would silently adopt remote over every refused
+ * write — the clobber back by the side door. Belt and braces on purpose. */
+if(typeof setTimeout==='function')setTimeout(_bootDone,15000);
 function _syncConflict(){const el=document.getElementById('syncConflict');if(el)el.style.display='flex';}
 function _isDup(e){return !!e&&(e.code==='23505'||/duplicate key/i.test(e.message||''));}
 function _sameVal(a,b){try{return JSON.stringify(a)===JSON.stringify(b);}catch(e){return false;}}
@@ -1161,13 +1173,18 @@ async function _cloudPush(key,val,_retried){const stamp=new Date().toISOString()
   _ver[key]=data[0].updated_at;_base[key]=val;
 }catch(e){console.warn('Supabase push:',e);}}
 async function _reconcile(key,val,retried){
-  if(retried){_syncConflict();return;}                       /* one retry, never a loop */
+  if(retried){if(!_booting)_syncConflict();return;}
   const fresh=await _cloudPullMeta(key);
-  if(!fresh){console.warn('Supabase push: could not re-read',key);return;}  /* unknown: never clobber, never cry wolf */
+  if(!fresh){console.warn('Supabase push: could not re-read',key);return;}
   _ver[key]=fresh.updated_at;
   const wasBase=_base[key];_base[key]=fresh.data;
-  if(!_sameVal(fresh.data,wasBase)){_syncConflict();return;} /* content really moved — refuse, this is the guard */
-  return await _cloudPush(key,val,true);                     /* version-only staleness — safe to repeat */
+  if(!_sameVal(fresh.data,wasBase)){
+    /* At boot: the server is the truth and there is nothing of the user's to lose.
+     * Adopt it and stay quiet. After boot: this is a real conflict — refuse and say so. */
+    if(_booting){try{localStorage.setItem(key,JSON.stringify(fresh.data));}catch(e){}return;}
+    _syncConflict();return;
+  }
+  return await _cloudPush(key,val,true);
 }
 async function _cloudPullMeta(key){try{const{data,error}=await _sb.from('app_data').select('data,updated_at').eq('id',key).single();if(!error&&data)return data;}catch(e){}return null;}
 async function _cloudPull(key){const row=await _cloudPullMeta(key);if(row){_ver[key]=row.updated_at;_base[key]=row.data;const val=row.data;const isEmpty=Array.isArray(val)?val.length===0:(val===null||val===undefined||(typeof val==='object'&&Object.keys(val).length===0));if(!isEmpty){localStorage.setItem(key,JSON.stringify(val));}return val;}return null;}
