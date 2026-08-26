@@ -1444,6 +1444,18 @@ function seqNextIdx(l,from){const lad=LADDERS[l.sequenceType]||[];for(let i=from
 function entityGuess(name){const n=(name||'').toLowerCase();if(/\bltd\b|\blimited\b/.test(n))return 'Ltd';if(/\bllp\b/.test(n))return 'LLP';return 'Unknown';}
 function routeSequence(l){const ent=l.entityType||entityGuess(l.business);const corp=ent==='Ltd'||ent==='LLP';if(corp&&canEmail(l))return 'FULL';if(l.phone)return 'CALL_DM';return canEmail(l)?'FULL':'DM_ONLY';}
 function seqActive(l){return l.sequenceType&&l.sequenceType!=='NONE'&&!l.doNotContact;}
+/* SEQ-SORT-START — extracted verbatim by test-crm-sort.mjs. Keep the markers. */
+/* The board ranked by touchCount, which is a proxy for warmth and not the same
+ * thing: a promise to ring someone back on a given day is the warmest action on
+ * the board and could sit under a pile of cold dials. An owed callback now
+ * outranks everything, regardless of channel. (v3 spec P0 #5.) */
+function owedCallback(l,today){return !!(l.followUp&&l.followUp<=today);}
+function seqDueSort(today){
+  return (a,b)=>(Number(owedCallback(b,today))-Number(owedCallback(a,today)))
+    ||((b.touchCount||0)-(a.touchCount||0))
+    ||String(a.nextActionDate||'').localeCompare(String(b.nextActionDate||''));
+}
+/* SEQ-SORT-END */
 function enrolLead(id,quiet){
   const arr=loadLeads();const l=arr.find(x=>x.id===id);if(!l)return false;
   if(l.doNotContact){if(!quiet)showToast('Do-not-contact — cannot enrol');return false;}
@@ -1522,7 +1534,7 @@ function renderSequence(){
   const el=document.getElementById('seqCalls');if(!el)return;
   const arr=loadLeads();const today=todayStr();
   const due=arr.filter(l=>seqActive(l)&&l.stage==='new'&&l.nextActionDate&&l.nextActionDate<=today)
-    .sort((a,b)=>((b.touchCount||0)-(a.touchCount||0))||String(a.nextActionDate).localeCompare(String(b.nextActionDate)));
+    .sort(seqDueSort(today));
   const byCh={call:[],email:[],dm:[]};due.forEach(l=>{(byCh[l.nextActionChannel]||byCh.dm).push(l);});
   const item=(l,acts)=>{
     const fup=(l.touchCount||0)>0;
