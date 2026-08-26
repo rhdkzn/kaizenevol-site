@@ -221,6 +221,25 @@ const KEY = 'ke_leads';
         /setTimeout\(\s*_bootDone/.test(block), 'no setTimeout(_bootDone) in the core');
 }
 
+/* 11 — the banner must clear itself once sync is healthy again. It had no off
+      switch at all: one legitimate blip and the red bar stayed up for the rest of
+      the session, through every successful save after it. A warning nobody can
+      clear is a warning everybody learns to ignore. */
+{
+  const db = makeDb({ [KEY]: { id: KEY, data: [{ id: 'a' }], updated_at: 't1' } });
+  const s = load(db);
+  s._bootDone();
+  await s._cloudPull(KEY);
+  db.rows.set(KEY, { id: KEY, data: [{ id: 'a' }, { id: 'other' }], updated_at: 't2' });
+  await s._cloudPush(KEY, [{ id: 'mine' }]);                  // real conflict
+  check('conflict raises the banner', s.banner(), `banner=${s.banner()}`);
+  await s._cloudPull(KEY);                                    // user reloads / realtime catches up
+  await s._cloudPush(KEY, [{ id: 'a' }, { id: 'other' }, { id: 'new' }]);
+  check('a write that lands clears the banner', !s.banner(), `banner=${s.banner()}`);
+  check('and that write actually landed', db.rows.get(KEY).data.length === 3,
+        String(db.rows.get(KEY).data.length));
+}
+
 let failed = 0;
 for (const r of results) {
   if (!r.pass) failed++;
