@@ -13,14 +13,14 @@ export default async function handler(req, res) {
 
   const { website } = req.body;
   if (!website) {
-    return res.status(200).json({ email: '' });
+    return res.status(200).json({ email: '', social: { ig: '', fb: '', x: '' } });
   }
 
   let url;
   try {
     url = new URL(website.startsWith('http') ? website : 'https://' + website).href;
   } catch {
-    return res.status(200).json({ email: '' });
+    return res.status(200).json({ email: '', social: { ig: '', fb: '', x: '' } });
   }
 
   // Pages most likely to have a visible email
@@ -38,6 +38,7 @@ export default async function handler(req, res) {
   // CRM's Website Quality dropdown: ugly / ok / modern.
   let quality = '';
   let qualityReason = '';
+  let social = { ig: '', fb: '', x: '' };
 
   for (let i = 0; i < pagesToTry.length; i++) {
     const page = pagesToTry[i];
@@ -57,13 +58,19 @@ export default async function handler(req, res) {
         qualityReason = q.reason;
       }
 
+      // Socials come out of the SAME bytes — no extra request, no extra latency.
+      // Merged across pages because a trade site often puts the Instagram link in
+      // the footer of /contact but not the homepage.
+      const found = extractSocials(html);
+      social = { ig: social.ig || found.ig, fb: social.fb || found.fb, x: social.x || found.x };
+
       // mailto: links first — highest confidence
       const mailtoMatches = [...html.matchAll(/mailto:([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/g)]
         .map(m => m[1])
         .filter(e => !SKIP.test(e));
 
       if (mailtoMatches.length) {
-        return res.status(200).json({ email: mailtoMatches[0], quality, qualityReason });
+        return res.status(200).json({ email: mailtoMatches[0], quality, qualityReason, social });
       }
 
       // Fallback: raw email pattern in HTML
@@ -72,14 +79,14 @@ export default async function handler(req, res) {
         .filter(e => !SKIP.test(e));
 
       if (rawMatches.length) {
-        return res.status(200).json({ email: rawMatches[0], quality, qualityReason });
+        return res.status(200).json({ email: rawMatches[0], quality, qualityReason, social });
       }
     } catch {
       continue;
     }
   }
 
-  return res.status(200).json({ email: '', quality, qualityReason });
+  return res.status(200).json({ email: '', quality, qualityReason, social });
 }
 
 /**
@@ -129,4 +136,58 @@ function assessQuality(html) {
     return { quality: 'modern', reason: 'responsive + ' + (modernBits.join(', ') || 'modern markup') };
   }
   return { quality: 'ok', reason: 'mobile-friendly' + (modernBits.length ? ', ' + modernBits.join(', ') : ', basic markup') };
+}
+
+/**
+ * Pull Instagram / Facebook / X profile links out of a page's markup.
+ *
+ * Named export so tests can drive the real thing; Vercel only reads the default.
+ *
+ * Most trade sites put these in the header or footer, which is why this is worth
+ * doing at all — Diego's DM leg had no data and ran empty. The work is almost
+ * entirely in REJECTING things: a share button, a tracking pixel and a hashtag
+ * link all live on the same hosts as a profile, and a bad handle is worse than
+ * none because it sends him to a dead page mid-sequence.
+ */
+export function extractSocials(html) {
+  const out = { ig: '', fb: '', x: '' };
+  if (!html) return out;
+
+  // ANCHORED. Unanchored, these match any hostname CONTAINING the platform
+  // domain — l.facebook.com (Facebook's link shim) captured as a profile, and
+  // worse, facebook.com.somephishingsite.net would too.
+  const HOSTS = {
+    ig: /^(?:www\.)?instagram\.com$/i,
+    fb: /^(?:www\.|m\.|business\.)?facebook\.com$/i,
+    x:  /^(?:www\.)?(?:twitter|x)\.com$/i,
+  };
+  // Share widgets, dialogs, pixels and link-shims — never a profile.
+  const NOT_PROFILE = /\/(sharer|share|intent|dialog|plugins|tr\?|hashtag|explore|search|login|signup|help|privacy|policies|terms)\b/i;
+  // Instagram /p/ and /reel/ are POSTS; X /i/ and /home are app routes.
+  const NOT_PROFILE_PATH = /^\/(p|reel|reels|tv|stories|i|home|about|events)(\/|$)/i;
+
+  for (const m of html.matchAll(/href\s*=\s*["']([^"']+)["']/gi)) {
+    let raw = m[1].trim();
+    if (raw.startsWith('//')) raw = 'https:' + raw;
+    if (!/^https?:\/\//i.test(raw)) continue;
+
+    let u;
+    try { u = new URL(raw); } catch { continue; }
+
+    for (const key of ['ig', 'fb', 'x']) {
+      if (out[key]) continue;                          // first plausible wins
+      if (!HOSTS[key].test(u.hostname)) continue;
+      if (NOT_PROFILE.test(u.pathname + u.search)) continue;
+
+      const path = u.pathname.replace(/\/+$/, '');
+      if (!path || path === '/') continue;             // bare platform link
+      if (NOT_PROFILE_PATH.test(path)) continue;
+
+      const handle = path.split('/').filter(Boolean)[0];
+      if (!handle || handle.length < 2) continue;
+
+      out[key] = 'https://' + u.hostname.replace(/^www\./, '') + '/' + handle;
+    }
+  }
+  return out;
 }
