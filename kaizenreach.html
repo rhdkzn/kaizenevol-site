@@ -247,6 +247,9 @@
     details[open] > .faq-inline-summary::after { transform:rotate(45deg); }
     .faq-inline-answer { font-size:15px; color:var(--muted); line-height:1.75; padding-bottom:26px; max-width:720px; }
 
+    .niche-row { display:flex; flex-wrap:wrap; gap:10px 28px; justify-content:center; }
+    .niche-row a { font-size:15px; font-weight:600; color:var(--text); text-decoration:none; border-bottom:1px solid var(--accent); padding-bottom:3px; }
+    .niche-row a:hover { color:var(--accent-2); }
     /* ============ INDUSTRIES — hairline columns ============ */
     .ind-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:48px; }
     .ind-card { display:block; text-decoration:none; color:inherit; border-top:1px solid var(--text); padding-top:26px; transition:border-color .3s var(--el-ease); }
@@ -443,48 +446,7 @@
   <div class="hero-inner container">
     <div class="hero-kicker"><span class="smallcaps accent">KaizenReach &middot; Meta ads, managed social and an AI front office for home renovation</span></div>
     <h1>Stop Losing High-Value Renovation Jobs<br>to Businesses That <em>Market Better</em></h1>
-    <p class="hero-sub">Done-for-you Meta ads, fully-managed social media and an AI front office that answers every enquiry day or night, built only for home renovation specialists, kitchen remodelling, bathroom renovation, loft conversion. Exclusive to your area, live in 7 days, and <strong>your first 60 days are free, our first 5 founding clients only.</strong></p>
-
-    <div class="calc-wrap">
-      <div class="calc-label">Your numbers. Your potential.</div>
-      <div class="calc-niche" id="calcNiche" role="group" aria-label="Choose your niche to set a typical job value">
-        <button type="button" data-v="30000">Loft</button>
-        <button type="button" data-v="8000">Kitchen</button>
-        <button type="button" data-v="6000">Bathroom</button>
-        <button type="button" data-v="12000">Other</button>
-      </div>
-      <div class="calc-row">
-        <div class="calc-row-header">
-          <label for="jobValue">Average Job Value</label>
-          <span class="calc-row-value">£<span id="jobValueDisplay">5,000</span></span>
-        </div>
-        <input type="range" id="jobValue" min="1000" max="50000" step="500" value="5000" aria-label="Average job value in pounds">
-      </div>
-      <div class="calc-row">
-        <div class="calc-row-header">
-          <label for="missedJobs">Jobs You Miss Each Month</label>
-          <span class="calc-row-value"><span id="missedJobsDisplay">2</span></span>
-        </div>
-        <input type="range" id="missedJobs" min="1" max="20" step="1" value="2" aria-label="Jobs missed per month">
-      </div>
-      <div class="calc-result" aria-live="polite" aria-atomic="true">
-        <div class="calc-result-label">Revenue on the table</div>
-        <div class="calc-result-amounts">
-          <div>
-            <div class="calc-result-amount" id="monthlyLoss">£10,000</div>
-            <div class="calc-result-period">Per Month</div>
-          </div>
-          <div>
-            <div class="calc-result-amount" id="annualLoss">£120,000</div>
-            <div class="calc-result-period">Per Year</div>
-          </div>
-        </div>
-        <div class="calc-fee">
-          <div class="calc-fee-stat"><div class="n"><em>Just one job</em></div><div class="l">more than covers a month with us, our fee is a fraction of a single project</div></div>
-          <div class="calc-fee-stat"><div class="n"><em>First 60 days free</em></div><div class="l">Founding clients cover ad spend plus the front office subscription, then a simple monthly service, cancel anytime</div></div>
-        </div>
-      </div>
-    </div>
+    <p class="hero-sub">Meta ads, your social run for you, and an AI front office that answers every enquiry day or night. Exclusive to your area, live in 7 days. <strong>Your first 60 days are free, first 5 founding clients only.</strong></p>
 
     <div class="hero-ctas">
       <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call%20about%20KaizenReach." class="btn-solid" target="_blank" rel="noopener">Book Your Free Strategy Call</a>
@@ -598,102 +560,15 @@
         <p>You drive out, measure up, spend two hours, and they wanted a budget patch-up job. There's no filter. Every enquiry costs you time you can't get back.</p>
       </div>
     </div>
+    <p style="margin:34px 0 0"><a class="btn-quiet" href="index.html#the-system">See where this sits in the whole system &rarr;</a></p>
     <div class="problem-callout">
       <p>Just 2 renovation jobs a month at £5,000 each is <em>£120,000 a year</em> left on the table, and for loft conversions, a single missed job can be £25,000. That's not a craft problem. That's a marketing problem, and it's fixable.</p>
     </div>
   </div>
 </section>
 
-<section class="section" id="in-the-system">
-<div class="container">
-<div class="section-header">
-<span class="smallcaps accent">Stage two of three</span>
-<h2>This Is the <em>Engine</em>.<br>It Runs Inside a System.</h2>
-<p>KaizenReach is the part that makes the phone ring, and on its own it is a very good version of what most agencies sell. It works harder when the stage before it and the stage after it are standing too.</p>
-</div>
-<div class="step-row"><div class="step-num">1</div><div class="step-main">
-<span class="smallcaps accent">Foundation &middot; free with your retainer</span>
-<h3>The site we build and hold</h3>
-<p>Your adverts need somewhere to land that is built to sell the job. We build it and keep the backend, which is how we can show you which advert produced which booked kitchen rather than asking you to trust us.</p>
-</div></div>
-<div class="step-row"><div class="step-num">2</div><div class="step-main">
-<span class="smallcaps accent">Demand &middot; you are reading it</span>
-<h3>KaizenReach</h3>
-<p>Paid Meta advertising and your social accounts, run for you on one flat monthly fee. Everything below on this page.</p>
-</div></div>
-<div class="step-row"><div class="step-num">3</div><div class="step-main">
-<span class="smallcaps accent">Capture &middot; a separate service</span>
-<h3>KaizenDesk, the front office</h3>
-<p>Adverts that work create a second problem: enquiries arriving while you are under a sink. The Desk answers them in seconds, books them, and goes back to the ones that go quiet. Strongly recommended, never required.</p>
-</div></div>
-<p style="margin-top:28px"><a class="btn-quiet" href="index.html#the-system">See the whole system &rarr;</a></p>
-</div>
-</section>
 
-<section class="section sec-void" id="how-it-works">
-  <div class="container">
-    <div class="section-header">
-      <span class="smallcaps accent">Getting started</span>
-      <h2>From Strategy Call to <em>Booked Jobs</em><br>in 7 Days</h2>
-      <p>Simple, fast, and built entirely around your niche, kitchen, bathroom, or loft. We know these niches inside out.</p>
-    </div>
-    <div class="step-row">
-      <div class="step-num">1</div>
-      <div class="step-main">
-        <span class="smallcaps accent">Day 1</span>
-        <h3>Strategy Call</h3>
-        <p>We learn your business, area, current pipeline, average project value, and goals. 30 minutes on the phone, a clear picture of what's achievable in your local area.</p>
-      </div>
-    </div>
-    <div class="step-row">
-      <div class="step-num">2</div>
-      <div class="step-main">
-        <span class="smallcaps accent">Days 2&ndash;7</span>
-        <h3>Campaign Build</h3>
-        <p>AI-assisted copy, targeting, and 5 ad variations built specifically for your area. Lead filter installed. Tracking set up. You approve everything before anything goes live.</p>
-      </div>
-    </div>
-    <div class="step-row">
-      <div class="step-num">3</div>
-      <div class="step-main">
-        <span class="smallcaps accent">Ongoing</span>
-        <h3>Launch, Optimise &amp; Post</h3>
-        <p>Live campaigns with daily monitoring, plus your social handled for you: weekly reels and posts from your real jobs, comments and DMs answered, your Google profile and reviews built. Weekly plain-English reports. We run the whole pipeline; you focus on the projects.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="section sec-void2" id="why-it-works">
-  <div class="container">
-    <div class="section-header">
-      <h2>The <em>Home Renovation Client Engine</em> ,<br>Built Differently</h2>
-      <p>Here's why this works when everything else hasn't.</p>
-    </div>
-    <div class="why-grid">
-      <div class="why-item why-item--lead">
-        <b>Exclusive UK Territory</b>
-        <p>We take one specialist per niche, per area. Your direct competitor cannot use this system in your postcode. The territory is yours for as long as we work together.</p>
-      </div>
-      <div class="why-item why-item--lead">
-        <b>7 Days to Live</b>
-        <p>Because we work exclusively with home renovation specialists, there's no learning curve. We know your niche, your buyers, your objections. Campaigns are live in a week, not months.</p>
-      </div>
-      <div class="why-item">
-        <b>Built-In Lead Filter</b>
-        <p>Price-shoppers and tyre-kickers are screened out before they reach your phone. Every lead has been pre-qualified against your minimum project value.</p>
-      </div>
-      <div class="why-item">
-        <b>Your Social, Fully Managed</b>
-        <p>We run your Instagram and Facebook too: weekly reels and posts made from your real jobs, scheduled and posted for you, comments and DMs answered, plus your Google profile and reviews built. A presence that sells while the ads bring the leads.</p>
-      </div>
-      <div class="why-item">
-        <b>Plain-English Reports</b>
-        <p>Cost per lead, cost per booked visit, cost per signed job. You always know exactly what your pipeline costs and what it's worth. Zero jargon.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="section sec-void" id="pricing">
   <div class="container">
@@ -702,6 +577,17 @@
       <p>We structure every engagement around your situation: your niche, your area, your average project value, your current pipeline. A flat rate that works brilliantly for a bathroom fitter won't suit a loft converter.<br><br>What we can tell you: our first 5 founding clients get their <strong>first 60 days completely free</strong>, you cover ad spend, paid directly to Meta, plus the AI front office subscription, then it's a simple monthly service you can cancel anytime. You carry none of the risk while we prove it works.</p>
       <p class="pricing-note">30 minutes on a call and you'll leave with a clear picture of what's possible in your area.</p>
     </div>
+  </div>
+</section>
+
+<section class="section sec-void" id="niches">
+  <div class="container" style="text-align:center">
+    <p style="color:var(--muted);margin-bottom:14px">We run three renovation niches, each with its own campaigns and its own page.</p>
+    <p class="niche-row">
+      <a href="kitchen.html">Kitchen remodelling</a>
+      <a href="bathroom.html">Bathroom renovation</a>
+      <a href="loft.html">Loft conversion</a>
+    </p>
   </div>
 </section>
 
@@ -727,71 +613,7 @@
   </div>
 </section>
 
-<section class="section sec-void" id="faq" style="border-top:1px solid var(--hairline);">
-  <div class="container">
-    <div class="section-header">
-      <h2>Questions Worth <em>Asking</em></h2>
-      <p>The ones we'd expect before anyone books a call with us.</p>
-    </div>
-    <div class="faq-inline">
-      <details class="faq-inline-item">
-        <summary class="faq-inline-summary">What if I've tried Meta ads before and they didn't work?</summary>
-        <p class="faq-inline-answer">Failed Meta ads almost always fail for the same reasons: generic copy, wrong audience, no qualification funnel, and no one actually watching the data. Most agencies run the same campaigns for every client. This system is purpose-built for your niche, whether you remodel kitchens, renovate bathrooms, or build loft conversions, the targeting, copy, and funnel are all specific to your niche. Book a call and we'll walk through exactly what went wrong last time.</p>
-      </details>
-      <details class="faq-inline-item">
-        <summary class="faq-inline-summary">How much do I need to spend on ads?</summary>
-        <p class="faq-inline-answer">It depends on your local market, how competitive your area is, and your monthly client targets. We agree on the right figure together during the discovery call, nothing is set without your sign-off. Your ad spend is paid directly to Meta by you. We don't hold the budget, take a cut, or mark it up.</p>
-      </details>
-      <details class="faq-inline-item">
-        <summary class="faq-inline-summary">What results can I realistically expect?</summary>
-        <p class="faq-inline-answer">Multiple qualified, booked renovation clients per month, each with a high project value. We don't count enquiries or unqualified leads as results. We count booked consultations with homeowners who have a real budget and a real project.</p>
-      </details>
-      <details class="faq-inline-item">
-        <summary class="faq-inline-summary">How much of my time does this take?</summary>
-        <p class="faq-inline-answer">Minimal. You'll spend 30 minutes on the discovery call, then a short review session when we present the campaign before launch. After that, the only time you spend is on the consultations we book into your calendar. We handle reporting, optimisation, and all communication with leads.</p>
-      </details>
-      <details class="faq-inline-item">
-        <summary class="faq-inline-summary">Why do you only work with one specialist per niche per area?</summary>
-        <p class="faq-inline-answer">Because we'd be competing against ourselves if we didn't. Running the same system for two kitchen remodellers in the same town would drive up costs, dilute results, and put us in the uncomfortable position of deciding whose campaign to favour. One client per niche per area means our interests are fully aligned with yours. A kitchen specialist and a bathroom specialist in the same postcode aren't competitors, so each can hold their own territory, but once you sign, no other business in your niche and local market gets access to this.</p>
-      </details>
-    </div>
-  </div>
-</section>
 
-<section class="section sec-void2" id="industries">
-  <div class="container">
-    <div class="section-header">
-      <h2>Niches We <em>Serve</em></h2>
-      <p>Home renovation is where we specialise. Each niche gets its own campaigns, its own copy and its own page.</p>
-    </div>
-    <div class="ind-grid">
-      <a class="ind-card" href="kitchen.html">
-        <div class="ind-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
-        <h3>Kitchen Remodelling</h3>
-        <p>Homeowners planning a full refurb, filtered past the flat-pack enquiries.</p>
-        <span class="ind-go">See the kitchen page &rarr;</span>
-      </a>
-      <a class="ind-card" href="bathroom.html">
-        <div class="ind-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M4 12V6a2 2 0 012-2 2 2 0 012 2"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M4 12v3a4 4 0 004 4h8a4 4 0 004-4v-3"/><line x1="8" y1="19" x2="7" y2="21"/><line x1="16" y1="19" x2="17" y2="21"/></svg>
-        </div>
-        <h3>Bathroom Renovation</h3>
-        <p>Full bathrooms, wetrooms and en-suites, won on finish quality rather than price.</p>
-        <span class="ind-go">See the bathroom page &rarr;</span>
-      </a>
-      <a class="ind-card" href="loft.html">
-        <div class="ind-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10"/><path d="M9 21v-6h6v6"/></svg>
-        </div>
-        <h3>Loft Conversion</h3>
-        <p>The highest-ticket niche we run, where the margins justify the ad spend.</p>
-        <span class="ind-go">See the loft page &rarr;</span>
-      </a>
-    </div>
-  </div>
-</section>
 
 
 <section class="closing" id="contact">
@@ -883,47 +705,6 @@
     var open = m.classList.toggle('open');
     b.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
-})();
-
-/* Calculator — logic unchanged, track colours restyled for Midnight II */
-(function () {
-  const jobValueInput     = document.getElementById('jobValue');
-  const missedJobsInput   = document.getElementById('missedJobs');
-  const jobValueDisplay   = document.getElementById('jobValueDisplay');
-  const missedJobsDisplay = document.getElementById('missedJobsDisplay');
-  const monthlyLossEl     = document.getElementById('monthlyLoss');
-  const annualLossEl      = document.getElementById('annualLoss');
-
-  function fmt(n) { return '£' + n.toLocaleString('en-GB'); }
-
-  function updateTrack(input) {
-    const pct = ((+input.value - +input.min) / (+input.max - +input.min)) * 100;
-    input.style.background = 'linear-gradient(to right,#8B5CF6 ' + pct + '%,rgba(238,232,255,0.14) ' + pct + '%)';
-  }
-
-  function updateCalc() {
-    const job    = +jobValueInput.value;
-    const missed = +missedJobsInput.value;
-    jobValueDisplay.textContent   = job.toLocaleString('en-GB');
-    missedJobsDisplay.textContent = missed;
-    monthlyLossEl.textContent     = fmt(job * missed);
-    annualLossEl.textContent      = fmt(job * missed * 12);
-    updateTrack(jobValueInput);
-    updateTrack(missedJobsInput);
-  }
-
-  document.querySelectorAll('#calcNiche button').forEach(function (b) {
-    b.addEventListener('click', function () {
-      document.querySelectorAll('#calcNiche button').forEach(function (x) { x.classList.remove('on'); });
-      b.classList.add('on');
-      jobValueInput.value = b.dataset.v;
-      updateCalc();
-    });
-  });
-
-  jobValueInput.addEventListener('input', updateCalc);
-  missedJobsInput.addEventListener('input', updateCalc);
-  updateCalc();
 })();
 
 /* Lead form */
