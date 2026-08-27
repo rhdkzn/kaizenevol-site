@@ -1,5 +1,10 @@
 /* brand/DESIGN.md, Voice on the page: "Sentence case. No Title Case Headings."
  *
+ * Extended 2026-08-27 to BUTTONS and EYEBROWS on Rahaid's call. The rule names
+ * headings, so the first pass left those alone — which left the site mixed: a
+ * sentence-case heading with "Book Your Free Strategy Call" under it. One system
+ * beats a defensible half.
+ *
  * 2026-08-27: audited on Rahaid's copy-upgrade pass. 42 h1/h2 headings across 8
  * pages were in Title Case, against our own brand file — "More Kitchen Jobs,
  * Booked Straight Into Your Diary", "Pricing Is Discussed on the Call". The rule
@@ -18,7 +23,9 @@ const SMALL = new Set(['a','an','and','the','or','of','to','in','on','for','with
   'but','so','if','per','&','are','was','be','can','do','does'])
 /* Names that are capitalised because they are names, not because of Title Case. */
 const PROPER = new Set(['kaizenevol','kaizenreach','kaizendesk','kaizenforge','meta','google',
-  'uk','instagram','facebook','whatsapp','bristol','ico','british','ai'])
+  'uk','instagram','facebook','whatsapp','bristol','ico','british','ai',
+  /* product names and the Desk agents */
+  'forge','one','pro','care','swift','slate','kudos','revival','sentinel'])
 /* 'house' is NOT here. It was, for "Companies House", and it capitalised the common
    noun in "If your website was a house" during the sweep. Phrases belong in prose,
    not in a word list. */
@@ -53,17 +60,26 @@ const INTERNAL = new Set(['dashboard.html','crm.html','diagnostic.html','reports
 for (const f of readdirSync('.').filter(x => x.endsWith('.html') && !INTERNAL.has(x)).sort()) {
   const html = readFileSync(f, 'utf8')
   const body = html.slice(html.indexOf('</style>'))
-  for (const m of body.matchAll(/<h([12])[^>]*>([\s\S]*?)<\/h\1>/g)) {
-    const txt = m[2].replace(/<[^>]+>/g, '').replace(/&[a-z]+;/g, ' ').split(/\s+/).join(' ').trim()
-    if (!txt) continue
-    scanned++
-    const bad = titleCase(txt)
-    if (bad.length) r.push([`${f}: heading is sentence case`, false, `${txt.slice(0, 52)}  [${bad.join(' ')}]`])
+  const SPOTS = [
+    ['heading',  /<h([12])[^>]*>([\s\S]*?)<\/h\1>/g,                                             2],
+    ['button',   /class="[^"]*btn[^"]*"[^>]*>([^<]{3,60})</g,                                      1],
+    ['eyebrow',  /class="[^"]*(?:smallcaps|eyebrow|work-kind|fbnd-tag)[^"]*"[^>]*>([^<]{3,60})</g, 1],
+  ]
+  for (const [kind, re, grp] of SPOTS) {
+    for (const m of body.matchAll(re)) {
+      const txt = m[grp].replace(/<[^>]+>/g, '').replace(/&[a-z#0-9]+;/g, ' ').split(/\s+/).join(' ').trim()
+      if (!txt) continue
+      /* Job titles are conventionally Title Case and are not brand voice copy. */
+      if (/Co-Founder|Head of/.test(txt)) continue
+      scanned++
+      const bad = titleCase(txt)
+      if (bad.length) r.push([`${f}: ${kind} is sentence case`, false, `${txt.slice(0, 46)}  [${bad.join(' ')}]`])
+    }
   }
 }
 
-console.log(`scanned ${scanned} h1/h2 headings`)
+console.log(`scanned ${scanned} headings, buttons and eyebrows`)
 let failed = 0
 for (const [n, pass, d] of r) { if (!pass) { failed++; console.log(`FAIL  ${n}   <- ${d}`) } }
-console.log(`\n${scanned - failed}/${scanned} headings are sentence case`)
+console.log(`\n${scanned - failed}/${scanned} are sentence case`)
 process.exit(failed ? 1 : 0)
