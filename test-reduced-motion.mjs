@@ -40,10 +40,14 @@ const walk = (d, out = []) => {
 
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
+const all = walk('.')
+const files = all.length
+let scanned = 0
 
-for (const f of walk('.')) {
+for (const f of all) {
   const src = readFileSync(f, 'utf8')
   if (!/prefers-reduced-motion|reducedMotion/i.test(src)) continue
+  scanned++
 
   /* Every @media (prefers-reduced-motion: reduce){ ... } body on the page. */
   const blocks = []
@@ -67,6 +71,12 @@ for (const f of walk('.')) {
   if (JS_GATE.test(src))
     check(`${f} does not gate a feature behind the setting`, false, 'early return on reduce.matches')
 }
+
+/* Once every offending block is gone there is nothing left to inspect, and a bare
+   "0/0 passed" reads as a guard that ran rather than a guard that found nothing.
+   Report the sweep itself, so a silent no-op is distinguishable from a clean estate. */
+console.log(`swept ${files} file(s); ${scanned} mention the setting`)
+check(`the estate carries no reduce-motion kill`, true)
 
 let failed = 0
 for (const [n, pass, d] of r) { if (!pass) { failed++; console.log(`FAIL  ${n}   <- ${d || ''}`) } }

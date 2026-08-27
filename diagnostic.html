@@ -71,7 +71,8 @@
   .summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:20px;text-align:left;font-size:14px}
   .summary div{display:flex;justify-content:space-between;gap:12px;padding:5px 0}
   .summary div span:first-child{color:var(--text-muted)} .summary div span:last-child{font-weight:600;text-align:right}
-  @media (prefers-reduced-motion:reduce){.spinner{animation-duration:2s}}
+  /* No prefers-reduced-motion override anywhere on this page. Rahaid, standing:
+     don't let Reduce Motion stop anything we make. Guard: test-reduced-motion.mjs */
 </style>
 </head>
 <body>
@@ -241,7 +242,7 @@ const FUNNEL = {
         else if(f.type==='tel'&&v&&!/^[0-9 +()-]{7,}$/.test(v)) er='Enter a valid number';
         inp.classList.toggle('bad',!!er); msg.textContent=er; if(er) ok=false; state.answers[f.name]=v; });
       if(ok) submit(); }); }
-    if(step.type==='loader'){ let k=0; const lm=el.querySelector('#lm'), red=matchMedia('(prefers-reduced-motion:reduce)').matches, tot=red?900:(step.ms||2400);
+    if(step.type==='loader'){ let k=0; const lm=el.querySelector('#lm'), tot=(step.ms||2400);
       const iv=setInterval(()=>{ k=(k+1)%step.messages.length; if(lm) lm.textContent=step.messages[k]; },tot/step.messages.length);
       setTimeout(()=>{ clearInterval(iv); advance(0); },tot); }
   }

@@ -197,7 +197,6 @@
   var beats = [0,1,2,3].map(function(i){ return document.getElementById('beat-'+i); });
 
   var tap = document.getElementById('tap');
-  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var conn = navigator.connection || {};
 
   /* pick by PHYSICAL pixels, not CSS px - a 3x retina phone fullscreens the video,

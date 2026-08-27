@@ -173,22 +173,11 @@
     .bub.typing i:nth-child(2){ animation-delay:.15s; }
     .bub.typing i:nth-child(3){ animation-delay:.3s; }
     @keyframes tdot { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
-    /* The comment that used to sit here called the always-play rule "a one-user
-       ruling that must never be copied to client-facing pages" and pinned every
-       bubble to opacity:1. That reading was wrong, and it cost us: Rahaid's iPhone
-       has Reduce Motion on, so the live page served him a finished transcript with
-       no conversation in it. brand/DESIGN.md is the brand file for anything carrying
-       our name and it says the opposite — "Never build a 'reduced' branch that shows
-       less of the product" — written after the SHOWPIECE page, also client-facing,
-       failed this exact way.
-       This chat IS the product demonstration: the Desk answers in under a minute. So
-       the sequence always plays. Reduce Motion drops the decoration around it — the
-       bubbles fade without sliding, the typing dots stop bouncing. */
-    @media (prefers-reduced-motion:reduce){
-      .chat .bub { transform:none; transition:opacity .25s ease; }
-      .chat .bub.show { transform:none; }
-      .bub.typing i { animation-duration:1.8s; }
-    }
+    /* No prefers-reduced-motion override. This page once pinned every bubble to
+       opacity:1 under that setting and served Rahaid a finished transcript instead
+       of a conversation — the product demonstration, switched off. Rahaid, standing:
+       don't let Reduce Motion stop anything we make. The chat plays at full speed
+       for everyone. Guard: test-reduced-motion.mjs */
 
     /* ============ SECTIONS ============ */
     .section { padding:100px 0; }
