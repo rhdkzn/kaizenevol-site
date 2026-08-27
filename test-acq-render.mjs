@@ -1,4 +1,8 @@
-/* The mechanism page, driven in a real browser.
+/* The site's public pages, driven in a real browser.
+ *
+ * The mechanism page (acquisition-system.html) was folded into index.html on
+ * 2026-08-27 and its URL retired to a 308. The system now lives at
+ * index.html#the-system.
  *
  * The first build shipped a `.btn-ghost` class that does not exist in this
  * site's stylesheet, so the secondary CTA rendered as a raw blue underlined
@@ -31,7 +35,7 @@ const browser = await chromium.launch(existsSync(pw) ? { executablePath: pw } : 
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
-const PAGES = (process.env.PAGES || 'index.html,acquisition-system.html,kaizenreach.html,kaizendesk.html,kaizenforge.html').split(',')
+const PAGES = (process.env.PAGES || 'index.html,kaizenreach.html,kaizendesk.html,kaizenforge.html').split(',')
 for (const PAGE of PAGES)
 for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
   const label = `${PAGE.replace('.html','')} ${label0}`
@@ -107,13 +111,14 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
   const text = (await page.evaluate(() => document.body.innerText)).toLowerCase()
   /* The three stages and the mechanism name belong on the pages that TEACH the
      system. Forge sells a one-off website and is not obliged to recite it. */
-  const TEACHES = ['acquisition-system.html', 'index.html']
+  const TEACHES = ['index.html']
   if (TEACHES.includes(PAGE)) {
     check(`${label}: all three stages render`,
       ['foundation', 'demand', 'capture'].every(x => text.includes(x)), text.slice(0, 80))
     check(`${label}: the mechanism is named`, text.includes('acquisition system'))
   }
-  check(`${label}: links to the system`, PAGE === 'acquisition-system.html' || /acquisition-system\.html/.test(await page.content()))
+  check(`${label}: links to the system`, /index\.html#the-system/.test(await page.content()))
+  check(`${label}: the retired mechanism URL is gone`, !/acquisition-system\.html/.test(await page.content()))
   check(`${label}: KaizenReach is named as the product`, text.includes('kaizenreach'))
   /* Reach and Desk retainer prices are NOT public (brand/DESIGN.md, FIN-PRI-001).
      Forge's £499 is. A price leaking onto this page is a canon breach. */

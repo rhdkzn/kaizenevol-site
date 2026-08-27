@@ -403,6 +403,26 @@
     .lf-chip:hover,.lf-chip:focus-visible{border-color:#A78BFA;background:rgba(139,92,246,.08)}
     .lf-back,.lf-alt{display:inline-block;margin-top:12px;margin-right:16px;font-size:13px;opacity:.65;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;color:inherit;font-family:inherit}
     .lf-hide{display:none!important}
+
+  /* Bands folded in from the mechanism page, merged into this one 2026-08-27 */
+    .eyebrow-rule { display:flex; align-items:center; gap:14px; margin-bottom:22px; }
+    .eyebrow-rule .line { flex:0 0 64px; height:1px; background:var(--hairline); }
+    .band { padding:88px 0; border-top:1px solid var(--hairline); }
+    .band-split { display:grid; grid-template-columns:.85fr 1.15fr; gap:56px; }
+    .band h2 { font-size:clamp(30px,1.4rem+2.4vw,48px); }
+    .band h2 em { font-style:italic; color:var(--accent-2); }
+    .band-body p { color:var(--muted); margin-bottom:18px; max-width:62ch; }
+    .band-body p:last-child { margin-bottom:0; }
+    .band-body strong { color:var(--text); font-weight:600; }
+    .timeline { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:34px; }
+    .tl { border:1px solid var(--hairline); border-radius:14px; padding:22px; background:var(--void-2); }
+    .tl .d { font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); }
+    .tl h4 { font-family:var(--serif); font-size:20px; margin:8px 0 8px; font-weight:500; }
+    .tl p { font-size:14px; color:var(--muted); margin:0; }
+  @media(max-width:768px){
+      .band-split { grid-template-columns:1fr; gap:34px; }
+      .timeline { grid-template-columns:1fr; }
+  }
 </style>
   <script type="application/ld+json">
   {
@@ -447,7 +467,7 @@
       <b>KaizenEvol</b>
     </a>
     <ul class="nav-links">
-      <li><a href="acquisition-system.html">The System</a></li>
+      <li><a href="index.html#the-system">The System</a></li>
 <li><a href="kaizenreach.html">KaizenReach</a></li>
       <li><a href="kaizendesk.html">KaizenDesk</a></li>
       <li><a href="kaizenforge.html">KaizenForge</a></li>
@@ -458,7 +478,7 @@
     <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="acquisition-system.html">The System</a>
+    <a href="index.html#the-system">The System</a>
 <a href="kaizenreach.html">KaizenReach</a>
     <a href="kaizendesk.html">KaizenDesk</a>
     <a href="kaizenforge.html">KaizenForge</a>
@@ -481,12 +501,26 @@
   <div class="hero-scroll" aria-hidden="true"></div>
 </header>
 
-<section class="services" id="services">
+<section class="band" id="the-leak">
+  <div class="container band-split">
+    <div>
+      <div class="eyebrow-rule"><span class="smallcaps">[ 01 / The leak ]</span></div>
+      <h2>Leads were never<br>the <em>problem</em>.</h2>
+    </div>
+    <div class="band-body">
+      <p>Every agency in this trade sells the same thing. They send you enquiries, they report on cost per lead, and what happens next is your problem.</p>
+      <p>So the enquiries land while you are under a sink. Three of them go to voicemail. Two get a text back at nine that evening, by which point they have already booked the firm that answered. <strong>The lead was never lost at the top. It was lost at the door.</strong></p>
+      <p>That is why we do not sell traffic on its own. A machine that fills the top and leaks at the bottom is a more expensive version of the problem you already had.</p>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="the-system">
   <div class="container">
-    <span class="smallcaps accent sec-eyebrow">How it works</span>
+    <div class="eyebrow-rule"><span class="smallcaps">[ 02 / The system ]</span></div>
     <div class="services-head">
       <h2>One System, <em>Three Stages</em></h2>
-      <p>We call it the Kaizen Acquisition System, and it is the whole reason this works. Most agencies sell you leads and call that the result. A lead is not a job. We build the shopfront, we send people to it, and we make sure nobody who knocks gets ignored. Run in order, because each stage is worth more once the one before it is standing.</p>
+      <p>We call it the Kaizen Acquisition System. We build the shopfront, we send people to it, and we make sure nobody who knocks gets ignored. Run in order, because each stage is worth more once the one before it is standing.</p>
     </div>
 
     <div class="svc-row">
@@ -502,7 +536,7 @@
         <li>Every enquiry tracked through to booked job</li>
         <li>You own your domain, always</li>
       </ul>
-      <a class="svc-link" href="acquisition-system.html">See the system</a>
+      <a class="svc-link" href="kaizenforge.html">See the build</a>
     </div>
 
     <div class="svc-row">
@@ -535,6 +569,33 @@
         <li>A separate service, priced on the call</li>
       </ul>
       <a class="svc-link" href="kaizendesk.html">See KaizenDesk</a>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="why-it-holds">
+  <div class="container band-split">
+    <div>
+      <div class="eyebrow-rule"><span class="smallcaps">[ 03 / Why it holds ]</span></div>
+      <h2>We can show you<br>which advert <em>paid</em>.</h2>
+    </div>
+    <div class="band-body">
+      <p>The oldest argument in this industry is whether the marketing worked. Most agencies answer it backwards, reconstructing the story afterwards from whatever numbers they can reach.</p>
+      <p><strong>We own the site the enquiries land on.</strong> So we are not reconstructing anything. We can follow a booked kitchen back to the advert, the day and the postcode that produced it.</p>
+      <p>That is the real reason stage one exists, and it is why we give the site away rather than sell it. If we ever stop working together, you can buy it outright and keep it running.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="getting-started">
+  <div class="container">
+    <div class="eyebrow-rule"><span class="smallcaps">[ 04 / Getting started ]</span></div>
+    <h2 style="max-width:15ch">From call to <em>live</em> in a week.</h2>
+    <p style="color:var(--muted);margin-top:16px;max-width:56ch">The system is the thing you keep. This is just how it starts.</p>
+    <div class="timeline">
+      <div class="tl"><span class="d">Day 1</span><h4>Strategy call</h4><p>Your area, your trade, your average job value and what a good month actually looks like. Thirty minutes.</p></div>
+      <div class="tl"><span class="d">Days 2&ndash;7</span><h4>Build</h4><p>Site, campaigns, creative and tracking. You approve everything before a penny of ad spend moves.</p></div>
+      <div class="tl"><span class="d">Day 7</span><h4>Live</h4><p>Adverts on, social running, enquiries landing somewhere we can measure.</p></div>
     </div>
   </div>
 </section>
@@ -697,7 +758,7 @@
     <a class="footer-logo" href="index.html"><img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
     <ul class="footer-nav">
       <li><a href="index.html">Home</a></li>
-      <li><a href="acquisition-system.html">The System</a></li>
+      <li><a href="index.html#the-system">The System</a></li>
 <li><a href="kaizenreach.html">KaizenReach</a></li>
       <li><a href="kaizendesk.html">KaizenDesk</a></li>
       <li><a href="kaizenforge.html">KaizenForge</a></li>

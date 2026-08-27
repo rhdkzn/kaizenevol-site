@@ -114,6 +114,11 @@
   ],
   "redirects": [
     {
+      "source": "/acquisition-system.html",
+      "destination": "/#the-system",
+      "permanent": true
+    },
+    {
       "source": "/kaizengrowth",
       "destination": "/kaizenreach.html",
       "permanent": true

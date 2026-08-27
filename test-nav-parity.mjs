@@ -11,11 +11,15 @@
  * had just created, and produced a nested duplicate link. Both failures are the
  * same shape: a nav edited in one place and not the others.
  *
+ * 2026-08-27: the mechanism page was folded into index.html, so the shared
+ * destination is now an ANCHOR (index.html#the-system). The href regex demanded a
+ * trailing .html and would have gone quietly blind to it.
+ *
  * Run: node test-nav-parity.mjs
  */
 import { readFileSync, readdirSync } from 'node:fs'
 
-const EXPECT = ['acquisition-system.html', 'kaizenreach.html', 'kaizendesk.html', 'kaizenforge.html']
+const EXPECT = ['index.html#the-system', 'kaizenreach.html', 'kaizendesk.html', 'kaizenforge.html']
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
@@ -25,7 +29,7 @@ const grab = (html, start, end) => {
   const j = html.indexOf(end, i)
   return html.slice(i, j < 0 ? undefined : j)
 }
-const hrefs = (block) => [...block.matchAll(/href="([^"]+\.html)"/g)].map(m => m[1])
+const hrefs = (block) => [...block.matchAll(/href="([^"]+\.html(?:#[\w-]+)?)"/g)].map(m => m[1])
 
 for (const f of readdirSync('.').filter(x => x.endsWith('.html')).sort()) {
   const html = readFileSync(f, 'utf8')
