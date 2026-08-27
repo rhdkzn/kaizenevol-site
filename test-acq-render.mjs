@@ -1,0 +1,100 @@
+/* The mechanism page, driven in a real browser.
+ *
+ * The first build shipped a `.btn-ghost` class that does not exist in this
+ * site's stylesheet, so the secondary CTA rendered as a raw blue underlined
+ * browser default — on brand/DESIGN.md's own terms, the single most obvious
+ * possible violation, and invisible to any check that only reads the markup.
+ * So this asserts on COMPUTED style: every link must carry a colour from our
+ * palette, never the user-agent default.
+ *
+ * Needs Playwright:  npm i playwright && node test-acq-render.mjs
+ */
+import { chromium } from 'playwright'
+import http from 'node:http'
+import { readFileSync, existsSync } from 'node:fs'
+
+const DIR = new URL('.', import.meta.url).pathname.replace(/\/$/, '')
+const srv = http.createServer((q, s) => {
+  const path = q.url.split('?')[0]
+  const f = DIR + (path === '/' ? '/index.html' : path)
+  if (!existsSync(f)) { s.writeHead(404); return s.end('') }
+  const ext = path.split('.').pop()
+  const type = { html:'text/html', css:'text/css', js:'text/javascript', woff2:'font/woff2',
+                 png:'image/png', ico:'image/x-icon', svg:'image/svg+xml', jpg:'image/jpeg' }[ext] || 'text/plain'
+  s.writeHead(200, { 'Content-Type': type }); s.end(readFileSync(f))
+})
+await new Promise(r => srv.listen(0, r))
+const port = srv.address().port
+const pw = process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium'
+const browser = await chromium.launch(existsSync(pw) ? { executablePath: pw } : {})
+
+const r = []
+const check = (n, pass, d) => r.push([n, pass, d])
+
+for (const [label, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
+  const page = await browser.newPage({ viewport: { width: w, height: h } })
+  const errs = []
+  page.on('pageerror', e => errs.push(String(e).slice(0, 140)))
+  page.on('console', m => { if (m.type() === 'error') errs.push(m.text().slice(0, 140)) })
+  const bad = []
+  page.on('response', res => { if (res.status() >= 400) bad.push(`${res.status()} ${res.url().split('/').pop()}`) })
+
+  await page.goto(`http://127.0.0.1:${port}/acquisition-system.html`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(900)
+
+  check(`${label}: no console or page errors`, errs.length === 0, errs[0] || '')
+  check(`${label}: nothing 404s`, bad.length === 0, [...new Set(bad)].join(','))
+  check(`${label}: no horizontal overflow`,
+    !(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)))
+
+  /* The defect that actually shipped. A browser-default link is rgb(0,0,238)
+     or the visited purple; ours are always palette values. */
+  const rogue = await page.evaluate(() => {
+    const DEFAULTS = ['rgb(0, 0, 238)', 'rgb(0, 0, 255)', 'rgb(85, 26, 139)']
+    return [...document.querySelectorAll('a')]
+      .filter(a => a.offsetParent !== null)
+      .filter(a => DEFAULTS.includes(getComputedStyle(a).color))
+      .map(a => (a.className || a.textContent || '').trim().slice(0, 40))
+  })
+  check(`${label}: no link falls back to the browser default colour`, rogue.length === 0, rogue.join(' | '))
+
+  /* A class that does not exist in the stylesheet is invisible in the markup.
+     Every class the page uses must actually resolve to a rule somewhere. */
+  const unstyled = await page.evaluate(() => {
+    const declared = new Set()
+    for (const sheet of document.styleSheets) {
+      let rules; try { rules = sheet.cssRules } catch { continue }
+      for (const rule of rules) {
+        const grab = (t) => (t.match(/\.[-\w]+/g) || []).forEach(c => declared.add(c.slice(1)))
+        if (rule.selectorText) grab(rule.selectorText)
+        else if (rule.cssRules) for (const inner of rule.cssRules) if (inner.selectorText) grab(inner.selectorText)
+      }
+    }
+    const used = new Set()
+    document.querySelectorAll('[class]').forEach(el => el.classList.forEach(c => used.add(c)))
+    return [...used].filter(c => !declared.has(c))
+  })
+  check(`${label}: every class used resolves to a real rule`, unstyled.length === 0, unstyled.join(', '))
+
+  check(`${label}: both brand faces loaded`,
+    await page.evaluate(() => document.fonts.check('500 40px Fraunces') && document.fonts.check('400 16px "Plus Jakarta Sans"')))
+
+  /* Content that must be on the page, not just in the file. */
+  const text = await page.evaluate(() => document.body.innerText)
+  check(`${label}: all three stages render`,
+    ['Foundation', 'Demand', 'Capture'].every(x => text.includes(x)), text.slice(0, 80))
+  check(`${label}: the mechanism is named`, text.includes('Acquisition System'))
+  check(`${label}: KaizenReach is named as the product`, text.includes('KaizenReach'))
+  /* Reach and Desk retainer prices are NOT public (brand/DESIGN.md, FIN-PRI-001).
+     Forge's £499 is. A price leaking onto this page is a canon breach. */
+  check(`${label}: no private retainer price leaked`,
+    !/£\s?(2,?500|1,?500|500|750|3,?500|5,?000)\b/.test(text), (text.match(/£[\d,]+/g) || []).join(','))
+
+  await page.screenshot({ path: `/tmp/acq-${label}-full.png`, fullPage: true })
+  await page.close()
+}
+await browser.close(); srv.close()
+let failed = 0
+for (const [n, pass, d] of r) { if (!pass) failed++; console.log(`${pass ? 'PASS' : 'FAIL'}  ${n}${pass ? '' : '   <- ' + (d || '')}`) }
+console.log(`\n${r.length - failed}/${r.length} passed`)
+process.exit(failed ? 1 : 0)
