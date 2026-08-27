@@ -192,12 +192,6 @@
     .section-head.center p { margin:0 auto; }
 
     /* Problem rows */
-    .problem-rows { border-top:1px solid var(--hairline); }
-    .problem-row { display:grid; grid-template-columns:280px 1fr; gap:12px 48px; padding:34px 0; align-items:baseline; border-bottom:1px solid var(--hairline); }
-    .problem-row h3 { font-size:clamp(20px, 1rem + 1vw, 26px); }
-    .problem-row p { font-size:15px; color:var(--muted); max-width:620px; }
-    .problem-quote { margin:64px auto 0; max-width:760px; text-align:center; }
-    .problem-quote p { font-family:var(--serif); font-weight:500; font-size:clamp(21px, 1.1rem + 1.4vw, 30px); line-height:1.4; color:var(--text); }
 
     /* Comparison */
     .cmp { max-width:680px; margin:0 auto; border-top:1px solid var(--hairline); }
@@ -274,11 +268,6 @@
     .faq-inline-answer { font-size:15px; color:var(--muted); line-height:1.75; padding-bottom:26px; max-width:680px; }
 
     /* ============ YOUR CALL ============ */
-    .call-grid { display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid var(--hairline); max-width:1000px; margin:0 auto; }
-    .call-item { padding:36px 40px 36px 0; border-bottom:1px solid var(--hairline); }
-    .call-item + .call-item { border-left:1px solid var(--hairline); padding-left:40px; }
-    .call-item b { display:block; font-family:var(--serif); font-weight:500; font-size:21px; margin-bottom:10px; }
-    .call-item p { font-size:14.5px; color:var(--muted); }
 
     /* ============ CLOSING ============ */
     .closing { padding:110px 0; background:var(--void-2); border-top:1px solid var(--hairline); }
@@ -351,9 +340,6 @@
       .step-row { grid-template-columns:60px 1fr; }
       .step-row .step-copy { grid-column:2; }
       .closing-grid { grid-template-columns:1fr; gap:48px; }
-      .call-grid { grid-template-columns:1fr; }
-      .call-item, .call-item + .call-item { padding-left:0; padding-right:0; border-left:none; }
-      .problem-row { grid-template-columns:1fr; gap:8px; }
     }
     @media(max-width:768px) {
       .nav-links { display:none; } .burger { display:flex; }
@@ -518,20 +504,6 @@
   </div>
 </section>
 
-<section class="section bg-void2" id="problem">
-  <div class="container">
-    <div class="section-head">
-      <h2>Every Missed Message<br>Is <em>Money Walking Out</em></h2>
-      <p>Most local businesses lose work the same three ways, and never even know it.</p>
-    </div>
-    <div class="problem-rows">
-      <div class="problem-row"><h3>Missed Calls = Missed Jobs</h3><p>You're on a job or it's after hours, the phone rings out. That customer doesn't leave a voicemail, they ring the next business on the list.</p></div>
-      <div class="problem-row"><h3>Slow Replies Lose Customers</h3><p>A lead messages at 9pm. By the time you reply tomorrow, they've booked whoever answered first. Speed wins the job.</p></div>
-      <div class="problem-row"><h3>Reviews Never Get Asked For</h3><p>Happy customers would leave 5 stars, if anyone asked. They don't, your rating stalls, and new customers pick a higher-rated rival.</p></div>
-    </div>
-    <div class="problem-quote"><p>Leads contacted within 5 minutes are up to <em>21× more likely to qualify</em>. KaizenDesk replies in under one, every time, around the clock.</p></div>
-  </div>
-</section>
 
 <section class="section bg-void">
   <div class="container">
@@ -608,8 +580,6 @@
       </div>
       <ul class="svc-list">
         <li>Replies to every text and email, usually within two minutes, day or night</li>
-        <li>Asks the right questions to sort a real job from a time-waster</li>
-        <li>Captures the name, the job and the detail, nothing lost to a missed message</li>
         <li>Flags the hot ones straight to your phone while they're still warm</li>
       </ul>
     </div>
@@ -623,9 +593,7 @@
       </div>
       <ul class="svc-list">
         <li>Points ready customers straight to your booking link</li>
-        <li>Sends every confirmation and reminder automatically</li>
         <li>Handles "can we move it to Thursday?" without you touching your phone</li>
-        <li>Hands anything it can't settle straight to you</li>
       </ul>
     </div>
 
@@ -639,8 +607,6 @@
       <ul class="svc-list">
         <li>Asks every customer for a review once the job's done</li>
         <li>Sends the happy ones to your Google page</li>
-        <li>Routes the unhappy ones to private feedback first</li>
-        <li>Builds the review count that wins you the next ten jobs</li>
       </ul>
     </div>
 
@@ -653,9 +619,7 @@
       </div>
       <ul class="svc-list">
         <li>Re-engages old enquiries and past customers with a light nudge</li>
-        <li>Books work you'd already written off</li>
         <li>Stops the second anyone says stop, fully PECR and GDPR compliant</li>
-        <li>Never touches a bought list, only people you're allowed to contact</li>
       </ul>
     </div>
 
@@ -668,9 +632,7 @@
       </div>
       <ul class="svc-list">
         <li>Answers every call, 24/7, in a natural British voice</li>
-        <li>Handles the questions you get asked twenty times a week</li>
         <li>Takes the caller's name and what they need, then texts a booking link</li>
-        <li>Flags the genuine ones to you, the rest never interrupt your day</li>
       </ul>
     </div>
 
@@ -726,10 +688,6 @@
         <div class="faq-inline-answer">No. KaizenDesk connects to your existing number and email. You don't install anything or change how you work. Your phone only buzzes when there's a genuine job to take.</div>
       </details>
       <details class="faq-inline-item">
-        <summary class="faq-inline-summary">How quickly can it be up and running?</summary>
-        <div class="faq-inline-answer">Days, not weeks. A 15-minute chat about your business, services and opening hours is all we need. We switch it on, and you carry on working.</div>
-      </details>
-      <details class="faq-inline-item">
         <summary class="faq-inline-summary">What happens if a customer asks something it can't handle?</summary>
         <div class="faq-inline-answer">It answers what it can, qualifies the enquiry, and flags anything that needs you straight to your phone. You stay in control of every real job, KaizenDesk just makes sure none of them slip through.</div>
       </details>
@@ -737,27 +695,10 @@
         <summary class="faq-inline-summary">Is my customer data safe?</summary>
         <div class="faq-inline-answer">Yes. KaizenDesk is UK-based and fully GDPR-compliant, with your data held in the EU. You keep your number, your reviews, and your customer relationships, nothing is locked away from you.</div>
       </details>
-      <details class="faq-inline-item">
-        <summary class="faq-inline-summary">Which businesses is KaizenDesk for?</summary>
-        <div class="faq-inline-answer">Any local business that takes enquiries by phone, text or email, plumbers, electricians, builders, dentists, salons, gyms, garages, restaurants and more. If you lose work to missed calls and slow replies, it's built for you.</div>
-      </details>
     </div>
   </div>
 </section>
 
-<section class="section bg-void2" id="your-call">
-  <div class="container">
-    <div class="section-head center">
-      <h2>What Happens <em>On Your Call</em></h2>
-      <p>Fifteen minutes, no hard sell. Here's exactly how it goes.</p>
-    </div>
-    <div class="call-grid">
-      <div class="call-item"><b>1 · We listen</b><p>You tell us how enquiries reach you now and where they slip through. We find the real leak before suggesting anything.</p></div>
-      <div class="call-item"><b>2 · We show you</b><p>A live look at the Desk answering a customer, qualifying them and booking the job, on your kind of business.</p></div>
-      <div class="call-item"><b>3 · You decide</b><p>A straight answer on whether it fits and what it costs. No pressure, no follow-up spam. Cancel anytime if you start.</p></div>
-    </div>
-  </div>
-</section>
 
 <section class="closing" id="contact">
   <div class="container closing-grid">

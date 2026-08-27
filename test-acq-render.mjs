@@ -31,7 +31,7 @@ const browser = await chromium.launch(existsSync(pw) ? { executablePath: pw } : 
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
-const PAGES = (process.env.PAGES || 'acquisition-system.html,index.html').split(',')
+const PAGES = (process.env.PAGES || 'index.html,acquisition-system.html,kaizenreach.html,kaizendesk.html,kaizenforge.html').split(',')
 for (const PAGE of PAGES)
 for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
   const label = `${PAGE.replace('.html','')} ${label0}`
