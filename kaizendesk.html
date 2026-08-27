@@ -173,12 +173,21 @@
     .bub.typing i:nth-child(2){ animation-delay:.15s; }
     .bub.typing i:nth-child(3){ animation-delay:.3s; }
     @keyframes tdot { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
-    /* Public page: Reduce Motion is honoured here (unlike the Life OS, whose
-       always-play stance is a one-user ruling that must never be copied to
-       client-facing pages). Bubbles render at rest; the typing theatre goes. */
+    /* The comment that used to sit here called the always-play rule "a one-user
+       ruling that must never be copied to client-facing pages" and pinned every
+       bubble to opacity:1. That reading was wrong, and it cost us: Rahaid's iPhone
+       has Reduce Motion on, so the live page served him a finished transcript with
+       no conversation in it. brand/DESIGN.md is the brand file for anything carrying
+       our name and it says the opposite — "Never build a 'reduced' branch that shows
+       less of the product" — written after the SHOWPIECE page, also client-facing,
+       failed this exact way.
+       This chat IS the product demonstration: the Desk answers in under a minute. So
+       the sequence always plays. Reduce Motion drops the decoration around it — the
+       bubbles fade without sliding, the typing dots stop bouncing. */
     @media (prefers-reduced-motion:reduce){
-      .chat .bub { opacity:1; transform:none; transition:none; }
-      .bub.typing { display:none; }
+      .chat .bub { transform:none; transition:opacity .25s ease; }
+      .chat .bub.show { transform:none; }
+      .bub.typing i { animation:none; opacity:.55; }
     }
 
     /* ============ SECTIONS ============ */
@@ -866,6 +875,9 @@
     }
     var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ play(); io.disconnect(); } }); },{threshold:0.45});
     io.observe(chat);
+    /* A bubble left at opacity:0 is the whole demonstration lost, and it fails silently.
+       If the sequence has not run by the time anyone could have scrolled here, show it. */
+    setTimeout(function(){ if(!played){ bubs.forEach(function(b){ b.classList.add('show'); }); } },12000);
   })();
 
   /* calculator: count up on first view */
