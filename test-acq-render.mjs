@@ -117,7 +117,12 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
       ['foundation', 'demand', 'capture'].every(x => text.includes(x)), text.slice(0, 80))
     check(`${label}: the mechanism is named`, text.includes('acquisition system'))
   }
-  check(`${label}: links to the system`, /index\.html#the-system/.test(await page.content()))
+  /* "The System" left the nav on 2026-08-27 (it pointed at the page it sat on), so a
+     site-wide link check no longer means anything. What must hold is that each service
+     page still routes back to the mechanism from the section that explains its stage. */
+  const ROUTES_BACK = ['kaizenreach.html', 'kaizendesk.html', 'kaizenforge.html']
+  if (ROUTES_BACK.includes(PAGE))
+    check(`${label}: routes back to the system`, /index\.html#the-system/.test(await page.content()))
   check(`${label}: the retired mechanism URL is gone`, !/acquisition-system\.html/.test(await page.content()))
   check(`${label}: KaizenReach is named as the product`, text.includes('kaizenreach'))
   /* Reach and Desk retainer prices are NOT public (brand/DESIGN.md, FIN-PRI-001).

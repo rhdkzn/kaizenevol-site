@@ -19,7 +19,7 @@
  */
 import { readFileSync, readdirSync } from 'node:fs'
 
-const EXPECT = ['index.html#the-system', 'kaizenreach.html', 'kaizendesk.html', 'kaizenforge.html']
+const EXPECT = ['kaizenreach.html', 'kaizendesk.html', 'kaizenforge.html']
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
@@ -31,12 +31,20 @@ const grab = (html, start, end) => {
 }
 const hrefs = (block) => [...block.matchAll(/href="([^"]+\.html(?:#[\w-]+)?)"/g)].map(m => m[1])
 
+const NAVS = { 'desktop nav': {}, 'mobile menu': {}, 'footer nav': {} }
+
 for (const f of readdirSync('.').filter(x => x.endsWith('.html')).sort()) {
   const html = readFileSync(f, 'utf8')
   const desktop = grab(html, '<ul class="nav-links">', '</ul>')
   if (!desktop) continue                     // funnel pages carry no nav by design
   const mobile = grab(html, '<div class="mobile-menu"', '</div>')
   const footer = grab(html, '<ul class="footer-nav">', '</ul>')
+
+  const items = (block) => [...block.matchAll(/<a[^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/g)]
+    .map(m => `${m[2].trim()}>${m[1]}`).filter(x => !x.startsWith('>'))
+  NAVS['desktop nav'][f] = items(desktop)
+  if (mobile) NAVS['mobile menu'][f] = items(mobile)
+  if (footer) NAVS['footer nav'][f] = items(footer)
 
   const d = hrefs(desktop)
   check(`${f}: desktop nav offers every service`, EXPECT.every(x => d.includes(x)),
@@ -60,6 +68,32 @@ for (const f of readdirSync('.').filter(x => x.endsWith('.html')).sort()) {
     check(`${f}: footer has no duplicate link`, new Set(ft).size === ft.length,
       ft.filter((x, i) => ft.indexOf(x) !== i).join(', '))
   }
+}
+
+
+/* Presence was never the whole test. On 2026-08-27 Rahaid read the site and said the
+ * nav "shows different things at different pages" — and every check above was green,
+ * because each page DID offer every service. What differed was the rest of the list:
+ * "Home" sat in the desktop nav of three pages and no others, and the mobile menu ran
+ * two vocabularies (bare "KaizenReach" on six pages, descriptive "KaizenReach, Ads,
+ * Social + Front Office" on five). A per-page check cannot see that. Only a cross-page
+ * comparison can.
+ *
+ * The trailing CTA is deliberately page-tuned (Forge asks for a website, Reach names
+ * itself in the WhatsApp prefill), so it is excluded by position rather than by
+ * pretending it matches. */
+const shape = (items) => items.slice(0, -1).join('  |  ')
+for (const [zone, map] of Object.entries(NAVS)) {
+  const forms = new Map()
+  for (const [file, items] of Object.entries(map)) {
+    const k = shape(items)
+    if (!forms.has(k)) forms.set(k, [])
+    forms.get(k).push(file)
+  }
+  const variants = [...forms.entries()].sort((a, b) => b[1].length - a[1].length)
+  check(`${zone}: every page offers the same items in the same order`, variants.length === 1,
+    variants.length === 1 ? '' :
+      variants.map(([k, fs]) => `\n      [${fs.length} page(s)] ${fs.join(', ')}\n         ${k}`).join(''))
 }
 
 let failed = 0
