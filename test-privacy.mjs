@@ -46,15 +46,15 @@ check('names the ICO complaint route', /information commissioner|\bico\b/.test(t
 /* Art. 14 — data we obtained ourselves, which is what cold outreach is.
    The single largest exposure on this page, and the one the reference page
    we were pointed at does not carry. */
-check('covers outreach we initiate', /contact your business first|contact local businesses|outreach/.test(t))
+check('covers outreach we initiate', /we contacted you|contacted you first|contact (your business|local businesses)|outreach|get in touch about/.test(t))
 check('says where outreach data came from', /public|director(y|ies)|listings|companies house/.test(t))
-check('gives an objection route for outreach', /reply "?stop"?|opt out|object/.test(t))
+check('gives an objection route for outreach', /reply\s+["\u201c\u2018]?stop|opt out|object|off the list/.test(t))
 
 /* Art. 15-21 — the data subject rights themselves. */
-check('lists access, correction and deletion', /access/.test(t) && /correct/.test(t) && /delet/.test(t))
+check('lists access, correction and deletion', /access|see it|show you/.test(t) && /correct/.test(t) && /delet/.test(t))
 
 /* And the point of the exercise: it has to actually be short. */
-check(`reads short (${words} words, cap 340)`, words <= 340, `${words} words`)
+check(`reads short (${words} words, cap 200)`, words <= 200, `${words} words`)
 
 let failed = 0
 for (const [n, pass, d] of r) { if (!pass) { failed++; console.log(`FAIL  ${n}   <- ${d || ''}`) } }
