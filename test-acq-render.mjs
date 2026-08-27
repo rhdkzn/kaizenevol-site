@@ -61,8 +61,24 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
 
   check(`${label}: no console or page errors`, errs.length === 0, errs[0] || '')
   check(`${label}: nothing 404s`, bad.length === 0, [...new Set(bad)].join(','))
+  /* documentElement.scrollWidth stays CLAMPED to the viewport, so it reports 390 on a
+     page whose body is 433 wide. On 2026-08-27 this check passed while the homepage's
+     proof cards ran 43px off the right of a phone — Rahaid photographed it. Measure the
+     body, and name the element, so a green result cannot mean "I looked at the wrong
+     box". */
+  const overflow = await page.evaluate(() => {
+    const vw = window.innerWidth
+    const out = []
+    for (const e of document.querySelectorAll('body *')) {
+      const r = e.getBoundingClientRect()
+      if (r.width > 0 && r.right > vw + 1)
+        out.push(`${e.tagName.toLowerCase()}.${(e.className || '').toString().split(' ')[0]} right:${Math.round(r.right)}`)
+    }
+    return { body: document.body.scrollWidth, vw, els: [...new Set(out)].slice(0, 5) }
+  })
   check(`${label}: no horizontal overflow`,
-    !(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)))
+    overflow.body <= overflow.vw + 1 && overflow.els.length === 0,
+    `body ${overflow.body} vs viewport ${overflow.vw}${overflow.els.length ? ' | ' + overflow.els.join(', ') : ''}`)
 
   /* The defect that actually shipped. A browser-default link is rgb(0,0,238)
      or the visited purple; ours are always palette values. */
