@@ -83,7 +83,8 @@
 
   footer{background:var(--ink);color:var(--paper);padding:var(--pad);
     display:grid;gap:8px}
-  @media(prefers-reduced-motion:reduce){.btn{transition:none}}
+  /* No prefers-reduced-motion override. Rahaid, standing: don't let Reduce Motion
+     stop anything we make. Guard: test-reduced-motion.mjs */
 </style>
 
 <header>

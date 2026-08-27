@@ -87,7 +87,8 @@
   @media(min-width:760px){.titleblock{grid-template-columns:repeat(4,1fr)}}
   .titleblock b{font-weight:700;letter-spacing:-.01em}
 
-  @media(prefers-reduced-motion:reduce){.hero-img{transform:none!important}}
+  /* No prefers-reduced-motion override. Rahaid, standing: don't let Reduce Motion
+     stop anything we make. Guard: test-reduced-motion.mjs */
 </style>
 
 <div class="sheet">
@@ -161,11 +162,12 @@
 
 <script>
   // Hero parallax: the photograph moves at ~45% of scroll so the sheet slides
-  // over it. rAF-throttled, and disabled outright under reduced-motion.
+  // over it. rAF-throttled. It moves ONLY with the visitor's own thumb, which is
+  // why it ships regardless of Reduce Motion — this used to return early there,
+  // and flattened the showcase on the phone of the man who asks for the demo.
   (function(){
-    var img=document.getElementById('heroImg'),
-        reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
-    if(!img||reduce.matches)return;
+    var img=document.getElementById('heroImg');
+    if(!img)return;
     var ticking=false;
     function set(){img.style.transform='translate3d(0,'+(window.scrollY*0.45)+'px,0)';ticking=false;}
     addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(set);}},{passive:true});

@@ -125,7 +125,7 @@
       'cursor:pointer;border:1px solid rgba(167,139,250,.45);background:transparent;color:#EEE8FF}' +
       '.ke-consent button[data-ke="yes"]{background:#8B5CF6;border-color:#8B5CF6;color:#fff}' +
       '.ke-consent button:focus-visible{outline:2px solid #A78BFA;outline-offset:3px}' +
-      '@media (prefers-reduced-motion:reduce){.ke-consent{transition:none;opacity:1;transform:none}}';
+      ''  /* no reduce-motion override — see test-reduced-motion.mjs */;
 
     document.head.appendChild(css);
     document.body.appendChild(el);

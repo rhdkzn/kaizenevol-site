@@ -148,7 +148,8 @@
     .cmd-greeting{font-size:12px;font-weight:600;color:var(--purple);margin-bottom:12px;letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(139,92,246,0.12);border-radius:var(--radius-pill);border:1px solid rgba(139,92,246,0.22);}
     .cmd-title{font-family:var(--serif);font-size:clamp(34px,1.5rem + 3.2vw,54px);font-weight:640;letter-spacing:-0.03em;line-height:1.06;margin-bottom:8px;background:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:ccSweep 6.5s linear infinite;}
     @keyframes ccSweep{from{background-position:0% 0}to{background-position:220% 0}}
-    @media(prefers-reduced-motion:reduce){.cmd-title{animation:none}}
+  /* No prefers-reduced-motion override. Rahaid, standing: don't let Reduce Motion
+     stop anything we make. Guard: test-reduced-motion.mjs */
     .cmd-date{font-size:15px;color:var(--muted);font-weight:500;margin-bottom:16px;}
     .cmd-summary{font-size:13px;color:rgba(240,238,255,0.75);font-weight:500;padding:10px 18px;background:rgba(139,92,246,0.10);border-radius:var(--radius-sm);border:1px solid rgba(139,92,246,0.22);display:inline-block;}
     .cmd-summary strong{color:#fff;font-weight:700;}
