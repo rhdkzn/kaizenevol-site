@@ -1389,11 +1389,18 @@ function nextStepIdx(l,paused){
 /* Touch 1 on an unscreened firm is an email or a DM, and it must not open with
    "tried you / left you a voicemail" — there was no call. The flag is derived
    from what was actually WORKED, never from the track, so a firm screened
-   mid-sequence stops being a phantom-call risk without anyone resetting it. */
+   mid-sequence stops being a phantom-call risk without anyone resetting it.
+   The OUTCOME is what makes the claim true, not the fact a call step happened:
+   a no-answer is a worked call and no voicemail. Reading doneSteps instead told
+   Diego to reference a voicemail he never left on his first real dial session
+   (2026-08-27) — an untrue claim aimed outward at a stranger. logTouch has
+   stored the per-touch outcome all along, so the guard asks it directly.
+   Guarded by test-crm-voicemail-claim.mjs. */
 function stepFlags(l,i){
   const lad=ladderFor(l);const s=lad[i]||{};
   const out={};for(const k in s)out[k]=s[k];
-  if(out.refVm&&!(l.doneSteps||[]).some(j=>lad[j]&&lad[j].ch==='call')){out.refVm=false;out.standalone=true;}
+  const leftVm=(l.touches||[]).some(t=>t&&t.ch==='call'&&t.o==='voicemail');
+  if(out.refVm&&!leftVm){out.refVm=false;out.standalone=true;}
   return out;
 }
 function trackFor(l){return canCall(l)?'call-led':'email-led';}

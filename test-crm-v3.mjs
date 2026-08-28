@@ -77,10 +77,24 @@ eq('the warm re-entry ladder is two light touches', api.WARM_CADENCE.length, 2);
   const f = api.stepFlags(cold, 1);
   check('and that email is a STANDALONE opener', f.standalone === true && !f.refVm, JSON.stringify(f));
 
-  const warmLead = enrolled({ ...SCREENED, doneSteps: [0] });
+  /* PREMISE CORRECTED 2026-08-27. This originally asserted that a DONE call
+     step alone licenses "reference the voicemail", with no touches on the lead
+     at all. That is the phantom-voicemail defect Levi reported from Diego's
+     first real dial session: he logged no-answer, left no message, and the
+     paired email told him to reference one. A worked call is not a voicemail.
+     The check keeps its intent — a real voicemail IS still referenced — and
+     drops the premise that any call implies one. See
+     test-crm-voicemail-claim.mjs for the full guard. */
+  const warmLead = enrolled({ ...SCREENED, doneSteps: [0],
+    touches: [{ d: TODAY, ch: 'call', o: 'voicemail' }] });
   eq('a screened firm is call-led', api.trackFor(warmLead), 'call-led');
   const f2 = api.stepFlags(warmLead, 1);
-  check('once the call IS made, the email references the voicemail', f2.refVm === true && !f2.standalone, JSON.stringify(f2));
+  check('once a VOICEMAIL is left, the email references it', f2.refVm === true && !f2.standalone, JSON.stringify(f2));
+
+  const noAns = enrolled({ ...SCREENED, doneSteps: [0],
+    touches: [{ d: TODAY, ch: 'call', o: 'no-answer' }] });
+  const f3 = api.stepFlags(noAns, 1);
+  check('but a no-answer does NOT — it opens standalone', f3.refVm !== true && f3.standalone === true, JSON.stringify(f3));
 }
 
 /* ── item 8: the call leg is INJECTED when dialOk flips ──────────────────── */
