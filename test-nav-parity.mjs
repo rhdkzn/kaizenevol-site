@@ -96,6 +96,34 @@ for (const [zone, map] of Object.entries(NAVS)) {
       variants.map(([k, fs]) => `\n      [${fs.length} page(s)] ${fs.join(', ')}\n         ${k}`).join(''))
 }
 
+/* THE LOGO, added 2026-08-27. This file compared nav LINKS and never looked at
+ * the wordmark, so it passed 69/69 while kaizenreach.html read "KaizenReach",
+ * kaizenforge.html read "KaizenForge" and every other page read "KaizenEvol" —
+ * three brand names across three product pages, spotted by Rahaid on his phone.
+ *
+ * KaizenEvol is the correct text on the evidence, not by preference: the img
+ * alt said "KaizenEvol" on all 21 pages INCLUDING the two showing a product
+ * name, so a screen reader heard one brand while the eye read another; the href
+ * goes to index.html everywhere regardless of the text; and no chunk in canon
+ * ever declared a product-branded nav. Copy-paste drift where the visible text
+ * was edited and the alt and the destination were not. */
+{
+  const marks = {}
+  for (const f of readdirSync('.').filter(x => x.endsWith('.html')).sort()) {
+    const html = readFileSync(f, 'utf8')
+    const m = html.match(/<a[^>]*class="nav-logo"[^>]*>([\s\S]*?)<\/a>/)
+    if (!m) continue                                   /* pages with no nav */
+    const text = m[1].replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).join(' ')
+    const alt = (m[1].match(/alt="([^"]*)"/) || [])[1] || null
+    marks[f] = text
+    check(`${f} nav wordmark is KaizenEvol`, text === 'KaizenEvol', `reads "${text}"`)
+    check(`${f} wordmark agrees with its img alt`, alt === null || alt === text,
+      `visible "${text}" vs alt "${alt}"`)
+  }
+  const distinct = [...new Set(Object.values(marks))]
+  check('one wordmark across the whole site', distinct.length === 1, distinct.join(' | '))
+}
+
 let failed = 0
 for (const [n, pass, d] of r) { if (!pass) { failed++; console.log(`FAIL  ${n}   <- ${d || ''}`) } }
 console.log(`\n${r.length - failed}/${r.length} checks passed across the site`)
