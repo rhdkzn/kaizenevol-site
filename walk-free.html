@@ -11,23 +11,23 @@
   <meta property="og:description" content="See it finished before you commit to anything. Twenty minutes on a call, yours either way." />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <style>
-    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
-    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:500; font-display:swap; src:url('/pjs-500.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/newsreader-italic.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:400; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:500; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:600; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
 
     :root{
-      --void:#0C0618; --void-2:#120A24; --text:#EEE8FF;
-      --muted:rgba(238,232,255,0.56); --hairline:rgba(238,232,255,0.1);
-      --accent:#8B5CF6; --accent-2:#A78BFA;
-      --grad:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);
+      --void:#F7F6F4; --void-2:#EFEDE9; --text:#23211E;
+      --muted:#6E6A63; --hairline:#D8D4CC;
+      --accent:#23211E; --accent-2:#6E6A63;
+      --grad:linear-gradient(100deg,#6E6A63 0%,#23211E 34%,#8A857C 58%,#23211E 100%);
     }
     *{margin:0;padding:0;box-sizing:border-box}
-    body{background:var(--void);color:var(--text);font-family:'Plus Jakarta Sans',system-ui,sans-serif;line-height:1.6}
+    body{background:var(--void);color:var(--text);font-family:'Manrope',system-ui,sans-serif;line-height:1.6}
     .eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2)}
-    h1,h2{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.1}
+    h1,h2{font-family:'Newsreader',Georgia,serif;font-weight:600;line-height:1.1}
     h1{font-size:clamp(32px,1.4rem + 3vw,56px);letter-spacing:-0.03em}
     h2{font-size:clamp(28px,1.3rem + 2.2vw,42px);letter-spacing:-0.03em}
     .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -56,7 +56,7 @@
     .block p{max-width:560px}
     .stat-row{display:flex;gap:28px;margin-top:26px;flex-wrap:wrap}
     .stat{background:var(--void-2);border:1px solid var(--hairline);border-radius:14px;padding:16px 20px;flex:1;min-width:150px}
-    .stat .n{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:600;color:var(--text)}
+    .stat .n{font-family:'Newsreader',Georgia,serif;font-size:26px;font-weight:600;color:var(--text)}
     .stat .l{font-size:13px;color:var(--muted);margin-top:2px}
 
     /* ── proof cards ────────────────────── */

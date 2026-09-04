@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
-  <meta name="theme-color" content="#0C0618" />
+  <meta name="theme-color" content="#F7F6F4" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex" />
   <title>KaizenEvol, client acquisition for UK local businesses</title>
@@ -24,28 +24,28 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-  <link rel="preload" href="/fraunces.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin />
   <style>
-    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
-    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:500; font-display:swap; src:url('/pjs-500.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/newsreader-italic.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:400; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:500; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:600; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
 
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
     :root {
-      --void:      #0C0618;
-      --void-2:    #120A24;
-      --text:      #EEE8FF;
-      --muted:     rgba(238,232,255,0.56);
-      --hairline:  rgba(238,232,255,0.1);
-      --accent:    #8B5CF6;
-      --accent-2:  #A78BFA;
-      --serif:     'Fraunces', Georgia, 'Times New Roman', serif;
-      --sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+      --void:      #F7F6F4;
+      --void-2:    #EFEDE9;
+      --text:      #23211E;
+      --muted:     #6E6A63;
+      --hairline:  #D8D4CC;
+      --accent:    #23211E;
+      --accent-2:  #6E6A63;
+      --serif:     'Newsreader', Georgia, 'Times New Roman', serif;
+      --sans:      'Manrope', system-ui, sans-serif;
       --max-w:     1140px;
     }
 
@@ -65,7 +65,7 @@
     .btn-solid:hover { background:transparent; color:var(--accent-2); }
     .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:15px;
       padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
-    .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
+    .btn-quiet:hover { color:var(--text); border-color:#8A857C; }
 
     /* ============ NAV ============ */
     nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
@@ -141,7 +141,7 @@
     /* ============ FOUNDERS ============ */
     .founder-avatar { width:76px; height:76px; border-radius:50%; margin-bottom:18px;
       display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-style:italic; font-size:30px;
-      background:linear-gradient(135deg, #2a1260, #120A24); border:1px solid rgba(139,92,246,0.4);
+      background:#EFEDE9; border:1px solid rgba(35,33,30,0.18);
       background-size:cover; background-position:center; }
 
     /* ============ CLOSING ============ */
@@ -151,7 +151,7 @@
     .closing h2 { font-size:clamp(34px, 1.5rem + 3vw, 58px); margin-bottom:20px; }
     .closing-copy p { font-size:16px; color:var(--muted); max-width:420px; margin-bottom:32px; }
     .closing-alt { display:flex; flex-direction:column; gap:12px; }
-    .closing-alt a { color:var(--text); font-size:14.5px; text-decoration:none; border-bottom:1px solid rgba(238,232,255,0.3); align-self:flex-start; padding-bottom:2px; }
+    .closing-alt a { color:var(--text); font-size:14.5px; text-decoration:none; border-bottom:1px solid #A9A49B; align-self:flex-start; padding-bottom:2px; }
     .closing-alt a:hover { border-color:var(--text); }
     .lf-label { display:block; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
     .lf-input, .lf-select { width:100%; padding:13px 14px; background:transparent; border:1px solid rgba(238,232,255,0.22); border-radius:4px;
@@ -171,13 +171,13 @@
     .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
     .mid-consent.show { display:flex; }
     .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(18,10,36,0.97); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:16px 20px; }
-    .mid-consent-inner p { font-size:13px; line-height:1.55; color:rgba(238,232,255,0.85); margin:0; flex:1 1 320px; }
-    .mid-consent-inner strong { color:#EEE8FF; }
+    .mid-consent-inner p { font-size:13px; line-height:1.55; color:#23211E; margin:0; flex:1 1 320px; }
+    .mid-consent-inner strong { color:#23211E; }
     .mid-consent-btns { display:flex; gap:10px; align-items:center; }
     .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
-    .mid-consent-accept { background:#EEE8FF; color:#0C0618; }
-    .mid-consent-decline { background:transparent; color:rgba(238,232,255,0.6); border:1px solid rgba(238,232,255,0.2) !important; }
-    .mid-consent-inner a { color:#A78BFA; font-size:12px; }
+    .mid-consent-accept { background:#23211E; color:#F7F6F4; }
+    .mid-consent-decline { background:transparent; color:#6E6A63; border:1px solid #C9C4BA !important; }
+    .mid-consent-inner a { color:#6E6A63; font-size:12px; }
 
     /* iOS zooms the page when focusing inputs under 16px — keep fields at 16px on touch widths */
     @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
@@ -221,7 +221,7 @@
   nav { transition:transform .3s cubic-bezier(.16,1,.3,1); }
   nav.mid-nav-hidden { transform:translateY(-100%); }
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
-  @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
+  @keyframes mid-breathe { 0%,100% { color:#6E6A63; } 50% { color:#23211E; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
 
   /* ================================================================
@@ -262,7 +262,7 @@
      ================================================================ */
   /* Hero: animated gradient on the accent word (supersedes the breathe) */
   .hero h1 em {
-    background:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);
+    background:linear-gradient(100deg,#6E6A63 0%,#23211E 34%,#8A857C 58%,#23211E 100%);
     background-size:230% 100%; -webkit-background-clip:text; background-clip:text;
     -webkit-text-fill-color:transparent; color:transparent;
     animation:el-grad 6.5s linear infinite; }
@@ -346,7 +346,7 @@
     .lf-q{font-size:21px;line-height:1.25;margin:0 0 14px;font-weight:600}
     .lf-chips{display:flex;flex-direction:column;gap:9px}
     .lf-chip{width:100%;text-align:left;padding:14px 16px;background:transparent;color:inherit;border:1px solid rgba(238,232,255,.22);border-radius:6px;font-family:inherit;font-size:15px;cursor:pointer;transition:border-color .15s,background .15s}
-    .lf-chip:hover,.lf-chip:focus-visible{border-color:#A78BFA;background:rgba(139,92,246,.08)}
+    .lf-chip:hover,.lf-chip:focus-visible{border-color:#6E6A63;background:rgba(139,92,246,.08)}
     .lf-back,.lf-alt{display:inline-block;margin-top:12px;margin-right:16px;font-size:13px;opacity:.65;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;color:inherit;font-family:inherit}
     .lf-hide{display:none!important}
 
@@ -429,7 +429,7 @@
 <nav>
   <div class="container nav-inner">
     <a class="nav-logo" href="index.html">
-      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
       <b>KaizenEvol</b>
     </a>
     <ul class="nav-links">
@@ -587,7 +587,7 @@
 
 <footer>
   <div class="container footer-inner">
-    <a class="footer-logo" href="index.html"><img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
+    <a class="footer-logo" href="index.html"><img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
     <ul class="footer-nav">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
@@ -666,11 +666,11 @@ document.getElementById('lfAlt').addEventListener('click',function(){var w=docum
 })();
 </script>
 
-<div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(8,6,15,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
-  <div style="background:var(--void-2,#120A24);border:1px solid rgba(238,232,255,0.25);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+<div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--void-2,#EFEDE9);border:1px solid rgba(238,232,255,0.25);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
     <div style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
     <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply &amp; call you back — same day</span></a>
-    <button id="waClose" style="margin-top:16px;background:none;border:none;color:rgba(238,232,255,0.55);font-size:13px;cursor:pointer;font-family:inherit">Close</button>
+    <button id="waClose" style="margin-top:16px;background:none;border:none;color:#6E6A63;font-size:13px;cursor:pointer;font-family:inherit">Close</button>
   </div>
 
 <script>

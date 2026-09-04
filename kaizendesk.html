@@ -2,7 +2,7 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
-  <meta name="theme-color" content="#0C0618" />
+  <meta name="theme-color" content="#F7F6F4" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex" />
   <title>KaizenDesk, it qualifies the job while you're on the tools</title>
@@ -24,8 +24,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-  <link rel="preload" href="/fraunces.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -88,25 +88,25 @@
 }
   </script>
   <style>
-    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
-    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:500; font-display:swap; src:url('/pjs-500.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/newsreader-italic.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:400; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:500; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:600; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
 
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
     :root {
-      --void:      #0C0618;
-      --void-2:    #120A24;
-      --text:      #EEE8FF;
-      --muted:     rgba(238,232,255,0.56);
-      --hairline:  rgba(238,232,255,0.1);
-      --accent:    #8B5CF6;
-      --accent-2:  #A78BFA;
-      --serif:     'Fraunces', Georgia, 'Times New Roman', serif;
-      --sans:      'Plus Jakarta Sans', system-ui, sans-serif;
+      --void:      #F7F6F4;
+      --void-2:    #EFEDE9;
+      --text:      #23211E;
+      --muted:     #6E6A63;
+      --hairline:  #D8D4CC;
+      --accent:    #23211E;
+      --accent-2:  #6E6A63;
+      --serif:     'Newsreader', Georgia, 'Times New Roman', serif;
+      --sans:      'Manrope', system-ui, sans-serif;
       --max-w:     1140px;
     }
 
@@ -130,7 +130,7 @@
     .btn-solid:hover { background:transparent; color:var(--accent-2); }
     .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:15px;
       padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
-    .btn-quiet:hover { color:var(--text); border-color:rgba(238,232,255,0.4); }
+    .btn-quiet:hover { color:var(--text); border-color:#8A857C; }
 
     /* ============ NAV ============ */
     nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
@@ -170,7 +170,7 @@
     .chat .bub { opacity:0; transform:translateY(10px) scale(.97); transition:opacity .3s ease,transform .4s cubic-bezier(0.25,1,0.5,1); }
     .chat .bub.show { opacity:1; transform:none; }
     .bub.typing { display:flex; gap:5px; align-items:center; justify-content:center; width:58px; }
-    .bub.typing i { width:6px; height:6px; border-radius:50%; background:rgba(12,6,24,0.6); animation:tdot 1s infinite; }
+    .bub.typing i { width:6px; height:6px; border-radius:50%; background:rgba(247,246,244,0.7); animation:tdot 1s infinite; }
     .bub.typing i:nth-child(2){ animation-delay:.15s; }
     .bub.typing i:nth-child(3){ animation-delay:.3s; }
     @keyframes tdot { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
@@ -276,7 +276,7 @@
     .closing-divider { display:flex; align-items:center; gap:16px; max-width:340px; margin-bottom:24px; }
     .closing-divider::before, .closing-divider::after { content:''; flex:1; height:1px; background:var(--hairline); }
     .closing-alt { display:flex; flex-direction:column; gap:12px; }
-    .closing-alt a { color:var(--text); font-size:14.5px; text-decoration:none; border-bottom:1px solid rgba(238,232,255,0.3); align-self:flex-start; padding-bottom:2px; }
+    .closing-alt a { color:var(--text); font-size:14.5px; text-decoration:none; border-bottom:1px solid #A9A49B; align-self:flex-start; padding-bottom:2px; }
     .closing-alt a:hover { border-color:var(--text); }
     .closing-scarcity { margin-top:28px; font-size:13px; color:var(--muted); }
     .lf-label { display:block; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
@@ -298,13 +298,13 @@
     .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
     .mid-consent.show { display:flex; }
     .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(18,10,36,0.97); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:16px 20px; }
-    .mid-consent-inner p { font-size:13px; line-height:1.55; color:rgba(238,232,255,0.85); margin:0; flex:1 1 320px; }
-    .mid-consent-inner strong { color:#EEE8FF; }
+    .mid-consent-inner p { font-size:13px; line-height:1.55; color:#23211E; margin:0; flex:1 1 320px; }
+    .mid-consent-inner strong { color:#23211E; }
     .mid-consent-btns { display:flex; gap:10px; align-items:center; }
     .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
-    .mid-consent-accept { background:#EEE8FF; color:#0C0618; }
-    .mid-consent-decline { background:transparent; color:rgba(238,232,255,0.6); border:1px solid rgba(238,232,255,0.2) !important; }
-    .mid-consent-inner a { color:#A78BFA; font-size:12px; }
+    .mid-consent-accept { background:#23211E; color:#F7F6F4; }
+    .mid-consent-decline { background:transparent; color:#6E6A63; border:1px solid #C9C4BA !important; }
+    .mid-consent-inner a { color:#6E6A63; font-size:12px; }
 
     /* ============ FOOTER ============ */
     footer { padding:44px 0; border-top:1px solid var(--hairline); background:var(--void); }
@@ -323,13 +323,13 @@
     .footer-copy { font-size:12px; color:var(--muted); margin-top:6px; }
 
     /* WhatsApp modal */
-    #waModal { display:none; position:fixed; inset:0; z-index:200; background:rgba(8,6,15,0.72); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; }
+    #waModal { display:none; position:fixed; inset:0; z-index:200; background:rgba(247,246,244,0.86); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; }
     .wa-inner { background:var(--void-2); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:28px 26px; max-width:340px; width:100%; text-align:center; }
     .wa-inner .wa-title { font-family:var(--serif); font-weight:500; font-size:18px; margin-bottom:18px; }
     .wa-diego { display:block; background:#25D366; color:#08110b; font-weight:700; border-radius:4px; padding:13px 16px; text-decoration:none; margin-bottom:10px; }
     .wa-rahaid { display:block; background:transparent; color:#25D366; border:1px solid rgba(37,211,102,0.45); font-weight:700; border-radius:4px; padding:13px 16px; text-decoration:none; }
     .wa-sub { display:block; font-size:12px; font-weight:500; opacity:.8; }
-    #waClose { margin-top:16px; background:none; border:none; color:rgba(238,232,255,0.55); font-size:13px; cursor:pointer; font-family:inherit; }
+    #waClose { margin-top:16px; background:none; border:none; color:#6E6A63; font-size:13px; cursor:pointer; font-family:inherit; }
 
     /* ============ RESPONSIVE ============ */
     @media(max-width:960px) {
@@ -381,7 +381,7 @@
   nav { transition:transform .3s cubic-bezier(.16,1,.3,1); }
   nav.mid-nav-hidden { transform:translateY(-100%); }
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
-  @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
+  @keyframes mid-breathe { 0%,100% { color:#6E6A63; } 50% { color:#23211E; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
   
   /* ============ ELEVATION LAYER — homepage signature ported across ============ */
@@ -430,7 +430,7 @@
 <nav>
   <div class="container nav-inner">
     <a class="nav-logo" href="index.html">
-      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
       <b>KaizenEvol</b>
     </a>
     <ul class="nav-links">
@@ -737,7 +737,7 @@
 <footer>
   <div class="container footer-inner">
     <a class="footer-logo" href="index.html">
-      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
       <b>KaizenDesk by KaizenEvol</b>
     </a>
     <ul class="footer-nav">
@@ -784,7 +784,7 @@
   const ids=["leads","value","closeRate","missed"];
   const el=id=>document.getElementById(id);
   function fmt(n){return '£'+Math.round(n).toLocaleString('en-GB');}
-  function track(i){const p=((+i.value-+i.min)/(+i.max-+i.min))*100;i.style.background='linear-gradient(to right,#8B5CF6 '+p+'%,rgba(238,232,255,0.14) '+p+'%)';}
+  function track(i){const p=((+i.value-+i.min)/(+i.max-+i.min))*100;i.style.background='linear-gradient(to right,#23211E '+p+'%,rgba(238,232,255,0.14) '+p+'%)';}
   /* Job value uses a log scale: the Desk serves every local business, so the
      slider must span a £20 haircut and a £50,000 loft on one track. */
   const VMIN=20, VMAX=50000;
