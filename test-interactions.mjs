@@ -143,24 +143,37 @@ for (const [label, width, sels] of [
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await page.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(400);
-  const frames = await page.evaluate(async () => {
+  const r = await page.evaluate(async () => {
     const m = document.querySelector('.mobile-menu');
-    const out = [];
+    const below = document.querySelector('header.hero');
+    const beforeTop = below.getBoundingClientRect().top;
+    const clips = [];
     document.getElementById('burgerBtn').click();
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 9; i++) {
       await new Promise(r => requestAnimationFrame(() => setTimeout(r, 45)));
-      out.push(Math.round(m.getBoundingClientRect().height));
+      clips.push(getComputedStyle(m).clipPath);
     }
-    return out;
+    return {
+      shift: Math.round(below.getBoundingClientRect().top - beforeTop),
+      clips,
+      bar: getComputedStyle(document.querySelector('.burger span')).transform
+    };
   });
-  const final = frames[frames.length - 1];
-  const mid = frames.filter(h => h > 2 && h < final - 2);
-  check('the mobile menu animates open rather than cutting',
-        mid.length >= 2 && final > 40, `heights ${frames.join(',')}`);
+  // Intermediate clip values mean it is revealing rather than appearing. A run of
+  // identical values would be a hard cut.
+  const pct = r.clips.map(c => { const m = /([\d.]+)%/.exec(c); return m ? Number(m[1]) : 0; });
+  const moving = new Set(pct).size;
+  check('the mobile menu animates open rather than cutting', moving >= 3, r.clips.join(' -> '));
 
-  // And the burger has to become a close rather than staying three bars.
-  const bar = await page.evaluate(() => getComputedStyle(document.querySelector('.burger span')).transform);
-  check('the burger morphs when the menu is open', bar !== 'none' && bar !== 'matrix(1, 0, 0, 1, 0, 0)', bar);
+  // THE SMOOTHNESS PROPERTY, and the reason this is a test rather than a screenshot.
+  // The first version animated height 0 -> auto with the panel in normal flow, so every
+  // frame reflowed the whole document and everything below the nav moved. It animated and
+  // it stuttered - "the animation isn't the smoothest". Overlaying it means no layout is
+  // recalculated at all. If content below the nav ever moves again, the jank is back.
+  check('opening the menu does not move the page below it', r.shift === 0, `${r.shift}px`);
+
+  check('the burger morphs when the menu is open',
+        r.bar !== 'none' && r.bar !== 'matrix(1, 0, 0, 1, 0, 0)', r.bar);
   await page.close();
 }
 

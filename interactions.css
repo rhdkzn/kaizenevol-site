@@ -117,15 +117,25 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [role="button"]:fo
  * @starting-style gives the opening frame something to animate FROM - without it the menu
  * appears at its final size and only the closing animates, which is a common half-fix.
  */
-:root { interpolate-size: allow-keywords; }
-
+/* WHY NOT HEIGHT. The first version animated height 0 -> auto, which reflows the entire
+ * document on every frame - the panel is in normal flow, so everything below it moves. It
+ * animated, but it stuttered, and Rahaid called it: "the animation isn't the smoothest."
+ *
+ * The menu now OVERLAYS instead of pushing, and is revealed with clip-path. Nothing below
+ * it moves, no layout is recalculated, and the reveal runs on the compositor. This is also
+ * how a native menu behaves - the page does not shove itself down to make room.
+ */
 .mobile-menu {
-  overflow: hidden; height: 0; opacity: 0;
-  transition: height .44s var(--ke-ease), opacity .26s var(--ke-ease), display .44s;
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: var(--page, #F7F6F4);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--hairline, #D8D4CC);
+  clip-path: inset(0 0 100% 0); opacity: 0;
+  transition: clip-path .42s var(--ke-ease), opacity .24s var(--ke-ease), display .42s;
   transition-behavior: allow-discrete;
 }
-.mobile-menu.open { height: auto; opacity: 1; }
-@starting-style { .mobile-menu.open { height: 0; opacity: 0; } }
+.mobile-menu.open { clip-path: inset(0 0 0 0); opacity: 1; }
+@starting-style { .mobile-menu.open { clip-path: inset(0 0 100% 0); opacity: 0; } }
 
 /* The rows arrive after the panel, one behind the next. A menu whose items all appear at
    once with the box is a box appearing; staggered, it reads as a menu opening. */
