@@ -117,20 +117,30 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
   const fresh = unstyled.filter(c => !LEGACY_UNSTYLED.includes(c))
   check(`${label}: every class used resolves to a real rule`, fresh.length === 0, fresh.join(', '))
 
-  check(`${label}: both brand faces loaded`,
-    await page.evaluate(() => document.fonts.check('500 40px Fraunces') && document.fonts.check('400 16px "Plus Jakarta Sans"')))
+  /* NOT document.fonts.check(): that returns true when NO declared face matches the
+     request, so for months it asserted Fraunces and Plus Jakarta Sans - both retired -
+     and passed on a page that loaded neither. A face has to be DECLARED and LOADED. */
+  const faces = await page.evaluate(() => [...document.fonts].map(f => [f.family.replace(/["']/g, ''), f.status]))
+  for (const fam of ['Manrope', 'Newsreader'])
+    check(`${label}: ${fam} face is declared and loaded`,
+      faces.some(([f, s]) => f === fam && s === 'loaded'), JSON.stringify(faces))
 
   /* Content that must be on the page, not just in the file. */
   /* innerText returns TEXT-TRANSFORMED output, so a `.smallcaps` eyebrow reads
      back as FOUNDATION, not Foundation. Compare case-insensitively, or this
      fails because the page is styled correctly. */
   const text = (await page.evaluate(() => document.body.innerText)).toLowerCase()
-  /* The three stages and the mechanism name belong on the pages that TEACH the
-     system. Forge sells a one-off website and is not obliged to recite it. */
+  /* The method's steps and the mechanism name belong on the pages that TEACH the
+     system. Forge sells a one-off website and is not obliged to recite it.
+     Foundation / Demand / Capture left with the reno model when the creative page
+     became the homepage (7a34826, 2026-09-04); this went red that morning and stayed
+     red because nothing told it the system had changed. The steps are asserted by
+     their live headings so the next repositioning fails here loudly, on day one. */
   const TEACHES = ['index.html']
   if (TEACHES.includes(PAGE)) {
-    check(`${label}: all three stages render`,
-      ['foundation', 'demand', 'capture'].every(x => text.includes(x)), text.slice(0, 80))
+    const STEPS = ['establish the margin', 'set the baseline', 'build the creative']
+    const missing = STEPS.filter(x => !text.includes(x))
+    check(`${label}: the method's steps render`, missing.length === 0, missing.join(', '))
     check(`${label}: the mechanism is named`, text.includes('acquisition system'))
   }
   /* "The System" left the nav on 2026-08-27 (it pointed at the page it sat on), so a
