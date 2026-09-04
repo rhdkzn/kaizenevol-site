@@ -151,6 +151,58 @@ for (const name of PAGES) {
   if (smooth.mainName) mainNamesSeen.add(smooth.mainName);
   check(`${name}: the mobile menu is pulled out of the nav snapshot`,
         smooth.menuName === 'n/a' || smooth.menuName === 'ke-menu', smooth.menuName);
+
+  // THE EXIT ON THE TAP (transitions.js). A cross-document view transition cannot start
+  // until the next page is ready; on a throttled phone profile that was +524ms of frozen
+  // page after the tap, then a swap. The script starts the content's exit synchronously
+  // on the click, so the first visible change is the tap itself. Everything below is
+  // evaluated in-page so "synchronously" is literal: the class must be present on the
+  // very same tick the click was dispatched, before any timer or network.
+  const exit = await page.evaluate(() => {
+    const out = { linked: !!document.querySelector('script[src*="transitions.js"]') };
+    const a = document.querySelector('main a[href$=".html"], nav a[href$=".html"], a[href="index.html"], a[href="/"]');
+    if (!a) return { ...out, noLink: true };
+    const html = document.documentElement;
+    const fire = (init) => {
+      html.classList.remove('leaving');
+      const e = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init });
+      a.dispatchEvent(e);
+      const leaving = html.classList.contains('leaving');
+      html.classList.remove('leaving');
+      return { leaving, prevented: e.defaultPrevented };
+    };
+    out.plain = fire({});
+    out.meta = fire({ metaKey: true });     // "open in new tab" must stay the browser's
+    // A foreign link must never be intercepted.
+    const ext = document.createElement('a'); ext.href = 'https://example.com/x'; document.body.appendChild(ext);
+    html.classList.remove('leaving');
+    const ee = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
+    ext.dispatchEvent(ee); out.external = { leaving: html.classList.contains('leaving'), prevented: ee.defaultPrevented };
+    html.classList.remove('leaving'); ext.remove();
+    // Back from the bfcache restores the page mid-exit; pageshow(persisted) must clear it.
+    html.classList.add('leaving');
+    window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+    out.restored = !html.classList.contains('leaving');
+    return out;
+  });
+  check(`${name}: transitions.js is linked`, exit.linked);
+  if (!exit.noLink) {
+    check(`${name}: a same-page click starts the exit on the same tick`,
+          exit.plain.leaving === true && exit.plain.prevented === true, JSON.stringify(exit.plain));
+    check(`${name}: a modified click (new tab) is left to the browser`,
+          exit.meta.leaving === false && exit.meta.prevented === false, JSON.stringify(exit.meta));
+    check(`${name}: an external link is left to the browser`,
+          exit.external.leaving === false && exit.external.prevented === false, JSON.stringify(exit.external));
+    check(`${name}: a bfcache restore clears the exit state`, exit.restored === true);
+    // The dispatched click was real: the script has a navigation queued 160ms out. Let it
+    // land, then come back to the page under test, or every check after this one runs in
+    // a destroyed execution context. (First run of this block crashed the whole suite on
+    // index.html for exactly that reason - the script working is what broke the test.)
+    await page.waitForTimeout(260);
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
+    await page.goto(`${BASE}/${name}`, { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(320);
+  }
   check(`${name}: speculation rules prerender the next page`,
         smooth.eagerness === 'moderate', String(smooth.eagerness));
 

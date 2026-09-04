@@ -256,6 +256,18 @@ footer { view-transition-name: ke-footer; }
 ::view-transition-group(ke-menu) { animation: none; }
 ::view-transition-new(ke-menu) { animation: none; }
 
+/* The exit that starts ON THE TAP (transitions.js), before the next page has even been
+   requested. The view transition above cannot begin until the new document is ready, and
+   on a phone that is the longest part of the whole navigation - so this is what the user
+   actually sees first. The content leaves, the frame stays, and the fetch happens behind
+   an empty stage rather than a frozen page. The menu closes on the same clock. */
+html.leaving main {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity .16s cubic-bezier(.4, 0, .6, 1), transform .16s cubic-bezier(.4, 0, .6, 1);
+}
+html.leaving .mobile-menu { transition-duration: .16s, .12s, .16s; }
+
 /* The nav and the logo are the same object on both pages, so they are MORPHED rather than
    cross-faded — the header stays put while the body changes underneath it. This is the
    detail that separates a page transition from a fade. */
