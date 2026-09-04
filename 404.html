@@ -2,34 +2,34 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
-  <meta name="theme-color" content="#0C0618" />
+  <meta name="theme-color" content="#F7F6F4" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Page not found, KaizenEvol</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="preload" href="/fraunces.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
   <style>
-    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
-    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:500; font-display:swap; src:url('/pjs-500.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/newsreader-italic.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:400; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:500; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:600; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     html { overflow-x:clip; }
-    body { background:#0C0618; color:#EEE8FF; font-family:'Plus Jakarta Sans',system-ui,sans-serif; line-height:1.7;
+    body { background:#F7F6F4; color:#23211E; font-family:'Manrope',system-ui,sans-serif; line-height:1.7;
       min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px; }
-    .num { font-family:'Fraunces',Georgia,serif; font-style:italic; font-size:clamp(80px, 20vw, 160px); line-height:1; color:#8B5CF6; margin-bottom:18px; }
-    h1 { font-family:'Fraunces',Georgia,serif; font-weight:500; font-size:clamp(26px, 6vw, 40px); letter-spacing:-0.01em; margin-bottom:14px; }
-    h1 em { font-style:italic; color:#A78BFA; }
-    p { color:rgba(238,232,255,0.56); max-width:420px; margin-bottom:34px; font-size:16px; }
+    .num { font-family:'Newsreader',Georgia,serif; font-style:italic; font-size:clamp(80px, 20vw, 160px); line-height:1; color:#23211E; margin-bottom:18px; }
+    h1 { font-family:'Newsreader',Georgia,serif; font-weight:500; font-size:clamp(26px, 6vw, 40px); letter-spacing:-0.01em; margin-bottom:14px; }
+    h1 em { font-style:italic; color:#6E6A63; }
+    p { color:#6E6A63; max-width:420px; margin-bottom:34px; font-size:16px; }
     .btns { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
-    a.solid { display:inline-block; background:#A78BFA; color:#0C0618; font-weight:600; font-size:15px; padding:14px 30px; border-radius:4px; text-decoration:none; border:1px solid #A78BFA; transition:background .18s,color .18s; }
-    a.solid:hover { background:transparent; color:#A78BFA; }
-    a.quiet { display:inline-block; background:transparent; color:rgba(238,232,255,0.56); font-weight:600; font-size:15px; padding:14px 30px; border-radius:4px; text-decoration:none; border:1px solid rgba(238,232,255,0.1); transition:color .18s,border-color .18s; }
-    a.quiet:hover { color:#EEE8FF; border-color:rgba(238,232,255,0.4); }
+    a.solid { display:inline-block; background:#6E6A63; color:#F7F6F4; font-weight:600; font-size:15px; padding:14px 30px; border-radius:4px; text-decoration:none; border:1px solid #6E6A63; transition:background .18s,color .18s; }
+    a.solid:hover { background:transparent; color:#6E6A63; }
+    a.quiet { display:inline-block; background:transparent; color:#6E6A63; font-weight:600; font-size:15px; padding:14px 30px; border-radius:4px; text-decoration:none; border:1px solid #D8D4CC; transition:color .18s,border-color .18s; }
+    a.quiet:hover { color:#23211E; border-color:#8A857C; }
     .brand { position:fixed; top:24px; left:0; right:0; display:flex; justify-content:center; }
-    .brand a { display:flex; align-items:center; gap:10px; text-decoration:none; color:#EEE8FF; font-weight:700; font-size:16px; }
+    .brand a { display:flex; align-items:center; gap:10px; text-decoration:none; color:#23211E; font-weight:700; font-size:16px; }
     .brand img { height:28px; width:auto; }
     /* Cross-page transitions + FAQ height ease + press feedback (progressive, 2026 browsers) */
   @view-transition { navigation: auto; }
@@ -41,7 +41,7 @@
   nav { transition:transform .3s cubic-bezier(.16,1,.3,1); }
   nav.mid-nav-hidden { transform:translateY(-100%); }
   .nav-logo img, .brand img { view-transition-name: ke-logo; }
-  @keyframes mid-breathe { 0%,100% { color:#A78BFA; } 50% { color:#8B5CF6; } }
+  @keyframes mid-breathe { 0%,100% { color:#6E6A63; } 50% { color:#23211E; } }
   .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
   
   /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
