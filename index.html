@@ -156,6 +156,23 @@
     section .container > .smallcaps::before{content:"";position:absolute;left:0;top:-24px;
       width:180px;height:1px;background:var(--hairline);transform-origin:left center;transform:scaleX(0)}
     .closing .container > .smallcaps::before{left:50%;transform:translateX(-50%) scaleX(0);transform-origin:center}
+    /* 改 — kaizen, "change for the better" — set as a SECTION MARKER on the rule that
+       already draws above every section label. Rahaid picked this over a background
+       watermark (2026-09-04): a mark that marks something never reads as wallpaper,
+       and at 14px it is a detail you find rather than a graphic you are shown.
+
+       Outlined from IPAGothic, a genuine Japanese face, and baked into the SVG. Han
+       unification means this codepoint renders with different glyph SHAPES in a
+       Chinese font, so shipping live text would let a viewer's font stack serve the
+       wrong form. A path cannot be substituted.
+
+       .closing is excluded on purpose: its rule is centred, and a character hanging
+       off the left of a centred rule reads as a mistake. */
+    section:not(.closing) .container > .smallcaps::after{
+      content:"";position:absolute;left:0;top:-31px;width:14px;height:14px;
+      background:url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%202048%202048%22%3E%3Cg%20transform=%22translate(0,2048)%20scale(1,-1)%22%3E%3Cpath%20d=%22M703%20868H340V282Q340%20217%20371%20204Q402%20190%20539%20190Q745%20190%20766%20239Q791%20285%20797%20458L942%20424L940%20391Q922%20180%20877%20123Q818%2049%20549%2049Q306%2049%20248%2086Q197%20119%20197%20219V995H703V1405H123V1534H842V778H703ZM1358%20381Q1225%20571%201117%20884L1110%20874Q1055%20744%20973%20626L867%20731Q1083%201033%201164%201691L1311%201667Q1283%201458%201256%201343H1905V1208H1733Q1702%20703%201536%20399L1530%20389Q1704%20178%201952%2016L1848%20-125Q1621%2037%201446%20258Q1268%2012%20961%20-158L859%20-31Q1167%20104%201358%20381ZM1436%20520Q1555%20763%201586%201194Q1586%201204%201588%201208H1225Q1223%201198%201211%201156Q1200%201119%201192%201089Q1277%20774%201436%20520Z%22%20fill=%22%238A857C%22/%3E%3C/g%3E%3C/svg%3E') no-repeat center/contain;opacity:.62}
+    section:not(.closing) .container > .smallcaps::before{left:22px;width:158px}
+
 
     /* ---- Browsers WITHOUT scroll timelines (Firefox today): the same choreography on
        transitions, driven by the .in class the observer adds. ---- */
