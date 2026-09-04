@@ -83,7 +83,7 @@
     @media(max-width:860px){.nav-links{display:none}.nav-cta{display:inline-block;margin-left:auto}.burger{display:flex}.nav-inner{gap:12px}}
 
     /* hero */
-    .hero{padding:104px 0 76px;text-align:center;border-bottom:1px solid var(--hairline)}
+    .hero{padding:104px 0 76px;text-align:center;border-bottom:1px solid var(--hairline);background:rgba(247,246,244,.55)}
     .hero h1{max-width:15ch;margin:22px auto 0}
     .hero-sub{max-width:56ch;margin:22px auto 0;font-size:17px;color:var(--muted)}
     @media(max-width:640px){
@@ -245,7 +245,11 @@
       .ln > span{transform:none}
     }
 
-    section{padding:80px 0}
+    /* .55 everywhere at this level, not just on .band. Without it a plain section passes
+       the kanji at 100% and a band at 45%, so its tone steps visibly at every boundary -
+       reported as the ribbon 'changing abruptly' on scroll. Base = the surface's own
+       colour, so the composite is unchanged and only the passthrough is equalised. */
+    section{padding:80px 0;background:rgba(247,246,244,.55)}
     /* Translucent so the kanji reads THROUGH the panel instead of being hidden by it.
        Alpha solved so the composite over --page is exactly the old --recess: at a=.82,
        base = (239 - .18*247)/.82 = 237. The panel looks identical; the layer behind it
