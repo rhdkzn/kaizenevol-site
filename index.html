@@ -123,7 +123,16 @@
 
     /* hero line drop — the signature, untouched */
     .hero h1{perspective:900px}
-    .ln{display:inline-block;overflow:hidden;vertical-align:top}
+    /* The mask that lets each word fall in. overflow:hidden clips the box, and at
+       line-height 1.08 the box is ~5px shorter than the text needs, so every
+       descender was being cut off - Rahaid caught it on the phone hero ("some of
+       the letters look like they're cut off"): the g in "go", the y in "buy".
+       Headroom is added BELOW and taken straight back as negative margin, so the
+       visible box grows and the layout does not move. Safe against the animation
+       because the start state is translateY(-.85em) with opacity:0 - the word hides
+       ABOVE the mask, so the bottom edge does no masking work. */
+    .ln{display:inline-block;overflow:hidden;vertical-align:top;
+        padding-bottom:.18em;margin-bottom:-.18em}
     .js .ln > span{display:inline-block;transform:translateY(-.85em) rotateX(-62deg);opacity:0;
       transform-origin:50% 100%;transition:transform .62s var(--el-ease),opacity .5s var(--el-ease)}
     .lit .ln > span{transform:none;opacity:1}
