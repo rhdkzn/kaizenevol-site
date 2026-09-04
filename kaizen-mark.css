@@ -40,3 +40,19 @@ section:not(.closing) .container > .smallcaps::before{ left:22px; width:158px; }
 
 /* the pages without an eyebrow need the space made for the marker */
 .sect-head.kz-mark, .legal-head.kz-mark, .contact-grid.kz-mark{ padding-top:34px; }
+
+/* ── The seat mark ────────────────────────────────────────────────────────────
+ * "We take five at a time" appears five times across the site as plain text and
+ * was never shown. This is the cap made visible: five marks beside the line.
+ *
+ * IT SHOWS THE CAP, NOT THE OCCUPANCY, and that is a commercial decision rather
+ * than a design one. Filling marks to show seats taken would broadcast the client
+ * count to every prospect - and an empty board says "nobody has hired us". Set
+ * data-taken on the element to switch occupancy on; leave it off and all five read
+ * the same, which claims nothing that is not true.
+ */
+.seats{display:inline-flex;gap:5px;vertical-align:middle;margin-right:9px;
+       transform:translateY(-1px)}
+.seats i{width:7px;height:7px;border:1px solid var(--kz-seat,#8A857C);border-radius:1px;
+         opacity:.55;display:block}
+.seats i.taken{background:var(--kz-seat,#8A857C);opacity:.85}
