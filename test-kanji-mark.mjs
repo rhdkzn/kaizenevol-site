@@ -55,8 +55,16 @@ for (const [label, width, height] of [['desktop', 1280, 900], ['mobile', 390, 84
     const right = mRect.right - parseFloat(cs.right);
     const box = { top, bottom: top + h, left: right - w, right };
 
-    // Every block of running copy on the page, in document coordinates.
+    // Every block of running copy that sits on the OPEN PAGE, in document coordinates.
+    //
+    // Text inside a .step or .cell is excluded on purpose, and the distinction is the
+    // whole point of this check rather than a loosening of it: those cards carry their
+    // own near-opaque background, so a mark behind one is OCCLUDED by it - which is
+    // correct behaviour for a background layer and reads as depth. What looks wrong, and
+    // what Rahaid reported repeatedly, is the mark showing THROUGH running copy that sits
+    // directly on the page with nothing between them. Only that case is a failure.
     const texts = [...document.querySelectorAll('p, h1, h2, h3, .smallcaps, .lede')]
+      .filter(e => !e.closest('.step, .cell, .slot'))
       .map(e => {
         const b = e.getBoundingClientRect();
         return { top: b.top + window.scrollY, bottom: b.bottom + window.scrollY,
