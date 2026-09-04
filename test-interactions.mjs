@@ -98,13 +98,45 @@ for (const name of PAGES) {
         }
       } catch (e) { /* cross-origin sheet */ }
     }
+    // Read the two animations off the view-transition pseudo-elements. getComputedStyle
+    // cannot target them, so the rules are read out of the stylesheet - and the TIMES are
+    // parsed out of the `animation` SHORTHAND rather than the longhands, because a var()
+    // anywhere in a shorthand stops the browser exposing animationDuration and
+    // animationDelay at all. Both serialised empty, which made an earlier version of this
+    // check compare 0 against 0 and pass whatever the CSS said. In the shorthand the first
+    // <time> is the duration and the second is the delay.
+    const times = s => [...String(s).matchAll(/(-?[\d.]+)(ms|s)\b/g)]
+      .map(m => m[2] === 'ms' ? parseFloat(m[1]) / 1000 : parseFloat(m[1]));
+    let oldDuration = null, newDelay = null, foundBoth = false;
+    for (const sheet of document.styleSheets) {
+      try {
+        for (const r of sheet.cssRules) {
+          if (r.selectorText === '::view-transition-old(root)') oldDuration = times(r.style.animation)[0];
+          if (r.selectorText === '::view-transition-new(root)') newDelay = times(r.style.animation)[1];
+        }
+      } catch (e) { /* cross-origin sheet */ }
+    }
+    foundBoth = typeof oldDuration === 'number' && typeof newDelay === 'number';
+
     const s = document.querySelector('script[type="speculationrules"]');
     let spec = null;
     try { spec = s ? JSON.parse(s.textContent) : null; } catch (e) { spec = 'PARSE ERROR'; }
-    return { fades, eagerness: spec && spec !== 'PARSE ERROR' ? spec.prerender?.[0]?.eagerness : spec };
+    return { fades, oldDuration, newDelay, foundBoth, eagerness: spec && spec !== 'PARSE ERROR' ? spec.prerender?.[0]?.eagerness : spec };
   });
-  check(`${name}: the outgoing page does not fade (no transparent hole mid-transition)`,
-        smooth.fades === false, `ke-page-out sets opacity: ${smooth.fades}`);
+  // THE TWO PAGES MUST NEVER BE ON SCREEN TOGETHER, and this is the property that
+  // guarantees it: the incoming page's animation-delay must cover the outgoing page's
+  // whole duration, so the new one is still at opacity 0 while the old one leaves.
+  //
+  // Verified empirically before this assertion was written, by screen-recording a real
+  // index -> about navigation and measuring dark-pixel coverage per frame:
+  //     cross-dissolve   3.58% -> 2.90% -> 2.29%   ink never falls; at 542ms BOTH
+  //                                                headlines were legible at once
+  //     sequential       3.58% -> 0.55% -> 2.29%   ink falls to the nav alone, then rises
+  // The dip is the handover. Its absence is the double exposure, and no screenshot,
+  // no CSS parse and no pageswap event catches it - all three passed while it was broken.
+  check(`${name}: the incoming page waits for the outgoing one (no cross-dissolve)`,
+        smooth.foundBoth && smooth.newDelay >= smooth.oldDuration - 0.001,
+        `new delay ${smooth.newDelay}s vs old duration ${smooth.oldDuration}s`);
   check(`${name}: speculation rules prerender the next page`,
         smooth.eagerness === 'moderate', String(smooth.eagerness));
 

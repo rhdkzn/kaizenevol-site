@@ -173,32 +173,38 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [role="button"]:fo
 .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* ── Cross-page transitions ────────────────────────────────────────────────────────────
- * THE OLD PAGE MUST NOT FADE. This is the whole difference between a smooth transition and
- * a washed-out one, and the first version got it wrong: the old page faded to zero over
- * 200ms while the new one took 420ms to arrive, so for the ~220ms in between NEITHER was
- * opaque and the browser's background showed through both. That dip is what reads as
- * unsmooth - it is not a timing problem, it is a hole.
+ * SEQUENTIAL, NOT SIMULTANEOUS. This is the third version and the first one built off a
+ * recording rather than off reasoning about the CSS.
  *
- * ::view-transition-new paints ABOVE ::view-transition-old, so the fix is simply to let the
- * old page hold at full opacity and bring the new one in over the top of it. There is never
- * a frame where the viewport is not covered by something. The old page still MOVES - a
- * small lift and scale, so it reads as being replaced rather than sitting there - it just
- * never becomes transparent. */
+ * Version one faded the old page out in 200ms while the new took 420ms to arrive, leaving
+ * a window where neither was opaque. I called that a hole and removed the old page's fade.
+ * That was the wrong fix: ::view-transition-new paints ABOVE ::view-transition-old, so an
+ * opaque old page under a fading-in new one is a guaranteed CROSS-DISSOLVE. Screen-recorded
+ * at 542ms into a real index -> about navigation, both headlines were legible at once, one
+ * on top of the other. Two pages with different content dissolving through each other is a
+ * double exposure, and it looks far worse than any brief flat frame.
+ *
+ * So the two never overlap now. The old page leaves in 150ms, the new one waits for it and
+ * then arrives over 300ms. Between them is roughly one frame of the page's own background -
+ * which is a flat, identical colour on every page, so there is nothing there to notice. A
+ * moment of the page ground reads as clean; a moment of two headlines reads as broken.
+ */
 @view-transition { navigation: auto; }
 
 @keyframes ke-page-out {
-  /* Opacity is deliberately absent. Motion only. */
-  to { transform: translateY(-10px) scale(.992); }
+  to { opacity: 0; transform: translateY(-8px); }
 }
 @keyframes ke-page-in {
-  from { opacity: 0; transform: translateY(12px) scale(.994); }
+  from { opacity: 0; transform: translateY(10px); }
 }
 
 ::view-transition-old(root) {
-  animation: ke-page-out .36s var(--ke-ease) both;
+  animation: ke-page-out .15s var(--ke-press-in) both;
 }
 ::view-transition-new(root) {
-  animation: ke-page-in .36s var(--ke-ease) both;
+  /* The delay is the whole mechanism: it holds the incoming page at opacity 0 until the
+     outgoing one has finished leaving, so the two are never on screen together. */
+  animation: ke-page-in .3s var(--ke-ease) .15s both;
 }
 
 /* The nav and the logo are the same object on both pages, so they are MORPHED rather than
@@ -233,8 +239,8 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .mobile-menu a { transition-duration: .12s; }
   .mobile-menu.open a:nth-child(n):not(:active) { transition-delay: 0s; }
   .burger span { transition-duration: .14s; }
-  ::view-transition-old(root) { animation-duration: .14s; }
-  ::view-transition-new(root) { animation-duration: .14s; }
+  ::view-transition-old(root) { animation-duration: .08s; }
+  ::view-transition-new(root) { animation-duration: .12s; animation-delay: .08s; }
   ::view-transition-group(ke-nav), ::view-transition-group(ke-logo) {
     animation-duration: .14s;
   }
