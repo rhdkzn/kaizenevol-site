@@ -52,7 +52,7 @@
     '.kz-river{position:fixed;top:0;right:0;height:100vh;pointer-events:none;z-index:-1;',
     '  overflow:hidden}',
     '.kz-river svg{position:absolute;top:0;display:block;will-change:transform,opacity}',
-    '.kz-river path{fill:#D6D3CD}',
+    '.kz-river path{fill:#C6C0B4}',
     /* A watermark down the margin of a printed page is wasted toner. */
     '@media print{.kz-river{display:none}}'
   ].join('');
