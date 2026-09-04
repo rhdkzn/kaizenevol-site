@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="theme-color" content="#0D0D0F" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>KaizenEvol, creative acquisition for ecom brands</title>
+  <meta name="description" content="A growth partner for creative ecom brands. We build the profit picture first, then buy against it: performance creative, paid acquisition, social and retention on one retainer." />
+  <link rel="canonical" href="https://kaizenevol.com/ecom.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kaizenevol.com/ecom.html" />
+  <meta property="og:site_name" content="KaizenEvol" />
+  <meta property="og:title" content="KaizenEvol, creative acquisition for ecom brands" />
+  <meta property="og:description" content="A growth partner for creative ecom brands. Margin first, then scale." />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <style>
+    /* v3 — brand/DESIGN.md 3.0. Mixed neutrals, light. Black lives in the mark and the buttons. */
+    @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+    @font-face{font-family:'Newsreader';src:url('/newsreader-italic.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
+
+    :root{
+      --page:#F7F6F4; --recess:#EFEDE9; --cool:#E8E9EA; --hairline:#D8D4CC;
+      --stone:#8A857C; --muted:#6E6A63; --ink:#23211E;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+      --serif:'Newsreader',Georgia,'Times New Roman',serif;
+      --el-ease:cubic-bezier(.16,1,.3,1);
+      --maxw:1120px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    a{color:var(--ink)}
+    a:hover{color:var(--muted)}
+    img{max-width:100%}
+
+    h1,h2,h3{font-weight:200;letter-spacing:-0.04em;line-height:1.06;margin:0}
+    h1{font-size:clamp(34px,1.5rem + 3.2vw,60px)}
+    h2{font-size:clamp(30px,1.4rem + 2.4vw,48px)}
+    h3{font-size:clamp(20px,1rem + 1vw,26px);font-weight:600;letter-spacing:-0.02em;line-height:1.25}
+    em{font-family:var(--serif);font-style:italic;font-weight:300}
+    .smallcaps{font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone)}
+
+    /* nav — markup identical to the rest of the estate for nav parity */
+    nav{position:sticky;top:0;z-index:40;background:rgba(247,246,244,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
+    .nav-inner{display:flex;align-items:center;gap:24px;height:66px}
+    .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-0.02em}
+    .nav-logo img{height:24px;width:auto}
+    .nav-links{list-style:none;display:flex;align-items:center;gap:26px;margin:0 0 0 auto;padding:0;font-size:14px;font-weight:500}
+    .nav-links a{text-decoration:none;color:var(--muted)}
+    .nav-links a:hover{color:var(--ink)}
+    .btn-solid{background:var(--ink);color:var(--page);padding:10px 20px;border-radius:980px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block;transition:transform .3s var(--el-ease),opacity .3s var(--el-ease)}
+    .btn-solid:hover{color:var(--page);opacity:.88;transform:translateY(-1px)}
+    .btn-quiet{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;border-bottom:1px solid var(--hairline);padding-bottom:2px}
+    .burger{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:5px;padding:8px}
+    .burger span{display:block;width:20px;height:1.5px;background:var(--ink)}
+    .mobile-menu{display:none;flex-direction:column;gap:2px;padding:12px 24px 20px;border-top:1px solid var(--hairline)}
+    .mobile-menu a{padding:11px 0;text-decoration:none;font-size:15px;color:var(--muted);border-bottom:1px solid var(--hairline)}
+    .mobile-menu a.btn-solid{color:var(--page);text-align:center;margin-top:12px;border:0}
+    .mobile-menu.open{display:flex}
+    @media(max-width:860px){.nav-links{display:none}.burger{display:flex}}
+
+    /* hero */
+    .hero{padding:104px 0 76px;text-align:center;border-bottom:1px solid var(--hairline)}
+    .hero h1{max-width:15ch;margin:22px auto 0}
+    .hero-sub{max-width:56ch;margin:22px auto 0;font-size:17px;color:var(--muted)}
+    .hero-ctas{display:flex;gap:18px;justify-content:center;align-items:center;margin-top:32px;flex-wrap:wrap}
+    .hero-note{margin-top:18px;font-size:13px;color:var(--stone)}
+
+    /* reveal — decoration only, softened not disabled under reduced motion */
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .9s var(--el-ease),transform .9s var(--el-ease)}
+    .reveal.in{opacity:1;transform:none}
+    @media(prefers-reduced-motion:reduce){
+      .reveal{transition-duration:.01s}
+      .btn-solid{transition-duration:.01s}
+    }
+
+    section{padding:80px 0}
+    .band{background:var(--recess);border-block:1px solid var(--hairline)}
+    .lede{font-size:20px;font-weight:300;max-width:60ch;color:var(--ink);margin:20px 0 0}
+    .muted{color:var(--muted)}
+
+    .grid{display:grid;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:44px}
+    @media(min-width:760px){.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(min-width:1000px){.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    .cell{background:var(--page);padding:30px 26px;display:flex;flex-direction:column;gap:10px}
+    .cell .n{font-size:11px;font-weight:700;letter-spacing:0.16em;color:var(--stone)}
+    .cell p{margin:0;font-size:14.5px;color:var(--muted)}
+
+    .steps{display:grid;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:44px}
+    @media(min-width:820px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    .step{background:var(--recess);padding:30px 26px;display:flex;flex-direction:column;gap:12px}
+    .step .n{font-family:var(--serif);font-style:italic;font-size:30px;color:var(--stone);line-height:1}
+    .step p{margin:0;font-size:14.5px;color:var(--muted)}
+
+    .work{display:grid;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:40px}
+    @media(min-width:760px){.work{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    .slot{background:var(--cool);aspect-ratio:4/5;display:flex;align-items:flex-end;padding:18px}
+    .slot span{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--stone)}
+
+    .closing{text-align:center}
+    .closing h2{max-width:18ch;margin:0 auto}
+
+    footer{background:var(--recess);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
+    .f-grid{display:grid;gap:34px}
+    @media(min-width:760px){.f-grid{grid-template-columns:2fr 1fr 1fr}}
+    footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+    footer a{color:var(--muted);text-decoration:none}
+    footer a:hover{color:var(--ink)}
+    .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--stone);font-size:13px}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="nav-logo" href="index.html">
+      <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <b>KaizenEvol</b>
+    </a>
+    <ul class="nav-links">
+      <li><a href="kaizenreach.html">KaizenReach</a></li>
+      <li><a href="kaizendesk.html">KaizenDesk</a></li>
+      <li><a href="kaizenforge.html">KaizenForge</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a class="btn-solid" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Book a call</a></li>
+    </ul>
+    <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="kaizenreach.html">KaizenReach, Ads, Social + Front Office</a>
+    <a href="kaizendesk.html">KaizenDesk, AI Front Office</a>
+    <a href="kaizenforge.html">KaizenForge, Websites</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a class="btn-solid" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Book a call</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="smallcaps">Creative acquisition for ecom brands</div>
+    <h1>We find what a customer is <em>actually</em> worth to you. Then we go and buy more of them.</h1>
+    <p class="hero-sub">A growth partner for creative ecom brands. Performance creative, paid acquisition, social and retention on one retainer, run against margin rather than against a screenshot of a ROAS number.</p>
+    <div class="hero-ctas">
+      <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%20run%20an%20ecom%20brand%20and%20I%27d%20like%20to%20talk." class="btn-solid" target="_blank" rel="noopener">Start a conversation</a>
+      <a href="#method" class="btn-quiet">See how it works</a>
+    </div>
+    <p class="hero-note">We take five brands at a time.</p>
+  </div>
+</header>
+
+<section class="band">
+  <div class="container reveal">
+    <div class="smallcaps">The problem</div>
+    <h2>Most brands scale a number that isn't profit.</h2>
+    <p class="lede">Platform ROAS counts the sale and ignores what the sale cost you to make, pack and ship. Scale on it and you can grow revenue every month while the bank balance goes the other way. The first thing we do is work out what a customer is genuinely worth, because every decision after that depends on it.</p>
+  </div>
+</section>
+
+<section id="method">
+  <div class="container reveal">
+    <div class="smallcaps">The method</div>
+    <h2>Margin first. Then scale.</h2>
+    <p class="lede muted">Four steps, in order, and the order is the point. Nobody touches the ad account until step three.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <h3>Establish the margin</h3>
+        <p>Product-level costs, weighted across the catalogue, landed. What a sale actually leaves you with after everything.</p>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <h3>Set the baseline</h3>
+        <p>What your revenue was already doing before us, adjusted for season. We do not take credit for a trend you were already on.</p>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <h3>Build the creative</h3>
+        <p>Concepts, hooks and iteration built from your own footage and product photography, briefed off what the account is telling us.</p>
+      </div>
+      <div class="step">
+        <div class="n">04</div>
+        <h3>Buy against it</h3>
+        <p>Paid acquisition managed to contribution margin, with the numbers open to you and read the same way we read them.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container reveal">
+    <div class="smallcaps">What we run</div>
+    <h2>One retainer, four systems.</h2>
+    <div class="grid four">
+      <div class="cell"><div class="n">01</div><h3>Creative production</h3><p>Statics, motion and edited brand footage. Enough volume to actually learn what works, not one hero asset a month.</p></div>
+      <div class="cell"><div class="n">02</div><h3>Paid acquisition</h3><p>Meta and TikTok, judged on blended performance and contribution rather than per-channel vanity numbers.</p></div>
+      <div class="cell"><div class="n">03</div><h3>Organic social</h3><p>The same creative engine pointed at the feed, so the brand looks alive between campaigns.</p></div>
+      <div class="cell"><div class="n">04</div><h3>Retention</h3><p>Email and SMS flows so the customers you already paid for come back without paying for them twice.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container reveal">
+    <div class="smallcaps">Work</div>
+    <h2>We are building the first five.</h2>
+    <p class="lede muted">We would rather show you nothing than show you someone else's numbers. The first five brands we take on are priced as founding clients for exactly that reason, and their results will sit here when they exist.</p>
+    <div class="work" aria-label="Case studies, coming">
+      <div class="slot"><span>In progress</span></div>
+      <div class="slot"><span>In progress</span></div>
+      <div class="slot"><span>Available</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band closing" id="contact">
+  <div class="container reveal">
+    <div class="smallcaps">Next step</div>
+    <h2>Tell us what you sell and what it costs you to make.</h2>
+    <p class="lede muted" style="margin-left:auto;margin-right:auto">That conversation tells us in ten minutes whether we can move your numbers. If we can't, we will say so.</p>
+    <div class="hero-ctas">
+      <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%20run%20an%20ecom%20brand%20and%20I%27d%20like%20to%20talk." class="btn-solid" target="_blank" rel="noopener">Start a conversation</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="f-grid">
+      <div>
+        <div class="nav-logo"><img src="brand/v3/ke-mark-ink-256.png" alt="" style="height:22px" onerror="this.style.display='none'"><b>KaizenEvol</b></div>
+        <p class="muted" style="margin:12px 0 0;max-width:38ch">Creative acquisition for brands that care how they look doing it.</p>
+      </div>
+      <div>
+        <div class="smallcaps">Pages</div>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="kaizenreach.html">KaizenReach</a></li>
+          <li><a href="kaizendesk.html">KaizenDesk</a></li>
+          <li><a href="kaizenforge.html">KaizenForge</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="smallcaps">Contact</div>
+        <ul>
+          <li><a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></li>
+          <li><a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a></li>
+          <li><a href="https://www.instagram.com/kaizenevol/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.facebook.com/people/KaizenEvol-Home-Renovation-Marketing/61590237975968/" target="_blank" rel="noopener">Facebook</a></li>
+        </ul>
+        <a class="btn-solid" style="margin-top:14px" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Message us</a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 KaizenEvol</span>
+      <span>United Kingdom</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var b=document.getElementById('burgerBtn'),m=document.getElementById('mobileMenu');
+  if(b&&m){b.addEventListener('click',function(){var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});}
+  // Reveal on scroll. Gesture-driven, so it ships for everyone; reduced motion shortens
+  // the duration in CSS rather than removing the reveal. brand/DESIGN.md, reduce-motion ruling.
+  var els=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -12% 0px'});
+    els.forEach(function(el){io.observe(el);});
+  } else { els.forEach(function(el){el.classList.add('in');}); }
+</script>
+</body>
+</html>
