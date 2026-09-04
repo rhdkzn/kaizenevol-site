@@ -14,7 +14,13 @@
  */
 (function () {
   'use strict';
-  var EXIT_MS = 160;
+  /* The full length of the exit, on purpose. The browser captures the old page for the
+     view transition at the moment navigation commits and then HOLDS that capture, frozen,
+     while the new document loads. Navigate before the exit has finished and the capture
+     is a half-faded ghost of the content, frozen mid-fade for as long as the fetch takes
+     (recorded: ~25% ghost held ~200ms on a local server after a 100ms hold). Navigate
+     after it and the hold is an empty stage with the frame intact, which is the design. */
+  var EXIT_MS = 170;
   var main = document.querySelector('main');
   if (!main) return;
 

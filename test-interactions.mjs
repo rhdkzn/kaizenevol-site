@@ -110,10 +110,14 @@ for (const name of PAGES) {
           if (/::view-transition-(old|new)\(root\)/.test(r.selectorText))
             out.rootStatic = (out.rootStatic ?? true) && r.style.animationName === 'none';
           if (r.selectorText === '::view-transition-old(*)') out.contentOut = /ke-content-out/.test(r.style.animation);
-          if (r.selectorText === '::view-transition-new(*)') {
-            out.contentIn = /ke-content-in/.test(r.style.animation);
+          // The arrival is on <main> itself so a plain load gets it too; the incoming
+          // pseudo must then be none, or a navigation rises twice.
+          if (r.selectorText === 'main' && /ke-content-in/.test(r.style.animation)) {
+            out.contentIn = true;
             out.inDuration = times(r.style.animation)[0];
+            out.inFill = r.style.animationFillMode;
           }
+          if (r.selectorText === '::view-transition-new(*)') out.newPseudoStatic = r.style.animationName === 'none';
         }
       } catch (e) { /* cross-origin sheet */ }
     }
@@ -138,6 +142,12 @@ for (const name of PAGES) {
         smooth.rootStatic === true, `root rules found: ${smooth.rootStatic !== null}, static: ${smooth.rootStatic}`);
   check(`${name}: the content leaves and arrives via its own keyframes`,
         smooth.contentOut === true && smooth.contentIn === true, `out ${smooth.contentOut} in ${smooth.contentIn}`);
+  check(`${name}: the arrival runs once (main animates, the incoming pseudo does not)`,
+        smooth.newPseudoStatic === true, `::view-transition-new(*) static: ${smooth.newPseudoStatic}`);
+  // `both`/`forwards` would pin opacity:1 at animation level after the entrance and
+  // outrank the html.leaving transition - the exit-on-tap would stop working, silently.
+  check(`${name}: the arrival's fill-mode releases main afterwards (backwards)`,
+        smooth.inFill === 'backwards', String(smooth.inFill));
   // Apple's range. 10px was imperceptible on a phone; a full viewport was rejected on sight.
   check(`${name}: the incoming content rises a perceptible, restrained distance (8-24px)`,
         typeof smooth.inTravel === 'number' && smooth.inTravel >= 8 && smooth.inTravel <= 24,
@@ -203,6 +213,21 @@ for (const name of PAGES) {
     await page.goto(`${BASE}/${name}`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(320);
   }
+  // Behavioural twin of the fill-mode check: after the load entrance has finished, does
+  // the exit state actually MOVE main? A pinned animation value would leave it at 1 and
+  // every structural check above would still pass. Runs AFTER the click block above has
+  // been absorbed - its first placement sat 600ms inside a page that was navigating away.
+  const exitMoves = await page.evaluate(async () => {
+    const m = document.querySelector('main'); if (!m) return 'no main';
+    await new Promise(r => setTimeout(r, 600)); // let the entrance finish
+    document.documentElement.classList.add('leaving');
+    await new Promise(r => setTimeout(r, 120));
+    const op = parseFloat(getComputedStyle(m).opacity);
+    document.documentElement.classList.remove('leaving');
+    return op;
+  });
+  check(`${name}: after the entrance, the exit state still fades main`,
+        exitMoves === 'no main' || exitMoves < 0.9, `opacity ${exitMoves} at +120ms`);
   check(`${name}: speculation rules prerender the next page`,
         smooth.eagerness === 'moderate', String(smooth.eagerness));
 
@@ -308,6 +333,17 @@ for (const [label, width, sels] of [
 // A real navigation must actually run a transition, not just declare one.
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  // The ARRIVING side, armed before the new document exists. At pagereveal the new
+  // page's <main> must be at opacity 0 - the entrance's `from` state held by the
+  // backwards fill - or the content is about to pop rather than rise. No route handler
+  // anywhere in this file: a route.fulfill()ed document does not qualify for a
+  // cross-document transition, and a routed version of this check reported none.
+  await page.addInitScript(() => {
+    addEventListener('pagereveal', e => {
+      const m = document.querySelector('main');
+      sessionStorage.setItem('reveal', (e.viewTransition ? 'vt' : 'none') + '|main=' + (m ? getComputedStyle(m).opacity : 'absent'));
+    });
+  });
   await page.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(400);
   await page.evaluate(() => {
@@ -315,9 +351,11 @@ for (const [label, width, sels] of [
   });
   await page.evaluate(() => document.querySelector('nav a[href*="about"]').click());
   await page.waitForTimeout(1400);
-  const r = await page.evaluate(() => ({ path: location.pathname, vt: sessionStorage.getItem('vt') }));
+  const r = await page.evaluate(() => ({ path: location.pathname, vt: sessionStorage.getItem('vt'), reveal: sessionStorage.getItem('reveal') }));
   check('index -> about runs a real cross-document view transition',
         r.vt === 'yes' && r.path.includes('about'), JSON.stringify(r));
+  check('the arriving page reveals with the transition and its content armed to rise',
+        r.reveal === 'vt|main=0', String(r.reveal));
   await page.close();
 }
 

@@ -239,9 +239,24 @@ footer { view-transition-name: ke-footer; }
 ::view-transition-old(*) {
   animation: ke-content-out .12s cubic-bezier(.4, 0, .6, 1) both;
 }
-::view-transition-new(*) {
-  animation: ke-content-in .32s cubic-bezier(0, 0, .2, 1) .08s both;
+/* The ARRIVAL lives on <main> itself, not on the view-transition pseudo - so a first
+   load, a refresh and an arrival from outside get the same entrance as a navigation
+   (Rahaid: "when the page loads up it currently just pops up"). The incoming pseudo is a
+   live view of the new document, so if it animated too the content would rise twice.
+   fill-mode is BACKWARDS on purpose: `both` or `forwards` would keep opacity:1 pinned at
+   animation level after it ends, and that outranks the html.leaving transition below -
+   the exit-on-tap would silently stop working on every page. */
+main {
+  animation: ke-content-in .32s cubic-bezier(0, 0, .2, 1) .04s backwards;
 }
+::view-transition-new(*) { animation: none; }
+/* Measured 2026-09-04, both sides of a real navigation: pageswap and pagereveal both
+   carry the ViewTransition after the script-started navigation, and <main>'s entrance
+   runs inside it exactly once (opacity 0.26 at +100ms, 1.0 by +400ms after reveal).
+   A first draft of this note said the opposite. That measurement had gone through a
+   Playwright route.fulfill(), and a document served that way does not qualify for a
+   cross-document transition - the harness was disqualifying the navigation, not the
+   script. Record transitions with the responses untouched. */
 /* The nav and logo are paired and identical on both pages: they morph as a group and
    must NOT pick up the content animation above, or the header fades out and rises back
    in on every click. Named selectors outrank (*) whatever the source order. */
@@ -302,7 +317,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .burger span { transition-duration: .14s; }
   /* Shorten the content's exit and arrival; the frame is static either way. */
   ::view-transition-old(*) { animation-duration: .08s; }
-  ::view-transition-new(*) { animation-duration: .16s; animation-delay: .04s; }
+  main { animation-duration: .16s; animation-delay: .04s; }
   ::view-transition-group(ke-nav), ::view-transition-group(ke-logo) {
     animation-duration: .14s;
   }
