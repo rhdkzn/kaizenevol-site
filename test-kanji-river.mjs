@@ -3,12 +3,14 @@
  * Two of its properties are load-bearing and neither is visible in a screenshot, which is
  * exactly why they get a test:
  *
- *   mix-blend-mode:multiply is the ONLY thing keeping the ribbon off the body copy. It
- *   paints on top of every content block — it has to, because .band carries an opaque
- *   background and anything behind that is simply gone. Multiply can only move a pixel
- *   toward the darker of the two inputs, so text already darker than the glyph comes out
- *   unchanged. Drop the blend mode and the site still LOOKS fine in a thumbnail while
- *   every paragraph it crosses picks up a grey wash.
+ *   The ribbon paints BEHIND content at z-index:-1, which only works because body forms a
+ *   stacking context. Without that it escapes to the ROOT stacking context and body's own
+ *   opaque background paints straight over it — the layer still exists, still renders, and
+ *   is completely invisible. Nothing else in this file would catch that.
+ *
+ *   Tile opacity must reach zero before a tile is on screen. Any non-zero floor and tiles
+ *   appear at partial strength the instant they enter — reported as the ribbon "changing
+ *   abruptly" on scroll.
  *
  *   Binding to scroll POSITION rather than velocity is what makes it reverse cleanly on
  *   the way back up, which is what Rahaid asked for. A velocity- or timer-driven version
@@ -55,6 +57,9 @@ for (const [label, width, height] of [['desktop', 1280, 900], ['mobile', 390, 84
     return {
       tiles: r.querySelectorAll('svg').length,
       blend: cs.mixBlendMode,
+      bodyPos: getComputedStyle(document.body).position,
+      bodyZ: getComputedStyle(document.body).zIndex,
+      opacities: [...r.querySelectorAll('svg')].map(s => +s.style.opacity),
       position: cs.position,
       pointer: cs.pointerEvents,
       zIndex: cs.zIndex,
@@ -67,14 +72,24 @@ for (const [label, width, height] of [['desktop', 1280, 900], ['mobile', 390, 84
   check(`${label}: the ribbon is present`, !!info);
   if (info) {
     check(`${label}: it has tiles`, info.tiles > 0, `${info.tiles}`);
-    check(`${label}: mix-blend-mode is multiply — this is what protects body text`,
-          info.blend === 'multiply', info.blend);
+    // The ribbon paints BEHIND content (z-index:-1). That only works because body forms a
+    // stacking context - without it the layer escapes to the ROOT context and body's own
+    // opaque background paints over it. The layer still exists and still renders; it is
+    // simply invisible, which no other check here would catch.
+    check(`${label}: it sits behind the content, not on top of it`,
+          Number(info.zIndex) < 0, info.zIndex);
+    check(`${label}: body forms a stacking context, or the layer is painted out entirely`,
+          info.bodyPos !== 'static' && info.bodyZ !== 'auto',
+          `position:${info.bodyPos} z-index:${info.bodyZ}`);
+    // A tile must reach ZERO before it is on screen. Any non-zero floor and tiles appear at
+    // partial strength the moment they enter, which reads as the ribbon jumping.
+    check(`${label}: tiles fade to zero at the edges, so nothing pops in`,
+          Math.min(...info.opacities) === 0,
+          `min opacity ${Math.min(...info.opacities)}`);
     check(`${label}: fixed, so it is on screen at all times`,
           info.position === 'fixed', info.position);
     check(`${label}: pointer-events:none — scenery never eats a click`,
           info.pointer === 'none', info.pointer);
-    check(`${label}: it sits under the sticky nav`,
-          Number(info.zIndex) < Number(info.navZ), `${info.zIndex} < ${info.navZ}`);
     check(`${label}: aria-hidden, so a screen reader is not read decoration`,
           info.aria === 'true', String(info.aria));
     check(`${label}: no horizontal page scroll`, info.horiz === false);

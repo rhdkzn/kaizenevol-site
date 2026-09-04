@@ -49,10 +49,10 @@
     /* z-index 5 clears every content block and stays under the sticky nav at 40, so the
        ribbon never crosses the header. pointer-events:none throughout — this is scenery
        and must never eat a click or a text selection. */
-    '.kz-river{position:fixed;top:0;right:0;height:100vh;pointer-events:none;z-index:5;',
-    '  overflow:hidden;mix-blend-mode:multiply}',
+    '.kz-river{position:fixed;top:0;right:0;height:100vh;pointer-events:none;z-index:-1;',
+    '  overflow:hidden}',
     '.kz-river svg{position:absolute;top:0;display:block;will-change:transform,opacity}',
-    '.kz-river path{fill:#DFDEDC}',
+    '.kz-river path{fill:#D6D3CD}',
     /* A watermark down the margin of a printed page is wasted toner. */
     '@media print{.kz-river{display:none}}'
   ].join('');
@@ -135,13 +135,16 @@
       var centre = y + size / 2;
       // Weight by distance from the reader's eyeline, eased so the falloff is a curve
       // rather than a ramp.
-      var d = Math.min(Math.abs(centre - mid) / (vh * 0.62), 1);
+      // Normalised over a span that reaches past the viewport edge, so w hits 0 BEFORE a
+      // tile is on screen. Any non-zero floor here means tiles appear at partial strength
+      // the instant they enter - which reads as the whole ribbon changing abruptly.
+      var d = Math.min(Math.abs(centre - mid) / (vh * 0.78), 1);
       var w = 1 - d * d;
       var t = tiles[i];
       t.style.transform = 'translateY(' + y.toFixed(1) + 'px)';
       // Narrow screens carry it lighter: there is no gutter, so the ribbon is always
       // beside live text rather than beside whitespace. Body copy wins over scenery.
-      t.style.opacity = (0.62 + 0.38 * w).toFixed(3);
+      t.style.opacity = w.toFixed(3);
     }
   }
 

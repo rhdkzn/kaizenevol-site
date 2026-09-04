@@ -46,7 +46,10 @@
        itself measured exactly as tall as its footer. Painting html in the footer's
        own tone makes the bounce continue the footer instead of interrupting it. */
     html{scroll-behavior:smooth;background:var(--recess)}
-    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
+    /* position+z-index makes body a stacking context. Without it, .kz-river's z-index:-1
+       escapes to the root stacking context and body's own opaque background paints over
+       it - the layer exists, renders, and is invisible. */
+    body{position:relative;z-index:0;margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
     .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
     a{color:var(--ink)}
     a:hover{color:var(--muted)}
@@ -243,7 +246,11 @@
     }
 
     section{padding:80px 0}
-    .band{background:var(--recess);border-block:1px solid var(--hairline)}
+    /* Translucent so the kanji reads THROUGH the panel instead of being hidden by it.
+       Alpha solved so the composite over --page is exactly the old --recess: at a=.82,
+       base = (239 - .18*247)/.82 = 237. The panel looks identical; the layer behind it
+       now shows at ~18%, which is what gives the page depth rather than a sticker. */
+    .band{background:rgba(234,232,226,.62);border-block:1px solid var(--hairline)}
     .lede{font-size:20px;font-weight:300;max-width:60ch;color:var(--ink);margin:20px 0 0}
     .muted{color:var(--muted)}
 
@@ -272,7 +279,7 @@
     .closing{text-align:center}
     .closing h2{max-width:18ch;margin:0 auto}
 
-    footer{background:var(--recess);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
+    footer{background:rgba(234,232,226,.62);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
     .f-grid{display:grid;gap:34px}
     @media(min-width:760px){.f-grid{grid-template-columns:2fr 1fr 1fr}}
     footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
