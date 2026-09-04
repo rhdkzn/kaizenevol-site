@@ -78,6 +78,36 @@ for (const name of PAGES) {
         info.touch === 'manipulation', info.touch);
   check(`${name}: no failed same-origin requests`, failed.length === 0, failed.join(', '));
 
+  // SMOOTHNESS OF THE PAGE TRANSITION, and both of these are invisible in a screenshot.
+  //
+  // 1. The outgoing page must not fade. ::view-transition-new paints above
+  //    ::view-transition-old, so if the old one also animates opacity there is a window
+  //    where NEITHER is opaque and the browser background shows through both. The first
+  //    version faded the old out in 200ms while the new took 420ms to arrive - a ~220ms
+  //    hole. That is what reads as unsmooth, and it is a hole rather than a timing problem.
+  // 2. Speculation rules prerender the next page on hover or pointer-down. Without them
+  //    the transition cannot begin until the new document has been fetched, so the press
+  //    is followed by a dead pause no amount of animation can cover.
+  const smooth = await page.evaluate(() => {
+    let fades = null;
+    for (const sheet of document.styleSheets) {
+      try {
+        for (const r of sheet.cssRules) {
+          if (r.type === CSSRule.KEYFRAMES_RULE && r.name === 'ke-page-out')
+            fades = [...r.cssRules].some(k => k.style.opacity !== '');
+        }
+      } catch (e) { /* cross-origin sheet */ }
+    }
+    const s = document.querySelector('script[type="speculationrules"]');
+    let spec = null;
+    try { spec = s ? JSON.parse(s.textContent) : null; } catch (e) { spec = 'PARSE ERROR'; }
+    return { fades, eagerness: spec && spec !== 'PARSE ERROR' ? spec.prerender?.[0]?.eagerness : spec };
+  });
+  check(`${name}: the outgoing page does not fade (no transparent hole mid-transition)`,
+        smooth.fades === false, `ke-page-out sets opacity: ${smooth.fades}`);
+  check(`${name}: speculation rules prerender the next page`,
+        smooth.eagerness === 'moderate', String(smooth.eagerness));
+
   // The press. Forced via CDP rather than a real click: the hero CTAs are opacity:0 until
   // the entrance animation runs, so an actionability-based locator waits forever.
   const btn = await page.$('.btn-solid');

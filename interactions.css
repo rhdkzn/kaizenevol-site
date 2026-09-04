@@ -173,22 +173,32 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [role="button"]:fo
 .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* ── Cross-page transitions ────────────────────────────────────────────────────────────
- * Same asymmetry as the press: the old page leaves in 200ms, the new one arrives over
- * 420ms. Equal durations crossfade into a grey mush in the middle. */
+ * THE OLD PAGE MUST NOT FADE. This is the whole difference between a smooth transition and
+ * a washed-out one, and the first version got it wrong: the old page faded to zero over
+ * 200ms while the new one took 420ms to arrive, so for the ~220ms in between NEITHER was
+ * opaque and the browser's background showed through both. That dip is what reads as
+ * unsmooth - it is not a timing problem, it is a hole.
+ *
+ * ::view-transition-new paints ABOVE ::view-transition-old, so the fix is simply to let the
+ * old page hold at full opacity and bring the new one in over the top of it. There is never
+ * a frame where the viewport is not covered by something. The old page still MOVES - a
+ * small lift and scale, so it reads as being replaced rather than sitting there - it just
+ * never becomes transparent. */
 @view-transition { navigation: auto; }
 
 @keyframes ke-page-out {
-  to { opacity: 0; transform: translateY(-6px) scale(.994); }
+  /* Opacity is deliberately absent. Motion only. */
+  to { transform: translateY(-10px) scale(.992); }
 }
 @keyframes ke-page-in {
-  from { opacity: 0; transform: translateY(10px) scale(.995); }
+  from { opacity: 0; transform: translateY(12px) scale(.994); }
 }
 
 ::view-transition-old(root) {
-  animation: ke-page-out .2s var(--ke-press-in) both;
+  animation: ke-page-out .36s var(--ke-ease) both;
 }
 ::view-transition-new(root) {
-  animation: ke-page-in .42s var(--ke-ease) both;
+  animation: ke-page-in .36s var(--ke-ease) both;
 }
 
 /* The nav and the logo are the same object on both pages, so they are MORPHED rather than
@@ -223,7 +233,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .mobile-menu a { transition-duration: .12s; }
   .mobile-menu.open a:nth-child(n):not(:active) { transition-delay: 0s; }
   .burger span { transition-duration: .14s; }
-  ::view-transition-old(root) { animation-duration: .09s; }
+  ::view-transition-old(root) { animation-duration: .14s; }
   ::view-transition-new(root) { animation-duration: .14s; }
   ::view-transition-group(ke-nav), ::view-transition-group(ke-logo) {
     animation-duration: .14s;
