@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#F7F6F4" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Apply, KaizenEvol</title>
-  <meta name="description" content="Apply to work with KaizenEvol. We take five brands at a time, so we read every application properly and reply either way." />
+  <meta name="description" content="A few questions so we know whether we can help. We take five brands at a time and reply either way." />
   <link rel="canonical" href="https://kaizenevol.com/apply.html" />
   <meta name="robots" content="noindex" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -20,117 +20,146 @@
       --serif:'Newsreader',Georgia,serif;--el-ease:cubic-bezier(.16,1,.3,1);
     }
     *{box-sizing:border-box}
-    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
-    .container{max-width:660px;margin:0 auto;padding:0 24px}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+    .container{max-width:640px;margin:0 auto;padding:0 24px;width:100%}
     a{color:var(--ink)}
-    h1{font-weight:200;letter-spacing:-0.04em;line-height:1.06;font-size:clamp(30px,1.4rem + 2.4vw,44px);margin:18px 0 0}
     em{font-family:var(--serif);font-style:italic;font-weight:300}
-    .smallcaps{font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone)}
-    header{padding:52px 0 8px}
-    .back{font-size:13px;color:var(--muted);text-decoration:none}
-    .lede{color:var(--muted);margin:18px 0 0;font-size:16px}
-    form{margin:38px 0 0;display:flex;flex-direction:column;gap:22px}
-    .field{display:flex;flex-direction:column;gap:7px}
-    label{font-size:13px;font-weight:600}
-    .hint{font-size:12.5px;color:var(--stone)}
-    input,select,textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--page);border:1px solid var(--hairline);border-radius:0;padding:12px 14px;width:100%}
-    input:focus,select:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:-1px;border-color:var(--ink)}
-    textarea{min-height:110px;resize:vertical}
-    .row{display:grid;gap:22px}
-    @media(min-width:620px){.row{grid-template-columns:1fr 1fr}}
-    button{font:inherit;background:var(--ink);color:var(--page);border:0;border-radius:980px;padding:14px 32px;font-size:14px;font-weight:600;cursor:pointer;align-self:flex-start;transition:opacity .3s var(--el-ease)}
-    button:hover{opacity:.88}
-    button:disabled{opacity:.5;cursor:default}
-    .note{background:var(--recess);padding:22px 24px;margin:34px 0 0;font-size:14px;color:var(--muted)}
-    .note strong{color:var(--ink)}
-    .status{margin:16px 0 0;font-size:14px;min-height:1.5em}
-    .status.err{color:#8A2B2B}
-    .done{background:var(--recess);padding:34px 30px;margin:38px 0 0}
-    .done h2{font-weight:200;letter-spacing:-0.03em;font-size:26px;margin:0 0 10px}
-    footer{border-top:1px solid var(--hairline);margin-top:70px;padding:28px 0 40px;font-size:13px;color:var(--stone)}
+    .smallcaps{font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone)}
+
+    .top{padding:26px 0;border-bottom:1px solid var(--hairline)}
+    .top-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brandline{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-0.02em;font-size:15px}
+    .brandline img{height:20px;width:auto}
+    .count{font-size:12px;color:var(--stone);font-variant-numeric:tabular-nums}
+
+    main{flex:1;display:flex;align-items:center;padding:44px 0 60px}
+    .step{display:none}
+    .step.on{display:block}
+    .q{font-weight:200;letter-spacing:-0.035em;line-height:1.1;font-size:clamp(27px,1.3rem + 2.1vw,40px);margin:14px 0 0;text-wrap:balance}
+    .why{color:var(--muted);font-size:15px;margin:14px 0 0;max-width:46ch}
+    .answer{margin:30px 0 0}
+    input[type=text],input[type=email],input[type=url],textarea{
+      font:inherit;font-size:17px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--hairline);
+      padding:10px 2px;width:100%;border-radius:0}
+    input:focus,textarea:focus{outline:none;border-bottom-color:var(--ink)}
+    textarea{min-height:96px;resize:vertical;border:1px solid var(--hairline);padding:12px 14px}
+    textarea:focus{outline:2px solid var(--ink);outline-offset:-1px}
+    .opts{display:flex;flex-direction:column;gap:1px;background:var(--hairline);border:1px solid var(--hairline)}
+    .opt{background:var(--page);border:0;font:inherit;font-size:15.5px;text-align:left;padding:14px 16px;cursor:pointer;color:var(--ink);transition:background .2s var(--el-ease)}
+    .opt:hover{background:var(--recess)}
+    .opt:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+    .opt[aria-pressed=true]{background:var(--ink);color:var(--page)}
+    .nav{display:flex;align-items:center;gap:18px;margin:30px 0 0}
+    .go{font:inherit;background:var(--ink);color:var(--page);border:0;border-radius:980px;padding:13px 30px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .25s var(--el-ease)}
+    .go:hover{opacity:.88}
+    .back{background:none;border:0;font:inherit;font-size:13.5px;color:var(--stone);cursor:pointer;padding:0}
+    .back:hover{color:var(--ink)}
+    .err{color:#8A2B2B;font-size:13.5px;margin:14px 0 0;min-height:1.2em}
+    .review{background:var(--recess);padding:22px 24px;margin:26px 0 0;font-size:14px}
+    .review dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 20px}
+    .review dt{color:var(--stone);font-size:12.5px}
+    .review dd{margin:0}
+    .done h1{font-weight:200;letter-spacing:-0.035em;font-size:clamp(28px,1.3rem + 2vw,38px);margin:0}
+    .done p{color:var(--muted);margin:16px 0 0}
+    footer{border-top:1px solid var(--hairline);padding:22px 0 34px;font-size:13px;color:var(--stone)}
     footer a{color:var(--muted);text-decoration:none}
-    @media(prefers-reduced-motion:reduce){button{transition-duration:.01s}}
+    /* Softened, never switched off — brand/DESIGN.md reduce-motion ruling. */
+    @media(prefers-reduced-motion:reduce){.opt,.go{transition-duration:.01s}}
+    /* No JS: every step is visible and it is an ordinary form. */
+    .nojs .step{display:block;margin-bottom:38px}
+    .nojs .nav,.nojs .count{display:none}
+    .nojs .nojs-send{display:block!important}
+    .nojs-send{display:none}
   </style>
 </head>
-<body>
+<body class="nojs">
 
-<header>
-  <div class="container">
-    <a class="back" href="index.html">&larr; KaizenEvol</a>
-    <div class="smallcaps" style="margin-top:26px">Apply</div>
-    <h1>We take <em>five</em> brands at a time.</h1>
-    <p class="lede">Which means we read these properly and reply either way. It takes about two minutes, and the more honest the numbers are the more useful our answer is.</p>
+<div class="top">
+  <div class="container top-inner">
+    <a class="brandline" href="index.html"><img src="brand/v3/ke-mark-ink-256.png" alt="" onerror="this.style.display='none'"><span>KaizenEvol</span></a>
+    <span class="count" id="count" aria-live="polite"></span>
   </div>
-</header>
+</div>
 
-<main class="container">
-  <form id="applyForm" novalidate>
-    <div class="row">
-      <div class="field">
-        <label for="businessName">Brand name</label>
-        <input id="businessName" name="businessName" type="text" autocomplete="organization" required />
+<main>
+  <div class="container">
+    <form id="f" novalidate>
+
+      <section class="step on" data-key="businessName" data-type="text">
+        <div class="smallcaps">Apply</div>
+        <h1 class="q">First, what is the brand called?</h1>
+        <p class="why">We take <em>five</em> at a time, so these get read properly and you get a reply either way.</p>
+        <div class="answer"><input type="text" id="businessName" autocomplete="organization" placeholder="Brand name" /></div>
+      </section>
+
+      <section class="step" data-key="businessUrl" data-type="text">
+        <h1 class="q">Where can we see it?</h1>
+        <p class="why">The store, or an Instagram handle if the store is not up yet.</p>
+        <div class="answer"><input type="text" id="businessUrl" placeholder="yourbrand.com or @yourbrand" /></div>
+      </section>
+
+      <section class="step" data-key="trade" data-type="text">
+        <h1 class="q">What do you make?</h1>
+        <p class="why">In your own words. Streetwear, outerwear, jewellery, ceramics, whatever it is.</p>
+        <div class="answer"><input type="text" id="trade" placeholder="What you sell" /></div>
+      </section>
+
+      <section class="step" data-key="revenue" data-type="choice">
+        <h1 class="q">Roughly what is it doing a month?</h1>
+        <p class="why">This is the number that decides whether we can help, so an honest answer is worth more than a flattering one. Small is not a problem. Guessing is.</p>
+        <div class="answer opts" role="group" aria-label="Monthly revenue">
+          <button type="button" class="opt">Pre-launch, nothing yet</button>
+          <button type="button" class="opt">Under &pound;5k</button>
+          <button type="button" class="opt">&pound;5k &ndash; &pound;15k</button>
+          <button type="button" class="opt">&pound;15k &ndash; &pound;40k</button>
+          <button type="button" class="opt">&pound;40k &ndash; &pound;100k</button>
+          <button type="button" class="opt">Over &pound;100k</button>
+        </div>
+      </section>
+
+      <section class="step" data-key="adspend" data-type="choice">
+        <h1 class="q">And what are you spending on ads?</h1>
+        <p class="why">Whatever it is. We price on the brand, not the budget, so a small number here does not count against you.</p>
+        <div class="answer opts" role="group" aria-label="Monthly ad spend">
+          <button type="button" class="opt">Nothing yet</button>
+          <button type="button" class="opt">Under &pound;1k</button>
+          <button type="button" class="opt">&pound;1k &ndash; &pound;5k</button>
+          <button type="button" class="opt">&pound;5k &ndash; &pound;15k</button>
+          <button type="button" class="opt">Over &pound;15k</button>
+        </div>
+      </section>
+
+      <section class="step" data-key="message" data-type="long">
+        <h1 class="q">What are you trying to do in the next six months?</h1>
+        <p class="why">A launch, a drop, getting off a plateau, running ads properly for the first time.</p>
+        <div class="answer"><textarea id="message" placeholder="Where you are trying to get to"></textarea></div>
+      </section>
+
+      <section class="step" data-key="contactName" data-type="text">
+        <h1 class="q">Who are we speaking to?</h1>
+        <div class="answer"><input type="text" id="contactName" autocomplete="name" placeholder="Your name" /></div>
+      </section>
+
+      <section class="step" data-key="email" data-type="email">
+        <h1 class="q">And where do we send the answer?</h1>
+        <p class="why">Rahaid reads these himself. You will hear back whether it is a fit or not.</p>
+        <div class="answer"><input type="email" id="email" autocomplete="email" placeholder="you@yourbrand.com" /></div>
+        <div class="review" id="review" hidden></div>
+      </section>
+
+      <p class="err" id="err" role="alert"></p>
+      <div class="nav" id="nav">
+        <button type="button" class="go" id="go">Continue</button>
+        <button type="button" class="back" id="back" hidden>Back</button>
       </div>
-      <div class="field">
-        <label for="businessUrl">Store URL</label>
-        <input id="businessUrl" name="businessUrl" type="text" inputmode="url" placeholder="yourbrand.com" required />
-      </div>
+      <div class="nojs-send"><button type="submit" class="go">Send application</button></div>
+    </form>
+
+    <div id="done" hidden class="done">
+      <div class="smallcaps">Sent</div>
+      <h1>Got it.</h1>
+      <p>We read these in order and reply either way, usually within a couple of days. If it is urgent, email <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a> and say so.</p>
     </div>
-
-    <div class="row">
-      <div class="field">
-        <label for="contactName">Your name</label>
-        <input id="contactName" name="contactName" type="text" autocomplete="name" required />
-      </div>
-      <div class="field">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required />
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="trade">What do you sell?</label>
-      <input id="trade" name="trade" type="text" placeholder="Streetwear, outerwear, jewellery, ceramics&hellip;" />
-    </div>
-
-    <div class="row">
-      <div class="field">
-        <label for="revenue">Monthly revenue</label>
-        <select id="revenue" name="revenue" required>
-          <option value="">Choose one</option>
-          <option>Pre-launch, nothing yet</option>
-          <option>Under &pound;5k</option>
-          <option>&pound;5k &ndash; &pound;15k</option>
-          <option>&pound;15k &ndash; &pound;40k</option>
-          <option>&pound;40k &ndash; &pound;100k</option>
-          <option>Over &pound;100k</option>
-        </select>
-        <span class="hint">The number that decides whether we can help, so it is worth getting right.</span>
-      </div>
-      <div class="field">
-        <label for="adspend">Monthly ad spend</label>
-        <select id="adspend" name="adspend" required>
-          <option value="">Choose one</option>
-          <option>Nothing yet</option>
-          <option>Under &pound;1k</option>
-          <option>&pound;1k &ndash; &pound;5k</option>
-          <option>&pound;5k &ndash; &pound;15k</option>
-          <option>Over &pound;15k</option>
-        </select>
-        <span class="hint">Whatever it is. Small is fine; we price on the brand, not the budget.</span>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="message">What are you trying to do in the next six months?</label>
-      <textarea id="message" name="message" placeholder="A launch, a drop, getting off a plateau, first time running ads properly&hellip;"></textarea>
-    </div>
-
-    <button type="submit" id="submitBtn">Send application</button>
-    <p class="status" id="status" role="status" aria-live="polite"></p>
-  </form>
-
-  <div class="note">
-    <strong>What happens next.</strong> Rahaid reads it, not a filter. If it looks like a fit you get a reply with a time to talk; if it does not, you get a reply saying so and why. Either way you hear back &mdash; a brand that has told us its numbers deserves an answer.
   </div>
 </main>
 
@@ -142,38 +171,101 @@
 </footer>
 
 <script>
-  var f=document.getElementById('applyForm'),s=document.getElementById('status'),b=document.getElementById('submitBtn');
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
-    var d={
-      businessName:f.businessName.value.trim(),
-      businessUrl:f.businessUrl.value.trim(),
-      contactName:f.contactName.value.trim(),
-      email:f.email.value.trim(),
-      trade:f.trade.value.trim(),
-      /* the endpoint stores a single budget field; revenue is the qualifying number,
-         so it leads and ad spend rides in the message where it stays readable. */
-      monthlyBudget:f.revenue.value,
-      message:'Ad spend: '+(f.adspend.value||'not given')+'\n\n'+f.message.value.trim()
-    };
-    if(!d.businessName||!d.email||d.email.indexOf('@')<0||!d.revenue&&!f.revenue.value){
-      s.className='status err'; s.textContent='Brand name, a valid email and your monthly revenue are needed.'; return;
-    }
-    b.disabled=true; s.className='status'; s.textContent='Sending…';
-    fetch('/api/submit-lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
-      .then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json().catch(function(){return{}}); })
-      .then(function(){
-        f.style.display='none';
-        var done=document.createElement('div');
-        done.className='done';
-        done.innerHTML='<h2>Got it.</h2><p style="margin:0;color:var(--muted)">We read these in order and reply either way, usually within a couple of days. If it is urgent, email <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a> and say so.</p>';
-        f.parentNode.insertBefore(done,f);
-      })
-      .catch(function(){
-        b.disabled=false; s.className='status err';
-        s.textContent='That did not send. Email rahaid@kaizenevol.com and we will pick it up there.';
+(function(){
+  document.body.classList.remove('nojs');           // JS is here, so run the one-at-a-time flow
+  var steps = [].slice.call(document.querySelectorAll('.step'));
+  var f = document.getElementById('f'), go = document.getElementById('go'), back = document.getElementById('back');
+  var err = document.getElementById('err'), count = document.getElementById('count');
+  var review = document.getElementById('review'), done = document.getElementById('done');
+  var data = {}, i = 0;
+
+  function render(){
+    steps.forEach(function(s,n){ s.classList.toggle('on', n===i); });
+    count.textContent = (i+1) + ' of ' + steps.length;
+    back.hidden = i === 0;
+    go.textContent = i === steps.length-1 ? 'Send application' : 'Continue';
+    err.textContent = '';
+    if (i === steps.length-1) showReview();
+    var field = steps[i].querySelector('input,textarea');
+    if (field) { field.focus(); }
+    else { var b = steps[i].querySelector('.opt'); if (b) b.focus(); }
+  }
+
+  function showReview(){
+    var rows = '';
+    steps.slice(0,-1).forEach(function(s){
+      var k = s.dataset.key, v = data[k];
+      if (!v) return;
+      var label = s.querySelector('.q').textContent.replace(/\?$/,'');
+      rows += '<dt>' + label + '</dt><dd>' + String(v).replace(/</g,'&lt;') + '</dd>';
+    });
+    review.innerHTML = rows ? '<dl>' + rows + '</dl>' : '';
+    review.hidden = !rows;
+  }
+
+  steps.forEach(function(s){
+    s.querySelectorAll('.opt').forEach(function(b){
+      b.addEventListener('click', function(){
+        s.querySelectorAll('.opt').forEach(function(o){ o.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true');
+        data[s.dataset.key] = b.textContent.trim();
+        setTimeout(next, 140);                       // a beat, so the selection is visible
       });
+    });
   });
+
+  function capture(){
+    var s = steps[i], field = s.querySelector('input,textarea');
+    if (field) data[s.dataset.key] = field.value.trim();
+    return s;
+  }
+
+  function valid(s){
+    var k = s.dataset.key, v = (data[k]||'').trim();
+    if (k === 'businessName' && !v) return 'A brand name, even a working one.';
+    if (k === 'revenue' && !v) return 'Pick the closest one — it is the question that matters most.';
+    if (k === 'email') {
+      if (!v) return 'We need somewhere to send the answer.';
+      if (v.indexOf('@') < 1 || v.indexOf('.') < 0) return 'That email does not look right.';
+    }
+    return '';
+  }
+
+  function next(){
+    var s = capture(), problem = valid(s);
+    if (problem) { err.textContent = problem; return; }
+    if (i < steps.length-1) { i++; render(); return; }
+    send();
+  }
+
+  function send(){
+    go.disabled = true; err.textContent = ''; go.textContent = 'Sending…';
+    fetch('/api/submit-lead', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        businessName: data.businessName, businessUrl: data.businessUrl,
+        contactName: data.contactName, email: data.email, trade: data.trade,
+        /* the endpoint stores one budget field; revenue is the qualifying number so it
+           leads, and ad spend rides in the message where it stays readable. */
+        monthlyBudget: data.revenue,
+        message: 'Ad spend: ' + (data.adspend || 'not given') + '\n\n' + (data.message || '')
+      })
+    }).then(function(r){ if(!r.ok) throw 0; })
+      .then(function(){ f.hidden = true; count.textContent=''; done.hidden = false; done.querySelector('h1').focus && done.querySelector('h1').focus(); })
+      .catch(function(){
+        go.disabled = false; go.textContent = 'Send application';
+        err.textContent = 'That did not send. Email rahaid@kaizenevol.com and we will pick it up there.';
+      });
+  }
+
+  go.addEventListener('click', next);
+  back.addEventListener('click', function(){ capture(); if (i>0){ i--; render(); } });
+  f.addEventListener('submit', function(e){ e.preventDefault(); next(); });
+  f.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') { e.preventDefault(); next(); }
+  });
+  render();
+})();
 </script>
 </body>
 </html>
