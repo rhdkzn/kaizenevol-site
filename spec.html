@@ -26,17 +26,17 @@ img,video{max-width:100%}
 .hero{text-align:center;padding:56px 0 30px}
 .eyebrow{display:inline-flex;align-items:center;gap:9px;font:600 12px/1 var(--sans);letter-spacing:.15em;text-transform:uppercase;color:var(--accent-2);margin-bottom:18px}
 .eyebrow .pulse{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pl 2s infinite}
-@keyframes pl{0%{box-shadow:0 0 0 0 rgba(139,92,246,.55)}70%{box-shadow:0 0 0 10px rgba(139,92,246,0)}100%{box-shadow:0 0 0 0 rgba(139,92,246,0)}}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(35,33,30,.55)}70%{box-shadow:0 0 0 10px rgba(35,33,30,0)}100%{box-shadow:0 0 0 0 rgba(35,33,30,0)}}
 h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,6vw,54px);line-height:1.03;letter-spacing:-.01em}
 h1 em{font-style:italic;color:var(--accent-2)}
 .sub{color:var(--muted);font-size:clamp(16px,2.2vw,19px);max-width:620px;margin:18px auto 0}
 .stage{display:flex;justify-content:center;padding:14px 0 8px}
-.player{width:min(340px,86vw);aspect-ratio:9/16;border-radius:22px;overflow:hidden;border:1px solid var(--hairline);background:var(--void-2);box-shadow:0 30px 80px -30px rgba(139,92,246,.5),0 0 0 1px rgba(255,255,255,.02)}
+.player{width:min(340px,86vw);aspect-ratio:9/16;border-radius:22px;overflow:hidden;border:1px solid var(--hairline);background:var(--void-2);box-shadow:0 30px 80px -30px rgba(35,33,30,.5),0 0 0 1px rgba(255,255,255,.02)}
 .player video{width:100%;height:100%;object-fit:cover;display:block;background:#000}
 .ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:28px;color:var(--muted)}
 .ph svg{opacity:.5}
 .points{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:44px 0 8px}
-.pt{background:rgba(238,232,255,.03);border:1px solid var(--hairline);border-radius:16px;padding:20px}
+.pt{background:transparent;border:1px solid var(--hairline);border-radius:16px;padding:20px}
 .pt h3{font:600 15px/1.3 var(--sans);color:var(--text);margin-bottom:6px}
 .pt p{font:400 14px/1.5 var(--sans);color:var(--muted)}
 .cta{text-align:center;padding:48px 0 20px;margin-top:20px;border-top:1px solid var(--hairline)}
@@ -63,7 +63,7 @@ footer a{color:var(--muted)}
   </style>
 </head>
 <body>
-<div class="topbar"><div class="wrap"><a class="brand" href="/"><span class="dot"></span>KaizenEvol</a></div></div>
+<div class="topbar"><div class="wrap"><a class="brand" href="/"><img src="/brand/v3/ke-mark-ink-256.png" alt="" style="height:22px;width:auto;margin-right:9px;vertical-align:middle" onerror="this.style.display=String()">KaizenEvol</a></div></div>
 
 <section class="hero"><div class="wrap">
   <span class="eyebrow"><span class="pulse"></span><span id="eyebrow">A concept — built for you</span></span>

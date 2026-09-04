@@ -59,11 +59,9 @@
     .smallcaps { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
     .smallcaps.accent { color:var(--accent); }
 
-    .btn-solid { display:inline-block; background:var(--accent-2); color:var(--void); font-weight:600; font-size:15px;
-      padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--accent-2); transition:background .18s,color .18s; cursor:pointer; }
-    .btn-solid:hover { background:transparent; color:var(--accent-2); }
-    .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:15px;
-      padding:15px 32px; border-radius:4px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
+    .btn-solid { display:inline-block; background:var(--accent); color:var(--void); font-weight:600; font-size:14px; padding:12px 24px; border-radius:980px; text-decoration:none; border:0; transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .3s; cursor:pointer; }
+    .btn-solid:hover { color:var(--void); opacity:.88; transform:translateY(-1px); }
+    .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:14px; padding:11px 24px; border-radius:980px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
     .btn-quiet:hover { color:var(--text); border-color:#8A857C; }
 
     /* SKIP LINK */
@@ -79,8 +77,8 @@
     .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
     .nav-links a { font-size:14.5px; font-weight:500; color:var(--muted); text-decoration:none; padding:8px 14px; transition:color .15s; }
     .nav-links a:hover { color:var(--text); }
-    .nav-links a.btn-solid { font-size:14px; padding:11px 24px; margin-left:14px; color:var(--void); }
-    .nav-links a.btn-solid:hover { color:var(--accent-2); }
+    .nav-links a.btn-solid { font-size:13px; padding:10px 20px; margin-left:14px; color:var(--void); }
+    .nav-links a.btn-solid:hover { color:var(--void); }
     .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:10px; }
     .burger span { width:22px; height:2px; background:var(--text); display:block; }
     .mobile-menu { display:none; flex-direction:column; padding:8px 28px 24px; border-top:1px solid var(--hairline); }
@@ -107,11 +105,10 @@
     .field input::placeholder, .field textarea::placeholder { color:#D8D4CC; }
     .field select option { background:var(--void); }
     .field textarea { min-height:112px; resize:vertical; }
-    .field select { appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23A78BFA' stroke-width='2'%3E%3Cpath d='m1 1 5 5 5-5'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; }
+    .field select { appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%236E6A63' stroke-width='2'%3E%3Cpath d='m1 1 5 5 5-5'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; }
     .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
-    .lf-submit { width:100%; padding:15px; background:var(--accent-2); color:var(--void); border:none; border-radius:4px;
-      font-size:15.5px; font-weight:700; cursor:pointer; transition:background .18s; margin-top:6px; font-family:var(--sans); }
-    .lf-submit:hover { background:#4A463F; }
+    .lf-submit { width:100%; padding:14px; background:var(--accent); color:var(--void); border:none; border-radius:980px; font-size:15px; font-weight:600; cursor:pointer; transition:opacity .18s; margin-top:6px; font-family:var(--sans); }
+    .lf-submit:hover { opacity:.88; }
     /* Multi-step lead capture — one question at a time (2026-08-16). Replaces the 6-field form. */
     .lf-prog { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
     .lf-stepno { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
@@ -124,7 +121,7 @@
     .lf-chip { width:100%; text-align:left; padding:15px 16px; background:transparent; color:var(--text);
                border:1px solid var(--hairline); border-radius:4px; font-family:var(--sans); font-size:15px;
                cursor:pointer; transition:border-color .15s, background .15s; }
-    .lf-chip:hover, .lf-chip:focus-visible { border-color:var(--accent); background:rgba(139,92,246,0.08); }
+    .lf-chip:hover, .lf-chip:focus-visible { border-color:var(--accent); background:rgba(35,33,30,0.04); }
     .lf-back { display:inline-block; margin-top:14px; font-size:13px; color:var(--muted); background:none;
                border:none; padding:0; cursor:pointer; text-decoration:underline; font-family:var(--sans); }
     .lf-alt { display:inline-block; margin-top:12px; font-size:13px; color:var(--muted); background:none;
@@ -142,7 +139,7 @@
     .route-body h4 { font-size:21px; margin-bottom:6px; }
     .route-body p { font-size:14.5px; color:var(--muted); line-height:1.6; margin-bottom:8px; }
     .route-body a { font-weight:600; font-size:14.5px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--text); padding-bottom:2px; cursor:pointer; transition:color .15s,border-color .15s; }
-    .route-sep{color:rgba(238,232,255,.35);margin:0 .35em}
+    .route-sep{color:#D8D4CC;margin:0 .35em}
     .route-body a:hover { color:var(--accent-2); border-color:var(--accent-2); }
 
     /* Consent banner (injected by midnight.js) */
@@ -154,7 +151,7 @@
     .mid-consent-btns { display:flex; gap:10px; align-items:center; }
     .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
     .mid-consent-accept { background:#23211E; color:#F7F6F4; }
-    .mid-consent-decline { background:transparent; color:#6E6A63; border:1px solid rgba(238,232,255,0.2) !important; }
+    .mid-consent-decline { background:transparent; color:#6E6A63; border:1px solid #D8D4CC !important; }
     .mid-consent-inner a { color:#6E6A63; font-size:12px; }
 
     /* ============ FOOTER ============ */
@@ -221,6 +218,18 @@
   
     em,i{font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:300}
     h1,h2,h3{font-weight:300;letter-spacing:-0.03em}
+
+    /* ============ FOOTER v3 (ported from index) ============ */
+    footer{background:var(--void-2);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
+    .f-grid{display:grid;gap:34px}
+    @media(min-width:760px){.f-grid{grid-template-columns:1.4fr 1fr 1fr}}
+    footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+    footer a{color:var(--muted);text-decoration:none}
+    footer a:hover{color:var(--text)}
+    footer .footer-right{text-align:left}
+    footer .nav-logo b{font-size:15px}
+    .muted{color:var(--muted)}
+    .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#8A857C;font-size:13px}
   </style>
   <script type="application/ld+json">
   {
@@ -258,14 +267,14 @@
     <ul class="nav-links">
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
-      <li><a class="btn-solid" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Book a call</a></li>
+      <li><a class="btn-solid" href="apply.html">Apply</a></li>
     </ul>
     <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
-    <a class="btn-solid" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Book a call</a>
+    <a class="btn-solid" href="apply.html">Apply</a>
   </div>
 </nav>
 
@@ -292,17 +301,17 @@
           <div class="lf-step" data-step="1">
             <h3 class="lf-q">What do you need?</h3>
             <div class="lf-chips">
-              <button type="button" class="lf-chip" data-trade="KaizenReach (Ads)">More leads from ads</button>
-              <button type="button" class="lf-chip" data-trade="KaizenDesk (AI Front Office)">My calls and messages answered</button>
-              <button type="button" class="lf-chip" data-trade="KaizenForge (Website)">A new website</button>
+              <button type="button" class="lf-chip" data-trade="Creative acquisition (retainer)">Creative, paid ads and social on one retainer</button>
+              <button type="button" class="lf-chip" data-trade="Content only">Content and creative only, for now</button>
+              <button type="button" class="lf-chip" data-trade="Other">Something else</button>
               <button type="button" class="lf-chip" data-trade="Not sure yet">Not sure yet, point me the right way</button>
             </div>
           </div>
 
           <div class="lf-step" data-step="2" hidden>
-            <h3 class="lf-q">What&rsquo;s the business called?</h3>
+            <h3 class="lf-q">What&rsquo;s the brand called?</h3>
             <div class="field">
-              <input id="cBiz" name="businessName" type="text" autocomplete="organization" placeholder="Business name">
+              <input id="cBiz" name="businessName" type="text" autocomplete="organization" placeholder="Brand name">
             </div>
             <div class="field">
               <input id="cName" name="contactName" type="text" autocomplete="name" placeholder="And your name">
@@ -361,22 +370,34 @@
 </main>
 
 <footer>
-  <div class="container footer-inner">
-    <a class="footer-logo" href="index.html"><img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
-    <ul class="footer-nav">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="privacy.html">Privacy</a></li>
-      <li class="footer-social"><a href="https://www.instagram.com/kaizenevol/" target="_blank" rel="noopener noreferrer" aria-label="KaizenEvol on Instagram"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a></li>
-      <li class="footer-social"><a href="https://www.facebook.com/people/KaizenEvol-Home-Renovation-Marketing/61590237975968/" target="_blank" rel="noopener noreferrer" aria-label="KaizenEvol on Facebook"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg></a></li>
-    </ul>
-    <div class="footer-right">
-      <div class="fc-head">Contact Us</div>
-      <a class="fc-row" href="mailto:diego@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>diego@kaizenevol.com</a>
-      <a class="fc-row" href="mailto:rahaid@kaizenevol.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>rahaid@kaizenevol.com</a>
-      <a class="fc-row fc-wa" href="#" id="waOpen"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-2.9-1.3-4.8-4.2-5-4.4-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.8 2c.1.2.1.4 0 .6l-.4.6-.5.5c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg>Message us</a>
-      <p class="footer-copy">&copy; 2026 KaizenEvol. All rights reserved.</p>
+  <div class="container">
+    <div class="f-grid">
+      <div>
+        <div class="nav-logo"><img src="brand/v3/ke-mark-ink-256.png" alt="" style="height:22px" onerror="this.style.display='none'"><b>KaizenEvol</b></div>
+        <p class="muted" style="margin:12px 0 0;max-width:38ch">Creative acquisition for ecom brands that care how they look doing it.</p>
+      </div>
+      <div>
+        <div class="smallcaps">Pages</div>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </div>
+      <div class="footer-right">
+        <div class="smallcaps">Contact</div>
+        <ul>
+          <li><a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></li>
+          <li><a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a></li>
+          <li><a href="https://www.instagram.com/kaizenevol/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+        <a class="btn-solid" style="margin-top:14px" href="#" id="waOpen">Message us</a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 KaizenEvol</span>
+      <span>United Kingdom</span>
     </div>
   </div>
 </footer>
@@ -426,7 +447,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
   f.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click',function(){ show(at-1); }); });
   f.querySelector('[data-next]').addEventListener('click',function(){
     if(!f.businessName.value.trim()){
-      err.textContent='Just the business name and we can move on.'; err.classList.add('err'); return;
+      err.textContent='Just the brand name and we can move on.'; err.classList.add('err'); return;
     }
     show(2);
   });
@@ -444,7 +465,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
       trade:f.trade.value, message:'', businessUrl:'', monthlyBudget:''
     };
     if(!payload.businessName){
-      err.textContent='We just need the business name.'; err.classList.add('err'); show(1); return;
+      err.textContent='We just need the brand name.'; err.classList.add('err'); show(1); return;
     }
     if(!payload.phone && payload.email.indexOf('@')<0){
       err.textContent='Add a number we can text, or switch to email.'; err.classList.add('err'); return;
@@ -458,7 +479,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
       card.innerHTML='<div class="thanks"><h3>Thanks'+ (first?', '+first:'') +'.</h3><p>Your message is with us and we&rsquo;ll reply the same working day. In a hurry? Call us on WhatsApp or message us on WhatsApp.</p></div>';
     }catch(_){
       btn.disabled=false; btn.textContent='Send it over';
-      err.innerHTML='Something went wrong sending that. Email us directly at <a href="mailto:rahaid@kaizenevol.com" style="color:#ffb4b4;text-decoration:underline">rahaid@kaizenevol.com</a> and we&rsquo;ll pick it straight up.';
+      err.innerHTML='Something went wrong sending that. Email us directly at <a href="mailto:rahaid@kaizenevol.com" style="color:#8A2B2B;text-decoration:underline">rahaid@kaizenevol.com</a> and we&rsquo;ll pick it straight up.';
       err.classList.add('err');
     }
   });
