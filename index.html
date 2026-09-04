@@ -17,6 +17,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <script>document.documentElement.className+=" js";</script>
   <style>
     /* v3 — brand/DESIGN.md 3.0. Mixed neutrals, light. Black lives in the mark and the buttons. */
     @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
@@ -71,12 +72,49 @@
     .hero-ctas{display:flex;gap:18px;justify-content:center;align-items:center;margin-top:32px;flex-wrap:wrap}
     .hero-note{margin-top:18px;font-size:13px;color:var(--stone)}
 
-    /* reveal — decoration only, softened not disabled under reduced motion */
-    .reveal{opacity:0;transform:translateY(14px);transition:opacity .9s var(--el-ease),transform .9s var(--el-ease)}
+    /* MOTION — brand/DESIGN.md: one signature moment per surface, house easing everywhere.
+       The signature is the hero line drop: a rotateX fall, not an opacity fade. The rotation
+       is what reads as physical; a fade is the cheap version. Everything else stays quiet. */
+    .js .reveal{opacity:0;transform:translateY(14px);transition:opacity .9s var(--el-ease),transform .9s var(--el-ease)}
     .reveal.in{opacity:1;transform:none}
+
+    /* hero line drop */
+    .hero h1{perspective:900px}
+    .ln{display:inline-block;overflow:hidden;vertical-align:top}
+    .js .ln > span{display:inline-block;transform:translateY(-.85em) rotateX(-62deg);opacity:0;
+      transform-origin:50% 100%;transition:transform .62s var(--el-ease),opacity .5s var(--el-ease)}
+    .lit .ln > span{transform:none;opacity:1}
+
+    /* the rest of the hero follows the line, not the scroll */
+    .js .hero .smallcaps,.js .hero-sub,.js .hero-ctas,.js .hero-note{opacity:0;transform:translateY(10px);
+      transition:opacity .7s var(--el-ease),transform .7s var(--el-ease)}
+    .lit .hero .smallcaps{transition-delay:.05s}
+    .lit .hero-sub{transition-delay:.42s}
+    .lit .hero-ctas{transition-delay:.52s}
+    .lit .hero-note{transition-delay:.60s}
+    .lit .hero .smallcaps,.lit .hero-sub,.lit .hero-ctas,.lit .hero-note{opacity:1;transform:none}
+
+    /* buttons: a real press, not a colour change */
+    .btn-solid{will-change:transform}
+    .btn-solid:active{transform:translateY(0) scale(.985)}
+
+    /* the four steps and the four systems arrive in sequence, once */
+    .js .stagger > *{opacity:0;transform:translateY(12px);transition:opacity .6s var(--el-ease),transform .6s var(--el-ease)}
+    .stagger.in > *{opacity:1;transform:none}
+    .stagger.in > *:nth-child(1){transition-delay:0s}
+    .stagger.in > *:nth-child(2){transition-delay:.07s}
+    .stagger.in > *:nth-child(3){transition-delay:.14s}
+    .stagger.in > *:nth-child(4){transition-delay:.21s}
+
+    /* the work slots breathe very slightly, so the empty row is not dead */
+    .slot{transition:background .6s var(--el-ease)}
+    .slot:hover{background:var(--recess)}
+
+    /* DESIGN.md reduce-motion ruling: shorten, never switch off. Content still arrives. */
     @media(prefers-reduced-motion:reduce){
-      .reveal{transition-duration:.01s}
-      .btn-solid{transition-duration:.01s}
+      .reveal,.ln > span,.stagger > *,.hero .smallcaps,.hero-sub,.hero-ctas,.hero-note,
+      .btn-solid,.slot{transition-duration:.12s!important;transition-delay:0s!important}
+      .ln > span{transform:none}
     }
 
     section{padding:80px 0}
@@ -162,7 +200,7 @@
     <div class="smallcaps">The method</div>
     <h2>The Kaizen Acquisition System</h2>
     <p class="lede muted">Two steps set the floor, once. Two steps run above it, every week. Nobody touches the ad account until step three, and the order is the point.</p>
-    <div class="steps">
+    <div class="steps stagger reveal">
       <div class="step">
         <div class="n">01</div>
         <h3>Establish the margin</h3>
@@ -191,7 +229,7 @@
   <div class="container reveal">
     <div class="smallcaps">What we run</div>
     <h2>One retainer, four systems.</h2>
-    <div class="grid four">
+    <div class="grid four stagger reveal">
       <div class="cell"><div class="n">01</div><h3>Creative production</h3><p>Statics, motion and edited brand footage. Enough volume to actually learn what works, not one hero asset a month.</p></div>
       <div class="cell"><div class="n">02</div><h3>Paid acquisition</h3><p>Meta and TikTok, judged on blended performance and contribution rather than per-channel vanity numbers.</p></div>
       <div class="cell"><div class="n">03</div><h3>Organic social</h3><p>The same creative engine pointed at the feed, so the brand looks alive between drops.</p></div>
@@ -276,6 +314,35 @@
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -12% 0px'});
     els.forEach(function(el){io.observe(el);});
   } else { els.forEach(function(el){el.classList.add('in');}); }
+
+  /* Split the hero headline into words so each can fall. Walks child nodes rather than
+     touching innerHTML, so the <em> survives as one unit instead of being torn apart. */
+  var h1=document.querySelector('.hero h1');
+  if(h1){
+    var out=[];
+    [].slice.call(h1.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        n.textContent.split(/(\s+)/).forEach(function(t){
+          if(!t) return;
+          if(/^\s+$/.test(t)){ out.push(document.createTextNode(' ')); return; }
+          var w=document.createElement('span'); w.className='ln';
+          var inner=document.createElement('span'); inner.textContent=t;
+          w.appendChild(inner); out.push(w);
+        });
+      } else {
+        var w2=document.createElement('span'); w2.className='ln';
+        var i2=document.createElement('span'); i2.appendChild(n.cloneNode(true));
+        w2.appendChild(i2); out.push(w2);
+      }
+    });
+    h1.textContent='';
+    out.forEach(function(n){ h1.appendChild(n); });
+    var parts=h1.querySelectorAll('.ln > span'), step=35;
+    for(var k=0;k<parts.length;k++){ parts[k].style.transitionDelay=(k*step)+'ms'; }
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      document.body.classList.add('lit');
+    });});
+  } else { document.body.classList.add('lit'); }
 </script>
 <script>
 (function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
