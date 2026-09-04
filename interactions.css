@@ -197,34 +197,64 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [role="button"]:fo
  * exposure and to nothing else. Every version above was the same bug at a different point
  * on that one slider.
  *
- * So opacity is out of the mechanism entirely. The incoming page is OPAQUE and it COVERS
- * the outgoing one, sliding up from below the fold the way an iOS screen arrives. Opaque
- * means it cannot double-expose; covering means the screen is never empty; and a full
- * viewport of travel cannot be missed, which was the other half of the complaint. The
- * outgoing page drifts up behind it so the two are not locked together.
+ *   v5  took opacity out entirely: the incoming page slid up a full viewport, opaque, as
+ *       an iOS sheet. Structurally clean and Rahaid rejected it on sight - "that
+ *       transition isn't it". It was an app gesture on a website, and 440ms of a whole
+ *       page moving is the opposite of the reference he then pointed at.
  *
- * The guard below asserts the structural property rather than a timing: the incoming
- * keyframes must not touch opacity. That is what makes both failure modes impossible,
- * and unlike a duration it cannot be tuned back into a bug.
+ * The reference, READ rather than remembered (apple.com/shop/buy-iphone/iphone-16, all
+ * 11 stylesheets pulled, a real navigation recorded, 2026-09-04): Apple runs NO page
+ * transition at all - no @view-transition, pagereveal fires without one, the frames go
+ * from one page to the next with nothing between. What Apple animates is INSIDE the page:
+ * cubic-bezier(.4,0,.6,1) x88, durations clustered at 240-320ms, opacity x67 and
+ * transform x45, travel of 4-20px (-18.5px, -13.5px, -8px), 80ms as the stagger unit.
+ *
+ * So the structure is now Apple's, plus the one thing a hard cut cannot do. The FRAME
+ * stays still: root, nav and footer are static, and since the ground and the nav are
+ * identical on every page that swap is invisible. Only the CONTENT moves - the outgoing
+ * page's <main> leaves in 120ms, the incoming one arrives over 320ms with a 14px rise.
+ * A blank is structurally impossible because the ground is never part of the animation,
+ * and the two contents barely overlap and only while both are faint.
+ *
+ * Each page's <main> carries a UNIQUE view-transition-name, so old and new are unpaired
+ * and animate at their own geometry. A shared name would pair them into a morph and
+ * stretch one page's content into the other's height on the way through.
  */
 @view-transition { navigation: auto; }
 
-@keyframes ke-page-out {
-  to { transform: translateY(-52px); }
+@keyframes ke-content-out {
+  to { opacity: 0; transform: translateY(-6px); }
 }
-@keyframes ke-page-in {
-  from { transform: translateY(100%); }
+@keyframes ke-content-in {
+  from { opacity: 0; transform: translateY(14px); }
 }
 
-::view-transition-old(root) {
-  animation: ke-page-out .44s var(--ke-ease) both;
+/* The frame. Nothing here animates; the swap is between identical pixels. */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+footer { view-transition-name: ke-footer; }
+::view-transition-group(ke-footer) { animation: none; }
+::view-transition-old(ke-footer), ::view-transition-new(ke-footer) { animation: none; }
+
+/* The content. Unpaired, so old and new each get exactly one of these. */
+::view-transition-old(*) {
+  animation: ke-content-out .12s cubic-bezier(.4, 0, .6, 1) both;
 }
-::view-transition-new(root) {
-  animation: ke-page-in .44s var(--ke-ease) both;
-  /* The leading edge needs to read as an edge, or a cream page sliding over a cream page
-     is invisible however far it travels. */
-  box-shadow: 0 -18px 40px rgba(28, 26, 23, .13);
+::view-transition-new(*) {
+  animation: ke-content-in .32s cubic-bezier(0, 0, .2, 1) .08s both;
 }
+/* The nav and logo are paired and identical on both pages: they morph as a group and
+   must NOT pick up the content animation above, or the header fades out and rises back
+   in on every click. Named selectors outrank (*) whatever the source order. */
+::view-transition-old(ke-nav), ::view-transition-new(ke-nav),
+::view-transition-old(ke-logo), ::view-transition-new(ke-logo) { animation: none; }
+/* The open mobile menu sits INSIDE <nav>, so it was captured into the nav's snapshot and
+   hung there for the whole transition: the new nav bar cannot cover it, because the menu
+   overlays the page below the bar. Recorded: menu visible to +441ms, gone at +480ms. Its
+   own name pulls it out of the nav, and the (*) rule above then takes it out with the
+   content in 120ms. */
+.mobile-menu { view-transition-name: ke-menu; }
+::view-transition-group(ke-menu) { animation: none; }
+::view-transition-new(ke-menu) { animation: none; }
 
 /* The nav and the logo are the same object on both pages, so they are MORPHED rather than
    cross-faded — the header stays put while the body changes underneath it. This is the
@@ -258,11 +288,9 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .mobile-menu a { transition-duration: .12s; }
   .mobile-menu.open a:nth-child(n):not(:active) { transition-delay: 0s; }
   .burger span { transition-duration: .14s; }
-  /* Shorten the slide; never re-introduce a delay. A delay here would uncover the gap
-     between the two pages, which is the blink this whole section exists to avoid - and
-     reduced motion is not a reason to ship the broken version of the transition. */
-  ::view-transition-old(root) { animation-duration: .16s; }
-  ::view-transition-new(root) { animation-duration: .16s; animation-delay: 0s; }
+  /* Shorten the content's exit and arrival; the frame is static either way. */
+  ::view-transition-old(*) { animation-duration: .08s; }
+  ::view-transition-new(*) { animation-duration: .16s; animation-delay: .04s; }
   ::view-transition-group(ke-nav), ::view-transition-group(ke-logo) {
     animation-duration: .14s;
   }

@@ -24,6 +24,8 @@
 import { chromium } from 'playwright';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
+// Cross-page: every <main> name must be unique across the site, or two pages pair into a morph.
+const mainNamesSeen = new Set();
 const PAGES = ['index.html', 'about.html', 'contact.html', 'privacy.html',
                'apply.html', 'local.html', 'kaizenforge.html', '404.html'];
 
@@ -78,66 +80,77 @@ for (const name of PAGES) {
         info.touch === 'manipulation', info.touch);
   check(`${name}: no failed same-origin requests`, failed.length === 0, failed.join(', '));
 
-  // SMOOTHNESS OF THE PAGE TRANSITION. None of this is visible in a screenshot, and four
-  // successive versions of this check passed while the transition was broken.
-  //
-  // The incoming page must be OPAQUE and must COVER the outgoing one. That single property
-  // is what this asserts, because it is what makes both known failure modes impossible:
-  //   - it cannot double-expose, because an opaque page has nothing showing through it
-  //   - it cannot blink, because the outgoing page stays behind it until it is covered
-  // Four earlier versions all animated opacity on the two full-page snapshots and all four
-  // failed. ::view-transition-new paints ABOVE ::view-transition-old, so that mechanism has
-  // exactly one slider on it: too much gap gives an empty screen (recorded: contrast 3.9%
-  // of peak, four blank frames), too little gives two legible headlines at once (recorded
-  // at +160ms). Tuning moved the bug along the slider and never off it.
-  //
-  // A timing is the wrong thing to assert here - any duration can be tuned back into a bug.
-  // The absence of opacity in the incoming keyframes cannot.
-  //
-  // Also checked: speculation rules prerender the next page on hover or pointer-down.
-  // Without them the transition cannot begin until the new document has been fetched, so
-  // the press is followed by a dead pause no animation can cover.
+  // THE PAGE TRANSITION. None of this is visible in a screenshot, and five versions of
+  // this block passed while the transition was wrong. The structure now is Apple's
+  // (apple.com/shop/buy-iphone/iphone-16, read on 2026-09-04: no page transition at all,
+  // 240-320ms and 4-20px of travel on everything inside the page) plus the one thing a
+  // hard cut cannot do - the incoming content ARRIVES. The frame is static; only the
+  // content moves. What follows asserts that structure, not a timing, because a timing
+  // can always be tuned back into one of the two old bugs (a blank screen, or two pages
+  // legible at once) and a structural property cannot.
   const smooth = await page.evaluate(() => {
-    let inFades = null, inTravel = null, outMoves = null;
+    const times = s => [...String(s).matchAll(/(-?[\d.]+)(ms|s)\b/g)]
+      .map(m => m[2] === 'ms' ? parseFloat(m[1]) / 1000 : parseFloat(m[1]));
+    const out = { rootStatic: null, contentOut: null, contentIn: null, inTravel: null, inDuration: null };
     for (const sheet of document.styleSheets) {
       try {
         for (const r of sheet.cssRules) {
-          if (r.type !== CSSRule.KEYFRAMES_RULE) continue;
-          if (r.name === 'ke-page-in') {
-            inFades = [...r.cssRules].some(k => k.style.opacity !== '');
+          if (r.type === CSSRule.KEYFRAMES_RULE && r.name === 'ke-content-in') {
             for (const k of r.cssRules) {
-              const m = /translateY\((-?[\d.]+)(%|px)\)/.exec(k.style.transform || '');
-              if (m) inTravel = { n: Math.abs(parseFloat(m[1])), unit: m[2] };
+              const m = /translateY\((-?[\d.]+)px\)/.exec(k.style.transform || '');
+              if (m) out.inTravel = Math.abs(parseFloat(m[1]));
             }
           }
-          if (r.name === 'ke-page-out')
-            outMoves = [...r.cssRules].some(k => /translate/.test(k.style.transform || ''));
+          if (!r.selectorText) continue;
+          // The ROOT snapshot is the ground. If it animates at all, the ground can go
+          // transparent, and that is the blank frame of v3 coming back.
+          // Read the LONGHAND. Chrome serialises `animation: none` as
+          // "auto ease 0s 1 normal none running none" - the name sits last, so a regex on
+          // the shorthand's head reads a static rule as animated.
+          if (/::view-transition-(old|new)\(root\)/.test(r.selectorText))
+            out.rootStatic = (out.rootStatic ?? true) && r.style.animationName === 'none';
+          if (r.selectorText === '::view-transition-old(*)') out.contentOut = /ke-content-out/.test(r.style.animation);
+          if (r.selectorText === '::view-transition-new(*)') {
+            out.contentIn = /ke-content-in/.test(r.style.animation);
+            out.inDuration = times(r.style.animation)[0];
+          }
         }
       } catch (e) { /* cross-origin sheet */ }
     }
-    // The incoming snapshot only covers if the page ground behind it is opaque. A
-    // transparent body would let the outgoing page read straight through the "opaque" page
-    // and put the double exposure back with no CSS change to blame it on.
-    const bg = getComputedStyle(document.body).backgroundColor;
-    const opaqueGround = !/rgba\([^)]*,\s*0?\.?\d*\s*\)$/.test(bg) || /,\s*1\s*\)$/.test(bg);
+    // Each page's <main> must carry its OWN name. A shared name pairs the two contents
+    // into a morph that stretches one page's height into the other's on the way through;
+    // no name at all leaves the content inside root, where it hard-cuts.
+    const main = document.querySelector('main');
+    out.mainName = main ? getComputedStyle(main).viewTransitionName : null;
+    // The mobile menu lives inside <nav>. Unnamed, it is captured into the nav's snapshot
+    // and hangs over the whole transition (recorded: visible to +441ms). Named, it leaves
+    // with the content.
+    const menu = document.querySelector('.mobile-menu');
+    out.menuName = menu ? getComputedStyle(menu).viewTransitionName : 'n/a';
 
     const s = document.querySelector('script[type="speculationrules"]');
     let spec = null;
     try { spec = s ? JSON.parse(s.textContent) : null; } catch (e) { spec = 'PARSE ERROR'; }
-    return { inFades, inTravel, outMoves, bg, opaqueGround,
-             eagerness: spec && spec !== 'PARSE ERROR' ? spec.prerender?.[0]?.eagerness : spec };
+    out.eagerness = spec && spec !== 'PARSE ERROR' ? spec.prerender?.[0]?.eagerness : spec;
+    return out;
   });
-  check(`${name}: the incoming page never animates opacity (this is what stops both bugs)`,
-        smooth.inFades === false, `ke-page-in touches opacity: ${smooth.inFades}`);
-  // It has to cross the whole viewport, or there is a strip at the top it never covers and
-  // the outgoing page shows through it.
-  check(`${name}: the incoming page travels a full viewport and covers the old one`,
-        !!smooth.inTravel && smooth.inTravel.unit === '%' && smooth.inTravel.n >= 100,
-        `translateY ${smooth.inTravel ? smooth.inTravel.n + smooth.inTravel.unit : 'none'}, needs >= 100%`);
-  check(`${name}: the outgoing page moves behind it (or the slide reads as a flat cut)`,
-        smooth.outMoves === true, String(smooth.outMoves));
-  check(`${name}: the page ground is opaque, so the cover actually covers`,
-        smooth.opaqueGround === true, smooth.bg);
+  check(`${name}: the root snapshot (the ground) never animates`,
+        smooth.rootStatic === true, `root rules found: ${smooth.rootStatic !== null}, static: ${smooth.rootStatic}`);
+  check(`${name}: the content leaves and arrives via its own keyframes`,
+        smooth.contentOut === true && smooth.contentIn === true, `out ${smooth.contentOut} in ${smooth.contentIn}`);
+  // Apple's range. 10px was imperceptible on a phone; a full viewport was rejected on sight.
+  check(`${name}: the incoming content rises a perceptible, restrained distance (8-24px)`,
+        typeof smooth.inTravel === 'number' && smooth.inTravel >= 8 && smooth.inTravel <= 24,
+        `translateY ${smooth.inTravel}px`);
+  check(`${name}: the arrival takes 240-360ms`,
+        typeof smooth.inDuration === 'number' && smooth.inDuration >= 0.24 && smooth.inDuration <= 0.36,
+        `${smooth.inDuration}s`);
+  check(`${name}: <main> carries a page-unique view-transition-name`,
+        typeof smooth.mainName === 'string' && /^ke-main-/.test(smooth.mainName) && !mainNamesSeen.has(smooth.mainName),
+        `${smooth.mainName}${mainNamesSeen.has(smooth.mainName) ? ' (already used by another page)' : ''}`);
+  if (smooth.mainName) mainNamesSeen.add(smooth.mainName);
+  check(`${name}: the mobile menu is pulled out of the nav snapshot`,
+        smooth.menuName === 'n/a' || smooth.menuName === 'ke-menu', smooth.menuName);
   check(`${name}: speculation rules prerender the next page`,
         smooth.eagerness === 'moderate', String(smooth.eagerness));
 
