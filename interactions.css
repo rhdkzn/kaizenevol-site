@@ -106,6 +106,62 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [role="button"]:fo
   border-radius: 4px;
 }
 
+/* ── The mobile menu ───────────────────────────────────────────────────────────────────
+ * Reported as "the animation for the nav is non existent", and it was: the menu toggled
+ * display:none to display:flex, which is a hard cut with nothing in between. On a phone
+ * this is the main navigation interaction on the site, so it was the most-used control
+ * with the least behaviour.
+ *
+ * Height 0 -> auto needs interpolate-size, and display needs allow-discrete so the element
+ * stays rendered for the length of the transition instead of vanishing on frame one.
+ * @starting-style gives the opening frame something to animate FROM - without it the menu
+ * appears at its final size and only the closing animates, which is a common half-fix.
+ */
+:root { interpolate-size: allow-keywords; }
+
+.mobile-menu {
+  overflow: hidden; height: 0; opacity: 0;
+  transition: height .44s var(--ke-ease), opacity .26s var(--ke-ease), display .44s;
+  transition-behavior: allow-discrete;
+}
+.mobile-menu.open { height: auto; opacity: 1; }
+@starting-style { .mobile-menu.open { height: 0; opacity: 0; } }
+
+/* The rows arrive after the panel, one behind the next. A menu whose items all appear at
+   once with the box is a box appearing; staggered, it reads as a menu opening. */
+.mobile-menu a {
+  opacity: 0; transform: translateY(-7px);
+  transition: opacity .3s var(--ke-ease), transform .46s var(--ke-spring),
+              color .22s var(--ke-ease);
+}
+.mobile-menu.open a { opacity: 1; transform: none; }
+/* The rows need their OWN @starting-style. Until the panel leaves display:none they are
+   not rendered at all, so on first open they begin life already at the open state and the
+   stagger never runs - measured at full opacity 60ms in, before any delay had elapsed.
+   The panel's starting-style does not cascade to them. */
+@starting-style { .mobile-menu.open a { opacity: 0; transform: translateY(-7px); } }
+/* :not(:active) is not tidiness - it is the difference between a button that responds and
+   one that does not. These stagger delays are specificity 0,4,0 and the press rules are
+   0,2,0, so without it the ENTRANCE delay wins over the press and every tap on a menu row
+   sat dead for up to 220ms before anything moved. Measured: transition-delay .22s still in
+   force on the Apply row long after the menu had settled. A press must never be queued
+   behind an entrance it has nothing to do with. */
+.mobile-menu.open a:nth-child(1):not(:active) { transition-delay: .07s }
+.mobile-menu.open a:nth-child(2):not(:active) { transition-delay: .12s }
+.mobile-menu.open a:nth-child(3):not(:active) { transition-delay: .17s }
+.mobile-menu.open a:nth-child(4):not(:active) { transition-delay: .22s }
+
+/* The burger becomes a close. Driven off aria-expanded, which the existing toggle already
+   maintains, so this needs no change to any page's markup or script. Spans are 1.5px with
+   a 5px gap, so their centres are 6.5px apart - that is the exact travel to meet. */
+.burger span {
+  transform-origin: center;
+  transition: transform .4s var(--ke-ease), opacity .18s var(--ke-ease);
+}
+.burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(.3); }
+.burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
 /* ── Cross-page transitions ────────────────────────────────────────────────────────────
  * Same asymmetry as the press: the old page leaves in 200ms, the new one arrives over
  * 420ms. Equal durations crossfade into a grey mush in the middle. */
@@ -153,6 +209,10 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   button:not([disabled]), [role="button"] {
     transition-duration: .14s;
   }
+  .mobile-menu { transition-duration: .16s, .12s, .16s; }
+  .mobile-menu a { transition-duration: .12s; }
+  .mobile-menu.open a:nth-child(n):not(:active) { transition-delay: 0s; }
+  .burger span { transition-duration: .14s; }
   ::view-transition-old(root) { animation-duration: .09s; }
   ::view-transition-new(root) { animation-duration: .14s; }
   ::view-transition-group(ke-nav), ::view-transition-group(ke-logo) {

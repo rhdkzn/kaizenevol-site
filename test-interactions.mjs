@@ -111,7 +111,14 @@ for (const [label, width, sels] of [
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   await page.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(400);
-  if (width < 860) await page.evaluate(() => document.querySelector('.mobile-menu')?.classList.add('open'));
+  if (width < 860) {
+    await page.evaluate(() => document.querySelector('.mobile-menu')?.classList.add('open'));
+    // Wait out the staggered entrance before measuring a press. The rows animate in on a
+    // .46s spring behind delays up to .22s, and the entrance and the press share the
+    // transform property - so measuring at 190ms catches the last item still flying in and
+    // reads its entrance rather than its press. Not a defect, a measurement taken too early.
+    await page.waitForTimeout(900);
+  }
   const cdp = await page.context().newCDPSession(page);
   await cdp.send('DOM.enable'); await cdp.send('CSS.enable');
   const { root } = await cdp.send('DOM.getDocument');
@@ -125,6 +132,35 @@ for (const [label, width, sels] of [
     const got = Number((/matrix\(([\d.]+)/.exec(tr) || [])[1]);
     check(`${label} nav: ${sel} presses to ${want}`, Math.abs(got - want) < 0.003, tr);
   }
+  await page.close();
+}
+
+// THE MOBILE MENU MUST OPEN, NOT APPEAR. Reported as "the animation for the nav is non
+// existent" - it toggled display:none to display:flex, a hard cut with nothing between,
+// and on a phone that is the main navigation control on the site. A height that goes
+// straight from 0 to its final value is the failure; intermediate values are the fix.
+{
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await page.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(400);
+  const frames = await page.evaluate(async () => {
+    const m = document.querySelector('.mobile-menu');
+    const out = [];
+    document.getElementById('burgerBtn').click();
+    for (let i = 0; i < 8; i++) {
+      await new Promise(r => requestAnimationFrame(() => setTimeout(r, 45)));
+      out.push(Math.round(m.getBoundingClientRect().height));
+    }
+    return out;
+  });
+  const final = frames[frames.length - 1];
+  const mid = frames.filter(h => h > 2 && h < final - 2);
+  check('the mobile menu animates open rather than cutting',
+        mid.length >= 2 && final > 40, `heights ${frames.join(',')}`);
+
+  // And the burger has to become a close rather than staying three bars.
+  const bar = await page.evaluate(() => getComputedStyle(document.querySelector('.burger span')).transform);
+  check('the burger morphs when the menu is open', bar !== 'none' && bar !== 'matrix(1, 0, 0, 1, 0, 0)', bar);
   await page.close();
 }
 
