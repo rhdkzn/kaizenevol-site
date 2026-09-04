@@ -39,7 +39,13 @@
       --maxw:1120px;
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    /* The footer sits on --recess. Without a background on html, an iOS over-scroll
+       past the bottom of the page exposes the CANVAS painted from body's lighter
+       --page, which reads as a slab of empty white hanging under the footer -
+       reported as "no need for the extra white at the bottom" when the document
+       itself measured exactly as tall as its footer. Painting html in the footer's
+       own tone makes the bounce continue the footer instead of interrupting it. */
+    html{scroll-behavior:smooth;background:var(--recess)}
     body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
     .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
     a{color:var(--ink)}

@@ -52,7 +52,7 @@
     '.kz-river{position:fixed;top:0;right:0;height:100vh;pointer-events:none;z-index:5;',
     '  overflow:hidden;mix-blend-mode:multiply}',
     '.kz-river svg{position:absolute;top:0;display:block;will-change:transform,opacity}',
-    '.kz-river path{fill:#E7E3DB}',
+    '.kz-river path{fill:#DFDEDC}',
     /* A watermark down the margin of a printed page is wasted toner. */
     '@media print{.kz-river{display:none}}'
   ].join('');
@@ -70,31 +70,30 @@
   var size = 0, pitch = 0, count = 0, narrow = false;
 
   function build() {
-    // SCALE AND TONE ARE THE WHOLE THING, and both previous builds got them wrong in
-    // opposite directions.
+    // EVERY NUMBER HERE IS MEASURED OFF DIEGO'S MOCKUP, not judged by eye. Three builds
+    // were tuned by eye against that image and all three were wrong, so it got measured:
     //
-    // Build 2 ran ~400px characters at a heavy fill. At that size you see most of each
-    // glyph, so it reads as solid blocky radicals sitting in a column - Rahaid: "why does
-    // it look like that". Build 3 then over-corrected to small WHOLE characters, which he
-    // rejected against the reference: "no you don't need the whole".
+    //   glyph height          349px in an 858px viewport  =  41% of viewport width
+    //   glyph tone            rgb(216,214,211)  — neutral grey, not warm
+    //   page behind it        rgb(245,244,242)
+    //   clipped edge          ink reaches x=1074 of a 1075px viewport — it runs OFF THE
+    //                         RIGHT, so what you see is the LEFT of each character
     //
-    // The mockup is neither. Its characters are LARGE - a large fraction of the viewport,
-    // so what you see is a few sweeping strokes rather than a whole dense glyph - and
-    // LIGHT, closer to a ghost than to a mark. Cropping is correct at that scale precisely
-    // because nobody is reading it as a character; it is architecture. Go big and go
-    // quiet, and the crop stops being the thing you notice.
+    // The build before this had it at 95% of viewport width (2.3x too big — "it's too
+    // visible") and clipped the other way round, showing the RIGHT of each character with
+    // clear space at the screen edge ("it's cut off the wrong way"). Both are corrected
+    // here and both are asserted in test-kanji-river.mjs, because eyeballing this against
+    // a reference has now failed three times.
     var vw = window.innerWidth;
     narrow = vw < 720;
-    size = Math.round(Math.min(vw * (narrow ? 0.95 : 0.68), 880));
-    // Pushed further off than feels natural, on purpose. The more of a glyph you show at
-    // this scale the more it reads as a dense block of radicals sitting on the content;
-    // the OUTER portion of each character is the sweeping part, and that is what should
-    // be on the page. Less of it, bigger, is quieter AND more graphic.
-    var hang = narrow ? 0.60 : 0.56;
-    var visible = Math.round(size * (1 - hang));
-    pitch = Math.round(size * 0.92);          // overlapping slightly, so it never gaps
+    // 0.41 is the measured figure and applies to the phone the mockup was made on. Wide
+    // screens take a smaller fraction, because the same fraction of a 1440px viewport is
+    // a far bigger object next to the same-size body text.
+    size = Math.round(Math.min(vw * (narrow ? 0.41 : 0.30), 440));
+    var show = 0.68;                          // fraction on screen; the rest runs off right
+    pitch = Math.round(size * 1.30);
 
-    river.style.width = visible + 'px';
+    river.style.width = Math.round(size * show) + 'px';
     river.innerHTML = '';
     tiles.length = 0;
 
@@ -104,7 +103,10 @@
       svg.setAttribute('viewBox', '0 0 2048 2048');
       svg.setAttribute('width', size);
       svg.setAttribute('height', size);
-      svg.style.left = -Math.round(size * hang) + 'px';
+      // left:0 inside a container narrower than the glyph, so overflow:hidden clips the
+      // RIGHT-hand side and the character bleeds off the edge of the screen. Setting a
+      // negative left instead clips the left-hand side, which is the mistake above.
+      svg.style.left = '0px';
       svg.innerHTML = '<g transform="translate(0,2048) scale(1,-1)"><path d="' +
                       (i % 2 ? ZEN : KAI) + '"/></g>';
       river.appendChild(svg);
@@ -139,7 +141,7 @@
       t.style.transform = 'translateY(' + y.toFixed(1) + 'px)';
       // Narrow screens carry it lighter: there is no gutter, so the ribbon is always
       // beside live text rather than beside whitespace. Body copy wins over scenery.
-      t.style.opacity = ((0.50 + 0.42 * w) * (narrow ? 0.78 : 1)).toFixed(3);
+      t.style.opacity = (0.62 + 0.38 * w).toFixed(3);
     }
   }
 

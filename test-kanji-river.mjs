@@ -80,6 +80,22 @@ for (const [label, width, height] of [['desktop', 1280, 900], ['mobile', 390, 84
     check(`${label}: no horizontal page scroll`, info.horiz === false);
   }
 
+  // Measured off Diego's mockup: glyph height 349px in an 858px viewport = 41% of viewport
+  // width, ink reaching x=1074 of 1075 so it runs OFF THE RIGHT. Three builds were tuned by
+  // eye against that image and all three missed one or both — 2.3x oversized, and clipped on
+  // the wrong side so the character sat inside the page with clear air at the screen edge.
+  // Eyeballing a reference has failed enough times to earn an assertion.
+  const geom = await page.evaluate(() => {
+    const s = document.querySelector('.kz-river svg').getBoundingClientRect();
+    return { w: s.width, right: s.right, vw: window.innerWidth };
+  });
+  check(`${label}: the character bleeds off the RIGHT edge, not into the page`,
+        geom.right > geom.vw + 1,
+        `glyph right ${Math.round(geom.right)} vs viewport ${geom.vw}`);
+  check(`${label}: glyph is at the reference scale, not oversized`,
+        geom.w / geom.vw <= 0.45,
+        `${Math.round(geom.w / geom.vw * 100)}% of viewport width (reference 41%)`);
+
   const a = await at(600);
   const b = await at(1400);
   const c = await at(600);
