@@ -29,7 +29,7 @@
     --hairline:  #D8D4CC;
     --accent:    #23211E;
     --accent-2:  #6E6A63;
-    --serif:     'Newsreader', Georgia, 'Times New Roman', serif;
+    --serif:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
     --sans:      'Manrope', system-ui, sans-serif;
     --max-w:     1140px;
   }
@@ -53,7 +53,7 @@
   .btn-quiet:hover { color:var(--text); border-color:#8A857C; }
 
   /* ============ NAV ============ */
-  nav { position:sticky; top:0; z-index:60; background:rgba(12,6,24,0.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
+  nav { position:sticky; top:0; z-index:60; background:rgba(247,246,244,0.86); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
   .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
   .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
   .nav-logo img { height:30px; width:auto; }
@@ -94,7 +94,7 @@
   /* Consent banner (injected by midnight.js) */
   .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
   .mid-consent.show { display:flex; }
-  .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(18,10,36,0.97); border:1px solid rgba(238,232,255,0.25); border-radius:8px; padding:16px 20px; }
+  .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(247,246,244,0.97); border:1px solid #D8D4CC; border-radius:8px; padding:16px 20px; }
   .mid-consent-inner p { font-size:13px; line-height:1.55; color:#23211E; margin:0; flex:1 1 320px; }
   .mid-consent-inner strong { color:#23211E; }
   .mid-consent-btns { display:flex; gap:10px; align-items:center; }
@@ -159,6 +159,9 @@
   .footer-social a{display:inline-flex;align-items:center;color:var(--muted);transition:color .2s}
   .footer-social a:hover{color:var(--accent-2)}
   .footer-social svg{width:18px;height:18px;display:block}
+  
+    em,i{font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:300}
+    h1,h2,h3{font-weight:300;letter-spacing:-0.03em}
   </style>
 </head>
 <body>
@@ -166,7 +169,7 @@
 <nav>
   <div class="container nav-inner">
     <a class="nav-logo" href="index.html">
-      <img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
       <b>KaizenEvol</b>
     </a>
     <ul class="nav-links">
@@ -222,7 +225,7 @@
 
 <footer>
   <div class="container footer-inner">
-    <a class="footer-logo" href="index.html"><img src="logo.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
+    <a class="footer-logo" href="index.html"><img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'"><b>KaizenEvol</b></a>
     <ul class="footer-nav">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
@@ -243,7 +246,7 @@
 
 <script defer src="/_vercel/insights/script.js"></script>
 <div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
-  <div style="background:var(--void-2,#EFEDE9);border:1px solid rgba(238,232,255,0.25);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+  <div style="background:var(--void-2,#EFEDE9);border:1px solid #D8D4CC;border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
     <div style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
     <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply &amp; call you back — same day</span></a>
     <button id="waClose" style="margin-top:16px;background:none;border:none;color:#6E6A63;font-size:13px;cursor:pointer;font-family:inherit">Close</button>

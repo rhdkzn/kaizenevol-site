@@ -30,7 +30,7 @@
 :root{
   --void:#F7F6F4; --text:#23211E; --muted:#6E6A63;
   --hairline:#D8D4CC; --accent:#23211E;
-  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --serif:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
   --sans:'Manrope',system-ui,sans-serif;
   --max-w:840px;
 }
@@ -80,7 +80,7 @@ p+p{margin-top:14px}
 @media(min-width:720px){.parts{grid-template-columns:repeat(3,1fr)}}
 .part{
   border:1px solid var(--hairline);border-radius:14px;padding:22px;
-  background:rgba(238,232,255,0.02)
+  background:#EFEDE9
 }
 .part .n{
   font-family:var(--serif);font-size:13px;color:var(--accent);
@@ -101,7 +101,7 @@ ul.ticks li::before{
 /* ── callout ── */
 .callout{
   border:1px solid var(--hairline);border-left:3px solid var(--accent);
-  border-radius:0 14px 14px 0;padding:22px 24px;background:rgba(139,92,246,0.05)
+  border-radius:0 14px 14px 0;padding:22px 24px;background:rgba(35,33,30,0.04)
 }
 .callout h3{font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:10px}
 .callout p{font-size:15.5px;color:var(--muted)}
@@ -130,7 +130,10 @@ footer a{color:var(--muted)}
 .rise{opacity:0;transform:translateY(14px);animation:rise .62s cubic-bezier(.22,.61,.36,1) forwards}
 .rise:nth-of-type(2){animation-delay:.06s}
 @keyframes rise{to{opacity:1;transform:none}}
-</style>
+
+    em,i{font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:300}
+    h1,h2,h3{font-weight:300;letter-spacing:-0.03em}
+  </style>
 </head>
 <body>
 

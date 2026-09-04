@@ -16,7 +16,7 @@
 @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:600;font-display:swap}
 @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:800;font-display:swap}
-:root{--void:#F7F6F4;--void-2:#EFEDE9;--surface:#1a1036;--text:#23211E;--muted:#6E6A63;--hairline:#D8D4CC;--accent:#23211E;--accent-2:#6E6A63;--serif:'Newsreader',Georgia,serif;--sans:'Manrope',system-ui,sans-serif}
+:root{--void:#F7F6F4;--void-2:#EFEDE9;--surface:#1a1036;--text:#23211E;--muted:#6E6A63;--hairline:#D8D4CC;--accent:#23211E;--accent-2:#6E6A63;--serif:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;--sans:'Manrope',system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--text);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;background-image:radial-gradient(1100px 500px at 80% -10%,rgba(139,92,246,.12),transparent 60%)}
 h1,h2,.sub,.foot p,.cap,label{overflow-wrap:break-word}
@@ -83,7 +83,10 @@ footer a{color:var(--muted)}
     .lf-q{font-size:19px;line-height:1.25;margin:0 0 12px;font-weight:600}
     .lf-back{display:inline-block;margin-top:10px;font-size:13px;opacity:.65;background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;color:inherit;font-family:inherit}
     .lf-hide{display:none!important}
-</style>
+
+    em,i{font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:300}
+    h1,h2,h3{font-weight:300;letter-spacing:-0.03em}
+  </style>
 </head>
 <body>
 <div class="topbar"><div class="wrap"><a class="brand" href="/"><span class="dot"></span>KaizenEvol</a></div></div>
