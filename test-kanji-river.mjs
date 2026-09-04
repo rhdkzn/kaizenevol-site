@@ -111,6 +111,43 @@ for (const [label, width, height] of [['desktop', 1280, 900], ['mobile', 390, 84
         geom.w / geom.vw <= 0.45,
         `${Math.round(geom.w / geom.vw * 100)}% of viewport width (reference 41%)`);
 
+  // THE WRAP MUST NOT SWAP THE CHARACTERS. The column alternates 改/善, so its pattern
+  // repeats every TWO pitches. Wrapping the scroll offset modulo a single pitch shifted
+  // every tile onto its neighbour's slot - and the neighbour is the other character - so
+  // the whole visible column flipped 改<->善 in one frame. Measured before the fix: at
+  // scrollY 1380 the column read 改善改善改 and at 1400 it read 善改善改善.
+  //
+  // This survived two earlier fixes aimed at other things (an opacity floor that made
+  // tiles pop in, then a passthrough seam at section boundaries) because neither had
+  // anything to do with it. Hence a test: a tile still on screen after a scroll step must
+  // be carrying the same character it had before.
+  const wrapOk = await page.evaluate(async () => {
+    const read = () => [...document.querySelectorAll('.kz-river svg')].map(s => ({
+      y: Math.round(s.getBoundingClientRect().top),
+      ch: s.querySelector('path').getAttribute('d').startsWith('M703') ? 'kai' : 'zen'
+    })).filter(o => o.y > -300 && o.y < window.innerHeight + 100);
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    let bad = 0, compared = 0;
+    let prev = null;
+    for (let y = 1000; y <= 2000; y += 20) {
+      window.scrollTo({ top: y, behavior: 'instant' });
+      await sleep(35);
+      const now = read();
+      if (prev) {
+        for (const a of prev) {
+          // the same tile after one step is within a few px of where it was
+          const m = now.find(b => Math.abs(b.y - a.y) <= 12);
+          if (m) { compared++; if (m.ch !== a.ch) bad++; }
+        }
+      }
+      prev = now;
+    }
+    return { bad, compared };
+  });
+  check(`${label}: the wrap never swaps 改 and 善`,
+        wrapOk.bad === 0,
+        `${wrapOk.bad} swapped of ${wrapOk.compared} tiles tracked across the scroll`);
+
   const a = await at(600);
   const b = await at(1400);
   const c = await at(600);

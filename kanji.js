@@ -100,7 +100,9 @@
     river.innerHTML = '';
     tiles.length = 0;
 
-    count = Math.ceil(window.innerHeight / pitch) + 3;
+    // +4 rather than +3: the wrap period is TWO pitches (see frame()), so the column has
+    // to stay covered across a shift of two characters, not one.
+    count = Math.ceil(window.innerHeight / pitch) + 4;
     for (var i = 0; i < count; i++) {
       var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('viewBox', '0 0 2048 2048');
@@ -129,12 +131,21 @@
     ticking = false;
     var vh = window.innerHeight;
     var mid = vh / 2;
-    var off = (window.scrollY * SPEED) % pitch;
-    if (off < 0) off += pitch;
+    // WRAP ON THE PATTERN'S PERIOD, NOT ON ONE GLYPH. The characters alternate 改/善, so
+    // the column repeats every TWO pitches. Wrapping modulo a single pitch shifted every
+    // tile onto the position its NEIGHBOUR held - and its neighbour is the other character,
+    // so the entire visible column swapped 改<->善 in one frame. Measured: at scrollY 1380
+    // the column read 改 善 改 善 改 and at 1400 it read 善 改 善 改 善. That was the abrupt
+    // change, and it survived two earlier fixes aimed at the wrong things (an opacity floor,
+    // then a passthrough seam at section boundaries) because neither had anything to do
+    // with it. Modulo 2*pitch lands every tile where the SAME character was.
+    var period = pitch * 2;
+    var off = (window.scrollY * SPEED) % period;
+    if (off < 0) off += period;
 
     for (var i = 0; i < count; i++) {
       // i>>1 is which 改善 this is; i&1 is which half of it.
-      var y = i * pitch - pitch + off;
+      var y = i * pitch - period + off;
       var centre = y + size / 2;
       // Weight by distance from the reader's eyeline, eased so the falloff is a curve
       // rather than a ramp.
