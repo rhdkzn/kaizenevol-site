@@ -65,12 +65,20 @@ for (const [label, width, height] of [['desktop', 1280, 900], ['mobile', 390, 84
     // directly on the page with nothing between them. Only that case is a failure.
     const texts = [...document.querySelectorAll('p, h1, h2, h3, .smallcaps, .lede')]
       .filter(e => !e.closest('.step, .cell, .slot'))
-      .map(e => {
-        const b = e.getBoundingClientRect();
-        return { top: b.top + window.scrollY, bottom: b.bottom + window.scrollY,
-                 left: b.left, right: b.right, tag: e.tagName, txt: (e.textContent || '').slice(0, 28) };
+      // PER-LINE INK, not the block box. A heading's box spans the whole column even
+      // where the words stop, so a mark sitting in clear space to the right of a short
+      // line registered as an overlap that nobody can see. Range rects give one rect per
+      // rendered line, ending where the text actually ends.
+      .flatMap(e => {
+        const rg = document.createRange();
+        rg.selectNodeContents(e);
+        return [...rg.getClientRects()].map(b => ({
+          top: b.top + window.scrollY, bottom: b.bottom + window.scrollY,
+          left: b.left, right: b.right, tag: e.tagName,
+          txt: (e.textContent || '').slice(0, 28)
+        }));
       })
-      .filter(b => b.bottom > b.top);
+      .filter(b => b.bottom > b.top && b.right > b.left);
 
     const hits = texts.filter(b =>
       box.top < b.bottom && box.bottom > b.top && box.left < b.right && box.right > b.left);

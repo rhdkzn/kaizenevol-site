@@ -97,6 +97,37 @@ for (const name of PAGES) {
   await page.close();
 }
 
+// EVERY NAV CONTROL MUST PRESS, and buttons must press as buttons. The nav's Apply CTA
+// matched both the button rule and the text-link rule at identical specificity, so source
+// order decided it and the primary CTA in the header pressed like a link - 0.985 where it
+// should be 0.965. Reported as "there is no animation with the navigation button". A tie
+// on specificity is not something to leave to chance on the one button every page is
+// trying to get clicked, so both the presence and the AMOUNT are asserted.
+for (const [label, width, sels] of [
+  ['desktop', 1280, [['nav .nav-links a.btn-solid', 0.965], ['nav .nav-links a:not(.btn-solid)', 0.985]]],
+  ['mobile', 390, [['nav .burger', 0.965], ['nav .nav-cta', 0.965],
+                   ['.mobile-menu a.btn-solid', 0.965], ['.mobile-menu a:not(.btn-solid)', 0.985]]]
+]) {
+  const page = await browser.newPage({ viewport: { width, height: 900 } });
+  await page.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(400);
+  if (width < 860) await page.evaluate(() => document.querySelector('.mobile-menu')?.classList.add('open'));
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('DOM.enable'); await cdp.send('CSS.enable');
+  const { root } = await cdp.send('DOM.getDocument');
+  for (const [sel, want] of sels) {
+    const q = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: sel }).catch(() => ({ nodeId: 0 }));
+    if (!q.nodeId) { check(`${label} nav: ${sel} exists`, false); continue; }
+    await cdp.send('CSS.forcePseudoState', { nodeId: q.nodeId, forcedPseudoClasses: ['active'] });
+    await page.waitForTimeout(190);
+    const tr = await page.evaluate(s => getComputedStyle(document.querySelector(s)).transform, sel);
+    await cdp.send('CSS.forcePseudoState', { nodeId: q.nodeId, forcedPseudoClasses: [] });
+    const got = Number((/matrix\(([\d.]+)/.exec(tr) || [])[1]);
+    check(`${label} nav: ${sel} presses to ${want}`, Math.abs(got - want) < 0.003, tr);
+  }
+  await page.close();
+}
+
 // A real navigation must actually run a transition, not just declare one.
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });

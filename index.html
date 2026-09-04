@@ -275,12 +275,23 @@
      * version collected - tiles popping in, a tone seam at section boundaries, a wrap that
      * swapped the two characters at once - was a failure of MOTION. A still mark has none.
      */
-    section.band, #method{position:relative}
+    /* overflow:clip, not hidden: the mark hangs past the right edge on purpose and must
+       be cut by the section rather than pushing the page sideways. clip does that without
+       turning the section into a scroll container, which hidden would. BOTH axes, not
+       overflow-x alone - a clip on one axis forces the other to compute to auto, which
+       reintroduces the scroll container, and it also let the mark spill past the section
+       top into the hero. Each mark now stays inside the section it belongs to. */
+    section.band, #method{position:relative;overflow:clip}
     section.band > .container, #method > .container{position:relative;z-index:1}
     section.band::before, #method::before{
       content:"";position:absolute;z-index:0;pointer-events:none;
-      /* Vertically centred in the section, held to the right-hand edge. */
-      right:24px;top:50%;height:264px;aspect-ratio:2048/4376;
+      /* Vertically centred in the section and hung HALF OFF the right edge, per Rahaid:
+         "increase the size, remember only half the characters show". The stack is
+         2048/4376, so its width is height x 0.468 and half of that is height x 0.234 -
+         which is the negative inset that puts the cut exactly down the middle of each
+         character. Tied to --kzh so the two stay in step at any size. */
+      --kzh:620px;
+      right:calc(var(--kzh) * -0.234);top:50%;height:var(--kzh);aspect-ratio:2048/4376;
       transform:translateY(-50%);
       background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%202048%204376%22%3E%3Cg%20transform%3D%22translate%280%2C2048%29%20scale%281%2C-1%29%22%3E%3Cpath%20d%3D%22M304%20928V264Q304%20213%20335%20201Q366%20191%20484%20191Q647%20191%20674%20209Q730%20243%20748%20535L801%20518Q801%20297%20820%20248Q835%20203%20891%20203Q882%20110%20793%2094Q704%2082%20490%2082Q281%2082%20236%20109Q185%20136%20185%20246V1040Q248%201014%20316%20979H670V1460H121L103%201511H651L727%201613Q851%201515%20851%201485Q851%201470%20834%201460L785%201427V809H670V928ZM1457%20392Q1648%20163%201962%209Q1902%20-37%201860%20-108Q1560%2073%201393%20296Q1155%20-7%20748%20-145L719%20-98Q1117%2072%201328%20396Q1170%20654%201098%201043Q994%20810%20854%20638L811%20670Q1065%201077%201145%201690Q1340%201650%201340%201608Q1340%201584%201256%201565Q1226%201415%201180%201262H1727L1823%201393Q1888%201332%201952%201248L1932%201211H1711Q1649%20700%201457%20392ZM1387%20490Q1537%20781%201584%201211H1164Q1155%201186%201139%201143Q1239%20717%201387%20490Z%22%20fill%3D%22%23C9C3B7%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%280%2C4376%29%20scale%281%2C-1%29%22%3E%3Cpath%20d%3D%22M543%20370H1478L1561%20458Q1690%20369%201690%20339Q1690%20327%201669%20313L1618%20278V-147H1499V-39H518V-147H397V442Q453%20421%20543%20370ZM518%20319V12H1499V319ZM1278%20592Q1347%20715%201397%20877Q1571%20819%201571%20780Q1571%20756%201487%20750Q1420%20660%201349%20592H1706L1810%20721Q1890%20648%201943%20578L1921%20541H149L125%20592H952V893H168L143%20944H952V1118H346L323%201169H952V1331H221L200%201382H1143Q1215%201512%201268%201699Q1454%201638%201454%201595Q1454%201566%201364%201560Q1305%201477%201222%201394Q1216%201385%201210%201382H1638L1734%201505Q1810%201440%201872%201368L1849%201331H1073V1169H1515L1614%201278Q1696%201209%201743%201151L1720%201118H1073V944H1681L1782%201063Q1859%201004%201921%20930L1898%20893H1073V592ZM473%20874Q713%20798%20713%20676Q713%20602%20643%20602Q598%20602%20580%20665Q552%20765%20449%20838ZM600%201694Q852%201608%20852%201479Q852%201434%20811%201405Q794%201395%20776%201395Q723%201395%20711%201465Q690%201563%20576%201659Z%22%20fill%3D%22%23C9C3B7%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat center/contain;
       opacity:.5;
@@ -289,7 +300,7 @@
       /* No gutter at all under 720px - the text column is the full width - so the mark is
          smaller and quieter here. It is behind the copy by construction; the alternative
          at this width is a sliver nobody would see. */
-      section.band::before, #method::before{right:10px;height:186px;opacity:.4}
+      section.band::before, #method::before{--kzh:400px;right:calc(var(--kzh) * -0.234);opacity:.4}
     }
 
     /* Translucent so the kanji reads THROUGH the panel instead of being hidden by it.

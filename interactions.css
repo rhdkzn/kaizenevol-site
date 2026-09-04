@@ -79,9 +79,16 @@ button:not([disabled]), [role="button"] {
   transition: transform .09s var(--ke-press-in);
 }
 
-/* Text links press less than buttons — a full 3.5% on a word reads as a glitch. */
-.btn-quiet:active, .nav-links a:active, .mobile-menu a:not(.btn-solid):active,
-footer a:active, summary:active {
+/* Text links press less than buttons — a full 3.5% on a word reads as a glitch.
+ *
+ * :not(.btn-solid) is load-bearing. Without it the nav's Apply button matched BOTH this
+ * rule and the button rule above at identical specificity (0,2,0), so the later one won
+ * and the primary CTA in the header pressed like a text link. Measured at 0.985 where it
+ * should be 0.965. Specificity ties are decided by source order, which is not a thing to
+ * leave to chance on the one button every page is trying to get clicked. */
+.btn-quiet:active, .nav-links a:not(.btn-solid):active,
+.mobile-menu a:not(.btn-solid):active, footer a:not(.btn-solid):active,
+summary:active {
   transform: scale(.985);
   transition: transform .09s var(--ke-press-in);
 }
