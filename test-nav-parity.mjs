@@ -19,7 +19,13 @@
  */
 import { readFileSync, readdirSync } from 'node:fs'
 
-const EXPECT = ['kaizenreach.html', 'kaizendesk.html', 'kaizenforge.html']
+/* UPDATED 2026-09-04 (Rahaid): KaizenDesk and KaizenForge came OUT of the nav.
+ * They target local businesses and are now a separate, parked business model, so
+ * kaizenevol.com no longer offers them in its navigation. The pages stay live and
+ * reachable; they are simply not services this site sells any more.
+ * This guard exists to stop a service going missing by ACCIDENT - so the list is
+ * narrowed deliberately here rather than the guard being skipped. */
+const EXPECT = ['kaizenreach.html']
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
