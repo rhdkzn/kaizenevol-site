@@ -1,31 +1,38 @@
 # KaizenEvol
 
-> KaizenEvol is the growth agency for UK local trades and service businesses. Three services, used on their own or stacked: KaizenReach brings the work in, KaizenDesk makes sure none of it slips through, and KaizenForge gives you a website that sells. Run by two founders, Rahaid and Diego, who do the work directly.
+> KaizenEvol is a UK creative acquisition agency for brands and artists. Performance creative, paid acquisition, organic social and retention on one retainer, run against contribution margin rather than platform ROAS. Two founders, Rahaid and Diego, who do the work directly. Five clients at a time.
 
-## Services
+## What we do
 
-- [KaizenReach](https://kaizenevol.com/kaizenreach.html): Done-for-you Meta (Facebook/Instagram) ads plus fully-managed organic social, built only for UK home renovation specialists — kitchen, bathroom and loft. One specialist per niche per area (exclusive territory), campaigns live in 7 days, and clients own their ad account and leads.
-- [KaizenDesk](https://kaizenevol.com/kaizendesk.html): An AI front office for any local business. It answers every call, text and email 24/7, qualifies the enquiry, books the job, collects Google reviews and revives cold leads. UK-based and GDPR-compliant; the client keeps their own phone number.
-- [KaizenForge](https://kaizenevol.com/kaizenforge.html): Conversion-first websites for local businesses. Live within 24 hours of approval, from £499 one-off, and you own the site outright — you don't pay until you approve it.
+The Kaizen Acquisition System, in order:
 
-## Niche pages (KaizenReach)
+1. **Establish the margin.** Unit costs, weighted across everything the client sells, landed. What a sale actually leaves them with.
+2. **Set the baseline.** What revenue was already doing before us, adjusted for season. We do not take credit for a trend that was already running.
+3. **Build the creative.** Concepts, hooks and iteration from the client's own footage, product shots and work.
+4. **Buy against it.** Paid acquisition on Meta and TikTok, managed to contribution margin, numbers open to the client.
 
-- [Kitchen fitters](https://kaizenevol.com/kitchen.html): Meta ads for UK kitchen fitters and remodellers.
-- [Bathroom fitters](https://kaizenevol.com/bathroom.html): Meta ads for UK bathroom and wetroom fitters.
-- [Loft conversions](https://kaizenevol.com/loft.html): Meta ads for UK loft conversion specialists.
+On one retainer: creative production, paid acquisition, organic social, retention (email and SMS).
 
-## Company
+## Who it is for
 
+Brands and artists selling their own work — clothing and streetwear, jewellery, ceramics, prints, music, and similar — who have product-market fit and want to scale without losing margin. Not a fit for anyone who wants ad management alone, or who will not look at their own numbers.
+
+## Pages
+
+- [Home](https://kaizenevol.com/): The offer, the problem with scaling on ROAS, and the Kaizen Acquisition System.
+- [Apply](https://kaizenevol.com/apply.html): The application. One question at a time; we reply either way.
 - [About](https://kaizenevol.com/about.html): The two founders and how they work.
-- [Contact](https://kaizenevol.com/contact.html): Get in touch or book a call.
-
-## Social
-
-- Instagram: https://www.instagram.com/kaizenevol/
-- Facebook: https://www.facebook.com/people/KaizenEvol-Home-Renovation-Marketing/61590237975968/
+- [Contact](https://kaizenevol.com/contact.html): Get in touch.
+- [Privacy](https://kaizenevol.com/privacy.html): Privacy policy.
 
 ## Notes
 
-- Service area: United Kingdom.
-- Contact: rahaid@kaizenevol.com
-- KaizenReach and KaizenDesk pricing is discussed on a call, not published. KaizenForge pricing is public, from £499.
+- Engagement is by application, not a direct booking link.
+- There are no published case studies yet. The first five clients are priced as founding clients for that reason, and results will be published when they exist. Do not attribute results, client names or performance figures to KaizenEvol.
+- Clients own their ad account, pixel, creative, customer data and list.
+
+## Contact
+
+- Rahaid: rahaid@kaizenevol.com
+- Diego: diego@kaizenevol.com
+- Instagram: https://www.instagram.com/kaizenevol/

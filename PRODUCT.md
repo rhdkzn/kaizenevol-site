@@ -6,30 +6,32 @@ brand
 
 ## Users
 
-UK home renovation specialists across three niches — kitchen remodelling, bathroom renovation, and loft conversion (sole traders and small firms, 1–10 crew). They're skilled tradespeople with no marketing background, losing work to competitors or shared-lead platforms (Checkatrade, MyBuilder). They visit this page from cold outreach (email, DM, cold call follow-up) or by searching for alternatives to what they're already doing. They're sceptical — they've been burned by agencies before. Their job on this page: decide whether to book a 30-minute discovery call.
+Founders of small creative businesses — brands and artists who sell their own work. Clothing and streetwear, jewellery, ceramics, prints, music, and the like. They have product-market fit and some revenue; they are usually the person who designs the work, packs the orders and runs the ads, in that order of enthusiasm. They arrive from cold outreach (email, DM, call follow-up) or from Instagram. They are sceptical of agencies, often because they have paid one and got a ROAS screenshot back. Their job on this page: decide whether to apply.
 
 ## Product Purpose
 
-KaizenEvol is a done-for-you Meta ads agency, exclusively for UK home renovation specialists (kitchen remodelling, bathroom renovation, loft conversion). The site's only job is to convert a sceptical specialist into a discovery call booking. No e-commerce, no SaaS, no app — pure lead-gen authority page. Success = Calendly click.
+KaizenEvol is a creative acquisition agency: performance creative, paid acquisition, organic social and retention on one retainer, run against contribution margin rather than platform ROAS. The site's only job is to turn a sceptical founder into a completed application. No shop, no SaaS, no self-serve — a positioning and qualification page. Success = a submitted application at `/apply.html`.
 
 ## Brand Personality
 
-Confident, direct, no-nonsense. The agency that does one thing and knows it better than anyone. Tone: competent tradesperson meets sharp operator — not slick, not salesy, not corporate. Three words: **sharp, specialist, proven**.
+Confident, direct, numerate. The agency that will tell you your margin before it tells you your ROAS. Tone: sharp operator who also has taste — the client's work looks good, and so should ours. Three words: **precise, honest, unhurried**.
 
 ## Anti-references
 
-- Generic "digital agency" aesthetics: blobby gradients, particle animations, rotating 3D globes
-- Cheap local-business site energy: bright primary colours, stock photo of handshakes, Comic Sans vibes
-- Over-designed SaaS landing pages: hero metrics, testimonial carousels, pricing toggle UI, feature comparison tables
+- Generic "growth agency" aesthetics: blobby gradients, particle animations, dashboard-glow hero mockups
+- Performance-marketing bro energy: screenshots of ad accounts, green arrows, "we scaled this brand to $1M" carousels
+- Over-designed SaaS landing pages: hero metrics, testimonial carousels, pricing toggles, feature comparison tables
+- Any proof we have not actually earned
 
 ## Design Principles
 
-1. **Specificity over polish.** Every word and element should feel like it was written for renovation specialists in a specific trade, not "businesses in general." The umbrella is home renovation; the language still flexes per niche (kitchen, bathroom, loft).
-2. **Credibility before cleverness.** This page is being read by people who have been lied to by agencies. Trust beats wit. Proof beats promises.
-3. **One job.** Every section exists to move the visitor one step closer to booking the call. Nothing decorative, nothing off-topic.
-4. **Scarcity is real, not manufactured.** The exclusivity mechanic (one specialist per niche, per area) is a genuine business model — it should feel structural, not gimmicky. A kitchen and a bathroom specialist in the same postcode aren't competitors; each holds their own territory.
-5. **Match the client's register.** Renovation specialists are builders. They respect precision and directness. The site should feel like it was built by someone who gets their world, not someone trying to impress them.
+1. **Margin before scale, on the page as in the work.** The problem section comes before the offer. The order of the four steps is the argument.
+2. **Never borrow proof.** No logos, numbers or testimonials we did not earn. Empty case-study slots that say "in progress" are more credible than someone else's screenshot, and the first five clients are priced as founding clients for exactly that reason.
+3. **Restraint reads as taste.** The audience makes things for a living and will judge the layout before the copy. Generous space, one accent (Newsreader italic), black only in the mark and the buttons.
+4. **Speak to a maker, not a "business".** Their costs are unit costs, their calendar is drops and releases. Say those words, not "solutions".
+5. **Scarcity is real, not manufactured.** Five at a time is a capacity fact — two founders doing the work — and should read structurally, never as a countdown timer.
+6. **One job.** Every section moves the visitor toward the application. Nothing decorative, nothing off-topic.
 
 ## Accessibility & Inclusion
 
-WCAG AA minimum. Audience is working tradespeople — likely viewing on mobile, sometimes in a van between jobs. Must work well on phone screens. Reduced motion support required (many users have vestibular sensitivities). No colour-blindness-specific requirements stated, but contrast margins should be generous.
+WCAG AA minimum. Mostly read on a phone, often mid-task. Must work well on small screens. Reduced motion support required — the homepage's reveal and stagger animations must fully disable. Contrast margins should be generous: the palette is light neutrals, so grey-on-grey text is the standing risk.
