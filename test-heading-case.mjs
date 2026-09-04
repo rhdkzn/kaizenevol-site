@@ -30,12 +30,22 @@ const PROPER = new Set(['kaizenevol','kaizenreach','kaizendesk','kaizenforge','m
    noun in "If your website was a house" during the sweep. Phrases belong in prose,
    not in a word list. */
 
+/* Multi-word product names, matched as WHOLE PHRASES and removed before the per-word
+   scan. Added 2026-09-04 for "The Kaizen Acquisition System". The tempting fix was to
+   drop 'acquisition' and 'system' into PROPER, which is precisely the mistake the
+   'house' note above records: a word list cannot tell "the Acquisition System" from
+   "more Acquisition", so it would license Title Case on those two words anywhere on
+   the site. A phrase list can. Keep this list to real product names. */
+const PHRASES = [/The Kaizen Acquisition System/g, /Kaizen Acquisition System/g]
+
 /* First pass only fired when 3+ significant words were capitalised, so short Title
    Case headings walked straight through: "We'd Rather Show You", "Meet the Team",
    "Questions, Answered". The correct test is per-word — ANY capitalised word that is
    not the first, not a proper noun, and not starting a new sentence after . ! ? is
    Title Case. */
-const titleCase = (s) => {
+const titleCase = (s0) => {
+  let s = s0
+  for (const p of PHRASES) s = s.replace(p, 'Kaizenreach')  // a known PROPER token, so the slot still parses
   let first = true, capNext = true
   const offenders = []
   const re = /[A-Za-z][A-Za-z'\u2019]*|[.!?]/g
