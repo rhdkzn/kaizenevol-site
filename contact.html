@@ -69,6 +69,7 @@
     .skip-link:focus { left:0; }
 
     /* ============ NAV ============ */
+    .nav-cta { display:none; font-size:13px; padding:10px 20px; }
     nav { position:sticky; top:0; z-index:60; background:rgba(247,246,244,0.86); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
     .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
     .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
@@ -175,7 +176,7 @@
       .contact-grid { grid-template-columns:1fr; gap:56px; }
     }
     @media(max-width:768px) {
-      .nav-links { display:none; } .burger { display:flex; }
+      .nav-links { display:none; } .burger { display:flex; } .nav-cta { display:inline-block; margin-left:auto; margin-right:4px; }
       .hero { min-height:62vh; }
       .hero-inner { padding-top:70px; padding-bottom:90px; }
       .contact { padding:72px 0; }
@@ -269,6 +270,7 @@
       <li><a href="contact.html">Contact</a></li>
       <li><a class="btn-solid" href="apply.html">Apply</a></li>
     </ul>
+    <a class="btn-solid nav-cta" href="apply.html">Apply</a>
     <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
