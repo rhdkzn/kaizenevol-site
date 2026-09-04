@@ -3,7 +3,12 @@
  * Rahaid, 2026-09-04: "I want that to be visible at all times, it should flow down as the
  * user scrolls down and vice versa." Diego proposed the kanji; this is the second build.
  * The first put one glyph per section as a background layer — discrete, faint, and absent
- * for most of the page. This is one unbroken ribbon fixed to the viewport.
+ * for most of the page. This is one unbroken ribbon fixed to the viewport, reading as a vertical inscription down the edge.
+
+ * THE CHARACTERS ARE NEVER CROPPED. Two builds hung them off the right edge and both were
+ * wrong for a reason that has nothing to do with taste: a Han character's radicals are
+ * themselves characters, so cropping 改 leaves a whole, different character (女) standing
+ * on its own. The site shipped a column reading 女 down its right edge. Size to fit.
  *
  * ── WHY IT PAINTS ON TOP RATHER THAN BEHIND ───────────────────────────────────────────
  * A background layer cannot work on this site, and the reason is worth writing down
@@ -47,7 +52,7 @@
     '.kz-river{position:fixed;top:0;right:0;height:100vh;pointer-events:none;z-index:5;',
     '  overflow:hidden;mix-blend-mode:multiply}',
     '.kz-river svg{position:absolute;top:0;display:block;will-change:transform,opacity}',
-    '.kz-river path{fill:#DAD5CB}',
+    '.kz-river path{fill:#E7E3DB}',
     /* A watermark down the margin of a printed page is wasted toner. */
     '@media print{.kz-river{display:none}}'
   ].join('');
@@ -65,29 +70,34 @@
   var size = 0, pitch = 0, count = 0, narrow = false;
 
   function build() {
-    // Sized off the viewport, then pulled right so a fixed share hangs past the edge.
-    // Measured rather than guessed: the content gutter is 160px at 1440, 80px at 1280 and
-    // ZERO at 1024 and below, so there is no lane to sit in on most screens. The overhang
-    // keeps it clear of the column; the blend mode covers everything the overhang cannot.
+    // SCALE AND TONE ARE THE WHOLE THING, and both previous builds got them wrong in
+    // opposite directions.
+    //
+    // Build 2 ran ~400px characters at a heavy fill. At that size you see most of each
+    // glyph, so it reads as solid blocky radicals sitting in a column - Rahaid: "why does
+    // it look like that". Build 3 then over-corrected to small WHOLE characters, which he
+    // rejected against the reference: "no you don't need the whole".
+    //
+    // The mockup is neither. Its characters are LARGE - a large fraction of the viewport,
+    // so what you see is a few sweeping strokes rather than a whole dense glyph - and
+    // LIGHT, closer to a ghost than to a mark. Cropping is correct at that scale precisely
+    // because nobody is reading it as a character; it is architecture. Go big and go
+    // quiet, and the crop stops being the thing you notice.
     var vw = window.innerWidth;
     narrow = vw < 720;
-    // On a phone the first build ran the SAME proportion as desktop, which produced a
-    // character every 122px — a dense decorative border running down the line-ends of the
-    // body copy. Rendered at 390px it read as clutter. Narrow screens get FEWER and BIGGER
-    // characters with more of each one off the edge: same presence, a quarter of the
-    // events per screen, and the ragged right of the text column stays clean.
-    size = narrow ? Math.round(Math.min(vw * 0.52, 260))
-                  : Math.round(Math.min(vw * 0.30, 400));
-    var hang = narrow ? 0.62 : 0.42;
+    size = Math.round(Math.min(vw * (narrow ? 0.95 : 0.68), 880));
+    // Pushed further off than feels natural, on purpose. The more of a glyph you show at
+    // this scale the more it reads as a dense block of radicals sitting on the content;
+    // the OUTER portion of each character is the sweeping part, and that is what should
+    // be on the page. Less of it, bigger, is quieter AND more graphic.
+    var hang = narrow ? 0.60 : 0.56;
     var visible = Math.round(size * (1 - hang));
-    pitch = Math.round(size * (narrow ? 1.22 : 1.04));
+    pitch = Math.round(size * 0.92);          // overlapping slightly, so it never gaps
 
     river.style.width = visible + 'px';
     river.innerHTML = '';
     tiles.length = 0;
 
-    // One tile more than fills the viewport, so a whole character is always entering at
-    // each end and the wrap is never visible.
     count = Math.ceil(window.innerHeight / pitch) + 3;
     for (var i = 0; i < count; i++) {
       var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -118,6 +128,7 @@
     if (off < 0) off += pitch;
 
     for (var i = 0; i < count; i++) {
+      // i>>1 is which 改善 this is; i&1 is which half of it.
       var y = i * pitch - pitch + off;
       var centre = y + size / 2;
       // Weight by distance from the reader's eyeline, eased so the falloff is a curve
@@ -128,7 +139,7 @@
       t.style.transform = 'translateY(' + y.toFixed(1) + 'px)';
       // Narrow screens carry it lighter: there is no gutter, so the ribbon is always
       // beside live text rather than beside whitespace. Body copy wins over scenery.
-      t.style.opacity = ((0.34 + 0.66 * w) * (narrow ? 0.72 : 1)).toFixed(3);
+      t.style.opacity = ((0.50 + 0.42 * w) * (narrow ? 0.78 : 1)).toFixed(3);
     }
   }
 
