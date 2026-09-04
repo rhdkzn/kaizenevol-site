@@ -138,9 +138,18 @@ for (const [zone, map] of Object.entries(NAVS)) {
     if (!m) continue                                   /* pages with no nav */
     const text = m[1].replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).join(' ')
     const alt = (m[1].match(/alt="([^"]*)"/) || [])[1] || null
-    marks[f] = text
-    check(`${f} nav wordmark is KaizenEvol`, text === 'KaizenEvol', `reads "${text}"`)
-    check(`${f} wordmark agrees with its img alt`, alt === null || alt === text,
+    marks[f] = text || alt
+    /* UPDATED 2026-09-04 (Rahaid): the nav now carries the MARK ALONE, no visible
+     * wordmark. That does not retire this check, it moves the burden: the img alt
+     * is now the only brand name anyone gets, sighted or not, so it has to be
+     * right on every page and it has to be the same one. A page that still shows
+     * text must still show "KaizenEvol" — the three-brand-names drift this block
+     * was written for is just as possible with a wordmark as without. */
+    check(`${f} nav names KaizenEvol`, (text || alt) === 'KaizenEvol',
+      `visible "${text}", alt "${alt}"`)
+    check(`${f} nav mark carries an alt`, alt !== null && alt.trim() !== '',
+      `alt is ${alt === null ? 'absent' : 'empty'} and no visible wordmark`)
+    check(`${f} wordmark agrees with its img alt`, text === '' || alt === null || alt === text,
       `visible "${text}" vs alt "${alt}"`)
   }
   const distinct = [...new Set(Object.values(marks))]

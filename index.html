@@ -57,7 +57,7 @@
     nav{position:sticky;top:0;z-index:40;background:rgba(247,246,244,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
     .nav-inner{display:flex;align-items:center;gap:24px;height:66px}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-0.02em}
-    .nav-logo img{height:24px;width:auto}
+    .nav-logo img{height:30px;width:auto}
     .nav-links{list-style:none;display:flex;align-items:center;gap:26px;margin:0 0 0 auto;padding:0;font-size:14px;font-weight:500}
     .nav-links a{text-decoration:none;color:var(--muted)}
     .nav-links a:hover{color:var(--ink)}
@@ -93,11 +93,35 @@
 
     /* MOTION — brand/DESIGN.md: one signature moment per surface, house easing everywhere.
        The signature is the hero line drop: a rotateX fall, not an opacity fade. The rotation
-       is what reads as physical; a fade is the cheap version. Everything else stays quiet. */
-    .js .reveal{opacity:0;transform:translateY(14px);transition:opacity .9s var(--el-ease),transform .9s var(--el-ease)}
-    .reveal.in{opacity:1;transform:none}
+       is what reads as physical; a fade is the cheap version. Everything below it stays quiet.
 
-    /* hero line drop */
+       REBUILT 2026-09-04 (Rahaid: "the animations look blocky and unprofessional"). He was
+       right, and it was structural rather than a matter of taste. Three faults compounded:
+
+       1. Every element below the hero made the SAME move — translateY(12-14px) plus a fade,
+          one curve, one duration — so the page arrived as a series of identical jerks.
+          Sameness is what reads as cheap: a heading and a paragraph are not the same kind of
+          object and have no business entering the same way.
+       2. The grids carried .stagger AND .reveal on one node, so the container faded while each
+          cell faded again on top of it. A grid draws its hairlines as a 1px background showing
+          through the gaps between opaque cells — so mid-fade the MESH was solid while the
+          cells were still translucent. The borders arrived before the things they belong to and
+          the grid popped in as literal blocks. That is the word he used.
+       3. Only four nth-child delays existed, so any grid with more children dumped the rest
+          simultaneously.
+
+       Rebuilt on the kaizenforge.html pattern, which already had the better vocabulary: motion
+       is SCROLL-LINKED (animation-timeline: view()), scrubbed continuously by the scroll
+       position instead of fired once at a tripwire — nothing can snap, because nothing is
+       ever triggered. Headings rise out of a clip-path mask instead of fading, section rules
+       draw themselves in, and a grid arrives as ONE wipe across the whole mesh, cells and
+       hairlines together, so the two can never disagree about who got there first. Firefox and
+       anything else without scroll timelines gets the same choreography on transitions. */
+
+    /* A damped settle with a little overshoot. Type wants it; the house curve has no return. */
+    :root{--spring:linear(0 0%,.055 4%,.189 8%,.363 12%,.547 17%,.718 21%,.863 25%,.975 29%,1.053 33%,1.101 38%,1.123 42%,1.125 46%,1.114 50%,1.095 54%,1.072 58%,1.049 62%,1.028 67%,1.012 71%,.999 75%,.991 79%,.986 83%,.984 88%,.985 92%,.986 96%,.989 100%)}
+
+    /* hero line drop — the signature, untouched */
     .hero h1{perspective:900px}
     .ln{display:inline-block;overflow:hidden;vertical-align:top}
     .js .ln > span{display:inline-block;transform:translateY(-.85em) rotateX(-62deg);opacity:0;
@@ -117,22 +141,88 @@
     .btn-solid{will-change:transform}
     .btn-solid:active{transform:translateY(0) scale(.985)}
 
-    /* the four steps and the four systems arrive in sequence, once */
-    .js .stagger > *{opacity:0;transform:translateY(12px);transition:opacity .6s var(--el-ease),transform .6s var(--el-ease)}
-    .stagger.in > *{opacity:1;transform:none}
-    .stagger.in > *:nth-child(1){transition-delay:0s}
-    .stagger.in > *:nth-child(2){transition-delay:.07s}
-    .stagger.in > *:nth-child(3){transition-delay:.14s}
-    .stagger.in > *:nth-child(4){transition-delay:.21s}
+    /* A rule draws itself in above every section eyebrow. Line work rather than another fade:
+       it gives each section a beginning without adding a fourth thing that pops. */
+    section .container > .smallcaps{position:relative}
+    section .container > .smallcaps::before{content:"";position:absolute;left:0;top:-24px;
+      width:180px;height:1px;background:var(--hairline);transform-origin:left center;transform:scaleX(0)}
+    .closing .container > .smallcaps::before{left:50%;transform:translateX(-50%) scaleX(0);transform-origin:center}
+
+    /* ---- Browsers WITHOUT scroll timelines (Firefox today): the same choreography on
+       transitions, driven by the .in class the observer adds. ---- */
+    @supports not (animation-timeline: view()){
+      .js .reveal .smallcaps{opacity:0;transition:opacity .55s var(--el-ease)}
+      .reveal.in .smallcaps{opacity:1}
+      .js .reveal > .smallcaps::before{transition:transform .8s var(--el-ease)}
+      .reveal.in > .smallcaps::before{transform:scaleX(1)}
+      .closing .reveal.in > .smallcaps::before{transform:translateX(-50%) scaleX(1)}
+
+      /* a heading is masked, never faded — type rising out of an edge reads made, a fade reads generated */
+      .js .reveal h2{clip-path:inset(0 0 104% 0);transform:translateY(14px);
+        transition:clip-path .95s var(--spring),transform .95s var(--spring)}
+      .reveal.in h2{clip-path:inset(-14% -8% -20% 0);transform:none}
+
+      .js .reveal .lede{opacity:0;transform:translateY(8px);
+        transition:opacity .8s var(--el-ease) .14s,transform .8s var(--el-ease) .14s}
+      .reveal.in .lede{opacity:1;transform:none}
+
+      /* the mesh arrives as ONE object — cells and hairlines together, left to right */
+      .js .grid,.js .steps,.js .work{clip-path:inset(0 100% 0 0);transition:clip-path 1.1s var(--el-ease) .18s}
+      .grid.in,.steps.in,.reveal.in .grid,.reveal.in .steps,.reveal.in .work{clip-path:inset(0 -2px 0 0)}
+      @media(max-width:759px){
+        .js .grid,.js .steps,.js .work{clip-path:none;opacity:0;transform:translateY(10px);
+          transition:opacity .75s var(--el-ease) .1s,transform .75s var(--el-ease) .1s}
+        .grid.in,.steps.in,.reveal.in .grid,.reveal.in .steps,.reveal.in .work{opacity:1;transform:none}
+      }
+    }
+
+    /* ---- Scroll-linked path. Every beat is scrubbed by the scroll position itself, so the page
+       resolves as the visitor moves and holds wherever they stop. ---- */
+    @supports (animation-timeline: view()){
+      section .container > .smallcaps::before{animation:ke-draw linear both;
+        animation-timeline:view();animation-range:entry 6% entry 48%}
+      @keyframes ke-draw{to{transform:scaleX(1)}}
+      .closing .container > .smallcaps::before{animation-name:ke-draw-c}
+      @keyframes ke-draw-c{to{transform:translateX(-50%) scaleX(1)}}
+
+      .js .reveal .smallcaps{animation:ke-fade linear both;
+        animation-timeline:view();animation-range:entry 8% entry 36%}
+      @keyframes ke-fade{from{opacity:0}to{opacity:1}}
+
+      .js .reveal h2{animation:ke-mask linear both;
+        animation-timeline:view();animation-range:entry 10% entry 54%}
+      @keyframes ke-mask{from{clip-path:inset(0 0 104% 0);transform:translateY(14px)}
+        to{clip-path:inset(-14% -8% -20% 0);transform:none}}
+
+      .js .reveal .lede{animation:ke-lift linear both;
+        animation-timeline:view();animation-range:entry 14% entry 60%}
+      @keyframes ke-lift{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+      .js .grid,.js .steps,.js .work{animation:ke-wipe linear both;
+        animation-timeline:view();animation-range:entry 12% entry 70%}
+      @keyframes ke-wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -2px 0 0)}}
+
+      /* A sideways wipe is a DESKTOP move. Below 760px the grids collapse to one column and
+         run taller than the viewport, so a horizontal clip cuts sentences down the middle
+         while you are reading them — caught on the phone shot, and worse than the blockiness
+         it replaced. On a phone the grid simply arrives as one object, no clipping at all,
+         which still fixes the original fault: no cell ever fades separately from its mesh. */
+      @media(max-width:759px){
+        @keyframes ke-wipe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+      }
+    }
 
     /* the work slots breathe very slightly, so the empty row is not dead */
     .slot{transition:background .6s var(--el-ease)}
     .slot:hover{background:var(--recess)}
 
-    /* DESIGN.md reduce-motion ruling: shorten, never switch off. Content still arrives. */
+    /* DESIGN.md reduce-motion ruling: shorten, never switch off. Content still arrives, and the
+       scroll-linked beats above are gesture-driven — the visitor's own thumb moves them, so
+       they ship for everyone untouched. Only the self-playing hero entrance is shortened. */
     @media(prefers-reduced-motion:reduce){
-      .reveal,.ln > span,.stagger > *,.hero .smallcaps,.hero-sub,.hero-ctas,.hero-note,
-      .btn-solid,.slot{transition-duration:.12s!important;transition-delay:0s!important}
+      .ln > span,.hero .smallcaps,.hero-sub,.hero-ctas,.hero-note,.btn-solid,.slot,
+      .reveal .smallcaps,.reveal h2,.reveal .lede,.grid,.steps,.work{
+        transition-duration:.14s!important;transition-delay:0s!important}
       .ln > span{transform:none}
     }
 
@@ -181,8 +271,7 @@
   <div class="container nav-inner">
     <a class="nav-logo" href="index.html">
       <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
-      <b>KaizenEvol</b>
-    </a>
+      </a>
     <ul class="nav-links">
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
@@ -416,5 +505,8 @@ c.addEventListener('click',function(){m.style.display='none';});
 m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
+<!-- The silk aura behind the hero, plus the sitewide grain and typography layer. The homepage
+     was the one public page not loading it, so it was the one hero with no depth behind the type. -->
+<script src="/midnight.js?v=18" defer></script>
 </body>
 </html>

@@ -49,7 +49,7 @@
     var st = document.createElement('style');
     st.textContent =
       '.mid-grain,.mid-vignette{position:fixed;inset:0;pointer-events:none;}' +
-      '.mid-vignette{z-index:9989;background:radial-gradient(125% 125% at 50% 40%,transparent 58%,rgba(6,3,14,0.30) 100%);}' +
+      '.mid-vignette{z-index:9989;background:radial-gradient(125% 125% at 50% 40%,transparent 62%,rgba(35,33,30,0.045) 100%);}' +
       '.mid-grain{z-index:9990;opacity:0.06;' +
         'background-image:url("' + svg + '");background-size:170px 170px;}';
     document.head.appendChild(st);
@@ -178,10 +178,17 @@
         '          +0.6*band(uv,0.69,0.16,1.35,0.42,0.6+S);' +
         '  float i2=band(uv,0.74,0.12,1.9,0.3,2.1+S*2.0);' +
         '  float i3=band(uv,0.58,0.2,0.9,0.54,4.2+S*3.0);' +
-        '  vec3 c=i1*vec3(0.545,0.361,0.965)+i2*vec3(0.427,0.247,0.753)+i3*vec3(0.769,0.71,0.992);' +
-        '  c*=0.155;' +
-        '  float a=clamp((i1+i2+i3)*0.11,0.0,0.85);' +
-        '  gl_FragColor=vec4(c,a);}';
+        /* Neutral graphite, weighted by band intensity. Three greys with a faint warm-to-cool
+           drift (ink -> stone -> cool) so the ribbon still reads as depth without carrying a hue.
+           Colour is NOT premultiplied: the blend below is standard source-alpha, so the silk
+           DARKENS the off-white ground instead of trying to add light to it. */
+        '  float sum=i1+i2+i3;' +
+        '  vec3 c=(i1*vec3(0.137,0.129,0.118)+i2*vec3(0.431,0.416,0.388)+i3*vec3(0.612,0.616,0.624))/max(sum,0.0001);' +
+        '  float a=clamp(sum*0.05,0.0,0.14);' +
+        /* A WebGL canvas is premultiplied by default, so the shader has to hand back
+           premultiplied colour. Emitting straight colour here is what made the first
+           neutral pass render LIGHTER than the page instead of darker. */
+        '  gl_FragColor=vec4(c*a,a);}';
       function sh(type, src) {
         var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
         if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(s);
@@ -203,7 +210,7 @@
       gl.enableVertexAttribArray(loc);
       gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
       gl.enable(gl.BLEND);
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);   /* premultiplied, per the shader above */
       var uR = gl.getUniformLocation(prog, 'R'), uT = gl.getUniformLocation(prog, 'T'),
           uP = gl.getUniformLocation(prog, 'P'), uS = gl.getUniformLocation(prog, 'S');
       function resize() {
@@ -236,9 +243,9 @@
       if (!ctx) return; /* canvas already holds a WebGL context (software-GL path) — nothing to draw on; skip silently */
       var t = 0;
       var RIBBONS = [
-        { strands: 22, baseY: 0.72, amp: 0.16, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [139, 92, 246], alpha: 0.1, core: 0.5 },
-        { strands: 16, baseY: 0.78, amp: 0.11, freq: 1.9,  speed: 0.0016, thick: 1.0, hue: [109, 63, 192], alpha: 0.09, core: 0.4 },
-        { strands: 12, baseY: 0.66, amp: 0.19, freq: 0.9,  speed: 0.0029, thick: 1.2, hue: [196, 181, 253], alpha: 0.08, core: 0.65 }
+        { strands: 22, baseY: 0.72, amp: 0.16, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [35, 33, 30],    alpha: 0.055, core: 0.17 },
+        { strands: 16, baseY: 0.78, amp: 0.11, freq: 1.9,  speed: 0.0016, thick: 1.0, hue: [110, 106, 99],  alpha: 0.050, core: 0.15 },
+        { strands: 12, baseY: 0.66, amp: 0.19, freq: 0.9,  speed: 0.0029, thick: 1.2, hue: [156, 158, 160], alpha: 0.060, core: 0.16 }
       ];
       function resize() {
         var r = hero.getBoundingClientRect();
@@ -250,7 +257,7 @@
       function draw() {
         if (!running) return;
         ctx.clearRect(0, 0, w, h);
-        ctx.globalCompositeOperation = 'lighter';
+        ctx.globalCompositeOperation = 'source-over';
         pointer.x += (pointer.tx - pointer.x) * 0.04;
         for (var r = 0; r < RIBBONS.length; r++) {
           var R = RIBBONS[r];
@@ -277,7 +284,6 @@
             ctx.stroke();
           }
         }
-        ctx.globalCompositeOperation = 'source-over';
         t++;
         raf = requestAnimationFrame(draw);
       }
@@ -436,14 +442,14 @@
       '.svc-row { position:relative; }' +
       '.svc-row::before { content:attr(data-ghost) / ""; position:absolute; left:-14px; top:-30px; z-index:0;' +
       ' font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; line-height:1;' +
-      ' font-size:clamp(120px, 16vw, 230px); color:rgba(139,92,246,0.055); pointer-events:none;' +
+      ' font-size:clamp(120px, 16vw, 230px); color:rgba(35,33,30,0.055); pointer-events:none;' +
       ' transform:translateY(var(--ghost-y, 0px)); will-change:transform; transition:color .5s; }' +
-      '.svc-row:hover::before { color:rgba(139,92,246,0.11); }' +
+      '.svc-row:hover::before { color:rgba(35,33,30,0.10); }' +
       '.svc-row > * { position:relative; z-index:1; }' +
       '@supports (animation-timeline: view()) {' +
       ' .svc-row { border-top-color:transparent !important; }' +
       ' .svc-row::after { content:""; position:absolute; top:0; left:0; right:0; height:1px;' +
-      '  background:rgba(238,232,255,0.1); transform-origin:left; transform:scaleX(0);' +
+      '  background:rgba(35,33,30,0.14); transform-origin:left; transform:scaleX(0);' +
       '  animation:mid-draw 1ms linear both; animation-timeline:view(); animation-range:entry 0% entry 45%; }' +
       ' @keyframes mid-draw { from { transform:scaleX(0); } to { transform:scaleX(1); } }' +
       '}';
