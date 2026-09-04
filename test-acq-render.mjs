@@ -140,7 +140,16 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
   if (ROUTES_BACK.includes(PAGE))
     check(`${label}: routes back to the system`, /index\.html#the-system/.test(await page.content()))
   check(`${label}: the retired mechanism URL is gone`, !/acquisition-system\.html/.test(await page.content()))
-  check(`${label}: KaizenReach is named as the product`, text.includes('kaizenreach'))
+  /* Scoped 2026-09-04. This asserted site-wide that every page names KaizenReach,
+     which was true under the three-product architecture and is a REVERSED decision
+     now: the v3 pass took Reach, Desk and Forge out of the nav, promoted the creative
+     page to index.html, and named the method the Kaizen Acquisition System. index.html
+     carries zero mentions and does not link kaizenreach.html at all. A guard asserting
+     a decision we deliberately reversed is worse than no guard - it trains you to skip
+     red. What must still hold is that the product's OWN page never stops naming it. */
+  const SELLS_REACH = ['kaizenreach.html']
+  if (SELLS_REACH.includes(PAGE))
+    check(`${label}: KaizenReach is named as the product`, text.includes('kaizenreach'))
   /* Reach and Desk retainer prices are NOT public (brand/DESIGN.md, FIN-PRI-001).
      Forge's £499 is. A price leaking onto this page is a canon breach. */
   /* A canon figure is only a breach when it is quoted AS OUR PRICE. Forge names
