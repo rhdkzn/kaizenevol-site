@@ -147,6 +147,10 @@
     .cell{background:var(--page);padding:30px 26px;display:flex;flex-direction:column;gap:10px}
     .cell .n{font-size:11px;font-weight:700;letter-spacing:0.16em;color:var(--stone)}
     .cell p{margin:0;font-size:14.5px;color:var(--muted)}
+    @media(min-width:760px){.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .cell ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+    .cell li{position:relative;padding-left:20px;font-size:14.5px;color:var(--muted);line-height:1.55}
+    .cell li::before{content:"";position:absolute;left:0;top:11px;width:9px;height:1px;background:var(--stone)}
 
     .steps{display:grid;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:44px}
     @media(min-width:820px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -254,6 +258,47 @@
       <div class="cell"><div class="n">02</div><h3>Paid acquisition</h3><p>Meta and TikTok, judged on blended performance and contribution rather than per-channel vanity numbers.</p></div>
       <div class="cell"><div class="n">03</div><h3>Organic social</h3><p>The same creative engine pointed at the feed, so you look alive between drops.</p></div>
       <div class="cell"><div class="n">04</div><h3>Retention</h3><p>Email and SMS flows so the customers you already paid for come back without paying for them twice.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container reveal">
+    <div class="smallcaps">How we charge</div>
+    <h2>One retainer. No cut of your ad spend.</h2>
+    <p class="lede muted">An agency paid a percentage of spend is being paid to spend more. That is the wrong thing to hand someone whose job is protecting your margin, so we do not take one.</p>
+    <div class="grid four stagger reveal">
+      <div class="cell"><div class="n">01</div><h3>One fee</h3><p>Creative, paid acquisition, social and retention on a single monthly retainer. No per-channel invoices, no add-on for the thing you assumed was included.</p></div>
+      <div class="cell"><div class="n">02</div><h3>Your budget stays yours</h3><p>You pay Meta and TikTok directly from your own account. We never hold your media money, and you watch every pound of it go out.</p></div>
+      <div class="cell"><div class="n">03</div><h3>You own the work</h3><p>Ad account, pixel, creative, customer data, list. If we part ways it all stays with you, and none of it needs asking for.</p></div>
+      <div class="cell"><div class="n">04</div><h3>The number comes on the call</h3><p>It depends on what you sell and how much creative the account needs. You will hear it in the first conversation, not the third.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container reveal">
+    <div class="smallcaps">Who this is for</div>
+    <h2>Built for you if &mdash; and honestly, not if.</h2>
+    <div class="grid two stagger reveal">
+      <div class="cell">
+        <div class="n">Built for you if</div>
+        <ul>
+          <li>You make and sell your own work, and there is something a stranger could buy today.</li>
+          <li>You will show us the real costs &mdash; what one unit takes to make, pack and ship.</li>
+          <li>You want the creative and the buying done by the same people, because the next batch is only better if whoever briefs it has read the account.</li>
+          <li>You would rather be told to stop spending than be told what you want to hear.</li>
+        </ul>
+      </div>
+      <div class="cell">
+        <div class="n">Not if</div>
+        <ul>
+          <li>You want someone to run ads against creative you supply. That is a different job, and other people do it well.</li>
+          <li>You are still deciding what to sell. There is no margin to find in a product that does not exist yet.</li>
+          <li>You would rather not look at your own numbers. The whole method is numbers.</li>
+          <li>You need it working this month. The margin and the baseline come first, and that is weeks before we spend properly.</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
