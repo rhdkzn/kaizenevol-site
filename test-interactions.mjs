@@ -78,65 +78,66 @@ for (const name of PAGES) {
         info.touch === 'manipulation', info.touch);
   check(`${name}: no failed same-origin requests`, failed.length === 0, failed.join(', '));
 
-  // SMOOTHNESS OF THE PAGE TRANSITION, and both of these are invisible in a screenshot.
+  // SMOOTHNESS OF THE PAGE TRANSITION. None of this is visible in a screenshot, and four
+  // successive versions of this check passed while the transition was broken.
   //
-  // 1. The outgoing page must not fade. ::view-transition-new paints above
-  //    ::view-transition-old, so if the old one also animates opacity there is a window
-  //    where NEITHER is opaque and the browser background shows through both. The first
-  //    version faded the old out in 200ms while the new took 420ms to arrive - a ~220ms
-  //    hole. That is what reads as unsmooth, and it is a hole rather than a timing problem.
-  // 2. Speculation rules prerender the next page on hover or pointer-down. Without them
-  //    the transition cannot begin until the new document has been fetched, so the press
-  //    is followed by a dead pause no amount of animation can cover.
+  // The incoming page must be OPAQUE and must COVER the outgoing one. That single property
+  // is what this asserts, because it is what makes both known failure modes impossible:
+  //   - it cannot double-expose, because an opaque page has nothing showing through it
+  //   - it cannot blink, because the outgoing page stays behind it until it is covered
+  // Four earlier versions all animated opacity on the two full-page snapshots and all four
+  // failed. ::view-transition-new paints ABOVE ::view-transition-old, so that mechanism has
+  // exactly one slider on it: too much gap gives an empty screen (recorded: contrast 3.9%
+  // of peak, four blank frames), too little gives two legible headlines at once (recorded
+  // at +160ms). Tuning moved the bug along the slider and never off it.
+  //
+  // A timing is the wrong thing to assert here - any duration can be tuned back into a bug.
+  // The absence of opacity in the incoming keyframes cannot.
+  //
+  // Also checked: speculation rules prerender the next page on hover or pointer-down.
+  // Without them the transition cannot begin until the new document has been fetched, so
+  // the press is followed by a dead pause no animation can cover.
   const smooth = await page.evaluate(() => {
-    let fades = null;
+    let inFades = null, inTravel = null, outMoves = null;
     for (const sheet of document.styleSheets) {
       try {
         for (const r of sheet.cssRules) {
-          if (r.type === CSSRule.KEYFRAMES_RULE && r.name === 'ke-page-out')
-            fades = [...r.cssRules].some(k => k.style.opacity !== '');
+          if (r.type !== CSSRule.KEYFRAMES_RULE) continue;
+          if (r.name === 'ke-page-in') {
+            inFades = [...r.cssRules].some(k => k.style.opacity !== '');
+            for (const k of r.cssRules) {
+              const m = /translateY\((-?[\d.]+)(%|px)\)/.exec(k.style.transform || '');
+              if (m) inTravel = { n: Math.abs(parseFloat(m[1])), unit: m[2] };
+            }
+          }
+          if (r.name === 'ke-page-out')
+            outMoves = [...r.cssRules].some(k => /translate/.test(k.style.transform || ''));
         }
       } catch (e) { /* cross-origin sheet */ }
     }
-    // Read the two animations off the view-transition pseudo-elements. getComputedStyle
-    // cannot target them, so the rules are read out of the stylesheet - and the TIMES are
-    // parsed out of the `animation` SHORTHAND rather than the longhands, because a var()
-    // anywhere in a shorthand stops the browser exposing animationDuration and
-    // animationDelay at all. Both serialised empty, which made an earlier version of this
-    // check compare 0 against 0 and pass whatever the CSS said. In the shorthand the first
-    // <time> is the duration and the second is the delay.
-    const times = s => [...String(s).matchAll(/(-?[\d.]+)(ms|s)\b/g)]
-      .map(m => m[2] === 'ms' ? parseFloat(m[1]) / 1000 : parseFloat(m[1]));
-    let oldDuration = null, newDelay = null, foundBoth = false;
-    for (const sheet of document.styleSheets) {
-      try {
-        for (const r of sheet.cssRules) {
-          if (r.selectorText === '::view-transition-old(root)') oldDuration = times(r.style.animation)[0];
-          if (r.selectorText === '::view-transition-new(root)') newDelay = times(r.style.animation)[1];
-        }
-      } catch (e) { /* cross-origin sheet */ }
-    }
-    foundBoth = typeof oldDuration === 'number' && typeof newDelay === 'number';
+    // The incoming snapshot only covers if the page ground behind it is opaque. A
+    // transparent body would let the outgoing page read straight through the "opaque" page
+    // and put the double exposure back with no CSS change to blame it on.
+    const bg = getComputedStyle(document.body).backgroundColor;
+    const opaqueGround = !/rgba\([^)]*,\s*0?\.?\d*\s*\)$/.test(bg) || /,\s*1\s*\)$/.test(bg);
 
     const s = document.querySelector('script[type="speculationrules"]');
     let spec = null;
     try { spec = s ? JSON.parse(s.textContent) : null; } catch (e) { spec = 'PARSE ERROR'; }
-    return { fades, oldDuration, newDelay, foundBoth, eagerness: spec && spec !== 'PARSE ERROR' ? spec.prerender?.[0]?.eagerness : spec };
+    return { inFades, inTravel, outMoves, bg, opaqueGround,
+             eagerness: spec && spec !== 'PARSE ERROR' ? spec.prerender?.[0]?.eagerness : spec };
   });
-  // THE TWO PAGES MUST NEVER BE ON SCREEN TOGETHER, and this is the property that
-  // guarantees it: the incoming page's animation-delay must cover the outgoing page's
-  // whole duration, so the new one is still at opacity 0 while the old one leaves.
-  //
-  // Verified empirically before this assertion was written, by screen-recording a real
-  // index -> about navigation and measuring dark-pixel coverage per frame:
-  //     cross-dissolve   3.58% -> 2.90% -> 2.29%   ink never falls; at 542ms BOTH
-  //                                                headlines were legible at once
-  //     sequential       3.58% -> 0.55% -> 2.29%   ink falls to the nav alone, then rises
-  // The dip is the handover. Its absence is the double exposure, and no screenshot,
-  // no CSS parse and no pageswap event catches it - all three passed while it was broken.
-  check(`${name}: the incoming page waits for the outgoing one (no cross-dissolve)`,
-        smooth.foundBoth && smooth.newDelay >= smooth.oldDuration - 0.001,
-        `new delay ${smooth.newDelay}s vs old duration ${smooth.oldDuration}s`);
+  check(`${name}: the incoming page never animates opacity (this is what stops both bugs)`,
+        smooth.inFades === false, `ke-page-in touches opacity: ${smooth.inFades}`);
+  // It has to cross the whole viewport, or there is a strip at the top it never covers and
+  // the outgoing page shows through it.
+  check(`${name}: the incoming page travels a full viewport and covers the old one`,
+        !!smooth.inTravel && smooth.inTravel.unit === '%' && smooth.inTravel.n >= 100,
+        `translateY ${smooth.inTravel ? smooth.inTravel.n + smooth.inTravel.unit : 'none'}, needs >= 100%`);
+  check(`${name}: the outgoing page moves behind it (or the slide reads as a flat cut)`,
+        smooth.outMoves === true, String(smooth.outMoves));
+  check(`${name}: the page ground is opaque, so the cover actually covers`,
+        smooth.opaqueGround === true, smooth.bg);
   check(`${name}: speculation rules prerender the next page`,
         smooth.eagerness === 'moderate', String(smooth.eagerness));
 

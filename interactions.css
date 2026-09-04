@@ -173,38 +173,57 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [role="button"]:fo
 .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* ── Cross-page transitions ────────────────────────────────────────────────────────────
- * SEQUENTIAL, NOT SIMULTANEOUS. This is the third version and the first one built off a
- * recording rather than off reasoning about the CSS.
+ * FOURTH VERSION. The first three all tuned opacity on a root cross-fade and all three
+ * failed, in a pattern worth keeping:
  *
- * Version one faded the old page out in 200ms while the new took 420ms to arrive, leaving
- * a window where neither was opaque. I called that a hole and removed the old page's fade.
- * That was the wrong fix: ::view-transition-new paints ABOVE ::view-transition-old, so an
- * opaque old page under a fading-in new one is a guaranteed CROSS-DISSOLVE. Screen-recorded
- * at 542ms into a real index -> about navigation, both headlines were legible at once, one
- * on top of the other. Two pages with different content dissolving through each other is a
- * double exposure, and it looks far worse than any brief flat frame.
+ *   v1  old out in 200ms, new in over 420ms -> a window where neither was opaque.
+ *   v2  removed the old page's fade to close that window. Wrong fix: ::view-transition-new
+ *       paints ABOVE ::view-transition-old, so an opaque old page under a fading-in new one
+ *       is a guaranteed CROSS-DISSOLVE. Recorded at 542ms, both headlines legible at once.
+ *   v3  made them strictly sequential - old leaves, THEN new arrives. Recorded frame by
+ *       frame (430x932, prerender stripped): contrast fell to 3.9% of peak and stayed under
+ *       15% for ~75ms. That is an empty page held for four frames. Traded a double exposure
+ *       for a blink, which is what Rahaid was seeing when he said there was no transition
+ *       at all. He was right: 8px and 10px of travel is not perceptible, so once you strip
+ *       the flash there was nothing left to see.
  *
- * So the two never overlap now. The old page leaves in 150ms, the new one waits for it and
- * then arrives over 300ms. Between them is roughly one frame of the page's own background -
- * which is a flat, identical colour on every page, so there is nothing there to notice. A
- * moment of the page ground reads as clean; a moment of two headlines reads as broken.
+ *   v4  overlapped them so the screen was never empty. Measured trough rose to 29.9% of
+ *       peak with no blank frame, which read as a pass - and the frames showed a DOUBLE
+ *       EXPOSURE at +160ms, both headlines legible at once. The metric could not tell one
+ *       page at 30% from two pages at 30% each, so it scored the old failure as the fix.
+ *
+ * The structural error in all four: OPACITY was the only cue. Two full-page snapshots
+ * cross-fading, with new painting above old, can be tuned to a blink or tuned to a double
+ * exposure and to nothing else. Every version above was the same bug at a different point
+ * on that one slider.
+ *
+ * So opacity is out of the mechanism entirely. The incoming page is OPAQUE and it COVERS
+ * the outgoing one, sliding up from below the fold the way an iOS screen arrives. Opaque
+ * means it cannot double-expose; covering means the screen is never empty; and a full
+ * viewport of travel cannot be missed, which was the other half of the complaint. The
+ * outgoing page drifts up behind it so the two are not locked together.
+ *
+ * The guard below asserts the structural property rather than a timing: the incoming
+ * keyframes must not touch opacity. That is what makes both failure modes impossible,
+ * and unlike a duration it cannot be tuned back into a bug.
  */
 @view-transition { navigation: auto; }
 
 @keyframes ke-page-out {
-  to { opacity: 0; transform: translateY(-8px); }
+  to { transform: translateY(-52px); }
 }
 @keyframes ke-page-in {
-  from { opacity: 0; transform: translateY(10px); }
+  from { transform: translateY(100%); }
 }
 
 ::view-transition-old(root) {
-  animation: ke-page-out .15s var(--ke-press-in) both;
+  animation: ke-page-out .44s var(--ke-ease) both;
 }
 ::view-transition-new(root) {
-  /* The delay is the whole mechanism: it holds the incoming page at opacity 0 until the
-     outgoing one has finished leaving, so the two are never on screen together. */
-  animation: ke-page-in .3s var(--ke-ease) .15s both;
+  animation: ke-page-in .44s var(--ke-ease) both;
+  /* The leading edge needs to read as an edge, or a cream page sliding over a cream page
+     is invisible however far it travels. */
+  box-shadow: 0 -18px 40px rgba(28, 26, 23, .13);
 }
 
 /* The nav and the logo are the same object on both pages, so they are MORPHED rather than
@@ -239,8 +258,11 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .mobile-menu a { transition-duration: .12s; }
   .mobile-menu.open a:nth-child(n):not(:active) { transition-delay: 0s; }
   .burger span { transition-duration: .14s; }
-  ::view-transition-old(root) { animation-duration: .08s; }
-  ::view-transition-new(root) { animation-duration: .12s; animation-delay: .08s; }
+  /* Shorten the slide; never re-introduce a delay. A delay here would uncover the gap
+     between the two pages, which is the blink this whole section exists to avoid - and
+     reduced motion is not a reason to ship the broken version of the transition. */
+  ::view-transition-old(root) { animation-duration: .16s; }
+  ::view-transition-new(root) { animation-duration: .16s; animation-delay: 0s; }
   ::view-transition-group(ke-nav), ::view-transition-group(ke-logo) {
     animation-duration: .14s;
   }
