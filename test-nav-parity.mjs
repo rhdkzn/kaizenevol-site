@@ -25,7 +25,22 @@ import { readFileSync, readdirSync } from 'node:fs'
  * reachable; they are simply not services this site sells any more.
  * This guard exists to stop a service going missing by ACCIDENT - so the list is
  * narrowed deliberately here rather than the guard being skipped. */
-const EXPECT = ['kaizenreach.html']
+/* NARROWED AGAIN 2026-09-04 (Rahaid): KaizenReach came out of the nav too, after
+ * KaizenDesk and KaizenForge. The site no longer advertises named services in its
+ * navigation at all, so a service list has nothing left to assert and would sit here
+ * as an empty array passing forever - a guard that cannot fail is worse than no guard,
+ * because it reads as coverage.
+ *
+ * The invariant that actually survives is the WAY IN: a nav or footer with no route to
+ * contact is the same class of bug this file was written for. Pages are lane-tuned -
+ * the creative lane sends people to the application, the local lane to WhatsApp - so
+ * either satisfies it. */
+const ENTRY = ['apply.html', 'wa.me', '#contact']
+/* '#contact' counts: kaizendesk and kaizenforge point their nav CTA at their own
+ * on-page contact section, and both sections carry a form, the WhatsApp line and an
+ * email. Verified before widening this, because the two previous versions of this
+ * check reported false failures by looking for the wrong marker. */
+const offersEntry = (block) => ENTRY.some(x => block.includes(x))
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
@@ -53,8 +68,7 @@ for (const f of readdirSync('.').filter(x => x.endsWith('.html')).sort()) {
   if (footer) NAVS['footer nav'][f] = items(footer)
 
   const d = hrefs(desktop)
-  check(`${f}: desktop nav offers every service`, EXPECT.every(x => d.includes(x)),
-    EXPECT.filter(x => !d.includes(x)).join(', '))
+  check(`${f}: desktop nav offers a way in`, offersEntry(desktop), 'no apply link and no WhatsApp link')
   check(`${f}: desktop nav has no duplicate link`, new Set(d).size === d.length,
     d.filter((x, i) => d.indexOf(x) !== i).join(', '))
 
@@ -69,8 +83,11 @@ for (const f of readdirSync('.').filter(x => x.endsWith('.html')).sort()) {
   }
   if (footer) {
     const ft = hrefs(footer)
-    check(`${f}: footer offers every service`, EXPECT.every(x => ft.includes(x)),
-      EXPECT.filter(x => !ft.includes(x)).join(', '))
+    /* No way-in check here on purpose. The footer's contact route is owned end to end by
+     * test-footer-contact - emails, the WhatsApp button, its modal AND its handler - and
+     * that guard reads the whole <footer>. This file only ever grabs the <ul class="footer-nav">,
+     * where the WhatsApp button does not live, so a check here reported two false failures
+     * before it was removed. One guard per fact. */
     check(`${f}: footer has no duplicate link`, new Set(ft).size === ft.length,
       ft.filter((x, i) => ft.indexOf(x) !== i).join(', '))
   }

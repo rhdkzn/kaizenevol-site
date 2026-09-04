@@ -123,7 +123,6 @@
       <b>KaizenEvol</b>
     </a>
     <ul class="nav-links">
-      <li><a href="kaizenreach.html">KaizenReach</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
       <li><a class="btn-solid" href="apply.html">Apply</a></li>
@@ -131,7 +130,6 @@
     <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="kaizenreach.html">KaizenReach, Ads, Social + Front Office</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
     <a class="btn-solid" href="apply.html">Apply</a>
@@ -237,21 +235,19 @@
         <div class="smallcaps">Pages</div>
         <ul>
           <li><a href="index.html">Home</a></li>
-          <li><a href="kaizenreach.html">KaizenReach</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="privacy.html">Privacy</a></li>
         </ul>
       </div>
-      <div>
+      <div class="footer-right">
         <div class="smallcaps">Contact</div>
         <ul>
           <li><a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></li>
           <li><a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a></li>
           <li><a href="https://www.instagram.com/kaizenevol/" target="_blank" rel="noopener">Instagram</a></li>
-          <li><a href="https://www.facebook.com/people/KaizenEvol-Home-Renovation-Marketing/61590237975968/" target="_blank" rel="noopener">Facebook</a></li>
         </ul>
-        <a class="btn-solid" style="margin-top:14px" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27d%20like%20to%20book%20a%20call." target="_blank" rel="noopener">Message us</a>
+        <a class="btn-solid" style="margin-top:14px" href="#" id="waOpen">Message us</a>
       </div>
     </div>
     <div class="f-bottom">
@@ -261,7 +257,16 @@
   </div>
 </footer>
 
+<div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(8,6,15,0.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:#120A24;border:1px solid rgba(139,92,246,0.4);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+    <div style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
+    <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply &amp; call you back — same day</span></a>
+    <button id="waClose" style="margin-top:16px;background:none;border:none;color:rgba(238,232,255,0.55);font-size:13px;cursor:pointer;font-family:inherit">Close</button>
+  </div>
+</div>
+
 <script>
+  
   var b=document.getElementById('burgerBtn'),m=document.getElementById('mobileMenu');
   if(b&&m){b.addEventListener('click',function(){var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');});}
   // Reveal on scroll. Gesture-driven, so it ships for everyone; reduced motion shortens
@@ -271,6 +276,13 @@
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -12% 0px'});
     els.forEach(function(el){io.observe(el);});
   } else { els.forEach(function(el){el.classList.add('in');}); }
+</script>
+<script>
+(function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
+if(!o||!m)return;o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
+c.addEventListener('click',function(){m.style.display='none';});
+m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
 </script>
 </body>
 </html>
