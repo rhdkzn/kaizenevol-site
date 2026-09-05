@@ -141,7 +141,7 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
     const STEPS = ['find your real profit per sale', 'mark where you already are', 'make the ads']
     const missing = STEPS.filter(x => !text.includes(x))
     check(`${label}: the method's steps render`, missing.length === 0, missing.join(', '))
-    check(`${label}: the mechanism is named`, text.includes('acquisition system'))
+    check(`${label}: the mechanism is named`, text.includes('kaizen method'))
   }
   /* "The System" left the nav on 2026-08-27 (it pointed at the page it sat on), so a
      site-wide link check no longer means anything. What must hold is that each service
@@ -153,7 +153,7 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
   /* Scoped 2026-09-04. This asserted site-wide that every page names KaizenReach,
      which was true under the three-product architecture and is a REVERSED decision
      now: the v3 pass took Reach, Desk and Forge out of the nav, promoted the creative
-     page to index.html, and named the method the Kaizen Acquisition System. index.html
+     page to index.html, and named the method the Kaizen Method (renamed 2026-09-05). index.html
      carries zero mentions and does not link kaizenreach.html at all. A guard asserting
      a decision we deliberately reversed is worse than no guard - it trains you to skip
      red. What must still hold is that the product's OWN page never stops naming it. */
