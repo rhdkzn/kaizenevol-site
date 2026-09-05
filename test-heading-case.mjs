@@ -66,7 +66,7 @@ const titleCase = (s0) => {
 const r = []
 let scanned = 0
 /* Internal surfaces are not brand copy — the rule is about what a prospect reads. */
-const INTERNAL = new Set(['dashboard.html','crm.html','diagnostic.html','reports.html','spec.html'])
+const INTERNAL = new Set(['dashboard.html','crm.html','reports.html',])
 for (const f of readdirSync('.').filter(x => x.endsWith('.html') && !INTERNAL.has(x)).sort()) {
   const html = readFileSync(f, 'utf8')
   const body = html.slice(html.indexOf('</style>'))

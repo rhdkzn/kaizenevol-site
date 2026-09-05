@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/(index|about|contact|services|poster|kitchen|bathroom|loft|kaizendesk|kaizenreach|kaizenforge|kitchen-jobs|bathroom-jobs|loft-jobs).html",
+      "source": "/(index|about|contact|services|poster|kaizendesk|kaizenforge).html",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -84,32 +84,12 @@
       "destination": "/privacy.html"
     },
     {
-      "source": "/kaizenreach",
-      "destination": "/kaizenreach.html"
-    },
-    {
       "source": "/kaizendesk",
       "destination": "/kaizendesk.html"
     },
     {
       "source": "/kaizenforge",
       "destination": "/kaizenforge.html"
-    },
-    {
-      "source": "/kitchen-jobs",
-      "destination": "/kitchen-jobs.html"
-    },
-    {
-      "source": "/bathroom-jobs",
-      "destination": "/bathroom-jobs.html"
-    },
-    {
-      "source": "/loft-jobs",
-      "destination": "/loft-jobs.html"
-    },
-    {
-      "source": "/diagnostic",
-      "destination": "/diagnostic.html"
     }
   ],
   "redirects": [
@@ -120,12 +100,12 @@
     },
     {
       "source": "/kaizengrowth",
-      "destination": "/kaizenreach.html",
+      "destination": "/",
       "permanent": true
     },
     {
       "source": "/kaizengrowth.html",
-      "destination": "/kaizenreach.html",
+      "destination": "/",
       "permanent": true
     },
     {
@@ -140,22 +120,142 @@
     },
     {
       "source": "/walk-reach",
-      "destination": "/walk.html",
+      "destination": "/",
       "permanent": true
     },
     {
       "source": "/walk-reach.html",
-      "destination": "/walk.html",
+      "destination": "/",
       "permanent": true
     },
     {
       "source": "/walk-desk",
-      "destination": "/walk.html",
+      "destination": "/",
       "permanent": true
     },
     {
       "source": "/walk-desk.html",
-      "destination": "/walk.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/bathroom",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/bathroom.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/bathroom-jobs",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/bathroom-jobs.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/diagnostic",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/diagnostic.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kaizenreach",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kaizenreach.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kitchen",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kitchen.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kitchen-jobs",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kitchen-jobs.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/local",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/local.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/loft",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/loft.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/loft-jobs",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/loft-jobs.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/roi",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/roi.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/spec",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/spec.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/walk",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/walk.html",
+      "destination": "/",
       "permanent": true
     }
   ]

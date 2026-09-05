@@ -17,12 +17,9 @@
 import { readFileSync, existsSync } from 'node:fs';
 
 const PAGES = [
-  'index.html', 'kaizenreach.html', 'kaizendesk.html', 'kaizenforge.html',
-  'kitchen.html', 'bathroom.html', 'loft.html',
-  'kitchen-jobs.html', 'bathroom-jobs.html', 'loft-jobs.html',
-  'about.html', 'contact.html', 'privacy.html', 'diagnostic.html', 'roi.html',
-  'showpiece.html', 'walk.html', 'walk-forge.html', 'walk-free.html',
-  'booked.html', '404.html', 'spec.html', 'kaizendesk/compare.html',
+  'index.html', 'kaizendesk.html', 'kaizenforge.html',
+      'about.html', 'contact.html', 'privacy.html',   'showpiece.html', 'walk-forge.html', 'walk-free.html',
+  'booked.html', '404.html', 'kaizendesk/compare.html',
 ];
 
 const MAX = 60;
@@ -44,9 +41,9 @@ for (const p of PAGES) {
 
   check(`${p} ≤${MAX} chars`, title.length <= MAX, `${title.length}: "${title}"`);
   check(`${p} names a brand`, BRANDS.some(b => title.includes(b)), title);
-  /* The one sanctioned exception: roi.html ends its distinctive half with a
-     question mark, which IS the separator. A comma after "?" is just wrong. */
-  const sepOk = p === 'roi.html' ? !/[—|·]/.test(title) : (title.includes(',') && !/[—|·]/.test(title));
+  /* The roi.html exception (a title ending in "?" where the question mark IS the
+     separator) died with the page on 2026-09-05. Every surviving title uses the comma. */
+  const sepOk = title.includes(',') && !/[—|·]/.test(title);
   check(`${p} uses the comma separator`, sepOk, title);
 
   /* Sentence case: only proper nouns and the first word may be capitalised.

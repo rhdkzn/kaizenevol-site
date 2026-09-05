@@ -27,7 +27,7 @@ const BASE = process.env.BASE || 'http://localhost:8899';
 // Cross-page: every <main> name must be unique across the site, or two pages pair into a morph.
 const mainNamesSeen = new Set();
 const PAGES = ['index.html', 'about.html', 'contact.html', 'privacy.html',
-               'apply.html', 'local.html', 'kaizenforge.html', '404.html'];
+               'apply.html', 'kaizenforge.html', '404.html'];
 
 let pass = 0, fail = 0;
 const check = (label, ok, detail = '') => {
