@@ -138,7 +138,7 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
      their live headings so the next repositioning fails here loudly, on day one. */
   const TEACHES = ['index.html']
   if (TEACHES.includes(PAGE)) {
-    const STEPS = ['establish the margin', 'set the baseline', 'build the creative']
+    const STEPS = ['find your real profit per sale', 'mark where you already are', 'make the ads']
     const missing = STEPS.filter(x => !text.includes(x))
     check(`${label}: the method's steps render`, missing.length === 0, missing.join(', '))
     check(`${label}: the mechanism is named`, text.includes('acquisition system'))
