@@ -36,6 +36,21 @@ const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
 const PAGES = (process.env.PAGES || 'index.html,kaizenreach.html,kaizendesk.html,kaizenforge.html').split(',')
+
+/* The growth step is CALL-ONLY (FIN-PRI-004, Rahaid 2026-09-04): the site reads as one
+   monthly fee, price on the first call, and Diego explains the step. About kept a "Paid
+   when you grow" panel spelling out the 50% trigger and the three-month baseline for a
+   day after that ruling, because the ruling was applied to the homepage in view and
+   never grepped across the site (OPS-LRN-001c, 2026-09-05). This reads every
+   prospect-facing page from disk, so it runs whatever PAGES is set to. */
+{
+  const { readFileSync } = await import('node:fs')
+  const STEP = /steps? up when|three[- ]month average|up by half|trailing three|trailing 3/i
+  for (const f of ['index.html','about.html','apply.html','contact.html','booked.html']) {
+    const m = readFileSync(f, 'utf8').replace(/<script[\s\S]*?<\/script>/g, '').match(STEP)
+    check(`${f}: growth step not disclosed on the site`, !m, m && m[0])
+  }
+}
 for (const PAGE of PAGES)
 for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
   const label = `${PAGE.replace('.html','')} ${label0}`
