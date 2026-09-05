@@ -243,7 +243,11 @@
       if (!ctx) return; /* canvas already holds a WebGL context (software-GL path) — nothing to draw on; skip silently */
       var t = 0;
       var RIBBONS = [
-        { strands: 22, baseY: 0.72, amp: 0.16, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [35, 33, 30],    alpha: 0.055, core: 0.17 },
+        /* baseY 0.72 / amp 0.16 put the band at 56-88% of the hero - straight through the
+           paragraph on a phone ("make it easier to read", 2026-09-05). Headless Chromium never
+           drew the WebGL silk, so no render caught it. Lower and tighter: it now sits behind
+           the buttons and the seat line, under the copy rather than across it. */
+        { strands: 22, baseY: 0.88, amp: 0.09, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [35, 33, 30],    alpha: 0.055, core: 0.17 },
         { strands: 16, baseY: 0.78, amp: 0.11, freq: 1.9,  speed: 0.0016, thick: 1.0, hue: [110, 106, 99],  alpha: 0.050, core: 0.15 },
         { strands: 12, baseY: 0.66, amp: 0.19, freq: 0.9,  speed: 0.0029, thick: 1.2, hue: [156, 158, 160], alpha: 0.060, core: 0.16 }
       ];

@@ -108,7 +108,9 @@
       /* Manrope 200 falls apart at phone sizes: it reads as spindly, not light. */
       .hero{padding:48px 0 44px}
       .hero h1{font-size:clamp(30px,8.6vw,38px);font-weight:300;letter-spacing:-0.03em;line-height:1.08;max-width:17ch;margin-top:14px}
-      .hero-sub{font-size:15px;max-width:34ch;margin-top:16px}
+      /* Ink, not muted, and 17px: grey 15px over the silk was the "make it easier to read"
+         complaint. --ink is in the palette; no third grey. */
+      .hero-sub{font-size:17px;max-width:32ch;margin-top:18px;color:var(--ink)}
       .hero-ctas{margin-top:24px;gap:14px}
       .hero-note{margin-top:14px;font-size:12.5px}
       section{padding:56px 0}
@@ -617,7 +619,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 </script>
 <!-- The silk aura behind the hero, plus the sitewide grain and typography layer. The homepage
      was the one public page not loading it, so it was the one hero with no depth behind the type. -->
-<script src="/midnight.js?v=18" defer></script>
+<script src="/midnight.js?v=19" defer></script>
 <script src="/seats.js" defer></script>
 </body>
 </html>
