@@ -175,13 +175,13 @@
         'void main(){' +
         '  vec2 uv=gl_FragCoord.xy/R;uv.y=1.0-uv.y;' +
         /* These bases and amps ARE the aura's position on a phone - the WebGL path, not the 2D
-           ribbons below, which is what an earlier fix moved by mistake. 0.58-0.86 of the hero
-           ran through the paragraph (Rahaid's screenshot, 03:21, 2026-09-05). Now 0.76-0.96:
-           behind the buttons and the seat line, under the copy. The paragraph ends at ~63%. */
-        '  float i1=band(uv,0.86,0.06,1.35,0.42,S)' +
-        '          +0.6*band(uv,0.88,0.06,1.35,0.42,0.6+S);' +
-        '  float i2=band(uv,0.90,0.05,1.9,0.3,2.1+S*2.0);' +
-        '  float i3=band(uv,0.82,0.07,0.9,0.54,4.2+S*3.0);' +
+           ribbons below. They were moved down out of the copy on 2026-09-05 and Rahaid put them
+           back the same night: "I preferred the look before." The band crossing behind the
+           paragraph is the look. Readability is carried by the copy and the ink paragraph. */
+        '  float i1=band(uv,0.66,0.17,1.35,0.42,S)' +
+        '          +0.6*band(uv,0.69,0.16,1.35,0.42,0.6+S);' +
+        '  float i2=band(uv,0.74,0.12,1.9,0.3,2.1+S*2.0);' +
+        '  float i3=band(uv,0.58,0.2,0.9,0.54,4.2+S*3.0);' +
         /* Neutral graphite, weighted by band intensity. Three greys with a faint warm-to-cool
            drift (ink -> stone -> cool) so the ribbon still reads as depth without carrying a hue.
            Colour is NOT premultiplied: the blend below is standard source-alpha, so the silk
@@ -247,12 +247,12 @@
       if (!ctx) return; /* canvas already holds a WebGL context (software-GL path) — nothing to draw on; skip silently */
       var t = 0;
       var RIBBONS = [
-        /* Kept in step with the shader above: the band lives at 0.76-0.96 of the hero, behind
-           the buttons and the seat line, never across the copy (2026-09-05). Phones run the
-           WebGL path; this fallback only draws where WebGL is unavailable. */
-        { strands: 22, baseY: 0.87, amp: 0.06, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [35, 33, 30],    alpha: 0.055, core: 0.17 },
-        { strands: 16, baseY: 0.90, amp: 0.05, freq: 1.9,  speed: 0.0016, thick: 1.0, hue: [110, 106, 99],  alpha: 0.050, core: 0.15 },
-        { strands: 12, baseY: 0.83, amp: 0.07, freq: 0.9,  speed: 0.0029, thick: 1.2, hue: [156, 158, 160], alpha: 0.060, core: 0.16 }
+        /* Original placement, kept in step with the shader above (restored 2026-09-05 on
+           Rahaid's call). Phones run the WebGL path; this fallback only draws where WebGL is
+           unavailable. */
+        { strands: 22, baseY: 0.72, amp: 0.16, freq: 1.35, speed: 0.0022, thick: 1.1, hue: [35, 33, 30],    alpha: 0.055, core: 0.17 },
+        { strands: 16, baseY: 0.78, amp: 0.11, freq: 1.9,  speed: 0.0016, thick: 1.0, hue: [110, 106, 99],  alpha: 0.050, core: 0.15 },
+        { strands: 12, baseY: 0.66, amp: 0.19, freq: 0.9,  speed: 0.0029, thick: 1.2, hue: [156, 158, 160], alpha: 0.060, core: 0.16 }
       ];
       function resize() {
         var r = hero.getBoundingClientRect();
