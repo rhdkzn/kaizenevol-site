@@ -4,7 +4,7 @@
 
 ## What we do
 
-The Kaizen Method, in order:
+The Kaizen Loop, in order:
 
 1. **Find your real profit per sale.** Unit costs, weighted across everything the client sells, landed. What a sale actually leaves them with.
 2. **Mark where you already are.** What revenue was already doing before us, adjusted for season. We do not take credit for a trend that was already running.
@@ -19,7 +19,7 @@ Brands and artists selling their own work — clothing and streetwear, jewellery
 
 ## Pages
 
-- [Home](https://kaizenevol.com/): The offer, the problem with scaling on ROAS, and the Kaizen Method.
+- [Home](https://kaizenevol.com/): The offer, the problem with scaling on ROAS, and the Kaizen Loop.
 - [Apply](https://kaizenevol.com/apply.html): The application. One question at a time; we reply either way.
 - [About](https://kaizenevol.com/about.html): The two founders and how they work.
 - [Contact](https://kaizenevol.com/contact.html): Get in touch.
