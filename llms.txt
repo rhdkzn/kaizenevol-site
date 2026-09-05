@@ -1,6 +1,6 @@
 # KaizenEvol
 
-> KaizenEvol is a UK creative agency for brands and artists that also runs the ads. Performance creative, paid acquisition, organic social and retention on one retainer, run against contribution margin rather than platform ROAS. Two founders, Rahaid and Diego, who do the work directly. Five clients at a time.
+> KaizenEvol is a UK creative agency for brands and artists that also runs the ads. Content, ads, social and email on one monthly fee, judged on what a sale actually leaves the client rather than on what the platform reports. Two founders, Rahaid and Diego, who do the work directly. Five clients at a time.
 
 ## What we do
 
@@ -9,17 +9,17 @@ The Kaizen Loop, in order:
 1. **Find your real profit per sale.** Unit costs, weighted across everything the client sells, landed. What a sale actually leaves them with.
 2. **Mark where you already are.** What revenue was already doing before us, adjusted for season. We do not take credit for a trend that was already running.
 3. **Make the ads.** Concepts, hooks and iteration from the client's own footage, product shots and work.
-4. **Buy against it.** Paid acquisition on Meta and TikTok, managed to contribution margin, numbers open to the client.
+4. **Run the ads to that number.** Meta and TikTok, run to what a sale actually leaves them, with the figures open to the client.
 
-On one retainer: creative production, paid acquisition, organic social, retention (email and SMS).
+On one monthly fee: content, ads, social, and email and texts.
 
 ## Who it is for
 
-Brands and artists selling their own work — clothing and streetwear, jewellery, ceramics, prints, music, and similar — who have product-market fit and want to scale without losing margin. Not a fit for anyone who wants ad management alone, or who will not look at their own numbers.
+Brands and artists selling their own work — clothing and streetwear, jewellery, ceramics, prints, music, and similar — who already sell and want to grow without the growth costing more than it brings in. Not a fit for anyone who wants ad management alone, or who will not look at their own numbers.
 
 ## Pages
 
-- [Home](https://kaizenevol.com/): The offer, the problem with scaling on ROAS, and the Kaizen Loop.
+- [Home](https://kaizenevol.com/): The offer, the problem with judging ads on what the platform reports, and the Kaizen Loop.
 - [Apply](https://kaizenevol.com/apply.html): The application. One question at a time; we reply either way.
 - [About](https://kaizenevol.com/about.html): The two founders and how they work.
 - [Contact](https://kaizenevol.com/contact.html): Get in touch.
