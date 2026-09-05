@@ -5,6 +5,21 @@ export default async function handler(req, res) {
 
   let { contactName, businessName, email, phone, businessUrl, trade, monthlyBudget, message } = req.body || {};
 
+  /* Which ad produced this lead. Sent by utm.js; absent on a direct visit.
+     Whitelisted rather than spread, because this object arrives from a public
+     endpoint and lands in the CRM's stored record. */
+  const ATTR_KEYS = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content',
+                     'gclid','fbclid','ttclid','msclkid','landing','referrer'];
+  const rawAttr = (req.body && typeof req.body.attribution === 'object' && req.body.attribution) || null;
+  let attribution = null;
+  if (rawAttr) {
+    attribution = {};
+    for (const k of ATTR_KEYS) {
+      if (typeof rawAttr[k] === 'string' && rawAttr[k]) attribution[k] = rawAttr[k].slice(0, 300);
+    }
+    if (!Object.keys(attribution).length) attribution = null;
+  }
+
   // Homepage one-pager posts { name, trade, contact, message } — contact is a phone OR an email.
   const { name, contact } = req.body || {};
   if (name && !businessName) {
@@ -59,12 +74,20 @@ export default async function handler(req, res) {
     area: '',
     niche: (trade || '').trim(),
     source: 'Website',
+    /* Additive: `source` keeps its existing value so nothing in the CRM changes
+       behaviour. Campaign detail rides alongside it. */
+    attribution,
     stage: 'new',
     score: 0,
     notes: [
       trade ? `Service: ${trade}` : '',
       monthlyBudget ? `Ad budget: ${monthlyBudget}` : '',
       message ? `Message: ${message.trim()}` : '',
+      /* Also written into notes so it is readable wherever a lead is read,
+         without the CRM needing to know the new field exists. */
+      attribution && attribution.utm_source
+        ? `Ad: ${[attribution.utm_source, attribution.utm_medium, attribution.utm_campaign].filter(Boolean).join(' / ')}`
+        : '',
     ].filter(Boolean).join(' · '),
     createdAt: Date.now(),
     updatedAt: Date.now(),

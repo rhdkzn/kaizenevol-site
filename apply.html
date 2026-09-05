@@ -84,7 +84,8 @@
     .nojs-send{display:none}
   </style>
   <link rel="stylesheet" href="/interactions.css">
-  <script src="/transitions.js" defer></script>
+  <script src="/utm.js"></script>
+<script src="/transitions.js" defer></script>
   <script type="speculationrules">
   {"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*\\?*"}}]},"eagerness":"moderate"}]}
   </script>
@@ -265,6 +266,7 @@
         /* the endpoint stores one budget field; revenue is the qualifying number so it
            leads, and ad spend rides in the message where it stays readable. */
         monthlyBudget: data.revenue,
+        attribution: window.keAttribution ? window.keAttribution() : null,
         message: 'Ad spend: ' + (data.adspend || 'not given') + '\n\n' + (data.message || '')
       })
     }).then(function(r){ if(!r.ok) throw 0; })
