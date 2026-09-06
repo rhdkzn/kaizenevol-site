@@ -47,21 +47,6 @@ export default async function handler(req, res) {
     'Accept': 'application/json',
   };
 
-  // Read current leads array
-  let leads = [];
-  try {
-    const getRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/app_data?id=eq.ke_leads&select=data`,
-      { headers: sbHeaders }
-    );
-    const body = await getRes.json();
-    if (Array.isArray(body) && body[0]?.data && Array.isArray(body[0].data)) {
-      leads = body[0].data;
-    }
-  } catch (_) {
-    // Non-fatal — start with empty array, don't block the submission
-  }
-
   // Build lead matching CRM data structure
   const newLead = {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
@@ -79,12 +64,11 @@ export default async function handler(req, res) {
     attribution,
     stage: 'new',
     score: 0,
+    estimatedValue: 2000,
     notes: [
       trade ? `Service: ${trade}` : '',
       monthlyBudget ? `Ad budget: ${monthlyBudget}` : '',
       message ? `Message: ${message.trim()}` : '',
-      /* Also written into notes so it is readable wherever a lead is read,
-         without the CRM needing to know the new field exists. */
       attribution && attribution.utm_source
         ? `Ad: ${[attribution.utm_source, attribution.utm_medium, attribution.utm_campaign].filter(Boolean).join(' / ')}`
         : '',
@@ -93,22 +77,22 @@ export default async function handler(req, res) {
     updatedAt: Date.now(),
   };
 
-  leads.push(newLead);
-
-  // Upsert back to Supabase — ?on_conflict=id required for REST API (SDK adds this automatically)
-  const upsertRes = await fetch(`${SUPABASE_URL}/rest/v1/app_data?on_conflict=id`, {
+  /* 2026-09-06: this used to read-modify-write the WHOLE ke_leads array as the anon
+     role. The RLS lockdown (authenticated-only on app_data) refuses that with 42501,
+     which meant every website lead since the lockdown failed with "Please email us
+     directly" (verified with a probe today). The form now drops the lead into
+     public.ke_inbound through an INSERT-only security-definer function; anon can read
+     nothing. The CRM pulls unimported rows into ke_leads on boot. No service-role key
+     is needed anywhere. */
+  const dropRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/inbound_submit`, {
     method: 'POST',
-    headers: { ...sbHeaders, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
-    body: JSON.stringify({
-      id: 'ke_leads',
-      data: leads,
-      updated_at: new Date().toISOString(),
-    }),
+    headers: { ...sbHeaders, 'Prefer': 'return=representation' },
+    body: JSON.stringify({ p: newLead }),
   });
 
-  if (!upsertRes.ok) {
-    const errText = await upsertRes.text();
-    console.error('Supabase upsert error:', upsertRes.status, errText);
+  if (!dropRes.ok) {
+    const errText = await dropRes.text();
+    console.error('Supabase inbound error:', dropRes.status, errText);
     return res.status(500).json({ error: 'Failed to save. Please email us directly.', detail: errText });
   }
 
