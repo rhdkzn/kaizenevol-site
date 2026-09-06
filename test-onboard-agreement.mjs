@@ -13,7 +13,7 @@ import { agreementText, agreementHash, newToken } from './api/onboard.js';
 let fails = 0;
 const ok = (name, cond, detail) => { if (cond) console.log('  ok   ' + name); else { fails++; console.log('  FAIL ' + name + (detail ? ' — ' + detail : '')); } };
 
-const founding = { business: 'Marauder', founder: 'Sam Okafor', founding: true, retainer: 1000, startDate: '2026-10-01' };
+const founding = { business: 'Marauder', founder: 'Sam Okafor', founding: true, retainer: 1000, startDate: '2026-10-01', issuedAt: '2026-09-06', email: 'sam@marauder.co.uk' };
 const standard = { business: 'Kiln & Co', founder: 'Priya Nair', founding: false, retainer: 2000 };
 
 const t1 = agreementText(founding), t2 = agreementText(founding);
@@ -34,6 +34,21 @@ ok('drop one is measurement, no guarantee', /Drop one is measurement/.test(t1) &
 ok('own-brand disclosure clause present', /never present its own brands as client results/.test(t1));
 ok('E&W law + e-signature', /England and Wales/.test(t1) && /signed electronically/.test(t1));
 ok('parties named', t1.includes('Marauder') && t1.includes('Sam Okafor'));
+ok('agency is a trading name, not a company', /trading together as KaizenEvol/.test(t1) && !/KaizenEvol Ltd/.test(t1));
+ok('signer confirms authority', /authorised to sign for the Client/.test(t1));
+ok('founding rate graduates at the first step to £2,000 (FIN-PRI-004)', /2\.4 The founding rate.*ends at the first growth step.*£2,000 per month/.test(t1));
+ok('standard agreement has no clause 2.4', !/2\.4 The founding rate/.test(agreementText(standard)));
+ok('growth-step payment mechanic with 7-day dispute (3.5)', /3\.5 When a step is verified/.test(t1) && /within 7 days/.test(t1));
+ok('30 days notice to the notice addresses, Stripe cancelled', /not less than 30 days' written notice/.test(t1) && /cancels the recurring charge/.test(t1));
+ok('copyright assigned with full title guarantee (CDPA s.90)', /assigns to the Client, with full title guarantee/.test(t1));
+ok('Art 28 processor terms present', /documented instructions/.test(t1) && /sub-processors/.test(t1) && /without undue delay/.test(t1) && /delete or return/.test(t1));
+ok('PECR consent warranty', /Privacy and Electronic Communications Regulations 2003/.test(t1));
+ok('sub-processors named', /Meta, Klaviyo, Shopify, Stripe, Resend and Supabase/.test(t1));
+ok('platform matters outside control excluded', /platform outages/.test(t1));
+ok('notices clause carries the client email', /11\.4 Notices go by email/.test(t1) && t1.includes('sam@marauder.co.uk'));
+ok('third-party rights excluded', /Contracts \(Rights of Third Parties\) Act 1999/.test(t1));
+ok('signed for the Agency at issue', /SIGNED for the Agency by Rahaid/.test(t1) && t1.includes('6 September 2026'));
+ok('issue date is deterministic when issuedAt is set', agreementText(founding) === agreementText({ ...founding }));
 
 for (const dead of ['2,500', '60 days', 'territory', 'AI front office', 'KaizenReach', 'KaizenDesk', 'renovation', 'guaranteed or your money back']) {
   ok('reno-era term absent: ' + dead, !t1.toLowerCase().includes(dead.toLowerCase()));
