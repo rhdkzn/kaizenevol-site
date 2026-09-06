@@ -16,46 +16,48 @@
   <!-- Pinned to v2.39.7 — SRI hash should be added once hash is verified from build artefact -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:500; font-display:swap; src:url('/pjs-500.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
+    /* GRAPHITE (brand/DESIGN.md, 2026-09-04): Manrope carries the whole hierarchy,
+       Newsreader italic is the one warm note. Self-hosted, same files as the site. */
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:200 800; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:italic; font-weight:300; font-display:swap; src:url('/newsreader-italic.woff2') format('woff2'); }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
-    body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--void);color:var(--text);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;}
+    body{font-family:'Manrope',system-ui,sans-serif;background:var(--void);color:var(--text);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;}
     a{text-decoration:none;color:inherit;}
-    /* Tokens copied VERBATIM from brand/DESIGN.md — read off the live site.
-       The old set was a near-miss of the brand rather than the brand: #0d0b18
-       against #0C0618, #16122a against #120A24, #f0eeff against #EEE8FF. Close
-       enough to look intentional, wrong enough to read as someone else's product
-       (OPS-LRN-001, the copper-and-gold one-pager, same failure). */
+    /* GRAPHITE, dark variant (brand/DESIGN.md 2026-09-04, realigned 2026-09-06).
+       The site is light; this is a working tool used in the car at night, so it
+       keeps the dark ground the brand file provides: #0D0D0F (the old violet
+       ground with the cast removed) and #1C1C1E for surfaces. "Client work is
+       the only colour" — so there is no accent. The --purple* names are kept as
+       aliases so 200 rules did not need rewriting; they now resolve to ink-on-dark
+       (page white) and its tints. Green / amber / red survive only as outcome
+       states (won, parked, stop), never as decoration. */
     :root{
-      --void:#0C0618; --void-2:#120A24;
-      --text:#EEE8FF; --muted:rgba(238,232,255,0.56); --hairline:rgba(238,232,255,0.1);
-      --accent:#8B5CF6; --accent-2:#A78BFA;
-      --purple:#8B5CF6;--purple-d:#6D3FC0;--purple-l:rgba(139,92,246,0.15);--purple-m:rgba(139,92,246,0.28);
-      --bg:#0C0618;--surface:#120A24;--border:rgba(238,232,255,0.1);
-      --green:#34D399;--amber:#FBBF24;--red:#F87171;
-      --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+      --void:#0D0D0F; --void-2:#1C1C1E;
+      --text:#F7F6F4; --muted:rgba(247,246,244,0.56); --hairline:rgba(247,246,244,0.1);
+      --accent:#F7F6F4; --accent-2:#D8D4CC;
+      --purple:#F7F6F4;--purple-d:#D8D4CC;--purple-l:rgba(247,246,244,0.08);--purple-m:rgba(247,246,244,0.18);
+      --bg:#0D0D0F;--surface:#1C1C1E;--border:rgba(247,246,244,0.1);
+      --green:#4ADE80;--amber:#FBBF24;--red:#F87171;
+      --serif:'Newsreader',Georgia,serif; --sans:'Manrope',system-ui,sans-serif;
       --el-ease:cubic-bezier(.16,1,.3,1);
       --radius:14px;--radius-sm:8px;--radius-pill:9999px;--shadow:0 2px 20px rgba(0,0,0,0.45);
     }
-    /* Display type is the serif, per the brand. Headings were sans-everything —
-       part of why it read as a template. */
-    h1,h2,.gate-title,.stat-num{font-family:var(--serif);letter-spacing:-0.02em;}
-    #gate{min-height:100vh;display:none;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d0b18 0%,#13102a 60%,#1a1438 100%);padding:24px;}
-    .gate-card{background:var(--surface);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(109,63,192,0.14);text-align:center;}
+    /* Manrope for the whole hierarchy; the serif appears once per page
+       (DESIGN.md: "one phrase per page") — the gate's word, in italic. */
+    .gate-title{font-family:var(--serif);font-style:italic;font-weight:300;font-size:26px;letter-spacing:-0.01em;}
+    #gate{min-height:100vh;display:none;align-items:center;justify-content:center;background:var(--void);padding:24px;}
+    .gate-card{background:var(--surface);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;border:1px solid var(--border);text-align:center;}
     .gate-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;}
     .gate-badge{width:48px;height:48px;border-radius:11px;object-fit:contain;}
     .gate-logo-name{font-size:22px;font-weight:700;}
-    .gate-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+    .gate-title{margin-bottom:6px;}
     .gate-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
     .gate-input{width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:15px;outline:none;transition:border-color .2s;margin-bottom:12px;background:var(--bg);color:var(--text);}
     .gate-input:focus{border-color:var(--purple);}
     .gate-input.error{border-color:var(--red);}
     .gate-input:disabled{opacity:0.5;cursor:not-allowed;}
-    .gate-btn{width:100%;padding:13px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .15s;}
+    .gate-btn{width:100%;padding:13px;background:var(--accent);color:var(--void);border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .15s;}
     .gate-btn:hover:not(:disabled){opacity:.88;transform:translateY(-1px);}
     .gate-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
     .gate-err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px;}
@@ -82,25 +84,25 @@
     .pipe-client-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
     .pipe-client-name{font-size:15px;font-weight:700;}
     .pipe-stage-label{font-size:11px;font-weight:700;padding:4px 12px;border-radius:var(--radius-pill);}
-    .psl-onboarding{background:rgba(56,189,248,0.15);color:#38bdf8;}
-    .psl-live{background:rgba(139,92,246,0.18);color:#a78bfa;}
-    .psl-optimising{background:rgba(244,114,182,0.15);color:#f472b6;}
+    .psl-onboarding{background:rgba(216,212,204,0.15);color:#D8D4CC;}
+    .psl-live{background:rgba(247,246,244,0.18);color:#F7F6F4;}
+    .psl-optimising{background:rgba(247,246,244,0.15);color:#F7F6F4;}
     .psl-conversion{background:rgba(245,158,11,0.2);color:#fbbf24;}
     .psl-retainer{background:rgba(34,197,94,0.15);color:#4ade80;}
-    .psl-inactive{background:rgba(156,163,175,0.1);color:#9ca3af;}
+    .psl-inactive{background:rgba(138,133,124,0.1);color:#8A857C;}
     .pipe-stages{display:flex;align-items:center;gap:0;margin-bottom:18px;}
     .pipe-stage-node{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
     .pipe-stage-node::before{content:'';position:absolute;top:11px;left:-50%;width:100%;height:2px;background:var(--border);z-index:0;}
     .pipe-stage-node:first-child::before{display:none;}
     .pipe-node-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:var(--bg);z-index:1;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;transition:all .3s;}
     .pipe-node-dot.done{background:var(--purple);border-color:var(--purple);}
-    .pipe-node-dot.done::after{content:'✓';color:#fff;}
-    .pipe-node-dot.active{background:var(--purple);border-color:var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,0.25);}
-    .pipe-node-dot.active::after{content:'●';color:#fff;font-size:8px;}
+    .pipe-node-dot.done::after{content:'✓';color:var(--void);}
+    .pipe-node-dot.active{background:var(--purple);border-color:var(--purple);box-shadow:0 0 0 4px rgba(247,246,244,0.25);}
+    .pipe-node-dot.active::after{content:'●';color:var(--void);font-size:8px;}
     .pipe-node-dot.alert{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,158,11,0.25);}
     .pipe-node-dot.alert::after{content:'!';color:#fff;font-size:11px;font-weight:900;}
     .pipe-node-dot.retainer-dot{background:var(--green);border-color:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,0.2);}
-    .pipe-node-dot.retainer-dot::after{content:'✓';color:#fff;}
+    .pipe-node-dot.retainer-dot::after{content:'✓';color:var(--void);}
     .pipe-stage-name{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-top:6px;text-align:center;}
     .pipe-stage-node.active .pipe-stage-name{color:var(--purple);}
     .pipe-stage-node.alert-node .pipe-stage-name{color:var(--amber);}
@@ -140,16 +142,16 @@
     .cl-item.checked{opacity:.55;}
     .cl-box{width:17px;height:17px;flex-shrink:0;border:2px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;}
     .cl-item.checked .cl-box{background:var(--purple);border-color:var(--purple);}
-    .cl-item.checked .cl-box::after{content:'✓';color:#fff;font-size:10px;font-weight:800;}
+    .cl-item.checked .cl-box::after{content:'✓';color:var(--void);font-size:10px;font-weight:800;}
     .cl-text{font-size:13px;flex:1;}
     .cl-item.checked .cl-text{text-decoration:line-through;color:var(--muted);}
     .checklist-phase.phase-locked .cl-item{opacity:.35;cursor:default;pointer-events:none;}
-    .checklist-phase.phase-locked .checklist-phase-label{color:rgba(122,111,168,0.45);border-bottom-color:rgba(44,36,72,0.4);}
+    .checklist-phase.phase-locked .checklist-phase-label{color:rgba(247,246,244,0.3);border-bottom-color:var(--border);}
     /* ── CLIENTS ── */
     .status-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);}
     .st-trial{background:rgba(245,158,11,0.18);color:#fbbf24;}
     .st-retainer{background:rgba(34,197,94,0.15);color:#4ade80;}
-    .st-inactive{background:rgba(156,163,175,0.12);color:#9ca3af;}
+    .st-inactive{background:rgba(138,133,124,0.12);color:#8A857C;}
     .mini-select{padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--sans);font-size:12px;outline:none;background:var(--surface);color:var(--text);cursor:pointer;}
     .client-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
     .client-name{font-size:16px;font-weight:700;}
@@ -173,7 +175,7 @@
     .comm-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
     .comm-table{width:100%;border-collapse:collapse;font-size:13px;}
     .comm-table th{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:0 8px 10px;text-align:left;border-bottom:1px solid var(--border);}
-    .comm-table td{padding:10px 8px;border-bottom:1px solid rgba(44,36,72,0.5);vertical-align:middle;}
+    .comm-table td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:middle;}
     .comm-table tr:last-child td{border-bottom:none;}
     .comm-status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--radius-pill);cursor:pointer;border:none;font-family:var(--sans);}
     .cs-pending{background:rgba(245,158,11,0.18);color:#fbbf24;}
@@ -182,18 +184,18 @@
     .comm-total-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
     .comm-total-val{font-size:20px;font-weight:800;color:var(--amber);}
     .comm-total-val.paid{color:var(--green);}
-    .add-btn{padding:9px 16px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
+    .add-btn{padding:9px 16px;background:var(--accent);color:var(--void);border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
     .add-btn:hover{opacity:.88;}
     .t-del{font-size:17px;color:var(--muted);cursor:pointer;background:none;border:none;opacity:0.5;transition:opacity .2s,color .2s;}
     .t-del:hover{opacity:1;color:var(--red);}
     /* ── LEAD SCRAPER / PROSPECT CRM ── */
     .stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
     .stat-card{background:var(--surface);border-radius:var(--radius);padding:18px 20px;border:1px solid var(--border);}
-    .stat-card.highlight{background:var(--purple);border-color:var(--purple);}
+    .stat-card.highlight{background:var(--void-2);border-color:var(--border);}
     .stat-l{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-    .highlight .stat-l{color:rgba(255,255,255,.65);}
+    .highlight .stat-l{color:var(--muted);}
     .stat-v{font-size:26px;font-weight:800;color:var(--text);line-height:1;}
-    .highlight .stat-v{color:#fff;}
+    .highlight .stat-v{color:var(--text);}
     .stat-s{font-size:11px;color:var(--muted);margin-top:3px;}
     .scraper-setup{display:flex;flex-direction:column;gap:14px;}
     .scraper-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
@@ -207,7 +209,7 @@
     .scraper-status-bar.done{color:var(--green);}
     .scraper-status-bar.error{color:var(--red);}
     .form-toggle{display:flex;align-items:center;justify-content:space-between;}
-    .form-toggle-btn{font-size:13px;font-weight:700;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);padding:8px 18px;cursor:pointer;font-family:var(--sans);transition:opacity .2s;}
+    .form-toggle-btn{font-size:13px;font-weight:700;background:var(--accent);color:var(--void);border:none;border-radius:var(--radius-pill);padding:8px 18px;cursor:pointer;font-family:var(--sans);transition:opacity .2s;}
     .form-toggle-btn:hover{opacity:.88;}
     .add-form{display:none;margin-top:18px;}
     .add-form.open{display:block;}
@@ -219,7 +221,7 @@
     .f-input:focus,.f-select:focus,.f-textarea:focus{border-color:var(--purple);}
     .f-textarea{resize:vertical;min-height:72px;}
     .form-actions{display:flex;gap:10px;}
-    .btn-save{padding:10px 24px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
+    .btn-save{padding:10px 24px;background:var(--accent);color:var(--void);border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
     .btn-save:hover:not(:disabled){opacity:.88;}
     .btn-cancel{padding:10px 20px;background:none;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-pill);font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:color .2s,border-color .2s;}
     .btn-cancel:hover{color:var(--text);border-color:var(--muted);}
@@ -229,7 +231,7 @@
     .filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
     .fpill{font-size:12px;font-weight:600;padding:5px 13px;border-radius:var(--radius-pill);border:1.5px solid var(--border);color:var(--muted);background:none;cursor:pointer;font-family:var(--sans);transition:all .2s;}
     .fpill:hover{border-color:var(--purple);color:var(--purple);}
-    .fpill.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+    .fpill.active{background:var(--accent);border-color:var(--accent);color:var(--void);}
     .sort-sel{padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:12px;outline:none;background:var(--surface);color:var(--text);cursor:pointer;margin-left:auto;}
     .leads-list{display:flex;flex-direction:column;gap:10px;}
     .lead-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 18px;transition:border-color .2s;}
@@ -269,10 +271,10 @@
     .notes-save-btn:hover{background:var(--purple-m);}
     .source-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);background:var(--purple-l);color:var(--purple);}
     .stage-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--radius-pill);}
-    .sg-new{background:rgba(56,189,248,0.15);color:#38bdf8;}
+    .sg-new{background:rgba(216,212,204,0.15);color:#D8D4CC;}
     .sg-contacted{background:rgba(245,158,11,0.15);color:#fbbf24;}
-    .sg-call{background:rgba(244,114,182,0.15);color:#f472b6;}
-    .sg-proposal{background:rgba(139,92,246,0.15);color:#a78bfa;}
+    .sg-call{background:rgba(247,246,244,0.15);color:#F7F6F4;}
+    .sg-proposal{background:rgba(247,246,244,0.15);color:#F7F6F4;}
     .sg-won{background:rgba(34,197,94,0.15);color:#4ade80;}
     .sg-lost{background:rgba(248,113,113,0.15);color:#f87171;}
     /* Section divider */
@@ -296,7 +298,7 @@
     .tmpl-edit-title{font-size:13px;font-weight:700;color:var(--purple);}
     .tmpl-reset-btn{font-size:11px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:4px 10px;cursor:pointer;font-family:var(--sans);transition:color .2s,border-color .2s;}
     .tmpl-reset-btn:hover{color:var(--amber);border-color:var(--amber);}
-    .tmpl-save-btn{padding:8px 22px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+    .tmpl-save-btn{padding:8px 22px;background:var(--accent);color:var(--void);border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .2s;}
     .tmpl-save-btn:hover{opacity:.88;}
     .compose-box{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;display:none;}
     .compose-box.open{display:block;}
@@ -318,7 +320,7 @@
     .oq-scroll::-webkit-scrollbar-track{background:transparent;}
     .oq-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
     .oq-row{display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);transition:border-color .2s;}
-    .oq-row:hover{border-color:rgba(139,92,246,0.4);}
+    .oq-row:hover{border-color:rgba(247,246,244,0.4);}
     .oq-top{display:flex;align-items:center;gap:10px;}
     .oq-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
     .oq-info{flex:1;min-width:0;}
@@ -327,7 +329,7 @@
     .oq-bottom{display:flex;align-items:center;gap:8px;}
     .oq-email-inp{flex:1;min-width:0;padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:12px;outline:none;background:var(--surface);color:var(--text);transition:border-color .2s;}
     .oq-email-inp:focus{border-color:var(--purple);}
-    .oq-send-btn{padding:6px 16px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .2s;}
+    .oq-send-btn{padding:6px 16px;background:var(--accent);color:var(--void);border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .2s;}
     .oq-send-btn:hover:not(:disabled){opacity:.88;}
     .oq-send-btn:disabled{opacity:.45;cursor:not-allowed;}
     .oq-sent-badge{font-size:10px;font-weight:700;color:var(--green);padding:2px 7px;background:rgba(34,197,94,0.12);border-radius:var(--radius-pill);white-space:nowrap;flex-shrink:0;}
@@ -338,8 +340,8 @@
     .es-select{flex-shrink:0;padding:6px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:12px;font-weight:600;background:var(--surface);color:var(--text);cursor:pointer;outline:none;transition:border-color .2s;}
     .es-select:focus{border-color:var(--purple);}
     .es-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:var(--radius-pill);white-space:nowrap;flex-shrink:0;}
-    .es-badge.es-none{color:var(--muted);background:rgba(148,163,184,0.14);}
-    .es-badge.es-sent{color:#3b82f6;background:rgba(59,130,246,0.12);}
+    .es-badge.es-none{color:var(--muted);background:rgba(138,133,124,0.14);}
+    .es-badge.es-sent{color:#D8D4CC;background:rgba(216,212,204,0.12);}
     .es-badge.es-reply{color:var(--green);background:rgba(34,197,94,0.12);}
     /* ── FOLLOW-UP ALERTS ── */
     .fu-alerts{background:rgba(245,158,11,.07);border:1.5px solid rgba(245,158,11,.25);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;}
@@ -379,6 +381,14 @@
     .score-pill{font-size:11px;font-weight:700;padding:4px 12px;border-radius:var(--radius-pill);border:1.5px solid var(--border);color:var(--muted);background:none;cursor:pointer;font-family:var(--sans);transition:all .2s;}
     .score-pill:hover{border-color:var(--purple);color:var(--purple);}
     .score-pill.active{background:var(--purple-l);border-color:var(--purple);color:var(--purple);}
+    .fit-pill{font-size:11px;font-weight:700;padding:4px 12px;border-radius:var(--radius-pill);border:1.5px solid var(--border);color:var(--muted);background:none;cursor:pointer;font-family:var(--sans);transition:all .2s;}
+    .fit-pill:hover{border-color:var(--accent);color:var(--text);}
+    .fit-pill.active{background:var(--accent);border-color:var(--accent);color:var(--void);}
+    .fit-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);border:1px solid var(--border);color:var(--muted);}
+    .fit-badge.q{border-color:rgba(74,222,128,.5);color:var(--green);}
+    .fit-badge.p{border-color:rgba(251,191,36,.5);color:var(--amber);}
+    .fit-badge.x{border-color:rgba(248,113,113,.5);color:var(--red);}
+    .kb-col-val{font-size:10px;opacity:.75;font-variant-numeric:tabular-nums;}
     .re-engage-btn{padding:3px 10px;font-size:11px;font-weight:700;border-radius:var(--radius-pill);border:1.5px solid rgba(245,158,11,.35);color:#fbbf24;background:rgba(245,158,11,.07);cursor:pointer;font-family:var(--sans);transition:all .15s;}
     .re-engage-btn:hover{background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.6);}
     .wq-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);}
@@ -389,7 +399,7 @@
     .tps-ok{background:rgba(34,197,94,0.15);color:#4ade80;}
     .tps-warn{background:rgba(245,158,11,0.15);color:#f59e0b;}
     .tps-no{background:rgba(248,113,113,0.15);color:#f87171;}
-    .own-block{margin-top:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(139,92,246,0.05);}
+    .own-block{margin-top:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(247,246,244,0.05);}
     .own-num{font-weight:700;letter-spacing:.2px;}
     .own-type{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
     .own-reason{font-size:11px;color:var(--muted);}
@@ -412,7 +422,7 @@
     .view-toggle{display:flex;align-items:center;gap:6px;margin-bottom:12px;}
     .vtbtn{font-size:12px;font-weight:600;padding:6px 14px;border-radius:var(--radius-pill);border:1.5px solid var(--border);color:var(--muted);background:none;cursor:pointer;font-family:var(--sans);transition:all .2s;}
     .vtbtn:hover{border-color:var(--purple);color:var(--purple);}
-    .vtbtn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+    .vtbtn.active{background:var(--accent);border-color:var(--accent);color:var(--void);}
     /* ── SMART FILTERS ── */
     .smart-pills{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
     .smart-pill{font-size:11px;font-weight:700;padding:4px 12px;border-radius:var(--radius-pill);border:1.5px solid var(--border);color:var(--muted);background:none;cursor:pointer;font-family:var(--sans);transition:all .2s;}
@@ -427,7 +437,7 @@
     .kb-col-hdr{padding:8px 12px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;font-size:11px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;justify-content:space-between;}
     .kb-col-count{font-size:10px;opacity:.75;}
     .kb-cards{flex:1;min-height:80px;border-radius:0 0 var(--radius-sm) var(--radius-sm);border:1.5px solid rgba(255,255,255,.08);border-top:none;background:rgba(255,255,255,.02);padding:8px;display:flex;flex-direction:column;gap:6px;transition:background .15s;}
-    .kb-cards.drag-over{background:rgba(139,92,246,.08);border-color:var(--purple);}
+    .kb-cards.drag-over{background:rgba(247,246,244,.08);border-color:var(--purple);}
     .kb-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;cursor:pointer;transition:border-color .15s,opacity .15s;user-select:none;}
     .kb-card:hover{border-color:var(--purple-m);}
     .kb-card.dragging{opacity:.4;}
@@ -436,7 +446,7 @@
     .prio-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
     .prio-high{background:#f87171;}
     .prio-medium{background:#f59e0b;}
-    .prio-low{background:#7a6fa8;}
+    .prio-low{background:#8A857C;}
     .kb-meta{font-size:11px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     /* ── KANBAN MODAL ── */
     #kModal .modal-box{max-width:480px;}
@@ -461,15 +471,15 @@
     /* ── Design Upgrade ── */
     .section-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
     .section-label::before{content:'';width:3px;height:14px;background:var(--purple);border-radius:3px;display:block;flex-shrink:0;}
-    .stat-card{background:var(--surface);border-radius:var(--radius);padding:18px 20px;border:1px solid var(--border);box-shadow:var(--shadow),inset 3px 0 0 rgba(139,92,246,0.5);transition:transform .18s ease,box-shadow .18s ease;}
-    .stat-card:hover:not(.highlight){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 3px 0 0 var(--purple);}
+    .stat-card{background:var(--surface);border-radius:var(--radius);padding:18px 20px;border:1px solid var(--border);box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease;}
+    .stat-card:hover:not(.highlight){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.6);}
     /* Was a full-bleed violet gradient block — the generic tell brand/DESIGN.md
    explicitly rules out ("gradient on type and thin rules; flat --void behind
    them"). The emphasis now comes from the accent rule and the gradient NUMBER,
    which is the brand's actual signature. */
-    .stat-card.highlight{background:var(--void-2);border:1px solid var(--line-strong,rgba(139,92,246,.32));box-shadow:0 6px 32px rgba(139,92,246,0.18);position:relative;overflow:hidden;}
-    .stat-card.highlight::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#A78BFA,#8B5CF6);}
-    .stat-card.highlight .stat-v{background:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .stat-card.highlight{background:var(--void-2);border:1px solid var(--purple-m);position:relative;overflow:hidden;}
+    .stat-card.highlight::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);}
+    .stat-card.highlight .stat-v{color:var(--text);}
     .card,.pipe-client,.checklist-client{box-shadow:0 4px 24px rgba(0,0,0,0.45);}
   
   /* ── SEQUENCE ENGINE (Diego's daily blocks — spec 2026-08-20) ── */
@@ -524,7 +534,7 @@
   .tgt-m.block .tgt-mv{color:#f87171;}
   .tgt-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.09);overflow:hidden;}
   .tgt-bar i{display:block;height:100%;background:currentColor;transition:width .3s ease;}
-  .tgt-m.call{color:#a855f7;} .tgt-m.email{color:#38bdf8;} .tgt-m.dm{color:#4ade80;}
+  .tgt-m.call{color:#D8D4CC;} .tgt-m.email{color:#D8D4CC;} .tgt-m.dm{color:#4ade80;}
   .tgt-m.warn{color:#fbbf24;} .tgt-m.block{color:#f87171;}
   .tgt-edit{background:none;border:0;color:var(--muted);font-size:11px;cursor:pointer;padding:2px 4px;text-decoration:underline;}
   .tgt-edit:hover{color:var(--text);}
@@ -533,11 +543,11 @@
   .seq-week .hit{color:#4ade80;}
   .seq-side{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
   @media(max-width:900px){.seq-side{grid-template-columns:1fr;}}
-  .seq-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.3);}
+  .seq-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);background:rgba(247,246,244,.12);color:var(--purple);border:1px solid rgba(247,246,244,.3);}
   .seq-badge.parked{background:rgba(245,158,11,.1);color:#f59e0b;border-color:rgba(245,158,11,.3);}
   .seq-badge.dnc{background:rgba(248,113,113,.1);color:#f87171;border-color:rgba(248,113,113,.3);}
-  .seq-enrol-btn{font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);border:1.5px solid rgba(139,92,246,.4);color:var(--purple);background:none;cursor:pointer;font-family:var(--sans);}
-        .crm-tabs{position:sticky;top:57px;/* below the 58px sticky site header, else it slides underneath */z-index:90;display:flex;gap:6px;padding:10px 16px;background:rgba(12,6,24,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline);overflow-x:auto;scrollbar-width:none;}
+  .seq-enrol-btn{font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);border:1.5px solid rgba(247,246,244,.4);color:var(--purple);background:none;cursor:pointer;font-family:var(--sans);}
+        .crm-tabs{position:sticky;top:57px;/* below the 58px sticky site header, else it slides underneath */z-index:90;display:flex;gap:6px;padding:10px 16px;background:rgba(13,13,15,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline);overflow-x:auto;scrollbar-width:none;}
     .crm-tabs::-webkit-scrollbar{display:none}
     .crm-tab{font-family:var(--sans);font-size:13px;font-weight:700;padding:9px 18px;border-radius:var(--radius-pill);border:1.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;white-space:nowrap;min-height:40px;}
     .crm-tab.active{color:var(--accent);background:var(--purple-l);border-color:var(--purple-m);}
@@ -561,7 +571,7 @@
       .seq-sub{font-size:12.5px;}
       .seq-item a{display:inline-block;padding:6px 2px;min-height:32px;}
       .seq-enrol-btn{padding:10px 14px;min-height:40px;}
-  .seq-enrol-btn:hover{background:rgba(139,92,246,.12);}
+  .seq-enrol-btn:hover{background:rgba(247,246,244,.12);}
   /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
   @view-transition { navigation: auto; }
   nav { view-transition-name: ke-nav; }
@@ -577,7 +587,7 @@
   <div class="gate-card">
     <div class="gate-logo"><img src="logo.png" alt="KaizenEvol" class="gate-badge" /><span class="gate-logo-name">KaizenEvol</span></div>
     <div class="gate-title" id="gateTitle">CRM</div>
-    <div class="gate-sub" id="gateSub">Private access only. Enter your password.</div>
+    <div class="gate-sub" id="gateSub">Creative growth agency for brands and artists. Private access.</div>
     <input type="password" class="gate-input" id="gateInput" placeholder="Password" aria-label="Password" autocomplete="current-password" />
     <button class="gate-btn" id="gateBtn" onclick="attemptLogin()">Unlock &rarr;</button>
     <div class="gate-err" id="gateErr" role="alert" aria-live="assertive"></div>
@@ -597,7 +607,8 @@
       </div>
     </div>
   </header>
-  <!-- View tabs (2026-08-23): 9 stacked sections became 4 views. With the live queue
+  <!-- Realigned 2026-09-06: creative growth agency for brands and artists (FIN-PRI-004, MKT-ICP-003).
+       View tabs (2026-08-23): 9 stacked sections became 4 views. With the live queue
        (296 due) the old single scroll measured 83 phone-screens tall. -->
   <nav class="crm-tabs" id="crmTabs">
     <button class="crm-tab active" data-tab="today" onclick="showView('today')">Today</button>
@@ -624,13 +635,13 @@
       <div class="seq-cities" id="seqCities"></div>
       <div class="seq-funnel" id="seqFunnel"></div>
       <div class="seq-grid">
-        <div class="seq-col"><div class="seq-col-hdr" style="color:#a855f7;">📞 Calls due <span class="seq-count" id="seqCntCall"></span></div><div id="seqCalls"></div></div>
-        <div class="seq-col"><div class="seq-col-hdr" style="color:#38bdf8;">✉ Emails due <span class="seq-count" id="seqCntEmail"></span></div><div id="seqEmails"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#D8D4CC;">📞 Calls due <span class="seq-count" id="seqCntCall"></span></div><div id="seqCalls"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#D8D4CC;">✉ Emails due <span class="seq-count" id="seqCntEmail"></span></div><div id="seqEmails"></div></div>
         <div class="seq-col"><div class="seq-col-hdr" style="color:#4ade80;">💬 DMs due <span class="seq-count" id="seqCntDm"></span></div><div id="seqDms"></div></div>
       </div>
       <div class="seq-side">
         <div class="seq-col"><div class="seq-col-hdr" style="color:#f59e0b;">⏸ Parked — returning soon <span class="seq-count" id="seqCntPark"></span></div><div id="seqParked"></div></div>
-        <div class="seq-col"><div class="seq-col-hdr" style="color:#f472b6;">↩ Replies owed <span class="seq-count" id="seqCntReply"></span></div><div id="seqReplies"></div></div>
+        <div class="seq-col"><div class="seq-col-hdr" style="color:#F7F6F4;">↩ Replies owed <span class="seq-count" id="seqCntReply"></span></div><div id="seqReplies"></div></div>
       </div>
     </section>
 
@@ -654,10 +665,11 @@
       <div id="clientsContainer"></div>
     </section>
 
-    <!-- COMMISSION TRACKER -->
+    <!-- GROWTH STEP TRACKER -->
     <section data-view="clients">
-      <div class="section-label">Bonus Tracker</div>
-      <div id="commissionContainer"></div>
+      <div class="section-label">Growth Step</div>
+      <div id="growthContainer"></div>
+      <div id="commissionContainer" style="margin-top:14px"></div>
     </section>
 
     <div class="section-divider"></div>
@@ -684,11 +696,7 @@
         <div class="scraper-row">
           <div class="f-group" style="min-width:200px">
             <div class="f-label">Niche</div>
-            <select class="f-select" id="scraperNiche" onchange="saveScraperField('niche',this.value)">
-              <option value="kitchen fitters">Kitchen fitter</option>
-              <option value="bathroom fitters">Bathroom fitter</option>
-              <option value="loft conversion specialists">Loft conversion</option>
-            </select>
+            <input type="text" class="f-input" id="scraperNiche" list="nicheList" placeholder="e.g. tattoo studio, jewellery, streetwear" onblur="saveScraperField('niche',this.value)" />
           </div>
           <div class="f-group" style="flex:2;min-width:240px">
             <div class="f-label">Target Areas (comma-separated)</div>
@@ -706,6 +714,7 @@
             </select>
           </div>
         </div>
+        <div class="scraper-hint">Google Places finds <b>local</b> businesses with a shopfront or studio. Online brands and artists don't live there — bring them in by CSV (Store Leads, Meta Ad Library) or add them by hand with the Instagram handle.</div>
         <div class="scraper-controls">
           <label class="toggle-wrap">
             <input type="checkbox" id="autoScanToggle" onchange="toggleAutoScan()" />
@@ -726,7 +735,7 @@
           <span style="font-size:12px;color:var(--muted)" id="importJsonStatus"></span>
         </div>
         <div style="margin-top:8px;font-size:11px;color:var(--muted);line-height:1.5;">
-          CSV columns (any order, case-insensitive): <code>business</code>, <code>owner</code>, <code>area</code>, <code>phone</code>, <code>email</code>, <code>niche</code>, <code>notes</code>. Only <code>business</code> is required. Leads with no <code>niche</code> column inherit the Niche selected above. Duplicates (same business name) are skipped. Imports sync live across all devices.
+          CSV columns (any order, case-insensitive): <code>business</code>, <code>owner</code>, <code>area</code>, <code>phone</code>, <code>email</code>, <code>niche</code>, <code>instagram</code>, <code>website</code>, <code>followers</code>, <code>revenue</code> (band, e.g. 10-20k), <code>platform</code>, <code>notes</code>. Only <code>business</code> is required. Leads with no <code>niche</code> column inherit the niche typed above. Duplicates (same business name) are skipped. Imports sync live across all devices.
         </div>
       </div>
     </section>
@@ -742,18 +751,32 @@
       </div>
       <div id="addForm" style="display:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px;background:var(--bg);">
         <div class="form-grid">
-          <div class="f-group"><div class="f-label">Business Name *</div><input type="text" class="f-input" id="fBusiness" placeholder="e.g. Johnson Renovations" /></div>
-          <div class="f-group"><div class="f-label">Owner Name</div><input type="text" class="f-input" id="fOwner" placeholder="e.g. Mike Johnson" /></div>
-          <div class="f-group"><div class="f-label">Area</div><input type="text" class="f-input" id="fArea" placeholder="e.g. Manchester" /></div>
-          <div class="f-group"><div class="f-label">Niche</div><select class="f-select" id="fNiche"><option value="">—</option><option value="Kitchen">Kitchen fitter</option><option value="Bathroom">Bathroom fitter</option><option value="Loft">Loft conversion</option></select></div>
+          <div class="f-group"><div class="f-label">Brand / Business *</div><input type="text" class="f-input" id="fBusiness" placeholder="e.g. Marauder" /></div>
+          <div class="f-group"><div class="f-label">Founder / Owner</div><input type="text" class="f-input" id="fOwner" placeholder="e.g. Sam Okafor" /></div>
+          <div class="f-group"><div class="f-label">City</div><input type="text" class="f-input" id="fArea" placeholder="e.g. London" /></div>
+          <div class="f-group"><div class="f-label">Segment</div><input type="text" class="f-input" id="fNiche" list="nicheList" placeholder="e.g. Streetwear" /><datalist id="nicheList"><option value="Streetwear"></option><option value="Clothing"></option><option value="Jewellery"></option><option value="Watches"></option><option value="Shoes"></option><option value="Prints &amp; Ceramics"></option><option value="Music / Artist"></option><option value="Creative studio"></option><option value="Local business"></option></datalist></div>
           <div class="f-group"><div class="f-label">Phone</div><input type="tel" class="f-input" id="fPhone" placeholder="e.g. 07700 900000" /></div>
-          <div class="f-group"><div class="f-label">Email</div><input type="email" class="f-input" id="fEmail" placeholder="e.g. mike@renovations.com" /></div>
-          <div class="f-group"><div class="f-label">Website URL</div><input type="url" class="f-input" id="fWebsite" placeholder="e.g. https://smithrenovations.co.uk" /></div>
+          <div class="f-group"><div class="f-label">Email</div><input type="email" class="f-input" id="fEmail" placeholder="e.g. hello@brand.com" /></div>
+          <div class="f-group"><div class="f-label">Website / Store</div><input type="url" class="f-input" id="fWebsite" placeholder="e.g. https://brand.com" /></div>
           <div class="f-group"><div class="f-label">Instagram</div><input type="text" class="f-input" id="fSocialIg" placeholder="@handle or link" /></div>
           <div class="f-group"><div class="f-label">Facebook</div><input type="text" class="f-input" id="fSocialFb" placeholder="@handle or link" /></div>
           <div class="f-group"><div class="f-label">X / Twitter</div><input type="text" class="f-input" id="fSocialX" placeholder="@handle or link" /></div>
           <div class="f-group"><div class="f-label">Website Quality</div><select class="f-select" id="fWebsiteQuality"><option value="">Not assessed</option><option value="ugly">Ugly — revamp candidate</option><option value="ok">OK — could be improved</option><option value="modern">Modern — skip</option></select></div>
-          <div class="f-group"><div class="f-label">Source</div><select class="f-select" id="fSource"><option value="Manual">Manual</option><option value="Referral">Referral</option><option value="Lead Scraper">Lead Scraper</option><option value="Cold Call">Cold Call</option><option value="Website Revamp">Website Revamp</option></select></div>
+          <div class="f-group"><div class="f-label">Source</div><select class="f-select" id="fSource"><option value="Manual">Manual</option><option value="Instagram">Instagram</option><option value="Referral">Referral</option><option value="Store Leads">Store Leads</option><option value="Meta Ad Library">Meta Ad Library</option><option value="Lead Scraper">Lead Finder</option><option value="Cold Call">Cold Call</option><option value="Website Revamp">Website Revamp</option></select></div>
+        </div>
+        <div class="f-label" style="margin:2px 0 8px">Fit — the five gates (MKT-ICP-003b). Leave blank if unknown; the call fills them in.</div>
+        <div class="form-grid">
+          <div class="f-group"><div class="f-label">Monthly revenue</div><select class="f-select" id="fRevenueBand"><option value="">Unknown</option><option value="under8k">Under £8k</option><option value="8-10k">£8–10k</option><option value="10-20k">£10–20k</option><option value="20-40k">£20–40k</option><option value="40-80k">£40–80k</option><option value="80k+">£80k+</option></select></div>
+          <div class="f-group"><div class="f-label">Months trading</div><input type="number" class="f-input" id="fMonthsTrading" placeholder="e.g. 18" min="0" /></div>
+          <div class="f-group"><div class="f-label">Repeat buyers</div><select class="f-select" id="fRepeatBuyers"><option value="">Unknown</option><option value="y">Yes</option><option value="n">No</option></select></div>
+          <div class="f-group"><div class="f-label">Can ship double</div><select class="f-select" id="fCanShipDouble"><option value="">Unknown</option><option value="y">Yes</option><option value="n">No</option></select></div>
+          <div class="f-group"><div class="f-label">Already spends on growth</div><select class="f-select" id="fSpendsOnGrowth"><option value="">Unknown</option><option value="y">Yes — any amount</option><option value="n">Never</option></select></div>
+          <div class="f-group"><div class="f-label">Sell-through</div><select class="f-select" id="fSellThrough"><option value="">Unknown</option><option value="fast">Sells out in hours — not yet ours</option><option value="slow">Sells out slowly / 60–90% — the client</option><option value="sits">Sits unsold, discounting — not ours</option></select></div>
+          <div class="f-group"><div class="f-label">How it's made</div><select class="f-select" id="fProduction"><option value="">Unknown / n.a.</option><option value="blanks">Printed blanks</option><option value="cutsew">Cut and sew</option><option value="pod">Print-on-demand</option><option value="handmade">Handmade / studio</option></select></div>
+          <div class="f-group"><div class="f-label">Followers (IG)</div><input type="number" class="f-input" id="fFollowers" placeholder="e.g. 12000" min="0" /></div>
+          <div class="f-group"><div class="f-label">Drops per year</div><input type="number" class="f-input" id="fDropsPerYear" placeholder="e.g. 6" min="0" /></div>
+          <div class="f-group"><div class="f-label">Store platform</div><select class="f-select" id="fPlatform"><option value="">Unknown</option><option value="Shopify">Shopify</option><option value="WooCommerce">WooCommerce</option><option value="Big Cartel">Big Cartel</option><option value="Squarespace">Squarespace</option><option value="Other">Other</option><option value="None">No store</option></select></div>
+          <div class="f-group"><div class="f-label">Est. monthly value (£)</div><input type="number" class="f-input" id="fEstValue" placeholder="2000" min="0" /></div>
         </div>
         <div class="form-grid-wide">
           <div class="f-group"><div class="f-label">Stage</div><select class="f-select" id="fStage"><option value="new">New Lead</option><option value="contacted">Contacted</option><option value="call">Call Booked</option><option value="proposal">Proposal Sent</option><option value="won">Won</option><option value="lost">Lost</option></select></div>
@@ -767,7 +790,7 @@
         <button class="vtbtn" id="vt-kanban" onclick="setViewMode('kanban')">⊞ Kanban</button>
       </div>
       <div class="filter-bar" style="margin-bottom:10px;">
-        <input type="text" class="search-inp" id="searchInp" placeholder="Search name, area, email..." oninput="renderLeads()" />
+        <input type="text" class="search-inp" id="searchInp" placeholder="Search brand, founder, city, segment..." oninput="renderLeads()" />
         <div class="filter-pills">
           <button class="fpill active" onclick="setFilter('all',this)">All</button>
           <button class="fpill" onclick="setFilter('new',this)">New</button>
@@ -780,7 +803,16 @@
         <select class="sort-sel" id="sortSel" onchange="renderLeads()"><option value="updated">Recently updated</option><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A-Z</option><option value="followup">Follow-up date</option></select>
       </div>
       <div class="score-pills">
-        <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;">Score</span>
+        <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;">Fit</span>
+        <button class="fit-pill active" onclick="setFitFilter('all',this)">All</button>
+        <button class="fit-pill" onclick="setFitFilter('qualified',this)">Qualified 5/5</button>
+        <button class="fit-pill" onclick="setFitFilter('near',this)">Near 3–4</button>
+        <button class="fit-pill" onclick="setFitFilter('potential',this)">Potential — sells through</button>
+        <button class="fit-pill" onclick="setFitFilter('unknown',this)">Gates unknown</button>
+        <button class="fit-pill" onclick="setFitFilter('out',this)">Out (POD / too small / sits)</button>
+      </div>
+      <div class="score-pills">
+        <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;">Ads score</span>
         <button class="score-pill active" onclick="setScoreFilter(0,this)">All</button>
         <button class="score-pill" onclick="setScoreFilter(5,this)">5 ⚡ Easiest close</button>
         <button class="score-pill" onclick="setScoreFilter(4,this)">4 · Bad ads</button>
@@ -796,7 +828,7 @@
         <button class="smart-pill" id="pillNeedsData" onclick="setSmartFilter('needsdata',this)">Needs data / screening</button>
       </div>
       <div id="wonStrip" class="won-strip">
-        <div class="won-strip-ttl">Send client a review request</div>
+        <div class="won-strip-ttl">Ask the client for a testimonial (with permission to quote)</div>
         <div class="won-strip-body" id="wonStripBody"></div>
         <button class="won-strip-copy" onclick="copyWonReview(event)">Copy</button>
       </div>
@@ -891,9 +923,34 @@
         <input type="text" class="km-inp" id="kmNextStep" placeholder="e.g. Call Monday to discuss proposal" />
       </div>
       <div class="km-field">
-        <div class="km-label">Est. Value (£)</div>
-        <input type="number" class="km-inp" id="kmEstValue" placeholder="0" min="0" />
+        <div class="km-label">Est. monthly value (£)</div>
+        <input type="number" class="km-inp" id="kmEstValue" placeholder="2000" min="0" />
       </div>
+    </div>
+    <div class="km-label" style="margin:4px 0 8px">Fit — the five gates</div>
+    <div class="km-row">
+      <div class="km-field"><div class="km-label">Segment</div><input type="text" class="km-inp" id="kmNiche" list="nicheList" placeholder="e.g. Jewellery" /></div>
+      <div class="km-field"><div class="km-label">Monthly revenue</div><select class="km-select" id="kmRevenueBand"><option value="">Unknown</option><option value="under8k">Under £8k</option><option value="8-10k">£8–10k</option><option value="10-20k">£10–20k</option><option value="20-40k">£20–40k</option><option value="40-80k">£40–80k</option><option value="80k+">£80k+</option></select></div>
+    </div>
+    <div class="km-row">
+      <div class="km-field"><div class="km-label">Months trading</div><input type="number" class="km-inp" id="kmMonthsTrading" min="0" /></div>
+      <div class="km-field"><div class="km-label">Repeat buyers</div><select class="km-select" id="kmRepeatBuyers"><option value="">Unknown</option><option value="y">Yes</option><option value="n">No</option></select></div>
+    </div>
+    <div class="km-row">
+      <div class="km-field"><div class="km-label">Can ship double</div><select class="km-select" id="kmCanShipDouble"><option value="">Unknown</option><option value="y">Yes</option><option value="n">No</option></select></div>
+      <div class="km-field"><div class="km-label">Already spends on growth</div><select class="km-select" id="kmSpendsOnGrowth"><option value="">Unknown</option><option value="y">Yes — any amount</option><option value="n">Never</option></select></div>
+    </div>
+    <div class="km-row">
+      <div class="km-field"><div class="km-label">Sell-through</div><select class="km-select" id="kmSellThrough"><option value="">Unknown</option><option value="fast">Sells out in hours</option><option value="slow">Sells out slowly / 60–90%</option><option value="sits">Sits unsold</option></select></div>
+      <div class="km-field"><div class="km-label">How it's made</div><select class="km-select" id="kmProduction"><option value="">Unknown / n.a.</option><option value="blanks">Printed blanks</option><option value="cutsew">Cut and sew</option><option value="pod">Print-on-demand</option><option value="handmade">Handmade / studio</option></select></div>
+    </div>
+    <div class="km-row">
+      <div class="km-field"><div class="km-label">Followers (IG)</div><input type="number" class="km-inp" id="kmFollowers" min="0" /></div>
+      <div class="km-field"><div class="km-label">Drops per year</div><input type="number" class="km-inp" id="kmDropsPerYear" min="0" /></div>
+    </div>
+    <div class="km-row">
+      <div class="km-field"><div class="km-label">Store platform</div><select class="km-select" id="kmPlatform"><option value="">Unknown</option><option value="Shopify">Shopify</option><option value="WooCommerce">WooCommerce</option><option value="Big Cartel">Big Cartel</option><option value="Squarespace">Squarespace</option><option value="Other">Other</option><option value="None">No store</option></select></div>
+      <div class="km-field"><div class="km-label">Fit</div><div class="km-info" id="kmFit" style="margin:0"></div></div>
     </div>
     <div class="km-row">
       <div class="km-field">
@@ -933,9 +990,9 @@ const LOCKOUT_KEY='ke_lockout',MAX_ATTEMPTS=3,LOCKOUT_TTL=18e5;
 if(typeof supabase==='undefined'){
   document.addEventListener('DOMContentLoaded',function(){
     document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;'
-      +'font-family:system-ui,sans-serif;background:#0C0618;color:#EEE8FF;text-align:center;padding:24px">'
+      +'font-family:system-ui,sans-serif;background:#0D0D0F;color:#F7F6F4;text-align:center;padding:24px">'
       +'<div><div style="font-size:19px;margin-bottom:10px">The database library did not load.</div>'
-      +'<div style="font-size:14px;color:rgba(238,232,255,.56);line-height:1.6">'
+      +'<div style="font-size:14px;color:rgba(247,246,244,.56);line-height:1.6">'
       +'Usually a blocked CDN or no connection.<br>Check your network and reload — no data has been lost.</div></div></div>';
   });
   throw new Error('supabase-js failed to load');
@@ -1030,13 +1087,13 @@ async function showApp(){
       const merged={...structuredClone(DEFAULTS),...remoteData};
       if(!Array.isArray(remoteData.clients)||remoteData.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);
       localStorage.setItem(DATA_KEY,JSON.stringify(merged));
-      const d=load();renderClientPipeline(d);renderClientChecklist(d);renderClients(d);renderCommission(d);
+      const d=load();renderClientPipeline(d);renderClientChecklist(d);renderClients(d);renderCommission(d);renderGrowth(d);
     }else if(!remoteData){_cloudPush(DATA_KEY,load());}
   }catch(e){console.warn('Cloud sync:',e);}
   if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);}
   _realtimeChannel=_sb.channel('crm_sync')
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at){_ver[LEADS_KEY]=payload.new.updated_at;_base[LEADS_KEY]=payload.new.data;}if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}})
-    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at){_ver[DATA_KEY]=payload.new.updated_at;_base[DATA_KEY]=payload.new.data;}if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));const u=load();renderClientPipeline(u);renderClientChecklist(u);renderClients(u);renderCommission(u);}})
+    .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at){_ver[DATA_KEY]=payload.new.updated_at;_base[DATA_KEY]=payload.new.data;}if(d&&typeof d==='object'){localStorage.setItem(DATA_KEY,JSON.stringify(d));const u=load();renderClientPipeline(u);renderClientChecklist(u);renderClients(u);renderCommission(u);renderGrowth(u);}})
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+SCRAPER_KEY},payload=>{if(payload.new?.updated_at){_ver[SCRAPER_KEY]=payload.new.updated_at;_base[SCRAPER_KEY]=payload.new.data;}})
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+EMAIL_KEY},payload=>{if(payload.new?.updated_at){_ver[EMAIL_KEY]=payload.new.updated_at;_base[EMAIL_KEY]=payload.new.data;}})
     .subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});
@@ -1044,7 +1101,7 @@ async function showApp(){
 }
 
 /* ── DATA ── */
-const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:2500}};
+const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},growth:{snapshots:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:2000,foundingValue:1000,stepValue:1000,stepTrigger:1.5}};
 function load(){try{const r=localStorage.getItem(DATA_KEY);const d=r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);(d.clients||[]).forEach(c=>{if(c.status==='trial'||c.status==='retainer')c.status='active';if(!c.liveDate&&c.trialStartDate)c.liveDate=c.trialStartDate;});return d;}catch(e){return structuredClone(DEFAULTS);}}
 function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));_cloudPush(DATA_KEY,data);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -1061,8 +1118,8 @@ const PIPE_STAGES=[{key:'onboarding',label:'Onboarding'},{key:'live',label:'Live
 function getNextAction(stageKey,day,clientName){
   const n=clientName.split(' ')[0];
   switch(stageKey){
-    case 'onboarding':return{text:`Run ${n} through the 7-day onboarding sprint, then set the go-live date.`,cls:''};
-    case 'live':return{text:`${n} is live on £2,500/mo. Deliver the booked jobs, log any bonus jobs, build the case study.`,cls:'green-action'};
+    case 'onboarding':return{text:`Run ${n} through onboarding: agreement, first invoice, revenue baseline in writing, access to the ad account, the store and email/SMS, then the drop calendar and the go-live date.`,cls:''};
+    case 'live':return{text:`${n} is live. Drop one is measurement — content, ads, email/SMS running, sell-through target set in writing off their baseline. Log the trailing 3-month revenue every month; the growth step fires when it is up 50%.`,cls:'green-action'};
     default:return{text:'',cls:''};
   }
 }
@@ -1095,24 +1152,28 @@ function renderClientPipeline(data){
 }
 
 /* ── CLIENT CHECKLIST ── */
+/* The onboarding chain (2026-09-06). Shape borrowed from Flozy's one-link funnel
+   (MKT-MON-002): proposal → agreement → invoice → baseline → access → plan → live.
+   Terms per FIN-PRI-004; delivery per MKT-SOL-001 (the four things). */
 const CLIENT_TASKS=[
-  {id:'ob1',phase:'onboarding',text:'Discovery call completed'},
-  {id:'ob2',phase:'onboarding',text:'Retainer agreement signed (£2,500/mo)'},
-  {id:'ob3',phase:'onboarding',text:'First invoice raised and paid (billing starts once the appointment target is hit)'},
-  {id:'ob4',phase:'onboarding',text:'Facebook Business Manager access granted'},
-  {id:'ob5',phase:'onboarding',text:'Meta Pixel installed and verified'},
-  {id:'ob6',phase:'onboarding',text:'Ad copy and creatives approved by client'},
-  {id:'ob7',phase:'onboarding',text:'Campaign live — go-live date set ✓'},
-  {id:'lv1',phase:'live',text:'Weekly performance review'},
-  {id:'lv2',phase:'live',text:'Weekly report sent to client'},
-  {id:'lv3',phase:'live',text:'Monthly strategy call held'},
-  {id:'lv4',phase:'live',text:'Booked-jobs target tracked vs agreed monthly target'},
-  {id:'lv5',phase:'live',text:'Bonus jobs logged + verified (signed acceptance / deposit invoice)'},
-  {id:'lv6',phase:'live',text:'Creative refreshed when CTR declining'},
-  {id:'lv7',phase:'live',text:'Case study / testimonial requested'},
+  {id:'ob1',phase:'onboarding',text:'Discovery call done — five gates confirmed on the call (repeat buyers, can ship double)'},
+  {id:'ob2',phase:'onboarding',text:'Proposal sent'},
+  {id:'ob3',phase:'onboarding',text:'Retainer agreement signed (£2,000/mo standard · £1,000/mo founding, first five)'},
+  {id:'ob4',phase:'onboarding',text:'First invoice raised and paid'},
+  {id:'ob5',phase:'onboarding',text:'Revenue baseline agreed in writing — trailing 3-month average — and revenue access granted'},
+  {id:'ob6',phase:'onboarding',text:'Access granted: Meta Business Manager + pixel, the store (Shopify), email/SMS (Klaviyo)'},
+  {id:'ob7',phase:'onboarding',text:'Drop calendar + content plan agreed; sell-through target set in writing'},
+  {id:'ob8',phase:'onboarding',text:'First content batch approved by the client'},
+  {id:'ob9',phase:'onboarding',text:'Live — go-live date set ✓'},
+  {id:'lv1',phase:'live',text:'Weekly numbers sent — sell-through, revenue per send, cost per purchase against margin'},
+  {id:'lv2',phase:'live',text:'Monthly strategy call held'},
+  {id:'lv3',phase:'live',text:'Monthly revenue snapshot logged below (growth-step check)'},
+  {id:'lv4',phase:'live',text:'Email/SMS list growing — every drop opens to the list first'},
+  {id:'lv5',phase:'live',text:'Creative refreshed when cost per purchase rises'},
+  {id:'lv6',phase:'live',text:'Testimonial / case study requested, permission to quote recorded'},
 ];
 const PHASE_ORDER=['onboarding','live'];
-const PHASE_LABELS={onboarding:'Onboarding — 7-Day Sprint',live:'Live — Ongoing Delivery'};
+const PHASE_LABELS={onboarding:'Onboarding — from yes to live',live:'Live — the four things, measured'};
 function activePhaseForStage(stageKey){return stageKey==='live'?'live':'onboarding';}
 function renderClientChecklist(data){
   const el=document.getElementById('checklistContainer');
@@ -1157,14 +1218,51 @@ function toggleClientTask(clientId,taskId){const d=load();if(!d.clientTasks)d.cl
 /* ── CLIENTS ── */
 function stClass(s){return{active:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
 function stLabel(s){return{active:'✓ Active',inactive:'○ Inactive'}[s]||s;}
-function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer Value</div><div class="cf-v">£${(c.retainerValue||2500).toLocaleString()}/mo</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}</div>`;}).join('');}
+function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}</div>`;}).join('');}
 function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
+/* ── GROWTH STEP (FIN-PRI-004, settled 2026-09-04) ──
+   Every time the trailing 3-month average revenue is up 50% on the level that
+   fired the last step, the retainer rises £1,000 permanently and a one-off bonus
+   of one month at the new rate is due. No cap. Measured off their total revenue,
+   so there is no attribution argument. Under three months trading there is no
+   baseline and no step. */
+function currentRetainer(c,data){const s=(data&&data.settings)||{};const base=Number(c.retainerValue)||(c.founding?(s.foundingValue||1000):(s.retainerValue||2000));return base+growthState(c,data).steps*(s.stepValue||1000);}
+function clientSnapshots(c,data){return (((data||{}).growth||{}).snapshots||[]).filter(x=>x.clientId===c.id).sort((a,b)=>String(a.date).localeCompare(String(b.date)));}
+function growthState(c,data){
+  const s=(data&&data.settings)||{};const trig=s.stepTrigger||1.5;
+  const base=Number(c.baselineRevenue)||0;if(!base)return{steps:0,level:0,next:0,bonusDue:0,fired:[]};
+  let level=base,steps=0;const fired=[];
+  clientSnapshots(c,data).forEach(x=>{const v=Number(x.avg)||0;while(v>=level*trig){level=level*trig;steps++;fired.push({date:x.date,level:Math.round(level)});}});
+  const retainer=(Number(c.retainerValue)||(c.founding?(s.foundingValue||1000):(s.retainerValue||2000)))+steps*(s.stepValue||1000);
+  return{steps,level:Math.round(level),next:Math.round(level*trig),bonusDue:fired.filter(f=>!(c.bonusPaid||[]).includes(f.date)).length*retainer,fired};
+}
 function setLiveDate(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.liveDate=date;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
 
-/* ── COMMISSION ── */
+/* ── GROWTH STEP TRACKER (replaces the 10%-bonus job log of the reno model, 2026-09-06) ── */
+function renderGrowth(data){
+  const el=document.getElementById('growthContainer');if(!el)return;
+  if(!data.growth)data.growth={snapshots:[]};
+  const clients=(data.clients||[]).filter(c=>c.status!=='inactive');
+  const opts=clients.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join('');
+  const rows=clients.map(c=>{const g=growthState(c,data);const snaps=clientSnapshots(c,data);const last=snaps[snaps.length-1];
+    return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+(c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString():'<span style="color:var(--amber)">set baseline</span>')+'</td>'
+      +'<td>'+(last?'£'+Number(last.avg).toLocaleString()+' <span style="color:var(--muted)">'+esc(last.date)+'</span>':'—')+'</td>'
+      +'<td>'+(g.next?'£'+g.next.toLocaleString():'—')+'</td><td>'+g.steps+'</td><td>£'+Number(currentRetainer(c,data)).toLocaleString()+'/mo</td>'
+      +'<td style="color:var(--amber);font-weight:700">'+(g.bonusDue?'£'+g.bonusDue.toLocaleString():'—')+'</td>'
+      +'<td><button class="comm-status cs-pending" onclick="setBaseline(\''+c.id+'\')">baseline</button></td></tr>';}).join('')
+    ||'<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:20px 0;">No active clients yet.</td></tr>';
+  el.innerHTML='<div class="card"><div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">One number at signing — their <strong>trailing 3-month average revenue</strong>, agreed in writing. Log the same number every month. When it is up <strong>50%</strong> on the level that fired the last step, the retainer rises <strong>£1,000</strong> for good and a one-off bonus of one month at the new rate is due. No cap. Explained on the call, never on the site.</div>'
+    +'<div class="comm-add-row"><select class="comm-inp" id="gsClient" style="max-width:200px">'+opts+'</select><input type="month" class="comm-inp" id="gsMonth" style="max-width:160px" /><input type="number" class="comm-inp" id="gsAvg" placeholder="Trailing 3-mo avg revenue (£)" min="0" style="max-width:240px" /><button class="add-btn" onclick="addSnapshot()">+ Log month</button></div>'
+    +'<div class="comm-wrap"><table class="comm-table"><thead><tr><th>Client</th><th>Baseline</th><th>Latest 3-mo avg</th><th>Next step at</th><th>Steps</th><th>Retainer now</th><th>Bonus due</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+}
+function setBaseline(id){const d=load();const c=d.clients.find(x=>x.id===id);if(!c)return;const a=prompt('Baseline for '+c.name+' — trailing 3-month average revenue at signing (£)',c.baselineRevenue||'');if(a===null)return;const v=Number(String(a).replace(/[£,\s]/g,''));if(!isFinite(v)||v<0)return;c.baselineRevenue=v;const f=prompt('Founding client? (y/n)',c.founding?'y':'n');if(f!==null)c.founding=/^y/i.test(f);save(d);renderGrowth(d);renderClients(d);showToast('Baseline saved');}
+function addSnapshot(){const d=load();if(!d.growth)d.growth={snapshots:[]};const clientId=document.getElementById('gsClient').value;const date=document.getElementById('gsMonth').value;const avg=Number(document.getElementById('gsAvg').value);if(!clientId||!date||!avg)return;d.growth.snapshots=d.growth.snapshots.filter(x=>!(x.clientId===clientId&&x.date===date));d.growth.snapshots.push({clientId,date,avg});save(d);renderGrowth(d);renderClients(d);const c=d.clients.find(x=>x.id===clientId);if(c){const g=growthState(c,d);showToast(g.steps?g.steps+' step'+(g.steps>1?'s':'')+' fired — retainer now £'+currentRetainer(c,d).toLocaleString():'Logged — next step at £'+(g.next||0).toLocaleString());}}
+/* ── COMMISSION (legacy reno bonus log — rendered only while jobs exist) ── */
 function renderCommission(data){
   if(!data.commission)data.commission={jobs:[]};
   const jobs=data.commission.jobs||[];
+  const host=document.getElementById('commissionContainer');
+  if(!jobs.length){if(host)host.innerHTML='';return;}
   const pending=jobs.filter(j=>j.status==='pending').reduce((s,j)=>s+(j.commission||0),0);
   const totalPaid=jobs.filter(j=>j.status==='paid').reduce((s,j)=>s+(j.commission||0),0);
   const rows=jobs.length?jobs.map((j,i)=>`<tr>
@@ -1176,7 +1274,7 @@ function renderCommission(data){
     <td><button class="t-del" onclick="delJob(${i})">×</button></td>
   </tr>`).join(''):'<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:20px 0;">No jobs logged yet.</td></tr>';
   document.getElementById('commissionContainer').innerHTML=`<div class="card">
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Log <strong>every closed job we won a client</strong> here &mdash; this is the delivery-proof record that feeds the dashboard Results section. The 10% bonus applies only to jobs above the agreed monthly target; collect it once verified by a signed acceptance email or a deposit invoice from the homeowner.</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5"><strong>Legacy — the reno-model 10% bonus log.</strong> Retired 2026-09-04 with the growth step above; kept read-only while these rows exist because the dashboard still reads them.</div>
     <div class="comm-add-row">
       <input type="date" class="comm-inp" id="commDate" style="max-width:160px" />
       <input type="text" class="comm-inp" id="commClient" placeholder="Client name" style="max-width:180px" />
@@ -1291,9 +1389,9 @@ function saveScraper(s){localStorage.setItem(SCRAPER_KEY,JSON.stringify(s));_clo
 // in /api/*; the old client-side key fields were removed. saveApiKey/saveGoogleKey/
 // saveMetaToken were orphaned (no inputs, no callers) and have been deleted.
 function saveScraperField(field,val){const s=loadScraper();s[field]=val;saveScraper(s);}
-function initScraper(){const s=loadScraper();if(!s.googleKey)s.googleKey='';if(!s.metaToken)s.metaToken='';if(!s.interval)s.interval='20';if(!s.niche)s.niche='kitchen fitters';
-  // Normalise any saved niche to one of the three dropdown values
-  const _nk=nicheKey(s.niche);s.niche=_nk==='Loft'?'loft conversion specialists':_nk==='Bathroom'?'bathroom fitters':'kitchen fitters';
+function initScraper(){const s=loadScraper();if(!s.googleKey)s.googleKey='';if(!s.metaToken)s.metaToken='';if(!s.interval)s.interval='20';if(!s.niche)s.niche='';
+  /* 2026-09-06: the three-trade normalisation is gone. A saved reno search term
+     ('kitchen fitters') still works as a Places query; it is just no longer forced. */
   saveScraper(s);document.getElementById('scraperNiche').value=s.niche;if(s.areas)document.getElementById('scraperAreas').value=s.areas;document.getElementById('scanInterval').value=s.interval;if(s.googleKey&&document.getElementById('googleKey'))document.getElementById('googleKey').value=s.googleKey;if(s.metaToken&&document.getElementById('metaToken'))document.getElementById('metaToken').value=s.metaToken;if(s.autoScan){document.getElementById('autoScanToggle').checked=true;scheduleAutoScan();}updateScraperStatus();}
 function toggleAutoScan(){const en=document.getElementById('autoScanToggle').checked;const s=loadScraper();s.autoScan=en;saveScraper(s);if(en){scheduleAutoScan();setScraperStatus('Auto-scan enabled.','done');}else{clearTimeout(autoScanTimer);autoScanTimer=null;setScraperStatus('Auto-scan disabled.','');}}
 function scheduleAutoScan(){clearTimeout(autoScanTimer);const s=loadScraper();const mins=parseInt(s.interval||'20');const last=s.lastScanTimestamp||0;const delay=Math.max(5000,last+mins*60000-Date.now());autoScanTimer=setTimeout(async()=>{await runScraper();if(loadScraper().autoScan)scheduleAutoScan();},delay);updateScraperStatus();}
@@ -1313,7 +1411,7 @@ async function searchGooglePlaces(niche,area){
 }
 async function enrichPhone(placeId){return{phone:'',website:''};}
 async function checkMetaAds(name){try{const d=await(await fetch('/api/check-meta-ads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})})).json();return{running_ads:d.running_ads||false,ad_count:d.ad_count||0,ad_quality:d.ad_quality||'unknown'};}catch(e){return{running_ads:false,ad_count:0,ad_quality:'unknown'};}}
-async function runScraper(){const s=loadScraper();const niche=(s.niche||'kitchen fitters').trim();const areas=(s.areas||'').split(',').map(a=>a.trim()).filter(Boolean);if(!areas.length){setScraperStatus('Add target areas above.','error');return;}const btn=document.getElementById('scanBtn');btn.disabled=true;let added=0;let totalFound=0;let totalDupes=0;let totalNoPhone=0;let totalChains=0;let totalErrors=0;for(const area of areas){setScraperStatus('Searching Google — '+niche+' in '+area+'...','running');try{const businesses=await searchGooglePlaces(niche,area);totalFound+=businesses.length;setScraperStatus('Found '+businesses.length+' in '+area+'. Filtering & checking ads...','running');let bIdx=0;for(const b of businesses){bIdx++;try{if(!b.name)continue;if(isExcludedLead(b.name,b.website)){totalChains++;continue;}const rating=b.rating||0;const reviews=b.reviews||0;const arr=loadLeads();if(arr.some(l=>(l.business||l.name||'').toLowerCase()===b.name.toLowerCase())){totalDupes++;continue;}let ph=(b.phone||'').trim();if(!ph&&b.placeId){const det=await enrichPhone(b.placeId);ph=det.phone||'';if(!b.website&&det.website)b.website=det.website;}if(!ph){totalNoPhone++;continue;}const phClean=ph.replace(/[^\d+]/g,'').replace(/^\+/,'+');if(!/^(\+44|0[1-9])/.test(phClean)){totalNoPhone++;continue;}setScraperStatus('Checking '+bIdx+'/'+businesses.length+' — '+b.name.slice(0,30)+'...','running');const meta=await checkMetaAds(b.name);let enrichedEmail='',enrichedQuality='',enrichedQualityReason='',enrichedSocial={ig:'',fb:'',x:''};if(b.website){try{const _er=await fetch('/api/enrich-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({website:b.website})});if(_er.ok){const _ed=await _er.json();enrichedEmail=_ed.email||'';enrichedQuality=_ed.quality||'';enrichedQualityReason=_ed.qualityReason||'';if(_ed.social)enrichedSocial={ig:_ed.social.ig||'',fb:_ed.social.fb||'',x:_ed.social.x||''};}}catch(e){}}const hasFb=(b.website||'').toLowerCase().includes('facebook.com');const score=scoreProspect(hasFb,meta.running_ads,meta.ad_quality,rating,reviews);const adNote=meta.running_ads?`${meta.ad_count} ad${meta.ad_count!==1?'s':''} running (${meta.ad_quality} quality)`:hasFb?'Facebook page, no ads':'No Facebook presence';const wqLabel={ugly:'Ugly — revamp candidate',ok:'OK — could be improved',modern:'Modern'};const siteNote=enrichedQuality?('Site: '+wqLabel[enrichedQuality]+(enrichedQualityReason?' ('+enrichedQualityReason+')':'')):'';const notes=['Score: '+score+'/5',b.address?'Address: '+b.address:'',rating?'Rating: '+rating+' ⭐ ('+reviews+' reviews)':'No rating yet',adNote,siteNote].filter(Boolean).join(' · ');const updated=loadLeads();updated.unshift({id:uid(),business:b.name,owner:'',area,niche:nicheKey(niche),phone:ph,email:enrichedEmail,website:b.website||'',social:enrichedSocial,websiteQuality:enrichedQuality,source:'Lead Scraper',stage:'new',tpsScreened:'n',tpsScreenDate:'',dialOk:'n',notes,lastContact:'',followUp:'',createdAt:Date.now()});saveLeads(updated);added++;}catch(_e){totalErrors++;console.warn('Lead skipped:',b&&b.name,_e&&_e.message);}}}catch(e){console.warn('Scraper:',e.message);setScraperStatus('Error scanning '+area+': '+e.message,'error');}}const now=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});const u=loadScraper();u.lastScan=now;u.lastScanTimestamp=Date.now();saveScraper(u);btn.disabled=false;setScraperStatus('Scan complete — '+totalFound+' found · '+added+' added'+(totalDupes?' · '+totalDupes+' dupes':'')+(totalNoPhone?' · '+totalNoPhone+' no UK number':'')+(totalChains?' · '+totalChains+' chains':'')+(totalErrors?' · '+totalErrors+' skipped':'')+(added>0?' · numbers UNSCREENED (TPS/CTPS) — not dial-ready':'')+'. Last scan: '+now,added>0?'done':'');renderLeadStats();renderLeads();}
+async function runScraper(){const s=loadScraper();const niche=(s.niche||'').trim();const areas=(s.areas||'').split(',').map(a=>a.trim()).filter(Boolean);if(!niche){setScraperStatus('Type a niche above — what Google Places should search for.','error');return;}if(!areas.length){setScraperStatus('Add target areas above.','error');return;}const btn=document.getElementById('scanBtn');btn.disabled=true;let added=0;let totalFound=0;let totalDupes=0;let totalNoPhone=0;let totalChains=0;let totalErrors=0;for(const area of areas){setScraperStatus('Searching Google — '+niche+' in '+area+'...','running');try{const businesses=await searchGooglePlaces(niche,area);totalFound+=businesses.length;setScraperStatus('Found '+businesses.length+' in '+area+'. Filtering & checking ads...','running');let bIdx=0;for(const b of businesses){bIdx++;try{if(!b.name)continue;if(isExcludedLead(b.name,b.website)){totalChains++;continue;}const rating=b.rating||0;const reviews=b.reviews||0;const arr=loadLeads();if(arr.some(l=>(l.business||l.name||'').toLowerCase()===b.name.toLowerCase())){totalDupes++;continue;}let ph=(b.phone||'').trim();if(!ph&&b.placeId){const det=await enrichPhone(b.placeId);ph=det.phone||'';if(!b.website&&det.website)b.website=det.website;}if(!ph){totalNoPhone++;continue;}const phClean=ph.replace(/[^\d+]/g,'').replace(/^\+/,'+');if(!/^(\+44|0[1-9])/.test(phClean)){totalNoPhone++;continue;}setScraperStatus('Checking '+bIdx+'/'+businesses.length+' — '+b.name.slice(0,30)+'...','running');const meta=await checkMetaAds(b.name);let enrichedEmail='',enrichedQuality='',enrichedQualityReason='',enrichedSocial={ig:'',fb:'',x:''};if(b.website){try{const _er=await fetch('/api/enrich-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({website:b.website})});if(_er.ok){const _ed=await _er.json();enrichedEmail=_ed.email||'';enrichedQuality=_ed.quality||'';enrichedQualityReason=_ed.qualityReason||'';if(_ed.social)enrichedSocial={ig:_ed.social.ig||'',fb:_ed.social.fb||'',x:_ed.social.x||''};}}catch(e){}}const hasFb=(b.website||'').toLowerCase().includes('facebook.com');const score=scoreProspect(hasFb,meta.running_ads,meta.ad_quality,rating,reviews);const adNote=meta.running_ads?`${meta.ad_count} ad${meta.ad_count!==1?'s':''} running (${meta.ad_quality} quality)`:hasFb?'Facebook page, no ads':'No Facebook presence';const wqLabel={ugly:'Ugly — revamp candidate',ok:'OK — could be improved',modern:'Modern'};const siteNote=enrichedQuality?('Site: '+wqLabel[enrichedQuality]+(enrichedQualityReason?' ('+enrichedQualityReason+')':'')):'';const notes=['Score: '+score+'/5',b.address?'Address: '+b.address:'',rating?'Rating: '+rating+' ⭐ ('+reviews+' reviews)':'No rating yet',adNote,siteNote].filter(Boolean).join(' · ');const updated=loadLeads();updated.unshift({id:uid(),business:b.name,owner:'',area,niche:nicheKey(niche),phone:ph,email:enrichedEmail,website:b.website||'',social:enrichedSocial,websiteQuality:enrichedQuality,source:'Lead Scraper',stage:'new',tpsScreened:'n',tpsScreenDate:'',dialOk:'n',notes,lastContact:'',followUp:'',estimatedValue:DEFAULT_LEAD_VALUE,createdAt:Date.now()});saveLeads(updated);added++;}catch(_e){totalErrors++;console.warn('Lead skipped:',b&&b.name,_e&&_e.message);}}}catch(e){console.warn('Scraper:',e.message);setScraperStatus('Error scanning '+area+': '+e.message,'error');}}const now=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});const u=loadScraper();u.lastScan=now;u.lastScanTimestamp=Date.now();saveScraper(u);btn.disabled=false;setScraperStatus('Scan complete — '+totalFound+' found · '+added+' added'+(totalDupes?' · '+totalDupes+' dupes':'')+(totalNoPhone?' · '+totalNoPhone+' no UK number':'')+(totalChains?' · '+totalChains+' chains':'')+(totalErrors?' · '+totalErrors+' skipped':'')+(added>0?' · numbers UNSCREENED (TPS/CTPS) — not dial-ready':'')+'. Last scan: '+now,added>0?'done':'');renderLeadStats();renderLeads();}
 
 /* ── LEADS CRM ── */
 function loadLeads(){try{return JSON.parse(localStorage.getItem(LEADS_KEY)||'[]');}catch(e){return[];}}
@@ -1321,9 +1419,11 @@ function saveLeads(arr){localStorage.setItem(LEADS_KEY,JSON.stringify(arr));_clo
 // RFC-4180-ish CSV parser — handles quoted fields, escaped quotes, commas & newlines inside quotes
 function parseCSV(text){const rows=[];let row=[],field='',inQ=false;text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');for(let i=0;i<text.length;i++){const c=text[i];if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}else if(c==='\n'){row.push(field);rows.push(row);row=[];field='';}else{field+=c;}}}if(field!==''||row.length){row.push(field);rows.push(row);}return rows;}
 // Import leads from a CSV file (e.g. Manus output). Flexible headers, dedupes by business, syncs live.
-function importCSV(event){const file=event.target.files[0];if(!file)return;const el=document.getElementById('importJsonStatus');const reader=new FileReader();reader.onload=function(e){try{const rows=parseCSV(e.target.result).filter(r=>r.some(c=>(c||'').trim()!==''));if(rows.length<2){el.textContent='CSV is empty — needs a header row plus at least one lead.';return;}const headers=rows[0].map(h=>h.trim().toLowerCase());const idx=(names)=>{for(const n of names){const k=headers.indexOf(n);if(k>-1)return k;}return -1;};const col={business:idx(['business','business name','name','company']),owner:idx(['owner','owner name','contact','contact name','director']),area:idx(['area','city','town','location']),phone:idx(['phone','phone number','tel','telephone','mobile','number']),email:idx(['email','email address','e-mail']),niche:idx(['niche','trade','category','service']),notes:idx(['notes','note','comments']),source:idx(['source']),website:idx(['website','url','web','site']),ig:idx(['instagram','insta','ig','instagram handle']),fb:idx(['facebook','fb','facebook page','facebook url']),x:idx(['x','twitter','x/twitter','twitter handle']),tps_screened:idx(['tps_screened']),tps_screen_date:idx(['tps_screen_date']),dial_ok:idx(['dial_ok']),tps_registered:idx(['tps_registered']),ctps_registered:idx(['ctps_registered']),suppressed:idx(['suppressed'])};if(col.business<0){el.textContent='No "business" column found. Required: business (optional: owner, area, phone, email, niche, notes, instagram, facebook, x).';return;}const fallbackNiche=nicheKey(loadScraper().niche||'');const arr=loadLeads();const existing=new Set(arr.map(l=>(l.business||'').toLowerCase()));let added=0,dupes=0,blank=0,screenedIn=0;for(let r=1;r<rows.length;r++){const cells=rows[r];const get=(k)=>k>-1&&cells[k]!=null?cells[k].trim():'';const applyTps=(lead)=>{if(col.tps_screened<0)return;const scr=get(col.tps_screened)==='y';const reg=get(col.tps_registered)==='y'||get(col.ctps_registered)==='y'||get(col.suppressed)==='y';lead.tpsScreened=scr?'y':'n';lead.tpsScreenDate=get(col.tps_screen_date);lead.dialOk=(col.dial_ok>-1?get(col.dial_ok)==='y':(scr&&!reg))?'y':'n';if(lead.dialOk==='y')seqRecheck(lead);if(scr)screenedIn++;};const biz=get(col.business);if(!biz){blank++;continue;}if(existing.has(biz.toLowerCase())){const ex=arr.find(x=>(x.business||'').toLowerCase()===biz.toLowerCase());if(ex&&col.tps_screened>-1){applyTps(ex);ex.updatedAt=Date.now();}dupes++;continue;}const niche=(col.niche>-1&&get(col.niche))?nicheKey(get(col.niche)):fallbackNiche;const nl={id:uid(),business:biz,owner:get(col.owner),area:get(col.area),niche,phone:get(col.phone),email:get(col.email),website:get(col.website),social:{ig:get(col.ig),fb:get(col.fb),x:get(col.x)},source:get(col.source)||'CSV Import',stage:'new',notes:get(col.notes),lastContact:'',followUp:'',nextStep:'',priority:'medium',estimatedValue:0,createdAt:Date.now()};applyTps(nl);arr.unshift(nl);existing.add(biz.toLowerCase());added++;}saveLeads(arr);renderLeadStats();renderLeads();renderOutreachQueue();el.textContent=added+' imported'+(screenedIn?' · '+screenedIn+' with TPS screening'+(dupes?' (dupes updated in place)':''):'')+(dupes?' · '+dupes+' dupe'+(dupes!==1?'s':'')+(col.tps_screened>-1?'':' skipped'):'')+(blank?' · '+blank+' blank':'')+'. Synced live.';setTimeout(()=>{el.textContent='';},6000);}catch(err){el.textContent='Could not parse CSV — check the format.';console.warn('CSV import:',err);}event.target.value='';};reader.readAsText(file);}
-function exportObsidian(){const arr=loadLeads();if(!arr.length){alert('No leads to export.');return;}const date=todayStr();const SCORE_LABEL={5:'Bad ads — easiest close',4:'Decent ads — pitch better results',3:'FB page, no ads — needs education',2:'No FB, good business',1:'Low priority'};let md='---\ndate: '+date+'\ntags: [crm-export, leads]\ntype: lead-export\n---\n\n# CRM Lead Export — '+date+'\n\n> Generated from KaizenEvol CRM. Drop individual sections into pipeline/prospects/ in Obsidian.\n\n';for(const l of arr){const score=parseInt((l.notes||'').match(/Score:\s*(\d)/)?.[1]||'0');md+='---\n\n## '+l.business+'\n\n';md+='| Field | Value |\n|---|---|\n';md+='| Score | '+(score?score+'/5 — '+(SCORE_LABEL[score]||''):'—')+'|\n';md+='| Stage | '+l.stage+' |\n';md+='| Niche | '+(l.niche||'—')+' |\n';md+='| Area | '+(l.area||'—')+' |\n';md+='| Phone | '+(l.phone||'—')+' |\n';md+='| Email | '+(l.email||'—')+' |\n';md+='| Source | '+l.source+' |\n';md+='| Added | '+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' |\n';if(l.lastContact)md+='| Last Contact | '+l.lastContact+' |\n';if(l.followUp)md+='| Follow-Up | '+l.followUp+' |\n';if(l.notes)md+='\n**Notes:** '+l.notes+'\n';md+='\n';}const blob=new Blob([md],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ke-leads-'+date+'.md';a.click();URL.revokeObjectURL(a.href);document.getElementById('importJsonStatus').textContent=arr.length+' leads exported — drop the file into your Obsidian vault.';setTimeout(()=>{document.getElementById('importJsonStatus').textContent='';},5000);}
+function importCSV(event){const file=event.target.files[0];if(!file)return;const el=document.getElementById('importJsonStatus');const reader=new FileReader();reader.onload=function(e){try{const rows=parseCSV(e.target.result).filter(r=>r.some(c=>(c||'').trim()!==''));if(rows.length<2){el.textContent='CSV is empty — needs a header row plus at least one lead.';return;}const headers=rows[0].map(h=>h.trim().toLowerCase());const idx=(names)=>{for(const n of names){const k=headers.indexOf(n);if(k>-1)return k;}return -1;};const col={business:idx(['business','business name','name','company']),owner:idx(['owner','owner name','contact','contact name','director']),area:idx(['area','city','town','location']),phone:idx(['phone','phone number','tel','telephone','mobile','number']),email:idx(['email','email address','e-mail']),niche:idx(['niche','trade','category','service']),notes:idx(['notes','note','comments']),source:idx(['source']),website:idx(['website','url','web','site']),ig:idx(['instagram','insta','ig','instagram handle']),fb:idx(['facebook','fb','facebook page','facebook url']),x:idx(['x','twitter','x/twitter','twitter handle']),followers:idx(['followers','ig followers','instagram followers']),revenue:idx(['revenue','monthly revenue','revenue band']),platform:idx(['platform','store platform','store']),tps_screened:idx(['tps_screened']),tps_screen_date:idx(['tps_screen_date']),dial_ok:idx(['dial_ok']),tps_registered:idx(['tps_registered']),ctps_registered:idx(['ctps_registered']),suppressed:idx(['suppressed'])};if(col.business<0){el.textContent='No "business" column found. Required: business (optional: owner, area, phone, email, niche, notes, instagram, facebook, x).';return;}const fallbackNiche=nicheKey(loadScraper().niche||'');const arr=loadLeads();const existing=new Set(arr.map(l=>(l.business||'').toLowerCase()));let added=0,dupes=0,blank=0,screenedIn=0;for(let r=1;r<rows.length;r++){const cells=rows[r];const get=(k)=>k>-1&&cells[k]!=null?cells[k].trim():'';const applyTps=(lead)=>{if(col.tps_screened<0)return;const scr=get(col.tps_screened)==='y';const reg=get(col.tps_registered)==='y'||get(col.ctps_registered)==='y'||get(col.suppressed)==='y';lead.tpsScreened=scr?'y':'n';lead.tpsScreenDate=get(col.tps_screen_date);lead.dialOk=(col.dial_ok>-1?get(col.dial_ok)==='y':(scr&&!reg))?'y':'n';if(lead.dialOk==='y')seqRecheck(lead);if(scr)screenedIn++;};const biz=get(col.business);if(!biz){blank++;continue;}if(existing.has(biz.toLowerCase())){const ex=arr.find(x=>(x.business||'').toLowerCase()===biz.toLowerCase());if(ex&&col.tps_screened>-1){applyTps(ex);ex.updatedAt=Date.now();}dupes++;continue;}const niche=(col.niche>-1&&get(col.niche))?nicheKey(get(col.niche)):fallbackNiche;const nl={id:uid(),business:biz,owner:get(col.owner),area:get(col.area),niche,phone:get(col.phone),email:get(col.email),website:get(col.website),social:{ig:get(col.ig),fb:get(col.fb),x:get(col.x)},source:get(col.source)||'CSV Import',stage:'new',notes:get(col.notes),lastContact:'',followUp:'',nextStep:'',priority:'medium',estimatedValue:DEFAULT_LEAD_VALUE,followers:get(col.followers),revenueBand:revBand(get(col.revenue)),platform:get(col.platform),createdAt:Date.now()};applyTps(nl);arr.unshift(nl);existing.add(biz.toLowerCase());added++;}saveLeads(arr);renderLeadStats();renderLeads();renderOutreachQueue();el.textContent=added+' imported'+(screenedIn?' · '+screenedIn+' with TPS screening'+(dupes?' (dupes updated in place)':''):'')+(dupes?' · '+dupes+' dupe'+(dupes!==1?'s':'')+(col.tps_screened>-1?'':' skipped'):'')+(blank?' · '+blank+' blank':'')+'. Synced live.';setTimeout(()=>{el.textContent='';},6000);}catch(err){el.textContent='Could not parse CSV — check the format.';console.warn('CSV import:',err);}event.target.value='';};reader.readAsText(file);}
+function exportObsidian(){const arr=loadLeads();if(!arr.length){alert('No leads to export.');return;}const date=todayStr();const SCORE_LABEL={5:'Bad ads — easiest close',4:'Decent ads — pitch better results',3:'FB page, no ads — needs education',2:'No FB, good business',1:'Low priority'};let md='---\ndate: '+date+'\ntags: [crm-export, leads]\ntype: lead-export\n---\n\n# CRM Lead Export — '+date+'\n\n> Generated from KaizenEvol CRM. Drop individual sections into pipeline/prospects/ in Obsidian.\n\n';for(const l of arr){const score=parseInt((l.notes||'').match(/Score:\s*(\d)/)?.[1]||'0');md+='---\n\n## '+l.business+'\n\n';md+='| Field | Value |\n|---|---|\n';md+='| Score | '+(score?score+'/5 — '+(SCORE_LABEL[score]||''):'—')+'|\n';md+='| Stage | '+l.stage+' |\n';md+='| Segment | '+(l.niche||'—')+' |\n';md+='| Fit | '+fitLabel(l)+' |\n';if(l.revenueBand)md+='| Revenue band | '+l.revenueBand+' |\n';if(l.estimatedValue)md+='| Est. value | £'+l.estimatedValue+'/mo |\n';md+='| Area | '+(l.area||'—')+' |\n';md+='| Phone | '+(l.phone||'—')+' |\n';md+='| Email | '+(l.email||'—')+' |\n';md+='| Source | '+l.source+' |\n';md+='| Added | '+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' |\n';if(l.lastContact)md+='| Last Contact | '+l.lastContact+' |\n';if(l.followUp)md+='| Follow-Up | '+l.followUp+' |\n';if(l.notes)md+='\n**Notes:** '+l.notes+'\n';md+='\n';}const blob=new Blob([md],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ke-leads-'+date+'.md';a.click();URL.revokeObjectURL(a.href);document.getElementById('importJsonStatus').textContent=arr.length+' leads exported — drop the file into your Obsidian vault.';setTimeout(()=>{document.getElementById('importJsonStatus').textContent='';},5000);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+// '15k', '£12,000', '10-20k', '25000' -> a revenue band key
+function revBand(raw){const v=String(raw||'').toLowerCase().replace(/[£,\s]/g,'');if(!v)return '';if(REV_ORDER.indexOf(v)>-1)return v;const m=v.match(/^(\d+(?:\.\d+)?)(k)?/);if(!m)return '';let n=parseFloat(m[1]);if(m[2])n*=1000;if(n<8000)return 'under8k';if(n<10000)return '8-10k';if(n<20000)return '10-20k';if(n<40000)return '20-40k';if(n<80000)return '40-80k';return '80k+';}
 // TPS/CTPS dial gate (Mike Ross ruling 13 Aug; ICO/PECR): cold calls only to screened, clear numbers.
 // Screening happens in the vault (tools/tps-screen.py) - the CRM stores and shows the result per record.
 function tpsInfo(l){if(!l.phone)return null;if(l.tpsScreened==='y')return l.dialOk==='y'?{cls:'tps-ok',label:'Dial OK · '+(l.tpsScreenDate||'screened'),dial:true}:{cls:'tps-no',label:'DO NOT DIAL — TPS/CTPS',dial:false};return{cls:'tps-warn',label:'Unscreened — no cold calls',dial:false};}
@@ -1987,12 +2087,49 @@ function renderSequence(){
   /* Funnel readout (Diego's spec item 4) on the stages that exist today */
   const fEl=document.getElementById('seqFunnel');
   if(fEl){const st=s=>arr.filter(l=>l.stage===s).length;
-    fEl.innerHTML='<span>New <b>'+st('new')+'</b></span><span>Contacted <b>'+st('contacted')+'</b></span><span>Call booked <b>'+st('call')+'</b></span><span>Proposal <b>'+st('proposal')+'</b></span><span>Won <b>'+st('won')+'</b></span>';}
+    const sv=s=>{const v=stageValue(arr,s);return v?' <i style="font-style:normal;opacity:.6">'+fmtGBP(v)+'</i>':'';};
+    fEl.innerHTML='<span>New <b>'+st('new')+'</b>'+sv('new')+'</span><span>Contacted <b>'+st('contacted')+'</b>'+sv('contacted')+'</span><span>Call booked <b>'+st('call')+'</b>'+sv('call')+'</span><span>Proposal <b>'+st('proposal')+'</b>'+sv('proposal')+'</span><span>Won <b>'+st('won')+'</b>'+sv('won')+'/mo</span>';}
 }
 function toggleForm(){const f=document.getElementById('addForm'),b=document.getElementById('toggleFormBtn');const open=f.style.display==='none'||!f.style.display;f.style.display=open?'block':'none';b.textContent=open?'− Cancel':'+ New Lead';}
-// Map any niche string (search term, label, or free text) to a clean niche tag
-function nicheKey(str){const t=(str||'').toLowerCase();if(t.includes('loft'))return 'Loft';if(t.includes('bathroom'))return 'Bathroom';if(t.includes('kitchen'))return 'Kitchen';return (str||'').trim();}
-function saveLead(){const biz=document.getElementById('fBusiness').value.trim();if(!biz){document.getElementById('fBusiness').focus();return;}const lead={id:uid(),business:biz,owner:document.getElementById('fOwner').value.trim(),area:document.getElementById('fArea').value.trim(),niche:document.getElementById('fNiche').value,phone:document.getElementById('fPhone').value.trim(),email:document.getElementById('fEmail').value.trim(),website:document.getElementById('fWebsite').value.trim(),social:{ig:document.getElementById('fSocialIg').value.trim(),fb:document.getElementById('fSocialFb').value.trim(),x:document.getElementById('fSocialX').value.trim()},websiteQuality:document.getElementById('fWebsiteQuality').value,source:document.getElementById('fSource').value,stage:document.getElementById('fStage').value,notes:document.getElementById('fNotes').value.trim(),lastContact:'',followUp:'',nextStep:'',priority:'medium',estimatedValue:0,createdAt:Date.now()};const arr=loadLeads();arr.unshift(lead);saveLeads(arr);['fBusiness','fOwner','fArea','fPhone','fEmail','fWebsite','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStage').value='new';document.getElementById('fWebsiteQuality').value='';document.getElementById('fNiche').value='';toggleForm();renderLeadStats();renderLeads();}
+// Map any niche string (search term, label, or free text) to a clean tag. The
+// three reno tags survive so the 2026 lead book keeps its labels; everything
+// else is kept as typed, title-cased.
+function nicheKey(str){const t=(str||'').toLowerCase();if(t.includes('loft'))return 'Loft';if(t.includes('bathroom'))return 'Bathroom';if(t.includes('kitchen'))return 'Kitchen';const v=(str||'').trim();return v?v.charAt(0).toUpperCase()+v.slice(1):'';}
+/* ── FIT — the five gates (MKT-ICP-003b, 2026-09-05) ──
+   money (£10k+/mo) · time (12 months) · repeat buyers · capacity to ship double ·
+   already spends on growth. Unknown is unknown, never a fail: the call fills it in.
+   Two hard outs sit outside the count: print-on-demand (ads cannot pay at median
+   ROAS) and stock that sits (we amplify, we do not rescue). Sell-through 'slow'
+   is the potential flag — under the floor with strong sell-through beats over it
+   with drops that sit. */
+const REV_ORDER=['under8k','8-10k','10-20k','20-40k','40-80k','80k+'];
+const DEFAULT_LEAD_VALUE=2000; /* the standard retainer, FIN-PRI-004 */
+function fitOf(l){
+  const g=[];const unk=[];
+  const rb=l.revenueBand||'';
+  if(!rb)unk.push('revenue');else g.push(REV_ORDER.indexOf(rb)>=2);
+  const mt=Number(l.monthsTrading);
+  if(!l.monthsTrading&&l.monthsTrading!==0)unk.push('months');else g.push(mt>=12);
+  ['repeatBuyers','canShipDouble','spendsOnGrowth'].forEach(k=>{if(!l[k])unk.push(k);else g.push(l[k]==='y');});
+  const passed=g.filter(Boolean).length;const failed=g.length-passed;
+  const out=l.production==='pod'?'print-on-demand':l.sellThrough==='sits'?'stock sits':rb==='under8k'?'under £8k':'';
+  const potential=l.sellThrough==='slow';
+  return {passed,failed,unknown:unk.length,out,potential,known:g.length>0||!!out||!!l.sellThrough};
+}
+function fitClass(l){const f=fitOf(l);if(f.out)return 'out';if(!f.known)return 'unknown';if(f.passed===5)return 'qualified';if(f.potential)return 'potential';if(f.passed>=3&&f.failed===0)return 'near';if(f.failed>0)return 'out';return 'unknown';}
+function fitLabel(l){const f=fitOf(l);if(f.out)return 'Out — '+f.out;if(!f.known)return 'Fit unknown';return f.passed+'/5'+(f.unknown?' · '+f.unknown+' unknown':'')+(f.potential?' · sells through':'')+(f.failed?' · '+f.failed+' failed':'');}
+function fitBadge(l){const c=fitClass(l);const cls=c==='qualified'?'q':(c==='potential'||c==='near')?'p':c==='out'?'x':'';return '<span class="fit-badge '+cls+'">'+esc(fitLabel(l))+'</span>';}
+function fmtGBP(n){return '£'+Math.round(Number(n)||0).toLocaleString('en-GB');}
+function stageValue(arr,stage){return (arr||[]).filter(l=>l.stage===stage).reduce((s,l)=>s+(Number(l.estimatedValue)||0),0);}
+let activeFitFilter='all';
+function setFitFilter(f,el){activeFitFilter=f;document.querySelectorAll('.fit-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLeads();}
+function applyFitFilter(arr){if(activeFitFilter==='all')return arr;return arr.filter(l=>fitClass(l)===activeFitFilter);}
+const FIT_FIELDS=['revenueBand','monthsTrading','repeatBuyers','canShipDouble','spendsOnGrowth','sellThrough','production','followers','dropsPerYear','platform'];
+const FIT_FORM_IDS={revenueBand:'fRevenueBand',monthsTrading:'fMonthsTrading',repeatBuyers:'fRepeatBuyers',canShipDouble:'fCanShipDouble',spendsOnGrowth:'fSpendsOnGrowth',sellThrough:'fSellThrough',production:'fProduction',followers:'fFollowers',dropsPerYear:'fDropsPerYear',platform:'fPlatform'};
+const FIT_MODAL_IDS={revenueBand:'kmRevenueBand',monthsTrading:'kmMonthsTrading',repeatBuyers:'kmRepeatBuyers',canShipDouble:'kmCanShipDouble',spendsOnGrowth:'kmSpendsOnGrowth',sellThrough:'kmSellThrough',production:'kmProduction',followers:'kmFollowers',dropsPerYear:'kmDropsPerYear',platform:'kmPlatform'};
+function _v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function readFit(map,into){FIT_FIELDS.forEach(k=>{const v=_v(map[k]);into[k]=v;});return into;}
+function saveLead(){const biz=document.getElementById('fBusiness').value.trim();if(!biz){document.getElementById('fBusiness').focus();return;}const lead={id:uid(),business:biz,owner:document.getElementById('fOwner').value.trim(),area:document.getElementById('fArea').value.trim(),niche:nicheKey(document.getElementById('fNiche').value),phone:document.getElementById('fPhone').value.trim(),email:document.getElementById('fEmail').value.trim(),website:document.getElementById('fWebsite').value.trim(),social:{ig:document.getElementById('fSocialIg').value.trim(),fb:document.getElementById('fSocialFb').value.trim(),x:document.getElementById('fSocialX').value.trim()},websiteQuality:document.getElementById('fWebsiteQuality').value,source:document.getElementById('fSource').value,stage:document.getElementById('fStage').value,notes:document.getElementById('fNotes').value.trim(),lastContact:'',followUp:'',nextStep:'',priority:'medium',estimatedValue:Number(_v('fEstValue'))||DEFAULT_LEAD_VALUE,createdAt:Date.now()};readFit(FIT_FORM_IDS,lead);const arr=loadLeads();arr.unshift(lead);saveLeads(arr);['fBusiness','fOwner','fArea','fPhone','fEmail','fWebsite','fNotes','fNiche','fEstValue'].forEach(id=>document.getElementById(id).value='');Object.values(FIT_FORM_IDS).forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('fStage').value='new';document.getElementById('fWebsiteQuality').value='';toggleForm();renderLeadStats();renderLeads();}
 function deleteLead(id){if(!confirm('Delete this lead?'))return;saveLeads(loadLeads().filter(l=>l.id!==id));renderLeadStats();renderLeads();}
 function clearDateField(btn,id,field){const inp=btn.previousElementSibling;inp.value='';updateLeadField(id,field,'');}
 function updateLeadField(id,field,val){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(l){l[field]=val;l.updatedAt=Date.now();/* screening just changed -> pull the skipped call leg back in (v3 P1 #8) */let _inj=false;if(field==='dialOk'||field==='tpsScreened')_inj=seqRecheck(l);saveLeads(arr);if(_inj){renderSequence();showToast('Call leg added — due today');}}if(field==='stage'){renderLeadStats();renderLeads();renderFollowupAlerts();if(val==='won'&&l)showWinReview(l);}if(field==='followUp')renderFollowupAlerts();}
@@ -2005,14 +2142,14 @@ function renderLeadStats(){
   /* Needs-data is a bucket Diego has to actually see, not a flag on a record. */
   {const n=loadLeads().filter(l=>l.needsData==='y').length;const p=document.getElementById('pillNeedsData');
    if(p){p.textContent='Needs data / screening'+(n?' ('+n+')':'');p.style.display=n?'':'none';}}
-const arr=loadLeads();const c={new:0,contacted:0,call:0,proposal:0,won:0,lost:0};arr.forEach(l=>{if(c[l.stage]!==undefined)c[l.stage]++;});const total=arr.length;const conv=total>0?Math.round(c.won/total*100):0;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+total+'</div><div class="stat-s">All time</div></div><div class="stat-card"><div class="stat-l">New</div><div class="stat-v">'+c.new+'</div><div class="stat-s">Awaiting contact</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+c.contacted+'</div><div class="stat-s">In conversation</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">'+c.call+'</div><div class="stat-s">Discovery scheduled</div></div><div class="stat-card'+(c.won>0?' highlight':'')+'"><div class="stat-l">Won</div><div class="stat-v">'+c.won+'</div><div class="stat-s">Closed clients</div></div><div class="stat-card"><div class="stat-l">Conv. Rate</div><div class="stat-v">'+conv+'%</div><div class="stat-s">Won / Total</div></div>';renderSequence();}
-function renderLeads(){flushNoteSaves();if(viewMode==='kanban'){renderKanban();return;}const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(activeScoreFilter>0)arr=arr.filter(l=>getScore(l.notes)===activeScoreFilter);arr=applySmartFilter(arr);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone+(l.niche||'')).toLowerCase().includes(search));if(sort==='updated')arr=[...arr].sort((a,b)=>(b.updatedAt||b.createdAt)-(a.updatedAt||a.createdAt));else if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});else arr=[...arr].sort((a,b)=>b.createdAt-a.createdAt);const el=document.getElementById('leadsList');const countEl=document.getElementById('leadsCount');if(countEl)countEl.textContent=arr.length+' lead'+(arr.length!==1?'s':'');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>'<div class="lead-card"><div class="lead-top"><div><div class="lead-name">'+(l.website?'<a href="'+esc(l.website.startsWith('http')?l.website:'https://'+l.website)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--purple)" title="'+esc(l.website)+'">'+esc(l.business||l.name||'')+'</a>':esc(l.business||l.name||''))+'</div></div><div class="lead-right"><span class="stage-badge '+(STAGE_CLS[l.stage]||'')+'">'+(STAGE_LABEL[l.stage]||l.stage)+'</span><select class="stage-sel" onchange="updateLeadField(\''+l.id+'\',\'stage\',this.value)">'+Object.entries(STAGE_LABEL).map(([v,lab])=>'<option value="'+v+'"'+(l.stage===v?' selected':'')+'>'+lab+'</option>').join('')+'</select><button class="lead-del" onclick="deleteLead(\''+l.id+'\')">×</button></div></div><div class="lead-meta"><div class="lm"><div class="lm-l">Owner / Director</div><div class="lm-v"><input type="text" class="lm-inp" value="'+esc(l.owner||'')+'" placeholder="Add owner name" onblur="updateLeadField(\''+l.id+'\',\'owner\',this.value)" /></div></div>'+(l.niche?'<div class="lm"><div class="lm-l">Niche</div><div class="lm-v"><span class="source-badge">'+esc(l.niche)+'</span></div></div>':'')+(l.area?'<div class="lm"><div class="lm-l">Area</div><div class="lm-v">'+esc(l.area)+'</div></div>':'')+(l.phone?(function(){const t=tpsInfo(l);return'<div class="lm"><div class="lm-l">Phone</div><div class="lm-v">'+(t.dial?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':esc(l.phone))+'</div></div><div class="lm"><div class="lm-l">Dial status</div><div class="lm-v"><span class="tps-badge '+t.cls+'">'+t.label+'</span></div></div>';})():'')+ownerHtml(l)+(l.email?'<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div></div>':'')+''+(l.websiteQuality?'<div class="lm"><div class="lm-l">Site Quality</div><div class="lm-v"><span class="wq-badge wq-'+esc(l.websiteQuality)+'">'+(l.websiteQuality==='ugly'?'Ugly — revamp':l.websiteQuality==='ok'?'OK':'Modern')+'</span></div></div>':'')+'<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">'+esc(l.source)+'</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">'+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="'+esc(l.lastContact)+'" onchange="updateLeadField(\''+l.id+'\',\'lastContact\',this.value)" /><button class="ld-clr" title="Clear" onclick="clearDateField(this,\''+l.id+'\',\'lastContact\')">×</button></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="'+esc(l.followUp)+'" onchange="updateLeadField(\''+l.id+'\',\'followUp\',this.value)" /><button class="ld-clr" title="Clear" onclick="clearDateField(this,\''+l.id+'\',\'followUp\')">×</button></div></div>'+seqRowHtml(l)+'<div class="lead-nextstep-row"><span class="ns-label">Next step</span><input type="text" class="ns-inp" value="'+esc(l.nextStep||'')+'" placeholder="What\'s the next action?" onblur="updateLeadField(\''+l.id+'\',\'nextStep\',this.value)" /></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_'+l.id+'" placeholder="Notes..." oninput="scheduleLeadNoteSave(\''+l.id+'\')" onfocus="_notesFocused=true" onblur="_notesFocused=false;saveLeadNotes(\''+l.id+'\')">'+esc(l.notes)+'</textarea><span class="notes-saved-ind" id="lnb_'+l.id+'"></span></div>'+((['contacted','lost'].includes(l.stage))?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;"><button class="re-engage-btn" onclick="showReactivate(\''+l.id+'\')">Re-engage →</button><span style="font-size:11px;color:var(--muted);">Pre-merged WhatsApp &amp; phone scripts</span></div>':'')+'</div>').join('');}
+const arr=loadLeads();const c={new:0,contacted:0,call:0,proposal:0,won:0,lost:0};arr.forEach(l=>{if(c[l.stage]!==undefined)c[l.stage]++;});const total=arr.length;const conv=total>0?Math.round(c.won/total*100):0;const sub=(s,txt)=>{const v=stageValue(arr,s);return v?fmtGBP(v)+'/mo in play':txt;};document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+total+'</div><div class="stat-s">'+arr.filter(l=>fitClass(l)==='qualified').length+' qualified 5/5</div></div><div class="stat-card"><div class="stat-l">New</div><div class="stat-v">'+c.new+'</div><div class="stat-s">Awaiting contact</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+c.contacted+'</div><div class="stat-s">'+sub('contacted','In conversation')+'</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">'+c.call+'</div><div class="stat-s">'+sub('call','Discovery scheduled')+'</div></div><div class="stat-card'+(c.won>0?' highlight':'')+'"><div class="stat-l">Won</div><div class="stat-v">'+c.won+'</div><div class="stat-s">'+sub('won','Closed clients')+'</div></div><div class="stat-card"><div class="stat-l">Conv. Rate</div><div class="stat-v">'+conv+'%</div><div class="stat-s">Won / Total</div></div>';renderSequence();}
+function renderLeads(){flushNoteSaves();if(viewMode==='kanban'){renderKanban();return;}const search=document.getElementById('searchInp').value.toLowerCase();const sort=document.getElementById('sortSel').value;let arr=loadLeads();if(activeFilter!=='all')arr=arr.filter(l=>l.stage===activeFilter);if(activeScoreFilter>0)arr=arr.filter(l=>getScore(l.notes)===activeScoreFilter);arr=applyFitFilter(applySmartFilter(arr));if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone+(l.niche||'')).toLowerCase().includes(search));if(sort==='updated')arr=[...arr].sort((a,b)=>(b.updatedAt||b.createdAt)-(a.updatedAt||a.createdAt));else if(sort==='oldest')arr=[...arr].sort((a,b)=>a.createdAt-b.createdAt);else if(sort==='name')arr=[...arr].sort((a,b)=>a.business.localeCompare(b.business));else if(sort==='followup')arr=[...arr].sort((a,b)=>{if(!a.followUp)return 1;if(!b.followUp)return -1;return a.followUp.localeCompare(b.followUp);});else arr=[...arr].sort((a,b)=>b.createdAt-a.createdAt);const el=document.getElementById('leadsList');const countEl=document.getElementById('leadsCount');if(countEl)countEl.textContent=arr.length+' lead'+(arr.length!==1?'s':'');if(!arr.length){el.innerHTML='<div class="empty-msg">No leads found.</div>';return;}el.innerHTML=arr.map(l=>'<div class="lead-card"><div class="lead-top"><div><div class="lead-name">'+(l.website?'<a href="'+esc(l.website.startsWith('http')?l.website:'https://'+l.website)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--purple)" title="'+esc(l.website)+'">'+esc(l.business||l.name||'')+'</a>':esc(l.business||l.name||''))+'</div></div><div class="lead-right"><span class="stage-badge '+(STAGE_CLS[l.stage]||'')+'">'+(STAGE_LABEL[l.stage]||l.stage)+'</span><select class="stage-sel" onchange="updateLeadField(\''+l.id+'\',\'stage\',this.value)">'+Object.entries(STAGE_LABEL).map(([v,lab])=>'<option value="'+v+'"'+(l.stage===v?' selected':'')+'>'+lab+'</option>').join('')+'</select><button class="lead-del" onclick="deleteLead(\''+l.id+'\')">×</button></div></div><div class="lead-meta"><div class="lm"><div class="lm-l">Founder / Owner</div><div class="lm-v"><input type="text" class="lm-inp" value="'+esc(l.owner||'')+'" placeholder="Add founder name" onblur="updateLeadField(\''+l.id+'\',\'owner\',this.value)" /></div></div>'+(l.niche?'<div class="lm"><div class="lm-l">Segment</div><div class="lm-v"><span class="source-badge">'+esc(l.niche)+'</span></div></div>':'')+'<div class="lm"><div class="lm-l">Fit</div><div class="lm-v">'+fitBadge(l)+'</div></div>'+(l.revenueBand?'<div class="lm"><div class="lm-l">Revenue</div><div class="lm-v">'+esc(({'under8k':'< £8k','8-10k':'£8–10k','10-20k':'£10–20k','20-40k':'£20–40k','40-80k':'£40–80k','80k+':'£80k+'})[l.revenueBand]||l.revenueBand)+'/mo</div></div>':'')+(l.followers?'<div class="lm"><div class="lm-l">Followers</div><div class="lm-v">'+Number(l.followers).toLocaleString('en-GB')+'</div></div>':'')+(l.estimatedValue?'<div class="lm"><div class="lm-l">Est. value</div><div class="lm-v">'+fmtGBP(l.estimatedValue)+'/mo</div></div>':'')+(l.area?'<div class="lm"><div class="lm-l">City</div><div class="lm-v">'+esc(l.area)+'</div></div>':'')+(l.phone?(function(){const t=tpsInfo(l);return'<div class="lm"><div class="lm-l">Phone</div><div class="lm-v">'+(t.dial?'<a href="tel:'+esc(l.phone)+'">'+esc(l.phone)+'</a>':esc(l.phone))+'</div></div><div class="lm"><div class="lm-l">Dial status</div><div class="lm-v"><span class="tps-badge '+t.cls+'">'+t.label+'</span></div></div>';})():'')+ownerHtml(l)+(l.email?'<div class="lm"><div class="lm-l">Email</div><div class="lm-v"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div></div>':'')+''+(l.websiteQuality?'<div class="lm"><div class="lm-l">Site Quality</div><div class="lm-v"><span class="wq-badge wq-'+esc(l.websiteQuality)+'">'+(l.websiteQuality==='ugly'?'Ugly — revamp':l.websiteQuality==='ok'?'OK':'Modern')+'</span></div></div>':'')+'<div class="lm"><div class="lm-l">Source</div><div class="lm-v"><span class="source-badge">'+esc(l.source)+'</span></div></div><div class="lm"><div class="lm-l">Added</div><div class="lm-v">'+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div></div></div><div class="lead-dates"><div class="ld"><span class="ld-l">Last contact:</span><input type="date" class="ld-inp" value="'+esc(l.lastContact)+'" onchange="updateLeadField(\''+l.id+'\',\'lastContact\',this.value)" /><button class="ld-clr" title="Clear" onclick="clearDateField(this,\''+l.id+'\',\'lastContact\')">×</button></div><div class="ld"><span class="ld-l">Follow-up:</span><input type="date" class="ld-inp" value="'+esc(l.followUp)+'" onchange="updateLeadField(\''+l.id+'\',\'followUp\',this.value)" /><button class="ld-clr" title="Clear" onclick="clearDateField(this,\''+l.id+'\',\'followUp\')">×</button></div></div>'+seqRowHtml(l)+'<div class="lead-nextstep-row"><span class="ns-label">Next step</span><input type="text" class="ns-inp" value="'+esc(l.nextStep||'')+'" placeholder="What\'s the next action?" onblur="updateLeadField(\''+l.id+'\',\'nextStep\',this.value)" /></div><div class="lead-notes-row"><textarea class="lead-notes-inp" id="ln_'+l.id+'" placeholder="Notes..." oninput="scheduleLeadNoteSave(\''+l.id+'\')" onfocus="_notesFocused=true" onblur="_notesFocused=false;saveLeadNotes(\''+l.id+'\')">'+esc(l.notes)+'</textarea><span class="notes-saved-ind" id="lnb_'+l.id+'"></span></div>'+((['contacted','lost'].includes(l.stage))?'<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;"><button class="re-engage-btn" onclick="showReactivate(\''+l.id+'\')">Re-engage →</button><span style="font-size:11px;color:var(--muted);">Pre-merged WhatsApp &amp; phone scripts</span></div>':'')+'</div>').join('');}
 
 /* ── EMAIL OUTREACH (manual — Diego sends from his own inbox) ── */
 function loadEmail(){try{return JSON.parse(localStorage.getItem(EMAIL_KEY)||'{}')}catch(e){return{}}}
 function saveEmail(e){localStorage.setItem(EMAIL_KEY,JSON.stringify(e));_cloudPush(EMAIL_KEY,e);}
 const EMAIL_STATUS=[{v:'not_contacted',label:'Not contacted',cls:'es-none'},{v:'contacted',label:'Contacted',cls:'es-sent'},{v:'replied',label:'Replied',cls:'es-reply'}];
-const OQ_COLORS=['#8B5CF6','#38bdf8','#f472b6','#4ade80','#f59e0b','#f87171'];
+const OQ_COLORS=['#8A857C','#6E6A63','#D8D4CC','#23211E','#8A857C','#6E6A63'];
 function emailStatusOf(l){return l.emailStatus||'not_contacted';}
 function emailStatusMeta(v){return EMAIL_STATUS.find(s=>s.v===v)||EMAIL_STATUS[0];}
 function setEmailStatus(id,val){const arr=loadLeads();const l=arr.find(x=>x.id===id);if(!l)return;l.emailStatus=val;if(val!=='not_contacted'&&!l.lastContact)l.lastContact=todayStr();l.updatedAt=Date.now();saveLeads(arr);renderOutreachQueue();renderLeads();}
@@ -2023,7 +2160,11 @@ function initEmail(){renderOutreachQueue();}
 /* ── FOLLOW-UP ALERTS ── */
 function renderFollowupAlerts(){const today=todayStr();const arr=loadLeads().filter(l=>l.followUp&&l.followUp<=today&&l.stage!=='won'&&l.stage!=='lost'&&!l.doNotContact);const el=document.getElementById('fuAlerts');if(!el)return;if(!arr.length){el.innerHTML='';return;}el.innerHTML='<div class="fu-alerts"><div class="fu-hdr"><span class="fu-ttl">&#9873; '+arr.length+' Follow-up'+(arr.length!==1?'s':'')+' due</span></div><div class="fu-items">'+arr.map(l=>{const days=Math.round((new Date(today)-new Date(l.followUp))/86400000);const label=days===0?'Today':days+'d overdue';return'<div class="fu-item"><span class="fu-name">'+esc(l.business)+'</span><span class="fu-due">'+label+'</span>'+(l.phone&&tpsInfo(l).dial?'<a href="tel:'+esc(l.phone)+'" class="fu-btn call">Call</a>':'')+'<button class="fu-btn" onclick="showReactivate(\''+l.id+'\')">Templates</button></div>';}).join('')+'</div></div>';}
 /* ── REACTIVATION MODAL ── */
-const REACT_TMPLS=[{name:'WhatsApp — Check-in',body:"Hi {{first_name}}, Rahaid here from KaizenEvol.\n\nJust checking in — are you still thinking about growing the business? We run the ads and an AI front office that answers your calls and messages 24/7, so nothing gets missed while you're on site.\n\nIf the timing's better now I'd love to show you what that looks like for {{business_name}}.\n\nReply here and I'll find a time that suits you.\n\n— Rahaid"},{name:'WhatsApp — Final Bump',body:"Hi {{first_name}},\n\nLast one from me — promise.\n\nWe're still only taking one specialist per niche per area, and {{area}} is open. No shared leads, no referral dependency — and the website is free while you're on a retainer.\n\nIf the timing's right, happy to walk you through it.\n\nReply here and I'll find a time that suits you.\n\n— Rahaid"},{name:'Phone Script',body:"Opening:\n\"Hi, is this {{first_name}} at {{business_name}}? It's Rahaid from KaizenEvol — we spoke a while back about the paid ads system for home renovation specialists.\"\n\nBridge:\n\"Just wanted to check in — has anything changed on your end? We're still only taking one specialist per niche per area, and {{area}} is open.\"\n\nClose:\n\"If the timing's right I'd love to book a quick 15-minute call. Are you free Thursday or Friday?\""}];
+/* Re-engage scripts, creative lane (2026-09-06, MKT-ICP-003 / MKT-SOL-001 / FIN-PRI-004).
+   Sales scripts are Diego's field (CRITICAL_FACTS) — these are the CRM's stock copy,
+   his to rewrite. No claim in them we cannot back: no case studies, no "we've done
+   this for brands like yours", no guarantee. */
+const REACT_TMPLS=[{name:'WhatsApp — Check-in',body:"Hi {{first_name}}, Rahaid here from KaizenEvol.\n\nJust checking in — how did the last {{business_name}} drop go? Did it sell through?\n\nWe run the content, the ads and the email/SMS around your drops, one fee, and drop one is measurement before anything scales.\n\nIf the timing's better now I'd like to show you what that looks like for your next one.\n\nReply here and I'll find a time that suits you.\n\n— Rahaid"},{name:'WhatsApp — Final Bump',body:"Hi {{first_name}},\n\nLast one from me — promise.\n\nYou've already done the hard part — you made something real that people buy. The bit that's missing is the system behind it, and that's what we build.\n\nWe're taking five founding brands at the founding rate. If the timing's right, happy to walk you through it.\n\n— Rahaid"},{name:'Phone Script',body:"Opening:\n\"Hi, is this {{first_name}} from {{business_name}}? It's Rahaid from KaizenEvol — we spoke a while back about running the content and ads around your drops.\"\n\nBridge:\n\"Just checking in — has anything changed since? How did the last drop go — did it sell through, or is there stock left?\"\n\nClose:\n\"If the timing's right I'd like to book a quick 15-minute call. Are you free Thursday or Friday?\""}];
 let _reactId=null;
 function showReactivate(id){_reactId=id;const lead=loadLeads().find(l=>l.id===id);if(!lead)return;const fn=lead.owner?lead.owner.trim().split(/\s+/)[0]:'there';document.getElementById('reactModalName').textContent=lead.business;document.getElementById('reactTmplContainer').innerHTML=REACT_TMPLS.map((t,i)=>{const body=t.body.replace(/\{\{first_name\}\}/g,fn).replace(/\{\{business_name\}\}/g,lead.business||'').replace(/\{\{area\}\}/g,lead.area||'your area');return'<div class="rt-card"><div class="rt-top"><span class="rt-name">'+esc(t.name)+'</span><button class="rt-copy" onclick="copyRt('+i+',this)">Copy</button></div><div class="rt-body" id="rtb'+i+'">'+esc(body)+'</div></div>';}).join('');document.getElementById('reactModal').classList.add('open');}
 function closeReactivate(){document.getElementById('reactModal').classList.remove('open');_reactId=null;}
@@ -2032,24 +2173,24 @@ function copyRt(i,btn){const el=document.getElementById('rtb'+i);if(!el)return;n
 function setScoreFilter(score,el){activeScoreFilter=score;document.querySelectorAll('.score-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLeads();}
 function getScore(notes){const m=(notes||'').match(/Score:\s*(\d)/);return m?parseInt(m[1]):0;}
 /* ── WIN REVIEW ── */
-function showWinReview(lead){const fn=lead.owner?lead.owner.trim().split(/\s+/)[0]:'there';const msg='Hi '+fn+", it's Rahaid from KaizenEvol.\n\nReally pleased with how the campaign's going — would you mind leaving us a quick Google review? Takes about 2 minutes and genuinely helps.\n\n[Paste your Google review link here]\n\nThanks a lot, appreciate it.\n\n— Rahaid";const strip=document.getElementById('wonStrip');const txt=document.getElementById('wonStripBody');if(strip&&txt){txt.textContent=msg;strip.classList.add('show');strip.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+function showWinReview(lead){const fn=lead.owner?lead.owner.trim().split(/\s+/)[0]:'there';const msg='Hi '+fn+", it's Rahaid from KaizenEvol.\n\nReally pleased with how the drop went — would you mind a two-line note on working with us that I can quote, with your name and the brand? A Google review works too if that's easier.\n\n[Paste your Google review link here]\n\nThanks a lot, appreciate it.\n\n— Rahaid";const strip=document.getElementById('wonStrip');const txt=document.getElementById('wonStripBody');if(strip&&txt){txt.textContent=msg;strip.classList.add('show');strip.scrollIntoView({behavior:'smooth',block:'nearest'});}}
 function copyWonReview(e){const el=document.getElementById('wonStripBody');if(!el)return;navigator.clipboard.writeText(el.textContent).catch(()=>{const ta=document.createElement('textarea');ta.value=el.textContent;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});const btn=e.target;btn.textContent='Copied ✓';setTimeout(()=>{btn.textContent='Copy';},1800);}
 function purgeUSLeads(){const arr=loadLeads();const clean=arr.filter(l=>{const p=(l.phone||'').trim();if(!p)return true;const pclean=p.replace(/[^\d+]/g,'').replace(/^\+/,'+');return /^(\+44|0[1-9])/.test(pclean);});if(clean.length<arr.length){saveLeads(clean);console.log('Purged '+(arr.length-clean.length)+' non-UK phone leads');}}
 /* ── KANBAN ── */
-const STAGE_COLORS={new:'#94a3b8',contacted:'#3b82f6',call:'#a855f7',proposal:'#f59e0b',won:'#22c55e',lost:'#ef4444'};
+const STAGE_COLORS={new:'#8A857C',contacted:'#D8D4CC',call:'#D8D4CC',proposal:'#f59e0b',won:'#22c55e',lost:'#ef4444'};
 function setViewMode(mode){viewMode=mode;document.getElementById('vt-list').classList.toggle('active',mode==='list');document.getElementById('vt-kanban').classList.toggle('active',mode==='kanban');document.getElementById('leadsList').style.display=mode==='list'?'':'none';document.getElementById('kanbanBoard').style.display=mode==='kanban'?'':'none';renderLeads();}
 function setSmartFilter(filter,el){activeSmartFilter=filter;document.querySelectorAll('.smart-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderLeads();}
 function applySmartFilter(arr){const today=todayStr();if(activeSmartFilter==='today')return arr.filter(l=>l.followUp===today);if(activeSmartFilter==='stale'){const cutoff=addDaysStr(-7);return arr.filter(l=>l.stage!=='won'&&l.stage!=='lost'&&(!l.lastContact||l.lastContact<cutoff));}if(activeSmartFilter==='needsdata')return arr.filter(l=>l.needsData==='y');if(activeSmartFilter==='revamp')return arr.filter(l=>l.websiteQuality==='ugly');return arr;}
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_toastTimer);_toastTimer=setTimeout(()=>el.classList.remove('show'),2200);}
-function renderKanban(){const search=document.getElementById('searchInp').value.toLowerCase();let arr=loadLeads();if(activeScoreFilter>0)arr=arr.filter(l=>getScore(l.notes)===activeScoreFilter);arr=applySmartFilter(arr);if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone+(l.niche||'')).toLowerCase().includes(search));const wrap=document.getElementById('kanbanWrap');const countEl=document.getElementById('leadsCount');if(countEl)countEl.textContent=arr.length+' lead'+(arr.length!==1?'s':'');wrap.innerHTML=Object.entries(STAGE_LABEL).map(([stage,label])=>{const cards=arr.filter(l=>l.stage===stage);const color=STAGE_COLORS[stage]||'#7a6fa8';const cardsHtml=cards.map(l=>{const prioCls='prio-'+(l.priority||'medium');const meta=[l.area,l.phone].filter(Boolean).join(' · ');return'<div class="kb-card" draggable="true" data-id="'+l.id+'" onclick="openKanbanModal(\''+l.id+'\')" ondragstart="handleDragStart(event,\''+l.id+'\')" ondragend="handleDragEnd(event)"><div class="kb-card-top"><div class="kb-name">'+esc(l.business||l.name||'')+'</div><div class="prio-dot '+prioCls+'"></div></div>'+(meta?'<div class="kb-meta">'+esc(meta)+'</div>':'')+(l.nextStep?'<div class="kb-meta" style="color:var(--purple);font-style:italic;margin-top:3px">'+esc(l.nextStep)+'</div>':'')+'</div>';}).join('');return'<div class="kb-col"><div class="kb-col-hdr" style="background:'+color+'20;color:'+color+';border:1.5px solid '+color+'40;border-bottom:none;"><span>'+label+'</span><span class="kb-col-count">'+cards.length+'</span></div><div class="kb-cards" data-stage="'+stage+'" ondragover="handleDragOver(event)" ondrop="handleDrop(event,\''+stage+'\')" ondragleave="handleDragLeave(event)">'+(cardsHtml||'<div style="height:40px"></div>')+'</div></div>';}).join('');}
+function renderKanban(){const search=document.getElementById('searchInp').value.toLowerCase();let arr=loadLeads();if(activeScoreFilter>0)arr=arr.filter(l=>getScore(l.notes)===activeScoreFilter);arr=applyFitFilter(applySmartFilter(arr));if(search)arr=arr.filter(l=>(l.business+l.owner+l.area+l.email+l.phone+(l.niche||'')).toLowerCase().includes(search));const wrap=document.getElementById('kanbanWrap');const countEl=document.getElementById('leadsCount');if(countEl)countEl.textContent=arr.length+' lead'+(arr.length!==1?'s':'');wrap.innerHTML=Object.entries(STAGE_LABEL).map(([stage,label])=>{const cards=arr.filter(l=>l.stage===stage);const color=STAGE_COLORS[stage]||'#8A857C';const cardsHtml=cards.map(l=>{const prioCls='prio-'+(l.priority||'medium');const meta=[l.niche,l.area,l.estimatedValue?fmtGBP(l.estimatedValue):''].filter(Boolean).join(' · ');return'<div class="kb-card" draggable="true" data-id="'+l.id+'" onclick="openKanbanModal(\''+l.id+'\')" ondragstart="handleDragStart(event,\''+l.id+'\')" ondragend="handleDragEnd(event)"><div class="kb-card-top"><div class="kb-name">'+esc(l.business||l.name||'')+'</div><div class="prio-dot '+prioCls+'"></div></div>'+(meta?'<div class="kb-meta">'+esc(meta)+'</div>':'')+(l.nextStep?'<div class="kb-meta" style="color:var(--purple);font-style:italic;margin-top:3px">'+esc(l.nextStep)+'</div>':'')+'</div>';}).join('');const colVal=cards.reduce((s,l)=>s+(Number(l.estimatedValue)||0),0);return'<div class="kb-col"><div class="kb-col-hdr" style="background:'+color+'20;color:'+color+';border:1.5px solid '+color+'40;border-bottom:none;"><span>'+label+'</span><span><span class="kb-col-val">'+(colVal?fmtGBP(colVal)+'/mo · ':'')+'</span><span class="kb-col-count">'+cards.length+'</span></span></div><div class="kb-cards" data-stage="'+stage+'" ondragover="handleDragOver(event)" ondrop="handleDrop(event,\''+stage+'\')" ondragleave="handleDragLeave(event)">'+(cardsHtml||'<div style="height:40px"></div>')+'</div></div>';}).join('');}
 function handleDragStart(e,id){_dragId=id;setTimeout(()=>{const c=document.querySelector('[data-id="'+id+'"]');if(c)c.classList.add('dragging');},0);e.dataTransfer.effectAllowed='move';}
 function handleDragEnd(){_dragId=null;document.querySelectorAll('.kb-card').forEach(c=>c.classList.remove('dragging'));document.querySelectorAll('.kb-cards').forEach(c=>c.classList.remove('drag-over'));}
 function handleDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over');}
 function handleDragLeave(e){e.currentTarget.classList.remove('drag-over');}
 function handleDrop(e,stage){e.preventDefault();e.currentTarget.classList.remove('drag-over');if(!_dragId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_dragId);if(l&&l.stage!==stage){l.stage=stage;l.updatedAt=Date.now();saveLeads(arr);renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Moved '+l.business+' to '+STAGE_LABEL[stage]);if(stage==='won')showWinReview(l);}_dragId=null;}
-function openKanbanModal(id){_kModalId=id;const l=loadLeads().find(x=>x.id===id);if(!l)return;document.getElementById('kmTitle').textContent=l.business;const _t=l.phone?tpsInfo(l):null;const info=[l.phone?'📞 '+l.phone+(_t?' — '+_t.label:''):'',l.email?'✉ '+l.email:'',l.area?'📍 '+l.area:'',l.website?'🌐 '+l.website:'',leadSocials(l).map(sn=>sn.short).join('/')].filter(Boolean).join('  ·  ');document.getElementById('kmInfo').textContent=info||'No contact details on file.';const _soc=l.social||{};document.getElementById('kmSocialIg').value=_soc.ig||'';document.getElementById('kmSocialFb').value=_soc.fb||'';document.getElementById('kmSocialX').value=_soc.x||'';document.getElementById('kmStage').value=l.stage||'new';document.getElementById('kmPriority').value=l.priority||'medium';document.getElementById('kmEntity').value=l.entityType||'';document.getElementById('kmParkUntil').value=l.parkUntil||'';document.getElementById('kmLastContact').value=l.lastContact||'';document.getElementById('kmFollowUp').value=l.followUp||'';document.getElementById('kmNextStep').value=l.nextStep||'';document.getElementById('kmEstValue').value=l.estimatedValue||'';document.getElementById('kmWebsite').value=l.website||'';document.getElementById('kmWebsiteQuality').value=l.websiteQuality||'';document.getElementById('kmNotes').value=l.notes||'';document.getElementById('kModal').classList.add('open');}
+function openKanbanModal(id){_kModalId=id;const l=loadLeads().find(x=>x.id===id);if(!l)return;document.getElementById('kmTitle').textContent=l.business;const _t=l.phone?tpsInfo(l):null;const info=[l.phone?'📞 '+l.phone+(_t?' — '+_t.label:''):'',l.email?'✉ '+l.email:'',l.area?'📍 '+l.area:'',l.website?'🌐 '+l.website:'',leadSocials(l).map(sn=>sn.short).join('/')].filter(Boolean).join('  ·  ');document.getElementById('kmInfo').textContent=info||'No contact details on file.';const _soc=l.social||{};document.getElementById('kmSocialIg').value=_soc.ig||'';document.getElementById('kmSocialFb').value=_soc.fb||'';document.getElementById('kmSocialX').value=_soc.x||'';document.getElementById('kmStage').value=l.stage||'new';document.getElementById('kmPriority').value=l.priority||'medium';document.getElementById('kmEntity').value=l.entityType||'';document.getElementById('kmParkUntil').value=l.parkUntil||'';document.getElementById('kmLastContact').value=l.lastContact||'';document.getElementById('kmFollowUp').value=l.followUp||'';document.getElementById('kmNextStep').value=l.nextStep||'';document.getElementById('kmEstValue').value=l.estimatedValue||'';document.getElementById('kmWebsite').value=l.website||'';document.getElementById('kmWebsiteQuality').value=l.websiteQuality||'';document.getElementById('kmNotes').value=l.notes||'';document.getElementById('kmNiche').value=l.niche||'';FIT_FIELDS.forEach(k=>{const e=document.getElementById(FIT_MODAL_IDS[k]);if(e)e.value=l[k]==null?'':l[k];});document.getElementById('kmFit').innerHTML=fitBadge(l);document.getElementById('kModal').classList.add('open');}
 function closeKanbanModal(){document.getElementById('kModal').classList.remove('open');_kModalId=null;}
-function saveKanbanModal(){if(!_kModalId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_kModalId);if(!l)return;const oldStage=l.stage;l.stage=document.getElementById('kmStage').value;l.priority=document.getElementById('kmPriority').value;l.entityType=document.getElementById('kmEntity').value;l.parkUntil=document.getElementById('kmParkUntil').value;l.lastContact=document.getElementById('kmLastContact').value;l.followUp=document.getElementById('kmFollowUp').value;l.nextStep=document.getElementById('kmNextStep').value.trim();l.social={ig:document.getElementById('kmSocialIg').value.trim(),fb:document.getElementById('kmSocialFb').value.trim(),x:document.getElementById('kmSocialX').value.trim()};l.estimatedValue=Number(document.getElementById('kmEstValue').value)||0;l.website=document.getElementById('kmWebsite').value.trim();l.websiteQuality=document.getElementById('kmWebsiteQuality').value;l.notes=document.getElementById('kmNotes').value;l.updatedAt=Date.now();saveLeads(arr);closeKanbanModal();renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Saved ✓');if(l.stage==='won'&&oldStage!=='won')showWinReview(l);}
+function saveKanbanModal(){if(!_kModalId)return;const arr=loadLeads();const l=arr.find(x=>x.id===_kModalId);if(!l)return;const oldStage=l.stage;l.stage=document.getElementById('kmStage').value;l.priority=document.getElementById('kmPriority').value;l.entityType=document.getElementById('kmEntity').value;l.parkUntil=document.getElementById('kmParkUntil').value;l.lastContact=document.getElementById('kmLastContact').value;l.followUp=document.getElementById('kmFollowUp').value;l.nextStep=document.getElementById('kmNextStep').value.trim();l.social={ig:document.getElementById('kmSocialIg').value.trim(),fb:document.getElementById('kmSocialFb').value.trim(),x:document.getElementById('kmSocialX').value.trim()};l.estimatedValue=Number(document.getElementById('kmEstValue').value)||0;l.website=document.getElementById('kmWebsite').value.trim();l.websiteQuality=document.getElementById('kmWebsiteQuality').value;l.notes=document.getElementById('kmNotes').value;l.niche=nicheKey(document.getElementById('kmNiche').value);readFit(FIT_MODAL_IDS,l);l.updatedAt=Date.now();saveLeads(arr);closeKanbanModal();renderLeads();renderLeadStats();renderFollowupAlerts();showToast('Saved ✓');if(l.stage==='won'&&oldStage!=='won')showWinReview(l);}
 function init(){
   purgeUSLeads();
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
@@ -2058,6 +2199,7 @@ function init(){
   renderClientChecklist(d);
   renderClients(d);
   renderCommission(d);
+  renderGrowth(d);
   initScraper();
   renderLeadStats();
   renderLeads();
