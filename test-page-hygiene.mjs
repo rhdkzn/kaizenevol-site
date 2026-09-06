@@ -53,8 +53,7 @@ const check = (n, pass, d) => r.push([n, pass, d])
  * this suite noisy enough to start being skipped. */
 const PAGES = (process.env.PAGES || [
   'index.html','about.html','contact.html','apply.html','booked.html','privacy.html','404.html',
-  'kaizendesk.html','kaizenforge.html','kaizendesk/compare.html',
-    ].join(',')).split(',')
+      ].join(',')).split(',')
 
 /* Widths that actually matter. 375 is the narrowest phone still in real use;
  * 390 is the modern default. Desktop is included because an overflow there is

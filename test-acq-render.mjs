@@ -35,7 +35,7 @@ const browser = await chromium.launch(existsSync(pw) ? { executablePath: pw } : 
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
-const PAGES = (process.env.PAGES || 'index.html,kaizendesk.html,kaizenforge.html').split(',')
+const PAGES = (process.env.PAGES || 'index.html').split(',')
 
 /* The growth step is CALL-ONLY (FIN-PRI-004, Rahaid 2026-09-04): the site reads as one
    monthly fee, price on the first call, and Diego explains the step. About kept a "Paid
@@ -161,7 +161,7 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
   /* "The System" left the nav on 2026-08-27 (it pointed at the page it sat on), so a
      site-wide link check no longer means anything. What must hold is that each service
      page still routes back to the mechanism from the section that explains its stage. */
-  const ROUTES_BACK = ['kaizendesk.html', 'kaizenforge.html']
+  const ROUTES_BACK = []
   if (ROUTES_BACK.includes(PAGE))
     check(`${label}: routes back to the system`, /index\.html#the-system/.test(await page.content()))
   check(`${label}: the retired mechanism URL is gone`, !/acquisition-system\.html/.test(await page.content()))

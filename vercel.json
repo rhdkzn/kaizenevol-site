@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/(index|about|contact|services|poster|kaizendesk|kaizenforge).html",
+      "source": "/(index|about|contact|services|poster).html",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -76,20 +76,8 @@
   ],
   "rewrites": [
     {
-      "source": "/kaizendesk/compare",
-      "destination": "/kaizendesk/compare.html"
-    },
-    {
       "source": "/privacy",
       "destination": "/privacy.html"
-    },
-    {
-      "source": "/kaizendesk",
-      "destination": "/kaizendesk.html"
-    },
-    {
-      "source": "/kaizenforge",
-      "destination": "/kaizenforge.html"
     }
   ],
   "redirects": [
@@ -255,6 +243,66 @@
     },
     {
       "source": "/walk.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kaizendesk",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kaizendesk.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kaizendesk/compare",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kaizendesk/compare.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kaizenforge",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kaizenforge.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/showpiece",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/showpiece.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/walk-forge",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/walk-forge.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/walk-free",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/walk-free.html",
       "destination": "/",
       "permanent": true
     }
