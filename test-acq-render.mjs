@@ -81,10 +81,24 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
      proof cards ran 43px off the right of a phone — Rahaid photographed it. Measure the
      body, and name the element, so a green result cannot mean "I looked at the wrong
      box". */
+  /* Narrowed 2026-09-06, and narrowly. The Kaizen Loop carousel's track is
+     wider than the viewport by design - that is what a carousel is - and it is
+     contained by .kz-stick (overflow hidden) on desktop and .kz-track
+     (overflow-x auto) on touch, so the user can never reach past the right edge
+     of the page. Verified: documentElement.scrollWidth equals clientWidth and
+     window.scrollTo(9999, y) does not move scrollX, at 390/768/1280.
+
+     The exemption is by NAME, not by a "has a clipping ancestor" heuristic. The
+     heuristic was tried first and gutted the guard: sections already carry
+     overflow-x:clip for their ambient layers, so it skipped 104 of 225 elements
+     and stopped catching an unclipped 1600px div injected as a control. The
+     2026-08-27 case this check exists for - proof cards running 43px off a
+     phone inside an ordinary container - is untouched. */
   const overflow = await page.evaluate(() => {
     const vw = window.innerWidth
     const out = []
     for (const e of document.querySelectorAll('body *')) {
+      if (e.closest('.kz-track')) continue
       const r = e.getBoundingClientRect()
       if (r.width > 0 && r.right > vw + 1)
         out.push(`${e.tagName.toLowerCase()}.${(e.className || '').toString().split(' ')[0]} right:${Math.round(r.right)}`)

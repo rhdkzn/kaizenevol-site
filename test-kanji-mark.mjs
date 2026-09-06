@@ -64,7 +64,9 @@ for (const [label, width, height] of [['desktop', 1280, 900], ['mobile', 390, 84
     // what Rahaid reported repeatedly, is the mark showing THROUGH running copy that sits
     // directly on the page with nothing between them. Only that case is a failure.
     const texts = [...document.querySelectorAll('p, h1, h2, h3, .smallcaps, .lede')]
-      .filter(e => !e.closest('.step, .cell, .slot'))
+      // .kz-card added 2026-09-06: the Kaizen Loop carousel replaced .step, and its
+      // cards carry the same opaque background, so the same reasoning applies.
+      .filter(e => !e.closest('.step, .cell, .slot, .kz-card'))
       // PER-LINE INK, not the block box. A heading's box spans the whole column even
       // where the words stop, so a mark sitting in clear space to the right of a short
       // line registered as an overlap that nobody can see. Range rects give one rect per

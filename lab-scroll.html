@@ -71,7 +71,10 @@
   .bar-hint{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-top:10px}
 
   /* ---- touch + reduced motion: native swipe carousel, mechanism off ---- */
-  @media (max-width:900px), (prefers-reduced-motion:reduce){
+  /* Touch only - a phone is a device fact. Reduce Motion is a preference and
+     DESIGN.md's standing ruling is that it must not stop anything we make, so
+     it is handled separately below and softens rather than switches off. */
+  @media (max-width:900px){
     .rail{height:auto!important}
     .rail-stick{position:static;height:auto;padding:8px 0 4px}
     .track{transform:none!important;overflow-x:auto;scroll-snap-type:x mandatory;
@@ -79,6 +82,10 @@
     .track::-webkit-scrollbar{display:none}
     .stage{scroll-snap-align:start;flex-basis:min(82vw,340px)}
     .stage.dim{opacity:1;transform:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .stage{transition-duration:1.1s}
+    .stage.dim{opacity:.55}
   }
 
   .after{padding:70px 0 90px;border-top:1px solid var(--hairline);margin-top:60px}
@@ -164,7 +171,9 @@
       hint = document.getElementById('hint'),
       stages = track.children;
 
-  var mqOff = window.matchMedia('(max-width:900px), (prefers-reduced-motion:reduce)');
+  // Width only - gating on prefers-reduced-motion would stop the feature
+  // running at all for those visitors, which DESIGN.md forbids.
+  var mqOff = window.matchMedia('(max-width:900px)');
   function setHint(){ if (mqOff.matches) hint.textContent = 'Swipe through'; }
 
   function travel(){ return Math.max(0, track.scrollWidth - track.clientWidth + 48); }
