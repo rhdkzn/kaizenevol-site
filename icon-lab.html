@@ -82,6 +82,52 @@
     .numeral text{stroke-dashoffset:0;fill-opacity:1;stroke-opacity:0}
     .third.drawn .numeral text{animation:none}
   }
+  /* option D: cut planes, built from the monogram's own geometry.
+     The mark is filled angular planes with wedge terminals — no curves, no
+     uniform strokes, no round caps. These are drawn in that language, so the
+     motion is a WIPE along each plane's own cut angle rather than a line
+     drawing itself. */
+  .cut{margin-top:44px;border:1px solid var(--hairline);border-radius:2px;background:var(--recess);padding:28px 26px 32px}
+  .cut-row{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:24px}
+  @media(max-width:860px){.cut-row{grid-template-columns:1fr 1fr;gap:28px}}
+  .cut .cell{border-top:1px solid var(--hairline);padding-top:16px}
+  .plane{width:74px;height:74px;display:block;color:var(--ink);margin-bottom:10px}
+  .plane path{fill:currentColor;clip-path:inset(0 100% 0 0)}
+  .cut.drawn .plane path{animation:wipe .72s var(--el-ease) forwards}
+  .cut.drawn .plane path:nth-child(2){animation-delay:.09s}
+  .cut.drawn .plane path:nth-child(3){animation-delay:.18s}
+  .cut.drawn .cell:nth-child(2) .plane path{animation-delay:.10s}
+  .cut.drawn .cell:nth-child(2) .plane path:nth-child(2){animation-delay:.19s}
+  .cut.drawn .cell:nth-child(2) .plane path:nth-child(3){animation-delay:.28s}
+  .cut.drawn .cell:nth-child(3) .plane path{animation-delay:.20s}
+  .cut.drawn .cell:nth-child(3) .plane path:nth-child(2){animation-delay:.29s}
+  .cut.drawn .cell:nth-child(4) .plane path{animation-delay:.30s}
+  .cut.drawn .cell:nth-child(4) .plane path:nth-child(2){animation-delay:.39s}
+  @keyframes wipe{to{clip-path:inset(0 0 0 0)}}
+  @media(prefers-reduced-motion:reduce){
+    .plane path{clip-path:none}
+    .cut.drawn .plane path{animation:none}
+  }
+  /* option E: ONE graphic for the section instead of four ornaments.
+     Wide, flat and diagonal is what the monogram's measured vocabulary
+     actually produces, so this works with the geometry instead of forcing
+     it into tall icon boxes. DESIGN.md: one signature moment per surface. */
+  .anchor{margin-top:44px;border:1px solid var(--hairline);border-radius:2px;background:#fff;padding:28px 26px 34px}
+  .anchor-art{width:100%;max-width:520px;height:auto;display:block;margin:26px 0 4px;color:var(--ink)}
+  .anchor-art path{fill:currentColor;clip-path:inset(0 100% 0 0)}
+  .anchor.drawn .anchor-art path{animation:wipe .78s var(--el-ease) forwards}
+  .anchor.drawn .anchor-art path:nth-child(2){animation-delay:.07s}
+  .anchor.drawn .anchor-art path:nth-child(3){animation-delay:.14s}
+  .anchor.drawn .anchor-art path:nth-child(4){animation-delay:.21s}
+  .anchor.drawn .anchor-art path:nth-child(5){animation-delay:.34s}
+  .anchor.drawn .anchor-art path:nth-child(6){animation-delay:.41s}
+  .anchor-row{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:26px}
+  @media(max-width:860px){.anchor-row{grid-template-columns:1fr 1fr;gap:26px}}
+  .anchor .cell{border-top:1px solid var(--hairline);padding-top:14px}
+  @media(prefers-reduced-motion:reduce){
+    .anchor-art path{clip-path:none}
+    .anchor.drawn .anchor-art path{animation:none}
+  }
   .verdict{margin-top:46px;border-top:1px solid var(--hairline);padding-top:26px;max-width:78ch}
   .verdict h2{font-size:19px;font-weight:500;margin-bottom:12px}
   .verdict li{font-size:14.5px;color:var(--muted);margin-bottom:9px}
@@ -93,8 +139,8 @@
 
   <div class="lab-head">
     <div class="eyebrow">Internal workbench &middot; not a public page</div>
-    <h1>Diego is right that it&rsquo;s flat. <em>Three ways</em> to fix it.</h1>
-    <p class="sub">Same section, built three ways, so the choice is made by looking rather than by arguing. Scroll it &mdash; two of the three only exist in motion, and a screenshot of them tells you nothing.</p>
+    <h1>Diego is right that it&rsquo;s flat. <em>Five ways</em> to fix it.</h1>
+    <p class="sub">Same section, built five ways, so the choice is made by looking rather than by arguing. Scroll it &mdash; two of the three only exist in motion, and a screenshot of them tells you nothing.</p>
   </div>
 
   <div class="note">
@@ -183,14 +229,52 @@
     </div>
   </div>
 
+  <div class="cut" id="cut">
+    <div class="col-tag">D &middot; cut planes</div>
+    <div class="col-name">Built from the monogram&rsquo;s own geometry</div>
+    <div class="col-why">Filled angular planes with wedge terminals. No curves, no uniform strokes, no round caps &mdash; the same construction as the KE mark. Each plane wipes in along its own cut.</div>
+    <div class="cut-row">
+      <div class="cell">
+        <svg class="plane" viewBox="0 0 74 74" aria-hidden="true"><path d="M9.00 29.58 L17.38 22.55 L30.00 22.55 L21.62 29.58 L9.00 29.58 Z"/><path d="M20.78 39.67 L31.09 31.02 L46.24 31.02 L35.93 39.67 L20.78 39.67 Z"/><path d="M34.24 51.45 L46.49 41.18 L65.00 41.18 L52.75 51.45 L34.24 51.45 Z"/></svg>
+        <h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got.</p>
+      </div>
+      <div class="cell">
+        <svg class="plane" viewBox="0 0 74 74" aria-hidden="true"><path d="M9.00 31.40 L15.13 25.27 L21.87 25.27 L15.74 31.40 L9.00 31.40 Z"/><path d="M21.52 39.10 L31.06 29.57 L40.69 29.57 L31.15 39.10 L21.52 39.10 Z"/><path d="M37.89 48.73 L51.52 35.11 L65.00 35.11 L51.38 48.73 L37.89 48.73 Z"/></svg>
+        <h3>Ads</h3><p>Run wherever your buyers actually are.</p>
+      </div>
+      <div class="cell">
+        <svg class="plane" viewBox="0 0 74 74" aria-hidden="true"><path fill-rule="evenodd" d="M13.01 24.75 L31.78 9.00 L45.91 9.00 L27.14 24.75 L13.01 24.75 Z M28.09 49.25 L46.86 65.00 L60.99 65.00 L42.22 49.25 L28.09 49.25 Z"/></svg>
+        <h3>Social</h3><p>Your feed and stories, run for you.</p>
+      </div>
+      <div class="cell">
+        <svg class="plane" viewBox="0 0 74 74" aria-hidden="true"><path d="M9.00 24.08 L35.40 46.23 L48.32 46.23 L21.92 24.08 L9.00 24.08 Z"/><path d="M52.08 49.92 L30.08 31.46 L43.00 31.46 L65.00 49.92 L52.08 49.92 Z"/></svg>
+        <h3>Bringing people back</h3><p>We keep in touch for you, so they come back on their own.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="anchor" id="anchor">
+    <div class="col-tag">E &middot; one graphic, no ornaments</div>
+    <div class="col-name">The section gets a mark. The cells get none.</div>
+    <div class="col-why">Wide, flat and diagonal is what the monogram&rsquo;s measured geometry produces &mdash; 61&#37; of its edge length sits at 45&ndash;50&deg;, 35&#37; horizontal, effectively no verticals. Four planes going out, two folding back. Wipes in left to right on scroll.</div>
+    <svg class="anchor-art" viewBox="0 0 320 88" aria-hidden="true"><path d="M35.57 84.00 L53.73 68.76 L75.95 68.76 L57.79 84.00 L35.57 84.00 Z"/><path d="M80.01 73.63 L103.85 53.63 L130.51 53.63 L106.68 73.63 L80.01 73.63 Z"/><path d="M124.46 63.26 L153.97 38.50 L185.08 38.50 L155.57 63.26 L124.46 63.26 Z"/><path d="M168.90 52.89 L204.08 23.37 L239.64 23.37 L204.46 52.89 L168.90 52.89 Z"/><path d="M231.12 24.74 L265.17 53.31 L284.43 53.31 L250.38 24.74 L231.12 24.74 Z"/><path d="M189.64 4.00 L212.34 23.05 L228.64 23.05 L205.94 4.00 L189.64 4.00 Z"/></svg>
+    <div class="anchor-row">
+      <div class="cell"><h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got.</p></div>
+      <div class="cell"><h3>Ads</h3><p>Run wherever your buyers actually are.</p></div>
+      <div class="cell"><h3>Social</h3><p>Your feed and stories, run for you.</p></div>
+      <div class="cell"><h3>Bringing people back</h3><p>We keep in touch for you, so they come back on their own.</p></div>
+    </div>
+  </div>
+
   <div class="verdict">
-    <h2>What looking at it actually shows</h2>
+    <h2>Where this ended up</h2>
     <ul>
-      <li><b>C wins, and it is the cheapest of the three.</b> Diego&rsquo;s complaint is that the section has no life. C gives it life &mdash; the numeral writes itself in and then inks solid &mdash; using the mark that is <em>already on the site</em>. Nothing new to draw, nothing new to maintain, nothing else on the page has to change.</li>
-      <li><b>B does not win, and I built B.</b> Three of the four marks are standard glyph vocabulary: a camera, signal arcs, a card stack, a refresh arrow. Drawing them by hand does not make them bespoke &mdash; it makes them a hand-traced icon set. That is the same criticism I levelled at the stock reference, so it would be dishonest to ship it as the answer.</li>
-      <li><b>What B did prove is that the motion is the asset.</b> A mark that draws itself cannot be lifted off a stock site, because it is a behaviour rather than a file. That is the part worth keeping, and C keeps it without the asset debt.</li>
-      <li><b>Why not the 3D glassy icons is a separate question, and it is already settled above</b> &mdash; three collisions with DESIGN.md, none about taste.</li>
-      <li><b>The real cost of B, if we ever want it:</b> four marks drawn by us per section, forever, every time a section is added or reworded. Stock is free and instant. That is the actual trade.</li>
+      <li><b>E is the one.</b> One graphic for the section, no ornament in the cells. It is built from the monogram&rsquo;s own measured geometry, so it is unmistakably from the same hand as the mark and cannot be lifted off a stock site. DESIGN.md already asks for one signature moment per surface, not five.</li>
+      <li><b>B failed and it was mine.</b> A camera, signal arcs, a card stack and a refresh arrow &mdash; standard glyph vocabulary drawn by hand. Worse, all of it round: circles, arcs and rounded caps, when the mark has no curves at all. Off-language by construction, not just generic.</li>
+      <li><b>D failed too, and the failure is the useful part.</b> The monogram&rsquo;s edges were measured rather than eyeballed: <b>40.2&#37; at 50&deg; from vertical, 21.0&#37; at 45&deg;, 24.3&#37; horizontal, 10.8&#37; at 85&deg;, and effectively no verticals.</b> That vocabulary makes marks that are wide and flat. Tall icons and tall numerals both need verticals, so anything forced into a 74px square comes out as horizontal slashes &mdash; which is what D rendered.</li>
+      <li><b>So the geometry chose the format.</b> Once the constraint was measured instead of assumed, a wide horizontal composition was the only honest thing to build with it. Four planes going out, two folding back, wiping left to right.</li>
+      <li><b>A and C are kept for the comparison, not as candidates.</b> C solved the wrong problem &mdash; it optimised for cheapness to maintain, which for a creative agency is the wrong variable. Drawing our own assets is the demonstration, not a cost to avoid.</li>
+      <li><b>Not about taste, the 3D route:</b> gradients are banned in DESIGN.md and 3D glass is a gradient by construction; client work is the only colour, so ours is none; and v3 moved off violet-on-dark because it read as a SaaS tool.</li>
     </ul>
   </div>
 
@@ -201,6 +285,8 @@
   }, { rootMargin: '0px 0px -12% 0px' });
   document.querySelectorAll('#proposed .cell').forEach(function(c){ io.observe(c); });
   io.observe(document.getElementById('third'));
+  io.observe(document.getElementById('cut'));
+  io.observe(document.getElementById('anchor'));
 </script>
 </body>
 </html>
