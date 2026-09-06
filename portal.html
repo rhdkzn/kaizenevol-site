@@ -116,6 +116,8 @@
       <h2>Drop calendar</h2>
       <ul class="list" id="p-events"></ul>
 
+      <div id="p-boards"></div>
+
       <h2>Where we are</h2>
       <ul class="list check" id="p-tasks"></ul>
 
@@ -197,6 +199,8 @@
     var today = new Date().toISOString().slice(0,10);
     var events = items.filter(function(i){ return i.kind==='event'; }).sort(function(a,b){ return String(a.on_date).localeCompare(String(b.on_date)); });
     $('p-events').innerHTML = events.length ? events.map(function(e){ var past = e.on_date && e.on_date < today; return '<li'+(past?' class="done"':'')+'><span class="d">'+esc(dstr(e.on_date))+'</span><span><b class="t">'+esc(e.title)+'</b>'+(e.body?'<div class="m">'+esc(e.body)+'</div>':'')+'</span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">No dates yet. The drop calendar appears here once we agree it.</span></li>';
+    var bds = me.boards||[];
+    $('p-boards').innerHTML = bds.map(function(b){ var cols = (b.columns||[]); return '<h2>'+esc(b.name)+'</h2><div class="grid">'+cols.map(function(c){ var ks = (b.cards||[]).filter(function(k){ return k.col===c.id; }); return '<div class="cell"><div class="k">'+esc(c.name)+' · '+ks.length+'</div>'+(ks.length?ks.map(function(k){ return '<div class="s" style="margin-top:6px"><b style="color:var(--ink)">'+esc(k.title)+'</b>'+(k.due?' · '+esc(dstr(k.due)):'')+'</div>'; }).join(''):'<div class="s" style="margin-top:6px">—</div>')+'</div>'; }).join('')+'</div>'; }).join('');
     var t = me.tasks||{};
     $('p-tasks').innerHTML = TASKS.map(function(x){ var on = !!t[x[0]]; return '<li'+(on?' class="done"':'')+'><span class="box'+(on?' on':'')+'"></span><span class="t">'+x[1]+'</span></li>'; }).join('');
     var ups = items.filter(function(i){ return i.kind==='update' || i.kind==='file'; });
