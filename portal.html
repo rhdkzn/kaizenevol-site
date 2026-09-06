@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="theme-color" content="#F7F6F4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Client Portal, KaizenEvol</title>
+  <meta name="description" content="Your space with KaizenEvol: the numbers, the drop calendar, what is done and what is next." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="Client Portal, KaizenEvol" />
+  <meta name="twitter:title" content="Client Portal, KaizenEvol" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <style>
+    @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+    @font-face{font-family:'Newsreader';src:url('/newsreader-italic.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
+    :root{--page:#F7F6F4;--recess:#EFEDE9;--cool:#E8E9EA;--hairline:#D8D4CC;--stone:#8A857C;--muted:#6E6A63;--ink:#23211E;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;--serif:'Newsreader',Georgia,serif;--el-ease:cubic-bezier(.16,1,.3,1);}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+    .container{max-width:880px;margin:0 auto;padding:0 24px;width:100%}
+    a{color:var(--ink)}
+    em{font-family:var(--serif);font-style:italic;font-weight:300}
+    .smallcaps{font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone)}
+    .top{padding:22px 0;border-bottom:1px solid var(--hairline)}
+    .top-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brandline{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-0.02em;font-size:15px}
+    .brandline img{height:20px;width:auto}
+    .who{font-size:12px;color:var(--stone);display:flex;gap:14px;align-items:center}
+    .who button{font:inherit;font-size:12px;background:none;border:1px solid var(--hairline);border-radius:999px;padding:5px 12px;cursor:pointer;color:var(--muted)}
+    main{flex:1;padding:44px 0 72px}
+    h1{font-weight:200;letter-spacing:-0.035em;line-height:1.08;font-size:clamp(30px,1.4rem + 2.4vw,46px);margin:10px 0 0;text-wrap:balance}
+    h2{font-weight:300;letter-spacing:-0.03em;font-size:clamp(20px,1rem + 1.2vw,26px);margin:36px 0 10px}
+    p{margin:12px 0 0;max-width:62ch}
+    .why{color:var(--muted);font-size:15px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:16px}
+    .cell{background:var(--page);padding:16px 18px}
+    .cell .k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
+    .cell .v{font-size:22px;margin-top:4px;letter-spacing:-0.02em;font-weight:300;font-variant-numeric:tabular-nums}
+    .cell .s{font-size:12px;color:var(--muted);margin-top:2px}
+    .list{margin:12px 0 0;padding:0;list-style:none}
+    .list li{padding:12px 0;border-top:1px solid var(--hairline);display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:baseline}
+    .list li:last-child{border-bottom:1px solid var(--hairline)}
+    .list .d{font-size:12px;color:var(--stone);font-variant-numeric:tabular-nums}
+    .list b{font-weight:600}
+    .list .m{color:var(--muted);font-size:14px;margin-top:2px}
+    .check li{grid-template-columns:22px 1fr}
+    .box{width:16px;height:16px;border:1px solid var(--hairline);border-radius:3px;display:inline-block;position:relative;top:2px}
+    .box.on{background:var(--ink);border-color:var(--ink)}
+    .box.on::after{content:'';position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid var(--page);border-width:0 2px 2px 0;transform:rotate(45deg)}
+    .done .t{color:var(--muted);text-decoration:line-through}
+    .btn-solid{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ink);color:var(--page);border:1px solid var(--ink);border-radius:999px;padding:12px 20px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:transform .09s cubic-bezier(.3,0,.2,1)}
+    .btn-solid:active{transform:scale(.965)}.btn-solid[disabled]{opacity:.45;cursor:not-allowed}
+    input[type=email],textarea{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--hairline);padding:10px 2px;width:100%;border-radius:0}
+    input:focus,textarea:focus{outline:none;border-bottom-color:var(--ink)}
+    textarea{border:1px solid var(--hairline);padding:12px 14px;min-height:92px;resize:vertical}
+    textarea:focus{outline:2px solid var(--ink);outline-offset:-1px}
+    .row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:18px}
+    .row .f{flex:1;min-width:240px}
+    .msg{font-size:14px;color:var(--muted);min-height:20px;margin-top:10px}
+    .err{color:#9a3b2f}
+    .step{display:none}.step.on{display:block}
+    .bubble{padding:12px 14px;border:1px solid var(--hairline);margin-top:8px;font-size:14px;max-width:62ch}
+    .bubble.client{background:var(--recess);margin-left:auto}
+    .bubble .d{font-size:11px;color:var(--stone);margin-bottom:4px}
+    .empty{color:var(--stone);font-size:14px;padding:14px 0;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);margin-top:12px}
+    footer{border-top:1px solid var(--hairline);padding:22px 0;font-size:13px;color:var(--stone)}
+    footer a{color:var(--stone);text-decoration:none}
+    @media(max-width:720px){.grid{grid-template-columns:1fr 1fr}.list li{grid-template-columns:1fr}.list .d{order:-1}}
+  </style>
+  <link rel="stylesheet" href="/interactions.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="top">
+  <div class="container top-inner">
+    <a class="brandline" href="index.html"><img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'"></a>
+    <div class="who" id="who"></div>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+
+    <!-- SIGN IN -->
+    <section class="step on" id="s-login">
+      <p class="smallcaps">Client portal</p>
+      <h1>Your space with KaizenEvol. <em>Sign in with your email.</em></h1>
+      <p class="why">No password. We send a link to the email address on your agreement; open it on this device and you're in.</p>
+      <div class="row">
+        <div class="f"><input type="email" id="email" placeholder="you@yourbrand.com" autocomplete="email" /></div>
+        <button class="btn-solid" id="send" onclick="sendLink()">Send me a sign-in link</button>
+      </div>
+      <div class="msg" id="login-msg"></div>
+    </section>
+
+    <!-- NOT A CLIENT -->
+    <section class="step" id="s-none">
+      <p class="smallcaps">Client portal</p>
+      <h1>This email isn't on a client space yet.</h1>
+      <p class="why">If you've just signed, Rahaid adds you within a day. If you think this is wrong, reply to any email from us and we'll fix it.</p>
+    </section>
+
+    <!-- PORTAL -->
+    <section class="step" id="s-portal">
+      <p class="smallcaps"><span id="p-name"></span> · <span id="p-terms"></span></p>
+      <h1 id="p-head"></h1>
+
+      <h2>The numbers</h2>
+      <div class="grid" id="p-numbers"></div>
+      <p class="why" id="p-numbers-note"></p>
+
+      <h2>Drop calendar</h2>
+      <ul class="list" id="p-events"></ul>
+
+      <h2>Where we are</h2>
+      <ul class="list check" id="p-tasks"></ul>
+
+      <h2>Updates from us</h2>
+      <div id="p-updates"></div>
+
+      <h2>A line to us</h2>
+      <p class="why">Anything at all — a restock date, a change of plan, a question. It lands in our CRM and we reply by email.</p>
+      <textarea id="msg-text" placeholder="Write to Rahaid and Diego…"></textarea>
+      <div class="row" style="margin-top:12px"><button class="btn-solid" id="msg-send" onclick="sendMessage()">Send</button><span class="msg" id="msg-status" style="margin:0"></span></div>
+      <div id="p-messages" style="margin-top:14px"></div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a> &nbsp;&middot;&nbsp;
+    <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; &copy; 2026 KaizenEvol
+  </div>
+</footer>
+
+<script>
+(function(){
+  if(typeof supabase==='undefined'){ document.getElementById('login-msg').textContent='The sign-in library did not load. Check your connection and reload.'; return; }
+  var sb = supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
+  var $ = function(id){ return document.getElementById(id); };
+  var me = null, items = [];
+  function gbp(n){ return '£' + Math.round(Number(n)||0).toLocaleString('en-GB'); }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function dstr(d){ if(!d) return ''; var x = new Date(d.length===10 ? d+'T12:00:00' : d); return x.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+  function show(id){ ['s-login','s-none','s-portal'].forEach(function(s){ $(s).classList.toggle('on', s===id); }); }
+
+  window.sendLink = async function(){
+    var email = $('email').value.trim().toLowerCase(), m = $('login-msg');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ m.textContent = 'Type the email address on your agreement.'; return; }
+    $('send').disabled = true; m.textContent = 'Sending…';
+    var r = await sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: location.origin + '/portal', shouldCreateUser: true } });
+    $('send').disabled = false;
+    m.textContent = r.error ? ('Could not send: ' + r.error.message) : 'Sent. Open the link in the email on this device — it signs you in here.';
+  };
+
+  window.signOut = async function(){ await sb.auth.signOut(); me = null; show('s-login'); $('who').innerHTML=''; };
+
+  /* growth-step arithmetic, same as the CRM */
+  function growth(c, snaps, s){
+    var trig = s.stepTrigger||1.5, base = Number(c.baselineRevenue)||0;
+    var latest = snaps.length ? Number(snaps[snaps.length-1].avg)||0 : 0;
+    var level = base, steps = 0;
+    snaps.forEach(function(x){ var v = Number(x.avg)||0; while(base && v >= level*trig){ level = level*trig; steps++; } });
+    var baseRet = Number(c.retainerValue) || (c.founding ? 1000 : (s.retainerValue||2000));
+    return { base: base, latest: latest, steps: steps, next: base ? Math.round(level*trig) : 0, retainer: baseRet + steps*(s.stepValue||1000), lift: (base && latest) ? Math.round((latest/base-1)*100) : null };
+  }
+  var TASKS = [['ob1','Discovery call done'],['ob2','Proposal sent'],['ob3','Agreement signed'],['ob4','First invoice paid'],['ob5','Baseline agreed in writing, revenue access granted'],['ob6','Access granted: Meta, store, email/SMS'],['ob7','Drop calendar and content plan agreed'],['ob8','First content batch approved'],['ob9','Live'],['lv1','Weekly numbers sent'],['lv2','Monthly strategy call'],['lv3','Monthly revenue snapshot logged'],['lv4','Email/SMS list growing'],['lv5','Creative refreshed when cost per purchase rises'],['lv6','Testimonial / case study asked for']];
+
+  function render(){
+    var c = me.client||{}, s = me.settings||{}, g = growth(c, me.snapshots||[], s);
+    $('p-name').textContent = c.name||''; $('p-terms').textContent = c.founding ? 'founding client' : 'client';
+    $('p-head').innerHTML = 'Hello, ' + esc((c.founder||'').split(' ')[0] || c.name) + '. <em>' + (c.liveDate ? 'Live since ' + dstr(c.liveDate) + '.' : 'Onboarding.') + '</em>';
+    $('who').innerHTML = '<span>' + esc(me.email) + '</span><button onclick="signOut()">Sign out</button>';
+    var cells = [
+      ['Baseline', g.base ? gbp(g.base)+'/mo' : '—', 'trailing 3-month average at signing'],
+      ['Latest 3-mo average', g.latest ? gbp(g.latest)+'/mo' : '—', g.lift==null ? 'logged monthly' : (g.lift>=0?'+':'')+g.lift+'% on baseline'],
+      ['Next growth step at', g.next ? gbp(g.next)+'/mo' : '—', g.steps ? g.steps+' step'+(g.steps>1?'s':'')+' so far' : 'none yet'],
+      ['Retainer', gbp(g.retainer)+'/mo', c.founding ? 'founding rate' : 'standard rate']
+    ];
+    $('p-numbers').innerHTML = cells.map(function(x){ return '<div class="cell"><div class="k">'+x[0]+'</div><div class="v">'+x[1]+'</div><div class="s">'+esc(x[2])+'</div></div>'; }).join('');
+    $('p-numbers-note').textContent = g.base ? 'Our fee only goes up when your revenue does, and only when it is up by half — measured on your total revenue, from your own records.' : 'Your baseline is agreed in writing before any spend. Until then these stay blank on purpose.';
+    var today = new Date().toISOString().slice(0,10);
+    var events = items.filter(function(i){ return i.kind==='event'; }).sort(function(a,b){ return String(a.on_date).localeCompare(String(b.on_date)); });
+    $('p-events').innerHTML = events.length ? events.map(function(e){ var past = e.on_date && e.on_date < today; return '<li'+(past?' class="done"':'')+'><span class="d">'+esc(dstr(e.on_date))+'</span><span><b class="t">'+esc(e.title)+'</b>'+(e.body?'<div class="m">'+esc(e.body)+'</div>':'')+'</span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">No dates yet. The drop calendar appears here once we agree it.</span></li>';
+    var t = me.tasks||{};
+    $('p-tasks').innerHTML = TASKS.map(function(x){ var on = !!t[x[0]]; return '<li'+(on?' class="done"':'')+'><span class="box'+(on?' on':'')+'"></span><span class="t">'+x[1]+'</span></li>'; }).join('');
+    var ups = items.filter(function(i){ return i.kind==='update' || i.kind==='file'; });
+    $('p-updates').innerHTML = ups.length ? ups.map(function(u){ return '<div class="bubble"><div class="d">'+esc(dstr(u.created_at))+'</div>'+(u.title?'<b>'+esc(u.title)+'</b><br>':'')+esc(u.body||'')+(u.url?' <a href="'+esc(u.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>'; }).join('') : '<div class="empty">Nothing yet. Weekly numbers and notes from us land here.</div>';
+    var msgs = items.filter(function(i){ return i.kind==='message'; });
+    $('p-messages').innerHTML = msgs.map(function(m){ return '<div class="bubble'+(m.author==='client'?' client':'')+'"><div class="d">'+(m.author==='client'?'You':'KaizenEvol')+' · '+esc(dstr(m.created_at))+'</div>'+esc(m.body||'')+'</div>'; }).join('');
+  }
+
+  window.sendMessage = async function(){
+    var txt = $('msg-text').value.trim(), st = $('msg-status'); if(!txt) return;
+    $('msg-send').disabled = true;
+    var r = await sb.from('ke_portal_items').insert({ client_id: me.client.id, kind:'message', author:'client', body: txt.slice(0,4000) });
+    $('msg-send').disabled = false;
+    if(r.error){ st.textContent = 'Could not send: ' + r.error.message; return; }
+    $('msg-text').value=''; st.textContent = 'Sent.'; await loadItems(); render();
+  };
+
+  async function loadItems(){
+    var r = await sb.from('ke_portal_items').select('id,kind,title,body,on_date,url,author,created_at').eq('client_id', me.client.id).order('created_at',{ascending:false}).limit(200);
+    items = (r.data||[]);
+  }
+
+  async function boot(){
+    var s = await sb.auth.getSession();
+    if(!s.data || !s.data.session){ show('s-login'); return; }
+    var r = await sb.rpc('portal_me');
+    if(r.error || !r.data){ show('s-none'); $('who').innerHTML='<span>'+esc((s.data.session.user||{}).email||'')+'</span><button onclick="signOut()">Sign out</button>'; return; }
+    me = r.data; if(!me.client || !me.client.id){ show('s-none'); return; }
+    await loadItems(); sb.rpc('portal_touch'); render(); show('s-portal');
+  }
+  sb.auth.onAuthStateChange(function(ev){ if(ev==='SIGNED_IN'||ev==='TOKEN_REFRESHED'){ if(location.hash) history.replaceState(null,'',location.pathname); boot(); } });
+  boot();
+})();
+</script>
+</body>
+</html>
