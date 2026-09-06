@@ -1062,7 +1062,7 @@ function getNextAction(stageKey,day,clientName){
   const n=clientName.split(' ')[0];
   switch(stageKey){
     case 'onboarding':return{text:`Run ${n} through the 7-day onboarding sprint, then set the go-live date.`,cls:''};
-    case 'live':return{text:`${n} is live on £2,500/mo. Deliver the booked jobs, log any bonus jobs, build the case study.`,cls:'green-action'};
+    case 'live':return{text:`${n} is live on the agreed retainer. Deliver the booked jobs, log any bonus jobs, build the case study.`,cls:'green-action'};
     default:return{text:'',cls:''};
   }
 }
@@ -1097,7 +1097,7 @@ function renderClientPipeline(data){
 /* ── CLIENT CHECKLIST ── */
 const CLIENT_TASKS=[
   {id:'ob1',phase:'onboarding',text:'Discovery call completed'},
-  {id:'ob2',phase:'onboarding',text:'Retainer agreement signed (£2,500/mo)'},
+  {id:'ob2',phase:'onboarding',text:'Retainer agreement signed'},
   {id:'ob3',phase:'onboarding',text:'First invoice raised and paid (billing starts once the appointment target is hit)'},
   {id:'ob4',phase:'onboarding',text:'Facebook Business Manager access granted'},
   {id:'ob5',phase:'onboarding',text:'Meta Pixel installed and verified'},
