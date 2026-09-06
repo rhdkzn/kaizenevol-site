@@ -153,7 +153,10 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
      their live headings so the next repositioning fails here loudly, on day one. */
   const TEACHES = ['index.html']
   if (TEACHES.includes(PAGE)) {
-    const STEPS = ['find your real profit per sale', 'mark where you already are', 'make the ads']
+    /* Re-staged 2026-09-06 with Diego's site rewrite, approved by Rahaid: the old set
+       described ads only, did not loop despite the name, and had stages at two different
+       sizes. Canon is CRITICAL_FACTS. */
+    const STEPS = ['learn the brand, set the numbers', 'make the content', 'get it in front of people', 'track it, then do more of what worked']
     const missing = STEPS.filter(x => !text.includes(x))
     check(`${label}: the method's steps render`, missing.length === 0, missing.join(', '))
     check(`${label}: the mechanism is named`, text.includes('kaizen loop'))

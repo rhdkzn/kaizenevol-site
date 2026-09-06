@@ -104,12 +104,17 @@ for (const page of ['index.html', 'apply.html', 'contact.html']) {
   for (let step = 0; step < total + 2 && !posted; step++) {
     await pg.evaluate(() => {
       const s = document.querySelector('.step.on'); if (!s) return
-      const f = s.querySelector('input, textarea')
-      if (f) {
-        f.value = f.type === 'email' ? 'law@kaizenevol.com'
-                : f.type === 'url'   ? 'https://example.com'
-                : 'ATTRIBUTION TEST'
-        f.dispatchEvent(new Event('input', { bubbles: true }))
+      /* querySelectorAll, not querySelector: the last step asks for the name AND the
+         email on one screen since 2026-09-06, and filling only the first left the form
+         with no address, failing validation and never POSTing. */
+      const fs = s.querySelectorAll('input, textarea')
+      if (fs.length) {
+        fs.forEach((f) => {
+          f.value = f.type === 'email' ? 'law@kaizenevol.com'
+                  : f.type === 'url'   ? 'https://example.com'
+                  : 'ATTRIBUTION TEST'
+          f.dispatchEvent(new Event('input', { bubbles: true }))
+        })
       } else {
         const o = s.querySelector('.opt'); if (o) o.click()
       }

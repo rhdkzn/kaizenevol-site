@@ -348,6 +348,11 @@
     .cell ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
     .cell li{position:relative;padding-left:20px;font-size:14.5px;color:var(--muted);line-height:1.55}
     .cell li::before{content:"";position:absolute;left:0;top:11px;width:9px;height:1px;background:var(--stone)}
+    /* The disqualifying list, which no longer sits inside a .cell — same dash-rule
+       treatment as .cell li, at body size because it now carries a whole section. */
+    .notfor{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:16px;max-width:46em}
+    .notfor li{position:relative;padding-left:26px;font-size:17px;color:var(--muted);line-height:1.62}
+    .notfor li::before{content:"";position:absolute;left:0;top:13px;width:13px;height:1px;background:var(--stone)}
 
     .steps{display:grid;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:44px}
     @media(min-width:820px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -407,8 +412,8 @@
 <header class="hero">
   <div class="container">
     <div class="smallcaps">Creative growth agency for brands and artists</div>
-    <h1>We get eyes on your work, and keep the brand <em>growing</em>.</h1>
-    <p class="hero-sub">We make the content, run the ads and grow your social presence. Every day new people find you, and every week you get to see exactly how much they put in your account.</p>
+    <h1>We get eyes on your work, and keep your brand <em>growing</em>.</h1>
+    <p class="hero-sub">We make your content, run your ads and grow your social presence. Every day new people find you, and every week you see exactly how much they put in your account.</p>
     <div class="hero-ctas">
       <a href="apply.html" class="btn-solid">Apply</a>
       <a href="#method" class="btn-quiet">See how it works</a>
@@ -420,149 +425,107 @@
 <section class="band">
   <div class="container reveal">
     <div class="smallcaps">The problem</div>
-    <h2>People with worse work are doing better than you and you can&rsquo;t work out why.</h2>
-    <p class="lede">Their work isn&rsquo;t better than yours. You&rsquo;ve looked. The difference is they have a reason for every good week and you have a repost you can&rsquo;t repeat.</p>
-    <p class="pull">So you finish the thing, put it out, and find out on the day at the same time as everyone else.</p>
-    <p class="lede">The work is good. That was never the question. What&rsquo;s missing is anything underneath it that makes the next one land on purpose.</p>
-  </div>
-</section>
-
-<section>
-  <div class="container reveal">
-    <div class="smallcaps">And the part nobody tells you</div>
-    <h2>Your best month on paper can be your worst month in the bank.</h2>
-    <p class="lede">The drop sold out. The ad numbers were the best you&rsquo;d seen. Then you looked at your account and couldn&rsquo;t work out where it went. That isn&rsquo;t you being bad with money.</p>
-    <p class="pull">The platform counts your sales. Nobody counts your costs.</p>
-    <p class="lede">So every ad decision you make, you make half blind. And if you make the thing yourself, selling it starts to feel like a job you&rsquo;re bad at.</p>
+    <h2>Your craft isn&rsquo;t the problem. It just isn&rsquo;t in front of enough people.</h2>
+    <p class="lede">The people who find it buy it. And that&rsquo;s the frustrating part. The work does its job the moment someone sees it. There just aren&rsquo;t enough someones. So the people who would buy it never do.</p>
+    <p class="pull">You&rsquo;re a maker who has to be a marketer, and it&rsquo;s the marketing that slips.</p>
+    <p class="lede">So you craft and create, put it out, and find out how it did at the same time as everyone else. When it goes well you can&rsquo;t say why, and you can&rsquo;t do it again. A good week you can&rsquo;t repeat isn&rsquo;t a plan.</p>
+    <p class="lede">The work was never the question.</p>
   </div>
 </section>
 
 <section class="band-cool">
   <div class="container reveal">
     <div class="smallcaps">The aim</div>
-    <h2>Getting seen is half of it. Staying seen is the half nobody does.</h2>
-    <p class="pull">Anyone can buy you a good week.</p>
-    <p class="lede">A post lands, the ads run hot, the orders come in, and then it goes quiet and you start again from nothing. You already know the number that decides it: how much of the drop moved, and how fast.</p>
-    <p class="lede">What we&rsquo;re after is the other thing. New people finding your work every week, buying, and coming back without us paying an ad to reach them twice. That is what makes a brand bigger instead of busier.</p>
-    <p class="lede">And we count it honestly, because a month with more sales in it is only worth having if more money stayed. If you make the thing yourself, it means the making stays yours and the selling stops being the part you dread.</p>
+    <h2>Getting seen is half of it. Staying seen is the half nobody talks about.</h2>
+    <p class="pull">Anyone can have a good week.</p>
+    <p class="lede">But you already know what that&rsquo;s worth, because you&rsquo;ve had them.</p>
+    <p class="lede">What we&rsquo;re after is something else. New people finding your work every day, buying, and coming back without us paying an ad to reach them twice. That&rsquo;s growth you keep. Everything else you have to buy again next month.</p>
+    <p class="lede">And we track it, because a month with more sales in it only counts if the next one does it again. If you&rsquo;re the one making it, the making stays yours and the selling stops being the part you dread.</p>
   </div>
 </section>
 
 <section id="method">
   <div class="container reveal">
-    <div class="smallcaps">The method</div>
+    <div class="smallcaps">Your fix</div>
     <h2>The Kaizen Loop</h2>
-    <p class="lede">This is where the guessing stops. Two steps before a single pound is spent: we work out what one sale really makes you, and what your sales were already doing without ads. Then every piece of content and every pound of spend is judged against those two numbers, every week.</p>
-    <p class="pull">You will know, on a Monday, whether last week&rsquo;s ads made you money.</p>
-    <p class="lede muted">Most brand owners have never once known that. Artists almost never. That is the floor, not the finish. Once you know which content and which ads are pulling people in, every pound after it goes behind those, and the growing keeps going instead of stopping when the launch does.</p>
+    <p class="lede">First we learn the brand properly. What you make, why you make it, and what it&rsquo;s meant to mean to the person who buys it. Then, before a pound is spent, two numbers: what a customer is actually worth to you, and what your sales were already doing without us.</p>
+    <p class="pull">Everything after that gets judged against both.</p>
     <div class="steps reveal">
       <div class="step">
         <div class="n">01</div>
-        <h3>Find your real profit per sale</h3>
-        <p>What one sale leaves you after the item, the packaging, the postage and the card fees are paid. Across everything you sell, not just the bestseller.</p>
+        <h3>Learn the brand, set the numbers</h3>
+        <p>We don&rsquo;t take credit for a trend you were already on, and nothing gets made that doesn&rsquo;t look like you.</p>
       </div>
       <div class="step">
         <div class="n">02</div>
-        <h3>Mark where you already are</h3>
-        <p>What your sales were already doing before us, allowing for the time of year. We don't take credit for a trend you were already on.</p>
+        <h3>Make the content</h3>
+        <p>Ads, posts, edits, and the messages that bring people back. We shoot it with you or cut it from footage you have, usually both.</p>
       </div>
       <div class="step">
         <div class="n">03</div>
-        <h3>Make the ads</h3>
-        <p>Ideas, edits and new versions from your own footage, your product and your work. Each one is made to make you money, not to win a like.</p>
+        <h3>Get it in front of people</h3>
+        <p>Paid and organic, both pulling new people in. Your feed kept alive so it holds them when they look you up. And the ones who already bought hearing from you directly.</p>
       </div>
       <div class="step">
         <div class="n">04</div>
-        <h3>Run the ads to that number</h3>
-        <p>Every pound of ad spend is judged on what the sale actually left you, not on the sales number Instagram shows you. You see the same numbers we see, read the same way.</p>
+        <h3>Track it, then do more of what worked <span aria-hidden="true">&#8634;</span></h3>
+        <p>You see the same numbers we see, read the same way. Then we make more of what pulled people in, and it goes again.</p>
       </div>
     </div>
-    <p class="lede muted" style="margin-top:28px">If you&rsquo;re an artist there is often no unit to cost, so the first two steps use different numbers and do the same job.</p>
-    <p class="lede muted">Instead of profit per sale we baseline what your audience actually does when you ask it for something, once a month, every month.</p>
-    <p class="lede muted">Instead of a revenue trend we watch how much of your listening sits on one track. That number coming down is the difference between a fanbase and a song that did well.</p>
+    <p class="lede muted" style="margin-top:28px">If you&rsquo;re an artist there&rsquo;s often no unit to cost, so the numbers are different. We measure what your audience does when you ask them for something, and how much of your streaming sits on one track. That number coming down is the difference between a fanbase and a song that did well.</p>
   </div>
 </section>
 
 <section class="band">
   <div class="container reveal">
     <div class="smallcaps">What we run</div>
-    <h2>One monthly fee, four things we run. Together they get eyes on your work and keep them there.</h2>
+    <h2>One monthly fee. Here&rsquo;s everything in it.</h2>
     <div class="grid four reveal">
-      <div class="cell"><div class="n">01</div><h3>Content</h3><p>Still ads, video ads and short edits of your own footage, made every week. Enough of them to find what makes a stranger stop, not one polished piece a month.</p></div>
-      <div class="cell"><div class="n">02</div><h3>Ads</h3><p>Instagram, Facebook and TikTok, putting the work in front of people who have never heard of you, judged on what they add to your profit rather than on what each one claims it sold you.</p></div>
-      <div class="cell"><div class="n">03</div><h3>Social</h3><p>The same content, posted to your own feed, so someone who looks you up after an ad finds a brand and not an empty grid.</p></div>
-      <div class="cell"><div class="n">04</div><h3>Email and texts</h3><p>To people who already bought from you, so they buy again without you paying an ad to reach them twice.</p></div>
+      <div class="cell"><div class="n">01</div><h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got. Concepts, hooks and edits coming consistently, not one polished piece a month, shot to the standard your work deserves, because for most people who see it the ad is the brand.</p></div>
+      <div class="cell"><div class="n">02</div><h3>Ads</h3><p>Run wherever your buyers actually are, not just where it&rsquo;s easy. Budgets, targeting and testing handled every day, turning off what loses and putting more behind what wins, so more of the right people land on the product.</p></div>
+      <div class="cell"><div class="n">03</div><h3>Social</h3><p>Your feed and stories, run for you. It brings people in on its own, and it&rsquo;s what convinces the ones who found you through an ad that you&rsquo;re worth buying from.</p></div>
+      <div class="cell"><div class="n">04</div><h3>Bringing people back</h3><p>The person who already bought is the easiest sale you&rsquo;ll ever make, and most brands never go back to them. We keep in touch for you, by email and message, so they come back on their own instead of you paying an ad to find them twice.</p></div>
     </div>
   </div>
 </section>
 
 <section class="band-cool">
   <div class="container reveal">
-    <div class="smallcaps">What stays yours</div>
-    <h2>We don&rsquo;t touch how it looks.</h2>
-    <p class="lede">The last agency made your brand look like everyone else&rsquo;s because you were this month&rsquo;s logo in their template.</p>
-    <p class="pull">The look and the direction stay yours.</p>
-    <p class="lede">We make more of what you already make, more often, and put it in front of people who&rsquo;ve never seen it. If a piece doesn&rsquo;t look like you, it&rsquo;s wrong, and we&rsquo;ll say so before you have to.</p>
+    <div class="smallcaps">The business is still yours</div>
+    <h2>We don&rsquo;t choose how it looks.</h2>
+    <p class="lede">The look and the direction stay yours. We&rsquo;re in it with you, whether it&rsquo;s a shoot or an edit, but what the brand is and where it&rsquo;s going is your call and stays that way.</p>
+    <p class="lede">We make more of what you already make, put it in front of people who&rsquo;ve never seen you, and if a piece doesn&rsquo;t look like you it&rsquo;s wrong, and we&rsquo;ll say so before you have to.</p>
+    <p class="lede">And it&rsquo;s not just the look. Your ad account, your content, your customer list and the tracking we set up on your shop are all yours. Your ad money goes straight from your own account, never through us. If we part ways, all of it stays with you.</p>
   </div>
 </section>
 
 <section>
   <div class="container reveal">
     <div class="smallcaps">How we charge</div>
-    <h2>One monthly fee. No cut of your ad spend.</h2>
-    <p class="lede">An agency on a percentage of your ad spend is paid to make you spend more. That&rsquo;s why the last one wanted a bigger budget every month and never asked what it costs you to make. We don&rsquo;t take a cut, so we only win when you do.</p>
-    <div class="grid four reveal">
-      <div class="cell"><div class="n">01</div><h3>One fee</h3><p>Content, ads, social and email on one monthly fee. One invoice.</p></div>
-      <div class="cell"><div class="n">02</div><h3>Your ad money stays yours</h3><p>You pay Instagram, Facebook and TikTok yourself, from your own account. Your ad money never passes through us.</p></div>
-      <div class="cell"><div class="n">03</div><h3>You own the work</h3><p>The ad account, the content, your customer list, and the tracking we set up on your shop. If we part ways, it all stays yours.</p></div>
-      <div class="cell"><div class="n">04</div><h3>The price comes on the call</h3><p>It depends what you sell and how much content you need. You hear it on the first call, not the third.</p></div>
-    </div>
+    <h2>No cut of your ad spend.</h2>
+    <p class="lede">One monthly payment, separate from your ad spend, so nothing we recommend is ever because it pays us more. There&rsquo;s no minimum ad spend. What you pay depends on what you sell and how much content you need, so we work it out with you, but you&rsquo;ll hear it on the first call, not the third.</p>
   </div>
 </section>
 
 <section class="band">
   <div class="container reveal">
     <div class="smallcaps">Who this is for</div>
-    <h2>Who we can make money for, and who we can&rsquo;t.</h2>
-    <div class="grid two reveal">
-      <div class="cell">
-        <div class="n">Built for you if</div>
-        <ul>
-          <li>You&rsquo;ve got something people already buy, a product, a print, a piece, a record, and orders coming in. Not an idea. Orders.</li>
-          <li>You can tell us what one of them costs to make, pack and post. Or you&rsquo;ll find out this week.</li>
-          <li>You&rsquo;re done paying one company to make the ads and another to blame for the results.</li>
-          <li>You want to be told when the ads are losing you money, even in a month when sales look great.</li>
-        </ul>
-      </div>
-      <div class="cell">
-        <div class="n">Not if</div>
-        <ul>
-          <li>You haven&rsquo;t picked what you&rsquo;re selling. There&rsquo;s no profit to find in something that doesn&rsquo;t exist yet, and we won&rsquo;t pretend there is.</li>
-          <li>You won&rsquo;t look at your own numbers. Then nobody can fix them, us included.</li>
-          <li>You sell print-on-demand. The margin is too thin for ads to pay for themselves, and better creative doesn&rsquo;t fix that. We&rsquo;d be spending your money to prove arithmetic.</li>
-          <li>You just want someone to press the buttons on Facebook and Instagram. Cheaper people exist for that, and the price is the whole reason.</li>
-          <li>You need it turned round by the end of the month. The first two steps take weeks, and skipping them is how you got here.</li>
-        </ul>
-      </div>
-    </div>
-    <p class="lede" style="margin-top:28px">If the first list made you feel something, that&rsquo;s the point. Every month you keep spending because Instagram said sales were up, you pay for this lesson again, with money you&rsquo;d already earned. Fifteen minutes decides whether you keep doing that.</p>
-  </div>
-</section>
-
-<section>
-  <div class="container reveal">
-    <div class="smallcaps">Work</div>
-    <h2>We&rsquo;re taking our first five clients.</h2>
-    <p class="lede">Two people, who make the ads and run them ourselves. No account manager between you and the work. We don&rsquo;t have client results to show yet, and we won&rsquo;t borrow someone else&rsquo;s. So the first five pay a founding price, for exactly that reason.</p>
-    <p class="pull">If you&rsquo;d rather wait for proof, wait. The founding price won&rsquo;t.</p>
+    <h2>This isn&rsquo;t for everyone.</h2>
+    <ul class="notfor">
+      <li>You won&rsquo;t look at your own numbers. Then nobody can fix them, us included.</li>
+      <li>The margin&rsquo;s too thin for ads to pay for themselves. We&rsquo;d be spending your money to prove arithmetic.</li>
+      <li>You want the ads run and nothing else. That&rsquo;s one of four things we do, so you&rsquo;d be paying for three you don&rsquo;t want.</li>
+    </ul>
   </div>
 </section>
 
 <section class="band closing" id="contact">
   <div class="container reveal">
-    <div class="smallcaps">Next step</div>
-    <h2>Tell us what you sell and what it costs you to make.</h2>
-    <p class="lede muted" style="margin-left:auto;margin-right:auto">Fifteen minutes tells us whether we can make you more money. If we can&rsquo;t, we&rsquo;ll say so, and you&rsquo;ll leave knowing your real profit per sale, which is more than most people get from a call.</p>
+    <div class="smallcaps">The first five</div>
+    <h2>We&rsquo;re taking five clients to start.</h2>
+    <p class="lede">Just the two of us. We make the work and run it ourselves, so there&rsquo;s no account manager between you and the people doing it.</p>
+    <p class="lede">We don&rsquo;t have client results to show yet, and we won&rsquo;t borrow someone else&rsquo;s. That&rsquo;s why the first five pay a founding price. If you&rsquo;d rather wait for proof, wait. The founding price won&rsquo;t.</p>
+    <p class="lede">Tell us what you sell and what it costs you to make. Fifteen minutes tells us whether we can help, and if we can&rsquo;t we&rsquo;ll say so. Either way you&rsquo;ll leave knowing what a customer is actually worth to you, which is more than most people get from a call.</p>
     <div class="hero-ctas">
       <a href="apply.html" class="btn-solid">Apply</a>
     </div>

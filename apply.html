@@ -105,9 +105,9 @@
 
       <section class="step on" data-key="businessName" data-type="text">
         <div class="smallcaps">Apply</div>
-        <h1 class="q">First, what is the brand called?</h1>
+        <h1 class="q">What&rsquo;s your brand called?</h1>
         <p class="why">We take <em>five</em> at a time, so these get read properly and you get a reply either way.</p>
-        <div class="answer"><input type="text" id="businessName" autocomplete="organization" placeholder="Brand name" /></div>
+        <div class="answer"><input type="text" id="businessName" autocomplete="organization" placeholder="Brand or artist name" /></div>
       </section>
 
       <section class="step" data-key="businessUrl" data-type="text">
@@ -122,6 +122,17 @@
         <div class="answer"><input type="text" id="trade" placeholder="What you sell" /></div>
       </section>
 
+      <section class="step" data-key="sellModel" data-type="choice">
+        <h1 class="q">How do you sell? Big drops, or always on?</h1>
+        <p class="why">Do you release collections on a schedule, or keep the same things for sale all the time?</p>
+        <div class="answer opts" role="group" aria-label="How you sell">
+          <button type="button" class="opt">Drops on a schedule</button>
+          <button type="button" class="opt">A bit of both</button>
+          <button type="button" class="opt">Always on</button>
+          <button type="button" class="opt">Still figuring it out</button>
+        </div>
+      </section>
+
       <section class="step" data-key="revenue" data-type="choice">
         <h1 class="q">Roughly how much does it sell a month?</h1>
         <p class="why">This is the number that decides whether we can help, so an honest answer is worth more than a flattering one. Small is not a problem. Guessing is.</p>
@@ -132,6 +143,18 @@
           <button type="button" class="opt">&pound;15k &ndash; &pound;40k</button>
           <button type="button" class="opt">&pound;40k &ndash; &pound;100k</button>
           <button type="button" class="opt">Over &pound;100k</button>
+        </div>
+      </section>
+
+      <section class="step" data-key="costShare" data-type="choice">
+        <h1 class="q">Roughly, how much of the price is what it costs you to make?</h1>
+        <p class="why">A rough guess is fine. Materials, blanks, printing, whatever goes into one piece.</p>
+        <div class="answer opts" role="group" aria-label="Cost as a share of price">
+          <button type="button" class="opt">About a quarter</button>
+          <button type="button" class="opt">About a third</button>
+          <button type="button" class="opt">About half</button>
+          <button type="button" class="opt">More than half</button>
+          <button type="button" class="opt">Not sure yet</button>
         </div>
       </section>
 
@@ -153,13 +176,9 @@
         <div class="answer"><textarea id="message" placeholder="Where you are trying to get to"></textarea></div>
       </section>
 
-      <section class="step" data-key="contactName" data-type="text">
-        <h1 class="q">Who are we speaking to?</h1>
-        <div class="answer"><input type="text" id="contactName" autocomplete="name" placeholder="Your name" /></div>
-      </section>
-
       <section class="step" data-key="email" data-type="email">
-        <h1 class="q">And where do we send the answer?</h1>
+        <h1 class="q">Who are we speaking to, and where do we send the answer?</h1>
+        <div class="answer"><input type="text" id="contactName" autocomplete="name" placeholder="Your name" /></div>
         <p class="why">We read these ourselves, both of us. You will hear back whether it is a fit or not.</p>
         <div class="answer"><input type="email" id="email" autocomplete="email" placeholder="you@yourbrand.com" /></div>
         <div class="review" id="review" hidden></div>
@@ -213,6 +232,9 @@
     var rows = '';
     steps.slice(0,-1).forEach(function(s){
       var k = s.dataset.key, v = data[k];
+      if (k === 'email' && data.contactName) {
+        rows += '<dt>Name</dt><dd>' + String(data.contactName).replace(/</g,'&lt;') + '</dd>';
+      }
       if (!v) return;
       var label = s.querySelector('.q').textContent.replace(/\?$/,'');
       rows += '<dt>' + label + '</dt><dd>' + String(v).replace(/</g,'&lt;') + '</dd>';
@@ -233,8 +255,15 @@
   });
 
   function capture(){
-    var s = steps[i], field = s.querySelector('input,textarea');
-    if (field) data[s.dataset.key] = field.value.trim();
+    /* querySelector (singular) was fine while every step had at most one field. The
+       final step now asks for the name AND the email on one screen, so it would have
+       captured the NAME into data.email and never captured the address — every
+       application arriving with nobody to reply to. Key by the element's own id, which
+       matches data-key on every single-field step, and fall back for anything unnamed. */
+    var s = steps[i], fields = s.querySelectorAll('input,textarea');
+    for (var n = 0; n < fields.length; n++) {
+      data[fields[n].id || s.dataset.key] = fields[n].value.trim();
+    }
     return s;
   }
 
@@ -267,7 +296,10 @@
            leads, and ad spend rides in the message where it stays readable. */
         monthlyBudget: data.revenue,
         attribution: window.keAttribution ? window.keAttribution() : null,
-        message: 'Ad spend: ' + (data.adspend || 'not given') + '\n\n' + (data.message || '')
+        message: 'Sells: ' + (data.sellModel || 'not given')
+               + '\nCost as a share of price: ' + (data.costShare || 'not given')
+               + '\nAd spend: ' + (data.adspend || 'not given')
+               + '\n\n' + (data.message || '')
       })
     }).then(function(r){ if(!r.ok) throw 0; })
       .then(function(){ f.hidden = true; count.textContent=''; done.hidden = false; done.querySelector('h1').focus && done.querySelector('h1').focus(); })
