@@ -476,6 +476,35 @@
     @media (prefers-reduced-motion:reduce){
       .cell .run-icon img{--drift:2px;--tilt:-.4deg;animation-duration:calc(var(--dur,7s) * 2.6)}
     }
+  
+    /* ── ICONS TILT TOWARD THE POINTER ────────────────────────────────────────
+       Replaces a spin. A 3D turntable was rendered and rejected: a video model
+       invents plausible motion rather than rotating a fixed object, so the
+       camera tumbled off-axis, its lens migrated and vanished, and the last
+       frame did not match the first, so it could not loop. And a 172px icon
+       spinning on its own pulls the eye off the copy it is there to label.
+
+       Responding to the visitor is the better lever, and it is honest 3D: real
+       perspective, real rotation, driven by where they actually are.
+
+       The tilt lives on the PICTURE and the idle float stays on the IMG,
+       because two rules writing `transform` on one element would overwrite each
+       other. Different elements compose instead. */
+    .kz-slot picture{display:block;width:100%;height:100%}
+    .kz-slot picture, .cell .run-icon{
+      transform:perspective(620px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+      transform-origin:center;
+      transition:transform .5s var(--el-ease);
+    }
+    /* Following the pointer has to feel immediate; the slow curve is for the
+       spring back to rest once they leave. */
+    .kz-card:hover .kz-slot picture, .cell:hover .run-icon{transition-duration:.09s}
+
+    @media (prefers-reduced-motion:reduce){
+      /* Softened, never switched off - the tilt is driven by the visitor's own
+         pointer, which is the case DESIGN.md's ruling names explicitly. */
+      .kz-slot picture, .cell .run-icon{transition-duration:.9s}
+    }
   </style>
   <link rel="stylesheet" href="/kaizen-mark.css">
   <link rel="stylesheet" href="/interactions.css">
@@ -798,6 +827,36 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
   addEventListener('resize',size);
   if(off.addEventListener) off.addEventListener('change',size);
   size();
+})();
+</script>
+<script>
+(function(){
+  /* Pointer only. A phone has no hover, so a tilt would fire on tap and then
+     stick there with nothing to return it to rest. */
+  if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  var soft = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var MAX = soft ? 4 : 11;
+
+  document.querySelectorAll('.kz-card, .grid.four .cell').forEach(function(host){
+    var pic = host.querySelector('.kz-slot picture, picture.run-icon');
+    if (!pic) return;
+    var raf = 0, rx = 0, ry = 0;
+    function apply(){
+      raf = 0;
+      pic.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+      pic.style.setProperty('--ry', ry.toFixed(2) + 'deg');
+    }
+    function queue(){ if (!raf) raf = requestAnimationFrame(apply); }
+    host.addEventListener('pointermove', function(e){
+      var r = host.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      // -0.5 .. 0.5 across the card, so the icon leans toward the cursor
+      ry =  ((e.clientX - r.left) / r.width  - 0.5) * MAX * 2;
+      rx = -((e.clientY - r.top)  / r.height - 0.5) * MAX * 2;
+      queue();
+    }, {passive:true});
+    host.addEventListener('pointerleave', function(){ rx = 0; ry = 0; queue(); }, {passive:true});
+  });
 })();
 </script>
 </body>
