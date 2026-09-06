@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Brain rot lab, KaizenEvol</title>
+<meta name="description" content="Internal workbench. The site in the loud register, for Rahaid and Diego to look at. Not a public page.">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+<style>
+  /* Monochrome on purpose. No accent colour, no gradient - the one canon rule
+     that survives this register intact, and the one that keeps it looking
+     expensive instead of looking like a 2014 tumblr. */
+  :root{
+    --paper:#0B0B0B; --ink:#F4F2EE; --dim:#6A665F; --line:#2A2926;
+    --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;
+    --slam:steps(5,end);
+  }
+  *{box-sizing:border-box;margin:0}
+  html{background:var(--paper)}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--ink);color:var(--paper)}
+
+  .note{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--dim);
+        border-bottom:1px solid var(--line);padding:12px 18px;text-transform:uppercase}
+  .note b{color:var(--ink)}
+
+  /* ---- the ticker. the single most legible device in this register, and it
+     doubles as a services list you can read at a glance. ---- */
+  .tick{border-block:1px solid var(--line);overflow:hidden;padding:9px 0;background:var(--paper)}
+  .tick-track{display:flex;width:max-content;animation:roll 22s linear infinite}
+  .tick.rev .tick-track{animation-direction:reverse;animation-duration:28s}
+  .tick-seq{display:flex;flex:0 0 auto;white-space:nowrap}
+  .tick span{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+             padding:0 22px;color:var(--ink)}
+  .tick span i{color:var(--dim);font-style:normal}
+  @keyframes roll{to{transform:translate3d(-50%,0,0)}}
+
+  /* ---- hero: type at a size that stops being type and becomes shape ---- */
+  .hero{padding:44px 18px 34px;position:relative}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+  .mega{font-weight:800;line-height:.78;letter-spacing:-.055em;text-transform:uppercase;
+        font-size:clamp(48px,11.5vw,158px);margin-left:-.055em}
+  .mega .thin{font-weight:200;letter-spacing:-.015em}
+  .mega .out{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+  .hero-sub{font-family:var(--mono);font-size:13px;line-height:1.55;color:var(--dim);
+            max-width:46ch;margin-top:22px;border-left:1px solid var(--line);padding-left:14px}
+  .hero-sub b{color:var(--ink);font-weight:400}
+  .hero-ctas{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .cta{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+       text-decoration:none;padding:13px 22px;background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
+  .cta.quiet{background:transparent;color:var(--ink);border-color:var(--line)}
+  .cta:hover{background:transparent;color:var(--ink);border-color:var(--ink)}
+  .cta.quiet:hover{background:var(--ink);color:var(--paper)}
+  .cta:active{transform:translateY(1px)}
+  .seats{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+         color:var(--dim);margin-top:16px}
+
+  /* ---- services. the numeral comes back, but abused: enormous, outlined,
+     sitting behind the words and running off the edge. ---- */
+  .rows{border-top:1px solid var(--line);margin-top:40px}
+  .row{border-bottom:1px solid var(--line);position:relative;overflow:hidden;
+       padding:34px 18px 30px;transition:none}
+  .row .ghost{position:absolute;right:-.06em;top:50%;transform:translateY(-50%);
+              font-weight:800;font-size:clamp(110px,20vw,240px);line-height:.7;letter-spacing:-.06em;
+              color:transparent;-webkit-text-stroke:1.5px #3D3B36;pointer-events:none;user-select:none}
+  .row h3{position:relative;font-weight:800;text-transform:uppercase;letter-spacing:-.035em;
+          font-size:clamp(30px,7vw,74px);line-height:.92}
+  .row p{position:relative;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--dim);
+         max-width:52ch;margin-top:12px}
+  .row .idx{position:relative;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--dim);
+            display:block;margin-bottom:10px}
+  /* hard invert on hover. no transition on purpose - the slam IS the effect. */
+  .row:hover{background:var(--ink);color:var(--paper)}
+  .row:hover p,.row:hover .idx{color:var(--paper)}
+  .row:hover .ghost{-webkit-text-stroke-color:rgba(11,11,11,.28)}
+
+  /* ---- the one moment that is genuinely unhinged: the word jitters. ---- */
+  .jit{display:inline-block;animation:jit .18s var(--slam) infinite}
+  @keyframes jit{
+    0%{transform:translate(0,0)} 20%{transform:translate(-2px,1px)}
+    40%{transform:translate(2px,-1px)} 60%{transform:translate(-1px,-2px)}
+    80%{transform:translate(1px,2px)} 100%{transform:translate(0,0)}
+  }
+
+  /* grain. keeps the flat black from reading as a cheap dark mode. */
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.16;mix-blend-mode:overlay}
+
+  .foot{padding:34px 18px 60px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+        text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line)}
+
+  /* On narrow widths the ghost numeral sat behind the body copy and cost
+     legibility. Anchor it to the top so it backs the heading instead, where
+     there is nothing to read through it. */
+  @media(max-width:640px){
+    .row .ghost{top:0;transform:none;font-size:104px;-webkit-text-stroke-width:1.2px}
+    .row p{max-width:34ch}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .tick-track{animation:none}
+    .jit{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<svg class="grain" aria-hidden="true"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+
+<div class="note"><b>Internal workbench.</b> &nbsp;The site in the loud register &mdash; not a public page, not linked, not indexed.</div>
+
+<div class="tick"><div class="tick-track" id="t1"></div></div>
+
+<div class="hero">
+  <div class="kicker">Creative growth agency &mdash; London</div>
+  <h1 class="mega">We get <span class="out">eyes</span><br>on your work,<br>and keep your<br>brand <span class="jit thin">growing</span></h1>
+  <p class="hero-sub">We make your content, run your ads and grow your social presence. <b>Every day new people find you, and every week you see exactly how much they put in your account.</b></p>
+  <div class="hero-ctas"><a class="cta" href="apply.html">Apply</a><a class="cta quiet" href="#rows">See how it works</a></div>
+  <p class="seats">We take five clients at a time.</p>
+</div>
+
+<div class="tick rev"><div class="tick-track" id="t2"></div></div>
+
+<div class="rows" id="rows"></div>
+
+<div class="foot">Hover a row &mdash; the slam is the point &middot; ticker runs both ways &middot; type is Manrope, no new face &middot; monochrome, no accent, no gradient</div>
+
+<script>
+  var TICK1 = ['Content','Ads','Social','Bringing people back','Creative growth','One monthly fee'];
+  var TICK2 = ['We shoot it','We run it','We track it','We do it again','No lock-in','Your account, your list'];
+  function ticker(el, words){
+    var seq = document.createElement('div'); seq.className = 'tick-seq';
+    words.forEach(function(w){
+      var s = document.createElement('span');
+      s.appendChild(document.createTextNode(w));
+      var i = document.createElement('i'); i.appendChild(document.createTextNode(' ✕'));
+      s.appendChild(i); seq.appendChild(s);
+    });
+    el.appendChild(seq); el.appendChild(seq.cloneNode(true));
+  }
+  ticker(document.getElementById('t1'), TICK1);
+  ticker(document.getElementById('t2'), TICK2);
+
+  var SERVICES = [
+    ['01','Content','We shoot it with you, or build from what you have already got. Concepts, hooks and edits coming consistently, not one polished piece a month.'],
+    ['02','Ads','Run wherever your buyers actually are. Budgets, targeting and testing handled every day, turning off what loses and putting more behind what wins.'],
+    ['03','Social','Your feed and stories, run for you. It brings people in on its own, and it convinces the ones who found you through an ad.'],
+    ['04','Bringing people back','The person who already bought is the easiest sale you will ever make. We keep in touch for you, so they come back on their own.']
+  ];
+  var rows = document.getElementById('rows');
+  SERVICES.forEach(function(s){
+    var d = document.createElement('div'); d.className = 'row';
+    var g = document.createElement('div'); g.className = 'ghost'; g.appendChild(document.createTextNode(s[0]));
+    var i = document.createElement('span'); i.className = 'idx'; i.appendChild(document.createTextNode('[ ' + s[0] + ' ]'));
+    var h = document.createElement('h3'); h.appendChild(document.createTextNode(s[1]));
+    var p = document.createElement('p'); p.appendChild(document.createTextNode(s[2]));
+    d.appendChild(g); d.appendChild(i); d.appendChild(h); d.appendChild(p);
+    rows.appendChild(d);
+  });
+</script>
+</body>
+</html>
