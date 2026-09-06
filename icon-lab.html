@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Icon lab, KaizenEvol</title>
+<meta name="description" content="Internal workbench comparing the flat service cells against drawn marks with a motion beat. Not a public page.">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..700&family=Newsreader:ital,opsz,wght@1,6..72,300&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --page:#F7F6F4; --recess:#EFEDE9; --cool:#E8E9EA; --hairline:#D8D4CC;
+    --stone:#8A857C; --muted:#6E6A63; --ink:#23211E;
+    --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    --serif:'Newsreader',Georgia,'Times New Roman',serif;
+    --el-ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1240px;margin:0 auto;padding:56px 28px 96px}
+  .lab-head{border-bottom:1px solid var(--hairline);padding-bottom:22px;margin-bottom:12px}
+  .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:10px}
+  h1{font-size:clamp(26px,3.4vw,38px);font-weight:300;letter-spacing:-.02em;line-height:1.15}
+  h1 em{font-family:var(--serif);font-style:italic;font-weight:300}
+  .sub{color:var(--muted);max-width:62ch;margin-top:12px;font-size:15.5px}
+  .note{background:var(--recess);border:1px solid var(--hairline);border-radius:2px;padding:16px 18px;margin:26px 0 40px;font-size:14.5px;color:var(--muted);max-width:78ch}
+  .note b{color:var(--ink)}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+  @media(max-width:860px){.cols{grid-template-columns:1fr;gap:44px}}
+  .col{border:1px solid var(--hairline);border-radius:2px;background:#fff;padding:28px 26px 32px}
+  .col.b{background:var(--recess)}
+  .col-tag{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--stone);margin-bottom:6px}
+  .col-name{font-size:19px;font-weight:500;margin-bottom:4px}
+  .col-why{font-size:13.5px;color:var(--muted);margin-bottom:26px;min-height:3.2em}
+
+  .cell{padding:22px 0;border-top:1px solid var(--hairline)}
+  .cell:first-of-type{border-top:0;padding-top:4px}
+  .n{font-family:var(--serif);font-style:italic;font-size:40px;color:var(--stone);line-height:.9}
+  .cell h3{font-size:16.5px;font-weight:500;margin:8px 0 6px;letter-spacing:-.01em}
+  .cell p{font-size:14px;color:var(--muted);line-height:1.6}
+
+  /* the proposed version: a drawn mark instead of a numeral */
+  .mark{width:74px;height:74px;display:block;color:var(--ink);margin-bottom:2px}
+  .mark path,.mark circle,.mark line,.mark rect{
+    fill:none;stroke:currentColor;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:var(--len,240);stroke-dashoffset:var(--len,240);
+  }
+  .drawn .mark path,.drawn .mark circle,.drawn .mark line,.drawn .mark rect{
+    animation:draw 1.15s var(--el-ease) forwards;
+  }
+  .drawn .mark :nth-child(2){animation-delay:.13s}
+  .drawn .mark :nth-child(3){animation-delay:.26s}
+  .drawn .mark :nth-child(4){animation-delay:.39s}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @media(prefers-reduced-motion:reduce){
+    .mark path,.mark circle,.mark line,.mark rect{stroke-dashoffset:0}
+    .drawn .mark *{animation:none}
+  }
+  /* option C: the numerals that are already there, writing themselves in */
+  .third{margin-top:44px;border:1px solid var(--hairline);border-radius:2px;background:#fff;padding:28px 26px 32px}
+  .third-row{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:24px}
+  @media(max-width:860px){.third-row{grid-template-columns:1fr 1fr;gap:28px}}
+  .third .cell{border-top:1px solid var(--hairline);padding-top:16px}
+  .numeral{width:64px;height:56px;display:block;overflow:visible;color:var(--stone)}
+  .numeral text{
+    fill:currentColor;fill-opacity:0;
+    stroke:currentColor;stroke-width:.85;stroke-linecap:round;stroke-linejoin:round;
+    font-family:var(--serif);font-style:italic;font-weight:300;font-size:46px;
+    stroke-dasharray:var(--len,300);stroke-dashoffset:var(--len,300);
+  }
+  /* writes itself in outline, then inks in — ends solid, exactly as it is on the live site */
+  .third.drawn .numeral text{animation:draw 1.4s var(--el-ease) forwards, ink .5s linear .95s forwards}
+  .third.drawn .cell:nth-child(2) .numeral text{animation-delay:.12s,1.07s}
+  .third.drawn .cell:nth-child(3) .numeral text{animation-delay:.24s,1.19s}
+  .third.drawn .cell:nth-child(4) .numeral text{animation-delay:.36s,1.31s}
+  @keyframes ink{to{fill-opacity:1;stroke-opacity:0}}
+  @media(prefers-reduced-motion:reduce){
+    .numeral text{stroke-dashoffset:0;fill-opacity:1;stroke-opacity:0}
+    .third.drawn .numeral text{animation:none}
+  }
+  .verdict{margin-top:46px;border-top:1px solid var(--hairline);padding-top:26px;max-width:78ch}
+  .verdict h2{font-size:19px;font-weight:500;margin-bottom:12px}
+  .verdict li{font-size:14.5px;color:var(--muted);margin-bottom:9px}
+  .verdict b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lab-head">
+    <div class="eyebrow">Internal workbench &middot; not a public page</div>
+    <h1>Diego is right that it&rsquo;s flat. <em>Three ways</em> to fix it.</h1>
+    <p class="sub">Same section, built three ways, so the choice is made by looking rather than by arguing. Scroll it &mdash; two of the three only exist in motion, and a screenshot of them tells you nothing.</p>
+  </div>
+
+  <div class="note">
+    <b>Why not the 3D glassy icons.</b> Three collisions with <b>brand/DESIGN.md</b>, none of them about the colour: gradients are banned outright and 3D glass is a gradient by construction; the whole positioning is that <b>client work is the only colour</b>, so ours is none; and the v3 rebrand moved us <b>away</b> from violet-on-dark specifically because it <b>read as a SaaS tool</b>. Separately, the ambient budget is spent &mdash; the hero aura is the one ambient layer, and a second was deleted on 4 Sept because two behind one headline fight each other. And the reference set is <b>stock</b>, on a site selling bespoke creative.
+  </div>
+
+  <div class="cols">
+
+    <div class="col a">
+      <div class="col-tag">A &middot; live now</div>
+      <div class="col-name">Numerals only</div>
+      <div class="col-why">What is on the site today. Honest and quiet. Nothing to look at.</div>
+
+      <div class="cell"><div class="n">01</div><h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got. Concepts, hooks and edits coming consistently.</p></div>
+      <div class="cell"><div class="n">02</div><h3>Ads</h3><p>Run wherever your buyers actually are. Budgets, targeting and testing handled every day.</p></div>
+      <div class="cell"><div class="n">03</div><h3>Social</h3><p>Your feed and stories, run for you. It brings people in on its own.</p></div>
+      <div class="cell"><div class="n">04</div><h3>Bringing people back</h3><p>We keep in touch for you, by email and message, so they come back on their own.</p></div>
+    </div>
+
+    <div class="col b" id="proposed">
+      <div class="col-tag">B &middot; proposed</div>
+      <div class="col-name">Drawn marks, drawn in</div>
+      <div class="col-why">Bespoke line geometry in ink. No gradient, no colour, no stock. Each one draws itself on scroll &mdash; the motion IS the asset.</div>
+
+      <div class="cell">
+        <svg class="mark" viewBox="0 0 74 74" aria-hidden="true">
+          <rect x="9" y="21" width="56" height="38" rx="3" style="--len:190"/>
+          <path d="M25 21 l4.5 -7 h15 l4.5 7" style="--len:46"/>
+          <circle cx="37" cy="40" r="11" style="--len:70"/>
+        </svg>
+        <h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got. Concepts, hooks and edits coming consistently.</p>
+      </div>
+
+      <div class="cell">
+        <svg class="mark" viewBox="0 0 74 74" aria-hidden="true">
+          <circle cx="19" cy="55" r="3.4" style="--len:22"/>
+          <path d="M19 43 A12 12 0 0 1 31 55" style="--len:20"/>
+          <path d="M19 32 A23 23 0 0 1 42 55" style="--len:38"/>
+          <path d="M19 21 A34 34 0 0 1 53 55" style="--len:56"/>
+        </svg>
+        <h3>Ads</h3><p>Run wherever your buyers actually are. Budgets, targeting and testing handled every day.</p>
+      </div>
+
+      <div class="cell">
+        <svg class="mark" viewBox="0 0 74 74" aria-hidden="true">
+          <rect x="9" y="27" width="56" height="38" rx="3" style="--len:185"/>
+          <line x1="15" y1="20" x2="59" y2="20" style="--len:44"/>
+          <line x1="21" y1="13" x2="53" y2="13" style="--len:32"/>
+        </svg>
+        <h3>Social</h3><p>Your feed and stories, run for you. It brings people in on its own.</p>
+      </div>
+
+      <div class="cell">
+        <svg class="mark" viewBox="0 0 74 74" aria-hidden="true">
+          <path d="M57 37 A20 20 0 1 1 37 17" style="--len:112"/>
+          <path d="M28 8 l10 9 l-10 9" style="--len:30"/>
+          <circle cx="37" cy="37" r="4.5" style="--len:30"/>
+        </svg>
+        <h3>Bringing people back</h3><p>We keep in touch for you, by email and message, so they come back on their own.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="third" id="third">
+    <div class="col-tag">C &middot; the cheap one</div>
+    <div class="col-name">The numerals that are already there, writing themselves in</div>
+    <div class="col-why">No new iconography, nothing to maintain. Same marks as column A, given the motion beat from column B.</div>
+    <div class="third-row">
+      <div class="cell">
+        <svg class="numeral" viewBox="0 0 64 56" aria-hidden="true"><text x="0" y="44">01</text></svg>
+        <h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got.</p>
+      </div>
+      <div class="cell">
+        <svg class="numeral" viewBox="0 0 64 56" aria-hidden="true"><text x="0" y="44">02</text></svg>
+        <h3>Ads</h3><p>Run wherever your buyers actually are.</p>
+      </div>
+      <div class="cell">
+        <svg class="numeral" viewBox="0 0 64 56" aria-hidden="true"><text x="0" y="44">03</text></svg>
+        <h3>Social</h3><p>Your feed and stories, run for you.</p>
+      </div>
+      <div class="cell">
+        <svg class="numeral" viewBox="0 0 64 56" aria-hidden="true"><text x="0" y="44">04</text></svg>
+        <h3>Bringing people back</h3><p>We keep in touch for you, so they come back on their own.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <h2>What looking at it actually shows</h2>
+    <ul>
+      <li><b>C wins, and it is the cheapest of the three.</b> Diego&rsquo;s complaint is that the section has no life. C gives it life &mdash; the numeral writes itself in and then inks solid &mdash; using the mark that is <em>already on the site</em>. Nothing new to draw, nothing new to maintain, nothing else on the page has to change.</li>
+      <li><b>B does not win, and I built B.</b> Three of the four marks are standard glyph vocabulary: a camera, signal arcs, a card stack, a refresh arrow. Drawing them by hand does not make them bespoke &mdash; it makes them a hand-traced icon set. That is the same criticism I levelled at the stock reference, so it would be dishonest to ship it as the answer.</li>
+      <li><b>What B did prove is that the motion is the asset.</b> A mark that draws itself cannot be lifted off a stock site, because it is a behaviour rather than a file. That is the part worth keeping, and C keeps it without the asset debt.</li>
+      <li><b>Why not the 3D glassy icons is a separate question, and it is already settled above</b> &mdash; three collisions with DESIGN.md, none about taste.</li>
+      <li><b>The real cost of B, if we ever want it:</b> four marks drawn by us per section, forever, every time a section is added or reworded. Stock is free and instant. That is the actual trade.</li>
+    </ul>
+  </div>
+
+</div>
+<script>
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('drawn'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -12% 0px' });
+  document.querySelectorAll('#proposed .cell').forEach(function(c){ io.observe(c); });
+  io.observe(document.getElementById('third'));
+</script>
+</body>
+</html>
