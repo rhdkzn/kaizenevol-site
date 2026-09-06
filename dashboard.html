@@ -3,49 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard, KaizenEvol</title>
+  <title>Owners Portal, KaizenEvol</title>
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="theme-color" content="#0C0618" />
+  <meta name="theme-color" content="#0D0D0F" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-  <link rel="preload" href="/fraunces.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/pjs-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin />
   <style>
-    @font-face { font-family:'Fraunces'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/fraunces.woff2') format('woff2'); }
-    @font-face { font-family:'Fraunces'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/fraunces-italic.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:400; font-display:swap; src:url('/pjs-400.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:500; font-display:swap; src:url('/pjs-500.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:600; font-display:swap; src:url('/pjs-600.woff2') format('woff2'); }
-    @font-face { font-family:'Plus Jakarta Sans'; font-style:normal; font-weight:700; font-display:swap; src:url('/pjs-700.woff2') format('woff2'); }
+    /* GRAPHITE (brand/DESIGN.md): Manrope for the hierarchy, Newsreader italic once. */
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:200 800; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Newsreader'; font-style:italic; font-weight:300; font-display:swap; src:url('/newsreader-italic.woff2') format('woff2'); }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
-    body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;}
     a{text-decoration:none;color:inherit;}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
     :focus-visible{outline:2px solid var(--purple);outline-offset:2px;}
+    /* GRAPHITE dark, same tokens as crm.html (2026-09-06). --purple* are aliases
+       resolving to ink-on-dark and its tints; there is no accent colour. */
     :root{
-      --purple:#8B5CF6;--purple-d:#6D3FC0;--purple-l:rgba(139,92,246,0.15);--purple-m:rgba(139,92,246,0.28);
-      --accent-2:#A78BFA;
-      --bg:#0C0618;--surface:#120A24;--border:rgba(238,232,255,0.1);--text:#EEE8FF;--muted:rgba(238,232,255,0.56);
-      --serif:'Fraunces',Georgia,serif;--el-ease:cubic-bezier(.16,1,.3,1);
-      --green:#22c55e;--amber:#f59e0b;--red:#f87171;
+      --purple:#F7F6F4;--purple-d:#D8D4CC;--purple-l:rgba(247,246,244,0.08);--purple-m:rgba(247,246,244,0.18);
+      --accent:#F7F6F4;--accent-2:#D8D4CC;--void:#0D0D0F;
+      --bg:#0D0D0F;--surface:#1C1C1E;--border:rgba(247,246,244,0.1);--text:#F7F6F4;--muted:rgba(247,246,244,0.56);
+      --serif:'Newsreader',Georgia,serif;--sans:'Manrope',system-ui,sans-serif;--el-ease:cubic-bezier(.16,1,.3,1);
+      --green:#4ADE80;--amber:#FBBF24;--red:#F87171;
       --radius:12px;--radius-sm:8px;--radius-pill:9999px;--shadow:0 2px 20px rgba(0,0,0,0.45);
     }
     /* Gate */
-    #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0C0618 0%,#120A24 60%,#1a1040 100%);padding:24px;}
-    .gate-card{background:var(--surface);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(109,63,192,0.14);text-align:center;}
+    #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px;}
+    .gate-card{background:var(--surface);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;border:1px solid var(--border);text-align:center;}
     .gate-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;}
     .gate-badge{width:48px;height:48px;border-radius:11px;object-fit:contain;}
     .gate-logo-name{font-size:22px;font-weight:700;}
-    .gate-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+    .gate-title{font-family:var(--serif);font-style:italic;font-weight:300;font-size:26px;margin-bottom:6px;}
     .gate-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
-    .gate-input{width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:15px;outline:none;transition:border-color .2s;margin-bottom:12px;background:var(--bg);color:var(--text);}
+    .gate-input{width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:15px;outline:none;transition:border-color .2s;margin-bottom:12px;background:var(--bg);color:var(--text);}
     .gate-input:focus{border-color:var(--purple);}
     .gate-input.error{border-color:var(--red);}
     .gate-input:disabled{opacity:0.5;cursor:not-allowed;}
-    .gate-btn{width:100%;padding:13px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-pill);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .15s;}
+    .gate-btn{width:100%;padding:13px;background:var(--accent);color:var(--void);border:none;border-radius:var(--radius-pill);font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .15s;}
     .gate-btn:hover:not(:disabled){opacity:.88;transform:translateY(-1px);}
     .gate-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
     .gate-err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px;}
@@ -64,21 +63,21 @@
     .dash-nav-link.active{color:var(--purple);background:var(--purple-l);}
     .dash-header-right{display:flex;align-items:center;gap:12px;}
     .dash-date{font-size:12px;color:var(--muted);font-weight:500;}
-    .btn-logout{font-size:12px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:5px 13px;cursor:pointer;font-family:'Plus Jakarta Sans',system-ui,sans-serif;transition:color .2s,border-color .2s;}
+    .btn-logout{font-size:12px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:var(--radius-pill);padding:5px 13px;cursor:pointer;font-family:var(--sans);transition:color .2s,border-color .2s;}
     .btn-logout:hover{color:var(--red);border-color:var(--red);}
 .dash-main{max-width:1240px;margin:0 auto;padding:28px 32px 72px;display:flex;flex-direction:column;gap:28px;}
     .section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:14px;}
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
     .stat-card{background:var(--surface);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);border:1px solid var(--border);}
-    .stat-card.highlight{background:var(--purple);border-color:var(--purple);}
+    .stat-card.highlight{background:var(--surface);border-color:var(--purple-m);}
     .stat-l{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-    .highlight .stat-l{color:rgba(255,255,255,.65);}
+    .highlight .stat-l{color:var(--muted);}
     .stat-v{font-size:30px;font-weight:800;color:var(--text);line-height:1;margin-bottom:5px;}
-    .highlight .stat-v{color:#fff;}
+    .highlight .stat-v{color:var(--text);}
     .stat-s{font-size:12px;color:var(--muted);}
-    .highlight .stat-s{color:rgba(255,255,255,.65);}
-    .prog-bar{height:5px;background:rgba(255,255,255,.25);border-radius:3px;margin-top:10px;overflow:hidden;}
-    .prog-fill{height:100%;background:#fff;border-radius:3px;transition:width .4s ease;}
+    .highlight .stat-s{color:var(--muted);}
+    .prog-bar{height:5px;background:var(--purple-m);border-radius:3px;margin-top:10px;overflow:hidden;}
+    .prog-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease;}
     .revenue-card{background:var(--surface);border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow);border:1px solid var(--border);}
     .rev-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap;}
     .rev-title{font-size:18px;font-weight:800;}
@@ -88,14 +87,14 @@
     .rev-target{font-size:13px;color:var(--muted);margin-top:2px;}
     .rev-bar-wrap{margin-bottom:16px;}
     .rev-bar{height:12px;background:var(--border);border-radius:6px;overflow:hidden;}
-    .rev-fill{height:100%;background:linear-gradient(90deg,var(--purple-d),var(--purple));border-radius:6px;transition:width .5s ease;}
+    .rev-fill{height:100%;background:var(--accent);border-radius:6px;transition:width .5s ease;}
     .rev-milestones{display:flex;justify-content:space-between;margin-top:8px;}
     .rev-milestone{font-size:10px;color:var(--muted);text-align:center;}
     .rev-milestone.reached{color:var(--purple);font-weight:700;}
     .rev-retainer-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:20px;}
     .ret-slot{height:36px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--muted);transition:all .2s;}
-    .ret-slot.filled{background:var(--purple);border-color:var(--purple);color:#fff;}
-    .ret-slot.filled.retainer{background:var(--green);border-color:var(--green);}
+    .ret-slot.filled{background:var(--accent);border-color:var(--accent);color:var(--void);}
+    .ret-slot.filled.retainer{background:var(--green);border-color:var(--green);color:var(--void);}
     .snapshot-list{display:flex;flex-direction:column;gap:10px;}
     .snap-item{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid var(--border);transition:border-color .2s;}
     .snap-item:hover{border-color:var(--purple-m);}
@@ -104,19 +103,19 @@
     .snap-day{font-size:12px;color:var(--muted);white-space:nowrap;}
     .snap-link{font-size:12px;font-weight:700;color:var(--purple);white-space:nowrap;}
     .snap-link:hover{opacity:.8;}
-    .psl-onboarding{background:rgba(56,189,248,0.15);color:#38bdf8;}
-    .psl-live{background:rgba(139,92,246,0.18);color:#a78bfa;}
-    .psl-optimising{background:rgba(244,114,182,0.15);color:#f472b6;}
+    .psl-onboarding{background:rgba(216,212,204,0.15);color:#D8D4CC;}
+    .psl-live{background:rgba(247,246,244,0.18);color:#F7F6F4;}
+    .psl-optimising{background:rgba(247,246,244,0.15);color:#F7F6F4;}
     .psl-conversion{background:rgba(245,158,11,0.2);color:#fbbf24;}
     .psl-retainer{background:rgba(34,197,94,0.15);color:#4ade80;}
-    .psl-inactive{background:rgba(156,163,175,0.1);color:#9ca3af;}
+    .psl-inactive{background:rgba(138,133,124,0.1);color:#8A857C;}
     .bottom-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start;}
     .side-stack{display:flex;flex-direction:column;gap:22px;}
     .card{background:var(--surface);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);border:1px solid var(--border);}
     .task-row{display:flex;gap:8px;margin-bottom:14px;}
-    .task-inp{flex:1;padding:9px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13px;outline:none;transition:border-color .2s;background:var(--bg);color:var(--text);}
+    .task-inp{flex:1;padding:9px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s;background:var(--bg);color:var(--text);}
     .task-inp:focus{border-color:var(--purple);}
-    .add-btn{padding:9px 16px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
+    .add-btn{padding:9px 16px;background:var(--accent);color:var(--void);border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;white-space:nowrap;}
     .add-btn:hover{opacity:.88;}
     .task-list{display:flex;flex-direction:column;gap:5px;}
     .task-item{display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid transparent;transition:border-color .2s;}
@@ -124,7 +123,7 @@
     .task-item.done{opacity:.5;}
     .t-check{width:17px;height:17px;flex-shrink:0;border:2px solid var(--border);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;}
     .t-check.on{background:var(--purple);border-color:var(--purple);}
-    .t-check.on::after{content:'✓';color:#fff;font-size:10px;font-weight:800;}
+    .t-check.on::after{content:'✓';color:var(--void);font-size:10px;font-weight:800;}
     .t-text{flex:1;font-size:13px;}
     .task-item.done .t-text{text-decoration:line-through;color:var(--muted);}
     .t-del{font-size:17px;color:var(--muted);cursor:pointer;background:none;border:none;opacity:0;transition:opacity .2s,color .2s;}
@@ -132,7 +131,7 @@
     @media(hover:none){.t-del{opacity:1;}}
     .t-del:hover{color:var(--red);}
     .empty-msg{font-size:12px;color:var(--muted);text-align:center;padding:20px 0;}
-    .notes-ta{width:100%;min-height:130px;padding:13px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13px;color:var(--text);line-height:1.6;border:1.5px solid var(--border);border-radius:var(--radius-sm);resize:vertical;outline:none;transition:border-color .2s,background .2s;background:var(--bg);}
+    .notes-ta{width:100%;min-height:130px;padding:13px;font-family:var(--sans);font-size:13px;color:var(--text);line-height:1.6;border:1.5px solid var(--border);border-radius:var(--radius-sm);resize:vertical;outline:none;transition:border-color .2s,background .2s;background:var(--bg);}
     .notes-ta:focus{border-color:var(--purple);background:var(--surface);}
     .notes-saved{font-size:11px;color:var(--muted);margin-top:6px;height:14px;}
     .qlinks{display:flex;flex-direction:column;gap:7px;}
@@ -143,28 +142,28 @@
     @media(max-width:640px){.stats-row{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.dash-main{padding:20px 16px 56px;}.dash-header{padding:0 12px;}.stat-v{font-size:24px;}.rev-current{font-size:24px;}.rev-retainer-grid{grid-template-columns:repeat(5,1fr);}.dash-date{display:none;}.dash-nav-link{padding:5px 9px;font-size:12px;}.btn-logout{padding:5px 10px;font-size:11px;}.dash-header-inner{gap:8px;}.rev-milestone{font-size:9px;}.revenue-card{padding:22px 18px;}}
     @media(max-width:380px){.rev-milestone:nth-child(2),.rev-milestone:nth-child(4){display:none;}}
     /* Command Center Hero */
-    .cmd-center{padding:36px 40px 28px;border-radius:20px;background:linear-gradient(135deg,var(--surface) 0%,#1a1040 60%,#2a1260 100%);border:1px solid rgba(139,92,246,0.22);position:relative;overflow:hidden;box-shadow:0 6px 36px rgba(0,0,0,0.5);}
-    .cmd-center::before{content:'';position:absolute;top:-120px;right:-80px;width:420px;height:420px;background:radial-gradient(circle,rgba(139,92,246,0.14) 0%,transparent 65%);pointer-events:none;}
-    .cmd-greeting{font-size:12px;font-weight:600;color:var(--purple);margin-bottom:12px;letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(139,92,246,0.12);border-radius:var(--radius-pill);border:1px solid rgba(139,92,246,0.22);}
-    .cmd-title{font-family:var(--serif);font-size:clamp(34px,1.5rem + 3.2vw,54px);font-weight:640;letter-spacing:-0.03em;line-height:1.06;margin-bottom:8px;background:linear-gradient(100deg,#A78BFA 0%,#8B5CF6 34%,#D6C7FF 58%,#8B5CF6 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:ccSweep 6.5s linear infinite;}
+    .cmd-center{padding:36px 40px 28px;border-radius:20px;background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden;box-shadow:0 6px 36px rgba(0,0,0,0.5);}
+    .cmd-center::before{content:none;}
+    .cmd-greeting{font-size:12px;font-weight:600;color:var(--purple);margin-bottom:12px;letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(247,246,244,0.12);border-radius:var(--radius-pill);border:1px solid rgba(247,246,244,0.22);}
+    .cmd-title{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(34px,1.5rem + 3.2vw,54px);letter-spacing:-0.02em;line-height:1.06;margin-bottom:8px;color:var(--text);}
     @keyframes ccSweep{from{background-position:0% 0}to{background-position:220% 0}}
   /* No prefers-reduced-motion override. Rahaid, standing: don't let Reduce Motion
      stop anything we make. Guard: test-reduced-motion.mjs */
     .cmd-date{font-size:15px;color:var(--muted);font-weight:500;margin-bottom:16px;}
-    .cmd-summary{font-size:13px;color:rgba(240,238,255,0.75);font-weight:500;padding:10px 18px;background:rgba(139,92,246,0.10);border-radius:var(--radius-sm);border:1px solid rgba(139,92,246,0.22);display:inline-block;}
-    .cmd-summary strong{color:#fff;font-weight:700;}
+    .cmd-summary{font-size:13px;color:var(--muted);font-weight:500;padding:10px 18px;background:rgba(247,246,244,0.10);border-radius:var(--radius-sm);border:1px solid rgba(247,246,244,0.22);display:inline-block;}
+    .cmd-summary strong{color:var(--text);font-weight:700;}
     /* Section labels with vertical accent bar */
     .section-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
     .section-label::before{content:'';width:3px;height:14px;background:var(--purple);border-radius:3px;display:block;flex-shrink:0;}
     /* Stat cards — inset left accent + hover lift */
-    .stat-card{background:var(--surface);border-radius:var(--radius);padding:20px 22px;border:1px solid var(--border);box-shadow:var(--shadow),inset 3px 0 0 rgba(139,92,246,0.5);transition:transform .18s ease,box-shadow .18s ease;}
-    .stat-card:hover:not(.highlight){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.6),inset 3px 0 0 var(--purple);}
-    .stat-card.highlight{background:linear-gradient(135deg,#6d28d9 0%,var(--purple) 55%,#a78bfa 100%);border:none;box-shadow:0 6px 32px rgba(139,92,246,0.45);}
+    .stat-card{background:var(--surface);border-radius:var(--radius);padding:20px 22px;border:1px solid var(--border);box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease;}
+    .stat-card:hover:not(.highlight){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.6);}
+    .stat-card.highlight{background:var(--surface);border:1px solid var(--purple-m);box-shadow:var(--shadow);}
     /* Chart card */
     .chart-card{background:var(--surface);border-radius:var(--radius);padding:24px 28px;box-shadow:0 4px 28px rgba(0,0,0,0.5);border:1px solid var(--border);}
     /* Revenue card + glowing progress fill */
     .revenue-card{background:var(--surface);border-radius:var(--radius);padding:28px 32px;box-shadow:0 4px 32px rgba(0,0,0,0.5);border:1px solid var(--border);}
-    .rev-fill{height:100%;background:linear-gradient(90deg,#5b21b6,var(--purple),#a78bfa);border-radius:6px;transition:width .5s ease;box-shadow:0 0 14px rgba(139,92,246,0.45);}
+    .rev-fill{height:100%;background:var(--accent);border-radius:6px;transition:width .5s ease;}
     /* Base cards */
     .card{background:var(--surface);border-radius:var(--radius);padding:22px 24px;box-shadow:0 4px 24px rgba(0,0,0,0.45);border:1px solid var(--border);}
     @media(max-width:640px){.cmd-summary{font-size:12px;}.cmd-center{padding:24px 20px 20px;}}
@@ -176,25 +175,25 @@
     .res-row{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid var(--border);transition:border-color .2s;flex-wrap:wrap;}
     .res-row:hover{border-color:var(--purple-m);}
     .res-name{font-size:14px;font-weight:700;}
-    .res-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--radius-pill);background:var(--purple-l);color:#a78bfa;text-transform:uppercase;letter-spacing:.5px;}
+    .res-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--radius-pill);background:var(--purple-l);color:#F7F6F4;text-transform:uppercase;letter-spacing:.5px;}
     .res-nums{font-size:13px;color:var(--muted);font-weight:600;margin-left:auto;font-variant-numeric:tabular-nums;white-space:nowrap;}
     .res-nums b{color:var(--text);}
-    .res-act{font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;background:none;border:none;font-family:'Plus Jakarta Sans',system-ui,sans-serif;padding:4px 5px;}
+    .res-act{font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;background:none;border:none;font-family:var(--sans);padding:4px 5px;}
     .res-act:hover{opacity:.75;}
     .res-act.del:hover{color:var(--red);}
-    .res-claim{width:100%;font-size:12.5px;color:rgba(240,238,255,.82);line-height:1.55;padding:10px 13px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);margin-top:2px;}
-    .res-claim b{color:#c4b5fd;font-weight:700;}
+    .res-claim{width:100%;font-size:12.5px;color:var(--text);line-height:1.55;padding:10px 13px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);margin-top:2px;}
+    .res-claim b{color:var(--text);font-weight:700;}
     dialog.res-modal{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:0;max-width:430px;width:92vw;box-shadow:0 12px 54px rgba(0,0,0,.6);}
-    dialog.res-modal::backdrop{background:rgba(4,2,12,.66);}
+    dialog.res-modal::backdrop{background:rgba(0,0,0,.66);}
     .res-modal-body{padding:24px;}
     .res-modal-body h3{font-size:16px;margin-bottom:16px;}
     .res-field{margin-bottom:12px;}
     .res-field label{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-    .res-field input,.res-field select{width:100%;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+    .res-field input,.res-field select{width:100%;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:var(--sans);font-size:14px;outline:none;transition:border-color .2s;}
     .res-field input:focus,.res-field select:focus{border-color:var(--purple);}
     .res-two{display:flex;gap:11px;}
     .res-two>*{flex:1;}
-    #resToast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--purple);color:#fff;padding:10px 18px;border-radius:var(--radius-pill);font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s;z-index:200;box-shadow:0 6px 24px rgba(139,92,246,.4);}
+    #resToast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--void);padding:10px 18px;border-radius:var(--radius-pill);font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s;z-index:200;box-shadow:0 6px 24px rgba(0,0,0,.4);}
   
   /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
   @view-transition { navigation: auto; }
@@ -216,8 +215,8 @@
 <div id="gate">
   <div class="gate-card">
     <div class="gate-logo"><img src="logo.png" alt="KaizenEvol" class="gate-badge" /><span class="gate-logo-name">KaizenEvol</span></div>
-    <h1 class="gate-title" id="gateTitle">Dashboard</h1>
-    <div class="gate-sub" id="gateSub">Private access only. Enter your password.</div>
+    <h1 class="gate-title" id="gateTitle">Owners Portal</h1>
+    <div class="gate-sub" id="gateSub">Rahaid and Diego. Creative growth agency for brands and artists.</div>
     <div id="gateErr" role="alert" aria-live="assertive" style="font-size:12px;color:#f87171;margin-top:8px;min-height:18px;word-break:break-word;"></div>
     <label for="gateInput" class="sr-only">Password</label>
     <input type="password" class="gate-input" id="gateInput" placeholder="Password" aria-label="Password" autocomplete="current-password" />
@@ -230,7 +229,7 @@
     <div class="dash-header-inner">
       <div class="dash-logo"><img src="logo.png" alt="KaizenEvol" class="dash-badge" />KaizenEvol</div>
       <nav class="dash-nav">
-        <a href="dashboard.html" class="dash-nav-link active" aria-current="page">Dashboard</a>
+        <a href="dashboard.html" class="dash-nav-link active" aria-current="page">Owners Portal</a>
         <a href="crm.html" class="dash-nav-link">CRM</a>
         <a href="#resultsSection" class="dash-nav-link">Results</a>
         <a href="tools/funnel-builder.html" class="dash-nav-link" target="_blank" rel="noopener">Funnel Builder</a>
@@ -244,7 +243,7 @@
   <main class="dash-main">
     <div class="cmd-center">
       <div class="cmd-greeting" id="ccGreeting"></div>
-      <h1 class="cmd-title">Command Center</h1>
+      <h1 class="cmd-title">Owners Portal</h1>
       <div class="cmd-date" id="ccDate"></div>
       <div class="cmd-summary" id="ccSummary"></div>
     </div>
@@ -268,21 +267,21 @@
         <div class="rev-header">
           <div>
             <div class="rev-title">Goal: 10 Retainer Clients</div>
-            <div class="rev-sub">&pound;3,500/mo per client &mdash; &pound;35,000/mo at capacity</div>
+            <div class="rev-sub">&pound;2,000/mo standard (&pound;1,000 founding, first five) &mdash; &pound;20,000/mo at ten, before growth steps</div>
           </div>
           <div class="rev-amount">
             <div class="rev-current" id="revCurrent">&pound;0</div>
-            <div class="rev-target">of &pound;35,000/mo target</div>
+            <div class="rev-target">of &pound;20,000/mo target</div>
           </div>
         </div>
         <div class="rev-bar-wrap">
           <div class="rev-bar"><div class="rev-fill" id="revFill" style="width:0%"></div></div>
           <div class="rev-milestones">
-            <span class="rev-milestone" id="m1">&pound;3,500<br/>1 client</span>
-            <span class="rev-milestone" id="m3">&pound;10,500<br/>3 clients</span>
-            <span class="rev-milestone" id="m5">&pound;17,500<br/>5 clients</span>
-            <span class="rev-milestone" id="m7">&pound;24,500<br/>7 clients</span>
-            <span class="rev-milestone" id="m10">&pound;35,000<br/>10 clients</span>
+            <span class="rev-milestone" id="m1">&pound;2,000<br/>1 client</span>
+            <span class="rev-milestone" id="m3">&pound;6,000<br/>3 clients</span>
+            <span class="rev-milestone" id="m5">&pound;10,000<br/>5 clients</span>
+            <span class="rev-milestone" id="m7">&pound;14,000<br/>7 clients</span>
+            <span class="rev-milestone" id="m10">&pound;20,000<br/>10 clients</span>
           </div>
         </div>
         <div class="rev-retainer-grid" id="retainerGrid"></div>
@@ -297,7 +296,7 @@
       <div class="stats-row" id="resultsStatsRow"></div>
       <div class="card" style="margin-top:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
-          <div style="font-size:12.5px;color:var(--muted);max-width:660px;">Jobs won &amp; revenue pull live from the CRM&rsquo;s <b style="color:var(--text)">Commission log</b>, grouped per client &mdash; the numbers that substantiate every claim (FIN-UEC-001) and gate the Forge Pro raise. Add a client&rsquo;s ad spend to unlock ROAS &amp; CPL; Diego copies the claim straight into outreach.</div>
+          <div style="font-size:12.5px;color:var(--muted);max-width:660px;">Revenue lift pulls live from the CRM&rsquo;s <b style="color:var(--text)">Growth Step</b> log (baseline vs latest trailing 3-month average), per client &mdash; the number behind every claim we make. Add the client&rsquo;s ad spend to show return on spend; Diego copies the claim into outreach only with the client&rsquo;s permission to quote. Our own brands never appear as client results without disclosing common ownership.</div>
           <button class="add-btn" onclick="openResult(null)">+ Add spend</button>
         </div>
         <div class="res-gate" id="resGate" style="margin-top:16px;"></div>
@@ -336,11 +335,11 @@
   <dialog id="resDlg" class="res-modal">
     <form method="dialog" class="res-modal-body">
       <h3 id="resDlgTitle">Add client spend</h3>
-      <div class="res-field"><label>Client (match the Commission log name)</label><input id="res_name" list="resClientList" placeholder="e.g. Anderson Kitchens" required autocomplete="off" /><datalist id="resClientList"></datalist></div>
-      <div class="res-field"><label>Niche</label><select id="res_niche"><option value="kitchen">Kitchen remodelling</option><option value="bathroom">Bathroom renovation</option><option value="loft">Loft conversion</option><option value="other">Other</option></select></div>
-      <div class="res-two"><div class="res-field"><label>Ad spend &pound;</label><input id="res_spend" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Client margin %</label><input id="res_margin" type="number" min="0" max="100" value="25" /></div></div>
-      <div class="res-two"><div class="res-field"><label>Leads (optional)</label><input id="res_leads" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Booked (optional)</label><input id="res_booked" type="number" min="0" placeholder="0" /></div></div>
-      <div style="font-size:11.5px;color:var(--muted);margin:2px 0 12px;line-height:1.5;">Jobs won &amp; revenue pull automatically from the Commission log &mdash; you don&rsquo;t enter them here. Ad spend unlocks ROAS, CPL and the full claim.</div>
+      <div class="res-field"><label>Client (match the CRM client name)</label><input id="res_name" list="resClientList" placeholder="e.g. Marauder" required autocomplete="off" /><datalist id="resClientList"></datalist></div>
+      <div class="res-field"><label>Segment</label><select id="res_niche"><option value="streetwear">Streetwear</option><option value="clothing">Clothing</option><option value="jewellery">Jewellery</option><option value="watches">Watches</option><option value="shoes">Shoes</option><option value="prints">Prints &amp; ceramics</option><option value="music">Music / artist</option><option value="local">Local business</option><option value="other">Other</option></select></div>
+      <div class="res-two"><div class="res-field"><label>Ad spend to date &pound;</label><input id="res_spend" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Gross margin %</label><input id="res_margin" type="number" min="0" max="100" value="60" /></div></div>
+      <div class="res-two"><div class="res-field"><label>Drops run (optional)</label><input id="res_leads" type="number" min="0" placeholder="0" /></div><div class="res-field"><label>Avg sell-through % (optional)</label><input id="res_booked" type="number" min="0" max="100" placeholder="0" /></div></div>
+      <div style="font-size:11.5px;color:var(--muted);margin:2px 0 12px;line-height:1.5;">Revenue lift comes from the CRM&rsquo;s Growth Step log &mdash; you don&rsquo;t enter it here. Ad spend adds return on spend to the claim.</div>
       <div class="res-two" style="margin-top:2px;"><button value="save" class="add-btn" style="flex:1;" onclick="saveResult(event)">Save</button><button value="cancel" class="btn-logout" style="flex:1;">Cancel</button></div>
     </form>
   </dialog>
@@ -348,7 +347,7 @@
 </div>
 <script>
 const SESSION_KEY='ke_session',DATA_KEY='ke_data',LEADS_KEY='ke_leads',LOCKOUT_KEY='ke_lockout',IDLE_TTL=18e5,MAX_ATTEMPTS=3,LOCKOUT_TTL=3e5;
-const STAGE_COLORS={new:'#94a3b8',contacted:'#3b82f6',call:'#a855f7',proposal:'#f59e0b',won:'#22c55e',lost:'#ef4444'};
+const STAGE_COLORS={new:'#8A857C',contacted:'#D8D4CC',call:'#F7F6F4',proposal:'#FBBF24',won:'#4ADE80',lost:'#F87171'};
 const STAGE_LABEL={new:'New Lead',contacted:'Contacted',call:'Call Booked',proposal:'Proposal Sent',won:'Won ✓',lost:'Lost'};
 const STAGE_ORDER=['new','contacted','call','proposal','won','lost'];
 const STAGE_PROB={new:.05,contacted:.15,call:.35,proposal:.60,won:1,lost:0};
@@ -357,38 +356,43 @@ function isLockedOut(){const l=getLockout();return l.until&&Date.now()<l.until;}
 function remainingLockout(){const l=getLockout();return Math.max(0,Math.ceil((l.until-Date.now())/60000));}
 function recordFailedAttempt(){const l=getLockout();const attempts=(l.attempts||0)+1;const until=attempts>=MAX_ATTEMPTS?Date.now()+LOCKOUT_TTL:null;localStorage.setItem(LOCKOUT_KEY,JSON.stringify({attempts,until}));return attempts;}
 function clearLockout(){localStorage.removeItem(LOCKOUT_KEY);}
-function applyLockoutUI(){const inp=document.getElementById('gateInput'),btn=document.getElementById('gateBtn'),el=document.getElementById('gateLockout');if(isLockedOut()){inp.disabled=btn.disabled=true;const m=remainingLockout();el.innerHTML='Too many failed attempts — try again in '+m+' min. <a href="#" onclick="event.preventDefault();localStorage.removeItem(\'ke_lockout\');location.reload();" style="color:#8B5CF6;text-decoration:underline;cursor:pointer;">Reset now</a>';setTimeout(applyLockoutUI,10000);}else{inp.disabled=btn.disabled=false;el.textContent='';}}
+function applyLockoutUI(){const inp=document.getElementById('gateInput'),btn=document.getElementById('gateBtn'),el=document.getElementById('gateLockout');if(isLockedOut()){inp.disabled=btn.disabled=true;const m=remainingLockout();el.innerHTML='Too many failed attempts — try again in '+m+' min. <a href="#" onclick="event.preventDefault();localStorage.removeItem(\'ke_lockout\');location.reload();" style="color:var(--text);text-decoration:underline;cursor:pointer;">Reset now</a>';setTimeout(applyLockoutUI,10000);}else{inp.disabled=btn.disabled=false;el.textContent='';}}
 let idleTimer=null;
 function resetIdle(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>{logout();document.getElementById('gateLockout').textContent='Session expired due to inactivity.';},IDLE_TTL);}
 function startIdleWatch(){['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.addEventListener(e,resetIdle,{passive:true}));resetIdle();}
 function stopIdleWatch(){clearTimeout(idleTimer);['mousemove','keydown','click','scroll','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
 const _sb=supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
-const PW_HASH='967b2c7f7d08166bfabad63fb8fbd5743cfdbb7965bc33c08e73c700e2dc20f1',PW_SALT='6b61697a656e65766f6c323032366b61697a656e65766f6c3230323661613030';
+/* Real authentication, same as crm.html since 2026-08-05 (ported here 2026-09-06).
+   The old gate compared a PBKDF2 hash in the browser and then read the database as
+   the ANON role — which the RLS lockdown now answers with an empty list, so every
+   panel rendered blank behind a password that guarded nothing. ONE shared account
+   (Rahaid's ruling 2026-08-24): both owners sign in as CRM_EMAIL. */
+const CRM_EMAIL='rahaid@kaizenevol.com';
 function initGateUI(){}
-async function pbkdf2Hash(pw,saltHex){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveBits']);const salt=new Uint8Array(saltHex.match(/../g).map(h=>parseInt(h,16)));const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:310000,hash:'SHA-256'},key,256);return Array.from(new Uint8Array(bits)).map(b=>b.toString(16).padStart(2,'0')).join('');}
 async function attemptLogin(){
   if(isLockedOut()){applyLockoutUI();return;}
   const pw=document.getElementById('gateInput').value;if(!pw)return;
   const btn=document.getElementById('gateBtn');btn.disabled=true;btn.textContent='Verifying…';
-  let hash;
-  try{hash=await pbkdf2Hash(pw,PW_SALT);}catch(e){
-    btn.textContent='Unlock →';btn.disabled=false;
-    document.getElementById('gateErr').textContent='Verification failed — must be opened over HTTPS.';
-    setTimeout(()=>{document.getElementById('gateErr').textContent='';},5000);
-    return;
-  }
+  let authOk=false;
+  try{const {error}=await _sb.auth.signInWithPassword({email:CRM_EMAIL,password:pw});if(!error)authOk=true;}catch(e){}
   btn.textContent='Unlock →';btn.disabled=false;
-  if(hash!==PW_HASH){const attempts=recordFailedAttempt();const inp=document.getElementById('gateInput');inp.classList.add('error');const errEl=document.getElementById('gateErr');if(isLockedOut()){applyLockoutUI();}else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=`Incorrect password. ${left} attempt(s) remaining.`;}inp.value='';setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);return false;}
+  if(!authOk){const attempts=recordFailedAttempt();const inp=document.getElementById('gateInput');inp.classList.add('error');const errEl=document.getElementById('gateErr');if(isLockedOut()){applyLockoutUI();}else{const left=MAX_ATTEMPTS-attempts;errEl.textContent=`Incorrect password. ${left} attempt(s) remaining.`;}inp.value='';setTimeout(()=>{inp.classList.remove('error');errEl.textContent='';},4000);return false;}
   clearLockout();openSession();showDashboard();return true;
 }
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
-function checkSession(){const s=localStorage.getItem(SESSION_KEY);if(s){try{const p=JSON.parse(s);if(p.expires_at>Date.now()){clearLockout();showDashboard();return;}else{localStorage.removeItem(SESSION_KEY);}}catch(e){console.warn('Session check:',e);}}initGateUI();applyLockoutUI();}
+/* Ask Supabase whether there is a session — the database is the only opinion that counts. */
+async function checkSession(){try{const {data}=await _sb.auth.getSession();if(data&&data.session){clearLockout();showDashboard();return;}}catch(e){console.warn('Session check:',e);}localStorage.removeItem(SESSION_KEY);initGateUI();applyLockoutUI();}
 let _dashChannel=null;
-function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();localStorage.removeItem(SESSION_KEY);document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
+function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();localStorage.removeItem(SESSION_KEY);try{_sb.auth.signOut();}catch(e){}document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
 function renderAll(d){renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl&&document.activeElement!==notesEl)notesEl.value=d.notes||'';}
 async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();try{const remote=await _cloudPull(DATA_KEY);if(remote&&typeof remote==='object'&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};if(!Array.isArray(remote.clients)||remote.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);const _ni=merged.clients.findIndex(c=>c.id==='nav');if(_ni!==-1){merged.clients.splice(_ni,1);if(merged.metrics)delete merged.metrics.nav;_cloudPush(DATA_KEY,merged);}localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}else if(!remote){_cloudPush(DATA_KEY,load());}}catch(e){console.warn('Initial sync:',e);}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}}).subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});}
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
-const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:3500}};
+const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},growth:{snapshots:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:2000,foundingValue:1000,stepValue:1000,stepTrigger:1.5}};
+/* Growth step (FIN-PRI-004) — the same arithmetic as crm.html, read-only here. */
+function baseRetainer(c,data){const s=(data&&data.settings)||{};return Number(c.retainerValue)||(c.founding?(s.foundingValue||1000):(s.retainerValue||2000));}
+function clientSnapshots(c,data){return (((data||{}).growth||{}).snapshots||[]).filter(x=>x.clientId===c.id).sort((a,b)=>String(a.date).localeCompare(String(b.date)));}
+function growthState(c,data){const s=(data&&data.settings)||{};const trig=s.stepTrigger||1.5;const base=Number(c.baselineRevenue)||0;const snaps=clientSnapshots(c,data);const latest=snaps.length?Number(snaps[snaps.length-1].avg)||0:0;if(!base)return{steps:0,level:0,next:0,bonusDue:0,fired:[],latest,base,lift:0};let level=base,steps=0;const fired=[];snaps.forEach(x=>{const v=Number(x.avg)||0;while(v>=level*trig){level=level*trig;steps++;fired.push({date:x.date,level:Math.round(level)});}});const retainer=baseRetainer(c,data)+steps*(s.stepValue||1000);return{steps,level:Math.round(level),next:Math.round(level*trig),bonusDue:fired.filter(f=>!(c.bonusPaid||[]).includes(f.date)).length*retainer,fired,latest,base,lift:latest&&base?Math.round((latest/base-1)*100):0};}
+function currentRetainer(c,data){return baseRetainer(c,data)+growthState(c,data).steps*(((data&&data.settings)||{}).stepValue||1000);}
 async function _cloudPush(key,val){try{await _sb.from('app_data').upsert({id:key,data:val,updated_at:new Date().toISOString()},{onConflict:'id'});}catch(e){console.warn('Supabase push:',e);}}
 async function _cloudPull(key){try{const{data,error}=await _sb.from('app_data').select('data').eq('id',key).single();if(!error&&data){localStorage.setItem(key,JSON.stringify(data.data));return data.data;}}catch(e){}return null;}
 function load(){try{const r=localStorage.getItem(DATA_KEY);const d=r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);(d.clients||[]).forEach(c=>{if(c.status==='trial'||c.status==='retainer')c.status='active';if(!c.liveDate&&c.trialStartDate)c.liveDate=c.trialStartDate;});return d;}catch(e){return structuredClone(DEFAULTS);}}
@@ -396,9 +400,9 @@ function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));_cloudPu
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function trialDays(startStr,total){if(!startStr)return null;const diff=Math.floor((Date.now()-new Date(startStr))/86400000);return{day:Math.max(1,diff+1),total};}
 function getClientStage(c){if(c.status==='inactive')return{key:'inactive',label:'Inactive',day:0};if(!c.liveDate)return{key:'onboarding',label:'Onboarding',day:0};const day=Math.max(1,Math.floor((Date.now()-new Date(c.liveDate))/86400000)+1);return{key:'live',label:'Live',day};}
-function renderStats(data){const active=data.clients.filter(c=>c.status!=='inactive');const goal=data.settings.goalRetainers||10;const mrr=active.reduce((n,c)=>n+(c.retainerValue||2500),0);const capacity=goal*3500;const pct=Math.min(100,Math.round(active.length/goal*100));const jobs=(data.commission&&data.commission.jobs)||[];const pending=jobs.filter(j=>j.status==='pending').reduce((s,j)=>s+(j.commission||0),0);document.getElementById('statsRow').innerHTML=`<div class="stat-card highlight"><div class="stat-l">Goal Progress</div><div class="stat-v">${active.length} / ${goal}</div><div class="stat-s">£${mrr.toLocaleString()} MRR</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div><div class="stat-card"><div class="stat-l">MRR</div><div class="stat-v">£${mrr.toLocaleString()}</div><div class="stat-s">of £${capacity.toLocaleString()}/mo at capacity</div></div><div class="stat-card"><div class="stat-l">Active Clients</div><div class="stat-v">${active.length}</div><div class="stat-s">live retainer client${active.length!==1?'s':''}</div></div><div class="stat-card"><div class="stat-l">Commission Owed</div><div class="stat-v" style="color:var(--amber)">£${pending.toLocaleString()}</div><div class="stat-s">${jobs.filter(j=>j.status==='pending').length} unpaid job(s)</div></div>`;}
-function renderRevenue(data){const active=data.clients.filter(c=>c.status!=='inactive');const goal=data.settings.goalRetainers||10;const capPrice=3500;const mrr=active.reduce((n,c)=>n+(c.retainerValue||2500),0);const pct=Math.min(100,mrr/(goal*capPrice)*100);document.getElementById('revCurrent').textContent='£'+mrr.toLocaleString();document.getElementById('revFill').style.width=pct+'%';const milestones=[{id:'m1',clients:1},{id:'m3',clients:3},{id:'m5',clients:5},{id:'m7',clients:7},{id:'m10',clients:10}];milestones.forEach(m=>{const el=document.getElementById(m.id);if(el){if(active.length>=m.clients)el.classList.add('reached');else el.classList.remove('reached');}});const grid=document.getElementById('retainerGrid');grid.innerHTML=Array.from({length:goal},(_,i)=>{const client=active[i];const filled=i<active.length;return`<div class="ret-slot ${filled?'filled retainer':''}" title="${filled?esc(client.name):'Empty slot'}">${filled?esc(client.name.split(' ')[0]):''}</div>`;}).join('');}
-function renderSnapshot(data){const active=data.clients.filter(c=>c.status!=='inactive');const el=document.getElementById('snapshotList');if(!el)return;if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:16px 0;">No active clients.</div>';return;}el.innerHTML=active.map(c=>{const s=getClientStage(c);const dayStr=s.key==='onboarding'?'Set go-live date':('Live '+s.day+' day'+(s.day===1?'':'s'));return`<div class="snap-item"><div class="snap-name">${esc(c.name)}</div><span class="snap-stage psl-${s.key}">${esc(s.label)}</span><div class="snap-day">${esc(dayStr)}</div><a href="crm.html" class="snap-link">View in CRM →</a></div>`;}).join('');}
+function renderStats(data){const active=data.clients.filter(c=>c.status!=='inactive');const goal=data.settings.goalRetainers||10;const std=data.settings.retainerValue||2000;const mrr=active.reduce((n,c)=>n+currentRetainer(c,data),0);const capacity=goal*std;const pct=Math.min(100,Math.round(active.length/goal*100));const bonus=active.reduce((n,c)=>n+growthState(c,data).bonusDue,0);const steps=active.reduce((n,c)=>n+growthState(c,data).steps,0);document.getElementById('statsRow').innerHTML=`<div class="stat-card highlight"><div class="stat-l">Goal Progress</div><div class="stat-v">${active.length} / ${goal}</div><div class="stat-s">£${mrr.toLocaleString()} MRR</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div><div class="stat-card"><div class="stat-l">MRR</div><div class="stat-v">£${mrr.toLocaleString()}</div><div class="stat-s">of £${capacity.toLocaleString()}/mo at ${goal} standard retainers</div></div><div class="stat-card"><div class="stat-l">Active Clients</div><div class="stat-v">${active.length}</div><div class="stat-s">${active.filter(c=>c.founding).length} founding · ${steps} growth step${steps!==1?'s':''} fired</div></div><div class="stat-card"><div class="stat-l">Growth-step bonus due</div><div class="stat-v" style="color:var(--amber)">£${bonus.toLocaleString()}</div><div class="stat-s">one month at the new rate, per step</div></div>`;}
+function renderRevenue(data){const active=data.clients.filter(c=>c.status!=='inactive');const goal=data.settings.goalRetainers||10;const capPrice=data.settings.retainerValue||2000;const mrr=active.reduce((n,c)=>n+currentRetainer(c,data),0);const pct=Math.min(100,mrr/(goal*capPrice)*100);document.getElementById('revCurrent').textContent='£'+mrr.toLocaleString();document.getElementById('revFill').style.width=pct+'%';const milestones=[{id:'m1',clients:1},{id:'m3',clients:3},{id:'m5',clients:5},{id:'m7',clients:7},{id:'m10',clients:10}];milestones.forEach(m=>{const el=document.getElementById(m.id);if(el){if(active.length>=m.clients)el.classList.add('reached');else el.classList.remove('reached');}});const grid=document.getElementById('retainerGrid');grid.innerHTML=Array.from({length:goal},(_,i)=>{const client=active[i];const filled=i<active.length;return`<div class="ret-slot ${filled?'filled retainer':''}" title="${filled?esc(client.name):'Empty slot'}">${filled?esc(client.name.split(' ')[0]):''}</div>`;}).join('');}
+function renderSnapshot(data){const active=data.clients.filter(c=>c.status!=='inactive');const el=document.getElementById('snapshotList');if(!el)return;if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:16px 0;">No active clients.</div>';return;}el.innerHTML=active.map(c=>{const s=getClientStage(c);const g=growthState(c,data);const dayStr=s.key==='onboarding'?'Set go-live date':('Live '+s.day+' day'+(s.day===1?'':'s'));const money='£'+currentRetainer(c,data).toLocaleString()+'/mo'+(c.founding?' · founding':'')+(g.base?(' · revenue '+(g.lift>=0?'+':'')+g.lift+'% on baseline'):' · no baseline yet');return`<div class="snap-item"><div class="snap-name">${esc(c.name)}</div><span class="snap-stage psl-${s.key}">${esc(s.label)}</span><div class="snap-day">${esc(dayStr)} · ${esc(money)}</div><a href="crm.html" class="snap-link">View in CRM →</a></div>`;}).join('');}
 function renderTasks(data){const el=document.getElementById('taskList');if(!el)return;if(!data.tasks.length){el.innerHTML='<div class="empty-msg">No tasks yet.</div>';return;}el.innerHTML=data.tasks.map((t,i)=>`<div class="task-item ${t.done?'done':''}"><div class="t-check ${t.done?'on':''}" role="checkbox" tabindex="0" aria-checked="${t.done?'true':'false'}" aria-label="Mark task complete: ${esc(t.text)}" onclick="toggleTask(${i})" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();toggleTask(${i});}"></div><span class="t-text">${esc(t.text)}</span><button class="t-del" aria-label="Delete task: ${esc(t.text)}" onclick="delTask(${i})">×</button></div>`).join('');}
 function addTask(){const inp=document.getElementById('taskInput');const txt=inp.value.trim();if(!txt)return;const d=load();d.tasks.unshift({text:txt,done:false});save(d);renderTasks(d);inp.value='';}
 function toggleTask(i){const d=load();d.tasks[i].done=!d.tasks[i].done;save(d);renderTasks(d);}
@@ -426,14 +430,15 @@ function renderCommandCenter(leads){
   const gr=document.getElementById('ccGreeting');if(gr)gr.textContent=getGreeting();/* no name — shared login, Diego uses this too (2026-08-23) */
   const dt=document.getElementById('ccDate');if(dt)dt.textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
   const sm=document.getElementById('ccSummary');if(sm)sm.innerHTML='<strong>'+followUps+'</strong> action'+(followUps!==1?'s':'')+' due &nbsp;&middot;&nbsp; <strong>'+stale+'</strong> lead'+(stale!==1?'s':'')+' going stale &nbsp;&middot;&nbsp; <strong>£'+pipeline.toLocaleString()+'</strong> in open pipeline';
-  const pr=document.getElementById('prospectRow');if(pr)pr.innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+leads.length+'</div><div class="stat-s">in the pipeline</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+contacted+'</div><div class="stat-s">have last contact date</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v" style="color:var(--purple)">'+callBooked+'</div><div class="stat-s">call stage leads</div></div><div class="stat-card"><div class="stat-l">Weighted Forecast</div><div class="stat-v" style="color:var(--green)">£'+weighted.toLocaleString()+'</div><div class="stat-s">of £'+pipeline.toLocaleString()+' open pipeline</div></div>';
+  const pr=document.getElementById('prospectRow');if(pr)pr.innerHTML='<div class="stat-card"><div class="stat-l">Total Leads</div><div class="stat-v">'+leads.length+'</div><div class="stat-s">in the pipeline</div></div><div class="stat-card"><div class="stat-l">Contacted</div><div class="stat-v">'+contacted+'</div><div class="stat-s">have last contact date</div></div><div class="stat-card"><div class="stat-l">Call Booked</div><div class="stat-v">'+callBooked+'</div><div class="stat-s">call stage leads</div></div><div class="stat-card"><div class="stat-l">Weighted Forecast</div><div class="stat-v" style="color:var(--green)">£'+weighted.toLocaleString()+'</div><div class="stat-s">of £'+pipeline.toLocaleString()+' open pipeline</div></div>';
   renderStageChart(leads);
 }
-function renderStageChart(leads){const counts=STAGE_ORDER.map(s=>leads.filter(l=>l.stage===s).length);const labels=STAGE_ORDER.map(s=>STAGE_LABEL[s]);const colors=STAGE_ORDER.map(s=>STAGE_COLORS[s]);const canvas=document.getElementById('stageChart');if(!canvas||typeof Chart==='undefined')return;if(_stageChart){_stageChart.destroy();_stageChart=null;}_stageChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:counts,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.raw+' lead'+(ctx.raw!==1?'s':'');}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#948abf',font:{family:'Plus Jakarta Sans',size:11}}},y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#948abf',font:{family:'Plus Jakarta Sans',size:11},stepSize:1}}}}});}
+function renderStageChart(leads){const counts=STAGE_ORDER.map(s=>leads.filter(l=>l.stage===s).length);const labels=STAGE_ORDER.map(s=>STAGE_LABEL[s]);const colors=STAGE_ORDER.map(s=>STAGE_COLORS[s]);const canvas=document.getElementById('stageChart');if(!canvas||typeof Chart==='undefined')return;if(_stageChart){_stageChart.destroy();_stageChart=null;}_stageChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:counts,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.raw+' lead'+(ctx.raw!==1?'s':'');}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'rgba(247,246,244,.56)',font:{family:'Manrope',size:11}}},y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'rgba(247,246,244,.56)',font:{family:'Manrope',size:11},stepSize:1}}}}});}
 async function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';const leads=await loadLeads();renderCommandCenter(leads);}
 
-/* ---- Client Results (delivery proof — won jobs & revenue pull live from the Commission log) ---- */
-const RES_NICHE={kitchen:{label:'Kitchen'},bathroom:{label:'Bathroom'},loft:{label:'Loft'},other:{label:'Other'}};
+/* ---- Client Results (delivery proof — revenue lift pulls live from the Growth Step log; the
+   reno-era won-jobs aggregation from commission.jobs is kept underneath while rows exist) ---- */
+const RES_NICHE={streetwear:{label:'Streetwear'},clothing:{label:'Clothing'},jewellery:{label:'Jewellery'},watches:{label:'Watches'},shoes:{label:'Shoes'},prints:{label:'Prints & ceramics'},music:{label:'Music / artist'},local:{label:'Local business'},other:{label:'Other'},kitchen:{label:'Kitchen'},bathroom:{label:'Bathroom'},loft:{label:'Loft'}};
 function resGBP(n){return '£'+Math.round(n||0).toLocaleString();}
 function resNorm(s){return String(s||'').trim().toLowerCase();}
 /* Build one row per client: won + revenue aggregated from commission.jobs (the CRM's closed-job log),
@@ -442,64 +447,70 @@ function resClients(data){
   const jobs=(data.commission&&data.commission.jobs)||[];
   const overlays=(data.results||[]);
   const map={};
-  jobs.forEach(j=>{const k=resNorm(j.clientName);if(!k)return;if(!map[k])map[k]={name:j.clientName,won:0,revenue:0};map[k].won++;map[k].revenue+=Number(j.jobValue||0);});
-  overlays.forEach(o=>{const k=resNorm(o.name);if(!k)return;if(!map[k])map[k]={name:o.name,won:0,revenue:0};map[k].overlay=o;});
-  return Object.keys(map).map(k=>({key:k,...map[k]})).sort((a,b)=>b.revenue-a.revenue);
+  /* One row per client with a baseline; the lift is the monthly gain on the trailing average. */
+  (data.clients||[]).forEach(c=>{const k=resNorm(c.name);if(!k||c.status==='inactive')return;const g=growthState(c,data);map[k]={name:c.name,client:c,won:0,revenue:0,base:g.base,latest:g.latest,lift:g.lift,steps:g.steps,snaps:clientSnapshots(c,data).length};});
+  jobs.forEach(j=>{const k=resNorm(j.clientName);if(!k)return;if(!map[k])map[k]={name:j.clientName,won:0,revenue:0,base:0,latest:0,lift:0,steps:0,snaps:0};map[k].won++;map[k].revenue+=Number(j.jobValue||0);});
+  overlays.forEach(o=>{const k=resNorm(o.name);if(!k)return;if(!map[k])map[k]={name:o.name,won:0,revenue:0,base:0,latest:0,lift:0,steps:0,snaps:0};map[k].overlay=o;});
+  return Object.keys(map).map(k=>({key:k,...map[k]})).sort((a,b)=>(b.latest-b.base)-(a.latest-a.base)||b.revenue-a.revenue);
 }
-function resMx(c){const o=c.overlay||{};const margin=(o.margin==null?25:Number(o.margin));const spend=Number(o.spend||0);const leads=Number(o.leads||0);const booked=Number(o.booked||0);const revenue=c.revenue||0;return{revenue,profit:revenue*margin/100,margin,spend,leads,booked,roas:spend?revenue/spend:0,cpl:leads?spend/leads:0,cac:c.won?spend/c.won:0};}
-function resClaim(c){const m=resMx(c);const B=v=>'<b>'+v+'</b>';const spendT=m.spend?' from '+resGBP(m.spend)+' in ad spend':'';const spendH=m.spend?' from '+B(resGBP(m.spend))+' in ad spend':'';const roasT=(m.spend&&m.revenue)?' — '+resGBP(m.roas)+' of work won for every £1 spent':'';const roasH=(m.spend&&m.revenue)?' — '+B(resGBP(m.roas)+' of work won')+' for every £1 spent':'';
-  if(c.won){const text=c.name+' won '+c.won+' '+(c.won==1?'job':'jobs')+' worth '+resGBP(m.revenue)+' (≈'+resGBP(m.profit)+' profit)'+spendT+roasT+'.';const html=esc(c.name)+' won '+B(c.won+' '+(c.won==1?'job':'jobs'))+' worth '+B(resGBP(m.revenue))+' (≈'+B(resGBP(m.profit))+' profit)'+spendH+roasH+'.';return{text,html};}
-  if(m.booked){const text=c.name+' booked '+m.booked+' qualified consult'+(m.booked==1?'':'s')+spendT+'.';const html=esc(c.name)+' booked '+B(m.booked+' qualified consult'+(m.booked==1?'':'s'))+spendH+'.';return{text,html};}
+function resMx(c){const o=c.overlay||{};const margin=(o.margin==null?60:Number(o.margin));const spend=Number(o.spend||0);const drops=Number(o.leads||0);const sellThrough=Number(o.booked||0);const gain=Math.max(0,(c.latest||0)-(c.base||0));return{gain,margin,spend,drops,sellThrough,ros:spend?gain/spend:0,revenue:c.revenue||0,profit:(c.revenue||0)*margin/100};}
+/* The claim is what Diego may say out loud. Every number in it is read off the log, never typed. */
+function resClaim(c){const m=resMx(c);const B=v=>'<b>'+v+'</b>';
+  if(c.base&&c.latest){const pct=(c.lift>=0?'+':'')+c.lift+'%';const spendT=m.spend?' on '+resGBP(m.spend)+' of ad spend':'';const spendH=m.spend?' on '+B(resGBP(m.spend))+' of ad spend':'';const stT=m.sellThrough?' — '+m.sellThrough+'% average sell-through across '+(m.drops||'their')+' drop'+(m.drops==1?'':'s'):'';const stH=m.sellThrough?' — '+B(m.sellThrough+'% average sell-through')+' across '+(m.drops||'their')+' drop'+(m.drops==1?'':'s'):'';
+    const text=c.name+': trailing 3-month revenue '+pct+' on their baseline ('+resGBP(c.base)+' → '+resGBP(c.latest)+'/mo)'+spendT+stT+'.';
+    const html=esc(c.name)+': trailing 3-month revenue '+B(pct)+' on their baseline ('+B(resGBP(c.base)+' → '+resGBP(c.latest)+'/mo')+')'+spendH+stH+'.';return{text,html};}
+  if(c.won){const text=c.name+' won '+c.won+' '+(c.won==1?'job':'jobs')+' worth '+resGBP(m.revenue)+' (legacy log).';const html=esc(c.name)+' won '+B(c.won+' '+(c.won==1?'job':'jobs'))+' worth '+B(resGBP(m.revenue))+' <span style="color:var(--muted)">(legacy log)</span>.';return{text,html};}
   return{text:'',html:''};}
 function renderResults(data){
   const clients=resClients(data);
-  const totalWon=clients.reduce((s,c)=>s+c.won,0);
-  const totalRev=clients.reduce((s,c)=>s+c.revenue,0);
+  const tracked=clients.filter(c=>c.base&&c.latest);
+  const totalGain=tracked.reduce((s,c)=>s+Math.max(0,c.latest-c.base),0);
   const totalSpend=clients.reduce((s,c)=>s+resMx(c).spend,0);
-  const revWithSpend=clients.reduce((s,c)=>resMx(c).spend>0?s+c.revenue:s,0);
-  const proof=clients.filter(c=>c.won>=1&&c.revenue>0).length;
-  const roas=totalSpend?revWithSpend/totalSpend:0;
+  const gainWithSpend=tracked.reduce((s,c)=>resMx(c).spend>0?s+Math.max(0,c.latest-c.base):s,0);
+  const proof=tracked.filter(c=>c.lift>0).length;
+  const steps=tracked.reduce((s,c)=>s+c.steps,0);
+  const ros=totalSpend?gainWithSpend/totalSpend:0;
   const sr=document.getElementById('resultsStatsRow');
-  if(sr)sr.innerHTML='<div class="stat-card"><div class="stat-l">Jobs Won</div><div class="stat-v">'+totalWon+'</div><div class="stat-s">across '+clients.length+' client'+(clients.length==1?'':'s')+' · from Commission log</div></div>'+
-    '<div class="stat-card"><div class="stat-l">Revenue Won</div><div class="stat-v" style="color:var(--green)">'+resGBP(totalRev)+'</div><div class="stat-s">client-side value delivered</div></div>'+
-    '<div class="stat-card"><div class="stat-l">Blended ROAS</div><div class="stat-v">'+(totalSpend?roas.toFixed(1)+'×':'—')+'</div><div class="stat-s">'+(totalSpend?resGBP(revWithSpend)+' / '+resGBP(totalSpend)+' spend':'add ad spend to unlock')+'</div></div>'+
-    '<div class="stat-card'+(proof?' highlight':'')+'"><div class="stat-l">Proof Clients</div><div class="stat-v">'+proof+'</div><div class="stat-s">with a tracked won job</div></div>';
+  if(sr)sr.innerHTML='<div class="stat-card"><div class="stat-l">Clients measured</div><div class="stat-v">'+tracked.length+'</div><div class="stat-s">with a baseline and at least one monthly snapshot</div></div>'+
+    '<div class="stat-card"><div class="stat-l">Monthly revenue added</div><div class="stat-v" style="color:var(--green)">'+resGBP(totalGain)+'</div><div class="stat-s">latest 3-mo average above baseline, summed</div></div>'+
+    '<div class="stat-card"><div class="stat-l">Return on spend</div><div class="stat-v">'+(totalSpend?ros.toFixed(1)+'×':'—')+'</div><div class="stat-s">'+(totalSpend?resGBP(gainWithSpend)+'/mo added / '+resGBP(totalSpend)+' spend':'add ad spend to unlock')+'</div></div>'+
+    '<div class="stat-card'+(proof?' highlight':'')+'"><div class="stat-l">Proof clients</div><div class="stat-v">'+proof+'</div><div class="stat-s">'+steps+' growth step'+(steps!==1?'s':'')+' fired</div></div>';
   const gate=document.getElementById('resGate');
-  if(gate){const on=proof>=1;gate.className='res-gate'+(on?' on':'');gate.innerHTML='<span class="rg-dot"></span><div>'+(on?'<b>Tracked result banked.</b> Forge Pro founding raise unlocked (£999 → £1,250) — trigger is a tracked client result (SAL-FRG-001).':'<span style="color:var(--muted)">Forge Pro raise gate: needs <b style="color:var(--text)">1 won job</b> in the Commission log. Not met yet.</span>')+'</div>';}
+  if(gate){const on=proof>=1;gate.className='res-gate'+(on?' on':'');gate.innerHTML='<span class="rg-dot"></span><div>'+(on?'<b>First tracked lift banked.</b> A case study can be written from it — with the client&rsquo;s written permission to quote, and never from one of our own brands without saying so.':'<span style="color:var(--muted)">Case-study gate: needs <b style="color:var(--text)">one client</b> whose trailing 3-month revenue is above its baseline in the Growth Step log. Not met yet.</span>')+'</div>';}
   const list=document.getElementById('resultsList');
-  if(list){if(!clients.length){list.innerHTML='<div class="empty-msg">No won jobs yet. Log closed jobs in the CRM&rsquo;s <b>Commission</b> tab &mdash; they appear here automatically, per client. Add ad spend to unlock ROAS &amp; the full claim.</div>';}
+  if(list){if(!clients.length){list.innerHTML='<div class="empty-msg">No measured clients yet. Set each client&rsquo;s baseline and log the monthly trailing average in the CRM&rsquo;s <b>Growth Step</b> section &mdash; the lift appears here automatically. Add ad spend to show return on spend.</div>';}
     else{list.innerHTML=clients.map(c=>{const m=resMx(c);const cl=resClaim(c);const o=c.overlay;const n=o&&o.niche?RES_NICHE[o.niche]:null;const enc=encodeURIComponent(c.name);
       return '<div class="res-row">'+
         '<span class="res-name">'+esc(c.name)+'</span>'+
         (n?'<span class="res-tag">'+esc(n.label)+'</span>':'')+
-        '<span class="res-nums"><b>'+c.won+'w</b> · <b>'+resGBP(m.revenue)+'</b>'+(m.spend?' · <b>'+(m.roas?m.roas.toFixed(1):'0')+'×</b>':'')+'</span>'+
+        '<span class="res-nums">'+(c.base?'<b>'+(c.lift>=0?'+':'')+c.lift+'%</b> · <b>'+resGBP(c.latest)+'/mo</b>'+(c.steps?' · '+c.steps+' step'+(c.steps>1?'s':''):''):(c.won?'<b>'+c.won+'w</b> · <b>'+resGBP(m.revenue)+'</b> (legacy)':'no baseline'))+(m.spend&&c.base?' · <b>'+(m.ros?m.ros.toFixed(1):'0')+'×</b>':'')+'</span>'+
         '<button class="res-act" onclick="copyResClaim(\''+enc+'\')">Copy claim</button>'+
         '<button class="res-act" onclick="openResult(\''+enc+'\')">'+(o?'Spend':'+ Spend')+'</button>'+
         (o?'<button class="res-act del" onclick="delResult(\''+enc+'\')">Clear</button>':'')+
         (cl.html?'<div class="res-claim">'+cl.html+'</div>':'')+
       '</div>';}).join('');}}
   const dl=document.getElementById('resClientList');
-  if(dl){const names=[...new Set(((data.commission&&data.commission.jobs)||[]).map(j=>j.clientName).filter(Boolean))];dl.innerHTML=names.map(nm=>'<option value="'+esc(nm)+'"></option>').join('');}
+  if(dl){const names=[...new Set(((data.clients||[]).map(c=>c.name)).concat(((data.commission&&data.commission.jobs)||[]).map(j=>j.clientName)).filter(Boolean))];dl.innerHTML=names.map(nm=>'<option value="'+esc(nm)+'"></option>').join('');}
 }
 let _resToastT=null;function resToast(m){const t=document.getElementById('resToast');if(!t)return;t.textContent=m;t.style.opacity='1';clearTimeout(_resToastT);_resToastT=setTimeout(()=>{t.style.opacity='0';},1500);}
-function copyResClaim(enc){const name=decodeURIComponent(enc);const d=load();const c=resClients(d).find(x=>resNorm(x.name)===resNorm(name));if(!c)return;const cl=resClaim(c);if(cl.text&&navigator.clipboard){navigator.clipboard.writeText(cl.text);resToast('Claim copied');}else if(cl.text){resToast('Copy unavailable');}else{resToast('Log a won job in Commission first');}}
+function copyResClaim(enc){const name=decodeURIComponent(enc);const d=load();const c=resClients(d).find(x=>resNorm(x.name)===resNorm(name));if(!c)return;const cl=resClaim(c);if(cl.text&&navigator.clipboard){navigator.clipboard.writeText(cl.text);resToast('Claim copied');}else if(cl.text){resToast('Copy unavailable');}else{resToast('Set a baseline and log a month in Growth Step first');}}
 let _resEditName=null;
 function openResult(enc){const name=enc?decodeURIComponent(enc):'';const d=load();const o=name?(d.results||[]).find(x=>resNorm(x.name)===resNorm(name)):null;_resEditName=o?o.name:(name||null);
   document.getElementById('resDlgTitle').textContent=o?'Edit ad spend — '+esc(name):(name?'Add ad spend — '+esc(name):'Add client spend');
   const g=f=>document.getElementById('res_'+f);
   g('name').value=name||(o?o.name:'');g('niche').value=o&&o.niche?o.niche:'other';
   g('spend').value=o&&o.spend?o.spend:'';g('leads').value=o&&o.leads?o.leads:'';
-  g('booked').value=o&&o.booked?o.booked:'';g('margin').value=o&&o.margin!=null?o.margin:25;
+  g('booked').value=o&&o.booked?o.booked:'';g('margin').value=o&&o.margin!=null?o.margin:60;
   document.getElementById('resDlg').showModal();}
 function saveResult(e){const name=document.getElementById('res_name').value.trim();if(!name){if(e)e.preventDefault();document.getElementById('res_name').focus();return;}
   const num=f=>Math.max(0,Number(document.getElementById('res_'+f).value)||0);const niche=document.getElementById('res_niche').value;
   const d=load();d.results=d.results||[];
-  const rec={name,niche,spend:num('spend'),leads:num('leads'),booked:num('booked'),margin:Number(document.getElementById('res_margin').value)||25};
+  const rec={name,niche,spend:num('spend'),leads:num('leads'),booked:num('booked'),margin:Number(document.getElementById('res_margin').value)||60};
   if(_resEditName&&resNorm(_resEditName)!==resNorm(name)){d.results=d.results.filter(x=>resNorm(x.name)!==resNorm(_resEditName));}
   const i=d.results.findIndex(x=>resNorm(x.name)===resNorm(name));
   if(i>-1)d.results[i]={...d.results[i],...rec};else{rec.id='r'+Math.random().toString(36).slice(2,9);d.results.push(rec);}
   save(d);renderResults(d);resToast('Saved');}
-function delResult(enc){const name=decodeURIComponent(enc);if(!confirm('Clear the ad-spend overlay for '+name+'? Won jobs stay in the Commission log.'))return;const d=load();d.results=(d.results||[]).filter(x=>resNorm(x.name)!==resNorm(name));save(d);renderResults(d);}
+function delResult(enc){const name=decodeURIComponent(enc);if(!confirm('Clear the ad-spend overlay for '+name+'? The Growth Step log is untouched.'))return;const d=load();d.results=(d.results||[]).filter(x=>resNorm(x.name)!==resNorm(name));save(d);renderResults(d);}
 checkSession();
 </script>
 </body>

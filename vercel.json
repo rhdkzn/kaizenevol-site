@@ -31,7 +31,7 @@
       ]
     },
     {
-      "source": "/(dashboard|crm|reports).html",
+      "source": "/(dashboard|crm|reports|onboard).html",
       "headers": [
         {
           "key": "X-Robots-Tag",
@@ -78,6 +78,10 @@
     {
       "source": "/privacy",
       "destination": "/privacy.html"
+    },
+    {
+      "source": "/onboard",
+      "destination": "/onboard.html"
     }
   ],
   "redirects": [
