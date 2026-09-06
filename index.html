@@ -391,15 +391,18 @@
     .kz-rail{position:relative}
     .kz-stick{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;
               justify-content:center;overflow:hidden}
-    .kz-head{max-width:var(--maxw);margin:0 auto 24px;padding:0 24px;width:100%;
-             display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+    /* min-height reserves the TALLEST stage name so the header never reflows
+       between slides. Measured before this existed: 28px on "Make the content"
+       and 56px on the other three, which moved every card down by 28px as you
+       swiped past it. align-items:start so a one-line name does not float. */
+    .kz-head{max-width:var(--maxw);margin:0 auto 24px;padding:0 24px;width:100%;min-height:30px;
+             display:flex;align-items:start;justify-content:space-between;gap:20px}
     .kz-count{font-family:var(--serif);font-style:italic;font-size:28px;color:var(--stone);line-height:1}
     .kz-count b{color:var(--ink);font-weight:300}
     .kz-name{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);text-align:right}
-    .kz-track{display:flex;gap:22px;padding:0 24px;will-change:transform}
+    .kz-track{display:flex;align-items:stretch;gap:22px;padding:0 24px;will-change:transform}
     .kz-card{flex:0 0 clamp(280px,46vw,560px);background:#fff;border:1px solid var(--hairline);
              border-radius:2px;padding:30px 26px 32px;display:flex;flex-direction:column;
-             justify-content:center;
              transition:opacity .5s var(--el-ease),transform .5s var(--el-ease)}
     .kz-card.dim{transform:scale(.965)}
     .kz-card > *{transition:opacity .5s var(--el-ease)}
@@ -442,7 +445,7 @@
       .kz-card{scroll-snap-align:start;flex-basis:min(82vw,340px)}
       .kz-card.dim{transform:none}
       .kz-card.dim > *{opacity:1}
-      .kz-head{margin-bottom:18px}
+      .kz-head{margin-bottom:18px;min-height:58px}
     }
     /* Reduce Motion is a PREFERENCE, and DESIGN.md's standing ruling is that it
        must not stop anything we make. The rail is driven by the visitor's own
@@ -454,6 +457,24 @@
       .kz-card{transition-duration:1.1s}
       .kz-card.dim{transform:none}
       .kz-card.dim > *{opacity:.55}
+    }
+  
+    /* "What we run" — one asset per service. Same generated set and same
+       treatment as the loop's, and deliberately DIFFERENT objects so the two
+       sections do not read as duplicates of each other: camera / target /
+       bubbles / envelope, against the loop's glass / clapper / megaphone /
+       arrow. Scale and centring are measured off each render's ink bounding
+       box - spans 784/806/795/660 at 1024px on the transparent renders.
+       These are generated with a real alpha channel rather than on white:
+       the white-backed first pass read as four boxes against this section's
+       off-white band, invisible only on the loop's white cards. */
+    .cell .run-icon{width:104px;height:104px;display:block;margin-bottom:14px}
+    .cell .run-icon img{width:100%;height:100%;object-fit:contain;display:block;
+      transform:scale(var(--k,1)) translateX(var(--nudge,0));transform-origin:center;
+      animation:kzFloat var(--dur,7s) ease-in-out var(--delay,0s) infinite}
+    @media(max-width:719px){.cell .run-icon{width:88px;height:88px;margin-bottom:10px}}
+    @media (prefers-reduced-motion:reduce){
+      .cell .run-icon img{--drift:2px;--tilt:-.4deg;animation-duration:calc(var(--dur,7s) * 2.6)}
     }
   </style>
   <link rel="stylesheet" href="/kaizen-mark.css">
@@ -552,10 +573,10 @@
     <div class="smallcaps">What we run</div>
     <h2>One monthly fee. Here&rsquo;s everything in it.</h2>
     <div class="grid four reveal">
-      <div class="cell"><div class="n">01</div><h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got. Concepts, hooks and edits coming consistently, not one polished piece a month, shot to the standard your work deserves, because for most people who see it the ad is the brand.</p></div>
-      <div class="cell"><div class="n">02</div><h3>Ads</h3><p>Run wherever your buyers actually are, not just where it&rsquo;s easy. Budgets, targeting and testing handled every day, turning off what loses and putting more behind what wins, so more of the right people land on the product.</p></div>
-      <div class="cell"><div class="n">03</div><h3>Social</h3><p>Your feed and stories, run for you. It brings people in on its own, and it&rsquo;s what convinces the ones who found you through an ad that you&rsquo;re worth buying from.</p></div>
-      <div class="cell"><div class="n">04</div><h3>Bringing people back</h3><p>The person who already bought is the easiest sale you&rsquo;ll ever make, and most brands never go back to them. We keep in touch for you, by email and message, so they come back on their own instead of you paying an ad to find them twice.</p></div>
+      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-01-320.webp"><img src="/assets/run/run-01-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.842;--nudge:-1.0%;--dur:7.2s;--delay:0s"></picture><div class="n">01</div><h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got. Concepts, hooks and edits coming consistently, not one polished piece a month, shot to the standard your work deserves, because for most people who see it the ad is the brand.</p></div>
+      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-02-320.webp"><img src="/assets/run/run-02-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.819;--nudge:-0.7%;--dur:6.4s;--delay:-1.6s"></picture><div class="n">02</div><h3>Ads</h3><p>Run wherever your buyers actually are, not just where it&rsquo;s easy. Budgets, targeting and testing handled every day, turning off what loses and putting more behind what wins, so more of the right people land on the product.</p></div>
+      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-03-320.webp"><img src="/assets/run/run-03-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.830;--nudge:0.1%;--dur:7.9s;--delay:-3.2s"></picture><div class="n">03</div><h3>Social</h3><p>Your feed and stories, run for you. It brings people in on its own, and it&rsquo;s what convinces the ones who found you through an ad that you&rsquo;re worth buying from.</p></div>
+      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-04-320.webp"><img src="/assets/run/run-04-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:1;--nudge:-1.8%;--dur:6.8s;--delay:-4.8s"></picture><div class="n">04</div><h3>Bringing people back</h3><p>The person who already bought is the easiest sale you&rsquo;ll ever make, and most brands never go back to them. We keep in touch for you, by email and message, so they come back on their own instead of you paying an ad to find them twice.</p></div>
     </div>
   </div>
 </section>
