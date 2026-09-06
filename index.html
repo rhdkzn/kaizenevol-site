@@ -256,6 +256,23 @@
          which still fixes the original fault: no cell ever fades separately from its mesh. */
       @media(max-width:759px){
         @keyframes ke-wipe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+        /* ...but "arrives as one object" only works while the object FITS. Measured on an
+           iPhone 13: the What-we-run grid is 1438px tall in a 664px viewport, and the
+           entrance is driven by the GRID's entry, so it is over long before you reach the
+           bottom of it. Cell 1 appeared at grid opacity 0.00, cell 2 at 0.84, and cells 3
+           and 4 at 1.00 — already finished. Most of that section had no entrance at all on
+           a phone, which is exactly what Rahaid was looking at when he said he could not
+           see any motion.
+
+           So on a phone each cell enters on its OWN scroll position. The desktop reason for
+           moving the grid as one piece — no cell fading separately from its mesh — is about
+           a four-across MESH. Stacked in a single column they are not a mesh, they are a
+           list, and a list arriving item by item is what the eye expects. */
+        .js .grid,.js .steps,.js .work{animation:none}
+        .js .grid > *,.js .steps > *,.js .work > *{
+          animation:ke-wipe linear both;
+          animation-timeline:view();animation-range:entry 5% entry 42%}
       }
     }
 
