@@ -447,6 +447,21 @@
     .kanban-wrap::-webkit-scrollbar{height:4px;}
     .kanban-wrap::-webkit-scrollbar-track{background:transparent;}
     .kanban-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+    /* Boards (2026-09-06): the generic kanban. Reuses .kb-* so it looks like the pipeline. */
+    .bd-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+    .bd-pill{font-family:var(--sans);font-size:12px;font-weight:700;padding:7px 14px;border-radius:var(--radius-pill);border:1.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;}
+    .bd-pill.active{color:var(--accent);background:var(--purple-l);border-color:var(--purple-m);}
+    .bd-head{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;font-size:12px;color:var(--muted);}
+    .bd-add{display:block;width:100%;margin-top:6px;padding:7px;border:1.5px dashed var(--border);border-radius:var(--radius-sm);background:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:var(--sans);}
+    .bd-add:hover{color:var(--text);border-color:var(--purple-m);}
+    .bd-col-tools{display:flex;gap:1px;margin-left:auto;}
+    .bd-col-tools button{background:none;border:none;color:inherit;opacity:.55;cursor:pointer;font-size:11px;padding:0 3px;line-height:1;}
+    .bd-col-tools button:hover{opacity:1;}
+    .bd-due{font-size:10px;font-weight:700;padding:1px 7px;border-radius:var(--radius-pill);border:1px solid var(--border);color:var(--muted);white-space:nowrap;}
+    .bd-due.late{color:#F87171;border-color:rgba(248,113,113,.5);}
+    .bd-due.soon{color:var(--amber);border-color:rgba(251,191,36,.5);}
+    .bd-tag{font-size:10px;padding:1px 6px;border-radius:var(--radius-pill);background:var(--purple-l);color:var(--muted);margin-right:3px;}
+    .bd-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px;border:1.5px dashed var(--border);border-radius:var(--radius);}
     .kb-col{flex-shrink:0;width:220px;display:flex;flex-direction:column;}
     .kb-col-hdr{padding:8px 12px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;font-size:11px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;justify-content:space-between;}
     .kb-col-count{font-size:10px;opacity:.75;}
@@ -614,6 +629,8 @@
       <nav class="dash-nav">
         <a href="dashboard.html" class="dash-nav-link">Owners Portal</a>
         <a href="crm.html" class="dash-nav-link active">CRM</a>
+        <a href="crm.html#boards" class="dash-nav-link" onclick="showView('boards');return false">Boards</a>
+        <a href="tools/funnel-builder.html" class="dash-nav-link" target="_blank" rel="noopener">Funnel Builder</a>
       </nav>
       <div class="dash-header-right">
         <span class="dash-date" id="headerDate"></span>
@@ -629,6 +646,7 @@
     <button class="crm-tab" data-tab="outreach" onclick="showView('outreach')">Outreach</button>
     <button class="crm-tab" data-tab="leads" onclick="showView('leads')">Leads</button>
     <button class="crm-tab" data-tab="clients" onclick="showView('clients')">Clients</button>
+    <button class="crm-tab" data-tab="boards" onclick="showView('boards')">Boards</button>
   </nav>
   <main class="main">
 
@@ -662,6 +680,15 @@
     <!-- PROSPECT STATS -->
     
     <!-- CLIENT PIPELINE -->
+    <!-- BOARDS (2026-09-06) — the one generic object Flozy got right: a kanban used for anything.
+         Content pipeline, drops and launches, our own content. Stored in ke_data.boards (staff only);
+         a board with clientId set is shown read-only in that client's portal. -->
+    <section class="card" data-view="boards">
+      <div class="bd-bar" id="bdBar"></div>
+      <div class="bd-head" id="bdHead"></div>
+      <div class="kanban-wrap" id="bdWrap"></div>
+    </section>
+
     <section data-view="clients">
       <div class="section-label">Client Pipeline</div>
       <div class="pipeline-track" id="pipelineTrack"></div>
@@ -992,6 +1019,20 @@
   </div>
 </div>
 <!-- ONBOARDING FUNNEL MODAL (2026-09-06) — one link: proposal → agreement → Stripe → client space -->
+<div class="modal-ov" id="bdModal" onclick="if(event.target===this)bdClose()">
+  <div class="modal-box">
+    <div class="modal-hdr"><div><div class="modal-ttl" id="bdmTitle">Card</div><div class="modal-sub" id="bdmSub"></div></div><button class="modal-x" onclick="bdClose()">×</button></div>
+    <div class="km-field"><div class="km-label">Title</div><input type="text" class="km-inp" id="bdmT" /></div>
+    <div class="km-row"><div class="km-field"><div class="km-label">Column</div><select class="km-select" id="bdmCol"></select></div><div class="km-field"><div class="km-label">Due</div><input type="date" class="km-inp" id="bdmDue" /></div></div>
+    <div class="km-row"><div class="km-field"><div class="km-label">£ value (optional)</div><input type="number" class="km-inp" id="bdmVal" min="0" step="1" /></div><div class="km-field"><div class="km-label">Tags, comma-separated</div><input type="text" class="km-inp" id="bdmTags" placeholder="reel, drop, paid" /></div></div>
+    <div class="km-field"><div class="km-label">Notes</div><textarea class="km-textarea" id="bdmNotes" rows="4"></textarea></div>
+    <div class="form-actions">
+      <button class="btn-save" onclick="bdSaveCard()">Save</button>
+      <button class="btn-cancel" onclick="bdClose()">Cancel</button>
+      <button class="btn-cancel" onclick="bdDelCard()" style="margin-left:auto">Delete</button>
+    </div>
+  </div>
+</div>
 <div class="modal-ov" id="obModal" onclick="if(event.target===this)closeOnboard()">
   <div class="modal-box">
     <div class="modal-hdr">
@@ -1127,7 +1168,7 @@ function showView(v){
 async function showApp(){
   document.getElementById('app').style.display='block';document.getElementById('gate').style.display='none';startIdle();
   init();
-  showView(localStorage.getItem('crm_view')||'today');
+  showView((location.hash||'').replace('#','')||localStorage.getItem('crm_view')||'today');if(location.hash)history.replaceState(null,'',location.pathname);
   clearInterval(_syncInterval);_syncInterval=setInterval(_liveSyncLeads,60000);
   try{
     const[remoteLeads,remoteScraper,remoteEmail,remoteData]=await Promise.all([_cloudPull(LEADS_KEY),_cloudPull(SCRAPER_KEY),_cloudPull(EMAIL_KEY),_cloudPull(DATA_KEY)]);
@@ -1144,7 +1185,7 @@ async function showApp(){
       const d=load();renderClientPipeline(d);renderClientChecklist(d);renderClients(d);renderCommission(d);renderGrowth(d);
     }else if(!remoteData){_cloudPush(DATA_KEY,load());}
   }catch(e){console.warn('Cloud sync:',e);}
-  await pullInbound();await obLoadAll();await ptLoad();renderLeads();renderLeadStats();renderOutreachQueue();renderClients(load());
+  await pullInbound();await obLoadAll();await ptLoad();renderLeads();renderLeadStats();renderOutreachQueue();renderClients(load());renderBoards();
   if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);}
   _realtimeChannel=_sb.channel('crm_sync')
     .on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+LEADS_KEY},payload=>{const d=payload.new?.data;if(payload.new?.updated_at){_ver[LEADS_KEY]=payload.new.updated_at;_base[LEADS_KEY]=payload.new.data;}if(Array.isArray(d)){localStorage.setItem(LEADS_KEY,JSON.stringify(d));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}})
@@ -1156,7 +1197,7 @@ async function showApp(){
 }
 
 /* ── DATA ── */
-const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},growth:{snapshots:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:2000,foundingValue:1000,stepValue:1000,stepTrigger:1.5}};
+const DEFAULTS={boards:[],clients:[],metrics:{},commission:{jobs:[]},growth:{snapshots:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:2000,foundingValue:1000,stepValue:1000,stepTrigger:1.5}};
 function load(){try{const r=localStorage.getItem(DATA_KEY);const d=r?{...structuredClone(DEFAULTS),...JSON.parse(r)}:structuredClone(DEFAULTS);(d.clients||[]).forEach(c=>{if(c.status==='trial'||c.status==='retainer')c.status='active';if(!c.liveDate&&c.trialStartDate)c.liveDate=c.trialStartDate;});return d;}catch(e){return structuredClone(DEFAULTS);}}
 function save(data){localStorage.setItem(DATA_KEY,JSON.stringify(data));_cloudPush(DATA_KEY,data);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -1293,6 +1334,53 @@ function growthState(c,data){
 }
 function setLiveDate(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.liveDate=date;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
 
+/* ── BOARDS (2026-09-06) ──
+   One kanban object for anything (Flozy's one good idea). board = {id,name,clientId,columns:[{id,name}],cards:[{id,col,title,notes,due,value,tags,created}]}.
+   Lives in ke_data.boards through load()/save(), so it syncs like everything else. */
+const BD_TEMPLATES={
+  content:{name:'Content pipeline',cols:['Idea','Scripting','Filming','Editing','Scheduled','Posted']},
+  drop:{name:'Drop / launch',cols:['Planned','Sampling','Shooting','Pre-order','Live','Sold through']},
+  ads:{name:'Ad concepts',cols:['Concept','Briefed','Shot','Edited','Testing','Winner','Killed']},
+  blank:{name:'Board',cols:['To do','Doing','Done']}};
+let _bdId=null,_bdDragId=null,_bdCard=null;
+function bdBoards(){const d=load();d.boards=d.boards||[];return d;}
+function bdCurrent(d){d=d||bdBoards();let b=d.boards.find(x=>x.id===_bdId)||d.boards[0];if(b)_bdId=b.id;return b;}
+function renderBoards(){
+  const d=bdBoards();const b=bdCurrent(d);const bar=document.getElementById('bdBar'),head=document.getElementById('bdHead'),wrap=document.getElementById('bdWrap');if(!bar)return;
+  bar.innerHTML=d.boards.map(x=>'<button class="bd-pill'+(x.id===(b&&b.id)?' active':'')+'" onclick="bdOpen(\''+x.id+'\')">'+esc(x.name)+(x.clientId?' · <span style="opacity:.7">'+esc((d.clients.find(c=>c.id===x.clientId)||{}).name||'client')+'</span>':'')+'</button>').join('')
+    +'<button class="bd-pill" onclick="bdNew()">+ New board</button>';
+  if(!b){head.innerHTML='';wrap.innerHTML='<div class="bd-empty" style="flex:1">No boards yet. A board is a kanban for anything: the content pipeline, a drop, ad concepts. Press + New board.</div>';return;}
+  const clientOpts='<option value="">Not shared with a client</option>'+(d.clients||[]).filter(c=>c.status!=='inactive').map(c=>'<option value="'+esc(c.id)+'"'+(c.id===b.clientId?' selected':'')+'>'+esc(c.name)+'</option>').join('');
+  head.innerHTML='<b style="color:var(--text);font-size:14px">'+esc(b.name)+'</b><a href="#" onclick="bdRename();return false" style="color:var(--muted)">rename</a><a href="#" onclick="bdDelete();return false" style="color:var(--muted)">delete</a>'
+    +'<span style="margin-left:auto">Show in client portal:</span><select class="pt-inp" style="flex:0 0 auto;padding:4px 8px" onchange="bdShare(this.value)">'+clientOpts+'</select>'
+    +'<button class="ob-btn" onclick="bdAddCol()">+ Column</button>';
+  const today=todayStr();
+  wrap.innerHTML=b.columns.map((col,ci)=>{const cards=b.cards.filter(k=>k.col===col.id).sort((x,y)=>(x.order||0)-(y.order||0)||String(x.due||'9').localeCompare(String(y.due||'9')));const val=cards.reduce((s,k)=>s+(Number(k.value)||0),0);
+    return '<div class="kb-col"><div class="kb-col-hdr" style="background:rgba(247,246,244,.06)"><span onclick="bdRenameCol(\''+col.id+'\')" style="cursor:text">'+esc(col.name)+'</span><span class="kb-col-count" style="margin-left:6px">'+cards.length+(val?' · '+fmtGBP(val):'')+'</span>'
+      +'<span class="bd-col-tools">'+(ci>0?'<button title="Move left" onclick="bdMoveCol(\''+col.id+'\',-1)">‹</button>':'')+(ci<b.columns.length-1?'<button title="Move right" onclick="bdMoveCol(\''+col.id+'\',1)">›</button>':'')+'<button title="Delete column" onclick="bdDelCol(\''+col.id+'\')">×</button></span></div>'
+      +'<div class="kb-cards" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="bdDrop(event,\''+col.id+'\')">'
+      +cards.map(k=>{const due=k.due?'<span class="bd-due'+(k.due<today?' late':k.due<=_bdPlus(today,3)?' soon':'')+'">'+esc(_bdShort(k.due))+'</span>':'';const tags=(k.tags||[]).map(t=>'<span class="bd-tag">'+esc(t)+'</span>').join('');
+        return '<div class="kb-card" draggable="true" data-bd="'+k.id+'" ondragstart="bdDragStart(event,\''+k.id+'\')" ondragend="handleDragEnd()" onclick="bdOpenCard(\''+k.id+'\')"><div class="kb-card-top"><div class="kb-name">'+esc(k.title)+'</div>'+due+'</div>'+(tags||k.value?'<div class="kb-meta">'+tags+(k.value?fmtGBP(k.value):'')+'</div>':'')+(k.notes?'<div class="kb-meta">'+esc(k.notes)+'</div>':'')+'</div>';}).join('')
+      +'<button class="bd-add" onclick="bdQuickAdd(\''+col.id+'\')">+ Card</button></div></div>';}).join('');
+}
+function _bdPlus(d,n){const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);}
+function _bdShort(d){try{return new Date(d+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});}catch(e){return d;}}
+function bdOpen(id){_bdId=id;renderBoards();}
+function bdNew(){const keys=Object.keys(BD_TEMPLATES);const pick=prompt('Board type: '+keys.map((k,i)=>(i+1)+' '+BD_TEMPLATES[k].name).join(', ')+'\n\nType a number:','1');if(pick===null)return;const t=BD_TEMPLATES[keys[Math.max(0,Math.min(keys.length-1,parseInt(pick,10)-1))||0]];const name=prompt('Board name:',t.name);if(!name)return;const d=bdBoards();const b={id:'b_'+uid(),name:name.trim(),clientId:'',columns:t.cols.map(c=>({id:'c_'+uid(),name:c})),cards:[],created:Date.now()};d.boards.push(b);save(d);_bdId=b.id;renderBoards();showToast('Board created');}
+function bdRename(){const d=bdBoards(),b=bdCurrent(d);if(!b)return;const name=prompt('Board name:',b.name);if(!name)return;b.name=name.trim();save(d);renderBoards();}
+function bdDelete(){const d=bdBoards(),b=bdCurrent(d);if(!b)return;if(!confirm('Delete the board "'+b.name+'" and its '+b.cards.length+' cards?'))return;d.boards=d.boards.filter(x=>x.id!==b.id);save(d);_bdId=null;renderBoards();}
+function bdShare(cid){const d=bdBoards(),b=bdCurrent(d);if(!b)return;b.clientId=cid||'';save(d);renderBoards();showToast(cid?'Board now shows in their portal':'Board is private again');}
+function bdAddCol(){const d=bdBoards(),b=bdCurrent(d);if(!b)return;const name=prompt('Column name:');if(!name)return;b.columns.push({id:'c_'+uid(),name:name.trim()});save(d);renderBoards();}
+function bdRenameCol(id){const d=bdBoards(),b=bdCurrent(d);const c=b&&b.columns.find(x=>x.id===id);if(!c)return;const name=prompt('Column name:',c.name);if(!name)return;c.name=name.trim();save(d);renderBoards();}
+function bdMoveCol(id,dir){const d=bdBoards(),b=bdCurrent(d);if(!b)return;const i=b.columns.findIndex(x=>x.id===id);const j=i+dir;if(i<0||j<0||j>=b.columns.length)return;[b.columns[i],b.columns[j]]=[b.columns[j],b.columns[i]];save(d);renderBoards();}
+function bdDelCol(id){const d=bdBoards(),b=bdCurrent(d);if(!b)return;const c=b.columns.find(x=>x.id===id);const k=b.cards.filter(x=>x.col===id).length;if(!confirm('Delete column "'+c.name+'"'+(k?' and its '+k+' cards':'')+'?'))return;b.columns=b.columns.filter(x=>x.id!==id);b.cards=b.cards.filter(x=>x.col!==id);save(d);renderBoards();}
+function bdQuickAdd(colId){const title=prompt('Card title:');if(!title)return;const d=bdBoards(),b=bdCurrent(d);if(!b)return;b.cards.push({id:'k_'+uid(),col:colId,title:title.trim(),notes:'',due:'',value:0,tags:[],order:Date.now(),created:Date.now()});save(d);renderBoards();}
+function bdDragStart(e,id){_bdDragId=id;setTimeout(()=>{const c=document.querySelector('[data-bd="'+id+'"]');if(c)c.classList.add('dragging');},0);e.dataTransfer.effectAllowed='move';}
+function bdDrop(e,colId){e.preventDefault();e.currentTarget.classList.remove('drag-over');if(!_bdDragId)return;const d=bdBoards(),b=bdCurrent(d);const k=b&&b.cards.find(x=>x.id===_bdDragId);if(k&&k.col!==colId){k.col=colId;k.order=Date.now();k.updated=Date.now();save(d);renderBoards();}_bdDragId=null;}
+function bdOpenCard(id){const d=bdBoards(),b=bdCurrent(d);const k=b&&b.cards.find(x=>x.id===id);if(!k)return;_bdCard=id;document.getElementById('bdmTitle').textContent=k.title;document.getElementById('bdmSub').textContent=b.name;document.getElementById('bdmT').value=k.title;document.getElementById('bdmCol').innerHTML=b.columns.map(c=>'<option value="'+esc(c.id)+'"'+(c.id===k.col?' selected':'')+'>'+esc(c.name)+'</option>').join('');document.getElementById('bdmDue').value=k.due||'';document.getElementById('bdmVal').value=k.value||'';document.getElementById('bdmTags').value=(k.tags||[]).join(', ');document.getElementById('bdmNotes').value=k.notes||'';document.getElementById('bdModal').classList.add('open');}
+function bdClose(){document.getElementById('bdModal').classList.remove('open');_bdCard=null;}
+function bdSaveCard(){const d=bdBoards(),b=bdCurrent(d);const k=b&&b.cards.find(x=>x.id===_bdCard);if(!k)return;const t=document.getElementById('bdmT').value.trim();if(!t){showToast('Title needed');return;}k.title=t;k.col=document.getElementById('bdmCol').value;k.due=document.getElementById('bdmDue').value;k.value=Math.round(Number(document.getElementById('bdmVal').value)||0);k.tags=document.getElementById('bdmTags').value.split(',').map(s=>s.trim()).filter(Boolean);k.notes=document.getElementById('bdmNotes').value.trim();k.updated=Date.now();save(d);bdClose();renderBoards();}
+function bdDelCard(){const d=bdBoards(),b=bdCurrent(d);if(!b||!_bdCard)return;if(!confirm('Delete this card?'))return;b.cards=b.cards.filter(x=>x.id!==_bdCard);save(d);bdClose();renderBoards();}
 /* ── CLIENT PORTAL (phase 2, 2026-09-06) ──
    ke_portal_users maps a client's email to a client id; ke_portal_items holds drop dates,
    updates from us, and messages from them. Staff policy on both (ke_staff), client policies
