@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="theme-color" content="#F7F6F4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Onboarding, KaizenEvol</title>
+  <meta name="description" content="Your proposal, the agreement to sign, and the retainer set-up. One link, about ten minutes." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="Onboarding, KaizenEvol" />
+  <meta name="twitter:title" content="Onboarding, KaizenEvol" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <style>
+    @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+    @font-face{font-family:'Newsreader';src:url('/newsreader-italic.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
+    :root{
+      --page:#F7F6F4;--recess:#EFEDE9;--cool:#E8E9EA;--hairline:#D8D4CC;
+      --stone:#8A857C;--muted:#6E6A63;--ink:#23211E;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+      --serif:'Newsreader',Georgia,serif;--el-ease:cubic-bezier(.16,1,.3,1);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+    .container{max-width:720px;margin:0 auto;padding:0 24px;width:100%}
+    a{color:var(--ink)}
+    em{font-family:var(--serif);font-style:italic;font-weight:300}
+    .smallcaps{font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone)}
+    .top{padding:26px 0;border-bottom:1px solid var(--hairline)}
+    .top-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brandline{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-0.02em;font-size:15px}
+    .brandline img{height:20px;width:auto}
+    .steps{display:flex;gap:18px;font-size:12px;color:var(--stone);font-variant-numeric:tabular-nums}
+    .steps span{position:relative;padding-left:14px}
+    .steps span::before{content:'';position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;background:var(--hairline)}
+    .steps span.on{color:var(--ink);font-weight:600}.steps span.on::before{background:var(--ink)}
+    .steps span.done::before{background:var(--stone)}
+    main{flex:1;padding:48px 0 72px}
+    h1{font-weight:200;letter-spacing:-0.035em;line-height:1.08;font-size:clamp(30px,1.4rem + 2.4vw,46px);margin:12px 0 0;text-wrap:balance}
+    h2{font-weight:300;letter-spacing:-0.03em;font-size:clamp(22px,1.1rem + 1.4vw,30px);margin:40px 0 10px}
+    p{margin:12px 0 0;max-width:62ch}
+    .lead{font-size:17px;color:var(--ink)}
+    .why{color:var(--muted);font-size:15px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:18px}
+    .cell{background:var(--page);padding:16px 18px}
+    .cell .k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
+    .cell .v{font-size:17px;margin-top:4px;letter-spacing:-0.01em}
+    .list{margin:14px 0 0;padding:0;list-style:none}
+    .list li{padding:12px 0;border-top:1px solid var(--hairline);display:grid;grid-template-columns:30px 1fr;gap:12px}
+    .list li:last-child{border-bottom:1px solid var(--hairline)}
+    .list b{font-weight:600}
+    .list .n{font-variant-numeric:tabular-nums;color:var(--stone)}
+    .btn-solid{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ink);color:var(--page);border:1px solid var(--ink);border-radius:999px;padding:13px 22px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .09s cubic-bezier(.3,0,.2,1),opacity .2s}
+    .btn-solid:active{transform:scale(.965)}
+    .btn-solid[disabled]{opacity:.45;cursor:not-allowed}
+    .btn-quiet{background:none;border:1px solid var(--hairline);color:var(--ink);border-radius:999px;padding:12px 20px;font:inherit;font-size:14px;cursor:pointer}
+    .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:32px}
+    .err{color:#9a3b2f;font-size:14px;min-height:20px;margin-top:10px}
+    .step{display:none}.step.on{display:block}
+    /* agreement */
+    .agreement{margin-top:18px;border:1px solid var(--hairline);background:#fff;max-height:52vh;overflow:auto;padding:22px 24px;font-size:14px;line-height:1.65;white-space:pre-wrap;font-variant-numeric:tabular-nums}
+    .agreement::-webkit-scrollbar{width:6px}.agreement::-webkit-scrollbar-thumb{background:var(--hairline);border-radius:3px}
+    .hash{font-size:11px;color:var(--stone);margin-top:8px;word-break:break-all;font-variant-numeric:tabular-nums}
+    .field{margin-top:22px}
+    .field label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:6px}
+    input[type=text]{font:inherit;font-size:17px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--hairline);padding:10px 2px;width:100%;border-radius:0}
+    input[type=text]:focus{outline:none;border-bottom-color:var(--ink)}
+    .pad-wrap{border:1px solid var(--hairline);background:#fff;position:relative;touch-action:none}
+    canvas#pad{display:block;width:100%;height:180px}
+    .pad-hint{position:absolute;left:14px;bottom:10px;font-size:12px;color:var(--stone);pointer-events:none}
+    .pad-clear{position:absolute;right:10px;top:10px;font:inherit;font-size:12px;background:none;border:1px solid var(--hairline);border-radius:999px;padding:4px 10px;cursor:pointer;color:var(--muted)}
+    .check{display:flex;gap:12px;align-items:flex-start;margin-top:18px;font-size:15px}
+    .check input{width:18px;height:18px;margin-top:3px;accent-color:var(--ink)}
+    .signed{margin-top:18px;padding:16px 18px;background:var(--recess);border:1px solid var(--hairline)}
+    .signed img{max-height:64px;display:block;margin-top:6px;mix-blend-mode:multiply}
+    .done-mark{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(34px,1.5rem + 3vw,54px);letter-spacing:-0.02em;line-height:1.05}
+    footer{border-top:1px solid var(--hairline);padding:22px 0;font-size:13px;color:var(--stone)}
+    footer a{color:var(--stone);text-decoration:none}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}.steps{gap:12px;font-size:11px}.agreement{max-height:46vh;padding:16px}}
+  </style>
+  <link rel="stylesheet" href="/interactions.css">
+</head>
+<body>
+<div class="top">
+  <div class="container top-inner">
+    <a class="brandline" href="index.html"><img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'"></a>
+    <div class="steps" id="steps"><span data-s="1">Proposal</span><span data-s="2">Agreement</span><span data-s="3">Retainer</span><span data-s="4">Live</span></div>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+
+    <div id="loading"><p class="why">Loading your proposal…</p></div>
+    <div id="dead" class="step"><p class="smallcaps">This link</p><h1>This link is not valid any more.</h1><p class="why">If you were expecting a proposal, reply to the email it came in and we will send a fresh one.</p></div>
+
+    <!-- 1 · PROPOSAL -->
+    <section class="step" id="s1">
+      <p class="smallcaps">Proposal · <span id="p-brand-eyebrow"></span></p>
+      <h1>You've done the hard part, <span id="p-founder"></span>. <em>We build the reach.</em></h1>
+      <p class="lead">Content, ads, email and SMS, and the numbers behind all three. One fee, everything delivered, measured against your own baseline.</p>
+
+      <h2>The four things we run for <span id="p-brand"></span></h2>
+      <ul class="list">
+        <li><span class="n">01</span><span><b>Content and creative social.</b> Planned against your drop calendar, produced and published by us. Your aesthetic, our volume.</span></li>
+        <li><span class="n">02</span><span><b>Paid ads.</b> Run against your gross profit, not platform-reported return. The budget ceiling is set off your margin so you never spend past what the product supports.</span></li>
+        <li><span class="n">03</span><span><b>Email and SMS.</b> Your owned list, so drop day opens to people who already want it.</span></li>
+        <li><span class="n">04</span><span><b>Growth management.</b> Sell-through per drop, revenue per send, cost per purchase against margin. You see the same numbers we do.</span></li>
+      </ul>
+
+      <h2>How the first drop works</h2>
+      <p>Drop one is measurement. We agree your baseline before a penny is spent, run the four things, and read what happens. From drop two we scale against a sell-through target we set with you in writing. No guesswork, no promise we can't back.</p>
+
+      <h2>The terms, plainly</h2>
+      <div class="grid">
+        <div class="cell"><div class="k">Retainer</div><div class="v" id="p-fee"></div></div>
+        <div class="cell"><div class="k">Covers</div><div class="v">All four things. Ad spend is yours, paid direct to the platforms.</div></div>
+        <div class="cell"><div class="k">Growth step</div><div class="v">Our fee only goes up when your revenue does, and only when it's up by half.</div></div>
+        <div class="cell"><div class="k">Start</div><div class="v" id="p-start"></div></div>
+      </div>
+      <p class="why" id="p-notes"></p>
+
+      <h2>What we need from you</h2>
+      <ul class="list">
+        <li><span class="n">—</span><span>Read access to your store and payment records, so the baseline is your number, not ours.</span></li>
+        <li><span class="n">—</span><span>Access to Meta Business Manager, your store platform and your email/SMS tool.</span></li>
+        <li><span class="n">—</span><span>Product and footage we can shoot or cut, and your drop calendar.</span></li>
+        <li><span class="n">—</span><span>Approvals within a couple of days, so the calendar holds.</span></li>
+      </ul>
+
+      <div class="actions">
+        <button class="btn-solid" onclick="go(2)">Read the agreement →</button>
+        <span class="why" style="margin:0">About ten minutes, all on this page.</span>
+      </div>
+    </section>
+
+    <!-- 2 · AGREEMENT -->
+    <section class="step" id="s2">
+      <p class="smallcaps">Agreement · <span id="a-brand-eyebrow"></span></p>
+      <h1>The agreement, in full.</h1>
+      <p class="why">Read it through. It says what the proposal says, in the words that count. Signing here has the same effect as signing on paper.</p>
+      <div class="agreement" id="a-text"></div>
+      <div class="hash">Document fingerprint (SHA-256): <span id="a-hash"></span></div>
+
+      <div id="sign-form">
+        <div class="field"><label for="sig-name">Your full name</label><input type="text" id="sig-name" autocomplete="name" placeholder="As it should appear on the agreement" /></div>
+        <div class="field">
+          <label>Draw your signature</label>
+          <div class="pad-wrap"><canvas id="pad"></canvas><span class="pad-hint" id="pad-hint">Sign here with your finger or mouse</span><button type="button" class="pad-clear" onclick="clearPad()">Clear</button></div>
+        </div>
+        <label class="check"><input type="checkbox" id="sig-agree" /><span>I have read the agreement above and I am signing it for <b id="a-brand"></b>. I understand the retainer is billed monthly in advance and that the growth step applies as set out in clause 3.</span></label>
+        <div class="err" id="a-err"></div>
+        <div class="actions">
+          <button class="btn-quiet" onclick="go(1)">← Back to the proposal</button>
+          <button class="btn-solid" id="sign-btn" onclick="sign()">Sign the agreement</button>
+        </div>
+      </div>
+      <div id="signed-box" class="signed" style="display:none">
+        <div class="smallcaps">Signed</div>
+        <div id="signed-meta" style="margin-top:6px;font-size:14px"></div>
+        <div class="actions" style="margin-top:16px"><button class="btn-solid" onclick="go(3)">Set up the retainer →</button></div>
+      </div>
+    </section>
+
+    <!-- 3 · RETAINER -->
+    <section class="step" id="s3">
+      <p class="smallcaps">Retainer · <span id="r-brand-eyebrow"></span></p>
+      <h1>Set up the monthly retainer.</h1>
+      <p class="lead" id="r-fee"></p>
+      <p class="why">Card through Stripe, billed monthly in advance. You can end it before any billing date by written notice, as the agreement says. Ad spend is separate and stays in your own ad account.</p>
+      <div class="actions">
+        <a class="btn-solid" id="pay-btn" href="#" target="_blank" rel="noopener">Pay the first month →</a>
+        <button class="btn-quiet" id="paid-check" onclick="checkPaid(true)">I've paid — check</button>
+      </div>
+      <div class="err" id="r-msg"></div>
+      <p class="why" id="r-nolink" style="display:none">The payment link for your rate is being set up. Rahaid will send it to you directly; nothing else is needed from you right now.</p>
+    </section>
+
+    <!-- 4 · LIVE -->
+    <section class="step" id="s4">
+      <p class="smallcaps">Done</p>
+      <div class="done-mark">Welcome, <span id="d-brand"></span>.</div>
+      <p class="lead">Agreement signed, retainer set up. You're a client.</p>
+      <h2>What happens next</h2>
+      <ul class="list">
+        <li><span class="n">01</span><span>Rahaid emails you within a day to agree the <b>baseline</b> in writing and collect access.</span></li>
+        <li><span class="n">02</span><span>We build the drop calendar and the first content batch, and you approve it.</span></li>
+        <li><span class="n">03</span><span>Go-live. Drop one is measurement; the numbers come to you every week.</span></li>
+      </ul>
+      <p class="why">Questions any time: <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a>. A copy of your signed agreement was emailed to you.</p>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a> &nbsp;&middot;&nbsp;
+    <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; &copy; 2026 KaizenEvol
+  </div>
+</footer>
+
+<script>
+(function(){
+  var token = new URLSearchParams(location.search).get('t') || '';
+  var view = null, cur = 1, padDirty = false;
+  var $ = function(id){ return document.getElementById(id); };
+  function gbp(n){ return '£' + Math.round(Number(n)||0).toLocaleString('en-GB'); }
+  function longDate(iso){ if(!iso) return 'On signing'; var d = new Date(iso + 'T12:00:00'); return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+
+  function showStep(n){
+    cur = n;
+    [1,2,3,4].forEach(function(i){ $('s'+i).classList.toggle('on', i===n); });
+    var ss = document.querySelectorAll('#steps span');
+    ss.forEach(function(s){ var k = Number(s.dataset.s); s.classList.toggle('on', k===n); s.classList.toggle('done', k<n); });
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(n===2) setTimeout(sizePad, 50);
+    if(n===3) checkPaid(false);
+  }
+  window.go = function(n){
+    if(n===3 && !(view && (view.status==='signed'||view.status==='paid'||view.status==='live'))) return;
+    showStep(n);
+  };
+
+  function render(){
+    $('loading').style.display = 'none';
+    ['p-brand','p-brand-eyebrow','a-brand','a-brand-eyebrow','r-brand-eyebrow','d-brand'].forEach(function(id){ $(id).textContent = view.business; });
+    $('p-founder').textContent = (view.founder||'').split(' ')[0] || 'friend';
+    $('p-fee').textContent = gbp(view.retainer) + '/mo' + (view.founding ? ' · founding rate, one of the first five' : '');
+    $('p-start').textContent = longDate(view.startDate);
+    $('p-notes').textContent = view.notes || '';
+    $('a-text').textContent = view.agreement;
+    $('a-hash').textContent = view.agreementHash;
+    $('r-fee').textContent = gbp(view.retainer) + ' a month' + (view.founding ? ', founding rate' : '') + '. First month today, then the same date each month.';
+    if(view.payUrl){ $('pay-btn').href = view.payUrl; } else { $('pay-btn').style.display='none'; $('paid-check').style.display='none'; $('r-nolink').style.display='block'; }
+    if(view.signature){ showSigned(); }
+    if(view.status==='paid'||view.status==='live') showStep(4);
+    else if(view.status==='signed') showStep(3);
+    else showStep(1);
+  }
+  function showSigned(){
+    $('sign-form').style.display='none'; $('signed-box').style.display='block';
+    $('signed-meta').textContent = 'Signed by ' + view.signature.name + ' on ' + new Date(view.signature.at).toLocaleString('en-GB') + '. Fingerprint ' + view.signature.hash.slice(0,16) + '…';
+  }
+
+  /* ── signature pad ── */
+  var pad = $('pad'), ctx = pad.getContext('2d'), drawing = false, last = null;
+  function sizePad(){
+    var r = pad.getBoundingClientRect(); if(!r.width) return;
+    var dpr = window.devicePixelRatio || 1;
+    var img = padDirty ? pad.toDataURL() : null;
+    pad.width = Math.round(r.width*dpr); pad.height = Math.round(180*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.lineWidth = 2.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#23211E';
+    if(img){ var im = new Image(); im.onload=function(){ ctx.drawImage(im,0,0,r.width,180); }; im.src = img; }
+  }
+  function pos(e){ var r = pad.getBoundingClientRect(); var p = e.touches ? e.touches[0] : e; return {x:p.clientX - r.left, y:p.clientY - r.top}; }
+  function down(e){ e.preventDefault(); drawing = true; last = pos(e); }
+  function move(e){ if(!drawing) return; e.preventDefault(); var p = pos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last = p; padDirty = true; $('pad-hint').style.display='none'; }
+  function up(){ drawing = false; }
+  pad.addEventListener('pointerdown', down); pad.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  window.addEventListener('resize', function(){ if(cur===2) sizePad(); });
+  window.clearPad = function(){ ctx.clearRect(0,0,pad.width,pad.height); padDirty=false; $('pad-hint').style.display=''; };
+
+  /* ── sign ── */
+  window.sign = async function(){
+    var name = $('sig-name').value.trim(), err = $('a-err');
+    err.textContent = '';
+    if(name.length < 2){ err.textContent = 'Type your full name.'; $('sig-name').focus(); return; }
+    if(!padDirty){ err.textContent = 'Draw your signature in the box.'; return; }
+    if(!$('sig-agree').checked){ err.textContent = 'Tick the box to confirm you have read the agreement.'; return; }
+    var btn = $('sign-btn'); btn.disabled = true; btn.textContent = 'Signing…';
+    try{
+      var r = await fetch('/api/onboard?op=sign&t=' + encodeURIComponent(token), { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name:name, image: pad.toDataURL('image/png'), agreed:true, hash: view.agreementHash }) });
+      var j = await r.json();
+      if(!r.ok){ err.textContent = j.error || 'Could not sign. Try again.'; btn.disabled=false; btn.textContent='Sign the agreement'; return; }
+      view = j; showSigned(); showStep(3);
+    }catch(e){ err.textContent = 'No connection. Try again.'; btn.disabled=false; btn.textContent='Sign the agreement'; }
+  };
+
+  /* ── payment ── */
+  var polling = null;
+  window.checkPaid = async function(manual){
+    var msg = $('r-msg'); if(manual) msg.textContent = 'Checking with Stripe…';
+    try{
+      var r = await fetch('/api/onboard?op=status&t=' + encodeURIComponent(token)); var j = await r.json();
+      if(j.status==='paid'||j.status==='live'){ view = j; clearInterval(polling); showStep(4); return; }
+      if(manual){ msg.textContent = j.stripeChecked===false ? 'Payment checking is not switched on yet. If you have paid, you are done — Rahaid will confirm by email.' : 'No payment found yet. If you just paid, give it a minute and check again.'; }
+    }catch(e){ if(manual) msg.textContent = 'No connection. Try again.'; }
+  };
+  function startPolling(){ clearInterval(polling); polling = setInterval(function(){ if(cur===3) checkPaid(false); }, 20000); }
+
+  /* ── boot ── */
+  (async function(){
+    if(!token){ $('loading').style.display='none'; $('dead').classList.add('on'); return; }
+    try{
+      var r = await fetch('/api/onboard?op=get&t=' + encodeURIComponent(token));
+      if(!r.ok){ $('loading').style.display='none'; $('dead').classList.add('on'); return; }
+      view = await r.json(); render(); startPolling();
+    }catch(e){ $('loading').innerHTML = '<p class="why">Could not load. Check your connection and reload.</p>'; }
+  })();
+})();
+</script>
+</body>
+</html>
