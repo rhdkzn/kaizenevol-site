@@ -57,6 +57,9 @@
     textarea:focus{outline:2px solid var(--ink);outline-offset:-1px}
     .row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-top:18px}
     .row .f{flex:1;min-width:240px}
+    .list a.t{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--hairline);text-underline-offset:3px}
+    .list .amt{font-weight:600;white-space:nowrap}
+    label.btn-solid{cursor:pointer}
     .msg{font-size:14px;color:var(--muted);min-height:20px;margin-top:10px}
     .err{color:#9a3b2f}
     .step{display:none}.step.on{display:block}
@@ -119,6 +122,14 @@
       <h2>Updates from us</h2>
       <div id="p-updates"></div>
 
+      <h2>Files</h2>
+      <p class="why">Briefs, reports, your signed agreement, finished creative. Send us things here too: raw footage, product shots, brand files. Up to 50 MB each; for anything bigger, send a link.</p>
+      <ul class="list" id="p-files"></ul>
+      <div class="row" style="margin-top:12px"><label class="btn-solid" for="file-inp">Send us a file</label><input type="file" id="file-inp" multiple style="display:none" onchange="uploadFiles(this)" /><span class="msg" id="file-status" style="margin:0"></span></div>
+
+      <h2>Invoices</h2>
+      <ul class="list" id="p-invoices"></ul>
+
       <h2>A line to us</h2>
       <p class="why">Anything at all — a restock date, a change of plan, a question. It lands in our CRM and we reply by email.</p>
       <textarea id="msg-text" placeholder="Write to Rahaid and Diego…"></textarea>
@@ -141,9 +152,10 @@
   if(typeof supabase==='undefined'){ document.getElementById('login-msg').textContent='The sign-in library did not load. Check your connection and reload.'; return; }
   var sb = supabase.createClient('https://otxinjuuflyfsoltodam.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90eGluanV1Zmx5ZnNvbHRvZGFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NzczNDQsImV4cCI6MjA5NjM1MzM0NH0.SCe8QMGFe8TnjKMOOp7fHAMsCGUIsf5Sbdtjf0XyAA4');
   var $ = function(id){ return document.getElementById(id); };
-  var me = null, items = [];
+  var me = null, items = [], files = [];
   function gbp(n){ return '£' + Math.round(Number(n)||0).toLocaleString('en-GB'); }
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fsize(b){ b = Number(b)||0; return b >= 1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1, Math.round(b/1024))+' KB'; }
   function dstr(d){ if(!d) return ''; var x = new Date(d.length===10 ? d+'T12:00:00' : d); return x.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
   function show(id){ ['s-login','s-none','s-portal'].forEach(function(s){ $(s).classList.toggle('on', s===id); }); }
 
@@ -189,6 +201,9 @@
     $('p-tasks').innerHTML = TASKS.map(function(x){ var on = !!t[x[0]]; return '<li'+(on?' class="done"':'')+'><span class="box'+(on?' on':'')+'"></span><span class="t">'+x[1]+'</span></li>'; }).join('');
     var ups = items.filter(function(i){ return i.kind==='update' || i.kind==='file'; });
     $('p-updates').innerHTML = ups.length ? ups.map(function(u){ return '<div class="bubble"><div class="d">'+esc(dstr(u.created_at))+'</div>'+(u.title?'<b>'+esc(u.title)+'</b><br>':'')+esc(u.body||'')+(u.url?' <a href="'+esc(u.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>'; }).join('') : '<div class="empty">Nothing yet. Weekly numbers and notes from us land here.</div>';
+    $('p-files').innerHTML = files.length ? files.map(function(f){ return '<li><span class="d">'+esc(dstr(f.created_at))+'</span><span><a href="#" class="t" data-p="'+esc(f.path)+'" onclick="openFile(this.dataset.p);return false">'+esc(f.name)+'</a><div class="m">'+(f.mine?'from you':'from KaizenEvol')+(f.size?' · '+fsize(f.size):'')+'</div></span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">Nothing here yet.</span></li>';
+    var invs = items.filter(function(i){ return i.kind==='invoice'; }).sort(function(a,b){ return String(b.on_date||b.created_at).localeCompare(String(a.on_date||a.created_at)); });
+    $('p-invoices').innerHTML = invs.length ? invs.map(function(v){ var paid = v.status==='paid'; return '<li'+(paid?' class="done"':'')+'><span class="d">'+esc(v.on_date ? dstr(v.on_date) : dstr(v.created_at))+'</span><span><b class="t">'+esc(v.title||'Invoice')+'</b> <span class="amt">'+gbp(v.amount)+'</span><div class="m">'+(paid ? 'Paid, thank you.' : (v.url ? 'Due '+esc(dstr(v.on_date))+' · <a href="'+esc(v.url)+'" target="_blank" rel="noopener">Pay ↗</a>' : 'Due '+esc(dstr(v.on_date))+' · collected from the card on file'))+'</div></span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">Your retainer is collected each month from the card on file. Each month shows here once it has gone through, with anything one-off alongside.</span></li>';
     var msgs = items.filter(function(i){ return i.kind==='message'; });
     $('p-messages').innerHTML = msgs.map(function(m){ return '<div class="bubble'+(m.author==='client'?' client':'')+'"><div class="d">'+(m.author==='client'?'You':'KaizenEvol')+' · '+esc(dstr(m.created_at))+'</div>'+esc(m.body||'')+'</div>'; }).join('');
   }
@@ -203,9 +218,40 @@
   };
 
   async function loadItems(){
-    var r = await sb.from('ke_portal_items').select('id,kind,title,body,on_date,url,author,created_at').eq('client_id', me.client.id).order('created_at',{ascending:false}).limit(200);
+    var r = await sb.from('ke_portal_items').select('id,kind,title,body,on_date,url,author,created_at,amount,status').eq('client_id', me.client.id).order('created_at',{ascending:false}).limit(200);
     items = (r.data||[]);
   }
+
+  async function loadFiles(){
+    files = []; var cid = me.client.id, opt = { limit: 200, sortBy: { column: 'created_at', order: 'desc' } };
+    try {
+      var a = await sb.storage.from('portal').list(cid, opt);
+      (a.data||[]).forEach(function(f){ if(f.id) files.push({ name: f.name, path: cid+'/'+f.name, size: (f.metadata||{}).size, created_at: f.created_at, mine: false }); });
+      var b = await sb.storage.from('portal').list(cid+'/from-client', opt);
+      (b.data||[]).forEach(function(f){ if(f.id) files.push({ name: f.name.replace(/^[a-z0-9]+-/, ''), path: cid+'/from-client/'+f.name, size: (f.metadata||{}).size, created_at: f.created_at, mine: true }); });
+    } catch(e) {}
+    files.sort(function(x,y){ return String(y.created_at).localeCompare(String(x.created_at)); });
+  }
+  window.openFile = async function(path){
+    var st = $('file-status'); st.textContent = 'Fetching…';
+    var r = await sb.storage.from('portal').createSignedUrl(path, 600, { download: true });
+    if(r.error || !r.data){ st.textContent = 'Could not fetch that file. Reply to any email from us and we will send it.'; return; }
+    st.textContent = ''; location.href = r.data.signedUrl;
+  };
+  window.uploadFiles = async function(inp){
+    var st = $('file-status'), list = Array.prototype.slice.call(inp.files||[]); if(!list.length) return;
+    var cid = me.client.id, sent = [];
+    for(var i=0; i<list.length; i++){ var f = list[i];
+      if(f.size > 50*1024*1024){ st.textContent = f.name + ' is over 50 MB. Send a link in the box below instead.'; continue; }
+      var safe = f.name.replace(/[^\w.\-() ]+/g, '_').slice(0, 120);
+      st.textContent = 'Sending ' + f.name + '…';
+      var r = await sb.storage.from('portal').upload(cid + '/from-client/' + Date.now().toString(36) + '-' + safe, f, { upsert: false, contentType: f.type || undefined });
+      if(r.error){ st.textContent = 'Could not send ' + f.name + ': ' + r.error.message; } else sent.push(f.name);
+    }
+    inp.value = '';
+    if(sent.length){ st.textContent = sent.length + ' file' + (sent.length>1?'s':'') + ' sent.'; await sb.from('ke_portal_items').insert({ client_id: cid, kind: 'message', author: 'client', body: 'Sent ' + (sent.length>1 ? sent.length + ' files: ' : 'a file: ') + sent.join(', ') }); }
+    await loadFiles(); await loadItems(); render();
+  };
 
   async function boot(){
     var s = await sb.auth.getSession();
@@ -213,7 +259,7 @@
     var r = await sb.rpc('portal_me');
     if(r.error || !r.data){ show('s-none'); $('who').innerHTML='<span>'+esc((s.data.session.user||{}).email||'')+'</span><button onclick="signOut()">Sign out</button>'; return; }
     me = r.data; if(!me.client || !me.client.id){ show('s-none'); return; }
-    await loadItems(); sb.rpc('portal_touch'); render(); show('s-portal');
+    await loadItems(); await loadFiles(); sb.rpc('portal_touch'); render(); show('s-portal');
   }
   sb.auth.onAuthStateChange(function(ev){ if(ev==='SIGNED_IN'||ev==='TOKEN_REFRESHED'){ if(location.hash) history.replaceState(null,'',location.pathname); boot(); } });
   boot();
