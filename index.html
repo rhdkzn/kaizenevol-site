@@ -82,6 +82,22 @@
     .mobile-menu{display:none;flex-direction:column;gap:2px;padding:12px 24px 20px;border-top:1px solid var(--hairline)}
     .mobile-menu a{padding:11px 0;text-decoration:none;font-size:15px;color:var(--muted);border-bottom:1px solid var(--hairline)}
     .mobile-menu a.btn-solid{color:var(--page);text-align:center;margin-top:12px;border:0}
+    /* nav-cta-typographic — Nav CTA — typographic, not a pill (2026-09-07, Rahaid: the pill read vibecoded).
+       The nav is the only place a filled 980px pill survived; the body is typographic
+       throughout, so the CTA is set as smallcaps on a rule instead of an app button. */
+    .nav-links a.btn-solid, .nav-cta, .mobile-menu a.btn-solid {
+      background:transparent; border-radius:0; color:var(--ink);
+      font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+      padding:8px 1px; text-decoration:underline; text-decoration-thickness:1px;
+      text-underline-offset:7px; text-decoration-color:var(--hairline);
+      transition:color .18s, text-decoration-color .18s; }
+    .nav-links a.btn-solid { margin-left:26px; }
+    .nav-cta { padding:14px 1px; }
+    .mobile-menu a.btn-solid { text-align:left; margin-top:10px;
+      padding:16px 1px 13px; border-bottom:none; }
+    .nav-links a.btn-solid:hover, .nav-cta:hover, .mobile-menu a.btn-solid:hover {
+      color:var(--ink); text-decoration-color:var(--ink); transform:none; opacity:1; }
+
     .mobile-menu.open{display:flex}
     .nav-cta{display:none}
     @media(max-width:860px){.nav-links{display:none}.nav-cta{display:inline-block;margin-left:auto}.burger{display:flex}.nav-inner{gap:12px}}

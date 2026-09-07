@@ -86,6 +86,22 @@
     .mobile-menu.open { display:flex; }
     .mobile-menu a { font-size:16px; font-weight:500; color:var(--text); text-decoration:none; padding:13px 0; border-bottom:1px solid var(--hairline); }
     .mobile-menu a.btn-solid { color:var(--void); text-align:center; margin-top:16px; border-bottom:none; }
+    /* nav-cta-typographic — Nav CTA — typographic, not a pill (2026-09-07, Rahaid: the pill read vibecoded).
+       The nav is the only place a filled 980px pill survived; the body is typographic
+       throughout, so the CTA is set as smallcaps on a rule instead of an app button. */
+    .nav-links a.btn-solid, .nav-cta, .mobile-menu a.btn-solid {
+      background:transparent; border-radius:0; color:var(--text);
+      font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+      padding:8px 1px; text-decoration:underline; text-decoration-thickness:1px;
+      text-underline-offset:7px; text-decoration-color:var(--hairline);
+      transition:color .18s, text-decoration-color .18s; }
+    .nav-links a.btn-solid { margin-left:26px; }
+    .nav-cta { padding:14px 1px; }
+    .mobile-menu a.btn-solid { text-align:left; margin-top:10px;
+      padding:16px 1px 13px; border-bottom:none; }
+    .nav-links a.btn-solid:hover, .nav-cta:hover, .mobile-menu a.btn-solid:hover {
+      color:var(--text); text-decoration-color:var(--text); transform:none; opacity:1; }
+
 
     /* ============ HERO ============ */
     .hero { position:relative; min-height:70vh; display:flex; align-items:center; overflow:hidden; isolation:isolate; }
@@ -118,9 +134,6 @@
     .founder-links a:hover { color:var(--accent-2); border-color:var(--accent-2); }
 
     /* ============ COMMITMENTS — numbered rows ============ */
-    .commit { background:var(--void); border-top:1px solid var(--hairline); }
-    .commit-intro { margin-bottom:34px; max-width:620px; }
-    .commit-intro:last-child { margin-bottom:0; }
     /* CREATIVE ASSETS (2026-09-07) — same soft-shell 3D set as the homepage, cut out
        with a real matte rather than a colour key: these renders reach 255 in their own
        highlights, so no threshold can separate subject from a white ground. Desaturated
@@ -137,17 +150,15 @@
       transform-origin:center; transition:transform .5s cubic-bezier(.16,1,.3,1); }
     .ab-icon:hover picture { transition-duration:.09s; }
     .hero .ab-icon { margin-bottom:26px; }
-    .commit .ab-icon, .sect .ab-icon { margin-top:38px; }
-    .commit-intro h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); margin-bottom:16px; }
-    .commit-intro p { font-size:15.5px; color:var(--muted); }
+    .sect .ab-icon { margin-top:38px; }
     /* Prose links had no rule on this page, so they rendered browser-default blue —
        caught on Rahaid's phone. The block that carried them has since been cut, but
        this stays as the base style: the next prose link added here would otherwise
        reproduce the same defect. Same treatment as .founder-links a. */
-    .sect .lede a, .commit-intro p a { color:var(--text); text-decoration:none;
+    .sect .lede a { color:var(--text); text-decoration:none;
       border-bottom:1px solid var(--hairline); padding-bottom:2px;
       transition:border-color .15s; }
-    .sect .lede a:hover, .commit-intro p a:hover { border-bottom-color:var(--text); }
+    .sect .lede a:hover { border-bottom-color:var(--text); }
 
     /* ============ WHAT WE DO — svc rows ============ */
     .svc { background:var(--void-2); border-top:1px solid var(--hairline); }
@@ -370,17 +381,9 @@
       <p>One of us makes the work, the other makes it pay. No account managers, no middlemen.</p>
     </div>
   </div>
+    <span class="ab-icon" style="--dur:7.4s;--delay:.6s;--drift:7px;--tilt:1.3deg"><picture><source srcset="assets/about/stopwatch-320.webp" type="image/webp"><img src="assets/about/stopwatch-320.png" alt="A stopwatch" width="320" height="320" decoding="async"></picture></span>
 </section>
 
-<section class="sect commit">
-  <div class="container">
-    <div class="commit-intro">
-      <h2>Small <em>by design</em></h2>
-      <p>You won&rsquo;t be handed to an account manager or a junior. The two people who make your work are the two people you talk to, and you get a reply the same working day. Every time.</p>
-    </div>
-    <span class="ab-icon" style="--dur:7.4s;--delay:.6s;--drift:7px;--tilt:1.3deg"><picture><source srcset="assets/about/stopwatch-320.webp" type="image/webp"><img src="assets/about/stopwatch-320.png" alt="A stopwatch" width="320" height="320" decoding="async"></picture></span>
-  </div>
-</section>
 
 
 <section class="closing" id="contact">
