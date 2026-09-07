@@ -64,9 +64,10 @@
   .verdict b{color:var(--ink);font-weight:600}
   .caveat{margin-top:22px;font-size:12.5px;color:var(--stone);max-width:62ch}
 
-    /* A short opacity fade only - no movement, nothing to soften. Deliberately NO
-     prefers-reduced-motion override: canon's rule is that such a block may change a
-     duration but may never switch motion off, and test-reduced-motion.mjs enforces it. */
+    /* A short opacity fade only. Deliberately NO prefers-reduced-motion override:
+     Rahaid's standing rule is that the setting is ignored entirely - a block here may
+     not switch motion off and may not shorten it either. test-reduced-motion.mjs
+     enforces that no such block exists at all. */
   .num{transition:opacity .18s var(--el-ease)}
   .num.tick{opacity:.35}
 </style>

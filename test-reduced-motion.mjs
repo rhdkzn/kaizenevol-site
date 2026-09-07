@@ -1,39 +1,42 @@
-/* Reduce Motion must not stop anything we make. Rahaid, standing, twice.
+/* Reduce Motion is ignored entirely. Rahaid, standing — 2026-07-07, and said again on
+ * 2026-08-27 and 2026-09-07.
  *
- * brand/DESIGN.md has carried this ruling since 2026-08-15. It has now failed three
- * times, each time because someone (me, latterly) decided their case was the
- * exception: the showpiece page served him a frozen poster, kaizendesk.html served
- * him a finished chat transcript, and demos/aldermere-lofts.html — a Forge SHOWCASE,
- * the page we point prospects at — disabled its hero parallax outright, in a comment
- * that said so proudly. That parallax is driven by the visitor's own scroll, which is
- * the exact case DESIGN.md names as must-always-ship.
+ * His words the second time: "don't let reduce motion stop anything, I told you this."
+ * The third time: "Don't let reduce motion affect anything I told you this."
  *
- * Judgement kept producing a new exemption, so this is mechanical. A
- * prefers-reduced-motion block may not kill motion. If you want to soften something
- * for that audience, change a DURATION or use `revert`. You may not switch it off.
+ * The earlier version of this file enforced a WEAKER rule — a block could not switch
+ * motion off, but was allowed to shorten it. That was my invention, not his ruling, and
+ * it is exactly the hole the fourth instance walked through: on 2026-09-07 I added five
+ * blocks to index.html and one to about.html that halved drift and multiplied durations,
+ * and this guard passed 9/9 while they shipped. A guard that permits the softer version
+ * of the banned thing is a guard that licenses it.
+ *
+ * So the rule is now the whole rule, and it is mechanical: after comments are stripped,
+ * the string must not appear in any html/css/js file. No @media block, no matchMedia
+ * branch, no gsap.matchMedia condition, no ternary. Documenting the ABSENCE in a comment
+ * is fine and encouraged — that is why comments are stripped before the scan.
  *
  * Run: node test-reduced-motion.mjs
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
-const KILLS = [
-  [/animation\s*:\s*none/i,        'animation:none'],
-  [/transition\s*:\s*none/i,       'transition:none'],
-  [/transform\s*:\s*none\s*!/i,    'transform:none!important'],
-  [/display\s*:\s*none/i,          'display:none'],
-  [/animation-duration\s*:\s*0/i,  'animation-duration:0'],
-  [/transition-duration\s*:\s*0(m?s)?\b/i, 'transition-duration:0'],
-]
-/* Gating BEHAVIOUR on the setting is the worst form: the feature never runs at all. */
-const JS_GATE = /if\s*\([^)]*reduce[A-Za-z]*\.matches[^)]*\)\s*return|reduce[A-Za-z]*\.matches\s*\)\s*return/i
+/* Comments are where the estate records that it deliberately has no override, so they
+   must not trip the scan. Strip block comments and JS line comments; a CSS/HTML file
+   has no // comments outside <script>, and stripping them there is harmless either way. */
+const stripComments = (src) => src
+  .replace(/\/\*[\s\S]*?\*\//g, ' ')
+  .replace(/<!--[\s\S]*?-->/g, ' ')
+  .replace(/(^|[\s;{}()])\/\/[^\n]*/g, '$1 ')
+
+const SETTING = /prefers-reduced-motion|reducedMotion/i
 
 const walk = (d, out = []) => {
   for (const e of readdirSync(d)) {
     if (e === 'node_modules' || e === '.git') continue
     const p = join(d, e)
     if (statSync(p).isDirectory()) walk(p, out)
-    else if (/\.(html|js|css)$/.test(e) && !e.startsWith('test-')) out.push(p)
+    else if (/\.(html|js|css|mjs)$/.test(e) && !e.startsWith('test-')) out.push(p)
   }
   return out
 }
@@ -41,44 +44,28 @@ const walk = (d, out = []) => {
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 const all = walk('.')
-const files = all.length
-let scanned = 0
+let mention = 0
 
 for (const f of all) {
-  const src = readFileSync(f, 'utf8')
-  if (!/prefers-reduced-motion|reducedMotion/i.test(src)) continue
-  scanned++
+  const raw = readFileSync(f, 'utf8')
+  if (!SETTING.test(raw)) continue
+  mention++
+  const code = stripComments(raw)
+  if (!SETTING.test(code)) continue          // documented in a comment only — correct
 
-  /* Every @media (prefers-reduced-motion: reduce){ ... } body on the page. */
-  const blocks = []
-  const re = /@media[^{]*prefers-reduced-motion[^{]*\{/gi
-  let m
-  while ((m = re.exec(src))) {
-    let i = m.index + m[0].length, depth = 1
-    while (i < src.length && depth > 0) {
-      if (src[i] === '{') depth++
-      else if (src[i] === '}') depth--
-      i++
-    }
-    blocks.push({ body: src.slice(m.index + m[0].length, i - 1), line: src.slice(0, m.index).split('\n').length })
-  }
-
-  for (const { body, line } of blocks) {
-    const hits = KILLS.filter(([rx]) => rx.test(body)).map(([, name]) => name)
-    check(`${f}:${line} reduce-motion block does not switch motion off`, hits.length === 0, hits.join(', '))
-  }
-
-  if (JS_GATE.test(src))
-    check(`${f} does not gate a feature behind the setting`, false, 'early return on reduce.matches')
+  /* Report every offending line so one run names all of them, not just the first. */
+  code.split('\n').forEach((ln, i) => {
+    if (SETTING.test(ln))
+      check(`${f}:${i + 1} must not branch on Reduce Motion`, false, ln.trim().slice(0, 96))
+  })
 }
 
-/* Once every offending block is gone there is nothing left to inspect, and a bare
-   "0/0 passed" reads as a guard that ran rather than a guard that found nothing.
-   Report the sweep itself, so a silent no-op is distinguishable from a clean estate. */
-console.log(`swept ${files} file(s); ${scanned} mention the setting`)
-check(`the estate carries no reduce-motion kill`, true)
+console.log(`swept ${all.length} file(s); ${mention} mention the setting in prose`)
+check('the estate carries no Reduce Motion branch at all', true)
 
-let failed = 0
-for (const [n, pass, d] of r) { if (!pass) { failed++; console.log(`FAIL  ${n}   <- ${d || ''}`) } }
-console.log(`\n${r.length - failed}/${r.length} checks passed`)
-process.exit(failed ? 1 : 0)
+let bad = 0
+for (const [n, pass, d] of r) {
+  if (!pass) { bad++; console.log(`FAIL  ${n}${d ? '  — ' + d : ''}`) }
+}
+console.log(`\n${r.length - bad}/${r.length} checks passed`)
+process.exit(bad ? 1 : 0)

@@ -182,24 +182,23 @@
     return;
   }
   gsap.registerPlugin(ScrollTrigger);
-  var mm = gsap.matchMedia();
-  mm.add({ full:'(prefers-reduced-motion: no-preference)',
-           calm:'(prefers-reduced-motion: reduce)' }, function(ctx){
-    var calm = ctx.conditions.calm;
-    /* calm keeps every beat and shortens it — canon forbids switching motion off */
-    var D = calm ? 0.28 : 1.0, LIFT = calm ? 8 : 46, TILT = calm ? 0 : -68;
+  /* No prefers-reduced-motion branch. Rahaid, standing (2026-07-07, restated 2026-08-27
+     and 2026-09-07): the setting is ignored entirely - not shortened, not calmed. Every
+     visitor gets the same motion. */
+  (function(){
+    var D = 1.0, LIFT = 46, TILT = -68;
 
     gsap.timeline({ defaults:{ ease:'power3.out' } })
       .to('#eyebrow', { opacity:1, duration: D * 0.8 }, 0.05)
       .fromTo(words, { yPercent: 118, rotateX: TILT, opacity: 0 },
                      { yPercent: 0, rotateX: 0, opacity: 1,
-                       duration: D * 1.25, stagger: calm ? 0.012 : 0.045 }, 0.12)
+                       duration: D * 1.25, stagger: 0.045 }, 0.12)
       .to('#ledger', { opacity:1, duration: D }, '-=' + (D * 0.5))
       .to('#rule',   { scaleX:1, duration: D * 1.2, ease:'power2.inOut' }, '<');
 
     var tl = gsap.timeline({
       scrollTrigger:{ trigger:'#stage', start:'top top', end:'+=120%',
-                      pin:true, scrub: calm ? 0.2 : 0.9, anticipatePin:1 }
+                      pin:true, scrub: 0.9, anticipatePin:1 }
     });
     tl.to(counters, {
         first: 40, life: 97, ease:'none',

@@ -75,8 +75,7 @@
     .done p{color:var(--muted);margin:16px 0 0}
     footer{border-top:1px solid var(--hairline);padding:22px 0 34px;font-size:13px;color:var(--stone)}
     footer a{color:var(--muted);text-decoration:none}
-    /* Softened, never switched off — brand/DESIGN.md reduce-motion ruling. */
-    @media(prefers-reduced-motion:reduce){.opt,.go{transition-duration:.01s}}
+    /* No prefers-reduced-motion override. Rahaid, standing: the setting is ignored. */
     /* No JS: every step is visible and it is an ordinary form. */
     .nojs .step{display:block;margin-bottom:38px}
     .nojs .nav,.nojs .count{display:none}

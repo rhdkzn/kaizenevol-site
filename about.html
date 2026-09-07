@@ -138,11 +138,6 @@
     .ab-icon:hover picture { transition-duration:.09s; }
     .hero .ab-icon { margin-bottom:26px; }
     .commit .ab-icon, .sect .ab-icon { margin-top:38px; }
-    @media (prefers-reduced-motion:reduce) {
-      /* softened, never switched off — a phone gets the beat too, just gentler */
-      .ab-icon img { --drift:2px; --tilt:-.4deg; animation-duration:calc(var(--dur,8s) * 2.6); }
-      .ab-icon picture { transition-duration:.9s; }
-    }
     .commit-intro h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); margin-bottom:16px; }
     .commit-intro p { font-size:15.5px; color:var(--muted); }
     /* Prose links had no rule on this page, so they rendered browser-default blue —
@@ -484,11 +479,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 /* Cursor-reactive tilt on the three creative assets. The tilt goes on <picture> and the
    float stays on <img>, so the two transforms compose instead of overwriting each other.
    Pointer-gated on purpose — it is an enhancement; the float is the beat that ships on
-   every device, and Reduce Motion softens both rather than switching either off. */
+   every device. Reduce Motion is ignored entirely (Rahaid, standing). */
 (function(){
   if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
-  var soft = matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var MAX = soft ? 4 : 11, raf = 0;
+  var MAX = 11, raf = 0;   // no Reduce Motion branch - the setting is ignored
   document.querySelectorAll('.ab-icon').forEach(function(slot){
     var pic = slot.querySelector('picture'); if (!pic) return;
     slot.addEventListener('pointermove', function(e){

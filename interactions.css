@@ -302,23 +302,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
 }
 
 /* ── Reduced motion ────────────────────────────────────────────────────────────────────
- * DESIGN.md ruling, enforced by test-reduced-motion.mjs: SHORTEN, never switch off. The
- * press still presses and the page still transitions; both simply happen quickly, and the
- * spring is replaced by a flat curve so nothing overshoots. */
-@media (prefers-reduced-motion: reduce) {
-  :root { --ke-spring: var(--ke-ease); }
-  .btn-solid, .btn-quiet, .nav-links a, .mobile-menu a, footer a, .slot, summary,
-  button:not([disabled]), [role="button"] {
-    transition-duration: .14s;
-  }
-  .mobile-menu { transition-duration: .16s, .12s, .16s; }
-  .mobile-menu a { transition-duration: .12s; }
-  .mobile-menu.open a:nth-child(n):not(:active) { transition-delay: 0s; }
-  .burger span { transition-duration: .14s; }
-  /* Shorten the content's exit and arrival; the frame is static either way. */
-  ::view-transition-old(*) { animation-duration: .08s; }
-  main { animation-duration: .16s; animation-delay: .04s; }
-  ::view-transition-group(ke-nav), ::view-transition-group(ke-logo) {
-    animation-duration: .14s;
-  }
-}
+ * NO OVERRIDE, deliberately. Rahaid, standing (2026-07-07, restated 2026-08-27 and
+ * 2026-09-07): don't let Reduce Motion stop or change anything we make - the motion is a
+ * client-acquisition asset. Not switched off, and not shortened either; the setting is
+ * ignored entirely. test-reduced-motion.mjs fails any file that reintroduces a block. */
