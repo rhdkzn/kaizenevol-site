@@ -121,6 +121,28 @@
     .commit { background:var(--void); border-top:1px solid var(--hairline); }
     .commit-intro { margin-bottom:34px; max-width:620px; }
     .commit-intro:last-child { margin-bottom:0; }
+    /* CREATIVE ASSETS (2026-09-07) — same soft-shell 3D set as the homepage, cut out
+       with a real matte rather than a colour key: these renders reach 255 in their own
+       highlights, so no threshold can separate subject from a white ground. Desaturated
+       to the existing set's neutral band and floated on the same easing. */
+    .ab-icon { display:block; margin:0 auto; width:clamp(132px,26vw,188px); height:auto; }
+    .ab-icon img { display:block; width:100%; height:auto;
+      animation:ab-float var(--dur,8s) ease-in-out var(--delay,0s) infinite; }
+    @keyframes ab-float {
+      0%,100% { transform:translateY(0) rotate(0deg); }
+      50%     { transform:translateY(calc(var(--drift,8px) * -1)) rotate(var(--tilt,-1.5deg)); }
+    }
+    .ab-icon picture { display:block;
+      transform:perspective(620px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+      transform-origin:center; transition:transform .5s cubic-bezier(.16,1,.3,1); }
+    .ab-icon:hover picture { transition-duration:.09s; }
+    .hero .ab-icon { margin-bottom:26px; }
+    .commit .ab-icon, .sect .ab-icon { margin-top:38px; }
+    @media (prefers-reduced-motion:reduce) {
+      /* softened, never switched off — a phone gets the beat too, just gentler */
+      .ab-icon img { --drift:2px; --tilt:-.4deg; animation-duration:calc(var(--dur,8s) * 2.6); }
+      .ab-icon picture { transition-duration:.9s; }
+    }
     .commit-intro h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); margin-bottom:16px; }
     .commit-intro p { font-size:15.5px; color:var(--muted); }
     /* Prose links had no rule on this page, so they rendered browser-default blue —
@@ -309,6 +331,7 @@
 
 <header class="hero">
   <div class="hero-inner container">
+    <span class="ab-icon" style="--dur:9s;--delay:0s;--drift:9px;--tilt:-1.6deg"><picture><source srcset="assets/about/chairs-320.webp" type="image/webp"><img src="assets/about/chairs-320.png" alt="Two chairs side by side" width="320" height="320" decoding="async"></picture></span>
     <h1>Who&rsquo;s behind <em>KaizenEvol</em></h1>
     <p class="hero-sub">Two founders, one monthly fee. We make your content, run your ads and keep your social alive, and judge all of it on what a sale actually leaves you, not on what Instagram says.</p>
   </div>
@@ -362,6 +385,7 @@
       <h2>Small <em>by design</em></h2>
       <p>You won&rsquo;t be handed to an account manager or a junior. The two people who make your work are the two people you talk to, and you get a reply the same working day. Every time.</p>
     </div>
+    <span class="ab-icon" style="--dur:7.4s;--delay:.6s;--drift:7px;--tilt:1.3deg"><picture><source srcset="assets/about/stopwatch-320.webp" type="image/webp"><img src="assets/about/stopwatch-320.png" alt="A stopwatch" width="320" height="320" decoding="async"></picture></span>
   </div>
 </section>
 
@@ -377,6 +401,7 @@
       <p class="lede"><a href="tel:+447405472460">+44 7405 472460</a>, call or WhatsApp</p>
       <p class="lede">We reply the same working day.</p>
     </div>
+    <span class="ab-icon" style="--dur:8.2s;--delay:.3s;--drift:8px;--tilt:-1.1deg"><picture><source srcset="assets/about/handset-320.webp" type="image/webp"><img src="assets/about/handset-320.png" alt="A telephone handset" width="320" height="320" decoding="async"></picture></span>
   </div>
 </section>
 
@@ -455,5 +480,34 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 <script src="/midnight.js?v=21" defer></script>
 <script defer src="/script.js"></script>
 <script src="/seats.js" defer></script>
+<script>
+/* Cursor-reactive tilt on the three creative assets. The tilt goes on <picture> and the
+   float stays on <img>, so the two transforms compose instead of overwriting each other.
+   Pointer-gated on purpose — it is an enhancement; the float is the beat that ships on
+   every device, and Reduce Motion softens both rather than switching either off. */
+(function(){
+  if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  var soft = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var MAX = soft ? 4 : 11, raf = 0;
+  document.querySelectorAll('.ab-icon').forEach(function(slot){
+    var pic = slot.querySelector('picture'); if (!pic) return;
+    slot.addEventListener('pointermove', function(e){
+      if (raf) return;
+      raf = requestAnimationFrame(function(){
+        raf = 0;
+        var r = slot.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        var ry =  ((e.clientX - r.left) / r.width  - 0.5) * MAX * 2;
+        var rx = -((e.clientY - r.top)  / r.height - 0.5) * MAX * 2;
+        pic.style.setProperty('--ry', ry.toFixed(2) + 'deg');
+        pic.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+      });
+    });
+    slot.addEventListener('pointerleave', function(){
+      pic.style.setProperty('--ry','0deg'); pic.style.setProperty('--rx','0deg');
+    });
+  });
+})();
+</script>
 </body>
 </html>
