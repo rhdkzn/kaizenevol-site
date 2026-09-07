@@ -8,7 +8,7 @@
  *   - the token is 32 chars of base64url and passes the validator the API uses
  *   - the reno-era terms (2,500 / 60 days / territory / AI front office) never appear
  */
-import { agreementText, agreementHash, newToken } from './api/onboard.js';
+import { agreementText, agreementHash, newToken, payUrl } from './api/onboard.js';
 
 let fails = 0;
 const ok = (name, cond, detail) => { if (cond) console.log('  ok   ' + name); else { fails++; console.log('  FAIL ' + name + (detail ? ' — ' + detail : '')); } };
@@ -37,6 +37,17 @@ ok('parties named', t1.includes('Marauder') && t1.includes('Sam Okafor'));
 ok('agency is a trading name, not a company', /trading together as KaizenEvol/.test(t1) && !/KaizenEvol Ltd/.test(t1));
 ok('signer confirms authority', /authorised to sign for the Client/.test(t1));
 ok('founding rate graduates at the first step to £2,000 (FIN-PRI-004)', /2\.4 The founding rate.*ends at the first growth step.*£2,000 per month/.test(t1));
+/* The PAY LINK. Nothing checked this before, and a standard-rate row rendered an EMPTY
+   payUrl in production on 2026-09-07 - a £2,000 client would have reached the last step of
+   a real sale with no button. Proven live before it was fixed. */
+const fRow = { id:'AAAAAAAAAAAAAAAAAAAAAAAA', data:{ ...founding } };
+const sRow = { id:'BBBBBBBBBBBBBBBBBBBBBBBB', data:{ ...standard, email:'p@kiln.co' } };
+ok('founding row gets a pay link', /^https:\/\/buy\.stripe\.com\/\S+/.test(payUrl(fRow)));
+ok('STANDARD row gets a pay link (was empty until 2026-09-07)', /^https:\/\/buy\.stripe\.com\/\S+/.test(payUrl(sRow)), payUrl(sRow) || '(empty)');
+ok('the two tiers use DIFFERENT links', payUrl(fRow) !== payUrl(sRow));
+ok('pay link carries client_reference_id = the token', payUrl(sRow).includes('client_reference_id=BBBBBBBBBBBBBBBBBBBBBBBB'));
+ok('pay link prefills the email when we have one', payUrl(sRow).includes('prefilled_email=p%40kiln.co'));
+
 /* The founding rate has NO TIME CAP — it ends at the first growth step and nothing else
    (Rahaid, 2026-09-07). This was actively proposed and declined: the economics argue for a
    12-month cap (a founding client nets 41-47% of a standard one and holds one of five seats

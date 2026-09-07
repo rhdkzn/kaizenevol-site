@@ -28,7 +28,7 @@ const SITE = 'https://kaizenevol.com';
 /* The live Stripe links (FIN-PRI-004, swept 2026-09-04). client_reference_id carries the token back. */
 const PAY_LINKS = {
   founding: 'https://buy.stripe.com/aFa5kF78wgpncajbPV6AM0g',
-  standard: process.env.STRIPE_STANDARD_LINK || ''
+  standard: process.env.STRIPE_STANDARD_LINK || 'https://buy.stripe.com/fZu00l64s8WV6PZaLR6AM0h'
 };
 const TERMS = { standard: 2000, founding: 1000, step: 1000, trigger: 1.5 };
 
@@ -118,7 +118,7 @@ export function agreementText(d) {
 }
 export function agreementHash(text) { return createHash('sha256').update(text, 'utf8').digest('hex'); }
 
-function payUrl(row) {
+export function payUrl(row) {
   const d = row.data || {};
   const base = d.payLink || PAY_LINKS[d.founding ? 'founding' : 'standard'];
   if (!base) return '';
