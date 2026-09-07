@@ -4,19 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="theme-color" content="#F7F6F4" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Apply, KaizenEvol</title>
+  <title>Take a seat, KaizenEvol</title>
   <meta name="description" content="A few questions so we know whether we can help. We take five at a time and reply either way." />
   <link rel="canonical" href="https://kaizenevol.com/apply.html" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://kaizenevol.com/apply.html" />
   <meta property="og:site_name" content="KaizenEvol" />
-  <meta property="og:title" content="Apply, KaizenEvol" />
+  <meta property="og:title" content="Take a seat, KaizenEvol" />
   <meta property="og:description" content="A few questions so we know whether we can help. We take five at a time and reply either way." />
   <meta property="og:image" content="https://kaizenevol.com/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Apply, KaizenEvol" />
+  <meta name="twitter:title" content="Take a seat, KaizenEvol" />
   <meta name="twitter:description" content="A few questions so we know whether we can help. We take five at a time and reply either way." />
   <meta name="twitter:image" content="https://kaizenevol.com/og-image.png" />
   <meta name="robots" content="noindex" />
@@ -104,7 +104,7 @@
     <form id="f" novalidate>
 
       <section class="step on" data-key="businessName" data-type="text">
-        <div class="smallcaps">Apply</div>
+        <div class="smallcaps">Take a seat</div>
         <h1 class="q">What&rsquo;s your brand called?</h1>
         <p class="why">We take <em>five</em> at a time, so these get read properly and you get a reply either way.</p>
         <div class="answer"><input type="text" id="businessName" autocomplete="organization" placeholder="Brand or artist name" /></div>
@@ -189,7 +189,7 @@
         <button type="button" class="go" id="go">Continue</button>
         <button type="button" class="back" id="back" hidden>Back</button>
       </div>
-      <div class="nojs-send"><button type="submit" class="go">Send application</button></div>
+      <div class="nojs-send"><button type="submit" class="go">Take my seat</button></div>
     </form>
 
     <div id="done" hidden class="done">
@@ -220,7 +220,7 @@
     steps.forEach(function(s,n){ s.classList.toggle('on', n===i); });
     count.textContent = (i+1) + ' of ' + steps.length;
     back.hidden = i === 0;
-    go.textContent = i === steps.length-1 ? 'Send application' : 'Continue';
+    go.textContent = i === steps.length-1 ? 'Take my seat' : 'Continue';
     err.textContent = '';
     if (i === steps.length-1) showReview();
     var field = steps[i].querySelector('input,textarea');
@@ -304,7 +304,7 @@
     }).then(function(r){ if(!r.ok) throw 0; })
       .then(function(){ f.hidden = true; count.textContent=''; done.hidden = false; done.querySelector('h1').focus && done.querySelector('h1').focus(); })
       .catch(function(){
-        go.disabled = false; go.textContent = 'Send application';
+        go.disabled = false; go.textContent = 'Take my seat';
         err.textContent = 'That did not send. Email rahaid@kaizenevol.com and we will pick it up there.';
       });
   }
