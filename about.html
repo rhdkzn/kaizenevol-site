@@ -141,15 +141,13 @@
     .commit-intro h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); margin-bottom:16px; }
     .commit-intro p { font-size:15.5px; color:var(--muted); }
     /* Prose links had no rule on this page, so they rendered browser-default blue —
-       three of them in Talk to us, caught on Rahaid's phone. Same treatment as
-       .founder-links a, which is the site's convention for a link inside text. */
+       caught on Rahaid's phone. The block that carried them has since been cut, but
+       this stays as the base style: the next prose link added here would otherwise
+       reproduce the same defect. Same treatment as .founder-links a. */
     .sect .lede a, .commit-intro p a { color:var(--text); text-decoration:none;
       border-bottom:1px solid var(--hairline); padding-bottom:2px;
       transition:border-color .15s; }
     .sect .lede a:hover, .commit-intro p a:hover { border-bottom-color:var(--text); }
-    .contact-lines { display:flex; flex-direction:column; gap:10px; }
-    .contact-lines .lede { margin:0; }
-    .contact-lines a { white-space:nowrap; }
 
     /* ============ WHAT WE DO — svc rows ============ */
     .svc { background:var(--void-2); border-top:1px solid var(--hairline); }
@@ -336,7 +334,7 @@
   <div class="container">
     <div class="kz-mark sect-head">
       <h2>Meet the <em>team</em></h2>
-      <p>Small by design. You will not be handed to an account manager or a junior. The two people who make your work are the two people you talk to.</p>
+      <p>Small by design. You will not be handed to an account manager or a junior. The two people who make your work are the two people you talk to. We&rsquo;re both behind the camera and both in the edit &mdash; Diego manages what you see, Rahaid runs everything underneath it.</p>
     </div>
     <div class="founders-grid">
 
@@ -384,21 +382,6 @@
   </div>
 </section>
 
-<section class="sect">
-  <div class="container">
-    <div class="commit-intro">
-      <h2>Talk to <em>us</em></h2>
-      <p>We&rsquo;re both behind the camera and both in the edit. Diego manages what you see. Rahaid runs everything underneath it.</p>
-    </div>
-    <div class="contact-lines">
-      <p class="lede"><a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></p>
-      <p class="lede"><a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a></p>
-      <p class="lede"><a href="tel:+447405472460">+44 7405 472460</a>, call or WhatsApp</p>
-      <p class="lede">We reply the same working day.</p>
-    </div>
-    <span class="ab-icon" style="--dur:8.2s;--delay:.3s;--drift:8px;--tilt:-1.1deg"><picture><source srcset="assets/about/handset-320.webp" type="image/webp"><img src="assets/about/handset-320.png" alt="A telephone handset" width="320" height="320" decoding="async"></picture></span>
-  </div>
-</section>
 
 <section class="closing" id="contact">
   <div class="container">
