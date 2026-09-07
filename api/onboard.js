@@ -90,9 +90,9 @@ export function agreementText(d) {
   L.push(`5.2 The Client warrants that it owns or is licensed to use everything it supplies and that its products, pricing and claims are lawful.`);
   L.push(``);
   L.push(`6. TERM AND ENDING`);
-  L.push(`6.1 This Agreement runs month to month from ${start}.`);
-  L.push(`6.2 Either party may end it by not less than 30 days' written notice to the email addresses in clause 11.4; it ends at the end of the last month paid for, and the Agency cancels the recurring charge on that date.`);
-  L.push(`6.3 Ending does not affect rights already accrued: fees already due remain payable, and any growth-step bonus earned before ending remains payable once verified.`);
+  L.push(`6.1 This Agreement begins on ${start} and runs for an initial term of three months. After that it continues month to month until it is ended under clause 6.2.`);
+  L.push(`6.2 Either party may end it by not less than 30 days' written notice to the email addresses in clause 11.4, but no ending may take effect before the end of the initial term. Notice may be given during the initial term to take effect at the end of it. It ends at the end of the last month paid for, and the Agency cancels the recurring charge on that date.`);
+  L.push(`6.3 Ending does not affect rights already accrued: fees already due remain payable, the retainer for the initial term remains payable in full, and any growth-step bonus earned before ending remains payable once verified.`);
   L.push(``);
   L.push(`7. OWNERSHIP`);
   L.push(`7.1 The Client's brand, marks, products and audience are the Client's. The Agency assigns to the Client, with full title guarantee, all present and future copyright in the content it produces for the Client under this Agreement, effective on payment for the month in which that content was produced.`);

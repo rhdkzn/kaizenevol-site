@@ -39,6 +39,16 @@ ok('signer confirms authority', /authorised to sign for the Client/.test(t1));
 ok('founding rate graduates at the first step to £2,000 (FIN-PRI-004)', /2\.4 The founding rate.*ends at the first growth step.*£2,000 per month/.test(t1));
 ok('standard agreement has no clause 2.4', !/2\.4 The founding rate/.test(agreementText(standard)));
 ok('growth-step payment mechanic with 7-day dispute (3.5)', /3\.5 When a step is verified/.test(t1) && /within 7 days/.test(t1));
+/* Term — three-month initial term then rolling (Rahaid, 2026-09-07, Mike Ross's recommendation
+   in SAL-DOC-002 item 1; the rolling-from-day-one version that shipped was Law's default, never
+   his ruling). The teeth are 6.3: without the initial-term fees surviving, a client could cancel
+   the card in month one and the term would mean nothing. */
+ok('6.1 three-month initial term', /initial term of three months/.test(t1));
+ok('6.1 rolls monthly after the initial term', /continues month to month/.test(t1));
+ok('6.2 notice cannot bite before the initial term ends', /no ending may take effect before the end of the initial term/.test(t1));
+ok('6.3 initial-term retainer survives ending', /retainer for the initial term remains payable in full/.test(t1));
+ok('the retired rolling-from-day-one wording is gone', !/runs month to month from/.test(t1));
+ok('standard rows carry the same term', /initial term of three months/.test(agreementText(standard)));
 ok('30 days notice to the notice addresses, Stripe cancelled', /not less than 30 days' written notice/.test(t1) && /cancels the recurring charge/.test(t1));
 ok('copyright assigned with full title guarantee (CDPA s.90)', /assigns to the Client, with full title guarantee/.test(t1));
 ok('Art 28 processor terms present', /documented instructions/.test(t1) && /sub-processors/.test(t1) && /without undue delay/.test(t1) && /delete or return/.test(t1));
