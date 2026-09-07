@@ -315,6 +315,22 @@
   f.addEventListener('keydown', function(e){
     if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') { e.preventDefault(); next(); }
   });
+  /* The homepage hero no longer has an Apply button — it asks the first question of this
+     form and sends the answer across in ?b= (2026-09-07). Take it, fill step one, and open
+     on step two, so answering in the hero is not made pointless by asking again here. An
+     empty or whitespace-only value is ignored and the form starts where it always did. */
+  (function seed(){
+    var b;
+    try { b = new URLSearchParams(location.search).get('b'); } catch (e) { return; }
+    if (!b || !b.trim()) return;
+    b = b.trim().slice(0, 120);
+    var field = document.getElementById('businessName');
+    if (!field) return;
+    field.value = b;
+    data.businessName = b;
+    i = 1;
+  })();
+
   render();
 })();
 </script>

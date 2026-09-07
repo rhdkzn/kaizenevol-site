@@ -57,6 +57,27 @@
     setTimeout(function () { location.assign(href); }, EXIT_MS);
   });
 
+  /* A form that navigates is a navigation, and until the hero's Apply pill became a
+     GET form (2026-09-07) nothing on the site submitted one — so every page change ran
+     the exit above and this one would have jumped with no animation at all. Same exit,
+     same timing. Forms that handle themselves (apply.html calls preventDefault) are
+     already excluded by the defaultPrevented guard. */
+  document.addEventListener('submit', function (e) {
+    if (e.defaultPrevented) return;
+    var f = e.target;
+    if (!f || f.tagName !== 'FORM') return;
+    if ((f.method || 'get').toLowerCase() !== 'get') return;
+    if (f.target && f.target !== '_self') return;
+    var url;
+    try { url = new URL(f.action || location.href, location.href); } catch (err) { return; }
+    if (url.origin !== location.origin) return;
+    e.preventDefault();
+    var q = new URLSearchParams(new FormData(f)).toString();
+    var href = url.pathname + (q ? '?' + q : '') + url.hash;
+    document.documentElement.classList.add('leaving');
+    setTimeout(function () { location.assign(href); }, EXIT_MS);
+  });
+
   // Coming back from the bfcache restores the page exactly as it was left — mid-exit.
   window.addEventListener('pageshow', function (e) {
     if (e.persisted) document.documentElement.classList.remove('leaving');
