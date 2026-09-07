@@ -147,6 +147,14 @@
       transition:transform .3s var(--el-ease),opacity .3s var(--el-ease)}
     .ke-start-go:hover{transform:translateX(3px)}
     .ke-start-go:active{opacity:.82}
+    /* The secondary link is 25px tall — the exact number the pill it replaced was
+       criticised for. Grow the TOUCH target to 44px without moving a pixel: a
+       transparent overlay, not padding, because padding would drag the underline
+       away from the text. 9.5px of overhang each side, clear of the 16px gap above
+       and the 14px note margin below. */
+    .hero-ctas.start .btn-quiet{position:relative}
+    .hero-ctas.start .btn-quiet::after{content:'';position:absolute;left:-14px;right:-14px;
+      top:50%;transform:translateY(-50%);height:44px}
     @media (prefers-reduced-motion:reduce){
       .ke-start-go:hover{transform:none}
       .ke-start,.ke-start-go{transition-duration:.9s}
