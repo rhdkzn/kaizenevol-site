@@ -127,7 +127,20 @@
                border:none; padding:0; cursor:pointer; text-decoration:underline; font-family:var(--sans); }
     .lf-alt { display:inline-block; margin-top:12px; font-size:13px; color:var(--muted); background:none;
               border:none; padding:0; cursor:pointer; text-decoration:underline; font-family:var(--sans); }
-    .form-note { font-size:12.5px; color:var(--muted); margin-top:12px; text-align:center; }
+    /* The global reset on line 36 zeroes every margin, and each block restores its own
+       (.hero h1, .lf-q). .lf-wrap never did, so the headline sat directly on the paragraph
+       and the paragraph directly on the button - measured 0px at both breakpoints, and it
+       read as cramped next to a hero carrying 144px of air. This is that block's rhythm. */
+    .lf-wrap h2.q { margin-bottom:18px; }
+    .lf-wrap > p { font-size:15.5px; line-height:1.6; color:var(--muted); margin-bottom:26px; }
+    .lf-wrap > p:last-child { margin-bottom:0; }
+    .lf-wrap .btn-solid { margin-top:4px; }
+    @media(max-width:768px){
+      .lf-wrap h2.q { margin-bottom:14px; }
+      .lf-wrap > p { margin-bottom:22px; }
+    }
+    /* Was text-align:center under left-aligned copy, which read as an orphan. */
+    .form-note { font-size:12.5px; color:var(--muted); margin-top:12px; }
     .form-msg { font-size:14px; border-radius:4px; padding:12px 14px; margin-top:12px; display:none; }
     .form-msg.err { display:block; background:rgba(220,60,60,0.12); border:1px solid rgba(220,60,60,0.4); color:#8A2B2B; }
     .thanks { text-align:center; padding:34px 12px; border-top:1px solid var(--text); }
@@ -293,7 +306,7 @@
         <h2 class="q">Want us to look at your brand?</h2>
         <p>Taking a seat is the way in. Nine questions, a few minutes, and we read every one and reply either way, the same working day.</p>
         <p><a href="apply.html" class="btn-solid">Take a seat &rarr;</a></p>
-        <p class="form-note">If it is a question rather than an application, message us on the right and we will come straight back.</p>
+        <p class="form-note">If it is a question rather than an application, message us on WhatsApp and we will come straight back.</p>
       </div>
 
       <div class="contact-routes">
