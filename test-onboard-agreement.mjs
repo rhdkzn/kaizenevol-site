@@ -37,6 +37,13 @@ ok('parties named', t1.includes('Marauder') && t1.includes('Sam Okafor'));
 ok('agency is a trading name, not a company', /trading together as KaizenEvol/.test(t1) && !/KaizenEvol Ltd/.test(t1));
 ok('signer confirms authority', /authorised to sign for the Client/.test(t1));
 ok('founding rate graduates at the first step to £2,000 (FIN-PRI-004)', /2\.4 The founding rate.*ends at the first growth step.*£2,000 per month/.test(t1));
+/* The founding rate has NO TIME CAP — it ends at the first growth step and nothing else
+   (Rahaid, 2026-09-07). This was actively proposed and declined: the economics argue for a
+   12-month cap (a founding client nets 41-47% of a standard one and holds one of five seats
+   plus a shoot day), but clause 6.2 already lets either party end on 30 days' notice, so the
+   seat can be reopened by hand without making the offer worse. This check exists because the
+   argument is re-derivable and a future session would otherwise make it again. */
+ok('founding rate ends at the growth step ONLY - no months-based cap', /2\.4 The founding rate[^\n]*ends at the first growth step/.test(t1) && !/2\.4 The founding rate[^\n]*(month|year)s? (of|from|after) (signing|the start)/.test(t1));
 ok('standard agreement has no clause 2.4', !/2\.4 The founding rate/.test(agreementText(standard)));
 ok('growth-step payment mechanic with 7-day dispute (3.5)', /3\.5 When a step is verified/.test(t1) && /within 7 days/.test(t1));
 /* Term — three-month initial term then rolling (Rahaid, 2026-09-07, Mike Ross's recommendation
