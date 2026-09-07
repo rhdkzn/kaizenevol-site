@@ -1158,7 +1158,24 @@ async function attemptLogin(){
 }
 function logout(){if(_realtimeChannel){_sb.removeChannel(_realtimeChannel);_realtimeChannel=null;}clearInterval(_syncInterval);stopIdle();localStorage.removeItem(SESSION_KEY);try{_sb.auth.signOut();}catch(e){}showGate();}
 let _syncInterval=null,_realtimeChannel=null;
-async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);if(Array.isArray(remote)&&remote.length>0){const local=loadLeads();if(remote.length!==local.length||JSON.stringify(remote)!==JSON.stringify(local)){localStorage.setItem(LEADS_KEY,JSON.stringify(remote));if(!_notesFocused){renderLeads();renderLeadStats();renderOutreachQueue();}}}}
+/* LEAD-SYNC-START — extracted verbatim by test-crm-lead-adopt.mjs. Keep the markers. */
+/* _cloudPull returns null when the row is ABSENT and [] when someone emptied it
+   on purpose. Both sync paths used to test length>0, so a deliberately cleared
+   lead book was re-pushed from every stale browser. Only an absent row seeds. */
+async function _adoptLeads(remote,opts){
+  const seed=opts&&opts.seed,rerender=!opts||opts.rerender!==false;
+  if(Array.isArray(remote)){
+    const local=loadLeads();
+    if(JSON.stringify(remote)===JSON.stringify(local))return false;
+    localStorage.setItem(LEADS_KEY,JSON.stringify(remote));
+    if(rerender){renderLeads();renderLeadStats();renderOutreachQueue();}
+    return true;
+  }
+  if(remote===null&&seed){const local=loadLeads();if(local.length>0)await _cloudPush(LEADS_KEY,local);}
+  return false;
+}
+/* LEAD-SYNC-END */
+async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);await _adoptLeads(remote,{rerender:!_notesFocused});}
 function showView(v){
   document.querySelectorAll('#app section[data-view]').forEach(s=>{s.style.display=(s.dataset.view===v)?'':'none';});
   document.querySelectorAll('.crm-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===v));
@@ -1172,8 +1189,7 @@ async function showApp(){
   clearInterval(_syncInterval);_syncInterval=setInterval(_liveSyncLeads,60000);
   try{
     const[remoteLeads,remoteScraper,remoteEmail,remoteData]=await Promise.all([_cloudPull(LEADS_KEY),_cloudPull(SCRAPER_KEY),_cloudPull(EMAIL_KEY),_cloudPull(DATA_KEY)]);
-    if(Array.isArray(remoteLeads)&&remoteLeads.length>0){localStorage.setItem(LEADS_KEY,JSON.stringify(remoteLeads));renderLeads();renderLeadStats();renderOutreachQueue();}
-    else{const local=loadLeads();if(local.length>0)_cloudPush(LEADS_KEY,local);}
+    await _adoptLeads(remoteLeads,{seed:true});
     if(remoteScraper&&Object.keys(remoteScraper).length>0){localStorage.setItem(SCRAPER_KEY,JSON.stringify(remoteScraper));initScraper();}
     else if(!remoteScraper){_cloudPush(SCRAPER_KEY,loadScraper());}
     if(remoteEmail&&Object.keys(remoteEmail).length>0){localStorage.setItem(EMAIL_KEY,JSON.stringify(remoteEmail));initEmail();}
