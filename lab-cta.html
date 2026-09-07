@@ -76,6 +76,48 @@
   .d-wrap:hover .d-top{background:#000}
   .d-quiet{min-height:48px;display:inline-flex;align-items:center;color:var(--muted);
     font-size:14px;font-weight:500;text-decoration:none;border-bottom:1px solid var(--hairline)}
+
+  /* ============ NOT BUTTONS ============ */
+  /* E — the seat strip is the control. The scarcity mechanic and the action
+     become the same object: you take a seat rather than press Apply. */
+  .e-strip{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;max-width:420px}
+  .e-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--stone)}
+  .e-head em{font-family:var(--serif);font-style:italic;text-transform:none;letter-spacing:0;
+    font-size:15px;color:var(--ink)}
+  .e-seats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .e-seat{height:56px;border:1.5px solid var(--hairline);border-radius:3px;display:grid;
+    place-items:center;font-size:12px;color:var(--stone);background:transparent;
+    transition:border-color .35s var(--el-ease),background .35s var(--el-ease),color .35s var(--el-ease)}
+  .e-seat.taken{background:var(--ink);border-color:var(--ink);color:var(--page)}
+  .e-strip:hover .e-seat.next,.e-strip:active .e-seat.next{border-color:var(--ink);background:var(--recess);color:var(--ink)}
+  .e-foot{font-size:13.5px;color:var(--muted)}
+  .e-foot b{color:var(--ink);font-weight:600}
+
+  /* F — slide to apply. A deliberate physical commitment, and touch is where it
+     belongs, which is the device he actually browses on. */
+  .f-track{position:relative;height:60px;border:1.5px solid var(--ink);border-radius:980px;
+    max-width:420px;overflow:hidden;background:var(--page);user-select:none;touch-action:none}
+  .f-fill{position:absolute;inset:0 auto 0 0;width:60px;background:var(--ink);border-radius:980px;
+    transition:width .45s var(--el-ease)}
+  .f-label{position:absolute;inset:0;display:grid;place-items:center;font-size:14px;font-weight:600;
+    letter-spacing:.02em;color:var(--muted);pointer-events:none}
+  .f-knob{position:absolute;top:3px;left:3px;width:54px;height:54px;border-radius:50%;
+    background:var(--ink);display:grid;place-items:center;color:var(--page);
+    transition:transform .45s var(--el-ease)}
+  .f-track:hover .f-knob{transform:translateX(10px)}
+  .f-track:hover .f-fill{width:74px}
+
+  /* G — no button at all. The first question of the application IS the hero
+     control, so the click that used to load a form is gone. */
+  .g-field{display:flex;align-items:center;gap:10px;max-width:460px;
+    border-bottom:1.5px solid var(--ink);padding:0 2px 10px}
+  .g-field input{flex:1;min-height:48px;border:0;background:transparent;font-family:var(--sans);
+    font-size:17px;color:var(--ink);outline:none;padding:0}
+  .g-field input::placeholder{color:var(--stone)}
+  .g-go{min-height:44px;min-width:44px;display:grid;place-items:center;background:var(--ink);
+    color:var(--page);border:0;border-radius:50%;cursor:pointer}
+  .g-hint{font-size:12.5px;color:var(--stone);margin-top:10px}
 </style>
 </head>
 <body>
@@ -126,6 +168,45 @@
       <a class="d-quiet" href="#">See how it works</a>
     </div>
     <div class="spec">one object &middot; 52px press area &middot; absorbs the seat line that currently floats</div>
+  </div>
+
+  <div class="opt">
+    <div class="tag">E &middot; not a button</div>
+    <div class="name">Take a seat</div>
+    <div class="why">The five seats stop being a caption and become the control. One is taken, four are open, and you <b>take one</b> rather than press Apply. The scarcity and the action are the same gesture, and there is nothing to restyle because it is not a button.</div>
+    <a class="e-strip" href="#">
+      <span class="e-head"><span>Five seats</span><em>four left</em></span>
+      <span class="e-seats">
+        <span class="e-seat taken">&#10003;</span><span class="e-seat next">Take</span>
+        <span class="e-seat"></span><span class="e-seat"></span><span class="e-seat"></span>
+      </span>
+      <span class="e-foot"><b>Take a seat</b> &mdash; two minutes, no call needed to start.</span>
+    </a>
+    <div class="spec">56px seats &middot; the mechanic IS the interface &mdash; nothing else on the page repeats it</div>
+  </div>
+
+  <div class="opt">
+    <div class="tag">F &middot; not a button</div>
+    <div class="name">Slide to apply</div>
+    <div class="why">A deliberate physical commitment instead of a tap. It belongs on touch, which is the device you actually browse on, and it is close to impossible to press by accident. <b>The cost is real friction</b> &mdash; that is the trade, and on a page whose job is to filter for five serious people it may be the right one.</div>
+    <div class="f-track">
+      <span class="f-fill"></span>
+      <span class="f-label">Slide to apply</span>
+      <span class="f-knob"><svg width="16" height="12" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></span>
+    </div>
+    <div class="spec">60px track &middot; drag, not tap &middot; needs a real gesture handler before it ships</div>
+  </div>
+
+  <div class="opt">
+    <div class="tag">G &middot; not a button</div>
+    <div class="name">The application starts here</div>
+    <div class="why">No button at all. The first question of the apply form sits in the hero, so the click that used to load a page is <b>gone</b> &mdash; they are already answering. Fewest steps of anything here, and the field itself says what kind of business you want.</div>
+    <div class="g-field">
+      <input type="text" placeholder="What do you make?" aria-label="What do you make?">
+      <button class="g-go" aria-label="Continue"><svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></button>
+    </div>
+    <div class="g-hint">Five seats, four left &middot; takes about two minutes</div>
+    <div class="spec">48px field &middot; 44px control &middot; removes one whole page load from the funnel</div>
   </div>
 
 </div>
