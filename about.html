@@ -120,13 +120,19 @@
     /* ============ COMMITMENTS — numbered rows ============ */
     .commit { background:var(--void); border-top:1px solid var(--hairline); }
     .commit-intro { margin-bottom:34px; max-width:620px; }
+    .commit-intro:last-child { margin-bottom:0; }
     .commit-intro h2 { font-size:clamp(32px, 1.4rem + 2.8vw, 54px); margin-bottom:16px; }
     .commit-intro p { font-size:15.5px; color:var(--muted); }
-    .commit-row { display:grid; grid-template-columns:110px 1fr; gap:36px; padding:44px 0; border-top:1px solid var(--hairline); align-items:start; }
-    .commit-row:last-of-type { border-bottom:1px solid var(--hairline); }
-    .commit-num { font-family:var(--serif); font-style:italic; font-size:46px; color:var(--accent); line-height:1; }
-    .commit-row h3 { font-size:clamp(22px, 1.1rem + 1.2vw, 30px); margin-bottom:12px; }
-    .commit-row p { font-size:15px; color:var(--muted); max-width:680px; }
+    /* Prose links had no rule on this page, so they rendered browser-default blue —
+       three of them in Talk to us, caught on Rahaid's phone. Same treatment as
+       .founder-links a, which is the site's convention for a link inside text. */
+    .sect .lede a, .commit-intro p a { color:var(--text); text-decoration:none;
+      border-bottom:1px solid var(--hairline); padding-bottom:2px;
+      transition:border-color .15s; }
+    .sect .lede a:hover, .commit-intro p a:hover { border-bottom-color:var(--text); }
+    .contact-lines { display:flex; flex-direction:column; gap:10px; }
+    .contact-lines .lede { margin:0; }
+    .contact-lines a { white-space:nowrap; }
 
     /* ============ WHAT WE DO — svc rows ============ */
     .svc { background:var(--void-2); border-top:1px solid var(--hairline); }
@@ -179,7 +185,6 @@
       .founders-grid { grid-template-columns:1fr; gap:36px; }
       .svc-row { grid-template-columns:60px 1fr; }
       .svc-link { grid-column:2; }
-      .commit-row { grid-template-columns:60px 1fr; }
     }
     @media(max-width:768px) {
       .nav-links { display:none; } .burger { display:flex; } .nav-cta { display:inline-block; margin-left:auto; margin-right:4px; }
@@ -355,15 +360,7 @@
   <div class="container">
     <div class="commit-intro">
       <h2>Small <em>by design</em></h2>
-      <p>You won&rsquo;t be handed to an account manager or a junior. The two people who make your work are the two people you talk to.</p>
-    </div>
-
-    <div class="commit-row">
-      <div class="commit-num">01</div>
-      <div>
-        <h3>Direct access, fast response</h3>
-        <p>You have direct access to us, not an account manager, not a junior. We reply within the same working day. Every time.</p>
-      </div>
+      <p>You won&rsquo;t be handed to an account manager or a junior. The two people who make your work are the two people you talk to, and you get a reply the same working day. Every time.</p>
     </div>
   </div>
 </section>
@@ -374,9 +371,12 @@
       <h2>Talk to <em>us</em></h2>
       <p>We&rsquo;re both behind the camera and both in the edit. Diego manages what you see. Rahaid runs everything underneath it.</p>
     </div>
-    <p class="lede"><a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a> &middot; <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a></p>
-    <p class="lede"><a href="tel:+447405472460">+44 7405 472460</a>, call or WhatsApp</p>
-    <p class="lede">We reply the same working day.</p>
+    <div class="contact-lines">
+      <p class="lede"><a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></p>
+      <p class="lede"><a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a></p>
+      <p class="lede"><a href="tel:+447405472460">+44 7405 472460</a>, call or WhatsApp</p>
+      <p class="lede">We reply the same working day.</p>
+    </div>
   </div>
 </section>
 
