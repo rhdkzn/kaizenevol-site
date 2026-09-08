@@ -107,6 +107,10 @@
       "destination": "https://kaizenevol.vercel.app/growth-diagnosis"
     },
     {
+      "source": "/pay",
+      "destination": "https://kaizenevol.vercel.app/pay"
+    },
+    {
       "source": "/api/diagnose",
       "destination": "https://kaizenevol.vercel.app/api/diagnose"
     },
