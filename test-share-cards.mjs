@@ -26,7 +26,7 @@ const PAGES = ['index.html', 'apply.html', 'about.html', 'contact.html', 'privac
                // Answer pages, added 2026-09-08 (workshop Day 14's question-page play).
                // These are the pages built to be FOUND, so a bare preview when one is
                // shared is the whole point missed.
-               'tried-ads-before.html', 'what-does-it-cost.html',
+               'tried-ads-before.html',
                'ads-for-musicians.html', 'can-i-do-this-myself.html'];
 const CARD = 'og-image.png';
 const CARD_URL = 'https://kaizenevol.com/og-image.png';
