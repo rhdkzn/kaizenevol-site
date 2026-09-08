@@ -22,7 +22,12 @@ import { readFileSync, existsSync } from 'node:fs';
 // nothing else. They are links we SEND — a client pastes one, or it previews in a
 // message — so a bare preview is our brand missing at the moment someone looks.
 const PAGES = ['index.html', 'apply.html', 'about.html', 'contact.html', 'privacy.html',
-               'onboard.html', 'portal.html', 'booked.html'];
+               'onboard.html', 'portal.html', 'booked.html',
+               // Answer pages, added 2026-09-08 (workshop Day 14's question-page play).
+               // These are the pages built to be FOUND, so a bare preview when one is
+               // shared is the whole point missed.
+               'tried-ads-before.html', 'what-does-it-cost.html',
+               'ads-for-musicians.html', 'can-i-do-this-myself.html'];
 const CARD = 'og-image.png';
 const CARD_URL = 'https://kaizenevol.com/og-image.png';
 const W = 1200, H = 630;

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#F7F6F4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can I just do this myself with AI? KaizenEvol</title>
+<meta name="description" content="Mostly yes, and the tools keep getting better. The real question is what the time costs you and whether the output is good enough to put your name on.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://kaizenevol.com/can-i-do-this-myself.html">
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://kaizenevol.com/can-i-do-this-myself.html" />
+<meta property="og:site_name" content="KaizenEvol" />
+<meta property="og:title" content="Can I just do this myself with AI? KaizenEvol" />
+<meta property="og:description" content="Mostly yes, and the tools keep getting better. The real question is what the time costs you and whether the output is good enough to put your name on." />
+<meta property="og:image" content="https://kaizenevol.com/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Can I just do this myself with AI? KaizenEvol" />
+<meta name="twitter:description" content="Mostly yes, and the tools keep getting better. The real question is what the time costs you and whether the output is good enough to put your name on." />
+<meta name="twitter:image" content="https://kaizenevol.com/og-image.png" />
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  @font-face { font-family:'Newsreader'; font-style:normal; font-weight:400 700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+  @font-face { font-family:'Newsreader'; font-style:italic; font-weight:400 700; font-display:swap; src:url('/newsreader-italic.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:400; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:500; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:600; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-style:normal; font-weight:700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+  :root {
+    --void:      #F7F6F4;
+    --void-2:    #EFEDE9;
+    --text:      #23211E;
+    --muted:     #6E6A63;
+    --hairline:  #D8D4CC;
+    --accent:    #23211E;
+    --accent-2:  #6E6A63;
+    --serif:'Newsreader',Georgia,'Times New Roman',serif;
+    --sans:      'Manrope', system-ui, sans-serif;
+    --max-w:     1140px;
+  }
+
+  html { scroll-behavior:smooth; overflow-x:clip; }
+  body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
+  p { text-wrap:pretty; }
+  .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
+
+  h1,h2,h3 { font-family:var(--serif); font-weight:500; letter-spacing:-0.01em; line-height:1.06; text-wrap:balance; }
+  h1 em, h2 em { font-style:italic; color:var(--accent-2); }
+
+  .smallcaps { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+  .smallcaps.accent { color:var(--accent); }
+
+  .btn-solid { display:inline-block; background:var(--accent); color:var(--void); font-weight:600; font-size:14px; padding:12px 24px; border-radius:980px; text-decoration:none; border:0; transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .3s; cursor:pointer; }
+  .btn-solid:hover { color:var(--void); opacity:.88; transform:translateY(-1px); }
+  .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:14px; padding:11px 24px; border-radius:980px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
+  .btn-quiet:hover { color:var(--text); border-color:#8A857C; }
+
+  /* ============ NAV ============ */
+  .nav-cta { display:none; font-size:13px; padding:10px 20px; }
+  nav { position:sticky; top:0; z-index:60; background:rgba(247,246,244,0.86); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-bottom:1px solid var(--hairline); }
+  .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
+  .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
+  .nav-logo img { height:30px; width:auto; }
+  .nav-logo b { font-weight:700; font-size:17px; letter-spacing:-0.02em; }
+  .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
+  .nav-links a { font-size:14.5px; font-weight:500; color:var(--muted); text-decoration:none; padding:8px 14px; transition:color .15s; }
+  .nav-links a:hover { color:var(--text); }
+  .nav-links a.btn-solid { font-size:13px; padding:10px 20px; margin-left:14px; color:var(--void); }
+  .nav-links a.btn-solid:hover { color:var(--void); }
+  .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:10px; }
+  .burger span { width:22px; height:2px; background:var(--text); display:block; }
+  .mobile-menu { display:none; flex-direction:column; padding:8px 28px 24px; border-top:1px solid var(--hairline); }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-size:16px; font-weight:500; color:var(--text); text-decoration:none; padding:13px 0; border-bottom:1px solid var(--hairline); }
+  .mobile-menu a.btn-solid { color:var(--void); text-align:center; margin-top:16px; border-bottom:none; }
+    /* nav-cta-typographic — Nav CTA — typographic, not a pill (2026-09-07, Rahaid: the pill read vibecoded).
+       The nav is the only place a filled 980px pill survived; the body is typographic
+       throughout, so the CTA is set as smallcaps on a rule instead of an app button. */
+    .nav-links a.btn-solid, .nav-cta, .mobile-menu a.btn-solid {
+      background:transparent; border-radius:0; color:var(--text);
+      font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+      padding:8px 1px; text-decoration:underline; text-decoration-thickness:1px;
+      text-underline-offset:7px; text-decoration-color:var(--hairline);
+      transition:color .18s, text-decoration-color .18s; }
+    .nav-links a.btn-solid { margin-left:26px; }
+    .nav-cta { padding:14px 1px; }
+    .mobile-menu a.btn-solid { text-align:left; margin-top:10px;
+      padding:16px 1px 13px; border-bottom:none; }
+    .nav-links a.btn-solid:hover, .nav-cta:hover, .mobile-menu a.btn-solid:hover {
+      color:var(--text); text-decoration-color:var(--text); transform:none; opacity:1; }
+
+
+  /* ============ LEGAL — editorial article ============ */
+  .legal { padding:96px 0 110px; background:var(--void); }
+  .legal-measure { max-width:70ch; }
+  .back-link { display:inline-block; font-size:13.5px; font-weight:600; color:var(--muted); text-decoration:none; margin-bottom:34px; transition:color .15s; }
+  .back-link:hover { color:var(--text); }
+  .legal-head .smallcaps { display:block; margin-bottom:16px; }
+  .legal h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin-bottom:16px; }
+  .updated { color:var(--muted); font-size:14px; margin-bottom:40px; }
+  .intro { color:var(--muted); font-size:17px; margin-bottom:64px; }
+  .legal-block { border-top:1px solid var(--hairline); padding:44px 0; }
+  .legal-block:last-child { padding-bottom:0; }
+  .legal-block h2 { font-size:clamp(24px, 1.1rem + 1.4vw, 32px); margin-bottom:16px; }
+  .legal-block p { font-size:15.5px; color:var(--muted); margin-bottom:14px; }
+  .legal-block p:last-child { margin-bottom:0; }
+  .legal-block strong { color:var(--text); font-weight:600; }
+  .legal-block a { color:var(--accent-2); text-decoration:none; border-bottom:1px solid #D8D4CC; transition:color .15s,border-color .15s; }
+  .legal-block a:hover { color:var(--text); border-color:var(--text); }
+  .legal-block ul { list-style:none; display:flex; flex-direction:column; gap:10px; margin:8px 0 16px; }
+  .legal-block li { font-size:15px; color:var(--muted); padding-left:22px; position:relative; line-height:1.55; }
+  .legal-block li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
+
+  /* Consent banner (injected by midnight.js) */
+  .mid-consent { position:fixed; left:16px; right:16px; bottom:max(16px, env(safe-area-inset-bottom)); z-index:2100; display:none; justify-content:center; }
+  .mid-consent.show { display:flex; }
+  .mid-consent-inner { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; max-width:720px; background:rgba(247,246,244,0.97); border:1px solid #D8D4CC; border-radius:8px; padding:16px 20px; }
+  .mid-consent-inner p { font-size:13px; line-height:1.55; color:#23211E; margin:0; flex:1 1 320px; }
+  .mid-consent-inner strong { color:#23211E; }
+  .mid-consent-btns { display:flex; gap:10px; align-items:center; }
+  .mid-consent-btns button { font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:4px; padding:9px 18px; border:none; }
+  .mid-consent-accept { background:#23211E; color:#F7F6F4; }
+  .mid-consent-decline { background:transparent; color:#6E6A63; border:1px solid #D8D4CC !important; }
+  .mid-consent-inner a { color:#6E6A63; font-size:12px; }
+
+  /* iOS zooms the page when focusing inputs under 16px — keep fields at 16px on touch widths */
+  @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
+
+  /* ============ FOOTER ============ */
+  footer { padding:44px 0; border-top:1px solid var(--hairline); background:var(--void); }
+  .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+  .footer-logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+  .footer-logo img { height:24px; }
+  .footer-logo b { font-weight:700; font-size:15px; }
+  .footer-nav { display:flex; gap:22px; list-style:none; flex-wrap:wrap; }
+  .footer-nav a { font-size:13.5px; color:var(--muted); text-decoration:none; }
+  .footer-nav a:hover { color:var(--text); }
+  .footer-right { font-size:12.5px; color:var(--muted); }
+  .fc-head { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .fc-row { display:flex; align-items:center; gap:8px; justify-content:flex-end; margin-bottom:7px; font-size:13px; text-decoration:none; color:var(--muted); transition:color .15s; }
+  .fc-row:hover { color:var(--text); }
+  .fc-wa { color:#25D366 !important; }
+  .footer-copy { font-size:12.5px; color:var(--muted); margin-top:4px; }
+
+  @media (max-width: 520px) {
+    .legal h1 { font-size:clamp(34px, 9.6vw, 48px); }
+  }
+  @media(max-width:768px) {
+    .nav-links { display:none; } .burger { display:flex; } .nav-cta { display:inline-block; margin-left:auto; margin-right:4px; }
+    .legal { padding:72px 0 90px; }
+  }
+  @media(max-width:700px) {
+    .footer-inner { flex-direction:column; align-items:flex-start; }
+    .footer-right { text-align:left; }
+    .fc-row { justify-content:flex-start; }
+  }
+  /* Cross-page transitions + FAQ height ease + press feedback (progressive, 2026 browsers) */
+  :root { interpolate-size: allow-keywords; }
+  details::details-content { block-size:0; overflow-y:clip; transition:content-visibility .32s allow-discrete, block-size .32s cubic-bezier(.16,1,.3,1); }
+  details[open]::details-content { block-size:auto; }
+  .btn-solid:active, .btn-quiet:active, .lf-submit:active { transform:scale(.975); }
+  nav { transition:transform .3s cubic-bezier(.16,1,.3,1); }
+  nav.mid-nav-hidden { transform:translateY(-100%); }
+  @keyframes mid-breathe { 0%,100% { color:#6E6A63; } 50% { color:#23211E; } }
+  .hero h1 em { animation: mid-breathe 7s ease-in-out infinite; }
+  
+  
+  .footer-social a{display:inline-flex;align-items:center;color:var(--muted);transition:color .2s}
+  .footer-social a:hover{color:var(--accent-2)}
+  .footer-social svg{width:18px;height:18px;display:block}
+  
+    em,i{font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:300}
+    h1,h2,h3{font-weight:300;letter-spacing:-0.03em}
+
+    /* ============ FOOTER v3 (ported from index) ============ */
+    footer{background:var(--void-2);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
+    .f-grid{display:grid;gap:34px}
+    @media(min-width:760px){.f-grid{grid-template-columns:1.4fr 1fr 1fr}}
+    footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+    footer a{color:var(--muted);text-decoration:none}
+    footer a:hover{color:var(--text)}
+    footer .footer-right{text-align:left}
+    footer .nav-logo b{font-size:15px}
+    .muted{color:var(--muted)}
+    .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#8A857C;font-size:13px}
+  </style>
+  <link rel="stylesheet" href="/kaizen-mark.css">
+  <link rel="stylesheet" href="/interactions.css">
+  <script src="/transitions.js" defer></script>
+  <script type="speculationrules">
+  {"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*\\?*"}}]},"eagerness":"moderate"}]}
+  </script>
+</head><body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="nav-logo" href="index.html">
+      <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
+      </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a class="btn-solid" href="apply.html">Take a seat</a></li>
+    </ul>
+    <a class="btn-solid nav-cta" href="apply.html">Take a seat</a>
+    <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a class="btn-solid" href="apply.html">Take a seat</a>
+  </div>
+</nav>
+
+<main style="view-transition-name:ke-main-can-i-do-this-myself" class="legal">
+  <div class="container">
+    <div class="legal-measure">
+      <a class="back-link" href="index.html">&larr; Back to site</a>
+      <div class="kz-mark legal-head"><span class="smallcaps accent">Answers</span></div>
+      <h1>Can I just do this myself with AI?</h1>
+
+      <section class="legal-block">
+      <p>Honestly, a lot of it, yes. The tools are good and getting better, and anyone telling you otherwise is protecting their invoice.</p>
+      <p>The part that does not get easier is judgement. Knowing which of forty generated pieces is worth posting, why an ad stopped working in week three, when to kill something that is nearly working. That comes from having done it repeatedly, and a tool does not hand it over.</p>
+      <p>Then there is the time. Running content, social and ads properly is not an evening job. Most founders who try it end up doing it well for three weeks and then not at all, which is worse than not starting, because the ads keep spending while the attention goes elsewhere.</p>
+      <p>If you have the time and you enjoy it, do it yourself. We would rather tell you that than take a fee for something you would do just as well. The case for handing it over is that you get the hours back and the output stays consistent when you are busy.</p>
+      </section>
+
+      <section class="legal-block">
+        <h2>What we would actually do</h2>
+        <ul>
+          <li>Take the whole thing off your desk: the content, the social and the ads, on one fee.</li>
+          <li>Bring the judgement about what to run, what to cut and what to spend more on.</li>
+          <li>Keep it consistent in the weeks you are busy, which is the part that quietly kills a self-run setup.</li>
+          <li>Show you what we are doing rather than hiding it behind a monthly report, so you could take it back in-house if you ever wanted to.</li>
+        </ul>
+      </section>
+
+      <section class="legal-block">
+        <h2>What do you use AI for yourselves?</h2>
+        <p>Plenty, and we are not precious about it. It speeds up the making. It does not decide what is worth making, and we do not pretend a tool replaces knowing your business.</p>
+      </section>
+      <section class="legal-block">
+        <h2>Will this be free in two years?</h2>
+        <p>The tools might well be. Attention will not be, and neither will knowing what to do with it. That is the part worth paying for now and probably still will be.</p>
+      </section>
+      <section class="legal-block">
+        <h2>Can we start with you and take it in-house later?</h2>
+        <p>Yes, and some should. There is no lock-in, and we would rather leave you able to run it than dependent on us.</p>
+      </section>
+    </div>
+  </div>
+
+<section class="closing" id="contact">
+  <div class="container">
+    <h2>Five at a time.<br>See if one of the seats is <em>yours</em>.</h2>
+    <p class="closing-sub">Taking a seat is a few minutes. We read every one and reply either way, the same working day.</p>
+    <div class="closing-ctas">
+      <a href="apply.html" class="btn-solid">Take a seat &rarr;</a>
+      <a href="mailto:rahaid@kaizenevol.com" class="btn-quiet">Email us directly</a>
+    </div>
+    <p class="closing-note" data-seats="5" data-taken="1">Five at a time, so every one of them gets the founders.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="f-grid">
+      <div>
+        <div class="nav-logo"><img src="brand/v3/ke-mark-ink-256.png" alt="" style="height:22px" onerror="this.style.display='none'"></div>
+        <p class="muted" style="margin:12px 0 0;max-width:38ch">A creative growth agency for brands and artists who care how they look doing it.</p>
+      </div>
+      <div>
+        <div class="smallcaps">Pages</div>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </div>
+      <div class="footer-right">
+        <div class="smallcaps">Contact</div>
+        <ul>
+          <li><a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a></li>
+          <li><a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a></li>
+          <li><a href="https://www.instagram.com/kaizenevol/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+        <a class="btn-solid" style="margin-top:14px" href="#" id="waOpen">Message us</a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 KaizenEvol</span>
+      <span>United Kingdom</span>
+    </div>
+  </div>
+</footer>
+
+<script defer src="/_vercel/insights/script.js"></script>
+<div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--void-2,#EFEDE9);border:1px solid #D8D4CC;border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+    <div style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
+    <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply and call you back the same working day</span></a>
+    <button id="waClose" style="margin-top:16px;background:none;border:none;color:#6E6A63;font-size:13px;cursor:pointer;font-family:inherit">Close</button>
+  </div>
+</div>
+<script>
+(function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
+if(!o||!m)return;o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
+c.addEventListener('click',function(){m.style.display='none';});
+m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
+</script>
+<script>
+(function () {
+  var b = document.getElementById('burgerBtn'), m = document.getElementById('mobileMenu');
+  b.addEventListener('click', function () {
+    var open = m.classList.toggle('open');
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+</script>
+<script src="/midnight.js?v=21" defer></script>
+<script defer src="/script.js"></script>
+</body>
+</html>
