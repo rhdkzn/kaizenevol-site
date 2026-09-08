@@ -103,7 +103,6 @@
   ],
   "rewrites": [
     {
-      "comment": "The growth-diagnosis funnel lives in the rahaid-crm project, not here. It was reachable only at kaizenevol.vercel.app, which middleware.ts still calls BRAND from the reno era, so the brand domain 404'd on it. These two proxy it onto kaizenevol.com. BOTH are required: the page calls fetch('/api/diagnose') relatively, and this project's api/ has no diagnose function, so rewriting the page alone would load a funnel whose only button throws — Day Eleven's Failure 2 exactly.",
       "source": "/growth-diagnosis",
       "destination": "https://kaizenevol.vercel.app/growth-diagnosis"
     },
