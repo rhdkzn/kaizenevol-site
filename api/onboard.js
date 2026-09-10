@@ -113,7 +113,7 @@ export function agreementText(d) {
   L.push(`11. GENERAL`);
   L.push(`11.1 This Agreement is governed by the law of England and Wales and its courts have exclusive jurisdiction. 11.2 It is the entire agreement between the parties on its subject; any change must be agreed in writing (email is enough) by both parties. 11.3 It may be signed electronically, and an electronic signature has the same effect as a handwritten one. 11.4 Notices go by email: to the Agency at rahaid@kaizenevol.com, to the Client at ${d.email || 'the email address the Client signed with'}. 11.5 Nothing in this Agreement creates a partnership, joint venture or employment relationship between the parties, and no third party may enforce any of its terms under the Contracts (Rights of Third Parties) Act 1999.`);
   L.push(``);
-  L.push(`SIGNED for the Agency by Rahaid, KaizenEvol, on ${d.issuedAt ? longDate(d.issuedAt) : longDate(new Date().toISOString().slice(0, 10))}, and issued to the Client for signature.`);
+  L.push(`SIGNED for the Agency by Rahaid and Diego, KaizenEvol, on ${d.issuedAt ? longDate(d.issuedAt) : longDate(new Date().toISOString().slice(0, 10))}, and issued to the Client for signature.`);
   return L.join('\n');
 }
 export function agreementHash(text) { return createHash('sha256').update(text, 'utf8').digest('hex'); }
