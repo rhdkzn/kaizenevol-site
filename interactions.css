@@ -306,3 +306,121 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
  * 2026-09-07): don't let Reduce Motion stop or change anything we make - the motion is a
  * client-acquisition asset. Not switched off, and not shortened either; the setting is
  * ignored entirely. test-reduced-motion.mjs fails any file that reintroduces a block. */
+
+/* ---------------------------------------------------------------------------
+ * Scroll-scrubbed film — the closing section's signature moment.
+ *
+ * The film is the page's ONE dark anchor. DESIGN.md's palette rule says the
+ * site is light and black lives in the mark and in buttons; this section is
+ * the agreed exception and the file carries the amendment alongside it.
+ *
+ * No prefers-reduced-motion block here on purpose. The scrub moves only with
+ * the visitor's own scroll, which DESIGN.md names as must-always-ship, and
+ * test-reduced-motion.mjs fails any file in the estate that branches at all.
+ * ------------------------------------------------------------------------ */
+.scrub {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: #0d0d0f;
+  color: var(--page, #f7f6f4);
+}
+
+.scrub-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.scrub-media img,
+.scrub-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% center;
+}
+
+/* The poster holds until a real frame paints, then hands over. */
+.scrub-media video {
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scrub[data-scrub-painted="true"] .scrub-media video {
+  opacity: 1;
+}
+
+/* The scrim is its own ELEMENT, not a pseudo.
+ *
+ * It was ::before first, and it never once applied: `section.band::before`
+ * already paints the kanji watermark and is more specific, so the browser
+ * simply used that. Nothing errored — the section looked plausible, the guard's
+ * "a scrim exists" check passed because it only asked whether a ::before had
+ * content, and the watermark satisfied that. Three rounds of contrast tuning
+ * were measuring a page with no scrim on it.
+ *
+ * As an element it composites over the film, under the copy, and leaves the
+ * watermark alone.
+ *
+ * The copy column here is CENTRED, so the scrim is centred too. An earlier
+ * angled version was drawn for a left-aligned column and cleared exactly where
+ * the words sit.
+ *
+ * Two layers, two jobs: a flat veil that lowers the whole film, and a wide
+ * centred pool over the copy that still lets the form read at the edges. Both
+ * stay inside the neutral ramp with no hue shift across stops, per the
+ * gradient rule in brand/DESIGN.md.
+ */
+.scrub-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      86% 64% at 50% 48%,
+      rgba(13, 13, 15, 0.9) 0%,
+      rgba(13, 13, 15, 0.84) 42%,
+      rgba(13, 13, 15, 0.5) 76%,
+      rgba(13, 13, 15, 0.12) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(13, 13, 15, 0.34) 0%,
+      rgba(13, 13, 15, 0.2) 45%,
+      rgba(13, 13, 15, 0.34) 100%
+    );
+}
+
+.scrub > .container {
+  position: relative;
+  z-index: 2;
+}
+
+.scrub h2,
+.scrub .lede {
+  color: var(--page, #f7f6f4);
+}
+.scrub .smallcaps {
+  color: var(--stone, #8a857c);
+}
+
+@media (max-width: 860px) {
+  .scrub-media img,
+  .scrub-media video {
+    object-position: 68% center;
+  }
+  /* Portrait crops the film hard and the copy runs nearly edge to edge, so
+     the centred pool has nowhere to clear to. A flat vertical veil instead —
+     the form still reads through it, the copy no longer competes with it. */
+  .scrub-scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(13, 13, 15, 0.8) 0%,
+      rgba(13, 13, 15, 0.9) 40%,
+      rgba(13, 13, 15, 0.93) 100%
+    );
+  }
+}

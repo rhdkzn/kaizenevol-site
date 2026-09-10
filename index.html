@@ -689,7 +689,18 @@
   </div>
 </section>
 
-<section class="band closing" id="contact">
+<section class="band closing scrub" id="contact" data-scrub>
+  <div class="scrub-media" aria-hidden="true">
+    <picture>
+      <source media="(max-width: 860px)" srcset="/assets/loop/loop-mobile-poster.jpg">
+      <img src="/assets/loop/loop-poster.jpg" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+    </picture>
+    <video class="scrub-video"
+      data-webm="/assets/loop/loop.webm" data-webm-mobile="/assets/loop/loop-mobile.webm"
+      data-mp4="/assets/loop/loop.mp4" data-mp4-mobile="/assets/loop/loop-mobile.mp4"
+      muted playsinline preload="none" disablepictureinpicture></video>
+    <div class="scrub-scrim"></div>
+  </div>
   <div class="container reveal">
     <div class="smallcaps">The first five</div>
     <h2>We&rsquo;re taking five clients to start.</h2>
@@ -803,6 +814,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
      was the one public page not loading it, so it was the one hero with no depth behind the type. -->
 <script src="/midnight.js?v=21" defer></script>
 <script src="/seats.js" defer></script>
+<script src="/scrub.js" defer></script>
 <script>
 (function(){
   // [num, title, body, measured scale, measured x-nudge, float duration]
