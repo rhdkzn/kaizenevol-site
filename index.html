@@ -516,11 +516,17 @@
        These are generated with a real alpha channel rather than on white:
        the white-backed first pass read as four boxes against this section's
        off-white band, invisible only on the loop's white cards. */
-    .cell .run-icon{width:104px;height:104px;display:block;margin-bottom:14px}
+    /* 104 -> 160 and 88 -> 140 (2026-09-10). The renders are 320px with a real alpha
+       channel and were being shown at 88px on a phone - 23% of screen width, a quarter of
+       the resolution we have. Four screens of this page are 110-130 words of body copy with
+       no visual anchor at all, and the anchor was sitting right there, shrunk. 160px is the
+       ceiling that stays sharp at DPR2 off a 320px source; do not raise it without larger
+       renders. Nothing is cut to make room - the cells simply give the artwork its space. */
+    .cell .run-icon{width:160px;height:160px;display:block;margin-bottom:18px}
     .cell .run-icon img{width:100%;height:100%;object-fit:contain;display:block;
       transform:scale(var(--k,1)) translateX(var(--nudge,0));transform-origin:center;
       animation:kzFloat var(--dur,7s) ease-in-out var(--delay,0s) infinite}
-    @media(max-width:719px){.cell .run-icon{width:88px;height:88px;margin-bottom:10px}}
+    @media(max-width:719px){.cell .run-icon{width:140px;height:140px;margin-bottom:14px}}
   
     /* ── ICONS TILT TOWARD THE POINTER ────────────────────────────────────────
        Replaces a spin. A 3D turntable was rendered and rejected: a video model
