@@ -60,8 +60,12 @@
     img{max-width:100%}
 
     h1,h2,h3{font-weight:200;letter-spacing:-0.04em;line-height:1.06;margin:0}
-    h1{font-size:clamp(34px,1.5rem + 3.2vw,60px)}
-    h2{font-size:clamp(30px,1.4rem + 2.4vw,48px)}
+    /* Raised 2026-09-10, never shrunk. The complaint was that nothing stands
+       out; flattening the scale downward makes the page quieter and leaves the
+       ranking exactly as flat (brand/DESIGN.md). Hero and section heads go up,
+       every body size is untouched. */
+    h1{font-size:clamp(42px,1.9rem + 3.9vw,68px)}
+    h2{font-size:clamp(36px,1.7rem + 3.1vw,58px)}
     h3{font-size:clamp(20px,1rem + 1vw,26px);font-weight:600;letter-spacing:-0.02em;line-height:1.25}
     em{font-family:var(--serif);font-style:italic;font-weight:300}
     .smallcaps{font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone)}
@@ -129,7 +133,10 @@
          are excluded and the seat line is never under the toolbar. Content centres vertically. */
       .hero{padding:40px 0 48px;min-height:calc(100vh - 66px);min-height:calc(100svh - 66px);display:flex;align-items:center}
       .hero .container{width:100%}
-      .hero h1{font-size:clamp(30px,8.6vw,38px);font-weight:300;letter-spacing:-0.03em;line-height:1.08;max-width:17ch;margin-top:14px}
+      /* Raised 2026-09-10 with the rest of the scale. This override is what
+         actually governs the hero on a phone — the global h1 clamp never
+         reaches it, so raising that alone moved nothing. */
+      .hero h1{font-size:clamp(40px,11.4vw,50px);font-weight:300;letter-spacing:-0.035em;line-height:1.06;max-width:17ch;margin-top:14px}
       /* Ink, not muted, and 17px: grey 15px over the silk was the "make it easier to read"
          complaint. --ink is in the palette; no third grey. */
       .hero-sub{font-size:17px;max-width:32ch;margin-top:18px;color:var(--ink)}
@@ -601,25 +608,14 @@
   </div>
 </header>
 
-<section class="band">
+<section>
   <div class="container reveal">
-    <div class="smallcaps">The problem</div>
     <h2>Your craft isn&rsquo;t the problem. It just isn&rsquo;t in front of enough people.</h2>
-    <p class="lede">The people who find it buy it. And that&rsquo;s the frustrating part. The work does its job the moment someone sees it. There just aren&rsquo;t enough someones. So the people who would buy it never do.</p>
+    <p class="lede">The work does its job the moment someone sees it. Not enough people do.</p>
     <p class="pull">You&rsquo;re a maker who has to be a marketer, and it&rsquo;s the marketing that slips.</p>
-    <p class="lede">So you craft and create, put it out, and find out how it did at the same time as everyone else. When it goes well you can&rsquo;t say why, and you can&rsquo;t do it again. A good week you can&rsquo;t repeat isn&rsquo;t a plan.</p>
-    <p class="lede">The work was never the question.</p>
-  </div>
-</section>
-
-<section class="band-cool">
-  <div class="container reveal">
-    <div class="smallcaps">The aim</div>
-    <h2>Getting seen is half of it. Staying seen is the half nobody talks about.</h2>
-    <p class="pull">Anyone can have a good week.</p>
-    <p class="lede">But you already know what that&rsquo;s worth, because you&rsquo;ve had them.</p>
-    <p class="lede">What we&rsquo;re after is something else. New people finding your work every day, buying, and coming back without us paying an ad to reach them twice. That&rsquo;s growth you keep. Everything else you have to buy again next month.</p>
-    <p class="lede">And we track it, because a month with more sales in it only counts if the next one does it again. If you&rsquo;re the one making it, the making stays yours and the selling stops being the part you dread.</p>
+    <p class="lede">So you put it out and find out how it did at the same time as everyone else. When it goes well you can&rsquo;t say why, and you can&rsquo;t do it again. A good week you can&rsquo;t repeat isn&rsquo;t a plan.</p>
+    <p class="lede">What we&rsquo;re after is new people finding your work every day, buying, and coming back without us paying an ad to reach them twice. That&rsquo;s growth you keep. Everything else you have to buy again next month.</p>
+    <p class="lede">The making stays yours. The selling stops being the part you dread.</p>
   </div>
 </section>
 
@@ -661,7 +657,6 @@
 
 <section class="band-cool">
   <div class="container reveal">
-    <div class="smallcaps">The business is still yours</div>
     <h2>We don&rsquo;t choose how it looks.</h2>
     <p class="lede">The look and the direction stay yours. We&rsquo;re in it with you, whether it&rsquo;s a shoot or an edit, but what the brand is and where it&rsquo;s going is your call and stays that way.</p>
     <p class="lede">We make more of what you already make, put it in front of people who&rsquo;ve never seen you, and if a piece doesn&rsquo;t look like you it&rsquo;s wrong, and we&rsquo;ll say so before you have to.</p>
@@ -671,7 +666,6 @@
 
 <section>
   <div class="container reveal">
-    <div class="smallcaps">How we charge</div>
     <h2>No cut of your ad spend.</h2>
     <p class="lede">One monthly payment, separate from your ad spend, so nothing we recommend is ever because it pays us more. There&rsquo;s no minimum ad spend. What you pay depends on what you sell and how much content you need, so we work it out with you, but you&rsquo;ll hear it on the first call, not the third.</p>
   </div>
@@ -679,7 +673,6 @@
 
 <section class="band">
   <div class="container reveal">
-    <div class="smallcaps">Who this is for</div>
     <h2>This isn&rsquo;t for everyone.</h2>
     <ul class="notfor">
       <li>You won&rsquo;t look at your own numbers. Then nobody can fix them, us included.</li>
