@@ -424,3 +424,59 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
     );
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * The mono — added 2026-09-10 (Rahaid).
+ *
+ * Third face in the system, and it earns its place by doing exactly ONE job:
+ * every LABEL and every small NUMERAL. Eyebrows, the 01-04 markers, the rail
+ * counter. Nothing else. It is the move that gives a page an instrument-panel
+ * character without a second display face, and it was the largest character
+ * gap between our estate and the reference (MKT-BRD-005).
+ *
+ * JetBrains Mono over IBM Plex Mono on a rendered comparison, not a
+ * description: Plex's numerals sit too heavy beside a 300-weight headline.
+ *
+ * Self-hosted, per brand/DESIGN.md — no Google @import anywhere in the estate.
+ *
+ * It lives HERE rather than in each page's inline <style> because every public
+ * page loads this file AFTER its own block, so one rule reaches all eleven and
+ * they cannot drift apart. Doing it per page is how the eyebrow ended up 12px
+ * on index and 11px everywhere else.
+ *
+ * NOT applied to .step .n — that is a display numeral at 56-104px, not a
+ * label, and the reference uses its SANS for figures at that size, never the
+ * mono. Newsreader keeps its display moments.
+ * ------------------------------------------------------------------------ */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/mono.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.smallcaps,
+.cell .n,
+.kz-count,
+.kz-num {
+  font-family: var(--mono);
+  font-style: normal;
+}
+
+/* A mono is already wide; the sans eyebrow's 0.18em becomes a gap at this
+ * size, so it comes back to 0.12em. Measured on the render, not assumed. */
+.smallcaps {
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+
+/* These carried Newsreader italic. Reverting the italic with the family, or
+ * the numerals inherit a slant the mono was never drawn for. */
+.kz-count { font-size: 22px; letter-spacing: 0.02em; }
+.kz-num { font-size: 13px; letter-spacing: 0.06em; }
+.cell .n { letter-spacing: 0.06em; }
