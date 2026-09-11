@@ -64,11 +64,11 @@
        out; flattening the scale downward makes the page quieter and leaves the
        ranking exactly as flat (brand/DESIGN.md). Hero and section heads go up,
        every body size is untouched. */
-    h1{font-size:clamp(42px,1.9rem + 3.9vw,68px)}
-    h2{font-size:clamp(36px,1.7rem + 3.1vw,58px)}
+    h1{font-size:clamp(44px,2rem + 4.4vw,78px)}
+    h2{font-size:clamp(30px,1.4rem + 2.2vw,46px)}
     h3{font-size:clamp(20px,1rem + 1vw,26px);font-weight:600;letter-spacing:-0.02em;line-height:1.25}
     em{font-family:var(--serif);font-style:italic;font-weight:300}
-    .smallcaps{font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone)}
+    .smallcaps{font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}
 
     /* nav — markup identical to the rest of the estate for nav parity */
     nav{position:sticky;top:0;z-index:40;background:rgba(247,246,244,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
@@ -146,7 +146,7 @@
       .lede{font-size:17px}
     }
     .hero-ctas{display:flex;gap:18px;justify-content:center;align-items:center;margin-top:32px;flex-wrap:wrap}
-    .hero-note{margin-top:18px;font-size:13px;color:var(--stone)}
+    .hero-note{margin-top:18px;font-size:13px;color:var(--muted)}
 
     /* THE START FIELD — replaces the hero's Apply pill (Rahaid, 2026-09-07: it "looks
        sloppy"; it was also measurably wrong — primary 41px, secondary 25px, and the
@@ -161,7 +161,7 @@
     .ke-start:focus-within,.ke-start:hover{border-bottom-color:var(--ink)}
     .ke-start input{flex:1;min-width:0;min-height:48px;padding:0;border:0;outline:none;
       background:transparent;font-family:var(--sans);font-size:17px;color:var(--ink)}
-    .ke-start input::placeholder{color:var(--stone);opacity:1}
+    .ke-start input::placeholder{color:var(--muted);opacity:1}
     .ke-start-go{flex:0 0 auto;width:44px;height:44px;padding:0;display:grid;place-items:center;
       border:0;border-radius:50%;background:var(--ink);color:var(--page);cursor:pointer;
       transition:transform .3s var(--el-ease),opacity .3s var(--el-ease)}
@@ -402,7 +402,7 @@
     @media(min-width:760px){.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(min-width:1000px){.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}}
     .cell{background:rgba(252,252,250,.86);padding:30px 26px;display:flex;flex-direction:column;gap:10px}
-    .cell .n{font-size:11px;font-weight:700;letter-spacing:0.16em;color:var(--stone)}
+    .cell .n{font-size:11px;font-weight:700;letter-spacing:0.16em;color:var(--muted)}
     .cell p{margin:0;font-size:14.5px;color:var(--muted)}
     @media(min-width:760px){.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
     .cell ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
@@ -417,13 +417,13 @@
     .steps{display:grid;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:44px}
     @media(min-width:820px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
     .step{background:rgba(243,241,238,.86);padding:34px 26px 30px;display:flex;flex-direction:column;gap:10px}
-    .step .n{font-family:var(--serif);font-style:italic;font-size:clamp(56px,2rem + 6vw,104px);color:var(--stone);line-height:.82;letter-spacing:-0.04em;margin:-6px 0 4px}
+    .step .n{font-family:var(--serif);font-style:italic;font-size:clamp(56px,2rem + 6vw,104px);color:var(--muted);line-height:.82;letter-spacing:-0.04em;margin:-6px 0 4px}
     .step p{margin:0;font-size:14.5px;color:var(--muted)}
 
     .work{display:grid;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:40px}
     @media(min-width:760px){.work{grid-template-columns:repeat(3,minmax(0,1fr))}}
     .slot{background:var(--cool);aspect-ratio:4/5;display:flex;align-items:flex-end;padding:18px}
-    .slot span{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--stone)}
+    .slot span{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
 
     .closing{text-align:center}
     .closing h2{max-width:18ch;margin:0 auto}
@@ -446,7 +446,7 @@
     footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
     footer a{color:var(--muted);text-decoration:none}
     footer a:hover{color:var(--ink)}
-    .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--stone);font-size:13px}
+    .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px}
   
     /* ===== KAIZEN LOOP RAIL — the four stages as a scroll-driven carousel =====
        Rahaid: the site is blunt, it is just text you have to read and stay
@@ -468,9 +468,9 @@
        swiped past it. align-items:start so a one-line name does not float. */
     .kz-head{max-width:var(--maxw);margin:0 auto 24px;padding:0 24px;width:100%;min-height:30px;
              display:flex;align-items:start;justify-content:space-between;gap:20px}
-    .kz-count{font-family:var(--serif);font-style:italic;font-size:28px;color:var(--stone);line-height:1}
+    .kz-count{font-family:var(--serif);font-style:italic;font-size:28px;color:var(--muted);line-height:1}
     .kz-count b{color:var(--ink);font-weight:300}
-    .kz-name{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);text-align:right}
+    .kz-name{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:right}
     .kz-track{display:flex;align-items:stretch;gap:22px;padding:0 24px;will-change:transform}
     .kz-card{flex:0 0 clamp(280px,46vw,560px);background:#fff;border:1px solid var(--hairline);
              border-radius:2px;padding:30px 26px 32px;display:flex;flex-direction:column;
@@ -480,7 +480,7 @@
     .kz-card.dim > *{opacity:.34}
     .kz-card h3{font-size:clamp(22px,2.2vw,30px);font-weight:500;letter-spacing:-.015em;margin:0 0 8px}
     .kz-card p{font-size:15px;color:var(--muted);line-height:1.6;margin:0}
-    .kz-num{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--stone);margin-bottom:10px}
+    .kz-num{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted);margin-bottom:10px}
 
     /* The icon. Ours, generated, neutral grey. Per-icon scale and centring are
        MEASURED off each render's ink bounding box, not eyeballed — spans of
@@ -503,7 +503,7 @@
     .kz-bar{max-width:var(--maxw);margin:24px auto 0;padding:0 24px;width:100%}
     .kz-line{height:2px;background:var(--hairline);position:relative;overflow:hidden}
     .kz-fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--ink)}
-    .kz-hint{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-top:10px}
+    .kz-hint{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:10px}
 
     /* Touch only. A phone is a DEVICE fact, so it gets the native swipe
        carousel; overriding scroll on touch is how a page starts feeling broken. */
@@ -575,6 +575,60 @@
   <script type="speculationrules">
   {"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*\\?*"}}]},"eagerness":"moderate"}]}
   </script>
+<!-- org-schema:start -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://kaizenevol.com/#organization",
+  "name": "KaizenEvol",
+  "url": "https://kaizenevol.com",
+  "logo": "https://kaizenevol.com/brand/v3/ke-tile-1024.png",
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "contactType": "sales",
+      "name": "Diego",
+      "email": "diego@kaizenevol.com",
+      "areaServed": "GB",
+      "availableLanguage": "en"
+    }
+  ],
+  "email": "diego@kaizenevol.com",
+  "sameAs": [
+    "https://www.instagram.com/kaizenevol/"
+  ],
+  "description": "A UK creative growth agency for brands and artists: content, ads and social on one monthly fee, judged on your profit.",
+  "areaServed": {
+    "@type": "Country",
+    "name": "United Kingdom"
+  },
+  "founder": [
+    {
+      "@type": "Person",
+      "name": "Law"
+    },
+    {
+      "@type": "Person",
+      "name": "Diego"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://kaizenevol.com/#website",
+  "url": "https://kaizenevol.com",
+  "name": "KaizenEvol",
+  "publisher": {
+    "@id": "https://kaizenevol.com/#organization"
+  },
+  "inLanguage": "en-GB"
+}
+</script>
+<!-- org-schema:end -->
 </head>
 <body>
 

@@ -21,6 +21,9 @@ const SKIP = new Set(['crm.html','dashboard.html','portal.html','onboard.html',
                       'hero-lab.html','motion-lab.html','lab-cta.html','showcase-home.html']);
 const pages = readdirSync('.').filter(f => f.endsWith('.html') && !SKIP.has(f));
 const WIDTHS = [360, 390, 430, 768, 1440];
+/* The page title must not merely be larger than its sections, it must read as
+   a different rank. 1.3 sits below the 1.42 the narrowest phone produces. */
+const MIN_RATIO = 1.3;
 
 const b = await chromium.launch({executablePath: process.env.PW_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
 let pass = 0, fail = 0;
@@ -38,8 +41,16 @@ for (const w of WIDTHS) {
     });
     await p.close();
     if (!r.h1 || r.h2 === null) continue;
-    if (r.h1 > r.h2) { pass++; }
-    else { fail++; console.log(`FAIL  ${f} @ ${w}px — h1 is ${r.h1}px, "${r.which}" is ${r.h2}px`); }
+    if (r.h1 <= r.h2) { fail++; console.log(`FAIL  ${f} @ ${w}px — h1 is ${r.h1}px, "${r.which}" is ${r.h2}px`); continue; }
+    /* Leading is not enough — it has to LEAD. Added 2026-09-11: index.html ran
+       h1 68px against seven h2s at 58px, a ratio of 1.17, so every section
+       shouted at the same volume as the page title and a prospect reported not
+       knowing what to look at. The old assertion passed that page happily,
+       because 68 is greater than 58. A page with no dominant size is the defect
+       this file exists to catch and it could not see it. */
+    const ratio = r.h1 / r.h2;
+    if (ratio < MIN_RATIO) { fail++; console.log(`FAIL  ${f} @ ${w}px — h1 ${r.h1}px vs "${r.which}" ${r.h2}px is only ${ratio.toFixed(2)}x, needs ${MIN_RATIO}x`); }
+    else pass++;
   }
   await ctx.close();
 }
