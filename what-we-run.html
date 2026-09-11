@@ -4,24 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="theme-color" content="#F7F6F4" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
-  <title>About, KaizenEvol</title>
-  <meta name="description" content="Meet the two founders behind KaizenEvol, a UK creative growth agency for brands and artists: we make the content, run the ads and keep your social alive, judged on what reaches your bank." />
-  <link rel="canonical" href="https://kaizenevol.com/about.html" />
+  <title>What we run, KaizenEvol</title>
+  <meta name="description" content="The four things we run for every client and what actually arrives: content, ads, social and email. What stays yours, and who it is not for." />
+  <link rel="canonical" href="https://kaizenevol.com/what-we-run.html" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://kaizenevol.com/about.html" />
+  <meta property="og:url" content="https://kaizenevol.com/what-we-run.html" />
   <meta property="og:site_name" content="KaizenEvol" />
-  <meta property="og:title" content="About, KaizenEvol" />
-  <meta property="og:description" content="Meet the two founders behind KaizenEvol, a UK creative growth agency for brands and artists: we make the content, run the ads and keep your social alive, judged on what reaches your bank." />
+  <meta property="og:title" content="What we run, KaizenEvol" />
+  <meta property="og:description" content="The four things we run for every client and what actually arrives: content, ads, social and email. What stays yours, and who it is not for." />
   <meta property="og:image" content="https://kaizenevol.com/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="About, KaizenEvol" />
-  <meta name="twitter:description" content="Meet the two founders behind KaizenEvol, a UK creative growth agency for brands and artists: we make the content, run the ads and keep your social alive, judged on what reaches your bank." />
+  <meta name="twitter:title" content="What we run, KaizenEvol" />
+  <meta name="twitter:description" content="The four things we run for every client and what actually arrives: content, ads, social and email. What stays yours, and who it is not for." />
   <meta name="twitter:image" content="https://kaizenevol.com/og-image.png" />
   <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin />
@@ -315,6 +315,12 @@
        h1 scaled to 31px at 360. The page title was losing to a section heading on
        every phone. Same specificity, and the h1 now leads by 5-8px throughout. */
     h2, .sect-head h2, .closing h2 { font-size: clamp(20px, 5.8vw, 30px); }
+      /* .lp-block h2 outranks the bare-tag rule above, exactly the specificity
+         trap this file's own comment describes - and the page's own .lp-* block
+         is declared AFTER this media query, so at equal specificity the desktop
+         clamp won anyway and the phone kept a 26px h2 against a 33px h1. Hence
+         `main`: it wins on specificity rather than on source order. Added 2026-09-11. */
+      main .lp-block h2 { font-size: clamp(19px, 5.4vw, 26px); }
   }
     /* Cross-page transitions + FAQ height ease + press feedback (progressive, 2026 browsers) */
   :root { interpolate-size: allow-keywords; }
@@ -363,6 +369,135 @@
     footer .nav-logo b{font-size:15px}
     .muted{color:var(--muted)}
     .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#6E6A63;font-size:13px}
+
+    /* ---- The Kaizen Loop page ---------------------------------------------
+       A vertical sequence, not the home page's sticky rail. The rail existed to
+       hold four stages inside one screen on a page that had other work to do;
+       here the stages ARE the page, so they get room and read top to bottom.
+       Label column left, argument right, hairline between each. */
+    h1 .tm, h2 .tm { font-size:.32em; vertical-align:super; font-weight:400; letter-spacing:0; margin-left:.06em; }
+    .lp-lede { font-size:clamp(19px,1rem + .7vw,24px); color:var(--text); max-width:34ch; margin:20px 0 0; }
+    .lp-block { padding:52px 0; border-top:1px solid var(--hairline); }
+    .lp-block:first-of-type { border-top:0; }
+    .lp-grid { display:grid; gap:22px; }
+    /* No font-family or tracking here on purpose: .smallcaps in interactions.css owns
+       both (mono 500 at +0.12em) and loads after this block, so every page gets one rule
+       and they cannot drift. A private copy here was exactly that drift. */
+    .lp-eyebrow { font-size:11px; text-transform:uppercase; color:var(--muted); margin:0 0 14px; }
+    /* Sans, not mono. brand/DESIGN.md: the mono does labels and SMALL numerals only -
+       "NOT for display numerals ... which is a figure and not a label; the reference
+       uses its sans at that size, never the mono." These run to 54px. */
+    .lp-no { font-family:var(--sans); font-size:clamp(38px,4vw,54px);
+             font-weight:200; line-height:1; color:#8A857C; letter-spacing:-.04em; margin:0 0 10px; }
+    .lp-block h2 { font-size:clamp(26px,1.1rem + 2vw,42px); margin:0; }
+    .lp-block h3 { font-size:clamp(22px,.9rem + 1.5vw,32px); margin:0 0 4px; font-weight:500; letter-spacing:-.015em; }
+    .lp-body p { margin:0 0 14px; color:var(--muted); max-width:62ch; }
+    .lp-body p:last-child { margin-bottom:0; }
+    .lp-body p.strong { color:var(--text); }
+    .lp-do { list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:11px; }
+    .lp-do li { position:relative; padding-left:22px; font-size:15px; color:var(--muted); line-height:1.55; max-width:58ch; }
+    .lp-do li::before { content:""; position:absolute; left:0; top:12px; width:10px; height:1px; background:var(--muted); }
+    .lp-back { display:inline-block; margin-top:34px; }
+    /* --- The four, as a SET. The Loop page runs a numbered SEQUENCE down the
+       page; this is four things that all run at once, so numerals would imply an
+       order that does not exist. A 2x2 grid, no numbers, and the mono key/status
+       header doing the labelling instead. Deliberately a different shape from the
+       Loop page: the reference runs its services page and its mechanism page on
+       one identical template, which is why the two read as the same page twice. */
+    .wr-set { display:grid; gap:18px; margin-top:8px; }
+    @media (min-width:820px) { .wr-set { grid-template-columns:1fr 1fr; gap:22px; } }
+    .wr-set .lp-card h3 { max-width:none; margin-bottom:10px; }
+    .wr-do { list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
+    .wr-do li { position:relative; padding-left:22px; font-size:14.5px; color:var(--muted); line-height:1.55; }
+    .wr-do li::before { content:""; position:absolute; left:0; top:11px; width:10px; height:1px; background:var(--muted); }
+
+    /* The page's own next step, rather than the shared closing. Rahaid asked for
+       it after the reference's [04 / NEXT STEP], and it is an exception to the
+       closing pattern he asked to be enforced across the estate - so it keeps
+       every PART that pattern checks (a heading, one .closing-sub, a route to
+       apply, a mailto, the seats note) and changes only what it says. The eyebrow
+       is centred here because the whole block is. */
+    .lp-next .lp-eyebrow { text-align:center; margin-bottom:18px; }
+    .lp-next .lp-eyebrow::before { margin-right:12px; }
+    .lp-next .lp-eyebrow::after {
+      content:""; display:inline-block; width:26px; height:1px; background:var(--hairline);
+      vertical-align:middle; margin-left:12px; transform:translateY(-1px);
+    }
+
+    /* --- Depth on the fold. brand/DESIGN.md permits a gradient where it does WORK
+       and names "a ground that gives a section depth" as exactly that. No hue
+       shift: both stops are the same neutral, --void-2 fading into --void, and
+       nothing arrives that could not arrive as a flat fill. The page was one
+       uniform #F7F6F4 from top to bottom, which is the fault the reference
+       teardown names in THEIR middle - it goes flat - and ours had it everywhere. */
+    header.hero { position:relative; overflow:clip; }
+    header.hero::before {
+      content:""; position:absolute; left:-20%; right:-20%; top:-30%; height:150%;
+      z-index:0; pointer-events:none;
+      background:radial-gradient(56% 60% at 50% 36%, rgba(228,225,218,.9) 0%, rgba(228,225,218,0) 66%);
+    }
+    header.hero > * { position:relative; z-index:1; }
+
+    /* The drawn rule before an eyebrow is OUR idiom, already on index.html. The
+       reference brackets its mono instead; brackets on one page would be the
+       drift this file has spent the day removing. */
+    .lp-eyebrow::before {
+      content:""; display:inline-block; width:26px; height:1px; background:var(--hairline);
+      vertical-align:middle; margin-right:12px; transform:translateY(-1px);
+    }
+
+    /* Two tones, alternating, so the stages do not read as one slab. */
+    /* The estate's band value, not a second invented one: index.html runs
+       rgba(233,230,224,.55), solved so the composite over --void is exactly
+       --void-2. Applied to the SYSTEM block and all four stages so the page
+       reads as three movements - problem, the loop, why it works - rather than
+       nine slabs at one tone, which is the flat middle the teardown names. */
+    .lp-block.tone { background:rgba(233,230,224,.55); }
+
+    /* --- "Why this works": two cards, the move Rahaid picked out of their page.
+       Mono header left, a status right, hairline under it, then the argument and
+       a mono footnote. The mono is doing labels and nothing else, which is what
+       DESIGN.md reserves it for. */
+    .lp-cards { display:grid; gap:18px; }
+    @media (min-width:880px) { .lp-cards { grid-template-columns:1fr 1fr; gap:22px; } }
+    .lp-card { border:1px solid var(--hairline); border-radius:3px; background:rgba(252,252,250,.86);
+               padding:26px 26px 24px; display:flex; flex-direction:column; }
+    .lp-card-top { display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+                   padding-bottom:12px; border-bottom:1px solid var(--hairline); margin-bottom:20px; }
+    .lp-card-top .k { font-size:10px; color:var(--muted); }
+    .lp-card-top .v { font-size:10px; color:var(--muted); opacity:.8; }
+    .lp-card h3 { font-size:clamp(21px,.9rem + 1.3vw,28px); font-weight:500; letter-spacing:-.015em;
+                  margin:0 0 12px; max-width:20ch; }
+    .lp-card p { margin:0 0 12px; color:var(--muted); font-size:15px; }
+    .lp-card p:last-of-type { margin-bottom:0; }
+    .lp-foot { margin-top:18px; padding-top:14px; border-top:1px solid var(--hairline);
+               font-family:var(--mono,ui-monospace,monospace); font-size:11px; line-height:1.6;
+               color:var(--muted); }
+
+    /* Declared AFTER the base rules on purpose. At equal specificity the later
+       rule wins, so a media query sitting above them loses to the very rules it
+       is meant to override - which is how this page shipped with single-column
+       bullets at 1440px and a 26px h2 on a phone. */
+    @media (min-width:880px) {
+      .lp-grid { grid-template-columns:minmax(0,.40fr) minmax(0,1fr); gap:56px; }
+      /* The reference runs a hairline down the gutter between label and argument. It is
+         what stops a two-column block reading as two unrelated things. */
+      .lp-grid > .lp-body { border-left:1px solid var(--hairline); padding-left:56px; margin-left:-28px; }
+      .lp-do { display:grid; grid-template-columns:1fr 1fr; gap:11px 34px; }
+      .lp-do li { max-width:none; }
+    }
+    /* Three figures under the hero. The reference's are abstract; ours are the three
+       true numbers we already publish, so nothing here is invented. Centred, because
+       brand/DESIGN.md rules the hero centred at every width - the reference splits its
+       hero into two columns and that is the one move on its page we do not take. */
+    .lp-tiles { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:30px auto 0; }
+    .lp-tile { border:1px solid var(--hairline); border-radius:2px; padding:14px 20px; min-width:118px; text-align:left; }
+    .lp-tile b { display:block; font-family:var(--sans); font-weight:200; font-size:30px; line-height:1;
+                 letter-spacing:-.03em; color:var(--text); }
+    .lp-tile span { display:block; margin-top:7px; font-size:10px; color:var(--muted); }
+    .lp-ctas { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:26px; }
+
+
   </style>
   <script type="application/ld+json">
   {
@@ -420,49 +555,121 @@
   </div>
 </nav>
 
-<main style="view-transition-name:ke-main-about" id="main-content">
+<main style="view-transition-name:ke-main-what-we-run" id="main-content">
 
 <header class="hero">
   <div class="hero-inner container">
-    <span class="ab-icon" style="--dur:9s;--delay:0s;--drift:9px;--tilt:-1.6deg"><picture><source srcset="assets/about/chairs-320.webp" type="image/webp"><img src="assets/about/chairs-320.png" alt="" width="320" height="320" decoding="async"></picture></span>
-    <h1>Who&rsquo;s behind <em>KaizenEvol</em></h1>
-    <p class="hero-sub">Two founders, no account managers. We make your content, run your ads and keep your social alive, and we judge it on what reaches your bank, not what reaches your feed.</p>
+    <span class="smallcaps accent">What we run</span>
+    <h1>Four things, and they only work <em>together</em>.</h1>
+    <p class="hero-sub">Content, ads, social and email, run by the two people who make them. Not four suppliers with four opinions about whose fault it is.</p>
+    <div class="lp-ctas">
+      <a class="btn-solid" href="apply.html">Take a seat &rarr;</a>
+      <a class="btn-quiet" href="#the-four">See the four</a>
+    </div>
   </div>
 </header>
 
-<section class="sect team">
-  <div class="container">
-    <div class="kz-mark sect-head">
-      <h2>Meet the <em>team</em></h2>
-      <p>Small by design. You will not be handed to an account manager or a junior. The two people who make your work are the two people you talk to. We&rsquo;re both behind the camera and both in the edit &mdash; Diego manages what you see, Law runs everything underneath it.</p>
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="smallcaps lp-eyebrow">01 / Why four</p>
+        <h2>One of them on its own does almost nothing.</h2>
+      </div>
+      <div class="lp-body">
+        <p class="strong">Ads with nothing good to run are money spent on the wrong thing. Content nobody is paid to see is a post your existing followers scroll past.</p>
+        <p>Social is what someone checks after an ad has done its job and before they decide, so an account that has been quiet for a month undoes the ad that sent them. And the person who already bought is the easiest sale in the business, which is the one almost nobody goes back for.</p>
+        <p>They are four things because that is how many it takes. Run apart, each one leaks into the gap beside it.</p>
+      </div>
     </div>
-    <figure class="duo">
-      <span class="duo-scrap" aria-hidden="true"></span>
-      <span class="duo-paper" aria-hidden="true"></span>
-      <picture>
-        <source srcset="assets/about/founders-1200.webp" type="image/webp">
-        <img src="assets/about/founders-1200.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="1129" decoding="async" loading="lazy">
-      </picture>
-      <span class="duo-badge" aria-hidden="true"><b>Two founders</b><span>no account manager</span></span>
-      <figcaption class="duo-credit">
-        <span><b>Diego</b>Content and social.</span>
-        <span><b>Law</b>Ads, email and tracking.</span>
-      </figcaption>
-    </figure>
+  </section>
 
-    <div class="team-note">
-      <p class="team-line">You should be making the thing. We will make people want it.</p>
-      <p>One of us makes the work, the other makes it pay. No account managers, no middlemen.</p>
+  <section class="lp-block tone" id="the-four">
+    <div class="container">
+      <p class="smallcaps lp-eyebrow">02 / The four</p>
+      <div class="wr-set lp-cards">
+        <div class="lp-card">
+          <div class="lp-card-top"><span class="k smallcaps">Content.made</span><span class="v smallcaps">weekly</span></div>
+          <h3>Content</h3>
+          <p>We shoot it with you, or cut it from footage you already have, usually both. Not one polished piece a month, because for most people who see it the ad is the brand.</p>
+          <ul class="wr-do">
+            <li>Shot with you, or built from what you already have</li>
+            <li>New pieces every week, not one film a month</li>
+            <li>Enough angles that a tired ad is never the whole account</li>
+          </ul>
+        </div>
+        <div class="lp-card">
+          <div class="lp-card-top"><span class="k smallcaps">Ads.run</span><span class="v smallcaps">daily</span></div>
+          <h3>Ads</h3>
+          <p>Run wherever your buyers actually are rather than wherever is easiest, and handled every day rather than set live and watched.</p>
+          <ul class="wr-do">
+            <li>Budgets, targeting and testing handled daily</li>
+            <li>What loses turned off, what wins funded</li>
+            <li>Judged on what reached your account, not what the platform claims</li>
+          </ul>
+        </div>
+        <div class="lp-card">
+          <div class="lp-card-top"><span class="k smallcaps">Social.kept</span><span class="v smallcaps">ongoing</span></div>
+          <h3>Social</h3>
+          <p>Your feed and stories, posted for you. It brings people in on its own, and it is what convinces someone who found you through an ad that you are worth buying from.</p>
+          <ul class="wr-do">
+            <li>Your feed and stories, posted for you</li>
+            <li>Kept alive between campaigns, not only during them</li>
+            <li>The page someone checks before they decide</li>
+          </ul>
+        </div>
+        <div class="lp-card">
+          <div class="lp-card-top"><span class="k smallcaps">Email.back</span><span class="v smallcaps">after the sale</span></div>
+          <h3>Email</h3>
+          <p>The person who already bought is the easiest sale there is, and most brands never go back to them. We keep in touch for you, by email and message.</p>
+          <ul class="wr-do">
+            <li>Email and messages to the people who already bought</li>
+            <li>Flows that run without you remembering to send them</li>
+            <li>They come back on their own instead of an ad finding them twice</li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="smallcaps lp-eyebrow">03 / What stays yours</p>
+        <h2>All of it stays <em>yours</em>.</h2>
+      </div>
+      <div class="lp-body">
+        <p class="strong">The look and the direction stay yours. We are in it with you, whether it is a shoot or an edit, but what the brand is and where it is going is your call and stays that way.</p>
+        <p>We make more of what you already make and put it in front of people who have never seen you. If a piece does not look like you it is wrong, and we will say so before you have to.</p>
+        <p>It is not just the look. Your ad account, your content, your customer list and the tracking we set up on your shop are all yours. Your ad money goes straight from your own account, never through us. If we part ways, all of it stays with you.</p>
+        <p>We never take a cut of your ad spend, so nothing we recommend is ever because it pays us more. There is no minimum ad spend either.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-block tone">
+    <div class="container lp-grid">
+      <div>
+        <p class="smallcaps lp-eyebrow">04 / Who it is not for</p>
+        <h2>Three reasons we would say no.</h2>
+      </div>
+      <div class="lp-body">
+        <ul class="lp-do">
+          <li>You will not look at your own numbers. Then nobody can fix them, us included.</li>
+          <li>The margin is too thin for ads to pay for themselves. We would be spending your money to prove arithmetic.</li>
+          <li>You want the ads run and nothing else. That is one of four things we do, and the other three are what make it work.</li>
+        </ul>
+        <p style="margin-top:20px">We would rather say it on the first call than three months in.</p>
+        <a class="btn-quiet lp-back" href="kaizen-loop.html">See how the Kaizen Loop runs it &rarr;</a>
+      </div>
+    </div>
+  </section>
 
 
-
-<section class="closing" id="contact">
+<section class="closing lp-next" id="contact">
   <div class="container">
-    <h2>Five at a time.<br>See if one of the seats is <em>yours</em>.</h2>
-    <p class="closing-sub">Taking a seat is a few minutes. We read every one and reply either way, the same working day.</p>
+    <p class="smallcaps lp-eyebrow">Next step</p>
+    <h2>Fifteen minutes tells us.</h2>
+    <p class="closing-sub">Tell us what you sell and what it costs you to make. If we cannot help we will say so, and either way you leave knowing what a customer is actually worth to you.</p>
     <div class="closing-ctas">
       <a href="apply.html" class="btn-solid">Take a seat &rarr;</a>
       <a href="mailto:diego@kaizenevol.com" class="btn-quiet">Email us directly</a>

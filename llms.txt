@@ -20,6 +20,7 @@ Brands and artists selling their own work — clothing and streetwear, jewellery
 ## Pages
 
 - [Home](https://kaizenevol.com/): The offer, the problem with judging ads on what the platform reports, and a summary of the Kaizen Loop™.
+- [What we run](https://kaizenevol.com/what-we-run.html): The four things run for every client and what actually arrives, what stays the client's, and the three reasons we say no.
 - [The Kaizen Loop™](https://kaizenevol.com/kaizen-loop.html): The four stages in full, what gets done in each, and why the baseline is set before any spend.
 - [Apply](https://kaizenevol.com/apply.html): The application. One question at a time; we reply either way.
 - [About](https://kaizenevol.com/about.html): The two founders and how they work.
