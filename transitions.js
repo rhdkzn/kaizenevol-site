@@ -26,7 +26,7 @@
      same beats from the scroll position and never need the class - harmless
      there, the only path in Firefox and older Safari. */
   (function () {
-    var blocks = document.querySelectorAll('.lp-block');
+    var blocks = document.querySelectorAll('.lp-block, .lp-next');
     if (!blocks.length) return;
     if (!('IntersectionObserver' in window)) {
       for (var i = 0; i < blocks.length; i++) blocks[i].classList.add('in');

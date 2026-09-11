@@ -28,7 +28,7 @@ import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
-const PAGES = ['kaizen-loop.html', 'what-we-run.html'];
+const PAGES = ['kaizen-loop.html', 'what-we-run.html', 'about.html'];
 
 let pass = 0, fail = 0;
 const check = (label, ok, detail = '') => {
@@ -41,8 +41,8 @@ const css = readFileSync(new URL('./interactions.css', import.meta.url), 'utf8')
 check('reveals declare no motion preference',
   !/prefers-reduced-motion/.test(css.slice(css.indexOf('.lp-block'))),
   'DESIGN.md: reduce-motion visitors get the same motion');
-check('block publishes a named view timeline',
-  /\.lp-block\s*\{\s*view-timeline-name:\s*--lp/.test(css),
+check('blocks and closers publish a named view timeline',
+  /\.lp-block,\s*\n?\s*\.motion \.lp-next \{ view-timeline-name: --lp/.test(css),
   'per-element view() gives a 20px eyebrow a 20px range');
 check('block children ride --lp, not their own subject',
   !/\.motion \.lp-block [^{]*\{[^}]*animation-timeline:\s*view\(\)/.test(css));
@@ -101,31 +101,52 @@ for (const name of PAGES) {
   // or the sample lands mid-flight and reads as a value the page never holds.
   // Sampling ONE element is not enough: the first block is above the fold and is
   // already past its range at y=0, which reads exactly like a snap. Sweep every
-  // instance and require that at least one genuinely scrubs.
+  // instance and require that at least one genuinely scrubs. The sweep covers the
+  // page's REAL height — a hardcoded ceiling silently stops testing a longer page.
   const sweep = async (sel, prop) => {
+    const max = await page.evaluate(() =>
+      document.documentElement.scrollHeight - window.innerHeight);
+    const step = Math.max(30, Math.round(max / 60));
     const seen = [];
-    for (let y = 0; y <= 2600; y += 40) {
+    for (let y = 0; y <= max; y += step) {
       await page.evaluate(v => window.scrollTo({ top: v, behavior: 'instant' }), y);
       await page.waitForTimeout(35);
       seen.push(await page.evaluate(([s, p]) =>
         [...document.querySelectorAll(s)].map(el => getComputedStyle(el)[p]), [sel, prop]));
     }
-    // -> one array of samples per element
-    return seen[0].map((_, i) => seen.map(row => row[i]));
+    if (!seen.length || !seen[0].length) return [];
+    return seen[0].map((_, i) => seen.map(row => row[i]));  // one track per element
   };
 
-  const ebs = await sweep('.lp-block .lp-eyebrow', 'opacity');
-  const partials = ebs.map(t => t.filter(v => Number(v) > 0.02 && Number(v) < 0.98).length);
-  check(`${name}: eyebrows SCRUB rather than snap`, partials.filter(n => n >= 2).length >= 2,
-    `intermediate opacity counts per eyebrow: [${partials}] (a snap gives 0)`);
-  check(`${name}: eyebrows reach both ends`,
-    ebs.some(t => t.some(v => Number(v) < 0.02) && t.some(v => Number(v) > 0.98)));
+  const REVEALED = ':is(.lp-block, .lp-next)';
 
-  const heads = await sweep('.lp-block h2, .lp-block h3', 'clipPath');
+  // about.html carries no eyebrows, so this reports n/a rather than passing quietly
+  // on an empty set — a check that can be satisfied by finding nothing is not a check.
+  const ebs = await sweep(`${REVEALED} .lp-eyebrow`, 'opacity');
+  if (!ebs.length) {
+    console.log(`  n/a   ${name}: no eyebrows on this page — headings carry the proof below`);
+  } else {
+    const partials = ebs.map(t => t.filter(v => Number(v) > 0.02 && Number(v) < 0.98).length);
+    check(`${name}: eyebrows SCRUB rather than snap`, partials.filter(n => n >= 2).length >= 2,
+      `intermediate opacity counts per eyebrow: [${partials}] (a snap gives 0)`);
+    check(`${name}: eyebrows reach both ends`,
+      ebs.some(t => t.some(v => Number(v) < 0.02) && t.some(v => Number(v) > 0.98)));
+  }
+
+  // Always required, on every page: the headings must genuinely scrub.
+  const heads = await sweep(`${REVEALED} h2, .lp-block h3`, 'clipPath');
   const clipStates = heads.map(t => new Set(t).size);
   check(`${name}: headings are MASKED across the scroll`,
-    clipStates.filter(n => n >= 3).length >= 2,
+    heads.length >= 2 && clipStates.filter(n => n >= 3).length >= 2,
     `distinct clip-path states per heading: [${clipStates}] — DESIGN.md: masked, never faded`);
+
+  // The closer is the page's most important block and had .lp-next on it with
+  // nothing reading the class, so it was the one section that never moved.
+  const closer = await sweep(`${REVEALED} .closing-sub`, 'opacity');
+  const closerOk = closer.length === 1 && closer[0].some(v => Number(v) > 0.02 && Number(v) < 0.98);
+  check(`${name}: the closing section reveals`, closerOk,
+    closerOk ? '' : (closer.length === 1 ? 'closing-sub holds no intermediate opacity'
+                                         : `expected 1 .closing-sub, found ${closer.length}`));
 
   await page.close();
 }

@@ -519,7 +519,15 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
 .motion .lp-card,
 .motion .lp-tile,
 .motion .lp-do li,
-.motion .wr-crit li { will-change: opacity, transform; }
+.motion .wr-crit li,
+.motion .lp-next .lp-eyebrow,
+.motion .lp-next h2,
+.motion .closing-sub,
+.motion .closing-ctas,
+.motion .closing-note,
+.motion .lp-block .sect-head > p,
+.motion .lp-block figure.duo,
+.motion .lp-block .team-note { will-change: opacity, transform; }
 
 /* Track one: scrubbed by the scroll itself, so the page resolves as the visitor
    moves and holds wherever they stop. Same approach as the home page. */
@@ -529,15 +537,34 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
      the subject's height, so a 20px eyebrow had a 20px scroll range and snapped
      0 -> 1 in a single wheel notch. The block is 309-803px tall, so offsets given
      in px below are a real scrub and read identically in every section. */
-  .motion .lp-block { view-timeline-name: --lp; }
+  .motion .lp-block,
+  .motion .lp-next { view-timeline-name: --lp; }
 
-  .motion .lp-block .lp-eyebrow { animation: ke-lp-fade linear both;
+  .motion :is(.lp-block, .lp-next) .lp-eyebrow { animation: ke-lp-fade linear both;
     animation-timeline: --lp; animation-range: entry 0 entry 150px; }
-  .motion .lp-block .lp-eyebrow::before { animation: ke-lp-draw linear both;
+  .motion :is(.lp-block, .lp-next) .lp-eyebrow::before { animation: ke-lp-draw linear both;
     animation-timeline: --lp; animation-range: entry 20px entry 215px; }
-  .motion .lp-block h2,
+  .motion :is(.lp-block, .lp-next) h2,
   .motion .lp-block h3 { animation: ke-lp-mask linear both;
     animation-timeline: --lp; animation-range: entry 40px entry 245px; }
+
+  /* The closer had .lp-next on it and nothing reading it, so the most important
+     block on the page was the one that did not move. Same beats as any section. */
+  .motion .closing-sub { animation: ke-lp-rise linear both;
+    animation-timeline: --lp; animation-range: entry 90px entry 290px; }
+  .motion .closing-ctas { animation: ke-lp-rise linear both;
+    animation-timeline: --lp; animation-range: entry 120px entry 300px; }
+  .motion .closing-note { animation: ke-lp-fade linear both;
+    animation-timeline: --lp; animation-range: entry 150px entry 300px; }
+
+  /* about.html's own shapes. Scoped under .lp-block so they reach nothing on a
+     page that has not opted in - index runs its own reveal system. */
+  .motion .lp-block .sect-head > p { animation: ke-lp-rise linear both;
+    animation-timeline: --lp; animation-range: entry 70px entry 270px; }
+  .motion .lp-block figure.duo { animation: ke-lp-card linear both;
+    animation-timeline: --lp; animation-range: entry 110px entry 300px; }
+  .motion .lp-block .team-note { animation: ke-lp-rise linear both;
+    animation-timeline: --lp; animation-range: entry 150px entry 300px; }
   .motion .lp-block .lp-no { animation: ke-lp-rise linear both;
     animation-timeline: --lp; animation-range: entry 30px entry 215px; }
   .motion .lp-body > p,
@@ -580,10 +607,10 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
    same beats driven by an IntersectionObserver instead, so nobody lands on a
    page that does not move. */
 @supports not (animation-timeline: view()) {
-  .motion .lp-block .lp-eyebrow { opacity: 0; transition: opacity .55s var(--ke-ease) }
-  .motion .lp-block .lp-eyebrow::before { transform: scaleX(0); transform-origin: left center;
+  .motion :is(.lp-block, .lp-next) .lp-eyebrow { opacity: 0; transition: opacity .55s var(--ke-ease) }
+  .motion :is(.lp-block, .lp-next) .lp-eyebrow::before { transform: scaleX(0); transform-origin: left center;
                                           transition: transform .8s var(--ke-ease) }
-  .motion .lp-block h2,
+  .motion :is(.lp-block, .lp-next) h2,
   .motion .lp-block h3 { clip-path: inset(0 0 104% 0); transform: translateY(13px);
                          transition: clip-path .95s var(--ke-spring), transform .95s var(--ke-spring) }
   .motion .lp-block .lp-no,
@@ -592,12 +619,28 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .motion .lp-card,
   .motion .lp-tile,
   .motion .lp-do li,
-  .motion .wr-crit li { opacity: 0; transform: translateY(11px);
+  .motion .wr-crit li,
+  .motion :is(.lp-block, .lp-next) .closing-sub,
+  .motion :is(.lp-block, .lp-next) .closing-ctas,
+  .motion :is(.lp-block, .lp-next) .closing-note,
+  .motion .lp-block .sect-head > p,
+  .motion .lp-block figure.duo,
+  .motion .lp-block .team-note { opacity: 0; transform: translateY(11px);
                         transition: opacity .8s var(--ke-ease), transform .8s var(--ke-ease) }
-  .motion .lp-block.in .lp-eyebrow { opacity: 1 }
-  .motion .lp-block.in .lp-eyebrow::before { transform: scaleX(1) }
-  .motion .lp-block.in h2,
+  .motion :is(.lp-block, .lp-next).in .lp-eyebrow { opacity: 1 }
+  .motion :is(.lp-block, .lp-next).in .lp-eyebrow::before { transform: scaleX(1) }
+  .motion :is(.lp-block, .lp-next).in h2,
   .motion .lp-block.in h3 { clip-path: inset(-14% -8% -22% 0); transform: none }
+  .motion :is(.lp-block, .lp-next).in .closing-sub,
+  .motion :is(.lp-block, .lp-next).in .closing-ctas,
+  .motion :is(.lp-block, .lp-next).in .closing-note,
+  .motion .lp-block.in .sect-head > p,
+  .motion .lp-block.in figure.duo,
+  .motion .lp-block.in .team-note { opacity: 1; transform: none }
+  .motion :is(.lp-block, .lp-next).in .closing-ctas { transition-delay: .09s }
+  .motion :is(.lp-block, .lp-next).in .closing-note { transition-delay: .16s }
+  .motion .lp-block.in figure.duo { transition-delay: .08s }
+  .motion .lp-block.in .team-note { transition-delay: .16s }
   .motion .lp-block.in .lp-no,
   .motion .lp-block.in .lp-body > p,
   .motion .lp-block.in .lp-body > ul,
