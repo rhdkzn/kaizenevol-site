@@ -27,7 +27,13 @@ const PAGES = ['index.html', 'apply.html', 'about.html', 'what-we-run.html', 'pr
                // These are the pages built to be FOUND, so a bare preview when one is
                // shared is the whole point missed.
                'tried-ads-before.html',
-               'ads-for-musicians.html', 'can-i-do-this-myself.html'];
+               'ads-for-musicians.html', 'can-i-do-this-myself.html',
+               // 2026-09-11: kaizen-loop.html carried the full block and was simply never
+               // added here, so nothing would have caught it drifting - the same
+               // hand-typed-list gap that had left it out of test-interactions.mjs.
+               // f.html is the generic funnel host and an AD destination; it had no share
+               // tags at all, and its runtime document.title is invisible to a scraper.
+               'kaizen-loop.html', 'f.html'];
 const CARD = 'og-image.png';
 const CARD_URL = 'https://kaizenevol.com/og-image.png';
 const W = 1200, H = 630;
