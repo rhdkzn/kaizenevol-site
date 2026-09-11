@@ -83,7 +83,16 @@ const probe = () => {
   return out;
 };
 
-const b = await chromium.launch({ executablePath: process.env.PW_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+/* BASE can point at the live site, which is the only way to check what a
+   stranger actually gets. Chromium needs the egress proxy and TLS 1.2 to
+   reach it from here; neither is used for localhost. */
+const REMOTE = /^https?:\/\/(?!localhost|127\.)/.test(BASE);
+const b = await chromium.launch({
+  executablePath: process.env.PW_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+  ...(REMOTE && process.env.HTTPS_PROXY
+      ? { args: ['--ssl-version-max=tls1.2'], proxy: { server: process.env.HTTPS_PROXY } }
+      : {})
+});
 let fail = 0, checked = 0;
 for (const w of WIDTHS) {
   const ctx = await b.newContext({ viewport:{width:w,height:900}, ...(w < 500 ? {isMobile:true,hasTouch:true} : {}) });
