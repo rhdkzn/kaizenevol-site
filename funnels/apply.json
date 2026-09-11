@@ -1,0 +1,100 @@
+{
+  "name": "apply",
+  "title": "Take a seat, KaizenEvol",
+  "eyebrow": "Take a seat",
+  "endpoint": "/api/submit-lead",
+  "reveal": "ecom-margin",
+  "cta": { "next": "Continue", "send": "Take my seat" },
+  "steps": [
+    {
+      "key": "businessName",
+      "type": "text",
+      "q": "What’s your brand called?",
+      "why": "We take <em>five</em> at a time, so these get read properly and you get a reply either way.",
+      "fields": [{ "id": "businessName", "type": "text", "autocomplete": "organization", "placeholder": "Brand or artist name" }],
+      "required": "A brand name, even a working one."
+    },
+    {
+      "key": "businessUrl",
+      "type": "text",
+      "q": "Where can we see it?",
+      "why": "The store, or an Instagram handle if the store is not up yet.",
+      "fields": [{ "id": "businessUrl", "type": "text", "placeholder": "yourbrand.com or @yourbrand" }]
+    },
+    {
+      "key": "trade",
+      "type": "text",
+      "q": "What do you make?",
+      "why": "In your own words. Streetwear, jewellery, ceramics, prints, music, whatever it is.",
+      "fields": [{ "id": "trade", "type": "text", "placeholder": "What you sell" }]
+    },
+    {
+      "key": "sellModel",
+      "type": "choice",
+      "q": "How do you sell? Big drops, or always on?",
+      "why": "Do you release collections on a schedule, or keep the same things for sale all the time?",
+      "aria": "How you sell",
+      "options": ["Drops on a schedule", "A bit of both", "Always on", "Still figuring it out"]
+    },
+    {
+      "key": "revenue",
+      "type": "choice",
+      "q": "Roughly how much does it sell a month?",
+      "why": "This is the number that decides whether we can help, so an honest answer is worth more than a flattering one. Small is not a problem. Guessing is.",
+      "aria": "Monthly revenue",
+      "options": ["Pre-launch, nothing yet", "Under £5k", "£5k – £15k", "£15k – £40k", "£40k – £100k", "Over £100k"],
+      "required": "Pick the closest one — it is the question that matters most."
+    },
+    {
+      "key": "costShare",
+      "type": "choice",
+      "q": "Roughly, how much of the price is what it costs you to make?",
+      "why": "A rough guess is fine. Materials, blanks, printing, whatever goes into one piece.",
+      "aria": "Cost as a share of price",
+      "options": ["About a quarter", "About a third", "About half", "More than half", "Not sure yet"]
+    },
+    {
+      "key": "adspend",
+      "type": "choice",
+      "q": "And what are you spending on ads?",
+      "why": "Whatever it is. We price on the work, not the budget, so a small number here does not count against you.",
+      "aria": "Monthly ad spend",
+      "options": ["Nothing yet", "Under £1k", "£1k – £5k", "£5k – £15k", "Over £15k"]
+    },
+    {
+      "key": "message",
+      "type": "long",
+      "q": "What are you trying to do in the next six months?",
+      "why": "A launch, a drop, getting off a plateau, running ads properly for the first time.",
+      "fields": [{ "id": "message", "type": "textarea", "placeholder": "Where you are trying to get to" }]
+    },
+    {
+      "key": "email",
+      "type": "email",
+      "q": "Who are we speaking to, and where do we send the answer?",
+      "why": "We read these ourselves, both of us. You will hear back whether it is a fit or not.",
+      "whyAfter": 1,
+      "review": true,
+      "fields": [
+        { "id": "contactName", "type": "text", "autocomplete": "name", "placeholder": "Your name" },
+        { "id": "email", "type": "email", "autocomplete": "email", "placeholder": "you@yourbrand.com" }
+      ],
+      "required": "We need somewhere to send the answer.",
+      "emailError": "That email does not look right."
+    }
+  ],
+  "payload": {
+    "businessName": "{{businessName}}",
+    "businessUrl": "{{businessUrl}}",
+    "contactName": "{{contactName}}",
+    "email": "{{email}}",
+    "trade": "{{trade}}",
+    "monthlyBudget": "{{revenue}}",
+    "message": "Sells: {{sellModel|not given}}\nCost as a share of price: {{costShare|not given}}\nAd spend: {{adspend|not given}}\n\n{{message}}"
+  },
+  "done": {
+    "eyebrow": "Sent",
+    "h1": "Got it.",
+    "body": "We read these in order and reply either way, the same working day. If it is urgent, email <a href=\"mailto:diego@kaizenevol.com\">diego@kaizenevol.com</a> and say so."
+  }
+}

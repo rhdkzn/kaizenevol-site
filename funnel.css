@@ -1,0 +1,69 @@
+/* funnel.css — the shared look for every funnel the engine renders.
+   Lifted verbatim from apply.html on 2026-09-11 so the two cannot drift on tokens or
+   type. apply.html still carries its own inline copy; when it migrates to the engine,
+   delete that copy rather than editing both. */
+@font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+    @font-face{font-family:'Newsreader';src:url('/newsreader-italic.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
+    :root{
+      --page:#F7F6F4;--recess:#EFEDE9;--cool:#E8E9EA;--hairline:#D8D4CC;
+      --stone:#8A857C;--muted:#6E6A63;--ink:#23211E;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+      --serif:'Newsreader',Georgia,serif;--el-ease:cubic-bezier(.16,1,.3,1);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+    .container{max-width:640px;margin:0 auto;padding:0 24px;width:100%}
+    a{color:var(--ink)}
+    em{font-family:var(--serif);font-style:italic;font-weight:300}
+    .smallcaps{font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}
+
+    .top{padding:26px 0;border-bottom:1px solid var(--hairline)}
+    .top-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brandline{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-0.02em;font-size:15px}
+    .brandline img{height:20px;width:auto}
+    .count{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+    main{flex:1;display:flex;align-items:center;padding:44px 0 60px}
+    .step{display:none}
+    .step.on{display:block}
+    .q{font-weight:200;letter-spacing:-0.035em;line-height:1.1;font-size:clamp(27px,1.3rem + 2.1vw,40px);margin:14px 0 0;text-wrap:balance}
+    .why{color:var(--muted);font-size:15px;margin:14px 0 0;max-width:46ch}
+    .answer{margin:30px 0 0}
+    input[type=text],input[type=email],input[type=url],textarea{
+      font:inherit;font-size:17px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--hairline);
+      padding:10px 2px;width:100%;border-radius:0}
+    input:focus,textarea:focus{outline:none;border-bottom-color:var(--ink)}
+    textarea{min-height:96px;resize:vertical;border:1px solid var(--hairline);padding:12px 14px}
+    textarea:focus{outline:2px solid var(--ink);outline-offset:-1px}
+    .opts{display:flex;flex-direction:column;gap:1px;background:var(--hairline);border:1px solid var(--hairline)}
+    .opt{background:var(--page);border:0;font:inherit;font-size:15.5px;text-align:left;padding:14px 16px;cursor:pointer;color:var(--ink);transition:background .2s var(--el-ease)}
+    .opt:hover{background:var(--recess)}
+    .opt:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+    .opt[aria-pressed=true]{background:var(--ink);color:var(--page)}
+    .nav{display:flex;align-items:center;gap:18px;margin:30px 0 0}
+    .go{font:inherit;background:var(--ink);color:var(--page);border:0;border-radius:980px;padding:13px 30px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .25s var(--el-ease)}
+    .go:hover{opacity:.88}
+    .back{background:none;border:0;font:inherit;font-size:13.5px;color:var(--muted);cursor:pointer;padding:0}
+    .back:hover{color:var(--ink)}
+    .err{color:#8A2B2B;font-size:13.5px;margin:14px 0 0;min-height:1.2em}
+    .review{background:var(--recess);padding:22px 24px;margin:26px 0 0;font-size:14px}
+    .review dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 20px}
+    .review dt{color:var(--muted);font-size:12.5px}
+    .review dd{margin:0}
+    .done h1{font-weight:200;letter-spacing:-0.035em;font-size:clamp(28px,1.3rem + 2vw,38px);margin:0}
+    .done p{color:var(--muted);margin:16px 0 0}
+    /* The read-back. It is the only part of this page that tells them something they did
+       not already know, so it gets the ink: body colour, a rule above it, and the lede in
+       the page's own voice. 2026-09-11, RES-CMP-013. */
+    .read{margin:22px 0 0;padding:20px 0 4px;border-top:1px solid var(--hairline)}
+    .read p{color:var(--ink);margin:12px 0 0}
+    .read .read-lede{color:var(--muted);margin:0}
+    .read .read-note{color:var(--muted);font-size:13px;margin-top:16px}
+    footer{border-top:1px solid var(--hairline);padding:22px 0 34px;font-size:13px;color:var(--muted)}
+    footer a{color:var(--muted);text-decoration:none}
+    /* No prefers-reduced-motion override. Rahaid, standing: the setting is ignored. */
+    /* No JS: every step is visible and it is an ordinary form. */
+    .nojs .step{display:block;margin-bottom:38px}
+    .nojs .nav,.nojs .count{display:none}
+    .nojs .nojs-send{display:block!important}
+    .nojs-send{display:none}
