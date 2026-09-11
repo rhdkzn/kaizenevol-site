@@ -380,11 +380,15 @@
     .lp-block { padding:52px 0; border-top:1px solid var(--hairline); }
     .lp-block:first-of-type { border-top:0; }
     .lp-grid { display:grid; gap:22px; }
-    @media (min-width:880px) { .lp-grid { grid-template-columns:minmax(0,.40fr) minmax(0,1fr); gap:56px; } }
-    .lp-eyebrow { font-family:var(--mono,ui-monospace,monospace); font-size:11px; letter-spacing:.16em;
-                  text-transform:uppercase; color:var(--muted); margin:0 0 14px; }
-    .lp-no { font-family:var(--mono,ui-monospace,monospace); font-size:clamp(38px,4vw,54px);
-             font-weight:300; line-height:1; color:#8A857C; letter-spacing:-.04em; margin:0 0 10px; }
+    /* No font-family or tracking here on purpose: .smallcaps in interactions.css owns
+       both (mono 500 at +0.12em) and loads after this block, so every page gets one rule
+       and they cannot drift. A private copy here was exactly that drift. */
+    .lp-eyebrow { font-size:11px; text-transform:uppercase; color:var(--muted); margin:0 0 14px; }
+    /* Sans, not mono. brand/DESIGN.md: the mono does labels and SMALL numerals only -
+       "NOT for display numerals ... which is a figure and not a label; the reference
+       uses its sans at that size, never the mono." These run to 54px. */
+    .lp-no { font-family:var(--sans); font-size:clamp(38px,4vw,54px);
+             font-weight:200; line-height:1; color:#8A857C; letter-spacing:-.04em; margin:0 0 10px; }
     .lp-block h2 { font-size:clamp(26px,1.1rem + 2vw,42px); margin:0; }
     .lp-block h3 { font-size:clamp(22px,.9rem + 1.5vw,32px); margin:0 0 4px; font-weight:500; letter-spacing:-.015em; }
     .lp-body p { margin:0 0 14px; color:var(--muted); max-width:62ch; }
@@ -394,6 +398,29 @@
     .lp-do li { position:relative; padding-left:22px; font-size:15px; color:var(--muted); line-height:1.55; max-width:58ch; }
     .lp-do li::before { content:""; position:absolute; left:0; top:12px; width:10px; height:1px; background:var(--muted); }
     .lp-back { display:inline-block; margin-top:34px; }
+    /* Declared AFTER the base rules on purpose. At equal specificity the later
+       rule wins, so a media query sitting above them loses to the very rules it
+       is meant to override - which is how this page shipped with single-column
+       bullets at 1440px and a 26px h2 on a phone. */
+    @media (min-width:880px) {
+      .lp-grid { grid-template-columns:minmax(0,.40fr) minmax(0,1fr); gap:56px; }
+      /* The reference runs a hairline down the gutter between label and argument. It is
+         what stops a two-column block reading as two unrelated things. */
+      .lp-grid > .lp-body { border-left:1px solid var(--hairline); padding-left:56px; margin-left:-28px; }
+      .lp-do { display:grid; grid-template-columns:1fr 1fr; gap:11px 34px; }
+      .lp-do li { max-width:none; }
+    }
+    /* Three figures under the hero. The reference's are abstract; ours are the three
+       true numbers we already publish, so nothing here is invented. Centred, because
+       brand/DESIGN.md rules the hero centred at every width - the reference splits its
+       hero into two columns and that is the one move on its page we do not take. */
+    .lp-tiles { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:30px auto 0; }
+    .lp-tile { border:1px solid var(--hairline); border-radius:2px; padding:14px 20px; min-width:118px; text-align:left; }
+    .lp-tile b { display:block; font-family:var(--sans); font-weight:200; font-size:30px; line-height:1;
+                 letter-spacing:-.03em; color:var(--text); }
+    .lp-tile span { display:block; margin-top:7px; font-size:10px; color:var(--muted); }
+    .lp-ctas { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:26px; }
+
 
   </style>
   <script type="application/ld+json">
@@ -457,13 +484,22 @@
     <span class="smallcaps accent">Our method</span>
     <h1>The Kaizen Loop<span class="tm">&trade;</span></h1>
     <p class="hero-sub">Four stages, run in order. Each one only works because the one before it did, and the last one feeds the first.</p>
+    <div class="lp-ctas">
+      <a class="btn-solid" href="apply.html">Take a seat &rarr;</a>
+      <a class="btn-quiet" href="#stages">See the stages</a>
+    </div>
+    <div class="lp-tiles">
+      <div class="lp-tile"><b>04</b><span class="smallcaps">Stages</span></div>
+      <div class="lp-tile"><b>02</b><span class="smallcaps">Founders on it</span></div>
+      <div class="lp-tile"><b>05</b><span class="smallcaps">Clients at a time</span></div>
+    </div>
   </div>
 </header>
 
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="lp-eyebrow">01 / The problem</p>
+        <p class="smallcaps lp-eyebrow">01 / The problem</p>
         <h2>Most reporting measures the platform, not your bank.</h2>
       </div>
       <div class="lp-body">
@@ -474,10 +510,10 @@
     </div>
   </section>
 
-  <section class="lp-block">
+  <section class="lp-block" id="stages">
     <div class="container lp-grid">
       <div>
-        <p class="lp-eyebrow">02 / The system</p>
+        <p class="smallcaps lp-eyebrow">02 / The system</p>
         <h2>Four stages. Built to go again.</h2>
       </div>
       <div class="lp-body">
@@ -490,7 +526,7 @@
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="lp-eyebrow">Stage one</p>
+        <p class="smallcaps lp-eyebrow">Stage one</p>
         <p class="lp-no">01</p>
         <h3>Learn the brand, set the numbers</h3>
       </div>
@@ -508,7 +544,7 @@
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="lp-eyebrow">Stage two</p>
+        <p class="smallcaps lp-eyebrow">Stage two</p>
         <p class="lp-no">02</p>
         <h3>Make the content</h3>
       </div>
@@ -526,7 +562,7 @@
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="lp-eyebrow">Stage three</p>
+        <p class="smallcaps lp-eyebrow">Stage three</p>
         <p class="lp-no">03</p>
         <h3>Get it in front of people</h3>
       </div>
@@ -544,7 +580,7 @@
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="lp-eyebrow">Stage four</p>
+        <p class="smallcaps lp-eyebrow">Stage four</p>
         <p class="lp-no">04</p>
         <h3>Track it, then do more of what worked</h3>
       </div>
@@ -563,7 +599,7 @@
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="lp-eyebrow">03 / Why it holds</p>
+        <p class="smallcaps lp-eyebrow">03 / Why it holds</p>
         <h2>The baseline is set before we spend.</h2>
       </div>
       <div class="lp-body">
