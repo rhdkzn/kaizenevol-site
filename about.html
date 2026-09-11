@@ -122,22 +122,51 @@
        in the stack. Heads clear the top, Diego's elbow clears the bottom; that
        overhang is the whole reason it reads as layered rather than pasted.
        Inset percentages, not pixels, so the geometry survives to phone width. */
-    .duo { position:relative; width:min(480px,100%); margin:0 auto 72px; }
+    .duo { position:relative; width:min(480px,100%); margin:0 auto 76px; }
     .duo picture, .duo img { display:block; width:100%; height:auto;
-      position:relative; z-index:2; }
-    .duo-paper { position:absolute; z-index:1; left:-17%; right:-17%; top:15%; bottom:7%;
-      background:#FCFBF9; border:1px solid var(--hairline);
+      position:relative; z-index:3; }
+
+    /* A SCRAPBOOK PAGE, not a framed photo (2026-09-11).
+       Three layers, each doing one job:
+         .duo-scrap  a torn offcut tucked behind, squared off the other way
+         .duo-paper  the sheet they are mounted on
+         the figure  sits ON the sheet and breaks BOTH its edges - heads over
+                     the top, bodies past the bottom. That overhang is the
+                     whole reason it reads as stuck down rather than printed.
+       The paper is a sibling element rather than a ::before so the figure can
+       sit between it and the tape. Insets are percentages, so the geometry
+       survives to phone width. */
+    .duo-scrap { position:absolute; z-index:1; left:-22%; right:-26%; top:21%; bottom:6%;
+      background:#E6E2DB; border:1px solid #D2CDC4;
+      transform:rotate(4.4deg);
+      /* torn along the bottom - a scrapbook offcut is never guillotined */
+      clip-path:polygon(0 0, 100% 0, 100% 93%, 92% 97%, 84% 92%, 73% 98%, 63% 93%,
+                        52% 99%, 41% 93%, 31% 98%, 21% 93%, 11% 97%, 0 92%);
+      box-shadow:0 12px 26px rgba(35,33,30,0.11); }
+
+    .duo-paper { position:absolute; z-index:2; left:-17%; right:-17%; top:15%; bottom:16%;
+      background:
+        repeating-linear-gradient(101deg, rgba(35,33,30,0.012) 0 2px, transparent 2px 5px),
+        #FCFBF9;
+      border:1px solid var(--hairline);
       transform:rotate(-2.1deg);
       box-shadow:0 2px 6px rgba(35,33,30,0.10), 0 18px 42px rgba(35,33,30,0.13); }
-    /* Two pins, deliberately not a matching pair - a level pair is the thing that
-       made the first version read like a slide. */
+
+    /* Two strips of tape with torn ends, at opposite corners and at different
+       angles. A matching level pair of anything is the thing that made the
+       first version read like a slide. */
     .duo-paper::before, .duo-paper::after { content:''; position:absolute;
-      width:15px; height:15px; border-radius:50%;
-      background:radial-gradient(circle at 34% 30%, #8A857C 0 20%, var(--text) 62%);
-      box-shadow:0 3px 7px rgba(35,33,30,0.34); }
-    .duo-paper::before { top:15px; left:19px; }
-    .duo-paper::after  { top:29px; right:17px; }
-    .duo figcaption { position:relative; z-index:2; text-align:center; margin-top:26px; }
+      width:132px; height:34px;
+      background:linear-gradient(180deg, rgba(244,242,237,0.72), rgba(190,185,175,0.62));
+      border-top:1px solid rgba(255,255,255,0.65);
+      border-bottom:1px solid rgba(35,33,30,0.10);
+      clip-path:polygon(0 0, 7% 24%, 0 47%, 6% 71%, 0 100%, 100% 100%,
+                        94% 73%, 100% 49%, 93% 25%, 100% 0);
+      box-shadow:0 3px 8px rgba(35,33,30,0.22); }
+    .duo-paper::before { top:-17px; left:-40px; transform:rotate(-39deg); }
+    .duo-paper::after  { right:-42px; bottom:11%; transform:rotate(-51deg); }
+
+    .duo figcaption { position:relative; z-index:3; text-align:center; margin-top:30px; }
     .team { background:var(--void-2); border-top:1px solid var(--hairline); }
     .founders-grid { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
     .founder-card { border-top:1px solid var(--text); padding-top:24px; }
@@ -231,8 +260,12 @@
     /* ============ RESPONSIVE ============ */
     @media(max-width:960px) {
       .founders-grid { grid-template-columns:1fr; gap:36px; }
-      .duo { width:min(330px,100%); margin-bottom:56px; }
+      .duo { width:min(330px,100%); margin-bottom:60px; }
       .duo-paper { left:-9%; right:-9%; }
+      .duo-scrap { left:-6%; right:-11%; }
+      .duo-paper::before, .duo-paper::after { width:86px; height:24px; }
+      .duo-paper::before { left:-24px; top:-11px; }
+      .duo-paper::after { right:-26px; }
       .svc-row { grid-template-columns:60px 1fr; }
       .svc-link { grid-column:2; }
     }
@@ -372,6 +405,7 @@
       <p>Small by design. You will not be handed to an account manager or a junior. The two people who make your work are the two people you talk to. We&rsquo;re both behind the camera and both in the edit &mdash; Diego manages what you see, Rahaid runs everything underneath it.</p>
     </div>
     <figure class="duo">
+      <span class="duo-scrap" aria-hidden="true"></span>
       <span class="duo-paper" aria-hidden="true"></span>
       <picture>
         <source srcset="assets/about/founders-1200.webp" type="image/webp">
