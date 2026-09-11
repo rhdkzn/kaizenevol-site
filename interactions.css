@@ -490,3 +490,129 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
 .kz-count { font-size: 22px; letter-spacing: 0.02em; }
 .kz-num { font-size: 13px; letter-spacing: 0.06em; }
 .cell .n { letter-spacing: 0.06em; }
+
+/* ── Reveal: the mechanism and services pages ──────────────────────────────
+ *
+ * Added 2026-09-11. Both pages shipped with NO entrance motion at all - 8 .reveal
+ * blocks on the home page, zero on either of them - which is why they read as
+ * flatter than the rest of the estate however good the layout is. DESIGN.md's
+ * standing instruction is that motion is the default state of anything we ship,
+ * and these went out without it.
+ *
+ * These selectors are the .lp-* families, which exist only on kaizen-loop.html
+ * and what-we-run.html, so they cannot collide with the home page's own inline
+ * block. Living here rather than inline on each page is the same reasoning the
+ * mono rule is here for: one rule reaches every page that uses the pattern, and
+ * two copies cannot drift apart.
+ *
+ * Gated on html.motion, which transitions.js adds as its first action. With no
+ * JS nothing is ever hidden, so a failed script costs the animation and never
+ * the content. No reduced-motion branch anywhere: Rahaid's standing ruling is
+ * that the setting must not stop or change what we make.
+ */
+.motion .lp-block .lp-eyebrow,
+.motion .lp-block h2,
+.motion .lp-block h3,
+.motion .lp-block .lp-no,
+.motion .lp-body > p,
+.motion .lp-body > ul,
+.motion .lp-card,
+.motion .lp-tile,
+.motion .lp-do li,
+.motion .wr-crit li { will-change: opacity, transform; }
+
+/* Track one: scrubbed by the scroll itself, so the page resolves as the visitor
+   moves and holds wherever they stop. Same approach as the home page. */
+@supports (animation-timeline: view()) {
+  /* Each block publishes ONE timeline and its children ride it. Anchoring every
+     beat to the element's OWN view() was the defect: `entry` is measured against
+     the subject's height, so a 20px eyebrow had a 20px scroll range and snapped
+     0 -> 1 in a single wheel notch. The block is 309-803px tall, so offsets given
+     in px below are a real scrub and read identically in every section. */
+  .motion .lp-block { view-timeline-name: --lp; }
+
+  .motion .lp-block .lp-eyebrow { animation: ke-lp-fade linear both;
+    animation-timeline: --lp; animation-range: entry 0 entry 150px; }
+  .motion .lp-block .lp-eyebrow::before { animation: ke-lp-draw linear both;
+    animation-timeline: --lp; animation-range: entry 20px entry 215px; }
+  .motion .lp-block h2,
+  .motion .lp-block h3 { animation: ke-lp-mask linear both;
+    animation-timeline: --lp; animation-range: entry 40px entry 245px; }
+  .motion .lp-block .lp-no { animation: ke-lp-rise linear both;
+    animation-timeline: --lp; animation-range: entry 30px entry 215px; }
+  .motion .lp-body > p,
+  .motion .lp-body > ul { animation: ke-lp-rise linear both;
+    animation-timeline: --lp; animation-range: entry 90px entry 290px; }
+  .motion .lp-body > p:nth-of-type(2) { animation-range: entry 112px entry 300px; }
+  .motion .lp-body > p:nth-of-type(3) { animation-range: entry 132px entry 300px; }
+  .motion .lp-card { animation: ke-lp-card linear both;
+    animation-timeline: --lp; animation-range: entry 80px entry 285px; }
+  .motion .lp-card:nth-child(2) { animation-range: entry 120px entry 300px; }
+  .motion .lp-do li,
+  .motion .wr-crit li { animation: ke-lp-rise linear both;
+    animation-timeline: --lp; animation-range: entry 120px entry 300px; }
+  .motion .lp-do li:nth-child(2),
+  .motion .wr-crit li:nth-child(2) { animation-range: entry 148px entry 300px; }
+  .motion .lp-do li:nth-child(3),
+  .motion .wr-crit li:nth-child(3) { animation-range: entry 176px entry 300px; }
+  .motion .lp-do li:nth-child(4) { animation-range: entry 204px entry 300px; }
+
+  /* The hero tiles sit OUTSIDE every block, so there is no --lp to ride and they
+     keep their own subject timeline. They are above the fold on load anyway. */
+  .motion .lp-tile { animation: ke-lp-card linear both;
+    animation-timeline: view(); animation-range: entry 6% entry 60%; }
+  .motion .lp-tile:nth-child(2) { animation-range: entry 16% entry 70%; }
+  .motion .lp-tile:nth-child(3) { animation-range: entry 26% entry 80%; }
+}
+
+@keyframes ke-lp-fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes ke-lp-draw { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+/* A heading is MASKED, never faded - type rising out of an edge reads made, a
+   fade reads generated. The house move, carried over from the home page. */
+@keyframes ke-lp-mask {
+  from { clip-path: inset(0 0 104% 0); transform: translateY(13px) }
+  to   { clip-path: inset(-14% -8% -22% 0); transform: none }
+}
+@keyframes ke-lp-rise { from { opacity: 0; transform: translateY(9px) } to { opacity: 1; transform: none } }
+@keyframes ke-lp-card { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+
+/* Track two: browsers without view timelines (Firefox, older Safari) get the
+   same beats driven by an IntersectionObserver instead, so nobody lands on a
+   page that does not move. */
+@supports not (animation-timeline: view()) {
+  .motion .lp-block .lp-eyebrow { opacity: 0; transition: opacity .55s var(--ke-ease) }
+  .motion .lp-block .lp-eyebrow::before { transform: scaleX(0); transform-origin: left center;
+                                          transition: transform .8s var(--ke-ease) }
+  .motion .lp-block h2,
+  .motion .lp-block h3 { clip-path: inset(0 0 104% 0); transform: translateY(13px);
+                         transition: clip-path .95s var(--ke-spring), transform .95s var(--ke-spring) }
+  .motion .lp-block .lp-no,
+  .motion .lp-body > p,
+  .motion .lp-body > ul,
+  .motion .lp-card,
+  .motion .lp-tile,
+  .motion .lp-do li,
+  .motion .wr-crit li { opacity: 0; transform: translateY(11px);
+                        transition: opacity .8s var(--ke-ease), transform .8s var(--ke-ease) }
+  .motion .lp-block.in .lp-eyebrow { opacity: 1 }
+  .motion .lp-block.in .lp-eyebrow::before { transform: scaleX(1) }
+  .motion .lp-block.in h2,
+  .motion .lp-block.in h3 { clip-path: inset(-14% -8% -22% 0); transform: none }
+  .motion .lp-block.in .lp-no,
+  .motion .lp-block.in .lp-body > p,
+  .motion .lp-block.in .lp-body > ul,
+  .motion .lp-block.in .lp-card,
+  .motion .lp-block.in .lp-tile,
+  .motion .lp-block.in .lp-do li,
+  .motion .lp-block.in .wr-crit li { opacity: 1; transform: none }
+  .motion .lp-block.in .lp-body > p:nth-of-type(2) { transition-delay: .07s }
+  .motion .lp-block.in .lp-body > p:nth-of-type(3) { transition-delay: .14s }
+  .motion .lp-block.in .lp-body > ul { transition-delay: .18s }
+  .motion .lp-block.in .lp-card:nth-child(2) { transition-delay: .09s }
+  .motion .lp-block.in .lp-tile:nth-child(2) { transition-delay: .07s }
+  .motion .lp-block.in .lp-tile:nth-child(3) { transition-delay: .14s }
+  .motion .lp-block.in .lp-do li:nth-child(2),
+  .motion .lp-block.in .wr-crit li:nth-child(2) { transition-delay: .06s }
+  .motion .lp-block.in .lp-do li:nth-child(3),
+  .motion .lp-block.in .wr-crit li:nth-child(3) { transition-delay: .12s }
+}

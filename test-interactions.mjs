@@ -26,8 +26,8 @@ import { chromium } from 'playwright';
 const BASE = process.env.BASE || 'http://localhost:8899';
 // Cross-page: every <main> name must be unique across the site, or two pages pair into a morph.
 const mainNamesSeen = new Set();
-const PAGES = ['index.html', 'about.html', 'what-we-run.html', 'privacy.html',
-               'apply.html', '404.html'];
+const PAGES = ['index.html', 'about.html', 'what-we-run.html', 'kaizen-loop.html',
+               'privacy.html', 'apply.html', '404.html'];
 
 let pass = 0, fail = 0;
 const check = (label, ok, detail = '') => {

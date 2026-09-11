@@ -14,6 +14,33 @@
  */
 (function () {
   'use strict';
+
+  /* Motion gate. interactions.css hides the .lp-* reveal states only under
+     html.motion, so a page whose JavaScript never runs shows all of its content
+     rather than a blank column. Set first, before anything can throw. */
+  document.documentElement.classList.add('motion');
+
+  /* Reveal for the mechanism and services pages. The home page has its own
+     observer inline and is deliberately untouched; this one only ever sees
+     .lp-block, which exists on neither. Browsers with view timelines scrub the
+     same beats from the scroll position and never need the class - harmless
+     there, the only path in Firefox and older Safari. */
+  (function () {
+    var blocks = document.querySelectorAll('.lp-block');
+    if (!blocks.length) return;
+    if (!('IntersectionObserver' in window)) {
+      for (var i = 0; i < blocks.length; i++) blocks[i].classList.add('in');
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    blocks.forEach(function (el) { io.observe(el); });
+  })();
   /* The full length of the exit, on purpose. The browser captures the old page for the
      view transition at the moment navigation commits and then HOLDS that capture, frozen,
      while the new document loads. Navigate before the exit has finished and the capture
