@@ -4,24 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="theme-color" content="#F7F6F4" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
-  <title>About, KaizenEvol</title>
-  <meta name="description" content="Meet the two founders behind KaizenEvol, a UK creative growth agency for brands and artists: we make the content, run the ads and keep your social alive, on one monthly fee, judged on your profit." />
-  <link rel="canonical" href="https://kaizenevol.com/about.html" />
+  <title>The Kaizen Loop, KaizenEvol</title>
+  <meta name="description" content="The four stages we run for every client, in order: learn the brand and set the numbers, make the content, get it in front of people, then track it and do more of what worked." />
+  <link rel="canonical" href="https://kaizenevol.com/kaizen-loop.html" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://kaizenevol.com/about.html" />
+  <meta property="og:url" content="https://kaizenevol.com/kaizen-loop.html" />
   <meta property="og:site_name" content="KaizenEvol" />
-  <meta property="og:title" content="About, KaizenEvol" />
-  <meta property="og:description" content="Meet the two founders behind KaizenEvol, a UK creative growth agency for brands and artists: we make the content, run the ads and keep your social alive, on one monthly fee, judged on your profit." />
+  <meta property="og:title" content="The Kaizen Loop, KaizenEvol" />
+  <meta property="og:description" content="The four stages we run for every client, in order: learn the brand and set the numbers, make the content, get it in front of people, then track it and do more of what worked." />
   <meta property="og:image" content="https://kaizenevol.com/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="About, KaizenEvol" />
-  <meta name="twitter:description" content="Meet the two founders behind KaizenEvol, a UK creative growth agency for brands and artists: we make the content, run the ads and keep your social alive, on one monthly fee, judged on your profit." />
+  <meta name="twitter:title" content="The Kaizen Loop, KaizenEvol" />
+  <meta name="twitter:description" content="The four stages we run for every client, in order: learn the brand and set the numbers, make the content, get it in front of people, then track it and do more of what worked." />
   <meta name="twitter:image" content="https://kaizenevol.com/og-image.png" />
   <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin />
@@ -315,6 +315,12 @@
        h1 scaled to 31px at 360. The page title was losing to a section heading on
        every phone. Same specificity, and the h1 now leads by 5-8px throughout. */
     h2, .sect-head h2, .closing h2 { font-size: clamp(20px, 5.8vw, 30px); }
+      /* .lp-block h2 outranks the bare-tag rule above, exactly the specificity
+         trap this file's own comment describes - and the page's own .lp-* block
+         is declared AFTER this media query, so at equal specificity the desktop
+         clamp won anyway and the phone kept a 26px h2 against a 33px h1. Hence
+         `main`: it wins on specificity rather than on source order. Added 2026-09-11. */
+      main .lp-block h2 { font-size: clamp(19px, 5.4vw, 26px); }
   }
     /* Cross-page transitions + FAQ height ease + press feedback (progressive, 2026 browsers) */
   :root { interpolate-size: allow-keywords; }
@@ -363,6 +369,32 @@
     footer .nav-logo b{font-size:15px}
     .muted{color:var(--muted)}
     .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#6E6A63;font-size:13px}
+
+    /* ---- The Kaizen Loop page ---------------------------------------------
+       A vertical sequence, not the home page's sticky rail. The rail existed to
+       hold four stages inside one screen on a page that had other work to do;
+       here the stages ARE the page, so they get room and read top to bottom.
+       Label column left, argument right, hairline between each. */
+    h1 .tm, h2 .tm { font-size:.32em; vertical-align:super; font-weight:400; letter-spacing:0; margin-left:.06em; }
+    .lp-lede { font-size:clamp(19px,1rem + .7vw,24px); color:var(--text); max-width:34ch; margin:20px 0 0; }
+    .lp-block { padding:52px 0; border-top:1px solid var(--hairline); }
+    .lp-block:first-of-type { border-top:0; }
+    .lp-grid { display:grid; gap:22px; }
+    @media (min-width:880px) { .lp-grid { grid-template-columns:minmax(0,.40fr) minmax(0,1fr); gap:56px; } }
+    .lp-eyebrow { font-family:var(--mono,ui-monospace,monospace); font-size:11px; letter-spacing:.16em;
+                  text-transform:uppercase; color:var(--muted); margin:0 0 14px; }
+    .lp-no { font-family:var(--mono,ui-monospace,monospace); font-size:clamp(38px,4vw,54px);
+             font-weight:300; line-height:1; color:#8A857C; letter-spacing:-.04em; margin:0 0 10px; }
+    .lp-block h2 { font-size:clamp(26px,1.1rem + 2vw,42px); margin:0; }
+    .lp-block h3 { font-size:clamp(22px,.9rem + 1.5vw,32px); margin:0 0 4px; font-weight:500; letter-spacing:-.015em; }
+    .lp-body p { margin:0 0 14px; color:var(--muted); max-width:62ch; }
+    .lp-body p:last-child { margin-bottom:0; }
+    .lp-body p.strong { color:var(--text); }
+    .lp-do { list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:11px; }
+    .lp-do li { position:relative; padding-left:22px; font-size:15px; color:var(--muted); line-height:1.55; max-width:58ch; }
+    .lp-do li::before { content:""; position:absolute; left:0; top:12px; width:10px; height:1px; background:var(--muted); }
+    .lp-back { display:inline-block; margin-top:34px; }
+
   </style>
   <script type="application/ld+json">
   {
@@ -418,43 +450,130 @@
   </div>
 </nav>
 
-<main style="view-transition-name:ke-main-about" id="main-content">
+<main style="view-transition-name:ke-main-kaizen-loop" id="main-content">
 
 <header class="hero">
   <div class="hero-inner container">
-    <span class="ab-icon" style="--dur:9s;--delay:0s;--drift:9px;--tilt:-1.6deg"><picture><source srcset="assets/about/chairs-320.webp" type="image/webp"><img src="assets/about/chairs-320.png" alt="" width="320" height="320" decoding="async"></picture></span>
-    <h1>Who&rsquo;s behind <em>KaizenEvol</em></h1>
-    <p class="hero-sub">Two founders, one monthly fee. We make your content, run your ads and keep your social alive, and we judge it on what reaches your bank, not what reaches your feed.</p>
+    <span class="smallcaps accent">Our method</span>
+    <h1>The Kaizen Loop<span class="tm">&trade;</span></h1>
+    <p class="hero-sub">Four stages, run in order. Each one only works because the one before it did, and the last one feeds the first.</p>
   </div>
 </header>
 
-<section class="sect team">
-  <div class="container">
-    <div class="kz-mark sect-head">
-      <h2>Meet the <em>team</em></h2>
-      <p>Small by design. You will not be handed to an account manager or a junior. The two people who make your work are the two people you talk to. We&rsquo;re both behind the camera and both in the edit &mdash; Diego manages what you see, Law runs everything underneath it.</p>
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="lp-eyebrow">01 / The problem</p>
+        <h2>Most reporting measures the platform, not your bank.</h2>
+      </div>
+      <div class="lp-body">
+        <p class="strong">The ads manager tells you what it took credit for. Your account tells you what arrived. When those two disagree, the one that ends up in the monthly report is almost always the platform&rsquo;s.</p>
+        <p>So spend goes up on a number nobody can find anywhere in the business, and the honest question &mdash; did this leave us better off than not doing it &mdash; never gets asked, because answering it needs a figure from before anyone started.</p>
+        <p>The Loop exists to set that figure first and then never argue about it again.</p>
+      </div>
     </div>
-    <figure class="duo">
-      <span class="duo-scrap" aria-hidden="true"></span>
-      <span class="duo-paper" aria-hidden="true"></span>
-      <picture>
-        <source srcset="assets/about/founders-1200.webp" type="image/webp">
-        <img src="assets/about/founders-1200.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="1129" decoding="async" loading="lazy">
-      </picture>
-      <span class="duo-badge" aria-hidden="true"><b>Two founders</b><span>no account manager</span></span>
-      <figcaption class="duo-credit">
-        <span><b>Diego</b>Content and social.</span>
-        <span><b>Law</b>Ads, email and tracking.</span>
-      </figcaption>
-    </figure>
+  </section>
 
-    <div class="team-note">
-      <p class="team-line">You should be making the thing. We will make people want it.</p>
-      <p>One of us makes the work, the other makes it pay. No account managers, no middlemen.</p>
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="lp-eyebrow">02 / The system</p>
+        <h2>Four stages. Built to go again.</h2>
+      </div>
+      <div class="lp-body">
+        <p>Run in sequence. Nothing here is a phase that finishes; the fourth stage is what makes the first one sharper the second time round, which is the whole reason it is called a loop.</p>
+        <p>If you are an artist there is often no unit to cost, so the numbers are different. We measure what your audience does when you ask them for something, and how much of your streaming sits on one track. That number coming down is the difference between a fanbase and a song that did well.</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="lp-eyebrow">Stage one</p>
+        <p class="lp-no">01</p>
+        <h3>Learn the brand, set the numbers</h3>
+      </div>
+      <div class="lp-body">
+        <p>First we learn the brand properly. What you make, why you make it, and what it is meant to mean to the person who buys it. Nothing gets made after this that does not look like you.</p>
+        <p>Then, before a pound is spent, two numbers: what a customer is actually worth to you, and what your sales were already doing without us. Everything after this stage is judged against both.</p>
+        <ul class="lp-do">
+          <li>What you make, why you make it, and who it is for, in your words</li>
+          <li>What a customer is worth to you, and what a sale actually leaves</li>
+          <li>What your sales were already doing before us, written down</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="lp-eyebrow">Stage two</p>
+        <p class="lp-no">02</p>
+        <h3>Make the content</h3>
+      </div>
+      <div class="lp-body">
+        <p>Ads, posts, edits, and the messages that bring people back. We shoot it with you or cut it from footage you already have, usually both.</p>
+        <p>Not one polished piece a month. Enough different angles, arriving often enough, that the system has something to work with and you are never down to a single ad that is still working.</p>
+        <ul class="lp-do">
+          <li>Shot with you, or cut from footage you already have</li>
+          <li>Ads, posts and edits arriving every week, not one piece a month</li>
+          <li>Enough different angles to find the one people react to</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="lp-eyebrow">Stage three</p>
+        <p class="lp-no">03</p>
+        <h3>Get it in front of people</h3>
+      </div>
+      <div class="lp-body">
+        <p>Paid and organic, both pulling new people in. Budgets, targeting and testing handled every day, run wherever your buyers actually are rather than wherever is easiest.</p>
+        <p>Your feed stays alive underneath it, because it is what convinces the person who found you through an ad that you are worth buying from. And the people who already bought hear from you directly.</p>
+        <ul class="lp-do">
+          <li>Paid running where your buyers actually are, handled daily</li>
+          <li>Your feed kept alive so it holds them when they look you up</li>
+          <li>Email and message to the people who already bought</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="lp-eyebrow">Stage four</p>
+        <p class="lp-no">04</p>
+        <h3>Track it, then do more of what worked</h3>
+      </div>
+      <div class="lp-body">
+        <p>You see the same numbers we see, read the same way, against the baseline from stage one rather than against a good week.</p>
+        <p>What loses gets turned off. What wins gets more behind it. Then it goes again, and the brand we learned in stage one is a brand we know better than we did.</p>
+        <ul class="lp-do">
+          <li>The same numbers we see, read the same way</li>
+          <li>What loses gets turned off, what wins gets more behind it</li>
+          <li>Measured against the baseline from stage one, not a good week</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-block">
+    <div class="container lp-grid">
+      <div>
+        <p class="lp-eyebrow">03 / Why it holds</p>
+        <h2>The baseline is set before we spend.</h2>
+      </div>
+      <div class="lp-body">
+        <p class="strong">We do not take credit for a trend you were already on.</p>
+        <p>Stage one writes down what your sales were already doing, adjusted for season, before a pound goes out. Every figure after that is measured against it rather than against the month before, so a good week does not get sold to you as a result and a quiet one does not get hidden.</p>
+        <p>It is the least flattering way to report and it is the only one worth paying for.</p>
+        <a class="btn-quiet lp-back" href="index.html">See what is included &rarr;</a>
+      </div>
+    </div>
+  </section>
 
 
 <section class="closing" id="contact">

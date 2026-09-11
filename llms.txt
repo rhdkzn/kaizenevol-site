@@ -6,10 +6,10 @@
 
 The Kaizen Loop™, in order:
 
-1. **Find your real profit per sale.** Unit costs, weighted across everything the client sells, landed. What a sale actually leaves them with.
-2. **Mark where you already are.** What revenue was already doing before us, adjusted for season. We do not take credit for a trend that was already running.
-3. **Make the ads.** Concepts, hooks and iteration from the client's own footage, product shots and work.
-4. **Run the ads to that number.** Meta and TikTok, run to what a sale actually leaves them, with the figures open to the client.
+1. **Learn the brand, set the numbers.** What the client makes, why, and who it is for. Then two figures before a pound is spent: what a customer is actually worth to them, and what their sales were already doing without us, adjusted for season. We do not take credit for a trend that was already running.
+2. **Make the content.** Ads, posts, edits and the messages that bring people back, shot with the client or cut from footage they already have. Enough different angles, arriving weekly, rather than one polished piece a month.
+3. **Get it in front of people.** Paid and organic both pulling new people in, budgets and testing handled daily, the client's feed kept alive underneath it, and email and messages to the people who already bought.
+4. **Track it, then do more of what worked.** The client sees the same numbers we see, read the same way, measured against the stage-one baseline. What loses is turned off, what wins gets more behind it, and it goes again.
 
 On one monthly fee: content, ads, social, and email and texts.
 
@@ -19,7 +19,8 @@ Brands and artists selling their own work — clothing and streetwear, jewellery
 
 ## Pages
 
-- [Home](https://kaizenevol.com/): The offer, the problem with judging ads on what the platform reports, and the Kaizen Loop.
+- [Home](https://kaizenevol.com/): The offer, the problem with judging ads on what the platform reports, and a summary of the Kaizen Loop™.
+- [The Kaizen Loop™](https://kaizenevol.com/kaizen-loop.html): The four stages in full, what gets done in each, and why the baseline is set before any spend.
 - [Apply](https://kaizenevol.com/apply.html): The application. One question at a time; we reply either way.
 - [About](https://kaizenevol.com/about.html): The two founders and how they work.
 - [Contact](https://kaizenevol.com/contact.html): Get in touch.

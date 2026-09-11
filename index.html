@@ -385,6 +385,13 @@
          smaller and quieter here. It is behind the copy by construction; the alternative
          at this width is a sliver nobody would see. */
       section.band::before, #method::before{--kzh:400px;right:calc(var(--kzh) * -0.234);opacity:.4}
+      /* #method lost its carousel on 2026-09-11 when the Loop moved to its own page.
+         The cards carried an opaque background, so the mark behind them read as
+         depth; the summary that replaced them is bare copy on the page, and the
+         mark went straight through it at this width - the exact thing Rahaid has
+         reported more than once and test-kanji-mark.mjs exists to catch. The bands
+         keep theirs; this one section goes without below 720px. */
+      #method::before{display:none}
     }
 
     /* Translucent so the kanji reads THROUGH the panel instead of being hidden by it.
@@ -459,35 +466,14 @@
        TOUCH / REDUCED MOTION: the mechanism is switched off entirely and the
        track becomes a native scroll-snap carousel. Overriding scroll on a phone
        is how a page starts feeling broken. */
-    .kz-rail{position:relative}
-    .kz-stick{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;
-              justify-content:center;overflow:hidden}
     /* min-height reserves the TALLEST stage name so the header never reflows
        between slides. Measured before this existed: 28px on "Make the content"
        and 56px on the other three, which moved every card down by 28px as you
        swiped past it. align-items:start so a one-line name does not float. */
-    .kz-head{max-width:var(--maxw);margin:0 auto 24px;padding:0 24px;width:100%;min-height:30px;
-             display:flex;align-items:start;justify-content:space-between;gap:20px}
-    .kz-count{font-family:var(--serif);font-style:italic;font-size:28px;color:var(--muted);line-height:1}
-    .kz-count b{color:var(--ink);font-weight:300}
-    .kz-name{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:right}
-    .kz-track{display:flex;align-items:stretch;gap:22px;padding:0 24px;will-change:transform}
-    .kz-card{flex:0 0 clamp(280px,46vw,560px);background:#fff;border:1px solid var(--hairline);
-             border-radius:2px;padding:30px 26px 32px;display:flex;flex-direction:column;
-             transition:opacity .5s var(--el-ease),transform .5s var(--el-ease)}
-    .kz-card.dim{transform:scale(.965)}
-    .kz-card > *{transition:opacity .5s var(--el-ease)}
-    .kz-card.dim > *{opacity:.34}
-    .kz-card h3{font-size:clamp(22px,2.2vw,30px);font-weight:500;letter-spacing:-.015em;margin:0 0 8px}
-    .kz-card p{font-size:15px;color:var(--muted);line-height:1.6;margin:0}
-    .kz-num{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted);margin-bottom:10px}
     /* What actually gets done in each stage. Added 2026-09-11: the four stages
        described the method and never said what the work IS, which is what makes
        a step read as filler. Same dash treatment as .cell li so the page has one
        list idiom, not two. */
-    .kz-do{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
-    .kz-do li{position:relative;padding-left:20px;font-size:14px;color:var(--muted);line-height:1.5}
-    .kz-do li::before{content:"";position:absolute;left:0;top:10px;width:9px;height:1px;background:var(--stone)}
     /* The mark on the mechanism name. Small and raised so it reads as a claim
        rather than as punctuation at 46px. Unregistered, so it is TM and never R:
        falsely representing a mark as registered is an offence under s.95 of the
@@ -498,10 +484,6 @@
        MEASURED off each render's ink bounding box, not eyeballed — spans of
        968/829/692/748 at 1024px, normalised to the smallest, and icon 02's ink
        centre sits at x=0.404 so it takes a nudge back to true centre. */
-    .kz-slot{width:172px;height:172px;display:grid;place-items:center;margin-bottom:16px}
-    .kz-slot img{width:100%;height:100%;object-fit:contain;display:block;
-                 transform:scale(var(--k,1)) translateX(var(--nudge,0));transform-origin:center;
-                 animation:kzFloat var(--dur,7s) ease-in-out var(--delay,0s) infinite}
     /* Idle drift, long and staggered so the four never march in step. The
        transform above is re-declared inside the keyframes because an animation
        on transform overrides the static one outright. */
@@ -510,25 +492,11 @@
       50%    {transform:scale(var(--k,1)) translateX(var(--nudge,0)) translateY(calc(var(--drift,7px) * -1)) rotate(var(--tilt,-1.4deg))}
     }
     /* The card being read lifts its icon. */
-    .kz-card:not(.dim) .kz-slot img{animation-duration:calc(var(--dur,7s) * .72)}
 
-    .kz-bar{max-width:var(--maxw);margin:24px auto 0;padding:0 24px;width:100%}
-    .kz-line{height:2px;background:var(--hairline);position:relative;overflow:hidden}
-    .kz-fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--ink)}
-    .kz-hint{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:10px}
 
     /* Touch only. A phone is a DEVICE fact, so it gets the native swipe
        carousel; overriding scroll on touch is how a page starts feeling broken. */
     @media (max-width:900px){
-      .kz-rail{height:auto!important}
-      .kz-stick{position:static;height:auto;padding:4px 0}
-      .kz-track{transform:none!important;overflow-x:auto;scroll-snap-type:x mandatory;
-                -webkit-overflow-scrolling:touch;padding-bottom:14px;scrollbar-width:none}
-      .kz-track::-webkit-scrollbar{display:none}
-      .kz-card{scroll-snap-align:start;flex-basis:min(82vw,340px)}
-      .kz-card.dim{transform:none}
-      .kz-card.dim > *{opacity:1}
-      .kz-head{margin-bottom:18px;min-height:58px}
     }
     /* No Reduce Motion branch anywhere in this file. Rahaid's standing ruling is
        that the setting must not stop OR change anything we make - the motion is a
@@ -569,15 +537,14 @@
        The tilt lives on the PICTURE and the idle float stays on the IMG,
        because two rules writing `transform` on one element would overwrite each
        other. Different elements compose instead. */
-    .kz-slot picture{display:block;width:100%;height:100%}
-    .kz-slot picture, .cell .run-icon{
+    .cell .run-icon{
       transform:perspective(620px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
       transform-origin:center;
       transition:transform .5s var(--el-ease);
     }
     /* Following the pointer has to feel immediate; the slow curve is for the
        spring back to rest once they leave. */
-    .kz-card:hover .kz-slot picture, .cell:hover .run-icon{transition-duration:.09s}
+    .cell:hover .run-icon{transition-duration:.09s}
 
   </style>
   <link rel="stylesheet" href="/kaizen-mark.css">
@@ -652,6 +619,7 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
+      <li><a href="kaizen-loop.html">Kaizen Loop</a></li>
       <li><a href="contact.html">Contact</a></li>
       <li><a class="btn-solid" href="apply.html">Take a seat</a></li>
     </ul>
@@ -661,6 +629,7 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
+    <a href="kaizen-loop.html">Kaizen Loop</a>
     <a href="contact.html">Contact</a>
   </div>
 </nav>
@@ -697,23 +666,10 @@
   <div class="container reveal">
     <div class="smallcaps">Your fix</div>
     <h2>The Kaizen Loop<span class="tm">&trade;</span></h2>
-    <p class="lede">First we learn the brand properly. What you make, why you make it, and what it&rsquo;s meant to mean to the person who buys it. Then, before a pound is spent, two numbers: what a customer is actually worth to you, and what your sales were already doing without us.</p>
+    <p class="lede">First we learn the brand properly, then we set two numbers before a pound is spent: what a customer is actually worth to you, and what your sales were already doing without us.</p>
     <p class="pull">Everything after that gets judged against both.</p>
-    <p class="lede">Four stages, run in order. Each one only works because the one before it did, and the last one feeds the first.</p>
-    <div class="kz-rail" id="kzRail">
-      <div class="kz-stick">
-        <div class="kz-head">
-          <div class="kz-count"><b id="kzCur">01</b> / 04</div>
-          <div class="kz-name" id="kzName">Learn the brand, set the numbers</div>
-        </div>
-        <div class="kz-track" id="kzTrack"></div>
-        <div class="kz-bar">
-          <div class="kz-line"><div class="kz-fill" id="kzFill"></div></div>
-          <div class="kz-hint" id="kzHint">Keep scrolling</div>
-        </div>
-      </div>
-    </div>
-    <p class="lede muted" style="margin-top:28px">If you&rsquo;re an artist there&rsquo;s often no unit to cost, so the numbers are different. We measure what your audience does when you ask them for something, and how much of your streaming sits on one track. That number coming down is the difference between a fanbase and a song that did well.</p>
+    <p class="lede muted">Four stages, run in order: learn the brand and set the numbers, make the content, get it in front of people, then track it and do more of what worked. Then it goes again.</p>
+    <a class="btn-quiet" style="margin-top:20px;display:inline-block" href="kaizen-loop.html">See how the Kaizen Loop works &rarr;</a>
   </div>
 </section>
 
@@ -799,6 +755,7 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
+          <li><a href="kaizen-loop.html">Kaizen Loop</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="privacy.html">Privacy</a></li>
         </ul>
@@ -886,98 +843,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 <script src="/scrub.js" defer></script>
 <script>
 (function(){
-  // [num, title, body, measured scale, measured x-nudge, float duration]
-  var S = [
-    ['01','Learn the brand, set the numbers','We don\u2019t take credit for a trend you were already on, and nothing gets made that doesn\u2019t look like you.','.715','2.8%','7.4s',['What you make, why you make it, and who it is for, in your words','What a customer is worth to you, and what a sale actually leaves','What your sales were already doing before us, written down']],
-    ['02','Make the content','Ads, posts, edits, and the messages that bring people back. We shoot it with you or cut it from footage you have, usually both.','.835','9.6%','6.6s',['Shot with you, or cut from footage you already have','Ads, posts and edits arriving every week, not one piece a month','Enough different angles to find the one people react to']],
-    ['03','Get it in front of people','Paid and organic, both pulling new people in. Your feed kept alive so it holds them when they look you up. And the ones who already bought hearing from you directly.','1','0','8.1s',['Paid running where your buyers actually are, handled daily','Your feed kept alive so it holds them when they look you up','Email and message to the people who already bought']],
-    ['04','Track it, then do more of what worked','You see the same numbers we see, read the same way. Then we make more of what pulled people in, and it goes again.','.925','0','7s',['The same numbers we see, read the same way','What loses gets turned off, what wins gets more behind it','Measured against the baseline from stage one, not a good week']]
-  ];
-  var rail=document.getElementById('kzRail'); if(!rail) return;
-  var track=document.getElementById('kzTrack'), fill=document.getElementById('kzFill'),
-      cur=document.getElementById('kzCur'), name=document.getElementById('kzName'),
-      hint=document.getElementById('kzHint');
-
-  S.forEach(function(s,i){
-    var d=document.createElement('div'); d.className='kz-card'+(i?' dim':'');
-    var slot=document.createElement('div'); slot.className='kz-slot';
-    var pic=document.createElement('picture');
-    var src=document.createElement('source');
-    src.type='image/webp'; src.srcset='/assets/stages/stage-'+s[0]+'-320.webp';
-    var img=document.createElement('img');
-    img.src='/assets/stages/stage-'+s[0]+'-320.png';
-    img.alt=''; img.width=172; img.height=172; img.decoding='async';
-    // NOT lazy: these sit off to the RIGHT inside a sticky track, so they never
-    // enter the viewport and never load. Four icons at ~3KB each do not need it.
-    img.style.setProperty('--k',s[3]);
-    if(s[4]&&s[4]!=='0') img.style.setProperty('--nudge',s[4]);
-    img.style.setProperty('--dur',s[5]);
-    img.style.setProperty('--delay',(i*-1.7)+'s');
-    pic.appendChild(src); pic.appendChild(img); slot.appendChild(pic);
-    var n=document.createElement('div'); n.className='kz-num'; n.appendChild(document.createTextNode(s[0]));
-    var h=document.createElement('h3'); h.appendChild(document.createTextNode(s[1]));
-    var p=document.createElement('p'); p.appendChild(document.createTextNode(s[2]));
-    d.appendChild(slot); d.appendChild(n); d.appendChild(h); d.appendChild(p);
-    /* s[6] is the stage's deliverables. Built with createTextNode like everything
-       else here, so a stray apostrophe in the copy cannot become markup. */
-    if (s[6] && s[6].length) {
-      var ul=document.createElement('ul'); ul.className='kz-do';
-      s[6].forEach(function(t){ var li=document.createElement('li'); li.appendChild(document.createTextNode(t)); ul.appendChild(li); });
-      d.appendChild(ul);
-    }
-    track.appendChild(d);
-  });
-
-  var cards=track.children;
-  // Width only. Gating this on prefers-reduced-motion would mean the feature
-  // never runs for those visitors, which is the violation DESIGN.md names.
-  var off=window.matchMedia('(max-width:900px)');
-  function travel(){ return Math.max(0, track.scrollWidth - track.clientWidth + 48); }
-
-  function size(){
-    if(off.matches){ rail.style.height=''; track.style.transform=''; hint.textContent='Swipe through'; return; }
-    rail.style.height=(window.innerHeight + travel())+'px';
-    hint.textContent='Keep scrolling';
-    onScroll();
-  }
-  function mark(p){
-    var i=Math.min(S.length-1, Math.round(p*(S.length-1)));
-    for(var k=0;k<cards.length;k++){ if(k===i) cards[k].classList.remove('dim'); else cards[k].classList.add('dim'); }
-    cur.textContent=S[i][0]; name.textContent=S[i][1];
-    hint.textContent = p>.985 ? 'That is the loop' : 'Keep scrolling';
-  }
-  function onScroll(){
-    if(off.matches) return;
-    var total=rail.offsetHeight-window.innerHeight;
-    var p=total>0 ? Math.min(1,Math.max(0,-rail.getBoundingClientRect().top/total)) : 0;
-    track.style.transform='translate3d('+(-p*travel())+'px,0,0)';
-    fill.style.width=(p*100).toFixed(2)+'%';
-    mark(p);
-  }
-  track.addEventListener('scroll',function(){
-    if(!off.matches) return;
-    var max=track.scrollWidth-track.clientWidth;
-    var p=max>0? track.scrollLeft/max : 0;
-    fill.style.width=(p*100).toFixed(2)+'%';
-    var i=Math.min(S.length-1, Math.round(p*(S.length-1)));
-    cur.textContent=S[i][0]; name.textContent=S[i][1];
-  },{passive:true});
-
-  addEventListener('scroll',onScroll,{passive:true});
-  addEventListener('resize',size);
-  if(off.addEventListener) off.addEventListener('change',size);
-  size();
-})();
-</script>
-<script>
-(function(){
   /* Pointer only. A phone has no hover, so a tilt would fire on tap and then
      stick there with nothing to return it to rest. */
   if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
   var MAX = 11;   // no Reduce Motion branch - the setting is ignored, see the note above
 
-  document.querySelectorAll('.kz-card, .grid.four .cell').forEach(function(host){
-    var pic = host.querySelector('.kz-slot picture, picture.run-icon');
+  document.querySelectorAll('.grid.four .cell').forEach(function(host){
+    var pic = host.querySelector('picture.run-icon');
     if (!pic) return;
     var raf = 0, rx = 0, ry = 0;
     function apply(){
