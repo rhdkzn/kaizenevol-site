@@ -247,7 +247,18 @@ footer { view-transition-name: ke-footer; }
    animation level after it ends, and that outranks the html.leaving transition below -
    the exit-on-tap would silently stop working on every page. */
 main {
-  animation: ke-content-in .32s cubic-bezier(0, 0, .2, 1) .04s backwards;
+  /* .22s and no delay, down from .32s + .04s (Rahaid, 2026-09-11, picking "bring the new
+     page's content in sooner" over leaving the gap between pages as it was). Measured
+     from the NEW document's navigation start, before and after, on a mobile context:
+     half-visible went 191/207/396ms -> see the commit. The delay was pure blank — 40ms
+     in which the page had loaded and deliberately showed nothing.
+     .24s is the FLOOR of the 240-360ms band brand/DESIGN.md sets for the arrival, not a
+     number picked freely: .22s measured better and broke canon, and test-interactions
+     caught it. Total time to full opacity is 360ms -> 240ms with the delay gone.
+     fill-mode stays BACKWARDS: `both` or `forwards` pins opacity:1 at animation level
+     after it ends, which outranks the html.leaving transition and silently kills the
+     exit-on-tap on every page. test-interactions guards that. */
+  animation: ke-content-in .24s cubic-bezier(0, 0, .2, 1) backwards;
 }
 ::view-transition-new(*) { animation: none; }
 /* Measured 2026-09-04, both sides of a real navigation: pageswap and pagereveal both
