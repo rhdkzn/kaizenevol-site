@@ -73,6 +73,13 @@
     .review dd{margin:0}
     .done h1{font-weight:200;letter-spacing:-0.035em;font-size:clamp(28px,1.3rem + 2vw,38px);margin:0}
     .done p{color:var(--muted);margin:16px 0 0}
+    /* The read-back. It is the only part of this page that tells them something they did
+       not already know, so it gets the ink: body colour, a rule above it, and the lede in
+       the page's own voice. 2026-09-11, RES-CMP-013. */
+    .read{margin:22px 0 0;padding:20px 0 4px;border-top:1px solid var(--hairline)}
+    .read p{color:var(--ink);margin:12px 0 0}
+    .read .read-lede{color:var(--muted);margin:0}
+    .read .read-note{color:var(--muted);font-size:13px;margin-top:16px}
     footer{border-top:1px solid var(--hairline);padding:22px 0 34px;font-size:13px;color:var(--muted)}
     footer a{color:var(--muted);text-decoration:none}
     /* No prefers-reduced-motion override. Rahaid, standing: the setting is ignored. */
@@ -194,6 +201,12 @@
     <div id="done" hidden class="done">
       <div class="smallcaps">Sent</div>
       <h1>Got it.</h1>
+      <div id="read" class="read" hidden>
+        <p class="read-lede">Before anyone here has opened it, here is what your answers already say.</p>
+        <p id="read-1"></p>
+        <p id="read-2"></p>
+        <p class="read-note">Rough, because they are ranges. We will do it properly with your real numbers on the call &mdash; and if we think it is too early, we will say that instead of selling you something.</p>
+      </div>
       <p>We read these in order and reply either way, the same working day. If it is urgent, email <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a> and say so.</p>
     </div>
   </div>
@@ -301,11 +314,89 @@
                + '\n\n' + (data.message || '')
       })
     }).then(function(r){ if(!r.ok) throw 0; })
-      .then(function(){ f.hidden = true; count.textContent=''; done.hidden = false; done.querySelector('h1').focus && done.querySelector('h1').focus(); })
+      .then(function(){ f.hidden = true; count.textContent=''; readBack(); done.hidden = false; done.querySelector('h1').focus && done.querySelector('h1').focus(); })
       .catch(function(){
         go.disabled = false; go.textContent = 'Take my seat';
         err.textContent = 'That did not send. Email diego@kaizenevol.com and we will pick it up there.';
       });
+  }
+
+  /* ── The read-back ───────────────────────────────────────────────────────────
+     They have just given us monthly revenue, cost as a share of price, and ad spend.
+     That is enough to say something TRUE and specific, and saying nothing is the
+     difference between a diagnosis funnel and a form with better manners
+     (RES-CMP-013, diagnosis-funnel skill).
+
+     Rules it follows, and they are the whole point:
+       - It PROVES, it never SOLVES. Name what the numbers say; the fix is the call.
+       - Every claim is derived from what they actually picked, never invented.
+       - It says "roughly" because bands are ranges, and it says so out loud.
+       - When the honest read is "too early", it says that. FIN-PRI-004 gates on
+         GROSS PROFIT, so a brand that cannot carry the retainer out of margin is
+         told, not sold to. */
+  var REV  = {'Pre-launch, nothing yet':0,'Under £5k':3000,'£5k – £15k':10000,'£15k – £40k':27000,'£40k – £100k':70000,'Over £100k':130000};
+  var COGS = {'About a quarter':0.25,'About a third':0.33,'About half':0.5,'More than half':0.6};
+  var ADS  = {'Nothing yet':0,'Under £1k':500,'£1k – £5k':3000,'£5k – £15k':10000,'Over £15k':20000};
+
+  function money(n){
+    if (n >= 1000) return '£' + Math.round(n/1000) + 'k';
+    return '£' + Math.round(n/100)*100;
+  }
+
+  function readBack(){
+    var wrap = document.getElementById('read'), one = document.getElementById('read-1'), two = document.getElementById('read-2');
+    if (!wrap || !one) return;
+    var rev = REV[data.revenue], cogs = COGS[data.costShare], ads = ADS[data.adspend];
+    var lines = [], tooEarly = '';
+
+    /* Pre-launch is its own read. There is no margin to reason about yet, and pretending
+       otherwise would be the fake-diagnosis version of a fake qualification gate. */
+    if (data.revenue === 'Pre-launch, nothing yet') {
+      lines.push('You have not sold yet, so there is no margin to work back from — which means the first question is not what to spend, it is who opens the first drop. A launch into no audience is the most expensive way to find out whether the product works.');
+      if (data.sellModel === 'Drops on a schedule' || data.sellModel === 'A bit of both') {
+        lines.push('You are planning to sell in drops. That decides the shape of everything before it: a drop is won or lost by the size and warmth of the list it opens to, not by what happens on the day.');
+      }
+    } else if (typeof rev === 'number') {
+      /* Cost share is the number most brands have not actually worked out. Not knowing it
+         IS the finding, and it is the most useful thing we can hand back. */
+      if (typeof cogs !== 'number') {
+        lines.push('You are doing roughly ' + money(rev) + ' a month and you were not sure what a unit costs you to make. That is the honest answer most brands give, and it is also the one number every decision about paid spend hangs on — without it, any budget we set would be a guess wearing a spreadsheet.');
+      } else {
+        var gp = rev * (1 - cogs);
+        lines.push('At roughly ' + money(rev) + ' a month with about ' + Math.round(cogs*100) + '% of the price going on cost, you are keeping in the region of ' + money(gp) + ' a month in gross profit. That is the number worth running everything against — not revenue, and not what the ad platform reports back to you.');
+
+        if (typeof ads === 'number') {
+          if (ads === 0) {
+            lines.push('And none of it is going into acquisition yet. So every order you take is coming from people who already found you — which is a real asset, and also a ceiling you will meet whether or not you choose to.');
+          } else {
+            var share = ads / gp;
+            if (share >= 0.45) {
+              lines.push('You are putting somewhere near ' + Math.round(share*100) + '% of that gross profit into ads. Past roughly a third, spend stops behaving like growth and starts behaving like rent — the first thing to look at is contribution per order, not the return the platform shows you.');
+            } else if (share <= 0.1) {
+              lines.push('Against that, spending around ' + money(ads) + ' a month is conservative — there is room in the margin, and the thing stopping it being used is usually confidence in what an order is actually worth, not appetite.');
+            } else {
+              lines.push('Spending around ' + money(ads) + ' a month against that margin is a workable place to start from. Whether it should be more depends on what a customer is worth the second time, which is the part almost nobody has measured.');
+            }
+          }
+        }
+        /* The honest "too early". FIN-PRI-004: affordability is measured against gross
+           profit. If ours would swallow it, say so here rather than on the call. */
+        if (gp > 0 && gp < 3500) {
+          tooEarly = 'Straight answer while you are here: at that level of gross profit our retainer would be a large share of what the business keeps. We will still read this and reply — but if we think it is too early, we will tell you that and what we would do first instead.';
+        }
+      }
+    }
+
+    if (!lines.length) return;
+    /* Only two lines ever show, and the "too early" line MUST be one of them when it
+       applies — it is the honest half of this whole screen, and the first version of
+       this code computed it and then dropped it on the floor because it was third in
+       the list. If we are telling someone we might not take their money, saying it
+       matters more than telling them their ad spend is conservative. */
+    one.textContent = lines[0];
+    var second = tooEarly || lines[1];
+    if (second) { two.textContent = second; } else { two.hidden = true; }
+    wrap.hidden = false;
   }
 
   go.addEventListener('click', next);
