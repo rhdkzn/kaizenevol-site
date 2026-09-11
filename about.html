@@ -185,9 +185,14 @@
        child of <figure>, whose height includes the caption, so bottom:15% put
        it straight over the right-hand name on a phone. */
     .duo-shot { position:relative; display:block; }
-    /* Top-right: the names are sprayed across both chests now, so the badge has
-       to be clear of them. Bottom-right put it straight over Law. */
-    .duo-badge { position:absolute; z-index:4; right:-9%; top:48%;
+    /* Top-right corner, hanging a little past the edge like the paper scraps
+       behind it. Mid-right put it across Law's arm and hand - the busiest part
+       of the die cut, at the eye level of both faces. An emptiness scan of the
+       photo's alpha channel puts the cleanest badge-sized box at the top right
+       (6.4% of it touches anyone, against 100% bottom-left and ~45% mid-right),
+       and it is read AFTER the two faces, which is the right order for a label
+       that annotates them. Clear of Diego, clear of Law's hair. */
+    .duo-badge { position:absolute; z-index:4; right:-4%; top:1.5%;
       background:var(--text); color:var(--void); padding:11px 17px; border-radius:4px;
       transform:rotate(-2.1deg); box-shadow:0 6px 16px rgba(35,33,30,0.22);
       text-align:left; line-height:1.25; }
@@ -300,7 +305,7 @@
       .duo-paper::before, .duo-paper::after { width:86px; height:24px; }
       .duo-paper::before { left:-24px; top:-11px; }
       .duo-paper::after { right:-26px; }
-      .duo-badge { right:-8%; top:48%; bottom:auto; padding:9px 13px; }
+      .duo-badge { right:-4%; top:1.5%; bottom:auto; padding:9px 13px; }
       .duo-badge b { font-size:10px; }
       .duo-badge span { font-size:10.5px; }
       .svc-row { grid-template-columns:60px 1fr; }
