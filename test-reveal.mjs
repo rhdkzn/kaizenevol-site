@@ -49,8 +49,14 @@ check('block children ride --lp, not their own subject',
 check('an IntersectionObserver track exists for browsers without view timelines',
   /@supports not \(animation-timeline: view\(\)\)/.test(css));
 
+// A remote BASE has to go through the agent proxy, and this Chromium negotiates a
+// TLS version the proxy rejects unless it is capped - the symptom is
+// ERR_CONNECTION_RESET from the browser while curl on the same URL returns 200.
+const remote = !/^https?:\/\/(localhost|127\.0\.0\.1)/.test(BASE);
 const browser = await chromium.launch({
-  executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox']
+  executablePath: '/opt/pw-browsers/chromium',
+  args: remote ? ['--no-sandbox', '--ssl-version-max=tls1.2'] : ['--no-sandbox'],
+  ...(remote && process.env.HTTPS_PROXY ? { proxy: { server: process.env.HTTPS_PROXY } } : {})
 });
 
 for (const name of PAGES) {
