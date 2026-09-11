@@ -481,6 +481,13 @@
     .kz-card h3{font-size:clamp(22px,2.2vw,30px);font-weight:500;letter-spacing:-.015em;margin:0 0 8px}
     .kz-card p{font-size:15px;color:var(--muted);line-height:1.6;margin:0}
     .kz-num{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted);margin-bottom:10px}
+    /* What actually gets done in each stage. Added 2026-09-11: the four stages
+       described the method and never said what the work IS, which is what makes
+       a step read as filler. Same dash treatment as .cell li so the page has one
+       list idiom, not two. */
+    .kz-do{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+    .kz-do li{position:relative;padding-left:20px;font-size:14px;color:var(--muted);line-height:1.5}
+    .kz-do li::before{content:"";position:absolute;left:0;top:10px;width:9px;height:1px;background:var(--stone)}
 
     /* The icon. Ours, generated, neutral grey. Per-icon scale and centring are
        MEASURED off each render's ink bounding box, not eyeballed — spans of
@@ -687,6 +694,7 @@
     <h2>The Kaizen Loop</h2>
     <p class="lede">First we learn the brand properly. What you make, why you make it, and what it&rsquo;s meant to mean to the person who buys it. Then, before a pound is spent, two numbers: what a customer is actually worth to you, and what your sales were already doing without us.</p>
     <p class="pull">Everything after that gets judged against both.</p>
+    <p class="lede">Four stages, run in order. Each one only works because the one before it did, and the last one feeds the first.</p>
     <div class="kz-rail" id="kzRail">
       <div class="kz-stick">
         <div class="kz-head">
@@ -875,10 +883,10 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 (function(){
   // [num, title, body, measured scale, measured x-nudge, float duration]
   var S = [
-    ['01','Learn the brand, set the numbers','We don\u2019t take credit for a trend you were already on, and nothing gets made that doesn\u2019t look like you.','.715','2.8%','7.4s'],
-    ['02','Make the content','Ads, posts, edits, and the messages that bring people back. We shoot it with you or cut it from footage you have, usually both.','.835','9.6%','6.6s'],
-    ['03','Get it in front of people','Paid and organic, both pulling new people in. Your feed kept alive so it holds them when they look you up. And the ones who already bought hearing from you directly.','1','0','8.1s'],
-    ['04','Track it, then do more of what worked','You see the same numbers we see, read the same way. Then we make more of what pulled people in, and it goes again.','.925','0','7s']
+    ['01','Learn the brand, set the numbers','We don\u2019t take credit for a trend you were already on, and nothing gets made that doesn\u2019t look like you.','.715','2.8%','7.4s',['What you make, why you make it, and who it is for, in your words','What a customer is worth to you, and what a sale actually leaves','What your sales were already doing before us, written down']],
+    ['02','Make the content','Ads, posts, edits, and the messages that bring people back. We shoot it with you or cut it from footage you have, usually both.','.835','9.6%','6.6s',['Shot with you, or cut from footage you already have','Ads, posts and edits arriving every week, not one piece a month','Enough different angles to find the one people react to']],
+    ['03','Get it in front of people','Paid and organic, both pulling new people in. Your feed kept alive so it holds them when they look you up. And the ones who already bought hearing from you directly.','1','0','8.1s',['Paid running where your buyers actually are, handled daily','Your feed kept alive so it holds them when they look you up','Email and message to the people who already bought']],
+    ['04','Track it, then do more of what worked','You see the same numbers we see, read the same way. Then we make more of what pulled people in, and it goes again.','.925','0','7s',['The same numbers we see, read the same way','What loses gets turned off, what wins gets more behind it','Measured against the baseline from stage one, not a good week']]
   ];
   var rail=document.getElementById('kzRail'); if(!rail) return;
   var track=document.getElementById('kzTrack'), fill=document.getElementById('kzFill'),
@@ -905,6 +913,13 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
     var h=document.createElement('h3'); h.appendChild(document.createTextNode(s[1]));
     var p=document.createElement('p'); p.appendChild(document.createTextNode(s[2]));
     d.appendChild(slot); d.appendChild(n); d.appendChild(h); d.appendChild(p);
+    /* s[6] is the stage's deliverables. Built with createTextNode like everything
+       else here, so a stray apostrophe in the copy cannot become markup. */
+    if (s[6] && s[6].length) {
+      var ul=document.createElement('ul'); ul.className='kz-do';
+      s[6].forEach(function(t){ var li=document.createElement('li'); li.appendChild(document.createTextNode(t)); ul.appendChild(li); });
+      d.appendChild(ul);
+    }
     track.appendChild(d);
   });
 
