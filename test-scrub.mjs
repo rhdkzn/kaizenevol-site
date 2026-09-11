@@ -272,6 +272,36 @@ for (const [name, opts] of [
     sampled >= 2, `${sampled} of 3 on screen`);
   check(`${name}: closing copy clears 4.5:1 over the brightest film frame`,
     worst >= 4.5, `worst ${worst === Infinity ? 'not measured' : worst.toFixed(2) + ':1'}`);
+
+  /* AND THERE HAS TO BE SOMETHING TO SEE (added 2026-09-11).
+   *
+   * Everything above measured whether the COPY survives the film. Nothing asked
+   * whether the film survives. It did not: the clip opens on black and its form
+   * only emerges 39.9% in, so the first half of the scroll was a black
+   * rectangle and the poster behind it was blacker still at mean 4.4 of 255.
+   * Every check on this page was green and Rahaid said "I believe the black
+   * page doesn't even work". He was right for a reason none of these guards
+   * could see, because they all measured legibility rather than presence.
+   *
+   * The floor is a p95, not a mean: a dark frame with a lit form in it is the
+   * whole point, an evenly black one is the defect. Measured 39 on the frame
+   * the scrub now starts from, 8 on the one it used to. */
+  {
+    const lit = await page.evaluate(async () => {
+      const src = getComputedStyle(document.querySelector('.scrub-media img')).content.match(/url\("([^"]+)"\)/)?.[1]
+        || document.querySelector('.scrub-media img').currentSrc;
+      const im = new Image(); im.crossOrigin = 'anonymous'; im.src = src;
+      await im.decode();
+      const c = document.createElement('canvas'); c.width = 160; c.height = 90;
+      const g = c.getContext('2d'); g.drawImage(im, 0, 0, 160, 90);
+      const d = g.getImageData(0, 0, 160, 90).data, lum = [];
+      for (let i = 0; i < d.length; i += 4) lum.push(0.2126*d[i] + 0.7152*d[i+1] + 0.0722*d[i+2]);
+      lum.sort((a, b) => a - b);
+      return Math.round(lum[Math.floor(lum.length * 0.95)]);
+    });
+    check(`${name}: the poster has a visible form in it, not just black`,
+      lit >= 25, `p95 luminance ${lit} of 255`);
+  }
   // Asserts the ELEMENT and that it actually carries a gradient. The previous
   // version asked whether the section had a ::before with content — which the
   // kanji watermark satisfied, so it passed for three rounds while the scrim
