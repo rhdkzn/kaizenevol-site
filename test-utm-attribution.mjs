@@ -133,10 +133,20 @@ for (const page of ['index.html', 'apply.html', 'what-we-run.html', 'kaizen-loop
 /* --- the API whitelist ---------------------------------------------------- */
 {
   const mod = await import('./api/submit-lead.js')
+  /* 2026-09-11: this stub used to intercept a POST to `app_data` and read the whole
+     ke_leads array back out. The API stopped writing that way on 2026-09-06 — the RLS
+     lockdown means the public form now drops the lead into public.ke_inbound through
+     the INSERT-only `inbound_submit` function — so the stub matched nothing, `upserted`
+     stayed null, and all four checks reported the ATTRIBUTION as broken when what was
+     actually broken was where the test was looking. The behaviour had been correct the
+     whole time. Every URL the API touches is recorded now, so the next time this drifts
+     the failure names the endpoint instead of printing null. */
   let upserted = null
+  const seen = []
   const realFetch = globalThis.fetch
   globalThis.fetch = async (url, opts) => {
-    if (String(url).includes('app_data') && opts?.method === 'POST') {
+    seen.push(`${opts?.method || 'GET'} ${String(url)}`)
+    if (String(url).includes('/rpc/inbound_submit') && opts?.method === 'POST') {
       upserted = JSON.parse(opts.body); return { ok: true, json: async () => ({}), text: async () => '' }
     }
     return { ok: true, json: async () => ([{ data: [] }]), text: async () => '' }
@@ -147,7 +157,10 @@ for (const page of ['index.html', 'apply.html', 'what-we-run.html', 'kaizen-loop
     attribution: { utm_source: 'meta', utm_campaign: 'founding5', evil: 'DROP TABLE', landing: '/index.html' },
   } }, res)
   globalThis.fetch = realFetch
-  const lead = upserted && upserted.data && upserted.data[upserted.data.length - 1]
+  /* The function takes the lead as { p: <lead> }. */
+  const lead = upserted && upserted.p
+  check('API: posts the lead to the inbound_submit function', !!lead,
+    'no POST to /rpc/inbound_submit. URLs the API actually called: ' + (seen.join(' | ') || '(none)'))
   check('API: stores attribution on the lead', !!(lead && lead.attribution && lead.attribution.utm_source === 'meta'),
     JSON.stringify(lead && lead.attribution))
   check('API: drops keys not on the whitelist', !!(lead && lead.attribution && lead.attribution.evil === undefined),

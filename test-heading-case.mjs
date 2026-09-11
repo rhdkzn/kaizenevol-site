@@ -58,6 +58,12 @@ const titleCase = (s0) => {
     if (capNext || first) { capNext = false; first = false; continue }
     if (PROPER.has(lw)) continue
     if (w.toUpperCase() === w && w.length > 1) continue     // acronym
+    /* The pronoun "I" is capitalised in EVERY position in English, so exempting it
+       cannot license Title Case on any word — which is what separates it from the
+       'house' mistake noted above. The acronym rule misses it because that rule
+       requires length > 1. Caught on "Can I just do this myself with AI?", which
+       was correct sentence case and had been failing this guard. */
+    if (w === 'I') continue
     if (isCap) offenders.push(w)
   }
   return offenders

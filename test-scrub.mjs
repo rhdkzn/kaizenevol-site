@@ -23,7 +23,6 @@
  */
 import { chromium, devices } from 'playwright';
 import { readFileSync, statSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
 let pass = 0, fail = 0;
@@ -58,12 +57,25 @@ check('controller coalesces seeks through rAF',
 // the browser checks below run on WebM and the mp4 is verified mechanically
 // instead. Deleting this leaves the Safari and iOS path completely untested.
 {
+  // Reads the codec out of the CONTAINER rather than shelling out to ffprobe.
+  // ffprobe is not installed here and is not installed on Rahaid's machine either,
+  // and the old `catch { return '(unreadable)' }` turned that into four FAIL lines
+  // saying the videos had the wrong codec — a guard reporting a defect that did not
+  // exist, which is how all four sat red and ignored. The files were correct the
+  // whole time. A byte read has no external dependency, so it gives the same answer
+  // on every machine.
+  //   mp4  : the sample-description box names the codec, 'avc1' for H.264
+  //   webm : Matroska stores a CodecID string, 'V_VP9'
+  // Only the header region is scanned, so a chance match inside compressed frame
+  // data cannot vote.
   const probe = (f) => {
-    try {
-      return execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v',
-        '-show_entries', 'stream=codec_name', '-of', 'csv=p=0', f],
-        { encoding: 'utf8' }).trim();
-    } catch { return '(unreadable)'; }
+    const head = readFileSync(f).subarray(0, 400000);
+    if (head.includes('avc1')) return 'h264';
+    if (head.includes('V_VP9')) return 'vp9';
+    if (head.includes('V_VP8')) return 'vp8';
+    if (head.includes('hvc1') || head.includes('hev1')) return 'hevc';
+    if (head.includes('av01') || head.includes('V_AV1')) return 'av1';
+    return '(no codec marker in the header)';
   };
   for (const f of ['assets/loop/loop.mp4', 'assets/loop/loop-mobile.mp4']) {
     const codec = probe(new URL(f, import.meta.url).pathname);

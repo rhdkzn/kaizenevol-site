@@ -109,7 +109,25 @@ const col = (id) => page.evaluate((i) => document.getElementById(i).innerText, i
   ok('and it is due TODAY, not tomorrow', lead.nextActionDate === today, `${lead.nextActionDate} vs ${today}`)
   const emails = await col('seqEmails')
   ok('so the firm appears in Emails due immediately', emails.includes('Baxter Kitchens Ltd'), emails)
-  ok('the paired email now references the voicemail', /reference the voicemail/i.test(emails), emails)
+  /* 2026-09-11: this used to assert the paired email says "reference the voicemail"
+     after a NO-ANSWER, and it had never passed — the assertion and the stepFlags guard
+     that contradicts it landed in the same commit (c161515). The GUARD is right:
+     no-answer means no voicemail was left, so the email must open cold rather than
+     point at a message that does not exist. That is the same rule the check above
+     states ("never tells him to reference a call that did not happen"). So the
+     expectation was the defect, and it is now asserted in BOTH directions — which also
+     gives stepFlags' leftVm downgrade the test it never had. */
+  ok('a no-answer downgrades the email to a standalone opener',
+    /standalone opener/i.test(emails), emails)
+  ok('and it does NOT reference a voicemail nobody left',
+    !/reference the voicemail/i.test(emails), emails)
+  /* The POSITIVE direction - log a voicemail and the email does point at it - is not
+     asserted here on purpose. It needs a call-led fixture on a fresh step, and this
+     file drives ONE page through a shared localStorage: Baxter's call-1 is spent by
+     the block above, the only other call-led fixture belongs to the bad-data block,
+     and re-seeding mid-file broke the email-lane pause block further down. Forcing it
+     in cost more than it guards. stepFlags' leftVm branch is unit-testable without a
+     browser and belongs in test-crm-v3.mjs, which already extracts the cadence. */
 }
 
 /* Bad data archives from the board rather than parking. */

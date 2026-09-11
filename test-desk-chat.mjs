@@ -20,11 +20,33 @@
  * Run: node test-desk-chat.mjs
  */
 import { chromium } from 'playwright'
+import { existsSync } from 'node:fs'
+
+/* 2026-09-11: kaizendesk.html is NOT in this repo. It only ever existed on an
+ * abandoned session branch (origin/claude/05-09-2026-pftoxd) and never reached
+ * main, and canon has moved KaizenDesk to a separate, parked business. So this
+ * guard was navigating to a file:// URL that does not exist and dying with an
+ * uncaught exception — rc=1 with no FAIL line, which reads as a broken harness
+ * rather than a missing page and is why it sat red unnoticed.
+ *
+ * It stands down loudly instead of being deleted: the reduce-motion lesson in the
+ * header is a real one, and if the Desk page is ever brought into this site the
+ * guard should wake up on its own rather than have to be remembered. It is NOT
+ * silent about standing down — a test that quietly passes while guarding nothing
+ * is worse than one that is missing.
+ */
 
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--ssl-version-max=tls1.2'] })
 const URL = process.env.URL || 'file:///home/user/kaizenevol-site/kaizendesk.html'
+
+if (!process.env.URL && !existsSync(import.meta.dirname + '/kaizendesk.html')) {
+  console.log('SKIP  kaizendesk.html is not in this repo - KaizenDesk is a separate, parked')
+  console.log('      business (CLAUDE.md, Commercial Terms). Nothing to guard here.')
+  console.log('      Point URL= at the page to run this against it anyway.')
+  process.exit(0)
+}
 
 /* Two motion settings, and a short viewport where the chat is TALLER than the screen —
    the old observer wanted 45% of it in view at once, which a small phone may never give. */
