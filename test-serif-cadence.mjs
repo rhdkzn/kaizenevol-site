@@ -16,8 +16,12 @@
  *   always            serif < mono
  *   where mono >= 4   serif >= 2
  *
- * Utility pages are exempt: apply.html is a one-question form and privacy.html is
- * legal text, and neither has headings to carry an accent.
+ * Form pages are exempt BY SHAPE, not by name. A page showing no h2 and no h3 has
+ * no headings for an accent to sit in - that is what a one-question form looks
+ * like. The first version listed apply.html by hand, and f.html shipped hours
+ * later from another session and landed red on main: a guard scoped by a list is
+ * a guard somebody has to remember to update. Measured on the estate the split is
+ * clean - forms show 0 h2 and 0 h3, every content page shows at least one.
  *
  * Placement is not mechanised on purpose. DESIGN.md says headings only, on the
  * last words of a line; a guard that counted would happily pass an italic dropped
@@ -29,8 +33,7 @@ import { readdirSync } from 'fs';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
 const SKIP = new Set(['crm.html','dashboard.html','portal.html','onboard.html','booked.html',
-                      '404.html','hero-lab.html','motion-lab.html','lab-cta.html','showcase-home.html',
-                      'apply.html','privacy.html']);
+                      '404.html','hero-lab.html','motion-lab.html','lab-cta.html','showcase-home.html']);
 const pages = readdirSync('.').filter(f => f.endsWith('.html') && !SKIP.has(f));
 
 const REMOTE = /^https?:\/\/(?!localhost|127\.)/.test(BASE);
@@ -48,6 +51,8 @@ for (const f of pages) {
   await p.goto(`${BASE}/${f}`, { waitUntil: 'networkidle' });
   await p.waitForTimeout(400);
   const r = await p.evaluate(() => {
+    const vis = e => { const r = e.getBoundingClientRect(); return r.width > 1 && r.height > 1; };
+    const headings = [...document.querySelectorAll('h2,h3')].filter(vis).length;
     let mono = 0, serif = 0;
     for (const el of document.querySelectorAll('body *')) {
       if (el.children.length || !el.textContent.trim()) continue;
@@ -62,10 +67,11 @@ for (const f of pages) {
     const stray = [...document.querySelectorAll('em')]
       .filter(e => !e.closest('h1,h2,h3'))
       .map(e => e.textContent.trim().slice(0, 30));
-    return { mono, serif, stray };
+    return { mono, serif, stray, headings };
   });
   await p.close();
 
+  if (r.headings === 0) { pass++; continue; }   /* a form: nothing to carry an accent */
   if (r.serif >= r.mono) { fail++; console.log(`FAIL  ${f} — serif ${r.serif} is not fewer than mono ${r.mono}`); }
   else pass++;
   if (r.mono >= 4 && r.serif < 2) { fail++; console.log(`FAIL  ${f} — serif used ${r.serif}x on a page running ${r.mono} mono labels; it needs at least 2`); }
