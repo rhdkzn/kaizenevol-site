@@ -398,6 +398,56 @@
     .lp-do li { position:relative; padding-left:22px; font-size:15px; color:var(--muted); line-height:1.55; max-width:58ch; }
     .lp-do li::before { content:""; position:absolute; left:0; top:12px; width:10px; height:1px; background:var(--muted); }
     .lp-back { display:inline-block; margin-top:34px; }
+    /* --- Depth on the fold. brand/DESIGN.md permits a gradient where it does WORK
+       and names "a ground that gives a section depth" as exactly that. No hue
+       shift: both stops are the same neutral, --void-2 fading into --void, and
+       nothing arrives that could not arrive as a flat fill. The page was one
+       uniform #F7F6F4 from top to bottom, which is the fault the reference
+       teardown names in THEIR middle - it goes flat - and ours had it everywhere. */
+    header.hero { position:relative; overflow:clip; }
+    header.hero::before {
+      content:""; position:absolute; left:-20%; right:-20%; top:-30%; height:150%;
+      z-index:0; pointer-events:none;
+      background:radial-gradient(56% 60% at 50% 36%, rgba(228,225,218,.9) 0%, rgba(228,225,218,0) 66%);
+    }
+    header.hero > * { position:relative; z-index:1; }
+
+    /* The drawn rule before an eyebrow is OUR idiom, already on index.html. The
+       reference brackets its mono instead; brackets on one page would be the
+       drift this file has spent the day removing. */
+    .lp-eyebrow::before {
+      content:""; display:inline-block; width:26px; height:1px; background:var(--hairline);
+      vertical-align:middle; margin-right:12px; transform:translateY(-1px);
+    }
+
+    /* Two tones, alternating, so the stages do not read as one slab. */
+    /* The estate's band value, not a second invented one: index.html runs
+       rgba(233,230,224,.55), solved so the composite over --void is exactly
+       --void-2. Applied to the SYSTEM block and all four stages so the page
+       reads as three movements - problem, the loop, why it works - rather than
+       nine slabs at one tone, which is the flat middle the teardown names. */
+    .lp-block.tone { background:rgba(233,230,224,.55); }
+
+    /* --- "Why this works": two cards, the move Rahaid picked out of their page.
+       Mono header left, a status right, hairline under it, then the argument and
+       a mono footnote. The mono is doing labels and nothing else, which is what
+       DESIGN.md reserves it for. */
+    .lp-cards { display:grid; gap:18px; }
+    @media (min-width:880px) { .lp-cards { grid-template-columns:1fr 1fr; gap:22px; } }
+    .lp-card { border:1px solid var(--hairline); border-radius:3px; background:rgba(252,252,250,.86);
+               padding:26px 26px 24px; display:flex; flex-direction:column; }
+    .lp-card-top { display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+                   padding-bottom:12px; border-bottom:1px solid var(--hairline); margin-bottom:20px; }
+    .lp-card-top .k { font-size:10px; color:var(--muted); }
+    .lp-card-top .v { font-size:10px; color:var(--muted); opacity:.8; }
+    .lp-card h3 { font-size:clamp(21px,.9rem + 1.3vw,28px); font-weight:500; letter-spacing:-.015em;
+                  margin:0 0 12px; max-width:20ch; }
+    .lp-card p { margin:0 0 12px; color:var(--muted); font-size:15px; }
+    .lp-card p:last-of-type { margin-bottom:0; }
+    .lp-foot { margin-top:18px; padding-top:14px; border-top:1px solid var(--hairline);
+               font-family:var(--mono,ui-monospace,monospace); font-size:11px; line-height:1.6;
+               color:var(--muted); }
+
     /* Declared AFTER the base rules on purpose. At equal specificity the later
        rule wins, so a media query sitting above them loses to the very rules it
        is meant to override - which is how this page shipped with single-column
@@ -490,8 +540,8 @@
     </div>
     <div class="lp-tiles">
       <div class="lp-tile"><b>04</b><span class="smallcaps">Stages</span></div>
-      <div class="lp-tile"><b>02</b><span class="smallcaps">Founders on it</span></div>
-      <div class="lp-tile"><b>05</b><span class="smallcaps">Clients at a time</span></div>
+      <div class="lp-tile"><b>01</b><span class="smallcaps">Loop</span></div>
+      <div class="lp-tile"><b>&#8734;</b><span class="smallcaps">Compounding</span></div>
     </div>
   </div>
 </header>
@@ -510,7 +560,7 @@
     </div>
   </section>
 
-  <section class="lp-block" id="stages">
+  <section class="lp-block tone" id="stages">
     <div class="container lp-grid">
       <div>
         <p class="smallcaps lp-eyebrow">02 / The system</p>
@@ -523,7 +573,7 @@
     </div>
   </section>
 
-  <section class="lp-block">
+  <section class="lp-block tone">
     <div class="container lp-grid">
       <div>
         <p class="smallcaps lp-eyebrow">Stage one</p>
@@ -541,7 +591,7 @@
       </div>
     </div>
   </section>
-  <section class="lp-block">
+  <section class="lp-block tone">
     <div class="container lp-grid">
       <div>
         <p class="smallcaps lp-eyebrow">Stage two</p>
@@ -559,7 +609,7 @@
       </div>
     </div>
   </section>
-  <section class="lp-block">
+  <section class="lp-block tone">
     <div class="container lp-grid">
       <div>
         <p class="smallcaps lp-eyebrow">Stage three</p>
@@ -577,7 +627,7 @@
       </div>
     </div>
   </section>
-  <section class="lp-block">
+  <section class="lp-block tone">
     <div class="container lp-grid">
       <div>
         <p class="smallcaps lp-eyebrow">Stage four</p>
@@ -597,17 +647,25 @@
   </section>
 
   <section class="lp-block">
-    <div class="container lp-grid">
-      <div>
-        <p class="smallcaps lp-eyebrow">03 / Why it holds</p>
-        <h2>The baseline is set before we spend.</h2>
+    <div class="container">
+      <p class="smallcaps lp-eyebrow">03 / Why this works</p>
+      <div class="lp-cards">
+        <div class="lp-card">
+          <div class="lp-card-top"><span class="k smallcaps">Baseline.first</span><span class="v smallcaps">set before spend</span></div>
+          <h3>We do not take credit for a trend you were already on.</h3>
+          <p>Stage one writes down what your sales were already doing, adjusted for season, before a pound goes out. Every figure after that is measured against it rather than against the month before.</p>
+          <p>A good week does not get sold to you as a result, and a quiet one does not get hidden.</p>
+          <p class="lp-foot">&gt; the least flattering way to report, and the only one worth paying for.</p>
+        </div>
+        <div class="lp-card">
+          <div class="lp-card-top"><span class="k smallcaps">Outcome.compound</span><span class="v smallcaps">stage four &rarr; stage one</span></div>
+          <h3>It gets better because it goes again.</h3>
+          <p>Stage four is not a report at the end. What it learns is what stage one knows the next time round, so the brand we are working with is one we understand better every cycle.</p>
+          <p>Most of what an agency charges for in month one is knowing your business. We stop having to buy that back.</p>
+          <p class="lp-foot">&gt; four stages, no finish line, and no ceiling anybody has to explain.</p>
+        </div>
       </div>
-      <div class="lp-body">
-        <p class="strong">We do not take credit for a trend you were already on.</p>
-        <p>Stage one writes down what your sales were already doing, adjusted for season, before a pound goes out. Every figure after that is measured against it rather than against the month before, so a good week does not get sold to you as a result and a quiet one does not get hidden.</p>
-        <p>It is the least flattering way to report and it is the only one worth paying for.</p>
-        <a class="btn-quiet lp-back" href="index.html">See what is included &rarr;</a>
-      </div>
+      <a class="btn-quiet lp-back" href="index.html">See what is included &rarr;</a>
     </div>
   </section>
 
