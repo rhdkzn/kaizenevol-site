@@ -410,6 +410,19 @@
     .wr-do { list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
     .wr-do li { position:relative; padding-left:22px; font-size:14.5px; color:var(--muted); line-height:1.55; }
     .wr-do li::before { content:""; position:absolute; left:0; top:11px; width:10px; height:1px; background:var(--muted); }
+    /* --- Engagement: their two-card block at the foot of the services page,
+       which Rahaid picked out. Their left card is PRICING.MODEL; ours cannot be,
+       because the site does not discuss what we charge - so the slot carries
+       capacity instead, which is the other thing a prospect needs to know before
+       a call. The numbered criteria rows with a hairline between each are the
+       distinctive part and transfer directly. */
+    .wr-crit { list-style:none; margin:16px 0 0; padding:0; }
+    .wr-crit li { display:flex; gap:14px; align-items:baseline; padding:11px 0;
+                  border-top:1px solid var(--hairline); font-size:14.5px; color:var(--text); line-height:1.5; }
+    .wr-crit li:first-child { border-top:0; padding-top:4px; }
+    .wr-crit .n { font-family:var(--mono,ui-monospace,monospace); font-size:10px; color:var(--muted);
+                  flex:0 0 auto; letter-spacing:.06em; }
+
 
     /* The page's own next step, rather than the shared closing. Rahaid asked for
        it after the reference's [04 / NEXT STEP], and it is an exception to the
@@ -647,20 +660,29 @@
   </section>
 
   <section class="lp-block tone">
-    <div class="container lp-grid">
-      <div>
-        <p class="smallcaps lp-eyebrow">04 / Who it is not for</p>
-        <h2>Three reasons we would say no.</h2>
+    <div class="container">
+      <p class="smallcaps lp-eyebrow">04 / Engagement</p>
+      <div class="wr-set lp-cards">
+        <div class="lp-card">
+          <div class="lp-card-top"><span class="k smallcaps">Capacity.five</span><span class="v smallcaps">seats &middot; 05</span></div>
+          <h3>Five at a time, and both of us on <em>each</em>.</h3>
+          <p>Five is the whole capacity, not a launch offer. When they are full, they are full.</p>
+          <p>Just the two of us, so there is no account manager between you and the people doing the work, and nobody is learning your brand on your time twice.</p>
+          <p class="lp-foot">&gt; every seat gets both of us, start to finish.</p>
+        </div>
+        <div class="lp-card">
+          <div class="lp-card-top"><span class="k smallcaps">Brand.fit</span><span class="v smallcaps">reasons &middot; 03</span></div>
+          <h3>Three reasons we would say no.</h3>
+          <p>We would rather say it on the first call than three months in.</p>
+          <ul class="wr-crit">
+            <li><span class="n">01</span><span>You will not look at your own numbers. Then nobody can fix them, us included.</span></li>
+            <li><span class="n">02</span><span>The margin is too thin for ads to pay for themselves. We would be spending your money to prove arithmetic.</span></li>
+            <li><span class="n">03</span><span>You want the ads run and nothing else. That is one of four things we do, and the other three are what make it work.</span></li>
+          </ul>
+          <p class="lp-foot">&gt; if none of those are you, the next step is fifteen minutes.</p>
+        </div>
       </div>
-      <div class="lp-body">
-        <ul class="lp-do">
-          <li>You will not look at your own numbers. Then nobody can fix them, us included.</li>
-          <li>The margin is too thin for ads to pay for themselves. We would be spending your money to prove arithmetic.</li>
-          <li>You want the ads run and nothing else. That is one of four things we do, and the other three are what make it work.</li>
-        </ul>
-        <p style="margin-top:20px">We would rather say it on the first call than three months in.</p>
-        <a class="btn-quiet lp-back" href="kaizen-loop.html">See how the Kaizen Loop runs it &rarr;</a>
-      </div>
+      <a class="btn-quiet lp-back" href="kaizen-loop.html">See how the Kaizen Loop runs it &rarr;</a>
     </div>
   </section>
 
