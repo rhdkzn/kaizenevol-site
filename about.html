@@ -187,7 +187,7 @@
     .duo-shot { position:relative; display:block; }
     /* Top-right: the names are sprayed across both chests now, so the badge has
        to be clear of them. Bottom-right put it straight over Law. */
-    .duo-badge { position:absolute; z-index:4; right:-6%; top:48%;
+    .duo-badge { position:absolute; z-index:4; right:-9%; top:48%;
       background:var(--text); color:var(--void); padding:11px 17px; border-radius:4px;
       transform:rotate(-2.1deg); box-shadow:0 6px 16px rgba(35,33,30,0.22);
       text-align:left; line-height:1.25; }
@@ -207,10 +207,11 @@
     /* Law's role is the longer string; give that column the extra width so both
        roles stay on one line and the two columns end level. */
     @media (min-width:620px) { .duo-credit span:last-child { padding-left:6%; } }
-    .duo-credit i { display:inline-block; font-style:normal;
-      font-family:var(--mono,ui-monospace,monospace); font-size:clamp(10px,2.7cqw,11px);
-      font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted);
-      line-height:1.5; white-space:nowrap; }
+    /* The captions are the SAME hand as the names sprayed on the shirts - the
+       lettering is artwork, not a typeface, so it ships as an image with the
+       words in alt. Each sits under the person it belongs to. */
+    .duo img.duo-cap { position:static; display:block; width:100%; height:auto;
+      max-width:none; z-index:auto; }
     .duo-badge b { display:block; font-family:var(--mono,ui-monospace,monospace);
       font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
     .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
@@ -299,7 +300,7 @@
       .duo-paper::before, .duo-paper::after { width:86px; height:24px; }
       .duo-paper::before { left:-24px; top:-11px; }
       .duo-paper::after { right:-26px; }
-      .duo-badge { right:-5%; top:48%; bottom:auto; padding:9px 13px; }
+      .duo-badge { right:-8%; top:48%; bottom:auto; padding:9px 13px; }
       .duo-badge b { font-size:10px; }
       .duo-badge span { font-size:10.5px; }
       .svc-row { grid-template-columns:60px 1fr; }
@@ -449,14 +450,14 @@
       <span class="duo-paper" aria-hidden="true"></span>
       <span class="duo-shot">
         <picture>
-          <source srcset="assets/about/founders-1228-85312a4a.webp" type="image/webp">
-          <img src="assets/about/founders-1228-85312a4a.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="988" decoding="async" loading="lazy">
+          <source srcset="assets/about/founders-1228-2485c68f.webp" type="image/webp">
+          <img src="assets/about/founders-1228-2485c68f.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="988" decoding="async" loading="lazy">
         </picture>
         <span class="duo-badge" aria-hidden="true"><b>Two founders</b></span>
       </span>
       <figcaption class="duo-credit">
-        <span><i>Content and social</i></span>
-        <span><i>Ads, retention, tracking</i></span>
+        <span><img class="duo-cap" src="assets/about/cap-diego-19acd34c.png" alt="Content and social" width="1000" height="161" decoding="async" loading="lazy"></span>
+        <span><img class="duo-cap" src="assets/about/cap-law-aa9da1ef.png" alt="Ads, retention, tracking" width="1000" height="155" decoding="async" loading="lazy"></span>
       </figcaption>
     </figure>
 
