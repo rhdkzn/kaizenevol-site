@@ -91,5 +91,33 @@ ok('funnel name is whitelisted as a slug (no path traversal into the fetch)',
    /\^\[a-z0-9-\]\{1,40\}\$/.test(host));
 ok('host loads the engine', /funnel-engine\.js/.test(host));
 
+
+/* ── telemetry ────────────────────────────────────────────────────────────────
+   The rule worth guarding is privacy, not plumbing: a step beacon must carry which
+   step was reached and never what was typed. If someone later "helpfully" adds the
+   answers to the payload, that widens our processor surface silently. */
+const eng = engine;
+ok('engine emits a step view', /emit\(this\.spec, 'view'/.test(eng));
+ok('engine emits back, submit and complete', /'back'/.test(eng) && /'submit'/.test(eng) && /'complete'/.test(eng));
+/* Scoped to the emit() body itself. The first version of this check matched "emit"
+   anywhere within 900 chars of `data` and fired on ordinary code — a guard that cries
+   wolf is one you learn to skip, which is the failure it exists to prevent. */
+const _es = eng.indexOf('function emit(');
+const emitBody = _es < 0 ? '' : eng.slice(_es, eng.indexOf('function Funnel(', _es));
+ok('emit() exists to be checked', emitBody.length > 100);
+ok('the beacon body carries NO answer content',
+   emitBody.length > 100 && emitBody.indexOf('.data') === -1);
+ok('telemetry cannot break the funnel (errors swallowed)',
+   /catch \(e\) \{ \/\* telemetry never breaks the funnel \*\/ \}/.test(eng));
+ok('uses sendBeacon so a mid-funnel close still records', /navigator\.sendBeacon/.test(eng));
+
+const api = readFileSync('api/funnel-event.js', 'utf8');
+ok('endpoint whitelists the event name', /EVENTS\.includes\(event\)/.test(api));
+ok('endpoint validates the funnel slug', /\^\[a-z0-9-\]\{1,40\}\$/.test(api));
+ok('endpoint validates the session id', /\^\[A-Za-z0-9_-\]\{6,40\}\$/.test(api));
+ok('endpoint stores no answer fields',
+   !/(businessName|email|contactName|revenue|costShare|adspend|trade)/.test(api.replace(/\/\*[\s\S]*?\*\//g, '')));
+ok('endpoint does not require the service-role key', /SUPABASE_SERVICE_ROLE_KEY \|\| SUPABASE_ANON_KEY/.test(api));
+
 console.log(fails ? `\n${fails} check(s) failed` : '\nfunnel engine: spec matches the live page, read-back pinned');
 process.exit(fails ? 1 : 0);

@@ -82,6 +82,38 @@
     });
   }
 
+  /* ── Telemetry ───────────────────────────────────────────────────────────────
+     Which step a visit reached, never what they typed. Fire-and-forget: a failed beacon
+     must never be able to cost a lead, so every call swallows its own errors and nothing
+     downstream waits on it. */
+  function sessionId() {
+    try {
+      var k = 'ke_funnel_sid', v = sessionStorage.getItem(k);
+      if (!v) { v = Math.random().toString(36).slice(2, 10) + Date.now().toString(36); sessionStorage.setItem(k, v); }
+      return v;
+    } catch (e) { return 'nostore' + Date.now().toString(36); }
+  }
+
+  function emit(spec, event, stepKey, stepIndex, totalSteps) {
+    try {
+      var body = JSON.stringify({
+        funnel: spec.name, event: event, stepKey: stepKey || null,
+        stepIndex: typeof stepIndex === 'number' ? stepIndex : null,
+        totalSteps: typeof totalSteps === 'number' ? totalSteps : null,
+        session: sessionId(),
+        attribution: global.keAttribution ? global.keAttribution() : null
+      });
+      /* sendBeacon survives the page being closed mid-funnel, which is exactly the
+         visit we most want to have recorded. fetch is the fallback. */
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/funnel-event', new Blob([body], { type: 'application/json' }));
+      } else {
+        fetch('/api/funnel-event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true })
+          .catch(function () {});
+      }
+    } catch (e) { /* telemetry never breaks the funnel */ }
+  }
+
   function Funnel(spec, root) {
     this.spec = spec;
     this.root = root;
@@ -168,7 +200,7 @@
     this.form = form; this.done = done; this.err = err; this.go = go; this.back = back;
 
     go.addEventListener('click', function () { self.next(); });
-    back.addEventListener('click', function () { self.capture(); if (self.i > 0) { self.i--; self.render(); } });
+    back.addEventListener('click', function () { self.capture(); if (self.i > 0) { emit(self.spec, 'back', self.spec.steps[self.i].key, self.i, self.steps.length); self.i--; self.render(); } });
     form.addEventListener('submit', function (e) { e.preventDefault(); self.next(); });
     form.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') { e.preventDefault(); self.next(); }
@@ -192,6 +224,10 @@
 
   Funnel.prototype.render = function () {
     var self = this;
+    if (this.seen !== this.i) {
+      this.seen = this.i;
+      emit(this.spec, 'view', this.spec.steps[this.i].key, this.i, this.steps.length);
+    }
     this.steps.forEach(function (s, n) { s.classList.toggle('on', n === self.i); });
     this.err.textContent = '';
     this.back.hidden = this.i === 0;
@@ -225,6 +261,7 @@
   Funnel.prototype.send = function () {
     var self = this, spec = this.spec;
     this.go.disabled = true; this.err.textContent = ''; this.go.textContent = 'Sending…';
+    emit(spec, 'submit', null, this.steps.length - 1, this.steps.length);
     var body = {};
     Object.keys(spec.payload || {}).forEach(function (k) { body[k] = fill(spec.payload[k], self.data); });
     body.attribution = global.keAttribution ? global.keAttribution() : null;
@@ -236,6 +273,7 @@
         self.form.hidden = true;
         var c = document.getElementById('count'); if (c) c.textContent = '';
         self.readBack();
+        emit(spec, 'complete', null, self.steps.length, self.steps.length);
         self.done.hidden = false;
         var h = self.done.querySelector('h1'); if (h && h.focus) h.focus();
       })
