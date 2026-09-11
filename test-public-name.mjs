@@ -8,7 +8,10 @@
 import { chromium } from 'playwright';
 import { readdirSync, readFileSync, existsSync } from 'fs';
 const BASE = process.env.BASE || 'http://localhost:8899';
-const pages = readdirSync('.').filter(f => f.endsWith('.html'));
+const WORDS = /\b(rahaid|founding)\b/i;
+/* A signed client's own pages legitimately name the terms they agreed to. */
+const EXEMPT = new Set(['onboard.html', 'portal.html', 'crm.html', 'dashboard.html']);
+const pages = readdirSync('.').filter(f => f.endsWith('.html') && !EXEMPT.has(f));
 /* Served from the root but not HTML, so the DOM pass never sees them. */
 const plain = ['llms.txt', 'robots.txt', 'sitemap.xml'].filter(f => existsSync(f));
 const b = await chromium.launch({executablePath:'/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
@@ -17,8 +20,8 @@ let hits = 0;
 for (const f of pages) {
   const p = await ctx.newPage();
   await p.goto(BASE + '/' + f, {waitUntil:'domcontentloaded'});
-  const found = await p.evaluate(() => {
-    const re = /\brahaid\b/i, out = [];
+  const found = await p.evaluate((src) => {
+    const re = new RegExp(src, 'i'), out = [];
     const skip = t => /rahaid-crm|calendly\.com\/rahaid/i.test(t);
     // every text node in the tree EXCEPT script and style: hidden elements count
     // (innerText skips them, which is how a name in onboard.html's hidden block
@@ -35,20 +38,19 @@ for (const f of pages) {
         if (v && re.test(v) && !skip(v)) out.push(`${a}: ${v.slice(0, 90)}`);
       }
     return out;
-  });
-  if (found.length) { hits += found.length; console.log(`RENDERS "Rahaid"  ${f}`); found.forEach(x => console.log('   ' + x)); }
+  }, WORDS.source);
+  if (found.length) { hits += found.length; console.log(`RENDERS a private word  ${f}`); found.forEach(x => console.log('   ' + x)); }
   await p.close();
 }
 await b.close();
 
 for (const f of plain) {
-  const re = /\brahaid\b/i;
   for (const line of readFileSync(f, 'utf8').split('\n')) {
-    if (re.test(line) && !/rahaid-crm|calendly\.com\/rahaid/i.test(line)) {
-      hits++; console.log(`CARRIES "Rahaid"  ${f}`); console.log('   ' + line.trim().slice(0, 90));
+    if (WORDS.test(line) && !/rahaid-crm|calendly\.com\/rahaid/i.test(line)) {
+      hits++; console.log(`CARRIES a private word  ${f}`); console.log('   ' + line.trim().slice(0, 90));
     }
   }
 }
 
-console.log(hits === 0 ? `clean: ${pages.length} pages + ${plain.length} text file(s), none render the name` : `${hits} occurrence(s) still visible`);
+console.log(hits === 0 ? `clean: ${pages.length} pages + ${plain.length} text file(s), no private word reaches a reader` : `${hits} occurrence(s) still visible`);
 process.exit(hits === 0 ? 0 : 1);
