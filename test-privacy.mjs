@@ -31,7 +31,9 @@ const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
 /* Art. 13(1)(a)+(b) — who the controller is and how to reach them. */
-check('names a contact for data questions', /rahaid@kaizenevol\.com/.test(html))
+/* diego@ since 2026-09-11 — Rahaid's address is off every public surface.
+   The clause still needs SOME reachable address, which is what this asserts. */
+check('names a contact for data questions', /diego@kaizenevol\.com/.test(html))
 check('names KaizenEvol as the controller', /kaizenevol/.test(t))
 
 /* Art. 13(1)(c) — the lawful basis, stated, not implied. */

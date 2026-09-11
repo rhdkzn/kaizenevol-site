@@ -183,7 +183,7 @@
         <button class="btn-quiet" id="paid-check" onclick="checkPaid(true)">I've paid — check</button>
       </div>
       <div class="err" id="r-msg"></div>
-      <p class="why" id="r-nolink" style="display:none">The payment link for your rate is being set up. Rahaid will send it to you directly; nothing else is needed from you right now.</p>
+      <p class="why" id="r-nolink" style="display:none">The payment link for your rate is being set up. Law will send it to you directly; nothing else is needed from you right now.</p>
     </section>
 
     <!-- 4 · LIVE -->
@@ -193,11 +193,11 @@
       <p class="lead">Agreement signed, retainer set up. You're a client.</p>
       <h2>What happens next</h2>
       <ul class="list">
-        <li><span class="n">01</span><span>Rahaid emails you within a day to agree the <b>baseline</b> in writing and collect access.</span></li>
+        <li><span class="n">01</span><span>Law emails you within a day to agree the <b>baseline</b> in writing and collect access.</span></li>
         <li><span class="n">02</span><span>We build the drop calendar and the first content batch, and you approve it.</span></li>
         <li><span class="n">03</span><span>Go-live. Drop one is measurement; the numbers come to you every week.</span></li>
       </ul>
-      <p class="why">Your client space is at <a href="/portal">kaizenevol.com/portal</a> — sign in with this email once Rahaid has switched it on. Questions any time: <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a>. A copy of your signed agreement was emailed to you.</p>
+      <p class="why">Your client space is at <a href="/portal">kaizenevol.com/portal</a> — sign in with this email once Law has switched it on. Questions any time: <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a>. A copy of your signed agreement was emailed to you.</p>
     </section>
 
   </div>
@@ -205,7 +205,7 @@
 
 <footer>
   <div class="container">
-    <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a> &nbsp;&middot;&nbsp;
     <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; &copy; 2026 KaizenEvol
   </div>
 </footer>
@@ -294,7 +294,7 @@
     try{
       var r = await fetch('/api/onboard?op=status&t=' + encodeURIComponent(token)); var j = await r.json();
       if(j.status==='paid'||j.status==='live'){ view = j; clearInterval(polling); showStep(4); return; }
-      if(manual){ msg.textContent = j.stripeChecked===false ? 'Payment checking is not switched on yet. If you have paid, you are done — Rahaid will confirm by email.' : 'No payment found yet. If you just paid, give it a minute and check again.'; }
+      if(manual){ msg.textContent = j.stripeChecked===false ? 'Payment checking is not switched on yet. If you have paid, you are done — Law will confirm by email.' : 'No payment found yet. If you just paid, give it a minute and check again.'; }
     }catch(e){ if(manual) msg.textContent = 'No connection. Try again.'; }
   };
   function startPolling(){ clearInterval(polling); polling = setInterval(function(){ if(cur===3) checkPaid(false); }, 20000); }

@@ -30,7 +30,10 @@ for (const f of files) {
   const mails = [...new Set([...block.matchAll(/mailto:([^"?]+)/g)].map(m => m[1]))].sort()
   const wa = /id="waOpen"/.test(block)
 
-  check(`${f}: footer offers rahaid@`, mails.includes('rahaid@kaizenevol.com'), mails.join(', ') || 'no email at all')
+  /* 2026-09-11, Rahaid: "keep out my email from the website". The footer now
+     carries diego@ only, and test-public-name.mjs fails if his address or his
+     name reaches any reader-facing surface at all. */
+  check(`${f}: footer does not carry rahaid@`, !mails.includes('rahaid@kaizenevol.com'), mails.join(', '))
   check(`${f}: footer offers diego@`, mails.includes('diego@kaizenevol.com'), mails.join(', ') || 'no email at all')
   /* brand/DESIGN.md: every public CTA opens the WhatsApp business line. */
   check(`${f}: footer offers the WhatsApp line`, wa)
