@@ -57,7 +57,7 @@ export function agreementText(d) {
   const clientEntity = d.clientEntity ? ` (${d.clientEntity})` : '';
   const clientAddr = d.clientAddress ? `, of ${d.clientAddress}` : '';
   L.push(`Between Rahaid and Diego, trading together as KaizenEvol ("the Agency"), Bristol, United Kingdom, and ${brand}${clientEntity}${clientAddr} ("the Client"), signed for the Client by ${founder}, who confirms they are authorised to sign for the Client.`);
-  L.push(`Version 2026-09-06 · Canon FIN-PRI-004, MKT-SOL-001`);
+  L.push(`Version 2026-09-11 · Canon FIN-PRI-004, MKT-SOL-001`);
   L.push(``);
   L.push(`RECITALS`);
   L.push(`WHEREAS the Agency runs content, paid advertising, email and SMS, and growth measurement for creative brands and artists; and WHEREAS the Client wishes to engage the Agency for those services on the terms below; NOW THEREFORE the parties agree as follows.`);
@@ -88,11 +88,16 @@ export function agreementText(d) {
   L.push(`5. WHAT THE CLIENT PROVIDES`);
   L.push(`5.1 Access to the Client's Meta Business Manager and pixel, store platform and email/SMS platform; product and footage the Agency can shoot or edit; timely approvals; and the drop calendar.`);
   L.push(`5.2 The Client warrants that it owns or is licensed to use everything it supplies and that its products, pricing and claims are lawful.`);
+  L.push(`5.3 The Agency warrants that it will perform the services with reasonable care and skill and in compliance with the laws that apply to them. This does not create a guarantee of any outcome, which clause 1.5 excludes.`);
+  L.push(`5.4 Approvals and access are time-critical. Where the Client does not give an access, approval, asset or decision the Agency has asked for in writing, the Agency is not responsible for the delay or its effect on results, any dates agreed move by at least the length of the delay, and the retainer continues to be payable in full for the period.`);
   L.push(``);
   L.push(`6. TERM AND ENDING`);
   L.push(`6.1 This Agreement begins on ${start} and runs for an initial term of three months. After that it continues month to month until it is ended under clause 6.2.`);
   L.push(`6.2 Either party may end it by not less than 30 days' written notice to the email addresses in clause 11.4, but no ending may take effect before the end of the initial term. Notice may be given during the initial term to take effect at the end of it. It ends at the end of the last month paid for, and the Agency cancels the recurring charge on that date.`);
   L.push(`6.3 Ending does not affect rights already accrued: fees already due remain payable, the retainer for the initial term remains payable in full, and any growth-step bonus earned before ending remains payable once verified.`);
+  L.push(`6.4 Either party may end this Agreement immediately by written notice if the other is in material breach of it and, where the breach can be put right, has not put it right within 30 days of being asked to in writing. Clause 6.2's notice period and the initial term do not apply to an ending under this clause.`);
+  L.push(`6.5 If a payment due under this Agreement is not made within 14 days of its due date, the Agency may give the Client written notice and, if it is still unpaid 7 days after that notice, suspend the services until it is paid. Suspension does not reduce what is owed, does not extend the term, and is without prejudice to clause 6.4. The Agency will not suspend over an amount the Client is disputing in good faith and in writing.`);
+  L.push(`6.6 On ending, and once everything due has been paid: the Client keeps its own accounts, advertising account, pixel and audience data, subscriber list, store and the content assigned to it under clause 7.1; the Agency will hand over the working files and any campaign, flow or automation it built inside the Client's own platforms, remove its own access within 14 days, and is not obliged to keep providing anything after the last day of the term. Each party then deals with the other's confidential information under clause 10.`);
   L.push(``);
   L.push(`7. OWNERSHIP`);
   L.push(`7.1 The Client's brand, marks, products and audience are the Client's. The Agency assigns to the Client, with full title guarantee, all present and future copyright in the content it produces for the Client under this Agreement, effective on payment for the month in which that content was produced.`);
@@ -109,9 +114,11 @@ export function agreementText(d) {
   L.push(``);
   L.push(`10. CONFIDENTIALITY`);
   L.push(`10.1 Each party keeps the other's non-public information confidential, uses it only for this Agreement, and returns or destroys it on request when this Agreement ends. Nothing prevents disclosure required by law.`);
+  L.push(`10.2 These obligations continue for three years after this Agreement ends, and for as long as the information remains a trade secret in the case of a trade secret. Each party accepts that damages alone may not be an adequate remedy for a breach of this clause and that the other may seek an injunction or other equitable relief in addition to any other remedy.`);
   L.push(``);
   L.push(`11. GENERAL`);
   L.push(`11.1 This Agreement is governed by the law of England and Wales and its courts have exclusive jurisdiction. 11.2 It is the entire agreement between the parties on its subject; any change must be agreed in writing (email is enough) by both parties. 11.3 It may be signed electronically, and an electronic signature has the same effect as a handwritten one. 11.4 Notices go by email: to the Agency at rahaid@kaizenevol.com, to the Client at ${d.email || 'the email address the Client signed with'}. 11.5 Nothing in this Agreement creates a partnership, joint venture or employment relationship between the parties, and no third party may enforce any of its terms under the Contracts (Rights of Third Parties) Act 1999.`);
+  L.push(`11.6 The Agency is not engaged exclusively. It may work for other clients, including others in the Client's market, provided it complies with clause 10. 11.7 Neither party may assign or transfer this Agreement without the other's written consent, which will not be unreasonably withheld; the Agency may use subcontractors to deliver the services and remains responsible for their work. 11.8 A failure or delay in enforcing any term is not a waiver of it, and waiving a breach once does not waive any later breach. 11.9 If any term is held unenforceable it is severed and the rest of this Agreement continues in force; if severing it would defeat the parties' original intention, they will replace it with an enforceable term of equivalent effect. 11.10 Neither party is liable for failure to perform caused by something beyond its reasonable control, including fire, flood, epidemic, war, civil disruption, industrial action, failure of utilities or communications networks, or the serious illness of a person the affected party depends on to perform; the affected party will tell the other as soon as it reasonably can and the obligations affected are suspended for as long as the cause lasts. If it lasts more than two months either party may end this Agreement under clause 6.4 without the cure period.`);
   L.push(``);
   L.push(`SIGNED for the Agency by Rahaid and Diego, KaizenEvol, on ${d.issuedAt ? longDate(d.issuedAt) : longDate(new Date().toISOString().slice(0, 10))}, and issued to the Client for signature.`);
   return L.join('\n');
@@ -130,7 +137,10 @@ export function payUrl(row) {
 
 function publicView(row) {
   const d = row.data || {};
-  const text = agreementText(d);
+  /* A signed row serves the text that was SIGNED, never a fresh render. The signature binds
+   * to a hash of the words as they stood that day; re-rendering from current canon would show
+   * a signed client a document their own hash does not match. Unsigned rows render live. */
+  const text = (d.signature && d.signature.text) ? d.signature.text : agreementText(d);
   const sig = d.signature ? { name: d.signature.name, at: d.signature.at, hash: d.signature.hash } : null;
   const tier = d.founding ? 'founding' : 'standard';
   return {

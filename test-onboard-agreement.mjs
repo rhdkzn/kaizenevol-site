@@ -78,6 +78,23 @@ ok('third-party rights excluded', /Contracts \(Rights of Third Parties\) Act 199
 ok('signed for the Agency at issue', /SIGNED for the Agency by Rahaid and Diego/.test(t1) && t1.includes('6 September 2026'));
 ok('issue date is deterministic when issuedAt is set', agreementText(founding) === agreementText({ ...founding }));
 
+/* The 2026-09-11 clause additions. These exist because the agreement had no way to stop
+ * work on non-payment, nothing to save the rest of the contract if one clause failed, and
+ * no offboarding terms. Pin them so a later edit cannot quietly drop them again. */
+ok('6.4 termination for material breach, 30-day cure', /material breach/.test(t1) && /within 30 days of being asked/.test(t1));
+ok('6.5 suspension for non-payment, with a good-faith dispute carve-out', /suspend the services until it is paid/.test(t1) && /disputing in good faith/.test(t1));
+ok('6.6 offboarding: client keeps its assets, Agency removes access', /remove its own access within 14 days/.test(t1) && /keeps its own accounts/.test(t1));
+ok('5.3 Agency warrants reasonable care and skill', /reasonable care and skill/.test(t1));
+ok('5.4 client delay does not fall on the Agency', /not responsible for the delay/.test(t1) && /retainer continues to be payable/.test(t1));
+ok('10.2 confidentiality survives 3 years + trade secrets', /three years after this Agreement ends/.test(t1) && /remains a trade secret/.test(t1));
+ok('10.2 injunctive relief available', /inju(nction|nctive)/.test(t1));
+ok('11.6 non-exclusive engagement', /is not engaged exclusively/.test(t1));
+ok('11.7 no assignment without consent; subcontractors allowed', /Neither party may assign or transfer/.test(t1) && /remains responsible for their work/.test(t1));
+ok('11.8 no waiver by delay', /is not a waiver of it/.test(t1));
+ok('11.9 severability', /it is severed and the rest of this Agreement continues/.test(t1));
+ok('11.10 force majeure', /beyond its reasonable control/.test(t1));
+ok('version line bumped', /Version 2026-09-11/.test(t1));
+
 for (const dead of ['2,500', '60 days', 'territory', 'AI front office', 'KaizenReach', 'KaizenDesk', 'renovation', 'guaranteed or your money back']) {
   ok('reno-era term absent: ' + dead, !t1.toLowerCase().includes(dead.toLowerCase()));
 }
@@ -85,6 +102,18 @@ for (const dead of ['2,500', '60 days', 'territory', 'AI front office', 'KaizenR
 const tok = newToken();
 ok('token is base64url, 32 chars', /^[A-Za-z0-9_-]{32}$/.test(tok), tok);
 ok('tokens differ', newToken() !== tok);
+
+/* A signed row must serve the SIGNED text, not a fresh render. Added 2026-09-11 after the
+ * clause additions: the signature binds to a hash of that day's words, so re-rendering from
+ * current canon would show a signed client a document their own hash does not match. */
+{
+  const mod = await import('./api/onboard.js');
+  const src = await (await import('node:fs/promises')).readFile('./api/onboard.js', 'utf8');
+  ok('publicView prefers the stored signature text',
+     /d\.signature && d\.signature\.text\) \? d\.signature\.text : agreementText\(d\)/.test(src));
+  ok('signing stores the text alongside the hash', /const signature = \{[^}]*hash, text \}/.test(src));
+  void mod;
+}
 
 console.log(fails ? `\n${fails} check(s) failed` : '\nall onboarding agreement checks passed');
 process.exit(fails ? 1 : 0);
