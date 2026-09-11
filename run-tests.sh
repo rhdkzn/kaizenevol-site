@@ -16,6 +16,22 @@ cd "$(dirname "$0")"
 filter="${1:-}"
 red=(); green=0
 
+# Preflight. Most of these tests drive a browser against BASE, and when that is not
+# up they die with an uncaught exception — 14 of them at once on 2026-09-11, every
+# one reading like a fresh site defect rather than a missing server. That is exactly
+# the failure verification.md now bans: a check that cannot run must SAY so, never
+# report a verdict. So the runner answers it once, up front, instead of 14 tests
+# each answering it wrong.
+BASE="${BASE:-http://localhost:8899}"
+if ! curl -fsS -o /dev/null --max-time 10 "$BASE/index.html" 2>/dev/null; then
+  echo "CANNOT RUN — nothing is serving $BASE"
+  echo "  The suite was not run. This is the harness, not the site."
+  echo "  Local:  npx --yes http-server -p 8899 -s ."
+  echo "  Or:     BASE=https://kaizenevol.com ./run-tests.sh"
+  exit 2
+fi
+echo "serving $BASE"
+
 for t in test-*.mjs; do
   [ -n "$filter" ] && [[ "$t" != *"$filter"* ]] && continue
   out=$(timeout 300 node "$t" 2>&1); rc=$?

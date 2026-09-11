@@ -208,7 +208,13 @@ for (const name of PAGES) {
     // land, then come back to the page under test, or every check after this one runs in
     // a destroyed execution context. (First run of this block crashed the whole suite on
     // index.html for exactly that reason - the script working is what broke the test.)
-    await page.waitForTimeout(260);
+    // Was a fixed 260ms for a navigation queued 170ms out. Under any load that timer can
+    // land later than the wait, and then location.assign() fires DURING the goto below —
+    // "Navigation ... is interrupted by another navigation", an uncaught throw that takes
+    // the whole suite with it. Measured at roughly one run in three on an unchanged tree,
+    // which is long enough to have been read as a real regression twice today.
+    // Wait for the navigation to ACTUALLY land rather than for a duration we hope covers it.
+    await page.waitForURL((u) => !u.pathname.endsWith(name), { timeout: 3000 }).catch(() => {});
     await page.waitForLoadState('domcontentloaded').catch(() => {});
     await page.goto(`${BASE}/${name}`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(320);
