@@ -137,7 +137,10 @@ export function payUrl(row) {
 
 function publicView(row) {
   const d = row.data || {};
-  const text = agreementText(d);
+  /* A signed row serves the text that was SIGNED, never a fresh render. The signature binds
+   * to a hash of the words as they stood that day; re-rendering from current canon would show
+   * a signed client a document their own hash does not match. Unsigned rows render live. */
+  const text = (d.signature && d.signature.text) ? d.signature.text : agreementText(d);
   const sig = d.signature ? { name: d.signature.name, at: d.signature.at, hash: d.signature.hash } : null;
   const tier = d.founding ? 'founding' : 'standard';
   return {

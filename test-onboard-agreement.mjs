@@ -103,5 +103,17 @@ const tok = newToken();
 ok('token is base64url, 32 chars', /^[A-Za-z0-9_-]{32}$/.test(tok), tok);
 ok('tokens differ', newToken() !== tok);
 
+/* A signed row must serve the SIGNED text, not a fresh render. Added 2026-09-11 after the
+ * clause additions: the signature binds to a hash of that day's words, so re-rendering from
+ * current canon would show a signed client a document their own hash does not match. */
+{
+  const mod = await import('./api/onboard.js');
+  const src = await (await import('node:fs/promises')).readFile('./api/onboard.js', 'utf8');
+  ok('publicView prefers the stored signature text',
+     /d\.signature && d\.signature\.text\) \? d\.signature\.text : agreementText\(d\)/.test(src));
+  ok('signing stores the text alongside the hash', /const signature = \{[^}]*hash, text \}/.test(src));
+  void mod;
+}
+
 console.log(fails ? `\n${fails} check(s) failed` : '\nall onboarding agreement checks passed');
 process.exit(fails ? 1 : 0);
