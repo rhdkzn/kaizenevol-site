@@ -115,6 +115,29 @@
     .sect-head p { font-size:15px; color:var(--muted); max-width:360px; }
 
     /* ============ FOUNDERS ============ */
+
+    /* THE FOUNDER SHOT — a white note tacked to the page (2026-09-10).
+       The paper is a sibling element, not a ::before on .duo: the figure has to
+       sit ON it and break BOTH its edges, which needs the two to be independent
+       in the stack. Heads clear the top, Diego's elbow clears the bottom; that
+       overhang is the whole reason it reads as layered rather than pasted.
+       Inset percentages, not pixels, so the geometry survives to phone width. */
+    .duo { position:relative; width:min(480px,100%); margin:0 auto 72px; }
+    .duo picture, .duo img { display:block; width:100%; height:auto;
+      position:relative; z-index:2; }
+    .duo-paper { position:absolute; z-index:1; left:-17%; right:-17%; top:15%; bottom:7%;
+      background:#FCFBF9; border:1px solid var(--hairline);
+      transform:rotate(-2.1deg);
+      box-shadow:0 2px 6px rgba(35,33,30,0.10), 0 18px 42px rgba(35,33,30,0.13); }
+    /* Two pins, deliberately not a matching pair - a level pair is the thing that
+       made the first version read like a slide. */
+    .duo-paper::before, .duo-paper::after { content:''; position:absolute;
+      width:15px; height:15px; border-radius:50%;
+      background:radial-gradient(circle at 34% 30%, #8A857C 0 20%, var(--text) 62%);
+      box-shadow:0 3px 7px rgba(35,33,30,0.34); }
+    .duo-paper::before { top:15px; left:19px; }
+    .duo-paper::after  { top:29px; right:17px; }
+    .duo figcaption { position:relative; z-index:2; text-align:center; margin-top:26px; }
     .team { background:var(--void-2); border-top:1px solid var(--hairline); }
     .founders-grid { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
     .founder-card { border-top:1px solid var(--text); padding-top:24px; }
@@ -208,6 +231,8 @@
     /* ============ RESPONSIVE ============ */
     @media(max-width:960px) {
       .founders-grid { grid-template-columns:1fr; gap:36px; }
+      .duo { width:min(330px,100%); margin-bottom:56px; }
+      .duo-paper { left:-9%; right:-9%; }
       .svc-row { grid-template-columns:60px 1fr; }
       .svc-link { grid-column:2; }
     }
@@ -346,6 +371,15 @@
       <h2>Meet the <em>team</em></h2>
       <p>Small by design. You will not be handed to an account manager or a junior. The two people who make your work are the two people you talk to. We&rsquo;re both behind the camera and both in the edit &mdash; Diego manages what you see, Rahaid runs everything underneath it.</p>
     </div>
+    <figure class="duo">
+      <span class="duo-paper" aria-hidden="true"></span>
+      <picture>
+        <source srcset="assets/about/founders-1200.webp" type="image/webp">
+        <img src="assets/about/founders-1200.png" alt="Diego and Rahaid, the two founders of KaizenEvol" width="1200" height="1101" decoding="async" loading="lazy">
+      </picture>
+      <figcaption class="smallcaps">Diego, front. Rahaid, behind him.</figcaption>
+    </figure>
+
     <div class="founders-grid">
 
       <div class="founder-card">
