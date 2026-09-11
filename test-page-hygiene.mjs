@@ -53,6 +53,9 @@ const check = (n, pass, d) => r.push([n, pass, d])
  * this suite noisy enough to start being skipped. */
 const PAGES = (process.env.PAGES || [
   'index.html','about.html','what-we-run.html','apply.html','booked.html','privacy.html','404.html',
+  // 2026-09-11: kaizen-loop and the three answer pages were never added here, so nothing
+  // watched them for overflow, favicon, description or the copyright year either.
+  'kaizen-loop.html','tried-ads-before.html','ads-for-musicians.html','can-i-do-this-myself.html',
       ].join(',')).split(',')
 
 /* Widths that actually matter. 375 is the narrowest phone still in real use;
@@ -107,6 +110,42 @@ for (const p of PAGES) {
       `body background is ${o.styled} — page may be unstyled, overflow result would be meaningless`)
     check(`${p} @${v.n}px: no horizontal overflow`, o.over <= 0,
       `scrollWidth exceeds clientWidth by ${o.over}px — ${o.culprits.join(' | ')}`)
+
+    /* The canvas under the page. Below the footer a PHONE paints the canvas, not the
+       page — the home-indicator safe area, the toolbar collapsing, the rubber band past
+       the end. With html transparent the canvas falls back to the BODY colour, which is
+       lighter than the footer band, so every page ended in a pale strip under a darker
+       footer. Rahaid, 2026-09-11: "the white page at the bottom the website on each
+       page". index.html had set this since it was built and was the one page that never
+       showed it, which is exactly why it went unnoticed everywhere else.
+       Invisible on desktop and in every full-page screenshot, so it needs a real check. */
+    const canvas = await page.evaluate(() => {
+      const toRgb = (c) => (c.match(/[\d.]+/g) || []).map(Number)
+      const over = (fg, bg) => {           // composite a semi-transparent band on the body
+        const a = fg.length > 3 ? fg[3] : 1
+        return [0, 1, 2].map((i) => Math.round(fg[i] * a + bg[i] * (1 - a)))
+      }
+      const body = toRgb(getComputedStyle(document.body).backgroundColor)
+      const f = document.querySelector('footer')
+      let band = body
+      if (f) {
+        let el = f
+        while (el) {
+          const c = getComputedStyle(el).backgroundColor
+          if (c !== 'rgba(0, 0, 0, 0)') { band = over(toRgb(c), body); break }
+          el = el.parentElement
+        }
+      }
+      const html = getComputedStyle(document.documentElement).backgroundColor
+      return { html, htmlRgb: toRgb(html), band,
+               transparent: html === 'rgba(0, 0, 0, 0)' || html === 'transparent' }
+    })
+    check(`${p} @${v.n}px: the canvas is painted`, !canvas.transparent,
+      'html has no background, so a phone paints the body colour below the footer')
+    const drift = canvas.transparent ? 999
+      : Math.max(...[0, 1, 2].map((i) => Math.abs(canvas.htmlRgb[i] - canvas.band[i])))
+    check(`${p} @${v.n}px: the canvas matches the last band`, drift <= 4,
+      `html is ${canvas.html}, last band composites to rgb(${canvas.band.join(', ')}) — off by ${drift}`)
     await ctx.close()
   }
 }

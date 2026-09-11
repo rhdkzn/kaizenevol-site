@@ -45,7 +45,13 @@
     --max-w:     1140px;
   }
 
-  html { scroll-behavior:smooth; overflow-x:clip; }
+  /* The phone's canvas. Below the footer a phone paints the CANVAS, not the page — the
+     home-indicator safe area, the toolbar collapsing, the rubber band past the end. With
+     html transparent that falls back to the BODY colour, which is lighter than the footer
+     band, so every page ended in a pale strip under a darker footer. index.html has set
+     this since it was built and is the one page that never showed it (Rahaid, 2026-09-11:
+     "the white page at the bottom the website on each page"). */
+    html { scroll-behavior:smooth; overflow-x:clip; background:var(--void-2); }
   body { background:var(--void); color:var(--text); font-family:var(--sans); line-height:1.7; overflow-x:hidden; }
   p { text-wrap:pretty; }
   .container { max-width:var(--max-w); margin:0 auto; padding:0 28px; }
