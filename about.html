@@ -31,6 +31,10 @@
     @font-face { font-family:'Manrope'; font-style:normal; font-weight:500; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
     @font-face { font-family:'Manrope'; font-style:normal; font-weight:600; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
     @font-face { font-family:'Manrope'; font-style:normal; font-weight:700; font-display:swap; src:url('/manrope.woff2') format('woff2'); }
+    /* Fourth face, scoped to the founder photo's tags and nothing else. Sedgwick
+       Ave Display - a handstyle tag, OFL, self-hosted like the other three. See
+       FONT-LICENSES.md. */
+    @font-face { font-family:'Tag'; font-style:normal; font-weight:400; font-display:swap; src:url('/tag.woff2') format('woff2'); }
 
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
@@ -44,6 +48,7 @@
       --accent-2:  #6E6A63;
       --serif:'Newsreader',Georgia,'Times New Roman',serif;
       --sans:      'Manrope', system-ui, sans-serif;
+      --tag:       'Tag', 'Comic Sans MS', cursive;
       --max-w:     1140px;
     }
 
@@ -181,29 +186,60 @@
     .duo-paper::before { top:-17px; left:-40px; transform:rotate(-39deg); }
     .duo-paper::after  { right:-42px; bottom:11%; transform:rotate(-51deg); }
 
-    .duo-badge { position:absolute; z-index:4; right:-11%; bottom:15%;
+    /* The badge is anchored to the PHOTO, not to the figure. It used to be a
+       child of <figure>, whose height includes the caption, so bottom:15% put
+       it straight over the right-hand name on a phone. */
+    .duo-shot { position:relative; display:block; }
+    .duo-badge { position:absolute; z-index:4; right:-5%; bottom:-5%;
       background:var(--text); color:var(--void); padding:11px 17px; border-radius:4px;
       transform:rotate(-2.1deg); box-shadow:0 6px 16px rgba(35,33,30,0.22);
       text-align:left; line-height:1.25; }
-    /* Names and roles under the photo. Two rows on a phone, side by side once
-       there is room; the name in the mono face the site uses for labels, the
-       role in --muted, which is the same pairing as .smallcaps + body copy
-       everywhere else. */
-    .duo-credit { position:relative; z-index:3; margin:28px auto 0; max-width:none;
-      display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-    /* Side by side at EVERY width, in the order they stand: Diego in front on the
+    /* Names tagged just under the bodies, on the paper the photo is taped to, in
+       the marker face. The old version set the NAME in 11px mono and the ROLE in
+       13.5px sans, so the two principals were introduced in the label register
+       and the block read as a photo credit (Rahaid, 2026-09-11: "it doesn't
+       introduce us proper"). The name now carries the weight; the role drops to
+       mono, which is what mono is for.
+       Side by side at EVERY width, in the order they stand: Diego in front on the
        left, Law behind on the right. Two columns read as a KEY to the photo, so
-       they have to match it. Stacked, the mapping is gone - which is what Rahaid
-       saw on his phone 2026-09-11, and the reason the old 620px breakpoint is
-       gone rather than lowered. Name over role, so each column stays narrow
-       enough to sit beside the other at 360px. */
-    .duo-credit { font-size:13.5px; color:var(--muted); line-height:1.5; }
-    .duo-credit span { display:grid; grid-template-columns:1fr; gap:6px;
-      align-items:start; text-align:left; }
-    .duo-credit b { display:block; font-family:var(--mono,ui-monospace,monospace);
-      font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
-      color:var(--text); margin:0; }
-    @media (min-width:620px) { .duo-credit { gap:34px; } }
+       they have to match it - stacked, the mapping is gone. */
+    .duo-credit { position:relative; z-index:3; margin:10px auto 0; max-width:none;
+      display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;
+      container-type:inline-size; }
+    .duo-credit span { display:block; text-align:left; }
+    .duo-credit span:first-child { padding-left:2%; }
+    .duo-credit span:last-child  { padding-left:3%; }
+    /* Law's role is the longer string; give that column the extra width so both
+       roles stay on one line and the two columns end level. */
+    @media (min-width:620px) { .duo-credit span:last-child { padding-left:6%; } }
+    /* Detailing: a white paint halo so each tag lifts off the tiled wall, a hard
+       offset shadow for depth, and a hand-drawn marker underline that overshoots
+       the word at both ends. The underline is an inline SVG stroke rather than a
+       border - a ruler-straight rule would undo the whole thing. */
+    .duo-credit b { position:relative; display:inline-block; font-family:var(--tag);
+      font-weight:400; font-size:clamp(34px,9.4vw,58px); line-height:0.92;
+      letter-spacing:0; text-transform:none; color:var(--text); margin:0 0 8px;
+      transform-origin:left bottom;
+      -webkit-text-stroke:7px var(--void); paint-order:stroke fill;
+      text-shadow:3px 4px 0 rgba(35,33,30,0.18); }
+    .duo-credit b::after { content:''; position:absolute; left:-6%; right:-14%;
+      bottom:-11px; height:14px; -webkit-text-stroke:0;
+      background:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20200%2022'%20preserveAspectRatio%3D'none'%3E%3Cpath%20d%3D'M4%2014%20C44%205%2C%2092%2017%2C%20142%208%20C164%204%2C%20180%209%2C%20196%205'%20fill%3D'none'%20stroke%3D'%2323211E'%20stroke-width%3D'3.6'%20stroke-linecap%3D'round'%2F%3E%3C%2Fsvg%3E")
+        no-repeat center/100% 100%; }
+    .duo-credit span:first-child b { transform:rotate(-3.2deg); }
+    .duo-credit span:last-child  b { transform:rotate(-1.4deg); }
+    /* The role line is the SAME hand, just smaller and quieter - a mono label under
+       a marker tag read as two different people writing (Rahaid, 2026-09-11: "the
+       names and caption still look different"). Same face, same halo, thinner
+       stroke, no shadow, so it sits back without changing register. */
+    .duo-credit i { display:inline-block; margin-top:15px; font-style:normal;
+      font-family:var(--tag); font-size:clamp(12px,4.05cqw,20px); font-weight:400;
+      letter-spacing:0; text-transform:none; color:var(--muted); line-height:1.15;
+      white-space:nowrap;
+      -webkit-text-stroke:4px var(--void); paint-order:stroke fill;
+      transform-origin:left top; }
+    .duo-credit span:first-child i { transform:rotate(-1.6deg); }
+    .duo-credit span:last-child  i { transform:rotate(-0.8deg); }
     .duo-badge b { display:block; font-family:var(--mono,ui-monospace,monospace);
       font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
     .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
@@ -440,14 +476,16 @@
     <figure class="duo">
       <span class="duo-scrap" aria-hidden="true"></span>
       <span class="duo-paper" aria-hidden="true"></span>
-      <picture>
-        <source srcset="assets/about/founders-1228-9ae4ef55.webp" type="image/webp">
-        <img src="assets/about/founders-1228-9ae4ef55.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="988" decoding="async" loading="lazy">
-      </picture>
-      <span class="duo-badge" aria-hidden="true"><b>Two founders</b><span>no account manager</span></span>
+      <span class="duo-shot">
+        <picture>
+          <source srcset="assets/about/founders-1228-9ae4ef55.webp" type="image/webp">
+          <img src="assets/about/founders-1228-9ae4ef55.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="988" decoding="async" loading="lazy">
+        </picture>
+        <span class="duo-badge" aria-hidden="true"><b>Two founders</b><span>no account manager</span></span>
+      </span>
       <figcaption class="duo-credit">
-        <span><b>Diego</b>Content and social.</span>
-        <span><b>Law</b>Ads, email and tracking.</span>
+        <span><b>Diego</b><i>Content and social</i></span>
+        <span><b>Law</b><i>Ads, retention, tracking</i></span>
       </figcaption>
     </figure>
 
