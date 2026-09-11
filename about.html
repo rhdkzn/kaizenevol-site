@@ -125,6 +125,13 @@
     .duo { position:relative; width:min(480px,100%); margin:0 auto 76px; }
     .duo picture, .duo img { display:block; width:100%; height:auto;
       position:relative; z-index:3; }
+    /* The image carries an ANGULAR white die-cut edge baked into its alpha -
+       Brand Lab's technique, measured in MKT-BRD-004. Theirs reads because
+       their ground is dark teal; ours is near-white paper, so the separation
+       has to come from a shadow that follows the die-cut shape. drop-shadow
+       does exactly that; box-shadow would draw a rectangle. */
+    .duo img { filter:drop-shadow(0 2px 3px rgba(35,33,30,0.20))
+                      drop-shadow(0 12px 20px rgba(35,33,30,0.14)); }
 
     /* A SCRAPBOOK PAGE, not a framed photo (2026-09-11).
        Three layers, each doing one job:
@@ -146,6 +153,11 @@
 
     .duo-paper { position:absolute; z-index:2; left:-17%; right:-17%; top:15%; bottom:16%;
       background:
+        linear-gradient(to right, transparent 17%, var(--hairline) 17% calc(17% + 1px), transparent calc(17% + 1px)),
+        linear-gradient(to right, transparent 43%, var(--hairline) 43% calc(43% + 1px), transparent calc(43% + 1px)),
+        linear-gradient(to right, transparent 79%, var(--hairline) 79% calc(79% + 1px), transparent calc(79% + 1px)),
+        linear-gradient(to bottom, transparent 26%, var(--hairline) 26% calc(26% + 1px), transparent calc(26% + 1px)),
+        linear-gradient(to bottom, transparent 68%, var(--hairline) 68% calc(68% + 1px), transparent calc(68% + 1px)),
         repeating-linear-gradient(101deg, rgba(35,33,30,0.012) 0 2px, transparent 2px 5px),
         #FCFBF9;
       border:1px solid var(--hairline);
@@ -166,6 +178,13 @@
     .duo-paper::before { top:-17px; left:-40px; transform:rotate(-39deg); }
     .duo-paper::after  { right:-42px; bottom:11%; transform:rotate(-51deg); }
 
+    .duo-badge { position:absolute; z-index:4; right:-11%; bottom:15%;
+      background:var(--text); color:var(--void); padding:11px 17px; border-radius:4px;
+      transform:rotate(-2.1deg); box-shadow:0 6px 16px rgba(35,33,30,0.22);
+      text-align:left; line-height:1.25; }
+    .duo-badge b { display:block; font-family:var(--mono,ui-monospace,monospace);
+      font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
+    .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
     .duo figcaption { position:relative; z-index:3; text-align:center; margin-top:30px; }
     .team { background:var(--void-2); border-top:1px solid var(--hairline); }
     .founders-grid { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
@@ -266,6 +285,9 @@
       .duo-paper::before, .duo-paper::after { width:86px; height:24px; }
       .duo-paper::before { left:-24px; top:-11px; }
       .duo-paper::after { right:-26px; }
+      .duo-badge { right:-4%; bottom:13%; padding:9px 13px; }
+      .duo-badge b { font-size:10px; }
+      .duo-badge span { font-size:10.5px; }
       .svc-row { grid-template-columns:60px 1fr; }
       .svc-link { grid-column:2; }
     }
@@ -409,8 +431,9 @@
       <span class="duo-paper" aria-hidden="true"></span>
       <picture>
         <source srcset="assets/about/founders-1200.webp" type="image/webp">
-        <img src="assets/about/founders-1200.png" alt="Diego and Rahaid, the two founders of KaizenEvol" width="1200" height="1101" decoding="async" loading="lazy">
+        <img src="assets/about/founders-1200.png" alt="Diego and Rahaid, the two founders of KaizenEvol" width="1228" height="1129" decoding="async" loading="lazy">
       </picture>
+      <span class="duo-badge" aria-hidden="true"><b>Five at a time</b><span>so you get the founders</span></span>
       <figcaption class="smallcaps">Diego, front. Rahaid, behind him.</figcaption>
     </figure>
 
