@@ -212,11 +212,14 @@
     /* Law's role is the longer string; give that column the extra width so both
        roles stay on one line and the two columns end level. */
     @media (min-width:620px) { .duo-credit span:last-child { padding-left:6%; } }
-    /* The captions are the SAME hand as the names sprayed on the shirts - the
-       lettering is artwork, not a typeface, so it ships as an image with the
-       words in alt. Each sits under the person it belongs to. */
-    .duo img.duo-cap { position:static; display:block; width:100%; height:auto;
-      max-width:none; z-index:auto; }
+    /* The captions are the SAME hand as the names sprayed on the shirts - all four
+       marks come off one lettering plate, so this is artwork rather than a typeface
+       and ships as an image with the words in alt. Each sits under its own person.
+       Sized by HEIGHT, not width. Both are normalised to one ink-band height before
+       export, so a single CSS height renders them at identical letter size; stretching
+       each to fill its column made the longer caption's letters visibly smaller. */
+    .duo img.duo-cap { position:static; display:block; width:auto;
+      height:clamp(24px, 8.75cqw, 46px); max-width:100%; z-index:auto; }
     .duo-badge b { display:block; font-family:var(--mono,ui-monospace,monospace);
       font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
     .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
@@ -455,14 +458,14 @@
       <span class="duo-paper" aria-hidden="true"></span>
       <span class="duo-shot">
         <picture>
-          <source srcset="assets/about/founders-1228-eee8a7f2.webp" type="image/webp">
-          <img src="assets/about/founders-1228-eee8a7f2.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="988" decoding="async" loading="lazy">
+          <source srcset="assets/about/founders-1228-6bedcbd4.webp" type="image/webp">
+          <img src="assets/about/founders-1228-6bedcbd4.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="988" decoding="async" loading="lazy">
         </picture>
         <span class="duo-badge" aria-hidden="true"><b>Two founders</b></span>
       </span>
       <figcaption class="duo-credit">
-        <span><img class="duo-cap" src="assets/about/cap-diego-63131fb4.png" alt="Content and social" width="1000" height="165" decoding="async" loading="lazy"></span>
-        <span><img class="duo-cap" src="assets/about/cap-law-4e0cbe25.png" alt="Ads, retention, tracking" width="1000" height="155" decoding="async" loading="lazy"></span>
+        <span><img class="duo-cap" src="assets/about/cap-diego-bed1542c.png" alt="Content and social" width="1556" height="354" decoding="async" loading="lazy"></span>
+        <span><img class="duo-cap" src="assets/about/cap-law-9fdf9860.png" alt="Ads, retention, tracking" width="1707" height="354" decoding="async" loading="lazy"></span>
       </figcaption>
     </figure>
 
