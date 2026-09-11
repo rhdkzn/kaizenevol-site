@@ -74,8 +74,13 @@ for (const f of readdirSync('.').filter(x => x.endsWith('.html')).sort()) {
 
   if (mobile) {
     const m = hrefs(mobile)
-    /* A page may legitimately omit a link to ITSELF; everything else must match. */
-    const want = d.filter(x => x !== f)
+    /* A page may legitimately omit a link to ITSELF; everything else must match.
+     * apply.html is excluded from 2026-09-11: Rahaid took TAKE A SEAT out of the
+     * drop-down because .nav-cta already sits in the bar at every phone width, so
+     * it was on screen twice at once. The route is not lost, it moved - and
+     * test-interactions asserts .nav-cta is actually visible at 390px, which is
+     * the check that stops this becoming a page with no way in. */
+    const want = d.filter(x => x !== f && x !== 'apply.html')
     check(`${f}: mobile menu matches the desktop nav`,
       want.every(x => m.includes(x)), 'missing on phone: ' + want.filter(x => !m.includes(x)).join(', '))
     check(`${f}: mobile menu has no duplicate link`, new Set(m).size === m.length,
@@ -103,9 +108,15 @@ for (const f of readdirSync('.').filter(x => x.endsWith('.html')).sort()) {
  * comparison can.
  *
  * The trailing CTA is deliberately page-tuned (Forge asks for a website, Reach names
- * itself in the WhatsApp prefill), so it is excluded by position rather than by
- * pretending it matches. */
-const shape = (items) => items.slice(0, -1).join('  |  ')
+ * itself in the WhatsApp prefill), so it is excluded - by WHAT IT IS, not by
+ * position. Dropping the last item blindly worked only while every menu ended in a
+ * CTA; once the drop-down lost TAKE A SEAT, seven menus ended in Contact and the
+ * comparison silently started ignoring Contact on those pages while still comparing
+ * it on booked.html, which keeps its own WhatsApp CTA because it has no .nav-cta in
+ * the bar to fall back on. */
+const isCta = (item) => /(>apply\.html$|>https?:)/.test(item)
+const shape = (items) =>
+  (items.length && isCta(items[items.length - 1]) ? items.slice(0, -1) : items).join('  |  ')
 for (const [zone, map] of Object.entries(NAVS)) {
   const forms = new Map()
   for (const [file, items] of Object.entries(map)) {

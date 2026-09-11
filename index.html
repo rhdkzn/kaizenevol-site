@@ -85,11 +85,10 @@
     .burger span{display:block;width:20px;height:1.5px;background:var(--ink)}
     .mobile-menu{display:none;flex-direction:column;gap:2px;padding:12px 24px 20px;border-top:1px solid var(--hairline)}
     .mobile-menu a{padding:11px 0;text-decoration:none;font-size:15px;color:var(--muted);border-bottom:1px solid var(--hairline)}
-    .mobile-menu a.btn-solid{color:var(--page);text-align:center;margin-top:12px;border:0}
     /* nav-cta-typographic — Nav CTA — typographic, not a pill (2026-09-07, Rahaid: the pill read vibecoded).
        The nav is the only place a filled 980px pill survived; the body is typographic
        throughout, so the CTA is set as smallcaps on a rule instead of an app button. */
-    .nav-links a.btn-solid, .nav-cta, .mobile-menu a.btn-solid {
+    .nav-links a.btn-solid, .nav-cta {
       background:transparent; border-radius:0; color:var(--ink);
       font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
       padding:8px 1px; text-decoration:underline; text-decoration-thickness:1px;
@@ -97,9 +96,7 @@
       transition:color .18s, text-decoration-color .18s; }
     .nav-links a.btn-solid { margin-left:26px; }
     .nav-cta { padding:14px 1px; }
-    .mobile-menu a.btn-solid { text-align:left; margin-top:10px;
-      padding:16px 1px 13px; border-bottom:none; }
-    .nav-links a.btn-solid:hover, .nav-cta:hover, .mobile-menu a.btn-solid:hover {
+    .nav-links a.btn-solid:hover, .nav-cta:hover {
       color:var(--ink); text-decoration-color:var(--ink); transform:none; opacity:1; }
 
     .mobile-menu.open{display:flex}
@@ -599,7 +596,6 @@
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
-    <a class="btn-solid" href="apply.html">Take a seat</a>
   </div>
 </nav>
 <main style="view-transition-name:ke-main-index">
@@ -710,7 +706,7 @@
     <div class="smallcaps">Five at a time</div>
     <h2>We only work with five clients at a time.</h2>
     <p class="closing-sub">Just the two of us. We make the work and run it ourselves, so there&rsquo;s no account manager between you and the people doing it.</p>
-    <p class="closing-sub">We don&rsquo;t have client results to show yet, and we won&rsquo;t borrow someone else&rsquo;s. That&rsquo;s why the seats open now are priced as founding seats. If you&rsquo;d rather wait for proof, wait. The founding rate won&rsquo;t.</p>
+    <p class="closing-sub">The seats open now are priced as founding seats. That rate belongs to whoever takes them, and it does not come back.</p>
     <p class="closing-sub">Tell us what you sell and what it costs you to make. Fifteen minutes tells us whether we can help, and if we can&rsquo;t we&rsquo;ll say so. Either way you&rsquo;ll leave knowing what a customer is actually worth to you, which is more than most people get from a call.</p>
     <div class="hero-ctas start">
       <form class="ke-start" action="apply.html" method="get">

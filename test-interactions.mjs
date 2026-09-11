@@ -258,8 +258,12 @@ for (const name of PAGES) {
 // trying to get clicked, so both the presence and the AMOUNT are asserted.
 for (const [label, width, sels] of [
   ['desktop', 1280, [['nav .nav-links a.btn-solid', 0.965], ['nav .nav-links a:not(.btn-solid)', 0.985]]],
+  /* .mobile-menu a.btn-solid was in this list until 2026-09-11, when TAKE A SEAT
+     came out of the drop-down - it was on screen in the bar at the same time.
+     .nav-cta is now the only nav CTA on a phone, so it is the one that has to
+     press like a button. */
   ['mobile', 390, [['nav .burger', 0.965], ['nav .nav-cta', 0.965],
-                   ['.mobile-menu a.btn-solid', 0.965], ['.mobile-menu a:not(.btn-solid)', 0.985]]]
+                   ['.mobile-menu a', 0.985]]]
 ]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   await page.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
@@ -357,6 +361,47 @@ for (const [label, width, sels] of [
   check('the arriving page reveals with the transition and its content armed to rise',
         r.reveal === 'vt|main=0', String(r.reveal));
   await page.close();
+}
+
+/* THE WAY IN, ON A PHONE (added 2026-09-11).
+ *
+ * TAKE A SEAT used to sit in the bar AND at the bottom of the open drop-down —
+ * on screen twice at once. Rahaid: "there doesn't need to be a take a seat on
+ * the drop down nav." Removing it is only safe while .nav-cta is genuinely
+ * visible at phone widths, and that is a COMPUTED fact: .nav-cta is
+ * display:none by default and switched on inside a media query, so reading the
+ * stylesheet proves nothing. A rule that is correct and does not apply has cost
+ * this site two defects already today.
+ *
+ * booked.html is exempt and carries its CTA in the menu instead: it has no
+ * .nav-cta element at all, its way in is a WhatsApp link that lives inside
+ * .nav-links, and .nav-links is hidden on a phone. */
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  for (const name of PAGES) {
+    /* apply.html IS the application, so it carries no CTA to itself; booked.html
+       and 404 have no .nav-cta element either. */
+    if (['booked.html', '404.html', 'apply.html'].includes(name)) continue;
+    const page = await ctx.newPage();
+    await page.goto(`${BASE}/${name}`, { waitUntil: 'domcontentloaded' });
+    const r = await page.evaluate(() => {
+      const cta = document.querySelector('.nav-cta');
+      if (!cta) return { present: false };
+      const cs = getComputedStyle(cta), box = cta.getBoundingClientRect();
+      return { present: true, display: cs.display, visibility: cs.visibility,
+               w: Math.round(box.width), h: Math.round(box.height),
+               href: cta.getAttribute('href'), text: cta.textContent.trim() };
+    });
+    check(`${name}: the nav CTA is on screen at 390px`,
+          r.present && r.display !== 'none' && r.visibility !== 'hidden' && r.w > 0 && r.h > 0,
+          JSON.stringify(r));
+    check(`${name}: and it still points at the application`, r.href === 'apply.html', r.href);
+    /* And it must not be duplicated inside the menu it was taken out of. */
+    const dupe = await page.evaluate(() => !!document.querySelector('.mobile-menu a[href="apply.html"]'));
+    check(`${name}: the drop-down does not repeat it`, !dupe);
+    await page.close();
+  }
+  await ctx.close();
 }
 
 await browser.close();
