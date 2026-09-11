@@ -75,7 +75,7 @@ ok('sub-processors named', /Meta, Klaviyo, Shopify, Stripe, Resend and Supabase/
 ok('platform matters outside control excluded', /platform outages/.test(t1));
 ok('notices clause carries the client email', /11\.4 Notices go by email/.test(t1) && t1.includes('sam@marauder.co.uk'));
 ok('third-party rights excluded', /Contracts \(Rights of Third Parties\) Act 1999/.test(t1));
-ok('signed for the Agency at issue', /SIGNED for the Agency by Rahaid/.test(t1) && t1.includes('6 September 2026'));
+ok('signed for the Agency at issue', /SIGNED for the Agency by Rahaid and Diego/.test(t1) && t1.includes('6 September 2026'));
 ok('issue date is deterministic when issuedAt is set', agreementText(founding) === agreementText({ ...founding }));
 
 for (const dead of ['2,500', '60 days', 'territory', 'AI front office', 'KaizenReach', 'KaizenDesk', 'renovation', 'guaranteed or your money back']) {
