@@ -398,6 +398,19 @@
     .lp-do li { position:relative; padding-left:22px; font-size:15px; color:var(--muted); line-height:1.55; max-width:58ch; }
     .lp-do li::before { content:""; position:absolute; left:0; top:12px; width:10px; height:1px; background:var(--muted); }
     .lp-back { display:inline-block; margin-top:34px; }
+    /* The page's own next step, rather than the shared closing. Rahaid asked for
+       it after the reference's [04 / NEXT STEP], and it is an exception to the
+       closing pattern he asked to be enforced across the estate - so it keeps
+       every PART that pattern checks (a heading, one .closing-sub, a route to
+       apply, a mailto, the seats note) and changes only what it says. The eyebrow
+       is centred here because the whole block is. */
+    .lp-next .lp-eyebrow { text-align:center; margin-bottom:18px; }
+    .lp-next .lp-eyebrow::before { margin-right:12px; }
+    .lp-next .lp-eyebrow::after {
+      content:""; display:inline-block; width:26px; height:1px; background:var(--hairline);
+      vertical-align:middle; margin-left:12px; transform:translateY(-1px);
+    }
+
     /* --- Depth on the fold. brand/DESIGN.md permits a gradient where it does WORK
        and names "a ground that gives a section depth" as exactly that. No hue
        shift: both stops are the same neutral, --void-2 fading into --void, and
@@ -670,10 +683,11 @@
   </section>
 
 
-<section class="closing" id="contact">
+<section class="closing lp-next" id="contact">
   <div class="container">
-    <h2>Five at a time.<br>See if one of the seats is <em>yours</em>.</h2>
-    <p class="closing-sub">Taking a seat is a few minutes. We read every one and reply either way, the same working day.</p>
+    <p class="smallcaps lp-eyebrow">04 / Next step</p>
+    <h2>It starts at <em>stage one</em>.</h2>
+    <p class="closing-sub">Tell us what you sell and what it costs you to make. Fifteen minutes tells us whether we can help, and either way you leave knowing what a customer is actually worth to you.</p>
     <div class="closing-ctas">
       <a href="apply.html" class="btn-solid">Take a seat &rarr;</a>
       <a href="mailto:diego@kaizenevol.com" class="btn-quiet">Email us directly</a>

@@ -14,8 +14,12 @@
 import { chromium } from 'playwright';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
+/* kaizen-loop.html added 2026-09-11. It carries its own heading and eyebrow -
+   Rahaid's exception, after the reference's [04 / NEXT STEP] - so it is exactly
+   the page most likely to drift out of the pattern, which is the argument for
+   guarding it rather than against. What this file checks is the PARTS. */
 const PAGES = ['index.html','about.html','ads-for-musicians.html',
-               'tried-ads-before.html','can-i-do-this-myself.html'];
+               'tried-ads-before.html','can-i-do-this-myself.html','kaizen-loop.html'];
 
 const b = await chromium.launch({executablePath: process.env.PW_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
 const ctx = await b.newContext({viewport:{width:1280,height:900}});
