@@ -52,7 +52,7 @@ const check = (n, pass, d) => r.push([n, pass, d])
  * not pages a prospect lands on, and holding them to marketing hygiene would make
  * this suite noisy enough to start being skipped. */
 const PAGES = (process.env.PAGES || [
-  'index.html','about.html','contact.html','apply.html','booked.html','privacy.html','404.html',
+  'index.html','about.html','what-we-run.html','apply.html','booked.html','privacy.html','404.html',
       ].join(',')).split(',')
 
 /* Widths that actually matter. 375 is the narrowest phone still in real use;

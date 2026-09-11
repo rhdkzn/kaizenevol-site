@@ -38,7 +38,7 @@ const check = (n, pass, d) => r.push([n, pass, d])
 const QS = 'utm_source=meta&utm_medium=cpc&utm_campaign=founding5&fbclid=ABC123'
 
 /* --- browser: read, carry, and hand over --------------------------------- */
-for (const page of ['index.html', 'apply.html', 'contact.html']) {
+for (const page of ['index.html', 'apply.html', 'what-we-run.html', 'kaizen-loop.html']) {
   const ctx = await browser.newContext()
   const pg = await ctx.newPage()
   await pg.goto(`http://127.0.0.1:${port}/${page}?${QS}`, { waitUntil: 'load' })

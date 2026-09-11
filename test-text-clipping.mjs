@@ -28,7 +28,7 @@ const srv = createServer((q, s) => {
 }).listen(0)
 const port = srv.address().port
 
-const PAGES = (process.env.PAGES || 'index.html,about.html,contact.html,privacy.html').split(',')
+const PAGES = (process.env.PAGES || 'index.html,about.html,what-we-run.html,privacy.html').split(',')
 const VIEWS = [[390, 844], [1280, 900]]
 const TOL = 1.5   /* sub-pixel rounding only */
 

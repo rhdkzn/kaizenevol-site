@@ -21,7 +21,7 @@ import { readFileSync, existsSync } from 'node:fs';
 // Extended 2026-09-08: onboard/portal/booked carried a <title> and a description and
 // nothing else. They are links we SEND — a client pastes one, or it previews in a
 // message — so a bare preview is our brand missing at the moment someone looks.
-const PAGES = ['index.html', 'apply.html', 'about.html', 'contact.html', 'privacy.html',
+const PAGES = ['index.html', 'apply.html', 'about.html', 'what-we-run.html', 'privacy.html',
                'onboard.html', 'portal.html', 'booked.html',
                // Answer pages, added 2026-09-08 (workshop Day 14's question-page play).
                // These are the pages built to be FOUND, so a bare preview when one is

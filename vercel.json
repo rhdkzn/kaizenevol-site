@@ -129,6 +129,16 @@
   ],
   "redirects": [
     {
+      "source": "/contact.html",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
       "source": "/acquisition-system.html",
       "destination": "/#the-system",
       "permanent": true

@@ -35,7 +35,7 @@ const browser = await chromium.launch(existsSync(pw) ? { executablePath: pw } : 
 const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
-const PAGES = (process.env.PAGES || 'index.html').split(',')
+const PAGES = (process.env.PAGES || 'index.html,kaizen-loop.html').split(',')
 
 /* The growth step is CALL-ONLY (FIN-PRI-004, Rahaid 2026-09-04): the site reads as one
    monthly fee, price on the first call, and Diego explains the step. About kept a "Paid
@@ -46,7 +46,7 @@ const PAGES = (process.env.PAGES || 'index.html').split(',')
 {
   const { readFileSync } = await import('node:fs')
   const STEP = /steps? up when|three[- ]month average|up by half|trailing three|trailing 3/i
-  for (const f of ['index.html','about.html','apply.html','contact.html','booked.html']) {
+  for (const f of ['index.html','about.html','apply.html','what-we-run.html','booked.html']) {
     const m = readFileSync(f, 'utf8').replace(/<script[\s\S]*?<\/script>/g, '').match(STEP)
     check(`${f}: growth step not disclosed on the site`, !m, m && m[0])
   }
@@ -141,8 +141,12 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
     return [...used].filter(c => !declared.has(c))
   })).filter(c => new RegExp('class="[^"]*\\b' + c + '\\b').test(src))
   /* Grandfathered: classes already unstyled before this rebuild. Named rather
-     than silently skipped, so they stay visible as debt instead of vanishing. */
-  const LEGACY_UNSTYLED = ['lead-form']
+     than silently skipped, so they stay visible as debt instead of vanishing.
+     `scrub-video` is different in kind and is here permanently: it is a JS HOOK,
+     the only handle scrub.js has on the closing film, and a hook legitimately
+     carries no style. Deleting the class would break the scrub; styling it to
+     satisfy a checker would be worse. */
+  const LEGACY_UNSTYLED = ['lead-form', 'scrub-video']
   const fresh = unstyled.filter(c => !LEGACY_UNSTYLED.includes(c))
   check(`${label}: every class used resolves to a real rule`, fresh.length === 0, fresh.join(', '))
 
@@ -165,7 +169,17 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
      became the homepage (7a34826, 2026-09-04); this went red that morning and stayed
      red because nothing told it the system had changed. The steps are asserted by
      their live headings so the next repositioning fails here loudly, on day one. */
-  const TEACHES = ['index.html']
+  /* Moved to kaizen-loop.html on 2026-09-11, on Rahaid's instruction after looking
+     at the reference's mechanism page: "if we have a whole dedicated page then you
+     only need to give a brief description on the main home page". The home page now
+     carries a four-line summary and a link; the four stages are asserted as HEADINGS
+     on the page that teaches them. test-loop-stages.mjs separately holds the summary,
+     the page and llms.txt to the same wording and order.
+     This check went red the moment the Loop moved and stayed red for several commits,
+     because the suite list being run by hand did not include this file. It is the
+     second time this exact test has gone stale on a repositioning and sat unnoticed -
+     the comment above records the first, on 2026-09-04. */
+  const TEACHES = ['kaizen-loop.html']
   if (TEACHES.includes(PAGE)) {
     /* Re-staged 2026-09-06 with Diego's site rewrite, approved by Rahaid: the old set
        described ads only, did not loop despite the name, and had stages at two different
