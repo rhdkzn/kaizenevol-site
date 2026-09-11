@@ -304,6 +304,17 @@
         <div class="snapshot-list" id="resultsList" style="margin-top:14px;"></div>
       </div>
     </section>
+    <section id="funnelSection">
+      <div class="section-label">Funnels &mdash; where people give up</div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div style="font-size:12.5px;color:var(--muted);max-width:660px;">Every visit records which question it reached &mdash; never what was typed. The drop is the share of people who saw a question and never reached the next one. <b style="color:var(--text)">The biggest drop is the question to rewrite.</b></div>
+          <select id="funnelPick" class="add-btn" style="padding:7px 10px;"></select>
+        </div>
+        <div class="stats-row" id="funnelStatsRow" style="margin-top:16px;"></div>
+        <div class="snapshot-list" id="funnelSteps" style="margin-top:14px;"></div>
+      </div>
+    </section>
     <div class="bottom-grid">
       <div class="card">
         <div class="section-label">Tasks</div>
@@ -386,7 +397,97 @@ async function checkSession(){try{const {data}=await _sb.auth.getSession();if(da
 let _dashChannel=null;
 function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();localStorage.removeItem(SESSION_KEY);try{_sb.auth.signOut();}catch(e){}document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
 function renderAll(d){renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl&&document.activeElement!==notesEl)notesEl.value=d.notes||'';}
-async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();try{const remote=await _cloudPull(DATA_KEY);if(remote&&typeof remote==='object'&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};if(!Array.isArray(remote.clients)||remote.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);const _ni=merged.clients.findIndex(c=>c.id==='nav');if(_ni!==-1){merged.clients.splice(_ni,1);if(merged.metrics)delete merged.metrics.nav;_cloudPush(DATA_KEY,merged);}localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}else if(!remote){_cloudPush(DATA_KEY,load());}}catch(e){console.warn('Initial sync:',e);}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}}).subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});}
+async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();loadFunnels();try{const remote=await _cloudPull(DATA_KEY);if(remote&&typeof remote==='object'&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};if(!Array.isArray(remote.clients)||remote.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);const _ni=merged.clients.findIndex(c=>c.id==='nav');if(_ni!==-1){merged.clients.splice(_ni,1);if(merged.metrics)delete merged.metrics.nav;_cloudPush(DATA_KEY,merged);}localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}else if(!remote){_cloudPush(DATA_KEY,load());}}catch(e){console.warn('Initial sync:',e);}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}}).subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});}
+/* ── Funnels: where people give up ───────────────────────────────────────────
+   Reads ke_funnel_events, which holds which step a visit reached and nothing a
+   visitor typed. Aggregated here rather than in SQL so the shape stays obvious and
+   there is no view to keep in step with the table.
+   A "drop" is the share of visits that SAW a question and never reached the next
+   one. That is the number worth acting on — the biggest one is the question to
+   rewrite (RES-CMP-013). */
+let _funnelSpecCache = {};
+async function _funnelSpec(name){
+  if(_funnelSpecCache[name]!==undefined) return _funnelSpecCache[name];
+  try{ const r=await fetch('/funnels/'+name+'.json'); _funnelSpecCache[name]= r.ok? await r.json():null; }
+  catch(e){ _funnelSpecCache[name]=null; }
+  return _funnelSpecCache[name];
+}
+async function loadFunnels(){
+  const sel=document.getElementById('funnelPick'); if(!sel) return;
+  const since=new Date(Date.now()-30*86400000).toISOString();
+  let rows=[];
+  try{
+    const {data,error}=await _sb.from('ke_funnel_events')
+      .select('funnel,event,step_key,step_index,total_steps,session')
+      .gte('created_at',since).limit(20000);
+    if(error) throw error;
+    rows=data||[];
+  }catch(e){
+    document.getElementById('funnelSteps').innerHTML='<div style="color:var(--muted);font-size:13px;">Could not read funnel events. '+(e.message||'')+'</div>';
+    return;
+  }
+  _funnelRows=rows;
+  const names=[...new Set(rows.map(r=>r.funnel))].sort();
+  if(!names.length){
+    document.getElementById('funnelStatsRow').innerHTML='';
+    document.getElementById('funnelSteps').innerHTML='<div style="color:var(--muted);font-size:13px;">No funnel visits recorded in the last 30 days. This fills in once <b style="color:var(--text)">/f.html?f=apply</b> takes traffic.</div>';
+    return;
+  }
+  const keep=sel.value;
+  sel.innerHTML=names.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
+  sel.value=names.includes(keep)?keep:names[0];
+  sel.onchange=()=>renderFunnel(sel.value);
+  renderFunnel(sel.value);
+}
+let _funnelRows=[];
+async function renderFunnel(name){
+  const rows=_funnelRows.filter(r=>r.funnel===name);
+  const spec=await _funnelSpec(name);
+  const total=rows.reduce((n,r)=>Math.max(n, r.total_steps||0), 0);
+
+  /* Distinct SESSIONS per step, not events — someone who goes back and forward twice
+     is still one person who reached that question. */
+  const seen=[]; for(let i=0;i<total;i++) seen[i]=new Set();
+  const starts=new Set(), completes=new Set(), submits=new Set();
+  rows.forEach(r=>{
+    if(r.event==='view'&&Number.isInteger(r.step_index)&&r.step_index<total){ seen[r.step_index].add(r.session); starts.add(r.session); }
+    if(r.event==='complete') completes.add(r.session);
+    if(r.event==='submit') submits.add(r.session);
+  });
+  const started=starts.size, done=completes.size;
+  const rate=started?Math.round(done/started*100):0;
+
+  /* The worst drop, ignoring the final step (leaving after the last question is
+     the send, not a drop). */
+  let worst={i:-1,pct:0};
+  for(let i=0;i<total-1;i++){
+    const a=seen[i].size, b=seen[i+1].size;
+    if(a>=5){ const d=a?Math.round((a-b)/a*100):0; if(d>worst.pct) worst={i,pct:d}; }
+  }
+  const label=i=>(spec&&spec.steps&&spec.steps[i]?spec.steps[i].q:'Step '+(i+1));
+
+  document.getElementById('funnelStatsRow').innerHTML=
+    '<div class="stat-card highlight"><div class="stat-l">Started</div><div class="stat-v">'+started+'</div><div class="stat-s">visits that saw question one, last 30 days</div></div>'+
+    '<div class="stat-card"><div class="stat-l">Finished</div><div class="stat-v">'+done+'</div><div class="stat-s">'+rate+'% of everyone who started</div></div>'+
+    '<div class="stat-card"><div class="stat-l">Biggest drop</div><div class="stat-v"'+(worst.pct>=40?' style="color:var(--amber)"':'')+'>'+(worst.i<0?'—':worst.pct+'%')+'</div><div class="stat-s">'+(worst.i<0?'not enough traffic to say yet':'on: '+label(worst.i))+'</div></div>'+
+    '<div class="stat-card"><div class="stat-l">Sent, not finished</div><div class="stat-v">'+Math.max(0,submits.size-done)+'</div><div class="stat-s">pressed send and the save failed — should be zero</div></div>';
+
+  let html='';
+  for(let i=0;i<total;i++){
+    const a=seen[i].size, b=i<total-1?seen[i+1].size:done;
+    const drop=a?Math.round((a-b)/a*100):0;
+    const width=started?Math.round(a/started*100):0;
+    const hot=drop>=40&&a>=5;
+    html+='<div style="padding:10px 0;border-bottom:1px solid var(--line);">'+
+      '<div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;">'+
+        '<div style="font-size:13px;'+(hot?'color:var(--amber);':'')+'"><b>'+(i+1)+'.</b> '+label(i)+'</div>'+
+        '<div style="font-size:12px;color:var(--muted);white-space:nowrap;">'+a+' reached'+(a?' · '+drop+'% left here':'')+'</div>'+
+      '</div>'+
+      '<div class="prog-bar" style="margin-top:6px;"><div class="prog-fill" style="width:'+width+'%'+(hot?';background:var(--amber)':'')+'"></div></div>'+
+    '</div>';
+  }
+  document.getElementById('funnelSteps').innerHTML=html;
+}
 document.getElementById('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
 const DEFAULTS={clients:[],metrics:{},commission:{jobs:[]},growth:{snapshots:[]},tasks:[],pipeline:[],notes:'',results:[],settings:{goalRetainers:10,retainerValue:2000,foundingValue:1000,stepValue:1000,stepTrigger:1.5}};
 /* Growth step (FIN-PRI-004) — the same arithmetic as crm.html, read-only here. */

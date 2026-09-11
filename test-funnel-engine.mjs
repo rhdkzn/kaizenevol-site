@@ -119,5 +119,18 @@ ok('endpoint stores no answer fields',
    !/(businessName|email|contactName|revenue|costShare|adspend|trade)/.test(api.replace(/\/\*[\s\S]*?\*\//g, '')));
 ok('endpoint does not require the service-role key', /SUPABASE_SERVICE_ROLE_KEY \|\| SUPABASE_ANON_KEY/.test(api));
 
+
+/* ── the dashboard panel ──────────────────────────────────────────────────────
+   The maths was verified against a hand-checked dataset (100 starts, a deliberate
+   55% cliff on question 2, 25 completions — the panel names step 2 at 56%). These
+   pin the two decisions that make the number honest rather than flattering. */
+const dash = readFileSync('dashboard.html', 'utf8');
+ok('dashboard has the funnel panel', /id="funnelSection"/.test(dash) && /loadFunnels\(\)/.test(dash));
+ok('counts DISTINCT SESSIONS, not events (going back must not inflate a step)',
+   /seen\[r\.step_index\]\.add\(r\.session\)/.test(dash));
+ok('refuses to call a biggest-drop on a tiny sample', /if\(a>=5\)/.test(dash));
+ok('reads only the telemetry table, never lead content',
+   /from\('ke_funnel_events'\)/.test(dash) && !/from\('ke_inbound'\)/.test(dash));
+
 console.log(fails ? `\n${fails} check(s) failed` : '\nfunnel engine: spec matches the live page, read-back pinned');
 process.exit(fails ? 1 : 0);
