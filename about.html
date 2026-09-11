@@ -188,16 +188,22 @@
        everywhere else. */
     .duo-credit { position:relative; z-index:3; margin:28px auto 0; max-width:420px;
       display:grid; gap:16px; }
-    /* Deliberately NOT two columns. Law is listed first, as asked, but he is the
-       one BEHIND in the photo - side by side, the left column would sit under
-       Diego and read as labelling him. Stacked, the order is a credit rather
-       than a left-to-right key, and nothing is mislabelled. */
+    /* Side by side, in the order they stand: Diego in front on the left, Law
+       behind on the right. Two columns read as a KEY to the photo, so they have
+       to match it - which is why this order is not negotiable with the layout.
+       Below 620px there is no room for two, and stacking loses the mapping, so
+       each name keeps its own row and the order still reads left-to-right as
+       first-then-second. */
     .duo-credit { font-size:13.5px; color:var(--muted); line-height:1.5; }
     .duo-credit span { display:grid; grid-template-columns:88px 1fr; gap:12px;
       align-items:baseline; text-align:left; }
     .duo-credit b { display:block; font-family:var(--mono,ui-monospace,monospace);
       font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
       color:var(--text); margin:0; }
+    @media (min-width:620px) {
+      .duo-credit { max-width:none; grid-template-columns:1fr 1fr; gap:34px; }
+      .duo-credit span { grid-template-columns:1fr; gap:6px; }
+    }
     .duo-badge b { display:block; font-family:var(--mono,ui-monospace,monospace);
       font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
     .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
@@ -439,8 +445,8 @@
       </picture>
       <span class="duo-badge" aria-hidden="true"><b>Two founders</b><span>no account manager</span></span>
       <figcaption class="duo-credit">
-        <span><b>Law</b>The ads, and the number behind them.</span>
-        <span><b>Diego</b>The content, the feed, and the first call.</span>
+        <span><b>Diego</b>Makes the work. Answers first.</span>
+        <span><b>Law</b>Buys the attention. Counts what comes back.</span>
       </figcaption>
     </figure>
 
