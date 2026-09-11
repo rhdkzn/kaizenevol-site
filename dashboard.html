@@ -429,8 +429,17 @@ async function loadFunnels(){
   _funnelRows=rows;
   const names=[...new Set(rows.map(r=>r.funnel))].sort();
   if(!names.length){
+    /* An unauthorised read under RLS comes back as an EMPTY ARRAY, not an error.
+       So "no rows" has two causes that look identical here, and the reassuring
+       one is wrong: a signed-out or expired session would report "no traffic"
+       forever. Say which it is. (OPS-LRN-001c, 2026-09-11: a check that cannot
+       run must say so, never return a value that reads as a verdict.) */
+    let signedIn=false;
+    try{ const {data}=await _sb.auth.getSession(); signedIn=!!(data&&data.session); }catch(e){}
     document.getElementById('funnelStatsRow').innerHTML='';
-    document.getElementById('funnelSteps').innerHTML='<div style="color:var(--muted);font-size:13px;">No funnel visits recorded in the last 30 days. This fills in once <b style="color:var(--text)">/f.html?f=apply</b> takes traffic.</div>';
+    document.getElementById('funnelSteps').innerHTML = signedIn
+      ? '<div style="color:var(--muted);font-size:13px;">No funnel visits recorded in the last 30 days. This fills in once <b style="color:var(--text)">/f.html?f=apply</b> takes traffic.</div>'
+      : '<div style="color:var(--muted);font-size:13px;">Not signed in, so funnel events cannot be read — this is <b style="color:var(--text)">not</b> a report of zero traffic. Sign in again and reload.</div>';
     return;
   }
   const keep=sel.value;
