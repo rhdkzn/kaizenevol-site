@@ -6,6 +6,12 @@
 *.key
 *.pem
 node_modules/
+# Also ignore a node_modules SYMLINK. Every test-*.mjs here imports playwright,
+# which lives in the global store, so running the suite means linking it in:
+#   ln -s /opt/node22/lib/node_modules node_modules
+# The pattern above ends in a slash and so matches only a real directory, which
+# left the link showing as untracked after every test run.
+node_modules
 .DS_Store
 
 # Local QA tooling — deliberately NOT committed (2026-07-31).
