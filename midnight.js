@@ -378,7 +378,7 @@
   /* ---------- Scroll reveals — editorial fade-rise with stagger ---------- */
   function reveals() {
     var els = document.querySelectorAll(
-      '.svc-row, .why-item, .founder-card, .founders-intro, .services-head, .section-header, ' +
+      '.svc-row, .why-item, .founders-intro, .services-head, .section-header, ' +
       '.step-row, .price-col, .ind-item, .prob-row, .closing-copy, .closing-grid form, ' +
       '.faq-list details, details.faq-item, .build-card, .why-grid > *, .agent-row, .cmp-row'
     );

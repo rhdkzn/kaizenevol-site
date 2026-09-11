@@ -187,21 +187,9 @@
     .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
     .duo figcaption { position:relative; z-index:3; text-align:center; margin-top:30px; }
     .team { background:var(--void-2); border-top:1px solid var(--hairline); }
-    .founders-grid { display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
-    .founder-card { border-top:1px solid var(--text); padding-top:24px; }
-    .founder-avatar { width:76px; height:76px; border-radius:50%; margin-bottom:18px;
-      display:flex; align-items:center; justify-content:center;
-      background:#EFEDE9; border:1px solid rgba(35,33,30,0.18);
-      background-size:cover; background-position:center; }
-    .founder-card h3 { font-size:24px; margin-bottom:2px; }
-    .founder-card .smallcaps { display:block; margin-bottom:14px; }
-    .founder-card p { font-size:14.5px; color:var(--muted); margin-bottom:12px; }
     .team-note { margin-top:52px; padding-top:28px; border-top:1px solid var(--hairline); max-width:640px; }
     .team-note p { font-size:14.5px; color:var(--muted); margin-bottom:10px; }
     .team-note .team-line { font-size:19px; color:var(--text); margin-bottom:14px; }
-    .founder-links { margin-top:20px; display:flex; flex-direction:column; gap:10px; }
-    .founder-links a { color:var(--text); font-size:14.5px; text-decoration:none; border-bottom:1px solid var(--hairline); align-self:flex-start; padding-bottom:2px; transition:color .15s,border-color .15s; }
-    .founder-links a:hover { color:var(--accent-2); border-color:var(--accent-2); }
 
     /* ============ COMMITMENTS — numbered rows ============ */
     /* CREATIVE ASSETS (2026-09-07) — same soft-shell 3D set as the homepage, cut out
@@ -224,7 +212,7 @@
     /* Prose links had no rule on this page, so they rendered browser-default blue —
        caught on Rahaid's phone. The block that carried them has since been cut, but
        this stays as the base style: the next prose link added here would otherwise
-       reproduce the same defect. Same treatment as .founder-links a. */
+       reproduce the same defect. */
     .sect .lede a { color:var(--text); text-decoration:none;
       border-bottom:1px solid var(--hairline); padding-bottom:2px;
       transition:border-color .15s; }
@@ -278,7 +266,6 @@
 
     /* ============ RESPONSIVE ============ */
     @media(max-width:960px) {
-      .founders-grid { grid-template-columns:1fr; gap:36px; }
       .duo { width:min(330px,100%); margin-bottom:60px; }
       .duo-paper { left:-9%; right:-9%; }
       .duo-scrap { left:-6%; right:-11%; }
@@ -436,34 +423,6 @@
       <span class="duo-badge" aria-hidden="true"><b>Five at a time</b><span>so you get the founders</span></span>
       <figcaption class="smallcaps">Diego, front. Rahaid, behind him.</figcaption>
     </figure>
-
-    <div class="founders-grid">
-
-      <div class="founder-card">
-        <div class="founder-avatar" aria-hidden="true" style="background-image:url(team-rahaid.jpg)"></div>
-        <h3>Rahaid</h3>
-        <span class="smallcaps accent">Co-founder. The ads, and the number behind them.</span>
-        <p>Most people spend on ads and never really find out whether it worked. The platform claims a sale, the bank says something different, and nobody can tell you which to believe.</p>
-        <p>Rahaid works out what a customer is actually worth to you before he spends anything, then buys against that number, kills what loses and feeds what wins, daily. He runs the email and messages too, and built the tracking under all of it. Ask what the ads did and you get an answer, not a screenshot.</p>
-        <div class="founder-links">
-          <a href="mailto:rahaid@kaizenevol.com">rahaid@kaizenevol.com</a>
-          <a href="apply.html">Take a seat &rarr;</a>
-        </div>
-      </div>
-
-      <div class="founder-card">
-        <div class="founder-avatar" aria-hidden="true" style="background-image:url(team-diego.jpg)"></div>
-        <h3>Diego</h3>
-        <span class="smallcaps accent">Co-Founder. The content, the feed, and the first call.</span>
-        <p>The work has to be constant. That is the part that eats your week and turns you into a content manager instead of an artist or a brand owner.</p>
-        <p>Diego takes it. What gets made, when it goes out, whether it is strong enough to put money behind. He keeps your feed alive so someone who finds you after an ad lands on something living, not an empty grid. He is usually the one who gets back to you first, and you get both of us on the call. No ticket queue.</p>
-        <div class="founder-links">
-          <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a>
-          <a href="apply.html">Take a seat &rarr;</a>
-        </div>
-      </div>
-
-    </div>
 
     <div class="team-note">
       <p>We are both behind the camera and both in the edit.</p>
