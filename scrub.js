@@ -102,13 +102,22 @@
     }
   });
 
+  // The clip opens on black and the form only emerges part-way in. Measured at
+  // 4fps across all 15.04s: the 95th-percentile luminance of a frame first
+  // clears 40 (of 255) at t=6.00s, 39.9% in. Everything before that is a black
+  // rectangle, which on a phone is exactly what the top of the section looked
+  // like - Rahaid: "the black page doesn't even work". So the scrub starts
+  // there and the remaining 9s carry the whole scroll. The reveal survives; the
+  // dead lead-in does not.
+  var START = 0.40;
+
   function tick() {
     frame = 0;
     if (!duration) return;
     // Ease toward the target so a flung scroll does not machine-gun seeks.
     current += (target - current) * 0.18;
     if (Math.abs(target - current) < 0.0008) current = target;
-    var t = current * duration;
+    var t = (START + current * (1 - START)) * duration;
     if (video.fastSeek) {
       try { video.fastSeek(t); } catch (e) { video.currentTime = t; }
     } else {

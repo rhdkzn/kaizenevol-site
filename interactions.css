@@ -400,8 +400,18 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
 }
 
 .scrub h2,
-.scrub .lede {
+.scrub .lede,
+.scrub .closing-sub {
   color: var(--page, #f7f6f4);
+}
+/* The sub and the note sit back from the heading on a dark ground the same way
+   --muted sits back from --ink on a light one. */
+.scrub .closing-sub {
+  color: rgba(247, 246, 244, 0.74);
+}
+.scrub .closing-note,
+.scrub .btn-quiet {
+  color: rgba(247, 246, 244, 0.6);
 }
 .scrub .smallcaps {
   color: var(--stone, #8a857c);
