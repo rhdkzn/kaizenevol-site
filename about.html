@@ -185,9 +185,8 @@
     .duo-badge b { display:block; font-family:var(--mono,ui-monospace,monospace);
       font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
     .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
-    .duo figcaption { position:relative; z-index:3; text-align:center; margin-top:30px; }
     .team { background:var(--void-2); border-top:1px solid var(--hairline); }
-    .team-note { margin-top:52px; padding-top:28px; border-top:1px solid var(--hairline); max-width:640px; }
+    .team-note { margin-top:52px; padding-top:28px; border-top:1px solid var(--hairline); max-width:560px; }
     .team-note p { font-size:14.5px; color:var(--muted); margin-bottom:10px; }
     .team-note .team-line { font-size:19px; color:var(--text); margin-bottom:14px; }
 
@@ -293,7 +292,11 @@
     /* Phone display scale — keep display type inside the padded column on narrow screens */
   @media (max-width: 520px) {
     .hero h1, h1 { font-size: clamp(29px, 8.5vw, 42px); }
-    h2 { font-size: clamp(26px, 8vw, 36px); }
+    /* .sect-head h2 and .closing h2 outrank a bare `h2`, so this rule never
+       reached them and both kept their desktop floors - 32px and 34px against an
+       h1 scaled to 31px at 360. The page title was losing to a section heading on
+       every phone. Same specificity, and the h1 now leads by 5-8px throughout. */
+    h2, .sect-head h2, .closing h2 { font-size: clamp(24px, 7.2vw, 34px); }
   }
     /* Cross-page transitions + FAQ height ease + press feedback (progressive, 2026 browsers) */
   :root { interpolate-size: allow-keywords; }
@@ -400,7 +403,7 @@
 
 <header class="hero">
   <div class="hero-inner container">
-    <span class="ab-icon" style="--dur:9s;--delay:0s;--drift:9px;--tilt:-1.6deg"><picture><source srcset="assets/about/chairs-320.webp" type="image/webp"><img src="assets/about/chairs-320.png" alt="Two chairs side by side" width="320" height="320" decoding="async"></picture></span>
+    <span class="ab-icon" style="--dur:9s;--delay:0s;--drift:9px;--tilt:-1.6deg"><picture><source srcset="assets/about/chairs-320.webp" type="image/webp"><img src="assets/about/chairs-320.png" alt="" width="320" height="320" decoding="async"></picture></span>
     <h1>Who&rsquo;s behind <em>KaizenEvol</em></h1>
     <p class="hero-sub">Two founders, one monthly fee. We make your content, run your ads and keep your social alive, and judge all of it on what a sale actually leaves you, not on what Instagram says.</p>
   </div>
@@ -419,17 +422,15 @@
         <source srcset="assets/about/founders-1200.webp" type="image/webp">
         <img src="assets/about/founders-1200.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="1129" decoding="async" loading="lazy">
       </picture>
-      <span class="duo-badge" aria-hidden="true"><b>Five at a time</b><span>so you get the founders</span></span>
-      <figcaption class="smallcaps">Diego, front. Law, behind him.</figcaption>
+      <span class="duo-badge" aria-hidden="true"><b>Two founders</b><span>no account manager</span></span>
     </figure>
 
     <div class="team-note">
-      <p>We are both behind the camera and both in the edit.</p>
       <p class="team-line">You should be making the thing. We will make people want it.</p>
       <p>One of us makes the work, the other makes it pay. No account managers, no middlemen.</p>
     </div>
   </div>
-    <span class="ab-icon" style="--dur:7.4s;--delay:.6s;--drift:7px;--tilt:1.3deg"><picture><source srcset="assets/about/stopwatch-320.webp" type="image/webp"><img src="assets/about/stopwatch-320.png" alt="A stopwatch" width="320" height="320" decoding="async"></picture></span>
+    <span class="ab-icon" style="--dur:7.4s;--delay:.6s;--drift:7px;--tilt:1.3deg"><picture><source srcset="assets/about/stopwatch-320.webp" type="image/webp"><img src="assets/about/stopwatch-320.png" alt="" width="320" height="320" decoding="async"></picture></span>
 </section>
 
 
@@ -442,7 +443,7 @@
       <a href="apply.html" class="btn-solid">Take a seat &rarr;</a>
       <a href="mailto:diego@kaizenevol.com" class="btn-quiet">Email us directly</a>
     </div>
-    <p class="closing-note" data-seats="5" data-taken="1">Five at a time, so every one of them gets the founders.</p>
+    <p class="closing-note" data-seats="5" data-taken="1">Every seat gets both of us, start to finish.</p>
   </div>
 </section>
 
