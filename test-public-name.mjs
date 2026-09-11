@@ -6,9 +6,11 @@
    never searched for, because a check derived from the edit can only confirm
    itself. */
 import { chromium } from 'playwright';
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync, existsSync } from 'fs';
 const BASE = process.env.BASE || 'http://localhost:8899';
 const pages = readdirSync('.').filter(f => f.endsWith('.html'));
+/* Served from the root but not HTML, so the DOM pass never sees them. */
+const plain = ['llms.txt', 'robots.txt', 'sitemap.xml'].filter(f => existsSync(f));
 const b = await chromium.launch({executablePath:'/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
 const ctx = await b.newContext();
 let hits = 0;
@@ -38,5 +40,15 @@ for (const f of pages) {
   await p.close();
 }
 await b.close();
-console.log(hits === 0 ? `clean: ${pages.length} pages, none render the name` : `${hits} occurrence(s) still visible`);
+
+for (const f of plain) {
+  const re = /\brahaid\b/i;
+  for (const line of readFileSync(f, 'utf8').split('\n')) {
+    if (re.test(line) && !/rahaid-crm|calendly\.com\/rahaid/i.test(line)) {
+      hits++; console.log(`CARRIES "Rahaid"  ${f}`); console.log('   ' + line.trim().slice(0, 90));
+    }
+  }
+}
+
+console.log(hits === 0 ? `clean: ${pages.length} pages + ${plain.length} text file(s), none render the name` : `${hits} occurrence(s) still visible`);
 process.exit(hits === 0 ? 0 : 1);
