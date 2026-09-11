@@ -488,6 +488,11 @@
     .kz-do{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
     .kz-do li{position:relative;padding-left:20px;font-size:14px;color:var(--muted);line-height:1.5}
     .kz-do li::before{content:"";position:absolute;left:0;top:10px;width:9px;height:1px;background:var(--stone)}
+    /* The mark on the mechanism name. Small and raised so it reads as a claim
+       rather than as punctuation at 46px. Unregistered, so it is TM and never R:
+       falsely representing a mark as registered is an offence under s.95 of the
+       Trade Marks Act 1994. test-trademark.mjs enforces both halves. */
+    h2 .tm{font-size:.32em;vertical-align:super;font-weight:400;letter-spacing:0;margin-left:.06em}
 
     /* The icon. Ours, generated, neutral grey. Per-icon scale and centring are
        MEASURED off each render's ink bounding box, not eyeballed — spans of
@@ -691,7 +696,7 @@
 <section id="method">
   <div class="container reveal">
     <div class="smallcaps">Your fix</div>
-    <h2>The Kaizen Loop</h2>
+    <h2>The Kaizen Loop<span class="tm">&trade;</span></h2>
     <p class="lede">First we learn the brand properly. What you make, why you make it, and what it&rsquo;s meant to mean to the person who buys it. Then, before a pound is spent, two numbers: what a customer is actually worth to you, and what your sales were already doing without us.</p>
     <p class="pull">Everything after that gets judged against both.</p>
     <p class="lede">Four stages, run in order. Each one only works because the one before it did, and the last one feeds the first.</p>
