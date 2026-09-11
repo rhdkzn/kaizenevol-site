@@ -11,6 +11,15 @@
  * boundary of the decision behind it. The decision is that our commercial terms
  * are a conversation, not a page.
  *
+ * ONE EXEMPTION, added the same day (Rahaid): "only on the engagement section do I
+ * want mentioned about the monthly fee". So what-we-run.html's engagement block may
+ * say it, and nowhere else on the site may - including the rest of that same file.
+ * The exemption is scoped to the SECTION rather than the file, and it is asserted
+ * in both directions: the phrase must appear there exactly once, and must not
+ * appear anywhere outside it. A one-way exemption would let the phrase quietly
+ * spread back across the estate, which is the state this guard was written to end.
+ * Still no figure, anywhere: that rule is older and was never relaxed.
+ *
  * WHAT THIS DOES NOT BAN, deliberately. The client's own money is the whole
  * argument of the site: their ad spend, their margin, what a sale leaves them.
  * And the ownership lines he kept explicitly - "no cut of your ad spend", "your
@@ -48,10 +57,32 @@ const visible = s => s
   .replace(/<style[\s\S]*?<\/style>/gi, ' ')
   .replace(/\/\*[\s\S]*?\*\//g, ' ');
 
+/* The engagement block on what-we-run.html, cut out of the scan and checked on its
+   own terms. Matched from its eyebrow to the end of its <section>. */
+const ENGAGEMENT_FILE = 'what-we-run.html';
+const ENGAGEMENT_RE = /<section class="lp-block tone">\s*<div class="container">\s*<p class="smallcaps lp-eyebrow">04 \/ Engagement<\/p>[\s\S]*?<\/section>/;
+const ALLOWED_IN_ENGAGEMENT = /\bone monthly fee\b/;
+
 let fail = 0, pass = 0;
 for (const f of files) {
   let s;
   try { s = readFileSync(f, 'utf8'); } catch { continue; }
+
+  if (f === ENGAGEMENT_FILE) {
+    const m = s.match(ENGAGEMENT_RE);
+    if (!m) {
+      fail++;
+      console.log(`FAIL  ${f} — the engagement block could not be found, so its exemption cannot be scoped`);
+    } else {
+      const inside = (visible(m[0]).match(new RegExp(ALLOWED_IN_ENGAGEMENT, 'g')) || []).length;
+      if (inside === 1) pass++;
+      else { fail++; console.log(`FAIL  ${f} — the engagement block mentions the fee ${inside} time(s); it must be exactly 1`); }
+      if (/£\s?\d/.test(visible(m[0]))) { fail++; console.log(`FAIL  ${f} — the engagement block carries a figure; the exemption is the phrase, never a number`); }
+      else pass++;
+      s = s.replace(ENGAGEMENT_RE, ' ');   // scan the rest of the file normally
+    }
+  }
+
   const body = visible(s);
   let clean = true;
   for (const [re, kind] of BANNED) {
