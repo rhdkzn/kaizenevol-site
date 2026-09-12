@@ -154,27 +154,9 @@
        under the 44px touch minimum). There is no button now. The apply form's first
        question sits in the hero, so answering it IS the application starting; the answer
        rides across in ?b= and apply.html opens on question two with it already filled. */
-    .hero-ctas.start{flex-direction:column;gap:16px}
-    .ke-start{display:flex;align-items:center;gap:12px;width:100%;max-width:440px;margin:0 auto;
-      text-align:left;padding:0 2px 10px;border-bottom:1.5px solid var(--hairline);
-      transition:border-color .3s var(--el-ease)}
-    .ke-start:focus-within,.ke-start:hover{border-bottom-color:var(--ink)}
-    .ke-start input{flex:1;min-width:0;min-height:48px;padding:0;border:0;outline:none;
-      background:transparent;font-family:var(--sans);font-size:17px;color:var(--ink)}
-    .ke-start input::placeholder{color:var(--muted);opacity:1}
-    .ke-start-go{flex:0 0 auto;width:44px;height:44px;padding:0;display:grid;place-items:center;
-      border:0;border-radius:50%;background:var(--ink);color:var(--page);cursor:pointer;
-      transition:transform .3s var(--el-ease),opacity .3s var(--el-ease)}
-    .ke-start-go:hover{transform:translateX(3px)}
-    .ke-start-go:active{opacity:.82}
-    /* The secondary link is 25px tall — the exact number the pill it replaced was
-       criticised for. Grow the TOUCH target to 44px without moving a pixel: a
-       transparent overlay, not padding, because padding would drag the underline
-       away from the text. 9.5px of overhang each side, clear of the 16px gap above
-       and the 14px note margin below. */
-    .hero-ctas.start .btn-quiet{position:relative}
-    .hero-ctas.start .btn-quiet::after{content:'';position:absolute;left:-14px;right:-14px;
-      top:50%;transform:translateY(-50%);height:44px}
+    /* .hero-ctas.start, .ke-start and the closing block below moved to
+       interactions.css on 2026-09-12 so every page's closing reads one source.
+       Leaving a copy here is how the set drifted apart the first time. */
 
     /* MOTION — brand/DESIGN.md: one signature moment per surface, house easing everywhere.
        The signature is the hero line drop: a rotateX fall, not an opacity fade. The rotation
@@ -598,20 +580,6 @@
     .slot{background:var(--cool);aspect-ratio:4/5;display:flex;align-items:flex-end;padding:18px}
     .slot span{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
 
-    .closing{text-align:center}
-    .closing h2{max-width:18ch;margin:0 auto}
-    /* Matched to the closing on about/contact and the three question pages:
-       16px sub capped at 52ch, the same two routes out, and the seats note.
-       Rahaid: "pattern this, it's not constant even the design is different".
-       The copy stays - two of these three paragraphs make a claim that appears
-       nowhere else on this page, so condensing them to match a shape would
-       have cost the page real selling copy, not just words. */
-    .closing .closing-sub{font-size:16px;font-weight:400;max-width:52ch;
-      margin:18px auto 0;line-height:1.65}
-    .closing .closing-sub:first-of-type{margin-top:24px}
-    .closing .hero-ctas.start{margin-top:36px}
-    .closing .btn-quiet{border-bottom-color:rgba(247,246,244,.34)}
-    .closing-note{margin-top:24px;font-size:13px;--kz-seat:rgba(247,246,244,.62)}
 
     footer{background:rgba(233,230,224,.55);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
     .f-grid{display:grid;gap:34px}

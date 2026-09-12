@@ -255,8 +255,10 @@
     /* ============ CLOSING ============ */
     .closing { padding:110px 0; background:var(--void); border-top:1px solid var(--hairline); text-align:center; }
     .closing h2 { font-size:clamp(28px, 1.2rem + 2.2vw, 48px); margin:0 auto 20px; max-width:22ch; }
-    .closing p.closing-sub { font-size:16px; color:var(--muted); max-width:520px; margin:0 auto 38px; }
-    .closing-ctas { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    /* The sub takes its colour from .scrub in interactions.css now - var(--muted)
+       here out-specified it and would have left dark grey on near-black.
+       The button-pair rule went with the buttons. */
+    .closing p.closing-sub { max-width:520px; margin:24px auto 0; }
     .closing-note { margin-top:22px; font-size:13px; color:var(--muted); }
 
     /* Consent banner (injected by midnight.js) */
@@ -693,13 +695,27 @@
   </section>
 
 
-<section class="closing lp-next" id="contact">
+<section class="closing lp-next scrub" id="contact" data-scrub>
+  <div class="scrub-media" aria-hidden="true">
+    <picture>
+      <source media="(max-width: 860px)" srcset="/assets/loop/loop-mobile-poster.jpg">
+      <img src="/assets/loop/loop-poster.jpg" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+    </picture>
+    <video class="scrub-video"
+      data-webm="/assets/loop/loop.webm" data-webm-mobile="/assets/loop/loop-mobile.webm"
+      data-mp4="/assets/loop/loop.mp4" data-mp4-mobile="/assets/loop/loop-mobile.mp4"
+      muted playsinline preload="none" disablepictureinpicture></video>
+    <div class="scrub-scrim"></div>
+  </div>
   <div class="container">
     <p class="smallcaps lp-eyebrow">Next step</p>
     <h2>Fifteen minutes tells us.</h2>
     <p class="closing-sub">Tell us what you sell and what it costs you to make. If we cannot help we will say so, and either way you leave knowing what a customer is actually worth to you.</p>
-    <div class="closing-ctas">
-      <a href="apply.html" class="btn-solid">Take a seat &rarr;</a>
+    <div class="hero-ctas start">
+      <form class="ke-start" action="apply.html" method="get">
+        <input type="text" name="b" autocomplete="organization" aria-label="What&rsquo;s your brand called?" placeholder="What&rsquo;s your brand called?">
+        <button class="ke-start-go" type="submit" aria-label="Take a seat"><svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></button>
+      </form>
       <a href="mailto:diego@kaizenevol.com" class="btn-quiet">Email us directly</a>
     </div>
     <p class="closing-note" data-seats="5" data-taken="1">Every seat gets both of us, start to finish.</p>
@@ -768,6 +784,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.disp
 <script src="/midnight.js?v=21" defer></script>
 <script defer src="/script.js"></script>
 <script src="/seats.js" defer></script>
+<script src="/scrub.js" defer></script>
 <script>
 /* Cursor-reactive tilt on the three creative assets. The tilt goes on <picture> and the
    float stays on <img>, so the two transforms compose instead of overwriting each other.

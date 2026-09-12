@@ -415,6 +415,10 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
 .scrub .closing-sub {
   color: var(--page, #f7f6f4);
 }
+/* kaizen-loop and what-we-run colour their heading emphasis with `h2 em`, which
+   beats the heading's own colour by inheritance and left "stage one" at 3.61:1
+   once the closing went dark. The em takes the heading's colour on this ground. */
+.scrub h2 em { color: inherit }
 /* The sub and the note sit back from the heading on a dark ground the same way
    --muted sits back from --ink on a light one. */
 .scrub .closing-sub {
@@ -534,7 +538,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
 .motion .lp-next .lp-eyebrow,
 .motion .lp-next h2,
 .motion .closing-sub,
-.motion .closing-ctas,
+.motion :is(.lp-block, .lp-next) .hero-ctas.start,
 .motion .closing-note,
 .motion .lp-block .sect-head > p,
 .motion .lp-block figure.duo,
@@ -563,7 +567,9 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
      block on the page was the one that did not move. Same beats as any section. */
   .motion .closing-sub { animation: ke-lp-rise linear both;
     animation-timeline: --lp; animation-range: entry 90px entry 290px; }
-  .motion .closing-ctas { animation: ke-lp-rise linear both;
+  /* Scoped, unlike its .closing-sub neighbour: .hero-ctas.start also exists in
+     the HOMEPAGE HERO now, which publishes no --lp timeline. */
+  .motion :is(.lp-block, .lp-next) .hero-ctas.start { animation: ke-lp-rise linear both;
     animation-timeline: --lp; animation-range: entry 120px entry 300px; }
   .motion .closing-note { animation: ke-lp-fade linear both;
     animation-timeline: --lp; animation-range: entry 150px entry 300px; }
@@ -632,7 +638,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .motion .lp-do li,
   .motion .wr-crit li,
   .motion :is(.lp-block, .lp-next) .closing-sub,
-  .motion :is(.lp-block, .lp-next) .closing-ctas,
+  .motion :is(.lp-block, .lp-next) .hero-ctas.start,
   .motion :is(.lp-block, .lp-next) .closing-note,
   .motion .lp-block .sect-head > p,
   .motion .lp-block figure.duo,
@@ -643,12 +649,12 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .motion :is(.lp-block, .lp-next).in h2,
   .motion .lp-block.in h3 { clip-path: inset(-14% -8% -22% 0); transform: none }
   .motion :is(.lp-block, .lp-next).in .closing-sub,
-  .motion :is(.lp-block, .lp-next).in .closing-ctas,
+  .motion :is(.lp-block, .lp-next).in .hero-ctas.start,
   .motion :is(.lp-block, .lp-next).in .closing-note,
   .motion .lp-block.in .sect-head > p,
   .motion .lp-block.in figure.duo,
   .motion .lp-block.in .team-note { opacity: 1; transform: none }
-  .motion :is(.lp-block, .lp-next).in .closing-ctas { transition-delay: .09s }
+  .motion :is(.lp-block, .lp-next).in .hero-ctas.start { transition-delay: .09s }
   .motion :is(.lp-block, .lp-next).in .closing-note { transition-delay: .16s }
   .motion .lp-block.in figure.duo { transition-delay: .08s }
   .motion .lp-block.in .team-note { transition-delay: .16s }
@@ -670,3 +676,96 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .motion .lp-block.in .lp-do li:nth-child(3),
   .motion .lp-block.in .wr-crit li:nth-child(3) { transition-delay: .12s }
 }
+
+/* ---------------------------------------------------------------------------
+ * THE CLOSING — one shape AND one treatment, on every page.
+ *
+ * Rahaid, looking at the question pages next to the homepage: "Wait I told you
+ * make it look like this on all pages and u didn't." He was right, and the
+ * reason is recorded in test-closing-parity.mjs: the first time he said
+ * "pattern this, it's not constant, even the design is different" I patterned
+ * the PARTS — a heading, a 16px sub, two routes out, the seats note — and left
+ * the homepage's dark anchor alone because DESIGN.md called it the homepage's
+ * single anchor. "Look like this" was never about the parts.
+ *
+ * DESIGN.md's rule is ONE PER SURFACE, not one per section. A page is the
+ * surface, so one dark closing at the foot of each page is the rule being
+ * followed, not bent — what it bars is a second dark band on the same page,
+ * and none of these has one.
+ *
+ * These rules lived in index.html's inline <style> and are MOVED here, not
+ * copied: a second copy is exactly how the set drifted apart the first time.
+ * ------------------------------------------------------------------------ */
+/* 80px top and bottom, the homepage's value, on every page. Measured before this
+   change: index 80/80, the question pages clamp(56,9vw,96) top and ZERO bottom -
+   the dark band ended flush against the seats note - and the two landing pages
+   110/110. Three different closings is what "make it look like this" was about. */
+.closing { text-align: center; padding-block: 80px }
+/* The heading is NOT sized here. Forcing index's h2 clamp onto all seven closings
+   took the question pages from 24px to 31px against a 37px h1 - 1.19x, under the
+   1.3x test-heading-scale.mjs requires, so the page's own headline stopped leading.
+   Each page's type scale sizes its own closing heading; index reads bigger there
+   because index's h1 is bigger. The guard caught it before it shipped. */
+.closing h2 { max-width: 18ch; margin: 0 auto }
+.closing .closing-sub { font-size: 16px; font-weight: 400; max-width: 52ch;
+  margin: 18px auto 0; line-height: 1.65 }
+.closing .closing-sub:first-of-type { margin-top: 24px }
+.closing .hero-ctas.start { margin-top: 36px }
+/* .btn-quiet is TWO different buttons in this estate: an underlined text link on
+   index, a bordered pill on the other six. Rendered side by side, the closing was
+   the one place that difference showed. The closing takes index's form everywhere;
+   the pill keeps its own life outside this section. */
+.closing .btn-quiet { display: inline-block; background: transparent; border: 0;
+  border-bottom: 1px solid rgba(247, 246, 244, .34); border-radius: 0;
+  padding: 0 0 2px; font-size: 14px; font-weight: 500; text-decoration: none }
+.closing-note { margin-top: 24px; font-size: 13px; --kz-seat: rgba(247, 246, 244, .62) }
+
+/* The eyebrow's hairline. index draws it — its closing container carries
+   .reveal and its own scroll-timeline keyframes animate the scaleX. Every
+   other page has no reveal system, so it gets the same line already drawn.
+   .lp-eyebrow is excluded because kaizen-loop and what-we-run animate theirs
+   through the .lp-next rules above, and this would out-specify them. */
+.closing .container > .smallcaps { position: relative }
+.closing .container:not(.reveal) > .smallcaps:not(.lp-eyebrow)::before {
+  content: ""; position: absolute; left: 50%; top: -24px;
+  width: 180px; height: 1px; background: var(--hairline);
+  transform: translateX(-50%) scaleX(1); transform-origin: center;
+}
+
+/* THE START FIELD — the closing's primary route in on every page now, the same
+   one the hero uses. Answering it IS the application starting: the answer rides
+   across in ?b= and apply.html opens on question two with it filled. */
+.hero-ctas.start { display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 16px; flex-wrap: wrap }
+.ke-start { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 440px;
+  margin: 0 auto; text-align: left; padding: 0 2px 10px;
+  border-bottom: 1.5px solid var(--hairline);
+  transition: border-color .3s var(--el-ease) }
+.ke-start:focus-within, .ke-start:hover { border-bottom-color: var(--ink) }
+.ke-start input { flex: 1; min-width: 0; min-height: 48px; padding: 0; border: 0; outline: none;
+  background: transparent; font-family: var(--sans); font-size: 17px; color: var(--ink) }
+.ke-start input::placeholder { color: var(--muted); opacity: 1 }
+.ke-start-go { flex: 0 0 auto; width: 44px; height: 44px; padding: 0; display: grid;
+  place-items: center; border: 0; border-radius: 50%; background: var(--ink); color: var(--page);
+  cursor: pointer; transition: transform .3s var(--el-ease), opacity .3s var(--el-ease) }
+.ke-start-go:hover { transform: translateX(3px) }
+.ke-start-go:active { opacity: .82 }
+/* The secondary link is 25px tall — the exact number the pill it replaced was
+   criticised for. Grow the TOUCH target to 44px without moving a pixel: a
+   transparent overlay, not padding, because padding would drag the underline
+   away from the text. */
+.hero-ctas.start .btn-quiet { position: relative }
+.hero-ctas.start .btn-quiet::after { content: ''; position: absolute; left: -14px; right: -14px;
+  top: 50%; height: 44px; transform: translateY(-50%) }
+
+/* The field ON THE DARK GROUND. It was never written, and the homepage has been
+   shipping the consequence: measured on the live closing, the typed text was
+   --ink #23211E on #0D0D0F — 1.2:1, which is to say you could not read what you
+   were typing into the primary call to action of the whole site. The submit disc
+   was --ink on the same ground, so the circle was invisible and only its arrow
+   read. Found while porting the section, by measuring the thing being copied. */
+.scrub .ke-start { border-bottom-color: rgba(247, 246, 244, .42) }
+.scrub .ke-start:focus-within, .scrub .ke-start:hover { border-bottom-color: var(--page, #f7f6f4) }
+.scrub .ke-start input { color: var(--page, #f7f6f4) }
+.scrub .ke-start input::placeholder { color: rgba(247, 246, 244, .62) }
+.scrub .ke-start-go { background: var(--page, #f7f6f4); color: var(--ink, #23211e) }
