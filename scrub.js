@@ -51,11 +51,41 @@
   var painted = false;
   var loading = false;
 
+  /* THE FILM RUNS FROM THE MOMENT THE SECTION APPEARS TO THE MOMENT THE PAGE
+     BOTTOMS OUT — the same journey on every page (2026-09-12).
+
+     Rahaid: "that black loops animation isn't consistent." It wasn't. The old
+     mapping was the section's own travel through the viewport,
+     (vh - rect.top) / (rect.height + vh), which assumes the section can scroll
+     all the way PAST the viewport. The closing is the last thing before the
+     footer, so it never can: you run out of page first. Measured at 390px, what
+     each page actually reached:
+
+       index             1430px of scroll   ->  87% of the film
+       the four questions 1266px            ->  93%
+       kaizen-loop / what-we-run  1195px    ->  86%
+
+     Three different speeds, three different stopping points, and the last
+     7-14% of the clip unreachable on every page — nobody had ever seen the end
+     of it. The section is 522-791px tall across the set and the footer is
+     638-657px, and those two numbers were silently setting the choreography.
+
+     Measuring the SCROLL RANGE instead removes both. The film starts when the
+     section's top crosses the bottom of the screen and finishes exactly as the
+     page does, so every page plays the whole clip over its own travel. */
   function progress() {
-    var rect = section.getBoundingClientRect();
-    var span = rect.height + window.innerHeight;
-    if (span <= 0) return 0;
-    var p = (window.innerHeight - rect.top) / span;
+    var top = section.getBoundingClientRect().top + window.pageYOffset;
+    var enter = top - window.innerHeight;          // scrollY when it first appears
+    if (enter < 0) enter = 0;
+    var end = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    ) - window.innerHeight;
+    var span = end - enter;
+    // A viewport tall enough to hold the section and the footer at once leaves
+    // nothing to scrub against; show the film complete rather than frozen at 0.
+    if (span < 8) return 1;
+    var p = (window.pageYOffset - enter) / span;
     return p < 0 ? 0 : p > 1 ? 1 : p;
   }
 

@@ -22,7 +22,7 @@
  *   rendered pixels behind the text, not assumed from the token.
  */
 import { chromium, devices } from 'playwright';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync, statSync, readdirSync } from 'node:fs';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
 let pass = 0, fail = 0;
@@ -144,6 +144,88 @@ const browser = await chromium.launch({
     document.querySelector('[data-scrub] .scrub-video')?.duration ?? 0);
   check('the clip loaded its metadata', dur > 1, `${dur.toFixed(1)}s`);
 
+  await ctx.close();
+}
+
+// ---- the film runs the SAME on every page that carries it ------------------
+//
+// Rahaid, 2026-09-12: "that black loops animation isn't consistent." It wasn't,
+// and nothing here would have known: every check above drives index.html only,
+// so the film was guarded on one page and shipped on seven.
+//
+// The old mapping measured the section's travel through the viewport, which
+// assumes the section can scroll PAST it. The closing is the last thing before
+// the footer, so it never can — you run out of page first, and where you run out
+// depends on that page's section height and footer height. Measured at 390px:
+// index reached 87% of the clip over 1430px, the question pages 93% over 1266px,
+// the two landing pages 86% over 1195px. Three speeds, three stopping points,
+// and the last 7-14% of the film unreachable everywhere.
+//
+// So this asserts the JOURNEY, not the mechanism: on every page the film sits at
+// frame zero when the section appears and finishes as the page bottoms out, and
+// the curve between is the same one index draws. Pages are discovered, never
+// typed.
+{
+  const pages = readdirSync('.')
+    .filter((f) => f.endsWith('.html'))
+    .filter((f) => /data-scrub/.test(readFileSync(f, 'utf8')));
+  check('more than one page carries the film', pages.length > 1, `${pages.length} found`);
+
+  const ctx = await browser.newContext({
+    viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true,
+  });
+  for (const f of pages) {
+    const page = await ctx.newPage();
+    await page.goto(`${BASE}/${f}`, { waitUntil: 'networkidle' });
+    // Wait on the controller's own flag, never a sleep.
+    const ready = await page.waitForFunction(
+      () => document.querySelector('[data-scrub]')?.dataset.scrubPainted === 'true',
+      { timeout: 20000 }).then(() => true).catch(() => false);
+    if (!ready) {
+      check(`${f}: the film paints so its travel can be measured`, false,
+        'no frame painted in 20s — this is the harness or the clip, not the mapping');
+      await page.close();
+      continue;
+    }
+    const geo = await page.evaluate(() => {
+      const s = document.querySelector('[data-scrub]');
+      const top = s.getBoundingClientRect().top + window.pageYOffset;
+      const end = document.documentElement.scrollHeight - window.innerHeight;
+      return { enter: Math.max(0, top - window.innerHeight), end };
+    });
+    const span = geo.end - geo.enter;
+    const at = async (frac) => {
+      await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }),
+        Math.round(geo.enter + span * frac));
+      /* WAIT FOR THE SEEK TO SETTLE, never a fixed sleep. The controller eases
+         toward its target (current += (target - current) * 0.18 per frame) so a
+         240ms read catches it about 3% short — and a first draft of this check
+         read that 97% as a mapping failure on three pages. Loosening the
+         threshold to swallow it would have made the check unable to fail, which
+         is the defect this file's budgets already had. Poll until currentTime
+         stops moving instead. */
+      return page.evaluate(() => new Promise((res) => {
+        const v = document.querySelector('.scrub-video');
+        if (!v || !v.duration) return res(null);
+        let last = -1, still = 0, ticks = 0;
+        (function poll() {
+          const t = v.currentTime;
+          still = Math.abs(t - last) < 0.004 ? still + 1 : 0;
+          last = t;
+          if (still >= 4 || ++ticks > 180) return res(t / v.duration);
+          requestAnimationFrame(poll);
+        })();
+      }));
+    };
+    const start = await at(0), mid = await at(0.5), end = await at(1);
+    check(`${f}: the film starts at the top of the clip`, start !== null && start <= 0.02,
+      `${start === null ? 'no duration' : (start * 100).toFixed(0) + '%'}`);
+    check(`${f}: the film finishes as the page does`, end !== null && end >= 0.97,
+      `${end === null ? 'no duration' : (end * 100).toFixed(0) + '%'} of the clip reached`);
+    check(`${f}: halfway down is halfway through`, mid !== null && Math.abs(mid - 0.5) <= 0.06,
+      `${mid === null ? 'no duration' : (mid * 100).toFixed(0) + '%'} at the midpoint`);
+    await page.close();
+  }
   await ctx.close();
 }
 
