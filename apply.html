@@ -72,7 +72,7 @@
     .review dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 20px}
     .review dt{color:var(--muted);font-size:12.5px}
     .review dd{margin:0}
-    .done h1{font-weight:200;letter-spacing:-0.035em;font-size:clamp(28px,1.3rem + 2vw,38px);margin:0}
+    .done h2{font-weight:200;letter-spacing:-0.035em;font-size:clamp(28px,1.3rem + 2vw,38px);margin:0}
     .done p{color:var(--muted);margin:16px 0 0}
     /* The read-back. It is the only part of this page that tells them something they did
        not already know, so it gets the ink: body colour, a rule above it, and the lede in
@@ -114,23 +114,23 @@
         <div class="smallcaps">Take a seat</div>
         <h1 class="q">What&rsquo;s your brand called?</h1>
         <p class="why">We take <em>five</em> at a time, so these get read properly and you get a reply either way.</p>
-        <div class="answer"><input type="text" id="businessName" autocomplete="organization" placeholder="Brand or artist name" /></div>
+        <div class="answer"><input type="text" id="businessName" aria-label="Brand or artist name" autocomplete="organization" placeholder="Brand or artist name" /></div>
       </section>
 
       <section class="step" data-key="businessUrl" data-type="text">
-        <h1 class="q">Where can we see it?</h1>
+        <h2 class="q">Where can we see it?</h2>
         <p class="why">The store, or an Instagram handle if the store is not up yet.</p>
-        <div class="answer"><input type="text" id="businessUrl" placeholder="yourbrand.com or @yourbrand" /></div>
+        <div class="answer"><input type="text" id="businessUrl" aria-label="Your store link or Instagram handle" placeholder="yourbrand.com or @yourbrand" /></div>
       </section>
 
       <section class="step" data-key="trade" data-type="text">
-        <h1 class="q">What do you make?</h1>
+        <h2 class="q">What do you make?</h2>
         <p class="why">In your own words. Streetwear, jewellery, ceramics, prints, music, whatever it is.</p>
-        <div class="answer"><input type="text" id="trade" placeholder="What you sell" /></div>
+        <div class="answer"><input type="text" id="trade" aria-label="What you sell" placeholder="What you sell" /></div>
       </section>
 
       <section class="step" data-key="sellModel" data-type="choice">
-        <h1 class="q">How do you sell? Big drops, or always on?</h1>
+        <h2 class="q">How do you sell? Big drops, or always on?</h2>
         <p class="why">Do you release collections on a schedule, or keep the same things for sale all the time?</p>
         <div class="answer opts" role="group" aria-label="How you sell">
           <button type="button" class="opt">Drops on a schedule</button>
@@ -141,7 +141,7 @@
       </section>
 
       <section class="step" data-key="revenue" data-type="choice">
-        <h1 class="q">Roughly how much does it sell a month?</h1>
+        <h2 class="q">Roughly how much does it sell a month?</h2>
         <p class="why">This is the number that decides whether we can help, so an honest answer is worth more than a flattering one. Small is not a problem. Guessing is.</p>
         <div class="answer opts" role="group" aria-label="Monthly revenue">
           <button type="button" class="opt">Pre-launch, nothing yet</button>
@@ -154,7 +154,7 @@
       </section>
 
       <section class="step" data-key="costShare" data-type="choice">
-        <h1 class="q">Roughly, how much of the price is what it costs you to make?</h1>
+        <h2 class="q">Roughly, how much of the price is what it costs you to make?</h2>
         <p class="why">A rough guess is fine. Materials, blanks, printing, whatever goes into one piece.</p>
         <div class="answer opts" role="group" aria-label="Cost as a share of price">
           <button type="button" class="opt">About a quarter</button>
@@ -166,7 +166,7 @@
       </section>
 
       <section class="step" data-key="adspend" data-type="choice">
-        <h1 class="q">And what are you spending on ads?</h1>
+        <h2 class="q">And what are you spending on ads?</h2>
         <p class="why">Whatever it is. We price on the work, not the budget, so a small number here does not count against you.</p>
         <div class="answer opts" role="group" aria-label="Monthly ad spend">
           <button type="button" class="opt">Nothing yet</button>
@@ -178,16 +178,16 @@
       </section>
 
       <section class="step" data-key="message" data-type="long">
-        <h1 class="q">What are you trying to do in the next six months?</h1>
+        <h2 class="q">What are you trying to do in the next six months?</h2>
         <p class="why">A launch, a drop, getting off a plateau, running ads properly for the first time.</p>
-        <div class="answer"><textarea id="message" placeholder="Where you are trying to get to"></textarea></div>
+        <div class="answer"><textarea id="message" aria-label="What you are trying to do in the next six months" placeholder="Where you are trying to get to"></textarea></div>
       </section>
 
       <section class="step" data-key="email" data-type="email">
-        <h1 class="q">Who are we speaking to, and where do we send the answer?</h1>
-        <div class="answer"><input type="text" id="contactName" autocomplete="name" placeholder="Your name" /></div>
+        <h2 class="q">Who are we speaking to, and where do we send the answer?</h2>
+        <div class="answer"><input type="text" id="contactName" aria-label="Your name" autocomplete="name" placeholder="Your name" /></div>
         <p class="why">We read these ourselves, both of us. You will hear back whether it is a fit or not.</p>
-        <div class="answer"><input type="email" id="email" autocomplete="email" placeholder="you@yourbrand.com" /></div>
+        <div class="answer"><input type="email" id="email" aria-label="Your email address" autocomplete="email" placeholder="you@yourbrand.com" /></div>
         <div class="review" id="review" hidden></div>
       </section>
 
@@ -201,7 +201,7 @@
 
     <div id="done" hidden class="done">
       <div class="smallcaps">Sent</div>
-      <h1>Got it.</h1>
+      <h2>Got it.</h2>
       <div id="read" class="read" hidden>
         <p class="read-lede">Before anyone here has opened it, here is what your answers already say.</p>
         <p id="read-1"></p>
@@ -321,7 +321,7 @@
            twice and why nothing but a label is sent. */
         try { if (window.keTrackLead) window.keTrackLead({ content_name: 'apply' }); }
         catch (e) {}
-        done.hidden = false; done.querySelector('h1').focus && done.querySelector('h1').focus(); })
+        done.hidden = false; done.querySelector('h2').focus && done.querySelector('h2').focus(); })
       .catch(function(){
         go.disabled = false; go.textContent = 'Take my seat';
         err.textContent = 'That did not send. Email diego@kaizenevol.com and we will pick it up there.';

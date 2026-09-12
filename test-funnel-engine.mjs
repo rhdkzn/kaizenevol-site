@@ -31,7 +31,10 @@ const dec = s => s
 const pageSteps = [...html.matchAll(/<section class="step[^"]*" data-key="([^"]+)"[\s\S]*?(?=<section class="step|<p class="err")/g)]
   .map(m => {
     const block = m[0];
-    const q = dec((block.match(/<h1 class="q">([\s\S]*?)<\/h1>/) || [, ''])[1]);
+    /* Match on the .q CLASS, not the tag. Steps 2-9 became <h2> on 2026-09-12 so the
+       document holds one <h1>; a tag-bound selector silently returned "" for eight of
+       nine steps and reported the page as disagreeing with its own spec. */
+    const q = dec((block.match(/<h([12]) class="q">([\s\S]*?)<\/h\1>/) || [, , ''])[2]);
     const opts = [...block.matchAll(/class="opt"[^>]*>([^<]*)<\/button>/g)].map(o => dec(o[1]));
     return { key: m[1], q, opts };
   });

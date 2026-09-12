@@ -19,7 +19,7 @@
       "type": "text",
       "q": "Where can we see it?",
       "why": "The store, or an Instagram handle if the store is not up yet.",
-      "fields": [{ "id": "businessUrl", "type": "text", "placeholder": "yourbrand.com or @yourbrand" }]
+      "fields": [{ "id": "businessUrl", "type": "text", "placeholder": "yourbrand.com or @yourbrand", "aria": "Your store link or Instagram handle" }]
     },
     {
       "key": "trade",
@@ -66,7 +66,7 @@
       "type": "long",
       "q": "What are you trying to do in the next six months?",
       "why": "A launch, a drop, getting off a plateau, running ads properly for the first time.",
-      "fields": [{ "id": "message", "type": "textarea", "placeholder": "Where you are trying to get to" }]
+      "fields": [{ "id": "message", "type": "textarea", "placeholder": "Where you are trying to get to", "aria": "What you are trying to do in the next six months" }]
     },
     {
       "key": "email",
@@ -77,7 +77,7 @@
       "review": true,
       "fields": [
         { "id": "contactName", "type": "text", "autocomplete": "name", "placeholder": "Your name" },
-        { "id": "email", "type": "email", "autocomplete": "email", "placeholder": "you@yourbrand.com" }
+        { "id": "email", "type": "email", "autocomplete": "email", "placeholder": "you@yourbrand.com", "aria": "Your email address" }
       ],
       "required": "We need somewhere to send the answer.",
       "emailError": "That email does not look right."

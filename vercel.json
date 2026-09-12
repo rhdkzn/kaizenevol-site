@@ -22,7 +22,7 @@
       ]
     },
     {
-      "source": "/(index|about|contact|services|poster).html",
+      "source": "/(index|about|what-we-run|kaizen-loop|apply|privacy|tried-ads-before|can-i-do-this-myself|ads-for-musicians|booked|f|404).html",
       "headers": [
         {
           "key": "Content-Security-Policy",

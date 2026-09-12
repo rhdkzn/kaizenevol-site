@@ -35,7 +35,15 @@ for (const w of WIDTHS) {
     const r = await p.evaluate(() => {
       const sz = e => e ? Math.round(parseFloat(getComputedStyle(e).fontSize)) : null;
       const h1 = document.querySelector('h1');
-      const h2 = [...document.querySelectorAll('main h2')].map(e => ({ s: sz(e), t: e.textContent.trim().slice(0,30) }));
+      /* .q headings are excluded. On the funnels every step is one question and only
+         one is ever on screen, so they are deliberately the SAME size; steps 2-9 are
+         <h2> purely so the document holds a single <h1> (2026-09-12). The .done panel
+         is the same case: it REPLACES the form, so its heading never shares a screen
+         with the h1 either. A real h2 on those pages is still checked — this exempts
+         two views, not the page. */
+      const h2 = [...document.querySelectorAll('main h2:not(.q)')]
+        .filter(e => !e.closest('.done'))
+        .map(e => ({ s: sz(e), t: e.textContent.trim().slice(0,30) }));
       const top = h2.sort((a,b) => b.s - a.s)[0];
       return { h1: sz(h1), h2: top ? top.s : null, which: top ? top.t : null };
     });

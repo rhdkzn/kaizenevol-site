@@ -52,7 +52,7 @@
     .review dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 20px}
     .review dt{color:var(--muted);font-size:12.5px}
     .review dd{margin:0}
-    .done h1{font-weight:200;letter-spacing:-0.035em;font-size:clamp(28px,1.3rem + 2vw,38px);margin:0}
+    .done h2{font-weight:200;letter-spacing:-0.035em;font-size:clamp(28px,1.3rem + 2vw,38px);margin:0}
     .done p{color:var(--muted);margin:16px 0 0}
     /* The read-back. It is the only part of this page that tells them something they did
        not already know, so it gets the ink: body colour, a rule above it, and the lede in

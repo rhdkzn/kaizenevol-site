@@ -132,7 +132,10 @@
       sec.dataset.key = s.key;
       if (idx === 0 && spec.eyebrow) sec.appendChild(el('div', 'smallcaps', spec.eyebrow));
 
-      var h = el('h1', 'q'); h.textContent = s.q; sec.appendChild(h);
+      /* Only the first step is the document's <h1>. Every step lives in the DOM at
+         once, so tagging them all h1 gave the page ten competing titles (audit,
+         2026-09-12). Styling comes from the .q class, so the tag change is invisible. */
+      var h = el(idx === 0 ? 'h1' : 'h2', 'q'); h.textContent = s.q; sec.appendChild(h);
 
       /* `why` carries <em> for the serif accent, so it is the one place innerHTML is used —
          and it is OUR copy from OUR spec file, never anything a visitor typed. */
@@ -165,6 +168,10 @@
           input.id = f.id;
           if (f.placeholder) input.placeholder = f.placeholder;
           if (f.autocomplete) input.setAttribute('autocomplete', f.autocomplete);
+          /* A placeholder is a VALUE, not a name: it is dropped the moment someone types,
+             so without this a screen reader announces "edit text, blank" on the page that
+             takes our leads. f.aria wins where the placeholder is only a format hint. */
+          input.setAttribute('aria-label', f.aria || f.placeholder || s.q);
           wrap.appendChild(input);
           sec.appendChild(wrap);
           if (why && s.whyAfter === fi + 1) sec.appendChild(why);
@@ -185,7 +192,7 @@
     var done = el('div', 'done'); done.id = 'done'; done.hidden = true;
     if (spec.done) {
       if (spec.done.eyebrow) done.appendChild(el('div', 'smallcaps', spec.done.eyebrow));
-      done.appendChild(el('h1', null, spec.done.h1 || 'Got it.'));
+      done.appendChild(el('h2', null, spec.done.h1 || 'Got it.'));
       var read = el('div', 'read'); read.id = 'read'; read.hidden = true;
       read.appendChild(el('p', 'read-lede', 'Before anyone here has opened it, here is what your answers already say.'));
       read.appendChild(function () { var p = el('p'); p.id = 'read-1'; return p; }());
@@ -282,7 +289,7 @@
         try { if (global.keTrackLead) global.keTrackLead({ content_name: spec.name || 'funnel' }); }
         catch (e) { /* tracking is never allowed to break a conversion */ }
         self.done.hidden = false;
-        var h = self.done.querySelector('h1'); if (h && h.focus) h.focus();
+        var h = self.done.querySelector('h2'); if (h && h.focus) h.focus();
       })
       .catch(function () {
         self.go.disabled = false;
