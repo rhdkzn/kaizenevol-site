@@ -14,7 +14,7 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 filter="${1:-}"
-red=(); green=0
+red=(); green=0; skipped=()
 
 # Preflight. Most of these tests drive a browser against BASE, and when that is not
 # up they die with an uncaught exception — 14 of them at once on 2026-09-11, every
@@ -32,8 +32,32 @@ if ! curl -fsS -o /dev/null --max-time 10 "$BASE/index.html" 2>/dev/null; then
 fi
 echo "serving $BASE"
 
+# Second preflight, same rule one layer out (added 2026-09-12). The server check above
+# was written on 2026-09-11 because 14 tests died at once and every one read as a fresh
+# site defect. A fresh container then reproduced it EXACTLY — 25 RED lines, all
+# "rc=1 Node.js v22.22.2" — for a reason the server check cannot see: `playwright` was
+# not installed. 25 of the 47 tests import it, so 25 of them crashed at the import and
+# the runner reported a red suite against a site that was entirely green.
+#
+# That is the SECOND instance of the failure verification.md bans by name — a check
+# that CANNOT RUN returning something that reads as a verdict — so it gets a mechanical
+# guard rather than another paragraph. A missing dependency is a SKIP that names itself,
+# never a RED that names the site.
+needs_browser() { grep -qE "from ['\"]playwright['\"]" "$1"; }
+have_playwright=1
+node -e "import('playwright')" >/dev/null 2>&1 || have_playwright=0
+if [ "$have_playwright" -eq 0 ]; then
+  echo "NOTE — playwright is not installed; browser tests will be SKIPPED, not failed."
+  echo "  Install:  npm install playwright@1.56.0   (1.56.0 matches this image's chromium 1194)"
+fi
+
 for t in test-*.mjs; do
   [ -n "$filter" ] && [[ "$t" != *"$filter"* ]] && continue
+  if [ "$have_playwright" -eq 0 ] && needs_browser "$t"; then
+    skipped+=("$t")
+    printf '  SKIP %-32s needs playwright — not installed (harness, not the site)\n' "$t"
+    continue
+  fi
   out=$(timeout 300 node "$t" 2>&1); rc=$?
   if [ "$rc" -eq 0 ]; then
     green=$((green+1))
@@ -46,5 +70,9 @@ for t in test-*.mjs; do
 done
 
 echo
-echo "$green green, ${#red[@]} red"
+if [ ${#skipped[@]} -gt 0 ]; then
+  echo "$green green, ${#red[@]} red, ${#skipped[@]} SKIPPED (playwright missing — these were NOT run and say nothing about the site)"
+else
+  echo "$green green, ${#red[@]} red"
+fi
 [ ${#red[@]} -eq 0 ] || { printf 'red: %s\n' "${red[*]}"; exit 1; }
