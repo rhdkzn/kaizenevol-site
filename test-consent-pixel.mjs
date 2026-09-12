@@ -22,7 +22,7 @@ const BASE = process.env.BASE || 'http://localhost:8899';
 const FAKE = '000000000000000';
 const PIXEL_HOST = /connect\.facebook\.net/;
 
-const PUBLIC = ['index.html','about.html','kaizen-loop.html','what-we-run.html','privacy.html',
+const PUBLIC = ['index.html','kaizen-loop.html','what-we-run.html','privacy.html',
                 'tried-ads-before.html','can-i-do-this-myself.html','ads-for-musicians.html',
                 'apply.html','f.html','booked.html','404.html'];
 const INTERNAL = ['crm.html','dashboard.html','portal.html','onboard.html'];

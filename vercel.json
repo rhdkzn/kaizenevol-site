@@ -127,10 +127,6 @@
       "destination": "/portal.html"
     },
     {
-      "source": "/about",
-      "destination": "/about.html"
-    },
-    {
       "source": "/what-we-run",
       "destination": "/what-we-run.html"
     },
@@ -156,6 +152,16 @@
     }
   ],
   "redirects": [
+    {
+      "source": "/about.html",
+      "destination": "/#founders",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/#founders",
+      "permanent": true
+    },
     {
       "source": "/contact.html",
       "destination": "/#contact",

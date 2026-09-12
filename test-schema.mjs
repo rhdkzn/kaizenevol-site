@@ -21,7 +21,7 @@ import { chromium } from 'playwright';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
 const FAQ = ['tried-ads-before.html', 'ads-for-musicians.html', 'can-i-do-this-myself.html'];
-const ORG_PAGES = ['index.html', 'about.html', 'what-we-run.html'];
+const ORG_PAGES = ['index.html', 'what-we-run.html'];
 const NEED_ORG = ['index.html'];
 
 /* BASE can point at the live site, which is the only way to check what a

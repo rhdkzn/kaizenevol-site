@@ -5,7 +5,7 @@
  * nobody asked for. */
 import { chromium } from 'playwright';
 const BASE = process.env.BASE || 'http://localhost:8899';
-const PAGES = ['index','about','contact','apply','privacy','can-i-do-this-myself',
+const PAGES = ['index','contact','apply','privacy','can-i-do-this-myself',
                'tried-ads-before','ads-for-musicians','404'];
 let pass = 0, fail = 0;
 const check = (l, ok, d='') => { (ok?pass++:fail++); console.log(`${ok?'PASS':'FAIL'}  ${l}${d?' — '+d:''}`); };

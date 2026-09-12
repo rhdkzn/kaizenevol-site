@@ -26,7 +26,7 @@ import { chromium } from 'playwright';
 const BASE = process.env.BASE || 'http://localhost:8899';
 // Cross-page: every <main> name must be unique across the site, or two pages pair into a morph.
 const mainNamesSeen = new Set();
-const PAGES = ['index.html', 'about.html', 'what-we-run.html', 'kaizen-loop.html',
+const PAGES = ['index.html', 'what-we-run.html', 'kaizen-loop.html',
                'privacy.html', 'apply.html', '404.html'];
 
 let pass = 0, fail = 0;
@@ -359,11 +359,15 @@ for (const [label, width, sels] of [
   await page.evaluate(() => {
     addEventListener('pageswap', e => sessionStorage.setItem('vt', e.viewTransition ? 'yes' : 'no'));
   });
-  await page.evaluate(() => document.querySelector('nav a[href*="about"]').click());
+  /* Was the About link until 2026-09-12, when that page was folded into the homepage
+     and its nav entry became an in-page anchor - which cannot cross documents, so this
+     check would have been asserting against a jump that no longer happens. Kaizen Loop
+     is the nearest equivalent: a real page, reached from the same nav. */
+  await page.evaluate(() => document.querySelector('nav a[href*="kaizen-loop"]').click());
   await page.waitForTimeout(1400);
   const r = await page.evaluate(() => ({ path: location.pathname, vt: sessionStorage.getItem('vt'), reveal: sessionStorage.getItem('reveal') }));
-  check('index -> about runs a real cross-document view transition',
-        r.vt === 'yes' && r.path.includes('about'), JSON.stringify(r));
+  check('index -> kaizen-loop runs a real cross-document view transition',
+        r.vt === 'yes' && r.path.includes('kaizen-loop'), JSON.stringify(r));
   check('the arriving page reveals with the transition and its content armed to rise',
         r.reveal === 'vt|main=0', String(r.reveal));
   await page.close();

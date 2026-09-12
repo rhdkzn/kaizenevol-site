@@ -35,7 +35,7 @@ import { readdirSync, statSync } from 'node:fs'
 
 const BASE = process.env.BASE || 'http://localhost:8899'
 const REMOTE = /^https?:\/\/(?!localhost|127\.)/.test(BASE)
-const PAGES = ['index','what-we-run','kaizen-loop','about','apply','privacy','tried-ads-before',
+const PAGES = ['index','what-we-run','kaizen-loop','apply','privacy','tried-ads-before',
                'can-i-do-this-myself','ads-for-musicians','booked','f','404']
 
 /* A face the site loads is worth its bytes only if it is doing a lot of work. Manrope

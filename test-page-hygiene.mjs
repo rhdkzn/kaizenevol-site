@@ -52,7 +52,7 @@ const check = (n, pass, d) => r.push([n, pass, d])
  * not pages a prospect lands on, and holding them to marketing hygiene would make
  * this suite noisy enough to start being skipped. */
 const PAGES = (process.env.PAGES || [
-  'index.html','about.html','what-we-run.html','apply.html','booked.html','privacy.html','404.html',
+  'index.html','what-we-run.html','apply.html','booked.html','privacy.html','404.html',
   // 2026-09-11: kaizen-loop and the three answer pages were never added here, so nothing
   // watched them for overflow, favicon, description or the copyright year either.
   'kaizen-loop.html','tried-ads-before.html','ads-for-musicians.html','can-i-do-this-myself.html',

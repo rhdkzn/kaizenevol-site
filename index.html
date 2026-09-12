@@ -417,6 +417,136 @@
     .cell li::before{content:"";position:absolute;left:0;top:11px;width:9px;height:1px;background:var(--stone)}
     /* The disqualifying list, which no longer sits inside a .cell — same dash-rule
        treatment as .cell li, at body size because it now carries a whole section. */
+    /* about.html clipped these at html/body; the homepage does not, so the paper and
+       scrap layers bled 73px past a 390px viewport until this was added. overflow-x:clip
+       rather than hidden: clip does not create a scroll container, so nothing inside
+       loses position:sticky. */
+    #founders { overflow-x:clip; }
+    /* ============ THE FOUNDERS (moved from about.html, 2026-09-12) ============
+       Rahaid: "don't really need the about page, just move the picture of me and
+       Diego and a short message somewhere sensible on the homepage." Rules lifted
+       verbatim - no collisions with anything already here, checked before the move. */
+    /* ============ FOUNDERS ============ */
+
+    /* THE FOUNDER SHOT — a white note tacked to the page (2026-09-10).
+       The paper is a sibling element, not a ::before on .duo: the figure has to
+       sit ON it and break BOTH its edges, which needs the two to be independent
+       in the stack. Heads clear the top, Diego's elbow clears the bottom; that
+       overhang is the whole reason it reads as layered rather than pasted.
+       Inset percentages, not pixels, so the geometry survives to phone width. */
+    .duo { position:relative; width:min(480px,100%); margin:0 auto 76px; }
+    .duo picture, .duo img { display:block; width:100%; height:auto;
+      position:relative; z-index:3; }
+    /* The image carries an ANGULAR white die-cut edge baked into its alpha -
+       Brand Lab's technique, measured in MKT-BRD-004. Theirs reads because
+       their ground is dark teal; ours is near-white paper, so the separation
+       has to come from a shadow that follows the die-cut shape. drop-shadow
+       does exactly that; box-shadow would draw a rectangle. */
+    .duo img { filter:drop-shadow(0 2px 3px rgba(35,33,30,0.20))
+                      drop-shadow(0 12px 20px rgba(35,33,30,0.14)); }
+    /* A SCRAPBOOK PAGE, not a framed photo (2026-09-11).
+       Three layers, each doing one job:
+         .duo-scrap  a torn offcut tucked behind, squared off the other way
+         .duo-paper  the sheet they are mounted on
+         the figure  sits ON the sheet and breaks BOTH its edges - heads over
+                     the top, bodies past the bottom. That overhang is the
+                     whole reason it reads as stuck down rather than printed.
+       The paper is a sibling element rather than a ::before so the figure can
+       sit between it and the tape. Insets are percentages, so the geometry
+       survives to phone width. */
+    .duo-scrap { position:absolute; z-index:1; left:-22%; right:-26%; top:21%; bottom:6%;
+      background:#E6E2DB; border:1px solid #D2CDC4;
+      transform:rotate(4.4deg);
+      /* torn along the bottom - a scrapbook offcut is never guillotined */
+      clip-path:polygon(0 0, 100% 0, 100% 93%, 92% 97%, 84% 92%, 73% 98%, 63% 93%,
+                        52% 99%, 41% 93%, 31% 98%, 21% 93%, 11% 97%, 0 92%);
+      box-shadow:0 12px 26px rgba(35,33,30,0.11); }
+    .duo-paper { position:absolute; z-index:2; left:-17%; right:-17%; top:15%; bottom:16%;
+      background:
+        linear-gradient(to right, transparent 17%, var(--hairline) 17% calc(17% + 1px), transparent calc(17% + 1px)),
+        linear-gradient(to right, transparent 43%, var(--hairline) 43% calc(43% + 1px), transparent calc(43% + 1px)),
+        linear-gradient(to right, transparent 79%, var(--hairline) 79% calc(79% + 1px), transparent calc(79% + 1px)),
+        linear-gradient(to bottom, transparent 26%, var(--hairline) 26% calc(26% + 1px), transparent calc(26% + 1px)),
+        linear-gradient(to bottom, transparent 68%, var(--hairline) 68% calc(68% + 1px), transparent calc(68% + 1px)),
+        repeating-linear-gradient(101deg, rgba(35,33,30,0.012) 0 2px, transparent 2px 5px),
+        #FCFBF9;
+      border:1px solid var(--hairline);
+      transform:rotate(-2.1deg);
+      box-shadow:0 2px 6px rgba(35,33,30,0.10), 0 18px 42px rgba(35,33,30,0.13); }
+    /* Two strips of tape with torn ends, at opposite corners and at different
+       angles. A matching level pair of anything is the thing that made the
+       first version read like a slide. */
+    .duo-paper::before, .duo-paper::after { content:''; position:absolute;
+      width:132px; height:34px;
+      background:linear-gradient(180deg, rgba(244,242,237,0.72), rgba(190,185,175,0.62));
+      border-top:1px solid rgba(255,255,255,0.65);
+      border-bottom:1px solid rgba(35,33,30,0.10);
+      clip-path:polygon(0 0, 7% 24%, 0 47%, 6% 71%, 0 100%, 100% 100%,
+                        94% 73%, 100% 49%, 93% 25%, 100% 0);
+      box-shadow:0 3px 8px rgba(35,33,30,0.22); }
+    .duo-paper::before { top:-17px; left:-40px; transform:rotate(-39deg); }
+    .duo-paper::after  { right:-42px; bottom:11%; transform:rotate(-51deg); }
+    /* The badge is anchored to the PHOTO, not to the figure. It used to be a
+       child of <figure>, whose height includes the caption, so bottom:15% put
+       it straight over the right-hand name on a phone. */
+    .duo-shot { position:relative; display:block; }
+    /* Top-right corner, hanging a little past the edge like the paper scraps
+       behind it. Mid-right put it across Law's arm and hand - the busiest part
+       of the die cut, at the eye level of both faces. An emptiness scan of the
+       photo's alpha channel puts the cleanest badge-sized box at the top right
+       (6.4% of it touches anyone, against 100% bottom-left and ~45% mid-right),
+       and it is read AFTER the two faces, which is the right order for a label
+       that annotates them. Clear of Diego, clear of Law's hair. */
+    .duo-badge { position:absolute; z-index:4; right:-4%; top:1.5%;
+      background:var(--text); color:var(--void); padding:11px 17px; border-radius:4px;
+      transform:rotate(-2.1deg); box-shadow:0 6px 16px rgba(35,33,30,0.22);
+      text-align:left; line-height:1.25; }
+    /* Just the two roles, in the mono label register. The NAMES are sprayed onto
+       the shirts in the photograph itself, so putting them here as well was saying
+       it twice; they were in the caption while the photo had none (Rahaid,
+       2026-09-11: "it doesn't introduce us proper").
+       Side by side at EVERY width, in the order they stand: Diego in front on the
+       left, Law behind on the right. Two columns read as a KEY to the photo, so
+       they have to match it - stacked, the mapping is gone. */
+    /* Columns size to the WORDS, not to half the figure each. Two 1fr columns capped
+       the lettering at whatever fitted the narrower half, which is why the captions
+       could not grow past 44px however much empty frame sat between them - the column
+       was the ceiling, not the type. auto/auto with space-between spends the slack in
+       the middle instead, where it reads as a gap rather than as waste. The percentage
+       indents went with it: they existed to nudge two fixed columns into line under
+       each person, and content-sized columns already land there.
+       The ceiling is arithmetic, not taste: the two marks measure 4.395h and 4.822h
+       wide at a shared height h, so they fit a 480px figure only up to h = (480-16)/9.218
+       = 50.3px. Past that max-width:100% does not shrink the longer one, it SQUASHES it -
+       same height, narrower than its own aspect - which distorts the lettering silently.
+       10.2cqw sits under that with 13px to spare, and the width sweep asserts on aspect
+       ratio rather than on overflow, because a squashed image never overflows. */
+    /* The row BLEEDS past the figure, the way .duo-paper and .duo-scrap already do.
+       Measured off Rahaid's phone screenshot (390pt, 3.09x): the collage behind the
+       photo spans the full 390 CSS px and the cut-out reaches 347, but the caption row
+       was pinned to the 330px figure and stopped at 315 - so ~35px of visible width sat
+       unused on a screen where the artwork already runs edge to edge. cqw is relative to
+       THIS element, so widening the row scales the lettering with it. */
+    .duo-credit { position:relative; z-index:3; margin:10px auto 0; max-width:none;
+      width:111%; margin-inline:-5.5%;
+      display:grid; grid-template-columns:auto auto; justify-content:space-between;
+      gap:16px; align-items:start; container-type:inline-size; }
+    .duo-credit span { display:block; text-align:left; min-width:0; }
+    /* The captions are the SAME hand as the names sprayed on the shirts - all four
+       marks come off one lettering plate, so this is artwork rather than a typeface
+       and ships as an image with the words in alt. Each sits under its own person.
+       Sized by HEIGHT, not width. Both are normalised to one ink-band height before
+       export, so a single CSS height renders them at identical letter size; stretching
+       each to fill its column made the longer caption's letters visibly smaller. */
+    .duo img.duo-cap { position:static; display:block; width:auto;
+      height:clamp(28px, 10.2cqw, 53px); max-width:100%; z-index:auto; }
+    .duo-badge b { display:block; font-family:var(--mono,ui-monospace,monospace);
+      font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
+    .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
+    .team-note { margin-top:52px; padding-top:28px; border-top:1px solid var(--hairline); max-width:560px; }
+    .team-note p { font-size:14.5px; color:var(--muted); margin-bottom:10px; }
+    .team-note .team-line { font-size:19px; color:var(--text); margin-bottom:14px; }
+
     /* ============ THE COMPARISON (added 2026-09-12) ============
        Parameterization, from Pen To Profit ch7: score every alternative against the
        SAME fixed set of parameters, so the conclusion arrives as the reader's own
@@ -665,7 +795,7 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="what-we-run.html">What we run</a></li>
       <li><a href="kaizen-loop.html">Kaizen Loop</a></li>
-      <li><a href="about.html">About</a></li>
+      <li><a href="index.html#founders">About</a></li>
       <li><a class="btn-solid" href="apply.html">Take a seat</a></li>
     </ul>
     <a class="btn-solid nav-cta" href="apply.html">Take a seat</a>
@@ -675,7 +805,7 @@
     <a href="index.html">Home</a>
     <a href="what-we-run.html">What we run</a>
     <a href="kaizen-loop.html">Kaizen Loop</a>
-    <a href="about.html">About</a>
+    <a href="index.html#founders">About</a>
   </div>
 </nav>
 <main style="view-transition-name:ke-main-index">
@@ -745,6 +875,33 @@
       </table>
     </div>
     <p class="cmp-note">The last row is the honest one. A big agency has a floor of people and we have two, so if what you want is a department, hire the department. What two people buy you is that the ones making the work are the ones you talk to.</p>
+  </div>
+</section>
+
+<section class="band" id="founders">
+  <div class="container reveal">
+    <div class="smallcaps">Who you get</div>
+    <h2>Both of us, on every seat.</h2>
+    <p class="lede">There is no account manager and no junior. The two people who make your work are the two people you talk to, and we are both behind the camera and both in the edit. Diego runs what you see; Law runs everything underneath it.</p>
+    <figure class="duo">
+      <span class="duo-scrap" aria-hidden="true"></span>
+      <span class="duo-paper" aria-hidden="true"></span>
+      <span class="duo-shot">
+        <picture>
+          <source srcset="assets/about/founders-1228-6bedcbd4.webp" type="image/webp">
+          <img src="assets/about/founders-1228-6bedcbd4.png" alt="Diego and Law, the two founders of KaizenEvol" width="1228" height="988" decoding="async" loading="lazy">
+        </picture>
+        <span class="duo-badge" aria-hidden="true"><b>Two founders</b></span>
+      </span>
+      <figcaption class="duo-credit">
+        <span><picture><source srcset="assets/about/cap-diego-45b7c590.webp" type="image/webp"><img class="duo-cap" src="assets/about/cap-diego-3623459d.png" alt="Content and social" width="747" height="170" decoding="async" loading="lazy"></picture></span>
+        <span><picture><source srcset="assets/about/cap-law-683e3043.webp" type="image/webp"><img class="duo-cap" src="assets/about/cap-law-b421262d.png" alt="Ads, retention, tracking" width="820" height="170" decoding="async" loading="lazy"></picture></span>
+      </figcaption>
+    </figure>
+    <div class="team-note">
+      <p class="team-line">You should be making the thing. We will make people want it.</p>
+      <p>One of us makes the work, the other makes it pay. No account managers, no middlemen.</p>
+    </div>
   </div>
 </section>
 
@@ -833,7 +990,7 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="what-we-run.html">What we run</a></li>
           <li><a href="kaizen-loop.html">Kaizen Loop</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="index.html#founders">About</a></li>
           <li><a href="privacy.html">Privacy</a></li>
         </ul>
       </div>

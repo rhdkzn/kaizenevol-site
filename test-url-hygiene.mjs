@@ -26,7 +26,7 @@ const LIVE = /^https?:\/\/(?!localhost|127\.)/.test(BASE)
 /* The pages a stranger can be sent to. booked, f and 404 are noindex and are not
    destinations anyone types, so they are out of the extensionless arm — but they
    still declare a language, so they stay in the lang arm below. */
-const INDEXABLE = ['about','what-we-run','kaizen-loop','apply','privacy',
+const INDEXABLE = ['what-we-run','kaizen-loop','apply','privacy',
                    'tried-ads-before','can-i-do-this-myself','ads-for-musicians']
 const ALL = [...INDEXABLE, 'index', 'booked', 'f', '404']
 

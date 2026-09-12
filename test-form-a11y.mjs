@@ -18,7 +18,7 @@
 import { chromium, devices } from 'playwright';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
-const PAGES = ['index','about','what-we-run','kaizen-loop','apply','privacy',
+const PAGES = ['index','what-we-run','kaizen-loop','apply','privacy',
                'tried-ads-before','can-i-do-this-myself','ads-for-musicians',
                'booked','f','404'];
 

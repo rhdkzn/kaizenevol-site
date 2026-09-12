@@ -28,7 +28,7 @@ import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
-const PAGES = ['kaizen-loop.html', 'what-we-run.html', 'about.html'];
+const PAGES = ['kaizen-loop.html', 'what-we-run.html'];
 
 let pass = 0, fail = 0;
 const check = (label, ok, detail = '') => {

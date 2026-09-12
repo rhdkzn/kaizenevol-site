@@ -46,7 +46,7 @@ const PAGES = (process.env.PAGES || 'index.html,kaizen-loop.html').split(',')
 {
   const { readFileSync } = await import('node:fs')
   const STEP = /steps? up when|three[- ]month average|up by half|trailing three|trailing 3/i
-  for (const f of ['index.html','about.html','apply.html','what-we-run.html','booked.html']) {
+  for (const f of ['index.html','apply.html','what-we-run.html','booked.html']) {
     const m = readFileSync(f, 'utf8').replace(/<script[\s\S]*?<\/script>/g, '').match(STEP)
     check(`${f}: growth step not disclosed on the site`, !m, m && m[0])
   }
@@ -101,12 +101,21 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
      was added - documentElement.scrollWidth equals clientWidth at all three, and
      scrollTo(9999, y) leaves scrollX at 0, so the page itself never moves. At 390 the
      box scrolls internally (620 inside 342); at 768 and above the table fits and
-     there is no scroll at all. */
+     there is no scroll at all.
+
+     #founders joined on 2026-09-12 when the founder figure moved over from about.html.
+     Its .duo-paper and .duo-scrap are the torn-paper layers behind the photograph and
+     they are MEANT to bleed past the text column; about.html contained them with
+     overflow-x:clip on html/body, which the homepage does not set, so the section
+     carries its own clip instead. getBoundingClientRect still reports the unclipped
+     geometry, which is what this check reads. Measured at 390/768/1280 before the name
+     was added: documentElement.scrollWidth, clientWidth and body.scrollWidth are all
+     equal at every width, and scrollTo(9999, y) leaves scrollX at 0. */
   const overflow = await page.evaluate(() => {
     const vw = window.innerWidth
     const out = []
     for (const e of document.querySelectorAll('body *')) {
-      if (e.closest('.kz-track') || e.closest('.cmp-wrap')) continue
+      if (e.closest('.kz-track') || e.closest('.cmp-wrap') || e.closest('#founders')) continue
       const r = e.getBoundingClientRect()
       if (r.width > 0 && r.right > vw + 1)
         out.push(`${e.tagName.toLowerCase()}.${(e.className || '').toString().split(' ')[0]} right:${Math.round(r.right)}`)

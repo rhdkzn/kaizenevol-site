@@ -17,7 +17,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 
 const PAGES = [
-  'index.html',       'about.html', 'what-we-run.html', 'privacy.html',     'booked.html', '404.html', ];
+  'index.html',       'what-we-run.html', 'privacy.html',     'booked.html', '404.html', ];
 
 const MAX = 60;
 const BRANDS = ['KaizenEvol', 'KaizenReach', 'KaizenDesk', 'KaizenForge'];

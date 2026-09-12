@@ -56,7 +56,7 @@ const check = (n, pass, d) => r.push([n, pass, d])
 /* Same public set as test-page-hygiene.mjs. Labs, demos and the app surfaces are
  * deliberately out — they are workbenches, not pages a prospect lands on. */
 const PAGES = (process.env.PAGES || [
-  'index.html','about.html','what-we-run.html','apply.html','booked.html','privacy.html','404.html',
+  'index.html','what-we-run.html','apply.html','booked.html','privacy.html','404.html',
 ].join(',')).split(',')
 
 /* brand/DESIGN.md v3.0, "Palette — mixed neutrals". Values, not names: a page is
