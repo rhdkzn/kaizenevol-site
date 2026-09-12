@@ -19,7 +19,7 @@ const BASE = process.env.BASE || 'http://localhost:8899';
    the page most likely to drift out of the pattern, which is the argument for
    guarding it rather than against. What this file checks is the PARTS. */
 const PAGES = ['index.html','ads-for-musicians.html',
-               'tried-ads-before.html','can-i-do-this-myself.html','kaizen-loop.html'];
+               'tried-ads-before.html','do-i-have-to-be-on-camera.html','kaizen-loop.html'];
 
 const b = await chromium.launch({executablePath: process.env.PW_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
 const ctx = await b.newContext({viewport:{width:1280,height:900}});

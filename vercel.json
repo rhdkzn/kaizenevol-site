@@ -143,19 +143,29 @@
       "destination": "/tried-ads-before.html"
     },
     {
-      "source": "/can-i-do-this-myself",
-      "destination": "/can-i-do-this-myself.html"
-    },
-    {
       "source": "/ads-for-musicians",
       "destination": "/ads-for-musicians.html"
     },
     {
       "source": "/faq",
       "destination": "/faq.html"
+    },
+    {
+      "source": "/do-i-have-to-be-on-camera",
+      "destination": "/do-i-have-to-be-on-camera.html"
     }
   ],
   "redirects": [
+    {
+      "source": "/can-i-do-this-myself.html",
+      "destination": "/do-i-have-to-be-on-camera.html",
+      "permanent": true
+    },
+    {
+      "source": "/can-i-do-this-myself",
+      "destination": "/do-i-have-to-be-on-camera.html",
+      "permanent": true
+    },
     {
       "source": "/about.html",
       "destination": "/#founders",

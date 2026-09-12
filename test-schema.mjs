@@ -20,7 +20,7 @@
 import { chromium } from 'playwright';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
-const FAQ = ['faq.html', 'tried-ads-before.html', 'ads-for-musicians.html', 'can-i-do-this-myself.html'];
+const FAQ = ['faq.html', 'tried-ads-before.html', 'ads-for-musicians.html', 'do-i-have-to-be-on-camera.html'];
 const ORG_PAGES = ['index.html', 'what-we-run.html'];
 const NEED_ORG = ['index.html'];
 

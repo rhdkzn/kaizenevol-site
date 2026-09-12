@@ -30,7 +30,7 @@ const LIMIT = {
   'kaizen-loop':           820,
   'faq':                   640,
   'tried-ads-before':      510,
-  'can-i-do-this-myself':  480,
+  'do-i-have-to-be-on-camera':  480,
   'ads-for-musicians':     470,
 }
 const GRADE_MAX = 8          // a 13-year-old reads grade 8 comfortably

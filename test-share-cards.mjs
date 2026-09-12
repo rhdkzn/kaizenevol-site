@@ -27,7 +27,7 @@ const PAGES = ['index.html', 'apply.html', 'what-we-run.html', 'privacy.html',
                // These are the pages built to be FOUND, so a bare preview when one is
                // shared is the whole point missed.
                'faq.html', 'tried-ads-before.html',
-               'ads-for-musicians.html', 'can-i-do-this-myself.html',
+               'ads-for-musicians.html', 'do-i-have-to-be-on-camera.html',
                // 2026-09-11: kaizen-loop.html carried the full block and was simply never
                // added here, so nothing would have caught it drifting - the same
                // hand-typed-list gap that had left it out of test-interactions.mjs.

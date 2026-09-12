@@ -17,7 +17,7 @@ import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'fs';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
-const PAGES = ['tried-ads-before.html', 'ads-for-musicians.html', 'can-i-do-this-myself.html'];
+const PAGES = ['tried-ads-before.html', 'ads-for-musicians.html', 'do-i-have-to-be-on-camera.html', 'faq.html'];
 const SITE = 'https://kaizenevol.com';
 const MARK_OPEN = '<!-- faq-schema:start -->';
 const MARK_CLOSE = '<!-- faq-schema:end -->';

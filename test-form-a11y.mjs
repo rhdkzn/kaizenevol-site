@@ -19,7 +19,7 @@ import { chromium, devices } from 'playwright';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
 const PAGES = ['index','what-we-run','kaizen-loop','apply','privacy',
-               'faq','tried-ads-before','can-i-do-this-myself','ads-for-musicians',
+               'faq','tried-ads-before','do-i-have-to-be-on-camera','ads-for-musicians',
                'booked','f','404'];
 
 /* BASE can point at the live site, which is the only way to check what a
