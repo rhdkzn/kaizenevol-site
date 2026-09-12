@@ -64,8 +64,17 @@
     return rect.top < window.innerHeight * 2 && rect.bottom > -window.innerHeight;
   }
 
+  /* Save-Data and 2g get the poster and nothing else. A still frame of the film
+     is the designed fallback, not a degraded one, and it is not worth 800KB of
+     somebody's metered plan. */
+  function tooExpensive() {
+    var c = navigator.connection;
+    if (!c) return false;
+    return c.saveData === true || c.effectiveType === 'slow-2g' || c.effectiveType === '2g';
+  }
+
   function load() {
-    if (loading) return;
+    if (loading || tooExpensive()) return;
     loading = true;
     fetch(clip, { credentials: 'same-origin' })
       .then(function (r) {
@@ -102,14 +111,12 @@
     }
   });
 
-  // The clip opens on black and the form only emerges part-way in. Measured at
-  // 4fps across all 15.04s: the 95th-percentile luminance of a frame first
-  // clears 40 (of 255) at t=6.00s, 39.9% in. Everything before that is a black
-  // rectangle, which on a phone is exactly what the top of the section looked
-  // like - Rahaid: "the black page doesn't even work". So the scrub starts
-  // there and the remaining 9s carry the whole scroll. The reveal survives; the
-  // dead lead-in does not.
-  var START = 0.40;
+  // The first 6.00s of the original clip was a black rectangle - measured at
+  // 4fps, the 95th-percentile luminance first clears 40 (of 255) there - and the
+  // scrub skipped it with START = 0.40. It was still being DOWNLOADED: 40% of
+  // the bytes for frames no visitor ever saw. Cut out of the files on
+  // 2026-09-12, so the playhead starts at zero and the whole file is the scroll.
+  var START = 0;
 
   function tick() {
     frame = 0;
@@ -141,4 +148,30 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
+
+  /* THE DOWNLOAD STARTS ON IDLE, NOT AT TWO VIEWPORTS (2026-09-12).
+     Rahaid: "some of the pages the black loop is static." Measured, cold, on a
+     throttled connection: time from reaching the closing to the first moving
+     frame was 1.6s on fast 4G and 8.7s on slow 4G - on EVERY page. The effect
+     was built for the home page, which is 10,032px tall, so the two-viewport
+     trigger fired thousands of pixels and several seconds before the visitor
+     arrived and the fetch always won. The question pages are 3,376-4,582px: the
+     closing is a third of the way down the same scroll, so the same fetch has a
+     third of the runway and loses. Nothing was broken on those pages - they just
+     could not cover the distance, and a film that has not arrived is a black
+     band.
+     So the clip is fetched while the visitor is reading, which is the time the
+     short pages do have. The SEEKING stays gated on nearViewport; only the
+     download moved. */
+  if (!tooExpensive()) {
+    var kick = function () { load(); };
+    if (window.requestIdleCallback) requestIdleCallback(kick, { timeout: 2500 });
+    else setTimeout(kick, 1200);
+  }
+
+  /* The blob was never released. One clip per page, held for the life of the
+     page, on seven pages instead of one since the closing was patterned. */
+  window.addEventListener('pagehide', function () {
+    if (video.src && video.src.indexOf('blob:') === 0) URL.revokeObjectURL(video.src);
+  });
 })();

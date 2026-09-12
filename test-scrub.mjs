@@ -89,8 +89,17 @@ check('controller coalesces seeks through rAF',
     .map((f) => statSync(new URL(`assets/loop/${f}`, import.meta.url).pathname).size);
   const desktop = (sizes[0] + sizes[1]) / 1048576;
   const mobile = (sizes[2] + sizes[3]) / 1048576;
-  check('desktop clips inside the 32 MiB budget', desktop <= 32, `${desktop.toFixed(2)} MiB`);
-  check('mobile clips inside the 16 MiB budget', mobile <= 16, `${mobile.toFixed(2)} MiB`);
+  /* 32 and 16 MiB were the old budgets and nothing could ever have breached them:
+     the clips were 7.4 and 4.3 MiB, so the guard had never been capable of going
+     red. It went red on nothing while the mobile pair took 8.7 SECONDS to arrive
+     on a throttled connection and the closing was a flat black band until it did
+     (Rahaid, 2026-09-12: "some of the pages the black loop is static").
+     A budget is now what a phone can actually fetch before the visitor gets
+     there. At ~200 KB/s - slow 4G - 1 MiB is about five seconds, which is the
+     outside edge of acceptable and well under what shipped. The pair is 0.59 MiB
+     today, so there is real headroom and a real ceiling. */
+  check('desktop clips inside the 4 MiB budget', desktop <= 4, `${desktop.toFixed(2)} MiB`);
+  check('mobile clips inside the 1 MiB budget', mobile <= 1, `${mobile.toFixed(2)} MiB`);
 }
 
 const browser = await chromium.launch({

@@ -358,7 +358,15 @@
       els.forEach(function (el) {
         if (el.classList.contains('mh-in')) return;
         var r = el.getBoundingClientRect();
-        if (r.top < vh && r.bottom > 0) reveal(el);   // any pixel in the viewport => reveal (never leave one hidden)
+        /* ABOVE the viewport counts too (fixed 2026-09-12). The condition was
+           "any pixel in the viewport", which refuses a heading the visitor has
+           already passed - and the clipped state hides it completely, so
+           arriving below one left it invisible for the life of the page. Reached
+           by a #contact link, a restored scroll position, a back navigation or
+           any jump. Found on the question pages' closing h2: scrolled straight
+           to the foot, it stayed at inset(... 110% ...) after three seconds.
+           r.top < vh alone is the safety net the comment already claimed. */
+        if (r.top < vh) reveal(el);
       });
     }
     if ('IntersectionObserver' in window) {
