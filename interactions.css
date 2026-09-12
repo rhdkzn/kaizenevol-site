@@ -345,21 +345,32 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
 }
 
 .scrub-media img,
-.scrub-media video {
+.scrub-media .scrub-frames {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+.scrub-media img {
   object-fit: cover;
   object-position: 62% center;
 }
 
-/* The poster holds until a real frame paints, then hands over. */
-.scrub-media video {
+/* The film, as a sprite sheet moved by background-position — no decoder in the
+   path at all. See scrub.js: a <video> does not paint on an iPhone in Low Power
+   Mode, and Rahaid's screenshot of the section sitting still had exactly that
+   battery icon in it. Geometry is set in PIXELS from JS, because a percentage
+   background-size stretches each 16:9 tile to the section's own aspect ratio;
+   the JS does object-fit: cover by hand and lands on the same 62% anchor the
+   video used. */
+.scrub-frames {
+  z-index: 0;
+  background-repeat: no-repeat;
   opacity: 0;
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: background-position;
 }
-.scrub[data-scrub-painted="true"] .scrub-media video {
+.scrub[data-scrub-painted="true"] .scrub-frames {
   opacity: 1;
 }
 
@@ -450,8 +461,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
 }
 
 @media (max-width: 860px) {
-  .scrub-media img,
-  .scrub-media video {
+  .scrub-media img {
     object-position: 68% center;
   }
   /* Portrait crops the film hard and the copy runs nearly edge to edge, so

@@ -4,7 +4,10 @@
  *
  *   A film that never SEEKS. The poster paints, the section looks right, and the
  *   scrub is simply a still image. Nothing errors. The only way to know is to
- *   scroll the page and read video.currentTime — which is what this does.
+ *   scroll the page and read the frame the controller is showing — which is
+ *   what this does. (It was video.currentTime until 2026-09-12; the film is a
+ *   sprite sheet now, because a <video> does not paint on an iPhone in Low
+ *   Power Mode. See scrub.js.)
  *
  *   A film served without the Blob fetch. It "works" on a fast desktop and stalls
  *   on every scroll tick over a real connection, because seeking a range-served
@@ -45,62 +48,61 @@ check('controller has no prefers-reduced-motion branch',
 check('controller queries no motion preference',
   !/matchMedia\s*\(\s*['"`][^'"`]*reduced-motion/.test(codeOnly),
   'DESIGN.md: reduce-motion visitors get the same motion');
-check('controller seeks a Blob, not a range-served URL',
-  /createObjectURL/.test(codeOnly) && /\.blob\(\)/.test(codeOnly),
-  'range-served seeking stalls on every scroll tick');
+/* The Blob check that stood here asserted the VIDEO mechanism. There is no
+   video and no seek now; the equivalent property is that the sprite is decoded
+   BEFORE it is shown, or the poster blinks out from under an image that has not
+   arrived. */
+check('the sprite is decoded before it is shown',
+  /new Image\(\)/.test(codeOnly) && /onload/.test(codeOnly),
+  'assigning background-image before the bytes land paints nothing');
+check('nothing depends on a video decoder any more',
+  !/scrub-video|canPlayType|currentTime|createObjectURL/.test(codeOnly),
+  'iOS Low Power Mode refuses to decode video at all');
 check('controller coalesces seeks through rAF',
   /requestAnimationFrame/.test(codeOnly));
 
 // The H.264 pair cannot be exercised in this harness AT ALL: Playwright's
-// bundled Chromium ships without proprietary codecs, so loop.mp4 returns
-// DEMUXER_ERROR_NO_SUPPORTED_STREAMS while being a perfectly valid file.
-// Proven with a control (a VP9 transcode of the same source played fine), so
-// the browser checks below run on WebM and the mp4 is verified mechanically
-// instead. Deleting this leaves the Safari and iOS path completely untested.
+// The film is a SPRITE SHEET now, not a video - see scrub.js. A <video> does
+// not paint on an iPhone in Low Power Mode, which is the state Rahaid's phone
+// was in when he sent a photograph of the closing sitting dead still. There is
+// no codec to probe any more, which also retires the ffprobe-shaped hole this
+// block used to carry.
 {
-  // Reads the codec out of the CONTAINER rather than shelling out to ffprobe.
-  // ffprobe is not installed here and is not installed on Rahaid's machine either,
-  // and the old `catch { return '(unreadable)' }` turned that into four FAIL lines
-  // saying the videos had the wrong codec — a guard reporting a defect that did not
-  // exist, which is how all four sat red and ignored. The files were correct the
-  // whole time. A byte read has no external dependency, so it gives the same answer
-  // on every machine.
-  //   mp4  : the sample-description box names the codec, 'avc1' for H.264
-  //   webm : Matroska stores a CodecID string, 'V_VP9'
-  // Only the header region is scanned, so a chance match inside compressed frame
-  // data cannot vote.
-  const probe = (f) => {
-    const head = readFileSync(f).subarray(0, 400000);
-    if (head.includes('avc1')) return 'h264';
-    if (head.includes('V_VP9')) return 'vp9';
-    if (head.includes('V_VP8')) return 'vp8';
-    if (head.includes('hvc1') || head.includes('hev1')) return 'hevc';
-    if (head.includes('av01') || head.includes('V_AV1')) return 'av1';
-    return '(no codec marker in the header)';
-  };
-  for (const f of ['assets/loop/loop.mp4', 'assets/loop/loop-mobile.mp4']) {
-    const codec = probe(new URL(f, import.meta.url).pathname);
-    check(`${f} is H.264 for Safari and iOS`, codec === 'h264', `codec ${codec}`);
+  const sprites = ['frames.webp', 'frames-mobile.webp'];
+  for (const f of sprites) {
+    let size = 0;
+    try { size = statSync(new URL(`assets/loop/${f}`, import.meta.url).pathname).size; } catch (e) { size = 0; }
+    check(`assets/loop/${f} exists`, size > 0, size ? `${(size / 1024).toFixed(0)}KB` : 'missing');
   }
-  for (const f of ['assets/loop/loop.webm', 'assets/loop/loop-mobile.webm']) {
-    const codec = probe(new URL(f, import.meta.url).pathname);
-    check(`${f} is VP9`, codec === 'vp9', `codec ${codec}`);
+  /* A budget the visitor can actually afford to wait for. The predecessor
+     allowed 32 MiB desktop and 16 MiB mobile against files of 7.4 and 4.3 MiB -
+     it had never been capable of going red, and was green throughout an 8.7
+     SECOND wait on a throttled connection. At ~200 KB/s on slow 4G, 300 KB is
+     about a second and a half. */
+  const total = sprites.reduce((a, f) => {
+    try { return a + statSync(new URL(`assets/loop/${f}`, import.meta.url).pathname).size; } catch (e) { return a; }
+  }, 0) / 1024;
+  const mobileOnly = (() => {
+    try { return statSync(new URL('assets/loop/frames-mobile.webp', import.meta.url).pathname).size / 1024; }
+    catch (e) { return Infinity; }
+  })();
+  check('a phone fetches under 300KB for the film', mobileOnly <= 300, `${mobileOnly.toFixed(0)}KB`);
+  check('both sprites together stay under 600KB', total <= 600, `${total.toFixed(0)}KB`);
+
+  /* The grid the markup DECLARES must match the sprite that ships. A sprite
+     re-exported at a different tile count silently shows the wrong frames -
+     every one of them a real image, so nothing looks broken, it just stops
+     being the film. */
+  const html = readFileSync('index.html', 'utf8');
+  const attrs = Object.fromEntries(
+    [...html.matchAll(/data-(cols|rows|frames|tile|tile-mobile)="([^"]+)"/g)].map((m) => [m[1], m[2]]));
+  check('the markup declares the sprite grid', !!(attrs.cols && attrs.rows && attrs.frames),
+    JSON.stringify(attrs));
+  if (attrs.cols) {
+    check('the grid holds every declared frame',
+      Number(attrs.cols) * Number(attrs.rows) >= Number(attrs.frames),
+      `${attrs.cols}x${attrs.rows} holds ${Number(attrs.cols) * Number(attrs.rows)}, needs ${attrs.frames}`);
   }
-  const sizes = ['loop.webm', 'loop.mp4', 'loop-mobile.webm', 'loop-mobile.mp4']
-    .map((f) => statSync(new URL(`assets/loop/${f}`, import.meta.url).pathname).size);
-  const desktop = (sizes[0] + sizes[1]) / 1048576;
-  const mobile = (sizes[2] + sizes[3]) / 1048576;
-  /* 32 and 16 MiB were the old budgets and nothing could ever have breached them:
-     the clips were 7.4 and 4.3 MiB, so the guard had never been capable of going
-     red. It went red on nothing while the mobile pair took 8.7 SECONDS to arrive
-     on a throttled connection and the closing was a flat black band until it did
-     (Rahaid, 2026-09-12: "some of the pages the black loop is static").
-     A budget is now what a phone can actually fetch before the visitor gets
-     there. At ~200 KB/s - slow 4G - 1 MiB is about five seconds, which is the
-     outside edge of acceptable and well under what shipped. The pair is 0.59 MiB
-     today, so there is real headroom and a real ceiling. */
-  check('desktop clips inside the 4 MiB budget', desktop <= 4, `${desktop.toFixed(2)} MiB`);
-  check('mobile clips inside the 1 MiB budget', mobile <= 1, `${mobile.toFixed(2)} MiB`);
 }
 
 
@@ -186,7 +188,7 @@ const browser = await chromium.launch({
   await page.waitForTimeout(1200);
 
   const early = await page.evaluate(() =>
-    document.querySelector('[data-scrub] .scrub-video')?.currentTime ?? -1);
+    getComputedStyle(document.querySelector('[data-scrub] .scrub-frames')).backgroundPosition);
 
   // Scroll THROUGH the section, not to it — the scrub is driven by the
   // section's travel across the viewport, so a single scrollIntoView proves
@@ -198,14 +200,14 @@ const browser = await chromium.launch({
   await page.waitForTimeout(1600);
 
   const late = await page.evaluate(() =>
-    document.querySelector('[data-scrub] .scrub-video')?.currentTime ?? -1);
+    getComputedStyle(document.querySelector('[data-scrub] .scrub-frames')).backgroundPosition);
 
-  check('the film seeks as the page scrolls', late > early + 0.5,
-    `currentTime ${early.toFixed(2)}s -> ${late.toFixed(2)}s`);
+  check('the film advances as the page scrolls', late !== early,
+    `background-position ${early} -> ${late}`);
 
-  const dur = await page.evaluate(() =>
-    document.querySelector('[data-scrub] .scrub-video')?.duration ?? 0);
-  check('the clip loaded its metadata', dur > 1, `${dur.toFixed(1)}s`);
+  const sized = await page.evaluate(() =>
+    getComputedStyle(document.querySelector('[data-scrub] .scrub-frames')).backgroundSize);
+  check('the sprite is sized in pixels, not percentages', /px/.test(sized), sized);
 
   await ctx.close();
 }
@@ -260,22 +262,27 @@ const browser = await chromium.launch({
     const at = async (frac) => {
       await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }),
         Math.round(geo.enter + span * frac));
-      /* WAIT FOR THE SEEK TO SETTLE, never a fixed sleep. The controller eases
+      /* WAIT FOR THE EASE TO SETTLE, never a fixed sleep. The controller eases
          toward its target (current += (target - current) * 0.18 per frame) so a
-         240ms read catches it about 3% short — and a first draft of this check
-         read that 97% as a mapping failure on three pages. Loosening the
-         threshold to swallow it would have made the check unable to fail, which
-         is the defect this file's budgets already had. Poll until currentTime
-         stops moving instead. */
+         fixed read catches it short — a first draft slept 240ms, read 97% on
+         three pages and called it a mapping failure. Loosening the threshold to
+         swallow that would have made the check unable to fail, which is the
+         defect this file's byte budgets already had. Settle on
+         background-position, which is the real applied state. */
       return page.evaluate(() => new Promise((res) => {
-        const v = document.querySelector('.scrub-video');
-        if (!v || !v.duration) return res(null);
-        let last = -1, still = 0, ticks = 0;
+        const el = document.querySelector('.scrub-frames');
+        const sec = document.querySelector('[data-scrub]');
+        if (!el) return res(null);
+        let last = '', still = 0, ticks = 0;
         (function poll() {
-          const t = v.currentTime;
-          still = Math.abs(t - last) < 0.004 ? still + 1 : 0;
-          last = t;
-          if (still >= 4 || ++ticks > 180) return res(t / v.duration);
+          const now = getComputedStyle(el).backgroundPosition;
+          still = now === last ? still + 1 : 0;
+          last = now;
+          if (still >= 4 || ++ticks > 180) {
+            const i = Number(sec.dataset.scrubFrame);
+            const n = Number(el.dataset.frames);
+            return res(Number.isFinite(i) && n > 1 ? i / (n - 1) : null);
+          }
           requestAnimationFrame(poll);
         })();
       }));
@@ -345,13 +352,13 @@ for (const [name, vp] of [
     await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }),
       Math.round(geo.enter + (geo.end - geo.enter) * f));
     await page.evaluate(() => new Promise((res) => {
-      const v = document.querySelector('.scrub-video');
-      if (!v || !v.duration) return res();
-      let last = -1, still = 0, ticks = 0;
+      const el = document.querySelector('.scrub-frames');
+      if (!el) return res();
+      let last = '', still = 0, ticks = 0;
       (function poll() {
-        const t = v.currentTime;
-        still = Math.abs(t - last) < 0.004 ? still + 1 : 0;
-        last = t;
+        const now = getComputedStyle(el).backgroundPosition;
+        still = now === last ? still + 1 : 0;
+        last = now;
         if (still >= 4 || ++ticks > 180) return res();
         requestAnimationFrame(poll);
       })();

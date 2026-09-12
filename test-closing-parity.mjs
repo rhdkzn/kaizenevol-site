@@ -83,7 +83,7 @@ async function read(f) {
       darkBands: dark,
       media: !!s.querySelector('.scrub-media'),
       poster: !!s.querySelector('.scrub-media img'),
-      video: !!s.querySelector('.scrub-video'),
+      video: !!s.querySelector('.scrub-frames'),
       scrim: !!s.querySelector('.scrub-scrim'),
       scrubJs: !!document.querySelector('script[src*="scrub.js"]'),
       dataScrub: s.hasAttribute('data-scrub'),
