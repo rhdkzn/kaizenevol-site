@@ -55,7 +55,7 @@ const PAGES = (process.env.PAGES || [
   'index.html','what-we-run.html','apply.html','booked.html','privacy.html','404.html',
   // 2026-09-11: kaizen-loop and the three answer pages were never added here, so nothing
   // watched them for overflow, favicon, description or the copyright year either.
-  'kaizen-loop.html','tried-ads-before.html','ads-for-musicians.html','can-i-do-this-myself.html',
+  'kaizen-loop.html','faq.html', 'tried-ads-before.html','ads-for-musicians.html','can-i-do-this-myself.html',
       ].join(',')).split(',')
 
 /* Widths that actually matter. 375 is the narrowest phone still in real use;

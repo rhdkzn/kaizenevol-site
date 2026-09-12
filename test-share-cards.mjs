@@ -26,7 +26,7 @@ const PAGES = ['index.html', 'apply.html', 'what-we-run.html', 'privacy.html',
                // Answer pages, added 2026-09-08 (workshop Day 14's question-page play).
                // These are the pages built to be FOUND, so a bare preview when one is
                // shared is the whole point missed.
-               'tried-ads-before.html',
+               'faq.html', 'tried-ads-before.html',
                'ads-for-musicians.html', 'can-i-do-this-myself.html',
                // 2026-09-11: kaizen-loop.html carried the full block and was simply never
                // added here, so nothing would have caught it drifting - the same

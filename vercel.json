@@ -149,6 +149,10 @@
     {
       "source": "/ads-for-musicians",
       "destination": "/ads-for-musicians.html"
+    },
+    {
+      "source": "/faq",
+      "destination": "/faq.html"
     }
   ],
   "redirects": [
@@ -185,16 +189,6 @@
     {
       "source": "/kaizengrowth.html",
       "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/faq.html",
-      "destination": "/#contact",
-      "permanent": true
-    },
-    {
-      "source": "/faq",
-      "destination": "/#contact",
       "permanent": true
     },
     {
