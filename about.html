@@ -216,7 +216,14 @@
        same height, narrower than its own aspect - which distorts the lettering silently.
        10.2cqw sits under that with 13px to spare, and the width sweep asserts on aspect
        ratio rather than on overflow, because a squashed image never overflows. */
+    /* The row BLEEDS past the figure, the way .duo-paper and .duo-scrap already do.
+       Measured off Rahaid's phone screenshot (390pt, 3.09x): the collage behind the
+       photo spans the full 390 CSS px and the cut-out reaches 347, but the caption row
+       was pinned to the 330px figure and stopped at 315 - so ~35px of visible width sat
+       unused on a screen where the artwork already runs edge to edge. cqw is relative to
+       THIS element, so widening the row scales the lettering with it. */
     .duo-credit { position:relative; z-index:3; margin:10px auto 0; max-width:none;
+      width:111%; margin-inline:-5.5%;
       display:grid; grid-template-columns:auto auto; justify-content:space-between;
       gap:16px; align-items:start; container-type:inline-size; }
     .duo-credit span { display:block; text-align:left; min-width:0; }
