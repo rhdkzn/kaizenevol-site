@@ -1,7 +1,9 @@
 /* KaizenEvol — consent gate + Meta pixel.
  *
- * Created 2026-07-31 and referenced from every public page (not crm.html or
- * dashboard.html — internal tools get no pixel and no banner).
+ * Created 2026-07-31. Referenced from every public page — index.html, apply.html and
+ * f.html were added 2026-09-12, having been missed: the homepage and BOTH conversion
+ * pages carried no pixel and no banner, while this comment claimed otherwise. Internal
+ * tools (crm.html, dashboard.html, portal.html, onboard.html, the labs) get neither.
  *
  * THE ONE RULE THIS FILE EXISTS TO ENFORCE: the pixel does not load until the visitor
  * has said yes. A banner that drops the cookie and then asks is the violation PLUS the
@@ -111,20 +113,20 @@
       '.ke-consent{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;max-width:640px;' +
       'margin:0 auto;display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;' +
       'justify-content:space-between;padding:16px 18px;border-radius:14px;' +
-      'background:rgba(18,10,36,.97);border:1px solid rgba(167,139,250,.28);color:#EEE8FF;' +
-      'font:400 14px/1.55 "Plus Jakarta Sans",system-ui,sans-serif;' +
-      'box-shadow:0 24px 60px -24px rgba(0,0,0,.75);opacity:0;transform:translateY(12px);' +
+      'background:#23211E;border:1px solid rgba(247,246,244,.16);color:#F7F6F4;' +
+      "font:400 14px/1.55 'Manrope',system-ui,-apple-system,sans-serif;" +
+      'box-shadow:0 24px 60px -24px rgba(35,33,30,.55);opacity:0;transform:translateY(12px);' +
       'transition:opacity .24s ease,transform .24s ease}' +
       '.ke-consent[data-open]{opacity:1;transform:translateY(0)}' +
-      '.ke-consent p{margin:0;flex:1 1 260px;color:rgba(238,232,255,.82)}' +
-      '.ke-consent a{color:#A78BFA}' +
+      '.ke-consent p{margin:0;flex:1 1 260px;color:rgba(247,246,244,.78)}' +
+      '.ke-consent a{color:#F7F6F4;text-decoration:underline;text-underline-offset:3px}' +
       '.ke-consent-btns{display:flex;gap:10px;flex:0 0 auto}' +
       /* Equal weight on both, deliberately: the ICO expects refusing to be as easy as
          accepting, and a ghosted "Decline" next to a solid "Accept" is not that. */
       '.ke-consent button{font:600 14px/1 inherit;padding:11px 18px;border-radius:999px;' +
-      'cursor:pointer;border:1px solid rgba(167,139,250,.45);background:transparent;color:#EEE8FF}' +
-      '.ke-consent button[data-ke="yes"]{background:#8B5CF6;border-color:#8B5CF6;color:#fff}' +
-      '.ke-consent button:focus-visible{outline:2px solid #A78BFA;outline-offset:3px}' +
+      'cursor:pointer;border:1px solid rgba(247,246,244,.42);background:transparent;color:#F7F6F4}' +
+      '.ke-consent button[data-ke="yes"]{background:#F7F6F4;border-color:#F7F6F4;color:#23211E}' +
+      '.ke-consent button:focus-visible{outline:2px solid #F7F6F4;outline-offset:3px}' +
       ''  /* no reduce-motion override — see test-reduced-motion.mjs */;
 
     document.head.appendChild(css);
