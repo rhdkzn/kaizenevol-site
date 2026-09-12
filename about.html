@@ -203,19 +203,23 @@
        Side by side at EVERY width, in the order they stand: Diego in front on the
        left, Law behind on the right. Two columns read as a KEY to the photo, so
        they have to match it - stacked, the mapping is gone. */
+    /* Columns size to the WORDS, not to half the figure each. Two 1fr columns capped
+       the lettering at whatever fitted the narrower half, which is why the captions
+       could not grow past 44px however much empty frame sat between them - the column
+       was the ceiling, not the type. auto/auto with space-between spends the slack in
+       the middle instead, where it reads as a gap rather than as waste. The percentage
+       indents went with it: they existed to nudge two fixed columns into line under
+       each person, and content-sized columns already land there.
+       The ceiling is arithmetic, not taste: the two marks measure 4.395h and 4.822h
+       wide at a shared height h, so they fit a 480px figure only up to h = (480-16)/9.218
+       = 50.3px. Past that max-width:100% does not shrink the longer one, it SQUASHES it -
+       same height, narrower than its own aspect - which distorts the lettering silently.
+       10.2cqw sits under that with 13px to spare, and the width sweep asserts on aspect
+       ratio rather than on overflow, because a squashed image never overflows. */
     .duo-credit { position:relative; z-index:3; margin:10px auto 0; max-width:none;
-      display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;
-      container-type:inline-size; }
-    .duo-credit span { display:block; text-align:left; }
-    .duo-credit span:first-child { padding-left:2%; }
-    .duo-credit span:last-child  { padding-left:3%; }
-    /* Law's role is the longer string, so its column is indented further to keep the
-       two ends level. Keyed to 960px, not 620px: the figure only widens at 960, so a
-       620px breakpoint applied the wide-figure indent to the 330px narrow figure and
-       left the longer caption 1.2px off the frame edge between 620 and 959.
-       961, not 960: the figure's own rule is max-width:960px, so at exactly 960 both
-       would apply - the narrow figure with the wide indent, the same 1.2px squeeze. */
-    @media (min-width:961px) { .duo-credit span:last-child { padding-left:6%; } }
+      display:grid; grid-template-columns:auto auto; justify-content:space-between;
+      gap:16px; align-items:start; container-type:inline-size; }
+    .duo-credit span { display:block; text-align:left; min-width:0; }
     /* The captions are the SAME hand as the names sprayed on the shirts - all four
        marks come off one lettering plate, so this is artwork rather than a typeface
        and ships as an image with the words in alt. Each sits under its own person.
@@ -223,7 +227,7 @@
        export, so a single CSS height renders them at identical letter size; stretching
        each to fill its column made the longer caption's letters visibly smaller. */
     .duo img.duo-cap { position:static; display:block; width:auto;
-      height:clamp(25px, 9.2cqw, 48px); max-width:100%; z-index:auto; }
+      height:clamp(28px, 10.2cqw, 53px); max-width:100%; z-index:auto; }
     .duo-badge b { display:block; font-family:var(--mono,ui-monospace,monospace);
       font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
     .duo-badge span { display:block; font-size:11.5px; color:#B9B4AA; }
