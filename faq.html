@@ -197,6 +197,15 @@
     footer .nav-logo b{font-size:15px}
     .muted{color:var(--muted)}
     .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#6E6A63;font-size:13px}
+      /* The last answer block zeroes its own bottom padding and .closing carried no top
+       padding, so on every question page the close collided with the answer above it at
+       EXACTLY 0px - measured, not eyeballed. Rahaid saw it on a phone before any of the
+       checks did, because every check we own asks about the document and none asked
+       whether two sections were touching. */
+    /* Every answer block above it is separated by a hairline; without one the close
+       read as a continuation of the last answer rather than as the next thing. */
+    main.legal + .closing, .legal ~ .closing, .closing {
+      padding-top:clamp(56px, 9vw, 96px); border-top:1px solid var(--hairline); }
   </style>
   <link rel="stylesheet" href="/kaizen-mark.css">
   <link rel="stylesheet" href="/interactions.css">
@@ -215,7 +224,7 @@
       "name": "What do you actually do?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Four things, run together: we make your content, run your ads, keep your social alive, and go back to the people who already bought. One of them on its own does very little, which is why we do not sell them separately."
+        "text": "Four things, run together: we make your content, run your ads, keep your social alive, and go back to the people who already bought. One on its own does very little, which is why we do not sell them separately."
       }
     },
     {
@@ -223,7 +232,7 @@
       "name": "Who is this for?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Brands and artists who make something good and are not getting it in front of enough people. Streetwear, jewellery, ceramics, prints, music. If you sell something you made and the marketing is the part that slips, that is the shape."
+        "text": "Brands and artists who make something good and are not getting it in front of enough people. Streetwear, jewellery, ceramics, prints, music. If you sell what you make and the marketing is the part that slips, that is the shape."
       }
     },
     {
@@ -231,7 +240,7 @@
       "name": "Do I need a following already?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. It goes further when there is something to build on, and we will say so on the call if we think it is too early. But we have no follower minimum and no minimum ad spend."
+        "text": "No. It goes further when there is something to build on, and we will say so if we think it is too early. There is no follower minimum and no minimum ad spend."
       }
     },
     {
@@ -239,7 +248,7 @@
       "name": "How quickly would I see anything?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Within days you can see whether people react to the creative. Whether the money makes sense takes longer, because you need enough sales through the door to be looking at a pattern rather than a good week."
+        "text": "Within days you can see whether people react to the creative. Whether the money makes sense takes longer, because you need enough sales to see a pattern rather than a good week."
       }
     },
     {
@@ -255,7 +264,7 @@
       "name": "Who owns the ads, the content and the customer list?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You do, the whole time. Your ad account, your content, your customer list and the tracking we set up on your shop. Your ad money goes from your own account, never through us. If we part ways, all of it stays with you."
+        "text": "You do, the whole time. The ad account, the content, the customer list and the tracking on your shop. Your ad money goes from your own account, never through us. If we part ways, it all stays with you."
       }
     },
     {
@@ -271,7 +280,7 @@
       "name": "What happens if you cannot help?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "We say so on the first call rather than three months in. There are three reasons we would say no, and all three are on the site: you will not look at your own numbers, the margin is too thin for ads to pay for themselves, or you only want the ads and nothing else."
+        "text": "We say so on the first call rather than three months in. There are three reasons we would say no: you will not look at your own numbers, the margin is too thin for ads to pay for themselves, or you only want the ads and nothing else."
       }
     },
     {
@@ -279,15 +288,7 @@
       "name": "Why only five clients?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Because it is the two of us and we do the work ourselves. Five is the whole capacity, not a launch offer. When they are full, they are full."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you use AI?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Plenty, and we are not precious about it. It speeds up the making. It does not decide what is worth making, and we do not pretend a tool replaces knowing your business."
+        "text": "Because it is the two of us and we do the work. Five is the whole capacity, not a launch offer. When they are full, they are full."
       }
     },
     {
@@ -300,7 +301,7 @@
     },
     {
       "@type": "Question",
-      "name": "Can I just do this myself with AI?",
+      "name": "Can I just do this myself?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Honestly, a lot of it, yes. Here is the part that does not get easier, and when handing it over is the wrong call."
@@ -329,7 +330,6 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="what-we-run.html">What we run</a></li>
       <li><a href="kaizen-loop.html">Kaizen Loop</a></li><li><a href="faq.html">FAQ</a></li>
-      <li><a href="index.html#founders">About</a></li>
       <li><a class="btn-solid" href="apply.html">Take a seat</a></li>
     </ul>
     <a class="btn-solid nav-cta" href="apply.html">Take a seat</a>
@@ -340,7 +340,6 @@
     <a href="what-we-run.html">What we run</a>
     <a href="kaizen-loop.html">Kaizen Loop</a>
     <a href="faq.html">FAQ</a>
-    <a href="index.html#founders">About</a>
   </div>
 </nav>
 
@@ -356,22 +355,22 @@
 
 <section class="legal-block">
   <h2>What do you actually do?</h2>
-  <p>Four things, run together: we make your content, run your ads, keep your social alive, and go back to the people who already bought. One of them on its own does very little, which is why we do not sell them separately.</p>
+  <p>Four things, run together: we make your content, run your ads, keep your social alive, and go back to the people who already bought. One on its own does very little, which is why we do not sell them separately.</p>
 </section>
 
 <section class="legal-block">
   <h2>Who is this for?</h2>
-  <p>Brands and artists who make something good and are not getting it in front of enough people. Streetwear, jewellery, ceramics, prints, music. If you sell something you made and the marketing is the part that slips, that is the shape.</p>
+  <p>Brands and artists who make something good and are not getting it in front of enough people. Streetwear, jewellery, ceramics, prints, music. If you sell what you make and the marketing is the part that slips, that is the shape.</p>
 </section>
 
 <section class="legal-block">
   <h2>Do I need a following already?</h2>
-  <p>No. It goes further when there is something to build on, and we will say so on the call if we think it is too early. But we have no follower minimum and no minimum ad spend.</p>
+  <p>No. It goes further when there is something to build on, and we will say so if we think it is too early. There is no follower minimum and no minimum ad spend.</p>
 </section>
 
 <section class="legal-block">
   <h2>How quickly would I see anything?</h2>
-  <p>Within days you can see whether people react to the creative. Whether the money makes sense takes longer, because you need enough sales through the door to be looking at a pattern rather than a good week.</p>
+  <p>Within days you can see whether people react to the creative. Whether the money makes sense takes longer, because you need enough sales to see a pattern rather than a good week.</p>
 </section>
 
 <section class="legal-block">
@@ -381,7 +380,7 @@
 
 <section class="legal-block">
   <h2>Who owns the ads, the content and the customer list?</h2>
-  <p>You do, the whole time. Your ad account, your content, your customer list and the tracking we set up on your shop. Your ad money goes from your own account, never through us. If we part ways, all of it stays with you.</p>
+  <p>You do, the whole time. The ad account, the content, the customer list and the tracking on your shop. Your ad money goes from your own account, never through us. If we part ways, it all stays with you.</p>
 </section>
 
 <section class="legal-block">
@@ -391,17 +390,12 @@
 
 <section class="legal-block">
   <h2>What happens if you cannot help?</h2>
-  <p>We say so on the first call rather than three months in. There are three reasons we would say no, and all three are on the site: you will not look at your own numbers, the margin is too thin for ads to pay for themselves, or you only want the ads and nothing else.</p>
+  <p>We say so on the first call rather than three months in. There are three reasons we would say no: you will not look at your own numbers, the margin is too thin for ads to pay for themselves, or you only want the ads and nothing else.</p>
 </section>
 
 <section class="legal-block">
   <h2>Why only five clients?</h2>
-  <p>Because it is the two of us and we do the work ourselves. Five is the whole capacity, not a launch offer. When they are full, they are full.</p>
-</section>
-
-<section class="legal-block">
-  <h2>Do you use AI?</h2>
-  <p>Plenty, and we are not precious about it. It speeds up the making. It does not decide what is worth making, and we do not pretend a tool replaces knowing your business.</p>
+  <p>Because it is the two of us and we do the work. Five is the whole capacity, not a launch offer. When they are full, they are full.</p>
 </section>
 
 <section class="legal-block">
@@ -409,10 +403,12 @@
   <p>Three questions come up so often they have their own page.</p>
   <ul>
     <li><a href="tried-ads-before.html">We tried ads before and they did not work</a> &mdash; Two things go wrong far more often than anything else, and it is worth knowing which one it was before spending again.</li>
-    <li><a href="can-i-do-this-myself.html">Can I just do this myself with AI?</a> &mdash; Honestly, a lot of it, yes. Here is the part that does not get easier, and when handing it over is the wrong call.</li>
+    <li><a href="can-i-do-this-myself.html">Can I just do this myself?</a> &mdash; Honestly, a lot of it, yes. Here is the part that does not get easier, and when handing it over is the wrong call.</li>
     <li><a href="ads-for-musicians.html">Do ads work for a music artist?</a> &mdash; Yes, but it is a different job from selling a product, and treating it like one is why a lot of artist ad spend disappears.</li>
   </ul>
 </section>
+    </div>
+  </div>
 
 <section class="closing" id="contact">
   <div class="container">
@@ -440,7 +436,6 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="what-we-run.html">What we run</a></li>
           <li><a href="kaizen-loop.html">Kaizen Loop</a></li><li><a href="faq.html">FAQ</a></li>
-          <li><a href="index.html#founders">About</a></li>
           <li><a href="privacy.html">Privacy</a></li>
         </ul>
       </div>
