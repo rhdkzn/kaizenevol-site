@@ -22,10 +22,22 @@ const shapes = new Map()
 
 for (const f of files) {
   const html = readFileSync(f, 'utf8')
-  const i = html.indexOf('<div class="footer-right"')
-  if (i < 0) continue                        // funnel and internal pages carry no footer by design
-  const j = html.indexOf('</footer>', i)
-  const block = html.slice(i, j)
+  /* Find the contact COLUMN by what it contains, not by a class one layout happens to
+     use. Keying on `.footer-right` silently skipped index.html — the most-visited page
+     on the site, and the very page this guard was written for — because its column is a
+     bare <div> (audit 2026-09-12). Labelling index to match would have been adding a
+     class with no rule behind it, which test-acq-render rightly refuses. */
+  const fi = html.indexOf('<footer')
+  if (fi < 0) continue                       // funnel and internal pages carry no footer by design
+  const fj = html.indexOf('</footer>', fi)
+  const foot = html.slice(fi, fj)
+  /* The funnel and internal pages (apply, f, onboard, portal) carry a one-line footer
+     with no contact column by design. The absence of the Contact heading is what says
+     so — previously it was the absence of a `.footer-right` class, which excluded them
+     correctly and index.html by accident. */
+  const ci = foot.search(/>\s*Contact(\s+Us)?\s*</i)
+  if (ci < 0) continue
+  const block = foot.slice(ci)
 
   const mails = [...new Set([...block.matchAll(/mailto:([^"?]+)/g)].map(m => m[1]))].sort()
   const wa = /id="waOpen"/.test(block)
@@ -44,7 +56,30 @@ for (const f of files) {
     check(`${f}: the WhatsApp button has its handler`, /getElementById\('waOpen'\)/.test(html))
   }
 
-  const key = mails.join(',') + (wa ? ' +wa' : '')
+  /* The SOCIAL block drifts the same way the contact block did (audit 2026-09-12):
+     booked.html carried Instagram alone while the other eight carried Instagram and
+     Facebook, and it was the one page whose icons were still an 18x18 tap target
+     against 36x36 everywhere else. Same failure, one block over, so it joins the
+     same parity comparison rather than getting its own test. */
+  /* Socials are read from the WHOLE <footer>, not the footer-right slice: the layouts
+     differ (booked.html keeps its icons in the nav list, the rest in the contact
+     column) and the question is whether the page carries them, not where. */
+  const socials = [...new Set([...foot.matchAll(/href="https:\/\/(?:www\.)?(instagram|facebook)\.com[^"]*"/g)]
+    .map(m => m[1]))].sort()
+  check(`${f}: footer carries the social links`, socials.length > 0, 'none')
+  /* An 18px glyph is a fine mark and a poor thumb. The padding grows the TAP TARGET
+     to 36x36 without moving the icon; WCAG 2.5.8 asks for 24. */
+  const socialRule = (html.match(/\.footer-social a\{[^}]*\}/s) || [''])[0]
+  check(`${f}: the social links are a real tap target`, /padding:\s*\d/.test(socialRule),
+        socialRule ? 'rule present, no padding' : 'no .footer-social a rule')
+  /* And the container rule, without which the two 36px targets overlap by 18px instead
+     of clearing by 4. booked.html was missing it and the icons sat on top of each other
+     (measured 2026-09-12) — the padding alone is not the whole guard. */
+  const socialBox = (html.match(/\.footer-social\{[^}]*\}/s) || [''])[0]
+  check(`${f}: the social targets are spaced apart`, /gap:\s*\d/.test(socialBox),
+        socialBox ? 'rule present, no gap' : 'no .footer-social container rule')
+
+  const key = mails.join(',') + (wa ? ' +wa' : '') + ' | ' + socials.join(',')
   if (!shapes.has(key)) shapes.set(key, [])
   shapes.get(key).push(f)
 }

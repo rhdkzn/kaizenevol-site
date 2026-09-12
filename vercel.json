@@ -125,6 +125,34 @@
     {
       "source": "/portal",
       "destination": "/portal.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/what-we-run",
+      "destination": "/what-we-run.html"
+    },
+    {
+      "source": "/kaizen-loop",
+      "destination": "/kaizen-loop.html"
+    },
+    {
+      "source": "/apply",
+      "destination": "/apply.html"
+    },
+    {
+      "source": "/tried-ads-before",
+      "destination": "/tried-ads-before.html"
+    },
+    {
+      "source": "/can-i-do-this-myself",
+      "destination": "/can-i-do-this-myself.html"
+    },
+    {
+      "source": "/ads-for-musicians",
+      "destination": "/ads-for-musicians.html"
     }
   ],
   "redirects": [
@@ -155,12 +183,12 @@
     },
     {
       "source": "/faq.html",
-      "destination": "/contact.html",
+      "destination": "/#contact",
       "permanent": true
     },
     {
       "source": "/faq",
-      "destination": "/contact.html",
+      "destination": "/#contact",
       "permanent": true
     },
     {
