@@ -155,6 +155,140 @@ const browser = await chromium.launch();
   await ctx.close();
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * 7. THE LEAD EVENT.
+ *
+ * window.keTrackLead existed from 2026-07-31 and NOTHING called it until
+ * 2026-09-12, so with a pixel id the site would have reported PageView and never
+ * a Lead — on a lead-generation site the only event that matters. Wired into the
+ * two real conversion points: funnel-engine.js (f.html) and apply.html.
+ *
+ * The spy is fbq's own queue. With fbevents.js aborted, Meta's loader never sets
+ * callMethod, so every fbq(...) lands in window.fbq.queue — real call site, real
+ * arguments, no stubbing of our own code.
+ *
+ * Four assertions, and three of them are negative. A Lead fired for someone who
+ * declined is precisely what they declined; a Lead fired on a submission that
+ * FAILED is a number that will not reconcile against the inbox later.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+const leads = (p) => p.evaluate(() =>
+  ((window.fbq && window.fbq.queue) ? Array.from(window.fbq.queue) : [])
+    .map(a => Array.from(a)).filter(a => a[0] === 'track' && a[1] === 'Lead'));
+
+/* Walks whatever steps the form currently has, so it does not go stale when the
+   questions change: text steps get typed into, choice steps take the first option. */
+async function driveApply(p) {
+  for (let i = 0; i < 40; i++) {
+    if (await p.locator('#done:not([hidden])').count()) return true;
+    const step = p.locator('.step.on').first();
+    if (!(await step.count())) break;
+    const type = await step.getAttribute('data-type');
+    if (type === 'choice') {
+      await step.locator('button.opt').first().click();
+    } else {
+      /* EVERY input in the step, keyed by the input's own id — apply.html reads
+         `data[field.id || step.dataset.key]`, and the last step carries TWO fields
+         (contactName and email). Filling only the first left the email blank and the
+         form sat on "We need somewhere to send the answer" forever. */
+      const inputs = step.locator('input, textarea');
+      for (let k = 0; k < await inputs.count(); k++) {
+        const el = inputs.nth(k);
+        const id = (await el.getAttribute('id')) || '';
+        const t  = (await el.getAttribute('type')) || '';
+        await el.fill(t === 'email' || /email/i.test(id) ? 'test@example.com'
+                    : /url|site|web/i.test(id) ? 'example.com'
+                    : 'Test ' + (id || 'answer'));
+      }
+    }
+    const go = p.locator('#go');
+    if (await go.count() && await go.isVisible()) await go.click();
+    await p.waitForTimeout(120);
+  }
+  return !!(await p.locator('#done:not([hidden])').count());
+}
+
+async function applyRun(browser, { answer, apiOk = true, poison = false }) {
+  const { ctx, hits } = await armed(browser);
+  await ctx.route('**/api/submit-lead', r => r.fulfill({ status: apiOk ? 200 : 500, body: '{}' }));
+  await ctx.route('**/api/funnel-event', r => r.fulfill({ status: 200, body: '{}' }));
+  const p = await ctx.newPage();
+  await p.goto(`${BASE}/apply.html`, { waitUntil: 'networkidle' });
+  await p.waitForSelector('.ke-consent', { timeout: 4000 });
+  await p.click(`.ke-consent button[data-ke="${answer}"]`);
+  await p.waitForTimeout(700);
+  if (poison) await p.evaluate(() => { window.keTrackLead = () => { throw new Error('tracking blew up'); }; });
+  const finished = await driveApply(p);
+  await p.waitForTimeout(500);
+  const out = { finished, leads: await leads(p), pixel: hits.length };
+  await ctx.close();
+  return out;
+}
+
+{
+  const r = await applyRun(browser, { answer: 'yes' });
+  is('lead/apply: form completes', r.finished, true);
+  is('lead/apply: exactly one Lead', r.leads.length, 1);
+  is('lead/apply: labelled', JSON.stringify(r.leads[0] && r.leads[0][2]), '{"content_name":"apply"}');
+  /* Nothing but the label may reach Meta — the form carries an email, a business
+     name and a free-text message, and none of it is ours to send. */
+  const keys = Object.keys((r.leads[0] && r.leads[0][2]) || {});
+  is('lead/apply: no PII in the payload', keys.join(','), 'content_name');
+}
+{
+  const r = await applyRun(browser, { answer: 'no' });
+  is('lead/declined: form still completes', r.finished, true);
+  is('lead/declined: NO Lead', r.leads.length, 0);
+  is('lead/declined: NO pixel at all', r.pixel, 0);
+}
+{
+  /* ISOLATES THE CONSENT CHECK. keTrackLead guards on `read() !== 'granted' || !window.fbq`,
+     and after a decline fbq never exists — so the plain declined case above passes even if
+     the CONSENT half is deleted. Red-green proved exactly that on 2026-09-12: removing
+     `read() !== 'granted'` left the suite green. Here fbq is defined by hand after the
+     decline, so only the consent check can stop the Lead. */
+  const { ctx } = await armed(browser);
+  await ctx.route('**/api/submit-lead', r => r.fulfill({ status: 200, body: '{}' }));
+  const p = await ctx.newPage();
+  await p.goto(`${BASE}/apply.html`, { waitUntil: 'networkidle' });
+  await p.waitForSelector('.ke-consent', { timeout: 4000 });
+  await p.click('.ke-consent button[data-ke="no"]');
+  await p.waitForTimeout(400);
+  await p.evaluate(() => {
+    window.fbq = function () { (window.fbq.queue = window.fbq.queue || []).push(arguments); };
+  });
+  const finished = await driveApply(p);
+  await p.waitForTimeout(400);
+  is('lead/declined-with-fbq-present: form completes', finished, true);
+  is('lead/declined-with-fbq-present: consent check alone blocks the Lead', (await leads(p)).length, 0);
+  await ctx.close();
+}
+{
+  const r = await applyRun(browser, { answer: 'yes', apiOk: false });
+  is('lead/failed submit: NO Lead', r.leads.length, 0);
+  is('lead/failed submit: success panel stays hidden', r.finished, false);
+}
+{
+  /* Tracking must never be able to take down a conversion that already succeeded. */
+  const r = await applyRun(browser, { answer: 'yes', poison: true });
+  is('lead/poisoned tracker: form still completes', r.finished, true);
+}
+
+/* The funnel's call site, checked in the file rather than by driving f.html, which
+   loads its spec over the network and would make this test depend on a JSON fixture.
+   Asserting the call sits in the SUCCESS branch is the part that matters. */
+{
+  const src = await (await fetch(`${BASE}/funnel-engine.js`)).text();
+  const i = src.indexOf('keTrackLead');
+  (i > 0) ? ok('lead/funnel: call site present') : bad('lead/funnel: call site present', 'not found in funnel-engine.js');
+  const before = src.slice(Math.max(0, i - 600), i);
+  /^[\s\S]*emit\(spec, 'complete'/.test(before)
+    ? ok('lead/funnel: fires in the success branch')
+    : bad('lead/funnel: fires in the success branch', 'not preceded by the complete emit');
+  /catch/.test(src.slice(i, i + 260)) ? ok('lead/funnel: guarded by try/catch')
+    : bad('lead/funnel: guarded by try/catch', 'no catch near the call');
+}
+
 await browser.close();
 
 if (fails.length) {

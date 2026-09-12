@@ -274,6 +274,13 @@
         var c = document.getElementById('count'); if (c) c.textContent = '';
         self.readBack();
         emit(spec, 'complete', null, self.steps.length, self.steps.length);
+        /* Meta Lead. Fires only here - after the POST came back ok - never in the catch.
+           Guarded twice over: keTrackLead is undefined until a pixel id exists, and it
+           no-ops without consent; the try/catch means a tracking fault can never take
+           down a submission that has already succeeded. Sends the funnel NAME and
+           nothing else - no email, no business, no message. */
+        try { if (global.keTrackLead) global.keTrackLead({ content_name: spec.name || 'funnel' }); }
+        catch (e) { /* tracking is never allowed to break a conversion */ }
         self.done.hidden = false;
         var h = self.done.querySelector('h1'); if (h && h.focus) h.focus();
       })

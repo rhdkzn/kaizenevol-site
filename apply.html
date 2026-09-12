@@ -315,7 +315,13 @@
                + '\n\n' + (data.message || '')
       })
     }).then(function(r){ if(!r.ok) throw 0; })
-      .then(function(){ f.hidden = true; count.textContent=''; readBack(); done.hidden = false; done.querySelector('h1').focus && done.querySelector('h1').focus(); })
+      .then(function(){
+        f.hidden = true; count.textContent=''; readBack();
+        /* Meta Lead — success branch only. See funnel-engine.js for why it is guarded
+           twice and why nothing but a label is sent. */
+        try { if (window.keTrackLead) window.keTrackLead({ content_name: 'apply' }); }
+        catch (e) {}
+        done.hidden = false; done.querySelector('h1').focus && done.querySelector('h1').focus(); })
       .catch(function(){
         go.disabled = false; go.textContent = 'Take my seat';
         err.textContent = 'That did not send. Email diego@kaizenevol.com and we will pick it up there.';
