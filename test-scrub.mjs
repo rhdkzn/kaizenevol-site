@@ -23,6 +23,7 @@
  */
 import { chromium, devices } from 'playwright';
 import { readFileSync, statSync, readdirSync } from 'node:fs';
+import { inflateSync } from 'node:zlib';
 
 const BASE = process.env.BASE || 'http://localhost:8899';
 let pass = 0, fail = 0;
@@ -101,6 +102,68 @@ check('controller coalesces seeks through rAF',
   check('desktop clips inside the 4 MiB budget', desktop <= 4, `${desktop.toFixed(2)} MiB`);
   check('mobile clips inside the 1 MiB budget', mobile <= 1, `${mobile.toFixed(2)} MiB`);
 }
+
+
+/* A PNG reader, forty lines, no dependency.
+ *
+ * The alternative was ffprobe/ffmpeg, which is not installed here or on
+ * Rahaid's machine — and this file already carries the scar of a codec probe
+ * that returned "(unreadable)" for a MISSING BINARY and compared it against
+ * 'h264', so a missing tool read as a broken file. A check that cannot run must
+ * say so; better still, a check that needs nothing cannot fail to run.
+ * Cross-checked against ffmpeg on the same frame pairs: 7.17 vs 7.27 and 24.34
+ * vs 24.45, the gap being ffmpeg's YUV rounding.
+ */
+const readPng = (buf) => {
+  let p = 8, w = 0, h = 0, depth = 0, color = 0, inter = 0;
+  const idat = [];
+  while (p < buf.length) {
+    const len = buf.readUInt32BE(p), type = buf.toString('ascii', p + 4, p + 8);
+    const data = buf.subarray(p + 8, p + 8 + len);
+    if (type === 'IHDR') {
+      w = data.readUInt32BE(0); h = data.readUInt32BE(4);
+      depth = data[8]; color = data[9]; inter = data[12];
+    } else if (type === 'IDAT') idat.push(data);
+    else if (type === 'IEND') break;
+    p += 12 + len;
+  }
+  if (depth !== 8 || inter !== 0 || (color !== 6 && color !== 2)) return null;
+  const ch = color === 6 ? 4 : 3;
+  const raw = inflateSync(Buffer.concat(idat));
+  const out = Buffer.alloc(w * h * ch);
+  let q = 0;
+  for (let y = 0; y < h; y++) {
+    const f = raw[q++];
+    const line = raw.subarray(q, q + w * ch); q += w * ch;
+    const cur = out.subarray(y * w * ch, (y + 1) * w * ch);
+    const prev = y ? out.subarray((y - 1) * w * ch, y * w * ch) : null;
+    for (let i = 0; i < w * ch; i++) {
+      const a = i >= ch ? cur[i - ch] : 0;
+      const b = prev ? prev[i] : 0;
+      const c = (prev && i >= ch) ? prev[i - ch] : 0;
+      let v = line[i];
+      if (f === 1) v += a;
+      else if (f === 2) v += b;
+      else if (f === 3) v += (a + b) >> 1;
+      else if (f === 4) {
+        const pa = Math.abs(b - c), pb = Math.abs(a - c), pc = Math.abs(a + b - 2 * c);
+        v += (pa <= pb && pa <= pc) ? a : (pb <= pc ? b : c);
+      }
+      cur[i] = v & 255;
+    }
+  }
+  return { w, h, ch, data: out };
+};
+const meanAbsDiff = (A, B) => {
+  if (!A || !B || A.w !== B.w || A.h !== B.h) return null;
+  let sum = 0, n = 0;
+  for (let i = 0; i < A.data.length; i += A.ch) {
+    const la = 0.2126 * A.data[i] + 0.7152 * A.data[i + 1] + 0.0722 * A.data[i + 2];
+    const lb = 0.2126 * B.data[i] + 0.7152 * B.data[i + 1] + 0.0722 * B.data[i + 2];
+    sum += Math.abs(la - lb); n++;
+  }
+  return sum / n;
+};
 
 const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox']
@@ -226,6 +289,79 @@ const browser = await chromium.launch({
       `${mid === null ? 'no duration' : (mid * 100).toFixed(0) + '%'} at the midpoint`);
     await page.close();
   }
+  await ctx.close();
+}
+
+// ---- the film SURVIVES the scrim -------------------------------------------
+//
+// Rahaid, after three rounds of fixes: "still look statics." He was right every
+// time and every check in this file agreed with me, because they all measured
+// the same half of the trade: whether the COPY survives the film. Not one asked
+// whether the film survives the scrim.
+//
+// It did not. Measured on the composited page, mean absolute luminance
+// difference between the first and last frame of the whole 9-second scrub:
+//
+//   raw clip, no scrim       41 of 255      real motion
+//   on the page, old scrim    7 of 255      invisible
+//
+// The scrim was eating 5.6x of it, because it had been tuned against legibility
+// alone and overshot: 12.89:1 against a 4.5:1 requirement, bought with the whole
+// effect. currentTime advanced perfectly throughout. THE PIXELS DID NOT MOVE,
+// and nothing here could tell the difference.
+//
+// Both directions are asserted now, so neither can be traded away for the other
+// again: the copy check above sets the floor on legibility, this sets the floor
+// on the thing a visitor came to see.
+for (const [name, vp] of [
+  ['phone', { width: 390, height: 844, isMobile: true, hasTouch: true }],
+  ['desktop', { width: 1280, height: 900 }],
+]) {
+  const { isMobile, hasTouch, ...viewport } = vp;
+  const ctx = await browser.newContext({ viewport, isMobile, hasTouch });
+  const page = await ctx.newPage();
+  await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
+  const painted = await page.waitForFunction(
+    () => document.querySelector('[data-scrub]')?.dataset.scrubPainted === 'true',
+    { timeout: 20000 }).then(() => true).catch(() => false);
+  if (!painted) {
+    check(`${name}: the film paints so its motion can be measured`, false,
+      'no frame in 20s — the harness or the clip, not the scrim');
+    await ctx.close();
+    continue;
+  }
+  const geo = await page.evaluate(() => {
+    const s = document.querySelector('[data-scrub]');
+    const top = s.getBoundingClientRect().top + window.pageYOffset;
+    return {
+      enter: Math.max(0, top - window.innerHeight),
+      end: document.documentElement.scrollHeight - window.innerHeight,
+    };
+  });
+  // The COPY is hidden: this measures the film, not the words over it.
+  await page.addStyleTag({ content: '.closing .container{visibility:hidden!important}' });
+  const shots = [];
+  for (const f of [0, 1]) {
+    await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }),
+      Math.round(geo.enter + (geo.end - geo.enter) * f));
+    await page.evaluate(() => new Promise((res) => {
+      const v = document.querySelector('.scrub-video');
+      if (!v || !v.duration) return res();
+      let last = -1, still = 0, ticks = 0;
+      (function poll() {
+        const t = v.currentTime;
+        still = Math.abs(t - last) < 0.004 ? still + 1 : 0;
+        last = t;
+        if (still >= 4 || ++ticks > 180) return res();
+        requestAnimationFrame(poll);
+      })();
+    }));
+    shots.push(readPng(await page.locator('section.closing').screenshot()));
+  }
+  const moved = meanAbsDiff(shots[0], shots[1]);
+  check(`${name}: the film visibly moves through the scrim`,
+    moved !== null && moved >= 15,
+    moved === null ? 'frames could not be compared' : `${moved.toFixed(1)} of 255 across the whole scrub`);
   await ctx.close();
 }
 

@@ -389,19 +389,36 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  /* LIGHTENED 2026-09-12. Rahaid, three rounds in: "still look statics."
+     He was right and I had been measuring the wrong thing. currentTime advanced,
+     the mapping was consistent, the clip arrived in 0.34s - and the PIXELS did
+     not move. Measured on the composited page, mean absolute difference between
+     the first and last frame of the whole 9-second scrub:
+
+       raw clip, no scrim      41 of 255      real motion
+       on the page, old scrim   7 of 255      invisible
+
+     The scrim was eating 5.6x of it. It was tuned for legibility alone and
+     overshot by a mile: it held the copy at 12.89:1 against a 4.5:1
+     requirement, and bought that margin with the entire effect.
+
+     Swept the alphas and measured both sides at each step. This level holds
+     8.87:1 - still nearly double the floor - and the film moves 23 of 255,
+     2.2x what it did. test-scrub asserts both directions now, so neither can be
+     traded away for the other again. */
   background:
     radial-gradient(
       86% 64% at 50% 48%,
-      rgba(13, 13, 15, 0.9) 0%,
-      rgba(13, 13, 15, 0.84) 42%,
-      rgba(13, 13, 15, 0.5) 76%,
-      rgba(13, 13, 15, 0.12) 100%
+      rgba(13, 13, 15, 0.56) 0%,
+      rgba(13, 13, 15, 0.5) 42%,
+      rgba(13, 13, 15, 0.28) 76%,
+      rgba(13, 13, 15, 0.06) 100%
     ),
     linear-gradient(
       180deg,
-      rgba(13, 13, 15, 0.34) 0%,
-      rgba(13, 13, 15, 0.2) 45%,
-      rgba(13, 13, 15, 0.34) 100%
+      rgba(13, 13, 15, 0.2) 0%,
+      rgba(13, 13, 15, 0.1) 45%,
+      rgba(13, 13, 15, 0.2) 100%
     );
 }
 
@@ -440,12 +457,14 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   /* Portrait crops the film hard and the copy runs nearly edge to edge, so
      the centred pool has nowhere to clear to. A flat vertical veil instead —
      the form still reads through it, the copy no longer competes with it. */
+  /* Same correction as the desktop scrim above, same measurement: this level
+     holds the copy at 8.59:1 and the film moves 24 of 255 against 7 before. */
   .scrub-scrim {
     background: linear-gradient(
       180deg,
-      rgba(13, 13, 15, 0.8) 0%,
-      rgba(13, 13, 15, 0.9) 40%,
-      rgba(13, 13, 15, 0.93) 100%
+      rgba(13, 13, 15, 0.46) 0%,
+      rgba(13, 13, 15, 0.56) 40%,
+      rgba(13, 13, 15, 0.62) 100%
     );
   }
 }
