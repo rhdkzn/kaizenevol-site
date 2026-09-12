@@ -17,12 +17,26 @@ const p = await b.newPage({ viewport:{width:1440,height:900} });
 // Fetched, not navigated: a woff2 navigation triggers a download in Chromium
 // and throws before any assertion runs.
 await p.goto(`${BASE}/index.html`, { waitUntil: 'domcontentloaded' });
+// Read the URL out of the @font-face rule rather than hardcoding the filename: the
+// mono was subset and content-hashed on 2026-09-12, and a literal '/mono.woff2' here
+// went 404 while the face itself was serving perfectly. Ask whether the FONT loads,
+// never whether a name still matches.
 const served = await p.evaluate(async () => {
-  const r = await fetch('/mono.woff2');
-  return { status: r.status, bytes: (await r.arrayBuffer()).byteLength };
+  let url = null
+  for (const sheet of document.styleSheets) {
+    let rules; try { rules = sheet.cssRules } catch { continue }
+    for (const rule of rules || []) {
+      if (rule.constructor.name === 'CSSFontFaceRule' && /mono/i.test(rule.style.fontFamily)) {
+        const m = rule.style.src.match(/url\(["']?([^"')]+)/); if (m) url = m[1]
+      }
+    }
+  }
+  if (!url) return { status: 0, bytes: 0, url: '(no mono @font-face found)' }
+  const r = await fetch(url)
+  return { status: r.status, bytes: (await r.arrayBuffer()).byteLength, url }
 });
-check('mono.woff2 is served', served.status === 200 && served.bytes > 5000,
-  `HTTP ${served.status}, ${served.bytes} bytes`);
+check('the mono face is served', served.status === 200 && served.bytes > 5000,
+  `${served.url} -> HTTP ${served.status}, ${served.bytes} bytes`);
 
 for (const pg of PAGES) {
   await p.goto(`${BASE}/${pg}.html`, { waitUntil:'networkidle' });

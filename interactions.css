@@ -471,7 +471,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
  * ------------------------------------------------------------------------ */
 @font-face {
   font-family: "JetBrains Mono";
-  src: url("/mono.woff2") format("woff2");
+  src: url("/mono-118cffcc.woff2") format("woff2");
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
