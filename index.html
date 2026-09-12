@@ -417,6 +417,42 @@
     .cell li::before{content:"";position:absolute;left:0;top:11px;width:9px;height:1px;background:var(--stone)}
     /* The disqualifying list, which no longer sits inside a .cell — same dash-rule
        treatment as .cell li, at body size because it now carries a whole section. */
+    /* ============ THE COMPARISON (added 2026-09-12) ============
+       Parameterization, from Pen To Profit ch7: score every alternative against the
+       SAME fixed set of parameters, so the conclusion arrives as the reader's own
+       arithmetic rather than as a claim. Two rules make it honest rather than a
+       weapon, and both are load-bearing: keep genuine full marks on the options we
+       are not, and INCLUDE A PARAMETER WE LOSE ON. Ours is headcount.
+       The source technique colour-codes red/amber/green. brand/DESIGN.md says the
+       site is neutral, so the marks are drawn instead - filled, half, empty - and
+       each carries a text label for anyone who cannot see the shape. */
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    /* min-width:0 and max-width:100% both matter: without them the table's 620px
+       min-width pushes the whole page wide instead of scrolling inside the box,
+       which is what test-acq-render caught at 390px. */
+    .cmp-wrap { margin-top:34px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+      max-width:100%; min-width:0; }
+    table.cmp { border-collapse:collapse; width:100%; min-width:620px; font-size:14px; }
+    table.cmp th, table.cmp td { padding:13px 10px; text-align:center;
+      border-bottom:1px solid var(--hairline); vertical-align:middle; }
+    /* --stone measured 3.16:1 on this band at 11px/600 and the contrast guard refused it.
+       --muted is the darker of the two greys and clears 4.5. */
+    table.cmp thead th { font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--muted); font-weight:600; border-bottom:1px solid var(--ink); }
+    table.cmp th[scope="row"] { text-align:left; font-weight:400; color:var(--ink);
+      min-width:230px; padding-left:0; }
+    table.cmp .us { background:var(--recess); }
+    table.cmp thead .us { color:var(--ink); }
+    table.cmp tbody tr:last-child th, table.cmp tbody tr:last-child td { border-bottom:0; }
+    .mark { display:block; margin:0 auto; }
+    .cmp-note { margin-top:18px; font-size:14px; color:var(--muted); max-width:62ch; }
+    /* Only the phone needs telling. Above 700px all five columns are on screen. */
+    /* --stone failed the contrast guard here for the same reason it did in the
+       table head: small, uppercase, on a light band. --muted clears 4.5. */
+    .cmp-hint { display:none; margin:10px 0 0; font-size:12.5px; color:var(--muted);
+      letter-spacing:0.06em; text-transform:uppercase; }
+    @media (max-width:700px){ .cmp-hint { display:block; } }
     .notfor{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:16px;max-width:46em}
     .notfor li{position:relative;padding-left:26px;font-size:17px;color:var(--muted);line-height:1.62}
     .notfor li::before{content:"";position:absolute;left:0;top:13px;width:13px;height:1px;background:var(--stone)}
@@ -690,9 +726,25 @@
       <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-01-320.webp"><img src="/assets/run/run-01-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.842;--nudge:-1.0%;--dur:7.2s;--delay:0s"></picture><div class="n">01</div><h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got. Concepts, hooks and edits coming consistently, not one polished piece a month, shot to the standard your work deserves, because for most people who see it the ad is the brand.</p></div>
       <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-02-320.webp"><img src="/assets/run/run-02-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.819;--nudge:-0.7%;--dur:6.4s;--delay:-1.6s"></picture><div class="n">02</div><h3>Ads</h3><p>Run wherever your buyers actually are, not just where it&rsquo;s easy. Budgets, targeting and testing handled every day, turning off what loses and putting more behind what wins, so more of the right people land on the product.</p></div>
       <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-03-320.webp"><img src="/assets/run/run-03-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.830;--nudge:0.1%;--dur:7.9s;--delay:-3.2s"></picture><div class="n">03</div><h3>Social</h3><p>Your feed and stories, run for you. It brings people in on its own, and it&rsquo;s what convinces the ones who found you through an ad that you&rsquo;re worth buying from.</p></div>
-      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-04-320.webp"><img src="/assets/run/run-04-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:1;--nudge:-1.8%;--dur:6.8s;--delay:-4.8s"></picture><div class="n">04</div><h3>Email</h3><p>The person who already bought is the easiest sale you&rsquo;ll ever make, and most brands never go back to them. We keep in touch for you, by email and message, so they come back on their own instead of you paying an ad to find them twice.</p></div>
+      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-04-320.webp"><img src="/assets/run/run-04-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:1;--nudge:-1.8%;--dur:6.8s;--delay:-4.8s"></picture><div class="n">04</div><h3>Retention</h3><p>The person who already bought is the easiest sale you&rsquo;ll ever make, and most brands never go back to them. We keep in touch for you, by email and message, so they come back on their own instead of you paying an ad to find them twice.</p></div>
     </div>
     <a class="btn-quiet" style="margin-top:26px;display:inline-block" href="what-we-run.html">See what each one actually means &rarr;</a>
+  </div>
+</section>
+
+<section class="band-cool">
+  <div class="container reveal">
+    <div class="smallcaps">Your options</div>
+    <h2>Every way of doing this, scored the same way.</h2>
+    <p class="lede">These are the real alternatives, and we are one of five. The same seven questions asked of each, including the one we lose.</p>
+    <p class="cmp-hint">Swipe the table for the other four</p>
+    <div class="cmp-wrap">
+      <table class="cmp">
+        <caption class="sr-only">Five ways of running your marketing, compared across seven questions.</caption>
+        <thead><tr><th scope="col"></th><th scope="col" class="us">KaizenEvol</th><th scope="col">You do it</th><th scope="col">A freelancer</th><th scope="col">A big agency</th><th scope="col">An in-house hire</th></tr></thead><tbody><tr><th scope="row">Someone is making new work every week</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td></tr><tr><th scope="row">It still happens in the weeks you are busy</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td></tr><tr><th scope="row">Judged against what your sales did before you started</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td></tr><tr><th scope="row">Content, ads, social and retention move as one thing</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td></tr><tr><th scope="row">You keep the account, the content and the list</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td></tr><tr><th scope="row">You can stop whenever you like</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td></tr><tr><th scope="row">There are more than two people behind it</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td></tr></tbody>
+      </table>
+    </div>
+    <p class="cmp-note">The last row is the honest one. A big agency has a floor of people and we have two, so if what you want is a department, hire the department. What two people buy you is that the ones making the work are the ones you talk to.</p>
   </div>
 </section>
 
@@ -707,8 +759,14 @@
 
 <section>
   <div class="container reveal">
-    <h2>No cut of your ad spend.</h2>
-    <p class="lede">We never take a cut of your ad spend, so nothing we recommend is ever because it pays us more. There&rsquo;s no minimum ad spend either.</p>
+    <div class="smallcaps">What you are not risking</div>
+    <h2>Four things we will not do to you.</h2>
+    <ul class="notfor">
+      <li><b>We never take a cut of your ad spend.</b> It leaves your own account, not ours, so nothing we recommend is ever because it pays us more. There is no minimum either.</li>
+      <li><b>We will tell you no on the first call, not three months in.</b> If the numbers do not work we say so while it is still free to hear.</li>
+      <li><b>Nothing is held hostage.</b> The ad account, the content, the customer list and the tracking are yours the whole time. Stop whenever you like and all of it stays with you.</li>
+      <li><b>You get an answer either way.</b> Every enquiry is read by the two of us and replied to the same working day, including the ones we turn down.</li>
+    </ul>
   </div>
 </section>
 
@@ -720,6 +778,15 @@
       <li>The margin&rsquo;s too thin for ads to pay for themselves. We&rsquo;d be spending your money to prove arithmetic.</li>
       <li>You want the ads run and nothing else. That&rsquo;s one of four things we do, so you&rsquo;d be paying for three you don&rsquo;t want.</li>
     </ul>
+  </div>
+</section>
+
+<section>
+  <div class="container reveal">
+    <h2>You do not have to be good at any of this.</h2>
+    <p class="lede">Most of the people we talk to think they are behind. They are not posting enough, the last ads did nothing, the shop has been half-finished for a year. None of that counts against you here, because it is the job.</p>
+    <p class="lede">You do not need a following, a plan, a brand book, or anything written down. You need to make something worth buying and know roughly what it costs you to make. We bring the rest.</p>
+    <p class="pull">If you could have fixed it yourself in the evenings, you already would have.</p>
   </div>
 </section>
 

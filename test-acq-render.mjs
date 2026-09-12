@@ -93,12 +93,20 @@ for (const [label0, w, h] of [['desktop', 1280, 1000], ['phone', 390, 844]]) {
      overflow-x:clip for their ambient layers, so it skipped 104 of 225 elements
      and stopped catching an unclipped 1600px div injected as a control. The
      2026-08-27 case this check exists for - proof cards running 43px off a
-     phone inside an ordinary container - is untouched. */
+     phone inside an ordinary container - is untouched.
+
+     .cmp-wrap joined it on 2026-09-12 on the same terms and the same evidence: the
+     comparison table has a 620px min-width so its seven columns stay readable, and
+     it sits in its own overflow-x:auto box. Measured at 390/768/1280 before the name
+     was added - documentElement.scrollWidth equals clientWidth at all three, and
+     scrollTo(9999, y) leaves scrollX at 0, so the page itself never moves. At 390 the
+     box scrolls internally (620 inside 342); at 768 and above the table fits and
+     there is no scroll at all. */
   const overflow = await page.evaluate(() => {
     const vw = window.innerWidth
     const out = []
     for (const e of document.querySelectorAll('body *')) {
-      if (e.closest('.kz-track')) continue
+      if (e.closest('.kz-track') || e.closest('.cmp-wrap')) continue
       const r = e.getBoundingClientRect()
       if (r.width > 0 && r.right > vw + 1)
         out.push(`${e.tagName.toLowerCase()}.${(e.className || '').toString().split(' ')[0]} right:${Math.round(r.right)}`)
