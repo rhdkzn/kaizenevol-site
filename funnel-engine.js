@@ -114,6 +114,32 @@
     } catch (e) { /* telemetry never breaks the funnel */ }
   }
 
+  /* The read block, built once and used in two places: as a STEP mid-funnel and on the done
+     screen. Two copies of this markup is how the inline version quietly stops matching the
+     final one, so there is exactly one. */
+  function readBlock() {
+    var wrap = el('div', 'read');
+    wrap.appendChild(el('p', 'read-lede', 'Before anyone here has opened it, here is what your answers already say.'));
+    var one = el('p'); one.className = 'read-1'; wrap.appendChild(one);
+    var two = el('p'); two.className = 'read-2'; wrap.appendChild(two);
+    wrap.appendChild(el('p', 'read-note', 'Rough, because they are ranges. We will do it properly with your real numbers on the call \— and if we think it is too early, we will say that instead of selling you something.'));
+    return wrap;
+  }
+
+  /* Returns true if it actually wrote something. A reveal that produces nothing must not leave
+     an empty box on screen pretending to be insight. */
+  function fillRead(wrap, spec, data) {
+    var fn = REVEALS[spec.reveal];
+    if (!fn || !wrap) return false;
+    var out = fn(data);
+    if (!out || !out.first) return false;
+    var one = wrap.querySelector('.read-1'), two = wrap.querySelector('.read-2');
+    if (one) one.textContent = out.first;
+    if (two) { if (out.second) { two.textContent = out.second; two.hidden = false; } else { two.hidden = true; } }
+    wrap.hidden = false;
+    return true;
+  }
+
   function Funnel(spec, root) {
     this.spec = spec;
     this.root = root;
@@ -177,6 +203,15 @@
           if (why && s.whyAfter === fi + 1) sec.appendChild(why);
         });
       }
+      if (s.type === 'reveal') {
+        /* Issac/Obteno's mechanic (MKT-FUN-002): the proof goes BEFORE the gate. Ours used to
+           arrive only after submit, which rewards people who already trusted us and converts
+           nobody who did not. Every input this needs is answered by now; the email is not. */
+        var rv = readBlock();
+        rv.hidden = true;
+        rv.className = 'read read-step';
+        sec.appendChild(rv);
+      }
       if (s.review) { var r = el('div', 'review'); r.id = 'review'; r.hidden = true; sec.appendChild(r); }
       form.appendChild(sec);
       self.steps.push(sec);
@@ -193,12 +228,14 @@
     if (spec.done) {
       if (spec.done.eyebrow) done.appendChild(el('div', 'smallcaps', spec.done.eyebrow));
       done.appendChild(el('h2', null, spec.done.h1 || 'Got it.'));
-      var read = el('div', 'read'); read.id = 'read'; read.hidden = true;
-      read.appendChild(el('p', 'read-lede', 'Before anyone here has opened it, here is what your answers already say.'));
-      read.appendChild(function () { var p = el('p'); p.id = 'read-1'; return p; }());
-      read.appendChild(function () { var p = el('p'); p.id = 'read-2'; return p; }());
-      read.appendChild(el('p', 'read-note', 'Rough, because they are ranges. We will do it properly with your real numbers on the call — and if we think it is too early, we will say that instead of selling you something.'));
-      done.appendChild(read);
+      /* Not repeated when a reveal STEP already showed it mid-funnel: reading the same two
+         paragraphs twice reads as padding and undercuts the moment it landed the first time. */
+      if (!spec.steps.some(function (x) { return x.type === 'reveal'; })) {
+        var read = readBlock();
+        read.id = 'read';
+        read.hidden = true;
+        done.appendChild(read);
+      }
       var body = el('p'); body.innerHTML = spec.done.body || ''; done.appendChild(body);
     }
 
@@ -224,6 +261,7 @@
 
   Funnel.prototype.valid = function (sec) {
     var spec = this.spec.steps[this.i], v = (this.data[spec.key] || '').trim();
+    if (spec.type === 'reveal') return '';          // nothing to answer
     if (spec.required && !v) return spec.required;
     if (spec.type === 'email' && v && (v.indexOf('@') < 1 || v.indexOf('.') < 0)) return spec.emailError || 'That email does not look right.';
     return '';
@@ -236,6 +274,13 @@
       emit(this.spec, 'view', this.spec.steps[this.i].key, this.i, this.steps.length);
     }
     this.steps.forEach(function (s, n) { s.classList.toggle('on', n === self.i); });
+    /* Computed on ENTRY, not at build time: the answers it reads are given mid-funnel, and a
+       visitor who goes Back and changes one must see the revised read, not the first one. */
+    var cur = this.spec.steps[this.i];
+    if (cur && cur.type === 'reveal') {
+      var box = this.steps[this.i].querySelector('.read-step');
+      if (!fillRead(box, this.spec, this.data) && box) box.hidden = true;
+    }
     this.err.textContent = '';
     this.back.hidden = this.i === 0;
     var last = this.i === this.steps.length - 1;
@@ -254,15 +299,7 @@
   };
 
   Funnel.prototype.readBack = function () {
-    var fn = REVEALS[this.spec.reveal];
-    if (!fn) return;
-    var out = fn(this.data);
-    if (!out) return;
-    var wrap = document.getElementById('read'), one = document.getElementById('read-1'), two = document.getElementById('read-2');
-    if (!wrap || !one) return;
-    one.textContent = out.first;
-    if (out.second) two.textContent = out.second; else two.hidden = true;
-    wrap.hidden = false;
+    fillRead(document.getElementById('read'), this.spec, this.data);
   };
 
   Funnel.prototype.send = function () {

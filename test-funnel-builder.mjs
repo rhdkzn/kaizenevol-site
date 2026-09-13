@@ -146,7 +146,10 @@ ok('retired COSMIC palette gone (#8B5CF6)', !/#8B5CF6/i.test(code));
 ok('retired COSMIC ground gone (#0D0B1A)', !/#0D0B1A/i.test(code));
 ok('no KaizenForge branding on a KaizenEvol tool', !/KaizenForge/i.test(code));
 ok('v1 localStorage key not reused (its model is incompatible)', !code.includes("'kf_builder_v1'"));
-ok("step types offered are exactly the engine's", ['choice', 'text', 'email', 'long'].every((t) => code.includes('value="' + t + '"')));
+ok("step types offered are exactly the engine's", ['choice', 'text', 'email', 'long', 'reveal'].every((t) => code.includes('value="' + t + '"')));
+bad('a reveal step with no read-back named is caught', (c) => {
+  c.reveal = ''; c.steps.push({ key: 'reveal', type: 'reveal', q: 'Here is what that says.' });
+}, 'empty box');
 ok('no step type the engine cannot render', !/NEW_STEP\s*=\s*\{[^}]*slider/.test(html) && !html.includes('scoreBands'));
 
 console.log('— the preview must not contaminate live data —');

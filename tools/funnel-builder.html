@@ -182,6 +182,7 @@
         <option value="text">text</option>
         <option value="email">email</option>
         <option value="long">long</option>
+        <option value="reveal">reveal</option>
       </select>
       <button class="btn mini" id="addBtn">+ add</button>
     </div>
@@ -258,7 +259,8 @@
     choice: function () { return { key: '', type: 'choice', q: 'New question', why: '', aria: '', options: ['First option', 'Second option'] }; },
     text:   function () { return { key: '', type: 'text',   q: 'New question', why: '', fields: [{ id: '', type: 'text', placeholder: '' }] }; },
     email:  function () { return { key: 'email', type: 'email', q: 'Where do we send the reply?', why: '', fields: [{ id: 'email', type: 'email', placeholder: 'you@brand.com', autocomplete: 'email' }], required: 'An email, so there is somewhere to reply.' }; },
-    long:   function () { return { key: '', type: 'long',   q: 'Anything else?', why: '', fields: [{ id: '', type: 'textarea', placeholder: '' }] }; }
+    long:   function () { return { key: '', type: 'long',   q: 'Anything else?', why: '', fields: [{ id: '', type: 'textarea', placeholder: '' }] }; },
+    reveal: function () { return { key: 'reveal', type: 'reveal', q: 'Here is what that already tells us.', why: 'Worked back from your own numbers.' }; }
   };
 
   var cfg = load() || starter();
@@ -295,6 +297,13 @@
       else if (keys[s.key]) p.push(at + 'duplicate key — the later answer silently overwrites the earlier one.');
       keys[s.key] = 1;
       if (!s.q) p.push(at + 'no question text.');
+      if (s.type === 'reveal') {
+        /* A reveal step shows the read-back mid-funnel. It has no inputs by design, so the
+           field checks below do not apply — but a reveal step with no reveal named on the
+           funnel renders an empty box pretending to be insight, which is worse than omitting it. */
+        if (!cfg.reveal) p.push(at + 'this is a reveal step but the funnel names no read-back, so it would show an empty box.');
+        return;
+      }
       if (s.type === 'choice') {
         if (!s.options || s.options.length < 2) p.push(at + 'a choice step needs at least two options.');
         if ((s.options || []).some(function (o) { return !String(o).trim(); })) p.push(at + 'an option is blank.');
@@ -446,7 +455,7 @@
     h += '<div class="row2">' +
       '<div class="fld"><label>Key</label><input type="text" class="mono" data-s="key" value="' + esc(s.key) + '" placeholder="businessName"></div>' +
       '<div class="fld"><label>Type</label><select data-s="type">' +
-      ['choice', 'text', 'email', 'long'].map(function (t) {
+      ['choice', 'text', 'email', 'long', 'reveal'].map(function (t) {
         return '<option value="' + t + '"' + (s.type === t ? ' selected' : '') + '>' + t + '</option>';
       }).join('') + '</select></div></div>';
     h += '<div class="fld"><label>Question</label><textarea data-s="q">' + esc(s.q) + '</textarea></div>';
@@ -454,7 +463,9 @@
     h += '<div class="fld"><label>Required? message shown when blank (empty = optional)</label>' +
          '<input type="text" data-s="required" value="' + esc(s.required || '') + '" placeholder="leave blank for optional"></div>';
 
-    if (s.type === 'choice') {
+    if (s.type === 'reveal') {
+      h += '<div class="hint">A reveal step shows the read-back named above, mid-funnel. No inputs — the visitor reads it and continues. Put it AFTER every question it reads and BEFORE the email.</div>';
+    } else if (s.type === 'choice') {
       h += '<div class="fld"><label>Aria label for the group</label><input type="text" data-s="aria" value="' + esc(s.aria || '') + '"></div>';
       h += '<h2 class="mt">Options</h2><div id="optWrap">';
       (s.options || []).forEach(function (o, i) {

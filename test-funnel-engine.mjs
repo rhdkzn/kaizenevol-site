@@ -40,11 +40,16 @@ const pageSteps = [...html.matchAll(/<section class="step[^"]*" data-key="([^"]+
   });
 
 ok('found the steps in apply.html', pageSteps.length > 0, 'parsed ' + pageSteps.length);
-ok('spec has the same number of steps as the page',
-   spec.steps.length === pageSteps.length, spec.steps.length + ' vs ' + pageSteps.length);
+/* Only the QUESTION steps are compared. A `reveal` step shows the read-back mid-funnel and has
+   no counterpart in apply.html, which never had one — so counting it here would make the guard
+   fail on a capability the spec gained rather than on a question it lost. The guard's job is
+   unchanged: every question on the page still has to exist, in order, with the same words. */
+const qSteps = spec.steps.filter((s) => s.type !== 'reveal');
+ok('spec has the same number of QUESTION steps as the page',
+   qSteps.length === pageSteps.length, qSteps.length + ' vs ' + pageSteps.length);
 
 pageSteps.forEach((p, i) => {
-  const s = spec.steps[i] || {};
+  const s = qSteps[i] || {};
   ok('step ' + (i + 1) + ' key matches (' + p.key + ')', s.key === p.key, 'spec has ' + s.key);
   ok('step ' + (i + 1) + ' question matches', s.q === p.q, JSON.stringify({ spec: s.q, page: p.q }));
   const specOpts = s.options || [];
@@ -66,6 +71,18 @@ const engine = readFileSync('funnel-engine.js', 'utf8');
 globalThis.window = globalThis;
 eval(engine);
 const reveal = globalThis.KEFunnel.reveals['ecom-margin'];
+/* The reveal is only worth anything BEFORE the gate (MKT-FUN-002). These pin the ordering the
+   change exists for: it must come after every answer it reads, and before the email is asked. */
+const iOf = (k) => spec.steps.findIndex((s) => s.key === k);
+const iReveal = spec.steps.findIndex((s) => s.type === 'reveal');
+ok('the spec has a reveal step', iReveal !== -1);
+ok('the reveal comes BEFORE the email step', iReveal !== -1 && iReveal < iOf('email'),
+   'reveal at ' + iReveal + ', email at ' + iOf('email'));
+['revenue', 'costShare', 'adspend'].forEach((k) => {
+  ok('the reveal comes after ' + k + ' (it reads that answer)', iOf(k) !== -1 && iOf(k) < iReveal,
+     k + ' at ' + iOf(k) + ', reveal at ' + iReveal);
+});
+
 ok('the spec names a reveal the engine actually has', typeof reveal === 'function', spec.reveal);
 
 const REVS = spec.steps.find(s => s.key === 'revenue').options;
