@@ -23,7 +23,7 @@
       /* WCAG 2.2 SC 2.5.8: 24px grab area WITHOUT fattening the 2px track — pad the hit
          box and clip the fill to the thin content strip so the slider stays elegant. */
       'input[type=range]{min-block-size:24px;padding-block:11px;background-clip:content-box!important;box-sizing:border-box;}' +
-      '.fc-row{min-block-size:24px;}';                 /* contact-row action links to a 24px hit area */
+      '.fc-row{min-block-size:44px;}';                 /* contact-row action links to a 44px hit area (was 24, 2026-09-18) */
     document.head.appendChild(s);
     /* Speculation Rules: prefetch same-origin links on intent -> near-instant navigation.
        Prefetch only (not prerender) so no page JS/pixel pre-fires; consent-gating untouched. */

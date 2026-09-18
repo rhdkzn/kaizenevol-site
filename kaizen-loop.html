@@ -64,9 +64,9 @@
     .smallcaps { font-size:11px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
     .smallcaps.accent { color:var(--accent); }
 
-    .btn-solid { display:inline-block; background:var(--accent); color:var(--void); font-weight:600; font-size:14px; padding:12px 24px; border-radius:980px; text-decoration:none; border:0; transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .3s; cursor:pointer; }
+    .btn-solid { display:inline-flex; align-items:center; justify-content:center; min-height:44px; background:var(--accent); color:var(--void); font-weight:600; font-size:14px; padding:12px 24px; border-radius:980px; text-decoration:none; border:0; transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .3s; cursor:pointer; }
     .btn-solid:hover { color:var(--void); opacity:.88; transform:translateY(-1px); }
-    .btn-quiet { display:inline-block; background:transparent; color:var(--muted); font-weight:600; font-size:14px; padding:11px 24px; border-radius:980px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
+    .btn-quiet { display:inline-flex; align-items:center; justify-content:center; min-height:44px; background:transparent; color:var(--muted); font-weight:600; font-size:14px; padding:11px 24px; border-radius:980px; text-decoration:none; border:1px solid var(--hairline); transition:color .18s,border-color .18s; }
     .btn-quiet:hover { color:var(--text); border-color:#8A857C; }
 
     /* SKIP LINK */
@@ -79,13 +79,14 @@
     .nav-inner { display:flex; align-items:center; justify-content:space-between; height:74px; }
     .nav-logo { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); }
     .nav-logo img { height:30px; width:auto; }
+    nav .nav-logo { padding:7px; margin:-7px; }
     .nav-logo b { font-weight:700; font-size:17px; letter-spacing:-0.02em; }
     .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
     .nav-links a { font-size:14.5px; font-weight:500; color:var(--muted); text-decoration:none; padding:8px 14px; transition:color .15s; }
     .nav-links a:hover { color:var(--text); }
     .nav-links a.btn-solid { font-size:13px; padding:10px 20px; margin-left:14px; color:var(--void); }
     .nav-links a.btn-solid:hover { color:var(--void); }
-    .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:10px; }
+    .burger { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:15px 12px; margin:-5px -2px; }
     .burger span { width:22px; height:2px; background:var(--text); display:block; }
     .mobile-menu { display:none; flex-direction:column; padding:8px 28px 24px; border-top:1px solid var(--hairline); }
     .mobile-menu.open { display:flex; }
@@ -359,12 +360,12 @@
   }
   
   
-  .footer-social{display:flex;gap:22px;align-items:center;margin-top:2px}
-  /* padding+negative margin grows the TAP TARGET to 36x36 without moving the icon:
-     an 18px glyph is a fine mark and a poor thumb target. The row gap is 22 so the two
-     targets clear each other by 4px instead of overlapping. */
+  .footer-social{display:flex;gap:28px;align-items:center;margin-top:6px}
+  /* padding+negative margin grows the TAP TARGET to 44x44 without moving the icon:
+     an 18px glyph is a fine mark and a poor thumb target. The row gap is 28 so the two
+     44px targets clear each other by 2px instead of overlapping. */
   .footer-social a{display:inline-flex;align-items:center;color:var(--muted);transition:color .2s;
-    padding:9px;margin:-9px}
+    padding:13px;margin:-13px}
   .footer-social a:hover{color:var(--accent-2)}
   .footer-social svg{width:18px;height:18px;display:block}
   
@@ -375,7 +376,9 @@
     footer{background:var(--void-2);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
     .f-grid{display:grid;gap:34px}
     @media(min-width:760px){.f-grid{grid-template-columns:1.4fr 1fr 1fr}}
-    footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+    footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:0}
+    /* 44px rows: a 19px text link is a fine mark and a poor thumb target. */
+    footer ul li:not(.footer-social) > a{display:inline-flex;align-items:center;min-height:44px;min-width:44px}
     footer a{color:var(--muted);text-decoration:none}
     footer a:hover{color:var(--text)}
     footer .footer-right{text-align:left}
@@ -750,9 +753,9 @@
   </div>
 </footer>
 
-<div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+<div id="waModal" role="dialog" aria-modal="true" aria-labelledby="waTitle" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
   <div style="background:#EFEDE9;border:1px solid rgba(35,33,30,0.18);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
-    <div style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
+    <div id="waTitle" style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
     <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply and call you back the same working day</span></a>
     <button id="waClose" style="margin-top:16px;background:none;border:none;color:#6E6A63;font-size:13px;cursor:pointer;font-family:inherit">Close</button>
   </div>
@@ -768,14 +771,23 @@
 })();
 </script>
 <script>
-(function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
-if(!o||!m)return;o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
-c.addEventListener('click',function(){m.style.display='none';});
-m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
+(function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose'),last=null;
+if(!o||!m)return;
+/* Focus moves INTO the dialog on open and BACK to the opener on close, and Tab stays
+   inside it while it is open. Without this a keyboard user opened it and stayed in the footer. */
+function open(e){e.preventDefault();last=document.activeElement;m.style.display='flex';var f=m.querySelector('a');if(f)f.focus();}
+function close(){m.style.display='none';if(last&&last.focus)last.focus();}
+o.addEventListener('click',open);
+c.addEventListener('click',close);
+m.addEventListener('click',function(e){if(e.target===m)close();});
+document.addEventListener('keydown',function(e){if(m.style.display!=='flex')return;
+  if(e.key==='Escape'){close();return;}
+  if(e.key==='Tab'){var f=m.querySelectorAll('a,button'),a=f[0],z=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}
+    else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}});})();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
-<script src="/midnight.js?v=21" defer></script>
+<script src="/midnight.js?v=22" defer></script>
 <script defer src="/script.js"></script>
 <script src="/seats.js" defer></script>
 <script src="/scrub.js" defer></script>
