@@ -318,7 +318,7 @@
     @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
     /* Phone display scale — keep display type inside the padded column on narrow screens */
   @media (max-width: 520px) {
-    .hero h1, h1 { font-size: clamp(29px, 8.5vw, 42px); }
+    .hero h1, h1 { font-size: clamp(40px, 11.4vw, 50px); }  /* matches index.html (was 29/8.5vw/42: 33px at 390, three sizes of small) */
     /* .sect-head h2 and .closing h2 outrank a bare `h2`, so this rule never
        reached them and both kept their desktop floors - 32px and 34px against an
        h1 scaled to 31px at 360. The page title was losing to a section heading on
@@ -399,7 +399,6 @@
     /* No font-family or tracking here on purpose: .smallcaps in interactions.css owns
        both (mono 500 at +0.12em) and loads after this block, so every page gets one rule
        and they cannot drift. A private copy here was exactly that drift. */
-    .lp-eyebrow { font-size:11px; text-transform:uppercase; color:var(--muted); margin:0 0 14px; }
     /* Sans, not mono. brand/DESIGN.md: the mono does labels and SMALL numerals only -
        "NOT for display numerals ... which is a figure and not a label; the reference
        uses its sans at that size, never the mono." These run to 54px. */
@@ -436,7 +435,7 @@
     .wr-crit li { display:flex; gap:14px; align-items:baseline; padding:11px 0;
                   border-top:1px solid var(--hairline); font-size:14.5px; color:var(--text); line-height:1.5; }
     .wr-crit li:first-child { border-top:0; padding-top:4px; }
-    .wr-crit .n { font-family:var(--mono,ui-monospace,monospace); font-size:11px; color:var(--muted);
+    .wr-crit .n { font-family:var(--sans); font-size:11px; color:var(--muted);
                   flex:0 0 auto; letter-spacing:.06em; }
 
 
@@ -446,12 +445,6 @@
        every PART that pattern checks (a heading, one .closing-sub, a route to
        apply, a mailto, the seats note) and changes only what it says. The eyebrow
        is centred here because the whole block is. */
-    .lp-next .lp-eyebrow { text-align:center; margin-bottom:18px; }
-    .lp-next .lp-eyebrow::before { margin-right:12px; }
-    .lp-next .lp-eyebrow::after {
-      content:""; display:inline-block; width:26px; height:1px; background:var(--hairline);
-      vertical-align:middle; margin-left:12px; transform:translateY(-1px);
-    }
 
     /* --- Depth on the fold. brand/DESIGN.md permits a gradient where it does WORK
        and names "a ground that gives a section depth" as exactly that. No hue
@@ -470,10 +463,6 @@
     /* The drawn rule before an eyebrow is OUR idiom, already on index.html. The
        reference brackets its mono instead; brackets on one page would be the
        drift this file has spent the day removing. */
-    .lp-eyebrow::before {
-      content:""; display:inline-block; width:26px; height:1px; background:var(--hairline);
-      vertical-align:middle; margin-right:12px; transform:translateY(-1px);
-    }
 
     /* Two tones, alternating, so the stages do not read as one slab. */
     /* The estate's band value, not a second invented one: index.html runs
@@ -491,16 +480,12 @@
     @media (min-width:880px) { .lp-cards { grid-template-columns:1fr 1fr; gap:22px; } }
     .lp-card { border:1px solid var(--hairline); border-radius:3px; background:rgba(252,252,250,.86);
                padding:26px 26px 24px; display:flex; flex-direction:column; }
-    .lp-card-top { display:flex; align-items:baseline; justify-content:space-between; gap:16px;
-                   padding-bottom:12px; border-bottom:1px solid var(--hairline); margin-bottom:20px; }
-    .lp-card-top .k { font-size:11px; color:var(--muted); }
-    .lp-card-top .v { font-size:11px; color:var(--muted); }  /* opacity:.8 took --muted to 3.43:1 (measured); removed 2026-09-18 */
     .lp-card h3 { font-size:clamp(21px,.9rem + 1.3vw,28px); font-weight:500; letter-spacing:-.015em;
                   margin:0 0 12px; max-width:20ch; }
     .lp-card p { margin:0 0 12px; color:var(--muted); font-size:15px; }
     .lp-card p:last-of-type { margin-bottom:0; }
     .lp-foot { margin-top:18px; padding-top:14px; border-top:1px solid var(--hairline);
-               font-family:var(--mono,ui-monospace,monospace); font-size:11px; line-height:1.6;
+               font-size:11px; line-height:1.6;
                color:var(--muted); }
 
     /* Declared AFTER the base rules on purpose. At equal specificity the later
@@ -600,7 +585,6 @@
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="smallcaps lp-eyebrow">01 / Why four</p>
         <h2>One of them on its own does almost nothing.</h2>
       </div>
       <div class="lp-body">
@@ -613,10 +597,8 @@
 
   <section class="lp-block tone" id="the-four">
     <div class="container">
-      <p class="smallcaps lp-eyebrow">02 / The four</p>
       <div class="wr-set lp-cards">
         <div class="lp-card">
-          <div class="lp-card-top"><span class="k smallcaps">Content.made</span><span class="v smallcaps">weekly</span></div>
           <h3>Content</h3>
           <p>We shoot it with you, or cut it from footage you already have, usually both. Not one polished piece a month, because for most people who see it the ad is the brand.</p>
           <ul class="wr-do">
@@ -624,7 +606,6 @@
           </ul>
         </div>
         <div class="lp-card">
-          <div class="lp-card-top"><span class="k smallcaps">Ads.run</span><span class="v smallcaps">daily</span></div>
           <h3>Ads</h3>
           <p>Run wherever your buyers actually are rather than wherever is easiest, and handled every day rather than set live and watched.</p>
           <ul class="wr-do">
@@ -633,7 +614,6 @@
           </ul>
         </div>
         <div class="lp-card">
-          <div class="lp-card-top"><span class="k smallcaps">Social.kept</span><span class="v smallcaps">ongoing</span></div>
           <h3>Social</h3>
           <p>Your feed and stories, posted for you. It brings people in on its own, and it is what convinces someone who found you through an ad that you are worth buying from.</p>
           <ul class="wr-do">
@@ -642,7 +622,6 @@
           </ul>
         </div>
         <div class="lp-card">
-          <div class="lp-card-top"><span class="k smallcaps">Retention.back</span><span class="v smallcaps">after the sale</span></div>
           <h3>Retention</h3>
           <p>The person who already bought is the easiest sale there is, and most brands never go back to them. We keep in touch for you, by email and message.</p>
           <ul class="wr-do">
@@ -657,7 +636,6 @@
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="smallcaps lp-eyebrow">03 / What stays yours</p>
         <h2>All of it stays <em>yours</em>.</h2>
       </div>
       <div class="lp-body">
@@ -671,18 +649,15 @@
 
   <section class="lp-block tone">
     <div class="container">
-      <p class="smallcaps lp-eyebrow">04 / Engagement</p>
       <div class="wr-set lp-cards">
         <div class="lp-card">
-          <div class="lp-card-top"><span class="k smallcaps">Engagement.model</span><span class="v smallcaps">seats &middot; 05</span></div>
           <h3>Five at a time, and both of us on <em>each</em>.</h3>
           <p>Five is the whole capacity, not a launch offer. When they are full, they are full.</p>
           <p>Just the two of us. No account manager between you and the people doing the work.</p>
           <p>All four run on <strong>one monthly fee</strong>, separate from your ad spend. We never take a cut of what you spend, and there is no minimum.</p>
-          <p class="lp-foot">&gt; the number depends on what you sell and how much you need. You hear it on the first call.</p>
+          <p class="lp-foot">the number depends on what you sell and how much you need. You hear it on the first call.</p>
         </div>
         <div class="lp-card">
-          <div class="lp-card-top"><span class="k smallcaps">Brand.fit</span><span class="v smallcaps">reasons &middot; 03</span></div>
           <h3>Three reasons we would say no.</h3>
           <p>Any of these and we would say so on the first call, not three months in. Nobody can fix numbers you will not look at. And we are not spending your money to prove arithmetic.</p>
           <ul class="wr-crit">
@@ -690,7 +665,7 @@
             <li><span class="n">02</span><span>The margin is too thin for ads to pay for themselves.</span></li>
             <li><span class="n">03</span><span>You want the ads run and nothing else.</span></li>
           </ul>
-          <p class="lp-foot">&gt; if none of those are you, the next step is fifteen minutes.</p>
+          <p class="lp-foot">if none of those are you, the next step is fifteen minutes.</p>
         </div>
       </div>
       <a class="btn-quiet lp-back" href="kaizen-loop.html">See how the Kaizen Loop runs it &rarr;</a>

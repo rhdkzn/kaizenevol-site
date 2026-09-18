@@ -105,11 +105,9 @@
      colour between the dark closing and the footer (90px on a phone) — measured 2026-09-18. */
   .legal { padding:96px 0 0; background:var(--void); }
   .legal-measure { max-width:70ch; padding-bottom:110px; }
-  .back-link { display:inline-block; font-size:13.5px; font-weight:600; color:var(--muted); text-decoration:none; margin-bottom:34px; transition:color .15s; }
-  .back-link:hover { color:var(--text); }
   /* 44px thumb target on a 23px text link, without moving a pixel: an invisible hit-slop. */
-  .back-link, main p a, main li > a { position:relative; }
-  .back-link::after, main p a::after, main li > a::after {content:'';position:absolute;left:-10px;right:-10px;top:50%;height:44px;transform:translateY(-50%)}
+  main p a, main li > a { position:relative; }
+  main p a::after, main li > a::after {content:'';position:absolute;left:-10px;right:-10px;top:50%;height:44px;transform:translateY(-50%)}
   .legal-head .smallcaps { display:block; margin-bottom:16px; }
   .legal h1 { font-size:clamp(38px, 1.6rem + 3.4vw, 72px); margin-bottom:16px; }
   .updated { color:var(--muted); font-size:14px; margin-bottom:40px; }
@@ -117,6 +115,14 @@
   .legal-block { border-top:1px solid var(--hairline); padding:44px 0; }
   .legal-block:last-child { padding-bottom:0; }
   .legal-block h2 { font-size:clamp(24px, 1.1rem + 1.4vw, 32px); margin-bottom:16px; }
+  /* Ten questions in one run had no way in: a phone visitor with one question scrolled 4.7k px
+     reading headings (critique, 2026-09-18). 44px rows, so each is a thumb target. */
+  .faq-index { margin:0 0 44px; }
+  .faq-index ol { list-style:none; margin:0; padding:0; }
+  .faq-index a { display:flex; align-items:center; min-height:44px; padding:4px 0; color:var(--ink); text-decoration:none; font-size:15.5px; border-bottom:1px solid var(--hairline); }
+  .faq-index a:hover { color:var(--muted); }
+  .faq-index a::after { content:none; }
+  main.legal .legal-block li > a { color:var(--ink); }
   /* The closing is the block every page shares; here it inherited the UA 24px because this page
      sizes only .legal-block h2. Same clamp as the homepage h2. */
   .closing h2 { font-size:clamp(28px, 1.2rem + 2.2vw, 48px); }
@@ -360,60 +366,71 @@
 <main style="view-transition-name:ke-main-faq" class="legal">
   <div class="container">
     <div class="legal-measure">
-      <a class="back-link" href="index.html">&larr; Back to site</a>
       <div class="kz-mark legal-head"><span class="smallcaps accent">Answers</span></div>
       <h1>Questions, answered <em>straight</em></h1>
 <section class="legal-block">
   <p>If yours is not here, ask it. We read every message ourselves and reply the same working day, including to the people we turn down.</p>
 </section>
+<nav class="faq-index" aria-label="Questions"><ol>
+  <li><a href="#what-do-you-actually-do">What do you actually do?</a></li>
+  <li><a href="#who-is-this-for">Who is this for?</a></li>
+  <li><a href="#do-i-need-a-following-already">Do I need a following already?</a></li>
+  <li><a href="#how-quickly-would-i-see-anything">How quickly would I see anything?</a></li>
+  <li><a href="#am-i-tied-in">Am I tied in?</a></li>
+  <li><a href="#who-owns-the-ads-the-content-and-the-cus">Who owns the ads, the content and the customer list?</a></li>
+  <li><a href="#do-you-take-a-cut-of-my-ad-spend">Do you take a cut of my ad spend?</a></li>
+  <li><a href="#what-happens-if-you-cannot-help">What happens if you cannot help?</a></li>
+  <li><a href="#why-only-five-clients">Why only five clients?</a></li>
+  <li><a href="#the-longer-ones">The longer ones</a></li>
+</ol></nav>
 
 <section class="legal-block">
-  <h2>What do you actually do?</h2>
+  <h2 id="what-do-you-actually-do">What do you actually do?</h2>
   <p>Four things, run together: we make your content, run your ads, keep your social alive, and go back to the people who already bought. One on its own does very little, which is why we do not sell them separately.</p>
 </section>
 
 <section class="legal-block">
-  <h2>Who is this for?</h2>
+  <h2 id="who-is-this-for">Who is this for?</h2>
   <p>Brands and artists who make something good and are not getting it in front of enough people. Streetwear, jewellery, ceramics, prints, music. If you sell what you make and the marketing is the part that slips, that is the shape.</p>
 </section>
 
 <section class="legal-block">
-  <h2>Do I need a following already?</h2>
+  <h2 id="do-i-need-a-following-already">Do I need a following already?</h2>
   <p>No. It goes further when there is something to build on, and we will say so if we think it is too early. There is no follower minimum and no minimum ad spend.</p>
 </section>
 
 <section class="legal-block">
-  <h2>How quickly would I see anything?</h2>
+  <h2 id="how-quickly-would-i-see-anything">How quickly would I see anything?</h2>
   <p>Within days you can see whether people react to the creative. Whether the money makes sense takes longer, because you need enough sales to see a pattern rather than a good week.</p>
 </section>
 
 <section class="legal-block">
-  <h2>Am I tied in?</h2>
+  <h2 id="am-i-tied-in">Am I tied in?</h2>
   <p>No. There is no contract holding you while we work anything out. Stop whenever you like.</p>
 </section>
 
 <section class="legal-block">
-  <h2>Who owns the ads, the content and the customer list?</h2>
+  <h2 id="who-owns-the-ads-the-content-and-the-cus">Who owns the ads, the content and the customer list?</h2>
   <p>You do, the whole time. The ad account, the content, the customer list and the tracking on your shop. Your ad money goes from your own account, never through us. If we part ways, it all stays with you.</p>
 </section>
 
 <section class="legal-block">
-  <h2>Do you take a cut of my ad spend?</h2>
+  <h2 id="do-you-take-a-cut-of-my-ad-spend">Do you take a cut of my ad spend?</h2>
   <p>Never. Nothing we recommend is ever because it pays us more. There is no minimum spend either.</p>
 </section>
 
 <section class="legal-block">
-  <h2>What happens if you cannot help?</h2>
+  <h2 id="what-happens-if-you-cannot-help">What happens if you cannot help?</h2>
   <p>We say so on the first call rather than three months in. There are three reasons we would say no: you will not look at your own numbers, the margin is too thin for ads to pay for themselves, or you only want the ads and nothing else.</p>
 </section>
 
 <section class="legal-block">
-  <h2>Why only five clients?</h2>
+  <h2 id="why-only-five-clients">Why only five clients?</h2>
   <p>Because it is the two of us and we do the work. Five is the whole capacity, not a launch offer. When they are full, they are full.</p>
 </section>
 
 <section class="legal-block">
-  <h2>The longer ones</h2>
+  <h2 id="the-longer-ones">The longer ones</h2>
   <p>Three questions come up so often they have their own page.</p>
   <ul>
     <li><a href="tried-ads-before.html">We tried ads before and they did not work</a> &mdash; Two things go wrong far more often than anything else, and it is worth knowing which one it was before spending again.</li>

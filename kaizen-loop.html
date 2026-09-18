@@ -318,7 +318,7 @@
     @media (max-width: 768px) { input, select, textarea { font-size: 16px !important; } }
     /* Phone display scale — keep display type inside the padded column on narrow screens */
   @media (max-width: 520px) {
-    .hero h1, h1 { font-size: clamp(29px, 8.5vw, 42px); }
+    .hero h1, h1 { font-size: clamp(40px, 11.4vw, 50px); }  /* matches index.html (was 29/8.5vw/42: 33px at 390, three sizes of small) */
     /* .sect-head h2 and .closing h2 outrank a bare `h2`, so this rule never
        reached them and both kept their desktop floors - 32px and 34px against an
        h1 scaled to 31px at 360. The page title was losing to a section heading on
@@ -399,7 +399,6 @@
     /* No font-family or tracking here on purpose: .smallcaps in interactions.css owns
        both (mono 500 at +0.12em) and loads after this block, so every page gets one rule
        and they cannot drift. A private copy here was exactly that drift. */
-    .lp-eyebrow { font-size:11px; text-transform:uppercase; color:var(--muted); margin:0 0 14px; }
     /* Sans, not mono. brand/DESIGN.md: the mono does labels and SMALL numerals only -
        "NOT for display numerals ... which is a figure and not a label; the reference
        uses its sans at that size, never the mono." These run to 54px. */
@@ -410,9 +409,6 @@
     .lp-body p { margin:0 0 14px; color:var(--muted); max-width:62ch; }
     .lp-body p:last-child { margin-bottom:0; }
     .lp-body p.strong { color:var(--text); }
-    .lp-do { list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:11px; }
-    .lp-do li { position:relative; padding-left:22px; font-size:15px; color:var(--muted); line-height:1.55; max-width:58ch; }
-    .lp-do li::before { content:""; position:absolute; left:0; top:12px; width:10px; height:1px; background:var(--muted); }
     .lp-back { display:inline-block; margin-top:34px; }
     /* The page's own next step, rather than the shared closing. Rahaid asked for
        it after the reference's [04 / NEXT STEP], and it is an exception to the
@@ -420,12 +416,6 @@
        every PART that pattern checks (a heading, one .closing-sub, a route to
        apply, a mailto, the seats note) and changes only what it says. The eyebrow
        is centred here because the whole block is. */
-    .lp-next .lp-eyebrow { text-align:center; margin-bottom:18px; }
-    .lp-next .lp-eyebrow::before { margin-right:12px; }
-    .lp-next .lp-eyebrow::after {
-      content:""; display:inline-block; width:26px; height:1px; background:var(--hairline);
-      vertical-align:middle; margin-left:12px; transform:translateY(-1px);
-    }
 
     /* --- Depth on the fold. brand/DESIGN.md permits a gradient where it does WORK
        and names "a ground that gives a section depth" as exactly that. No hue
@@ -444,10 +434,6 @@
     /* The drawn rule before an eyebrow is OUR idiom, already on index.html. The
        reference brackets its mono instead; brackets on one page would be the
        drift this file has spent the day removing. */
-    .lp-eyebrow::before {
-      content:""; display:inline-block; width:26px; height:1px; background:var(--hairline);
-      vertical-align:middle; margin-right:12px; transform:translateY(-1px);
-    }
 
     /* Two tones, alternating, so the stages do not read as one slab. */
     /* The estate's band value, not a second invented one: index.html runs
@@ -465,16 +451,12 @@
     @media (min-width:880px) { .lp-cards { grid-template-columns:1fr 1fr; gap:22px; } }
     .lp-card { border:1px solid var(--hairline); border-radius:3px; background:rgba(252,252,250,.86);
                padding:26px 26px 24px; display:flex; flex-direction:column; }
-    .lp-card-top { display:flex; align-items:baseline; justify-content:space-between; gap:16px;
-                   padding-bottom:12px; border-bottom:1px solid var(--hairline); margin-bottom:20px; }
-    .lp-card-top .k { font-size:11px; color:var(--muted); }
-    .lp-card-top .v { font-size:11px; color:var(--muted); }  /* opacity:.8 took --muted to 3.43:1 (measured); removed 2026-09-18 */
     .lp-card h3 { font-size:clamp(21px,.9rem + 1.3vw,28px); font-weight:500; letter-spacing:-.015em;
                   margin:0 0 12px; max-width:20ch; }
     .lp-card p { margin:0 0 12px; color:var(--muted); font-size:15px; }
     .lp-card p:last-of-type { margin-bottom:0; }
     .lp-foot { margin-top:18px; padding-top:14px; border-top:1px solid var(--hairline);
-               font-family:var(--mono,ui-monospace,monospace); font-size:11px; line-height:1.6;
+               font-size:11px; line-height:1.6;
                color:var(--muted); }
 
     /* Declared AFTER the base rules on purpose. At equal specificity the later
@@ -486,18 +468,11 @@
       /* The reference runs a hairline down the gutter between label and argument. It is
          what stops a two-column block reading as two unrelated things. */
       .lp-grid > .lp-body { border-left:1px solid var(--hairline); padding-left:56px; margin-left:-28px; }
-      .lp-do { display:grid; grid-template-columns:1fr 1fr; gap:11px 34px; }
-      .lp-do li { max-width:none; }
     }
     /* Three figures under the hero. The reference's are abstract; ours are the three
        true numbers we already publish, so nothing here is invented. Centred, because
        brand/DESIGN.md rules the hero centred at every width - the reference splits its
        hero into two columns and that is the one move on its page we do not take. */
-    .lp-tiles { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:30px auto 0; }
-    .lp-tile { border:1px solid var(--hairline); border-radius:2px; padding:14px 20px; min-width:118px; text-align:left; }
-    .lp-tile b { display:block; font-family:var(--sans); font-weight:200; font-size:30px; line-height:1;
-                 letter-spacing:-.03em; color:var(--text); }
-    .lp-tile span { display:block; margin-top:7px; font-size:11px; color:var(--muted); }
     .lp-ctas { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:26px; }
 
 
@@ -568,18 +543,12 @@
       <a class="btn-solid" href="apply.html">Take a seat &rarr;</a>
       <a class="btn-quiet" href="#stages">See the stages</a>
     </div>
-    <div class="lp-tiles">
-      <div class="lp-tile"><b>04</b><span class="smallcaps">Stages</span></div>
-      <div class="lp-tile"><b>01</b><span class="smallcaps">Loop</span></div>
-      <div class="lp-tile"><b>&#8734;</b><span class="smallcaps">Compounding</span></div>
-    </div>
   </div>
 </header>
 
   <section class="lp-block">
     <div class="container lp-grid">
       <div>
-        <p class="smallcaps lp-eyebrow">01 / The problem</p>
         <h2>Most reporting measures the platform, <em>not your bank</em>.</h2>
       </div>
       <div class="lp-body">
@@ -593,7 +562,6 @@
   <section class="lp-block tone" id="stages">
     <div class="container lp-grid">
       <div>
-        <p class="smallcaps lp-eyebrow">02 / The system</p>
         <h2>Four stages. Built to <em>go again</em>.</h2>
       </div>
       <div class="lp-body">
@@ -606,86 +574,65 @@
   <section class="lp-block tone">
     <div class="container lp-grid">
       <div>
-        <p class="smallcaps lp-eyebrow">Stage one</p>
         <p class="lp-no">01</p>
         <h3>Learn the brand, set the numbers</h3>
       </div>
       <div class="lp-body">
         <p>First we learn the brand properly. What you make, why you make it, and what it is meant to mean to the person who buys it. Nothing gets made after this that does not look like you.</p>
         <p>Then, before a pound is spent, two numbers: what a customer is actually worth to you, and what your sales were already doing without us. Everything after this stage is judged against both.</p>
-        <ul class="lp-do">
-          <li>What you make, why you make it, and who it is for, in your words</li>
-          <li>What a customer is worth to you, and what a sale actually leaves</li>
-          <li>What your sales were already doing before us, written down</li>
-        </ul>
       </div>
     </div>
   </section>
   <section class="lp-block tone">
     <div class="container lp-grid">
       <div>
-        <p class="smallcaps lp-eyebrow">Stage two</p>
         <p class="lp-no">02</p>
         <h3>Make the content</h3>
       </div>
       <div class="lp-body">
         <p>Ads, posts, edits, and the messages that bring people back. We shoot it with you or cut it from footage you already have, usually both.</p>
         <p>Not one polished piece a month. Enough different angles, arriving often enough, that the system has something to work with and you are never down to a single ad that is still working.</p>
-        <ul class="lp-do">
-          <li>Enough different angles to find the one people react to</li>
-        </ul>
       </div>
     </div>
   </section>
   <section class="lp-block tone">
     <div class="container lp-grid">
       <div>
-        <p class="smallcaps lp-eyebrow">Stage three</p>
         <p class="lp-no">03</p>
         <h3>Get it in front of people</h3>
       </div>
       <div class="lp-body">
         <p>Paid and organic, both pulling new people in. Budgets, targeting and testing handled every day, run wherever your buyers actually are rather than wherever is easiest.</p>
         <p>Your feed stays alive underneath it, because it is what convinces the person who found you through an ad that you are worth buying from. And the people who already bought hear from you directly.</p>
-        <ul class="lp-do">
-          <li>Your feed kept alive so it holds them when they look you up</li>
-        </ul>
       </div>
     </div>
   </section>
   <section class="lp-block tone">
     <div class="container lp-grid">
       <div>
-        <p class="smallcaps lp-eyebrow">Stage four</p>
         <p class="lp-no">04</p>
         <h3>Track it, then do more of what worked</h3>
       </div>
       <div class="lp-body">
         <p>You see the same numbers we see, read the same way, against the baseline from stage one rather than against a good week.</p>
         <p>What loses gets turned off. What wins gets more behind it. Then it goes again, and the brand we learned in stage one is a brand we know better than we did.</p>
-        <ul class="lp-do">
-          <li>Measured against the baseline from stage one, not a good week</li>
-        </ul>
       </div>
     </div>
   </section>
 
   <section class="lp-block">
     <div class="container">
-      <p class="smallcaps lp-eyebrow">03 / Why this works</p>
       <div class="lp-cards">
         <div class="lp-card">
-          <div class="lp-card-top"><span class="k smallcaps">Baseline.first</span><span class="v smallcaps">set before spend</span></div>
           <h3>We do not take credit for a trend <em>you were already on</em>.</h3>
           <p>Stage one writes down what your sales were already doing, adjusted for season, before a pound goes out. Every figure after that is measured against it rather than against the month before.</p>
           <p>A good week never gets sold to you as a result, and a quiet one never gets hidden.</p>
-          <p class="lp-foot">&gt; the least flattering way to report, and the only one worth paying for.</p>
+          <p class="lp-foot">the least flattering way to report, and the only one worth paying for.</p>
         </div>
         <div class="lp-card">
-          <div class="lp-card-top"><span class="k smallcaps">Outcome.compound</span><span class="v smallcaps">stage four &rarr; stage one</span></div>
           <h3>It gets better because it goes again.</h3>
           <p>Stage four is not a report at the end. What it learns is what stage one knows next time, so we understand your brand better every cycle.</p>
-          <p class="lp-foot">&gt; four stages, no finish line, and no ceiling anybody has to explain.</p>
+          <p class="lp-foot">four stages, no finish line, and no ceiling anybody has to explain.</p>
         </div>
       </div>
       <a class="btn-quiet lp-back" href="what-we-run.html#the-four">See what is included &rarr;</a>
