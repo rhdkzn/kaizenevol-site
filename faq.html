@@ -101,8 +101,10 @@
 
 
   /* ============ LEGAL — editorial article ============ */
-  .legal { padding:96px 0 110px; background:var(--void); }
-  .legal-measure { max-width:70ch; }
+  /* Bottom padding lives on the measure, not on .legal: on .legal it painted a 110px band of page
+     colour between the dark closing and the footer (90px on a phone) — measured 2026-09-18. */
+  .legal { padding:96px 0 0; background:var(--void); }
+  .legal-measure { max-width:70ch; padding-bottom:110px; }
   .back-link { display:inline-block; font-size:13.5px; font-weight:600; color:var(--muted); text-decoration:none; margin-bottom:34px; transition:color .15s; }
   .back-link:hover { color:var(--text); }
   /* 44px thumb target on a 23px text link, without moving a pixel: an invisible hit-slop. */
@@ -115,6 +117,9 @@
   .legal-block { border-top:1px solid var(--hairline); padding:44px 0; }
   .legal-block:last-child { padding-bottom:0; }
   .legal-block h2 { font-size:clamp(24px, 1.1rem + 1.4vw, 32px); margin-bottom:16px; }
+  /* The closing is the block every page shares; here it inherited the UA 24px because this page
+     sizes only .legal-block h2. Same clamp as the homepage h2. */
+  .closing h2 { font-size:clamp(28px, 1.2rem + 2.2vw, 48px); }
   .legal-block p { font-size:15.5px; color:var(--muted); margin-bottom:14px; }
   .legal-block p:last-child { margin-bottom:0; }
   .legal-block strong { color:var(--text); font-weight:600; }
@@ -160,7 +165,10 @@
   }
   @media(max-width:768px) {
     .nav-links { display:none; } .burger { display:flex; } .nav-cta { display:inline-block; margin-left:auto; margin-right:4px; }
-    .legal { padding:72px 0 90px; }
+    .legal { padding:72px 0 0; }
+    .legal-measure { padding-bottom:90px; }
+    /* Same phone size as the other closings, so the page title still leads it by 1.3x. */
+    .closing h2 { font-size:clamp(20px, 5.8vw, 30px); }
   }
   @media(max-width:700px) {
     .footer-inner { flex-direction:column; align-items:flex-start; }
@@ -428,12 +436,11 @@
     <div class="scrub-scrim"></div>
   </div>
   <div class="container">
-    <div class="smallcaps">Five at a time</div>
     <h2>See if one of the seats is <em>yours</em>.</h2>
     <p class="closing-sub">Taking a seat is a few minutes. We read every one and reply either way, the same working day.</p>
     <div class="hero-ctas start">
       <form class="ke-start" action="apply.html" method="get">
-        <input type="text" name="b" autocomplete="organization" aria-label="What&rsquo;s your brand called?" placeholder="What&rsquo;s your brand called?">
+        <input type="text" name="b" autocomplete="organization" required aria-label="What&rsquo;s your brand called?" placeholder="What&rsquo;s your brand called?">
         <button class="ke-start-go" type="submit" aria-label="Take a seat"><svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></button>
       </form>
       <a href="mailto:diego@kaizenevol.com" class="btn-quiet">Email us directly</a>
