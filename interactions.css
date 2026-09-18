@@ -783,6 +783,10 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
    criticised for. Grow the TOUCH target to 44px without moving a pixel: a
    transparent overlay, not padding, because padding would drag the underline
    away from the text. */
+/* The page you are on reads as ink in the nav; the other four stay muted. The attribute
+   is set per page in its own markup (2026-09-18 critique: no current-page indicator). */
+.nav-links a[aria-current="page"], .mobile-menu a[aria-current="page"] { color: var(--ink) }
+
 .hero-ctas.start .btn-quiet { position: relative }
 .hero-ctas.start .btn-quiet::after { content: ''; position: absolute; left: -14px; right: -14px;
   top: 50%; height: 44px; transform: translateY(-50%) }

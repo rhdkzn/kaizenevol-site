@@ -90,7 +90,6 @@ async function read(f) {
       painted: s.dataset.scrubPainted === 'true',
       failed: s.dataset.scrubFailed === 'true',
       h2: !!h2, h2Size: h2 ? px(getComputedStyle(h2).fontSize) : null,
-      eyebrow: !!s.querySelector('.smallcaps'),
       subs: s.querySelectorAll('.closing-sub').length,
       subSize: sub ? px(getComputedStyle(sub).fontSize) : null,
       subColor: sub ? getComputedStyle(sub).color : null,
@@ -142,7 +141,8 @@ for (const f of PAGES) {
      the question pages to 31px against their own 37px h1 and test-heading-scale.mjs
      goes red - the closing must stay subordinate to the page's own headline, which
      means it scales with that page, not with the homepage. */
-  check(`${f}: carries the eyebrow`, r.eyebrow);
+  /* `carries the eyebrow` retired 2026-09-18: the homepage closing lost its eyebrow under the
+     vendored-pack ruling (eyebrows are a ban), and the other closings follow as they are remade. */
   check(`${f}: closing uses .closing-sub`, r.subs > 0, `${r.subs} found`);
   check(`${f}: sub is 16px`, r.subSize === 16, `${r.subSize}px`);
   check(`${f}: offers the application`, r.apply);

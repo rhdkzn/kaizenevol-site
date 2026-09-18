@@ -72,8 +72,11 @@ for (const f of pages) {
   await p.close();
 
   if (r.headings === 0) { pass++; continue; }   /* a form: nothing to carry an accent */
-  if (r.serif >= r.mono) { fail++; console.log(`FAIL  ${f} — serif ${r.serif} is not fewer than mono ${r.mono}`); }
-  else pass++;
+  /* `serif < mono` retired 2026-09-18. It encoded the mono-label doctrine (eyebrows on every
+     section), and the vendored design packs now outrank it: eyebrows are a ban, so a page
+     runs one or two mono uses and the inequality punished the correct page. The two rules
+     below still hold: the accent is used more than once where mono is dense, and never
+     outside a heading. */
   if (r.mono >= 4 && r.serif < 2) { fail++; console.log(`FAIL  ${f} — serif used ${r.serif}x on a page running ${r.mono} mono labels; it needs at least 2`); }
   else pass++;
   if (r.stray.length) { fail++; console.log(`FAIL  ${f} — serif accent outside a heading: ${r.stray.join(' | ')}`); }

@@ -68,20 +68,21 @@
     h2{font-size:clamp(30px,1.4rem + 2.2vw,46px)}
     h3{font-size:clamp(20px,1rem + 1vw,26px);font-weight:600;letter-spacing:-0.02em;line-height:1.25}
     em{font-family:var(--serif);font-style:italic;font-weight:300}
-    .smallcaps{font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}
+    .smallcaps{font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-wrap:balance}
 
     /* nav — markup identical to the rest of the estate for nav parity */
     nav{position:sticky;top:0;z-index:40;background:rgba(247,246,244,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
     .nav-inner{display:flex;align-items:center;gap:24px;height:66px}
     .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-0.02em}
     .nav-logo img{height:30px;width:auto}
+    nav .nav-logo{padding:7px;margin:-7px}
     .nav-links{list-style:none;display:flex;align-items:center;gap:26px;margin:0 0 0 auto;padding:0;font-size:14px;font-weight:500}
     .nav-links a{text-decoration:none;color:var(--muted)}
     .nav-links a:hover{color:var(--ink)}
     .btn-solid{background:var(--ink);color:var(--page);padding:10px 20px;border-radius:980px;font-size:13px;font-weight:600;text-decoration:none;display:inline-block;transition:transform .3s var(--el-ease),opacity .3s var(--el-ease)}
     .btn-solid:hover{color:var(--page);opacity:.88;transform:translateY(-1px)}
     .btn-quiet{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;border-bottom:1px solid var(--hairline);padding-bottom:2px}
-    .burger{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:5px;padding:8px}
+    .burger{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:5px;padding:15px 12px;margin:-7px -4px}
     .burger span{display:block;width:20px;height:1.5px;background:var(--ink)}
     .mobile-menu{display:none;flex-direction:column;gap:2px;padding:12px 24px 20px;border-top:1px solid var(--hairline)}
     .mobile-menu a{padding:11px 0;text-decoration:none;font-size:15px;color:var(--muted);border-bottom:1px solid var(--hairline)}
@@ -244,12 +245,12 @@
       .reveal.in .lede{opacity:1;transform:none}
 
       /* the mesh arrives as ONE object — cells and hairlines together, left to right */
-      .js .grid,.js .steps,.js .work{clip-path:inset(0 100% 0 0);transition:clip-path 1.1s var(--el-ease) .18s}
-      .grid.in,.steps.in,.reveal.in .grid,.reveal.in .steps,.reveal.in .work{clip-path:inset(0 -2px 0 0)}
+      .js .grid,.js .steps,.js .stages,.js .work{clip-path:inset(0 100% 0 0);transition:clip-path 1.1s var(--el-ease) .18s}
+      .grid.in,.steps.in,.reveal.in .grid,.reveal.in .steps,.reveal.in .stages,.reveal.in .work{clip-path:inset(0 -2px 0 0)}
       @media(max-width:759px){
-        .js .grid,.js .steps,.js .work{clip-path:none;opacity:0;transform:translateY(10px);
+        .js .grid,.js .steps,.js .stages,.js .work{clip-path:none;opacity:0;transform:translateY(10px);
           transition:opacity .75s var(--el-ease) .1s,transform .75s var(--el-ease) .1s}
-        .grid.in,.steps.in,.reveal.in .grid,.reveal.in .steps,.reveal.in .work{opacity:1;transform:none}
+        .grid.in,.steps.in,.reveal.in .grid,.reveal.in .steps,.reveal.in .stages,.reveal.in .work{opacity:1;transform:none}
       }
     }
 
@@ -275,7 +276,7 @@
         animation-timeline:view();animation-range:entry 24% entry 62%}
       @keyframes ke-lift{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-      .js .grid,.js .steps,.js .work{animation:ke-wipe linear both;
+      .js .grid,.js .steps,.js .stages,.js .work{animation:ke-wipe linear both;
         animation-timeline:view();animation-range:entry 34% entry 80%}
       @keyframes ke-wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -2px 0 0)}}
 
@@ -299,7 +300,7 @@
            moving the grid as one piece — no cell fading separately from its mesh — is about
            a four-across MESH. Stacked in a single column they are not a mesh, they are a
            list, and a list arriving item by item is what the eye expects. */
-        .js .grid,.js .steps,.js .work{animation:none}
+        .js .grid,.js .steps,.js .stages,.js .work{animation:none}
         .js .grid > *,.js .steps > *,.js .work > *{
           animation:ke-wipe linear both;
           animation-timeline:view();animation-range:entry 5% entry 42%}
@@ -383,7 +384,7 @@
     .band{background:rgba(233,230,224,.55);border-block:1px solid var(--hairline)}
     .band-cool{background:rgba(232,233,234,.62);border-block:1px solid var(--hairline)}
     .lede{font-size:20px;font-weight:300;max-width:60ch;color:var(--ink);margin:20px 0 0}
-    .pull{font-size:clamp(23px,1.05rem + 1.7vw,31px);font-weight:300;line-height:1.24;letter-spacing:-0.02em;color:var(--ink);max-width:20ch;margin:30px 0 26px}
+    .pull{font-size:clamp(23px,1.05rem + 1.7vw,31px);font-weight:300;line-height:1.3;letter-spacing:-0.02em;color:var(--ink);max-width:20ch;margin:30px 0 26px}
     @media(max-width:640px){.pull{max-width:none;margin:26px 0 22px}}
     .muted{color:var(--muted)}
 
@@ -551,22 +552,68 @@
        --muted is the darker of the two greys and clears 4.5. */
     table.cmp thead th { font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
       color:var(--muted); font-weight:600; border-bottom:1px solid var(--ink); }
+    /* The row header STAYS while the columns scroll under it. On a phone the table is
+       620px in a 342px column; without this the question scrolls off as you swipe to the
+       answer, so you are holding the question in memory. Opaque ground, because a sticky
+       cell with alpha shows the cells sliding beneath it. --cmp-ground is the band's
+       painted colour, measured in the browser, not the token's alpha value. */
     table.cmp th[scope="row"] { text-align:left; font-weight:400; color:var(--ink);
-      min-width:230px; padding-left:0; }
-    table.cmp .us { background:var(--recess); }
+      min-width:230px; padding-left:0; padding-right:14px;
+      position:sticky; left:0; z-index:1; background:var(--cmp-ground); }
+    table.cmp thead th:first-child { position:sticky; left:0; z-index:2; background:var(--cmp-ground); }
+    /* Narrower on a phone so the KaizenEvol column AND half of the next one fit beside
+       it: the gesture is visible instead of described. */
+    @media (max-width:700px){ table.cmp th[scope="row"] { min-width:150px; } }
+    table.cmp .us { background:rgba(35,33,30,.06); }
     table.cmp thead .us { color:var(--ink); }
     table.cmp tbody tr:last-child th, table.cmp tbody tr:last-child td { border-bottom:0; }
     .mark { display:block; margin:0 auto; }
     .cmp-note { margin-top:18px; font-size:14px; color:var(--muted); max-width:62ch; }
-    /* Only the phone needs telling. Above 700px all five columns are on screen. */
-    /* --stone failed the contrast guard here for the same reason it did in the
-       table head: small, uppercase, on a light band. --muted clears 4.5. */
-    .cmp-hint { display:none; margin:10px 0 0; font-size:12.5px; color:var(--muted);
-      letter-spacing:0.06em; text-transform:uppercase; }
-    @media (max-width:700px){ .cmp-hint { display:block; } }
+    /* The table is the page's one WIDE moment: the only section whose container
+       runs past --maxw, so five columns get room and the block reads as different. */
+    .cmp-section > .container { max-width:calc(var(--maxw) + 120px); }
     .notfor{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:16px;max-width:46em}
     .notfor li{position:relative;padding-left:26px;font-size:17px;color:var(--muted);line-height:1.62}
     .notfor li::before{content:"";position:absolute;left:0;top:13px;width:13px;height:1px;background:var(--stone)}
+    /* Two lists side by side above 900px: what we will not do, and who this is not for.
+       Three sections were making this one argument in a row (2026-09-18 critique). */
+    .notfor-pair{display:grid;gap:40px;margin-top:8px}
+    @media(min-width:900px){.notfor-pair{grid-template-columns:1.15fr 1fr;gap:64px}}
+    .notfor-pair h3{margin-top:26px}
+    .notfor-pair .notfor{max-width:none}
+    /* The loop as four numbered stages. A rule, a large light numeral, the stage,
+       one line on what gets done — a different shape from every other section. */
+    .stages{list-style:none;margin:44px 0 0;padding:0;display:grid;gap:36px 32px}
+    @media(min-width:700px){.stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    /* From 1000px the four stages run full width, so the right column would sit under the
+       kanji mark hung off #method's right edge (145px of ink: --kzh 620 x 0.234). The
+       container's own side margin covers part of that; the stages pad the rest plus 16px,
+       so the mark stays in clear space. test-kanji-mark.mjs asserts it. */
+    @media(min-width:1000px){.stages{grid-template-columns:repeat(4,minmax(0,1fr));
+      padding-right:max(0px, calc(161px - max(24px, (100vw - var(--maxw)) / 2)))}}
+    .stages li{border-top:1px solid var(--ink);padding-top:18px;display:flex;flex-direction:column;gap:10px}
+    .stage-n{font-size:clamp(44px,2rem + 2vw,64px);font-weight:200;letter-spacing:-0.05em;line-height:1;color:var(--ink)}
+    .stages h3{margin:0}
+    .stages p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.55}
+    /* Founders: the copy beside the collage from 1000px, so the section is the one
+       two-column moment rather than one more heading over one more block. */
+    .founders-row{display:grid;gap:44px;align-items:center}
+    @media(min-width:1000px){
+      /* align-items:start, not center: the collage spans both rows and would stretch
+         them, leaving the note floating halfway down its column (seen in the render). */
+      .founders-row{grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:0 96px;grid-template-rows:auto auto;align-items:start}
+      .founders-copy{grid-column:1;grid-row:1}
+      .founders-row .duo{grid-column:2;grid-row:1 / 3;margin-bottom:0;align-self:center}
+      .founders-row .team-note{grid-column:1;grid-row:2;margin-top:36px}
+    }
+    /* Said at the field, where the decision is made, not 5,000px away in a bullet. */
+    .start-reply{margin:-2px 0 0;font-size:13px;color:var(--muted);max-width:440px}
+    /* Every quiet link gets the hero's 44px hit-slop, not only the two in the hero. */
+    main .btn-quiet{position:relative}
+    main .btn-quiet::after{content:'';position:absolute;left:-14px;right:-14px;top:50%;height:44px;transform:translateY(-50%)}
+    /* The comparison band's painted ground, for the sticky row header. Set from a
+       browser measurement of .band-cool over the body, never from the alpha token. */
+    :root{--cmp-ground:#EEEEEE}
 
     .steps{display:grid;gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:44px}
     @media(min-width:820px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -583,7 +630,10 @@
     footer{background:rgba(233,230,224,.55);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
     .f-grid{display:grid;gap:34px}
     @media(min-width:760px){.f-grid{grid-template-columns:2fr 1fr 1fr}}
-    footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+    footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:0}
+    /* 44px rows: a 19px text link is a fine mark and a poor thumb target. */
+    footer ul li:not(.footer-social) > a{display:inline-flex;align-items:center;min-height:44px}
+    footer .btn-solid{padding:12px 20px}
     footer a{color:var(--muted);text-decoration:none}
     footer a:hover{color:var(--ink)}
     .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px}
@@ -613,78 +663,18 @@
        Trade Marks Act 1994. test-trademark.mjs enforces both halves. */
     h2 .tm{font-size:.32em;vertical-align:super;font-weight:400;letter-spacing:0;margin-left:.06em}
 
-    /* The icon. Ours, generated, neutral grey. Per-icon scale and centring are
-       MEASURED off each render's ink bounding box, not eyeballed — spans of
-       968/829/692/748 at 1024px, normalised to the smallest, and icon 02's ink
-       centre sits at x=0.404 so it takes a nudge back to true centre. */
-    /* Idle drift, long and staggered so the four never march in step. The
-       transform above is re-declared inside the keyframes because an animation
-       on transform overrides the static one outright. */
-    @keyframes kzFloat{
-      0%,100%{transform:scale(var(--k,1)) translateX(var(--nudge,0)) translateY(0) rotate(0deg)}
-      50%    {transform:scale(var(--k,1)) translateX(var(--nudge,0)) translateY(calc(var(--drift,7px) * -1)) rotate(var(--tilt,-1.4deg))}
-    }
-    /* The card being read lifts its icon. */
+    /* "What we run" carries no imagery (2026-09-18). The four generated 3D objects were
+       a stock-looking icon set on the one page whose job is to prove taste, and there is
+       no client work to put in their place yet. The headings do the anchoring instead. */
+    .grid.four .cell{padding:36px 28px 34px;gap:14px}
+    .grid.four .cell h3{font-size:clamp(26px,1.2rem + 1.5vw,38px);font-weight:300;letter-spacing:-0.035em;line-height:1.05}
 
-
-    /* Touch only. A phone is a DEVICE fact, so it gets the native swipe
-       carousel; overriding scroll on touch is how a page starts feeling broken. */
-    @media (max-width:900px){
-    }
-    /* No Reduce Motion branch anywhere in this file. Rahaid's standing ruling is
-       that the setting must not stop OR change anything we make - the motion is a
-       client-acquisition asset. Every visitor gets the same rail, the same drift
-       and the same durations. */
-  
-    /* "What we run" — one asset per service. Same generated set and same
-       treatment as the loop's, and deliberately DIFFERENT objects so the two
-       sections do not read as duplicates of each other: camera / target /
-       bubbles / envelope, against the loop's glass / clapper / megaphone /
-       arrow. Scale and centring are measured off each render's ink bounding
-       box - spans 784/806/795/660 at 1024px on the transparent renders.
-       These are generated with a real alpha channel rather than on white:
-       the white-backed first pass read as four boxes against this section's
-       off-white band, invisible only on the loop's white cards. */
-    /* 104 -> 160 and 88 -> 140 (2026-09-10). The renders are 320px with a real alpha
-       channel and were being shown at 88px on a phone - 23% of screen width, a quarter of
-       the resolution we have. Four screens of this page are 110-130 words of body copy with
-       no visual anchor at all, and the anchor was sitting right there, shrunk. 160px is the
-       ceiling that stays sharp at DPR2 off a 320px source; do not raise it without larger
-       renders. Nothing is cut to make room - the cells simply give the artwork its space. */
-    .cell .run-icon{width:160px;height:160px;display:block;margin-bottom:18px}
-    .cell .run-icon img{width:100%;height:100%;object-fit:contain;display:block;
-      transform:scale(var(--k,1)) translateX(var(--nudge,0));transform-origin:center;
-      animation:kzFloat var(--dur,7s) ease-in-out var(--delay,0s) infinite}
-    @media(max-width:719px){.cell .run-icon{width:140px;height:140px;margin-bottom:14px}}
-  
-    /* ── ICONS TILT TOWARD THE POINTER ────────────────────────────────────────
-       Replaces a spin. A 3D turntable was rendered and rejected: a video model
-       invents plausible motion rather than rotating a fixed object, so the
-       camera tumbled off-axis, its lens migrated and vanished, and the last
-       frame did not match the first, so it could not loop. And a 172px icon
-       spinning on its own pulls the eye off the copy it is there to label.
-
-       Responding to the visitor is the better lever, and it is honest 3D: real
-       perspective, real rotation, driven by where they actually are.
-
-       The tilt lives on the PICTURE and the idle float stays on the IMG,
-       because two rules writing `transform` on one element would overwrite each
-       other. Different elements compose instead. */
-    .cell .run-icon{
-      transform:perspective(620px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
-      transform-origin:center;
-      transition:transform .5s var(--el-ease);
-    }
-    /* Following the pointer has to feel immediate; the slow curve is for the
-       spring back to rest once they leave. */
-    .cell:hover .run-icon{transition-duration:.09s}
-
-  .footer-social{display:flex;gap:22px;align-items:center;margin-top:2px}
-  /* padding+negative margin grows the TAP TARGET to 36x36 without moving the icon:
-     an 18px glyph is a fine mark and a poor thumb target. The row gap is 22 so the two
-     targets clear each other by 4px instead of overlapping. */
+  .footer-social{display:flex;gap:28px;align-items:center;margin-top:6px}
+  /* padding+negative margin grows the TAP TARGET to 44x44 without moving the icon:
+     an 18px glyph is a fine mark and a poor thumb target. The row gap is 28 so the two
+     44px targets clear each other by 2px instead of overlapping. */
   .footer-social a{display:inline-flex;align-items:center;color:var(--muted);transition:color .2s;
-    padding:9px;margin:-9px}
+    padding:13px;margin:-13px}
   .footer-social a:hover{color:var(--accent-2)}
   .footer-social svg{width:18px;height:18px;display:block}
   </style>
@@ -759,7 +749,7 @@
       <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
       </a>
     <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html" aria-current="page">Home</a></li>
       <li><a href="what-we-run.html">What we run</a></li>
       <li><a href="kaizen-loop.html">Kaizen Loop</a></li><li><a href="faq.html">FAQ</a></li>
       <li><a class="btn-solid" href="apply.html">Take a seat</a></li>
@@ -768,7 +758,7 @@
     <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html">Home</a>
+    <a href="index.html" aria-current="page">Home</a>
     <a href="what-we-run.html">What we run</a>
     <a href="kaizen-loop.html">Kaizen Loop</a>
     <a href="faq.html">FAQ</a>
@@ -783,9 +773,10 @@
     <p class="hero-sub">We make your content, run your ads and grow your social presence. Every day new people find you, and every week you see exactly how much they put in your account.</p>
     <div class="hero-ctas start">
       <form class="ke-start" action="apply.html" method="get">
-        <input type="text" name="b" autocomplete="organization" aria-label="What&rsquo;s your brand called?" placeholder="What&rsquo;s your brand called?">
+        <input type="text" name="b" autocomplete="organization" required aria-label="What&rsquo;s your brand called?" placeholder="What&rsquo;s your brand called?">
         <button class="ke-start-go" type="submit" aria-label="Take a seat"><svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></button>
       </form>
+      <p class="start-reply">Fifteen minutes. We read every enquiry ourselves and reply the same working day.</p>
       <a href="#method" class="btn-quiet">See how it works</a>
     </div>
     <p class="hero-note" data-seats="5" data-taken="1">We take five clients at a time.</p>
@@ -805,10 +796,14 @@
 <section id="method">
   <div class="container reveal">
     <h2>The Kaizen Loop<span class="tm">&trade;</span></h2>
-    <p class="lede">First we learn the brand properly, then we set two numbers before a pound is spent: what a customer is actually worth to you, and what your sales were already doing without us.</p>
-    <p class="pull">Everything after that gets judged against both.</p>
-    <p class="lede muted">Four stages, in order: learn the brand and set the numbers, make the content, get it in front of people, then track it and do more of what worked. Then it goes again.</p>
-    <a class="btn-quiet" style="margin-top:20px;display:inline-block" href="kaizen-loop.html">See how the Kaizen Loop works &rarr;</a>
+    <p class="lede">First we learn the brand properly, then we set two numbers before a pound is spent: what a customer is actually worth to you, and what your sales were already doing without us. Everything after that gets judged against both.</p>
+    <ol class="stages">
+      <li><span class="stage-n" aria-hidden="true">1</span><h3>Learn the brand and set the numbers</h3><p>What a customer is worth to you, and what your sales were already doing. Nothing is spent before both are written down.</p></li>
+      <li><span class="stage-n" aria-hidden="true">2</span><h3>Make the content</h3><p>Shot with you, or built from what you already have. New work every week, not one polished piece a month.</p></li>
+      <li><span class="stage-n" aria-hidden="true">3</span><h3>Get it in front of people</h3><p>Ads and social, run wherever your buyers actually are, with the budgets and testing handled every day.</p></li>
+      <li><span class="stage-n" aria-hidden="true">4</span><h3>Track it and do more of what worked</h3><p>Every piece judged against the two numbers. Then it goes again.</p></li>
+    </ol>
+    <a class="btn-quiet" style="margin-top:32px;display:inline-block" href="kaizen-loop.html">See how the Kaizen Loop works &rarr;</a>
   </div>
 </section>
 
@@ -816,21 +811,20 @@
   <div class="container reveal">
     <h2>Here&rsquo;s everything we run.</h2>
     <div class="grid four reveal">
-      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-01-320.webp"><img src="/assets/run/run-01-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.842;--nudge:-1.0%;--dur:7.2s;--delay:0s"></picture><h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got. Not one polished piece a month, because for most people who see it the ad is the brand.</p></div>
-      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-02-320.webp"><img src="/assets/run/run-02-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.819;--nudge:-0.7%;--dur:6.4s;--delay:-1.6s"></picture><h3>Ads</h3><p>Run wherever your buyers actually are, not just where it&rsquo;s easy. Budgets and testing handled every day, so more of the right people land on the product.</p></div>
-      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-03-320.webp"><img src="/assets/run/run-03-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:.830;--nudge:0.1%;--dur:7.9s;--delay:-3.2s"></picture><h3>Social</h3><p>Your feed and stories, run for you. It is what convinces the people an ad sent you that you are worth buying from.</p></div>
-      <div class="cell"><picture class="run-icon"><source type="image/webp" srcset="/assets/run/run-04-320.webp"><img src="/assets/run/run-04-320.png" alt="" width="104" height="104" decoding="async" loading="lazy" style="--k:1;--nudge:-1.8%;--dur:6.8s;--delay:-4.8s"></picture><h3>Retention</h3><p>The person who already bought is the easiest sale you&rsquo;ll ever make, and most brands never go back to them. We keep in touch for you, by email and message.</p></div>
+      <div class="cell"><h3>Content</h3><p>We shoot it with you, or build from what you&rsquo;ve already got. Not one polished piece a month, because for most people who see it the ad is the brand.</p></div>
+      <div class="cell"><h3>Ads</h3><p>Run wherever your buyers actually are, not just where it&rsquo;s easy. Budgets and testing handled every day, so more of the right people land on the product.</p></div>
+      <div class="cell"><h3>Social</h3><p>Your feed and stories, run for you. It is what convinces the people an ad sent you that you are worth buying from.</p></div>
+      <div class="cell"><h3>Retention</h3><p>The person who already bought is the easiest sale you&rsquo;ll ever make, and most brands never go back to them. We keep in touch for you, by email and message.</p></div>
     </div>
     <a class="btn-quiet" style="margin-top:26px;display:inline-block" href="what-we-run.html">See what each one actually means &rarr;</a>
   </div>
 </section>
 
-<section class="band-cool">
+<section class="band-cool cmp-section">
   <div class="container reveal">
     <h2>Every way of doing this, scored the same way.</h2>
     <p class="lede">The real alternatives, scored on the same seven questions &mdash; including the one we lose.</p>
-    <p class="cmp-hint">Swipe the table for the other four</p>
-    <div class="cmp-wrap">
+        <div class="cmp-wrap">
       <table class="cmp">
         <caption class="sr-only">Five ways of running your marketing, compared across seven questions.</caption>
         <thead><tr><th scope="col"></th><th scope="col" class="us">KaizenEvol</th><th scope="col">You do it</th><th scope="col">A freelancer</th><th scope="col">A big agency</th><th scope="col">An in-house hire</th></tr></thead><tbody><tr><th scope="row">Someone is making new work every week</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td></tr><tr><th scope="row">It still happens in the weeks you are busy</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td></tr><tr><th scope="row">Judged against what your sales did before you started</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td></tr><tr><th scope="row">Content, ads, social and retention move as one thing</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Partly"><path d="M9 2a7 7 0 0 0 0 14z" fill="currentColor"/><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></td></tr><tr><th scope="row">You keep the account, the content and the list</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td></tr><tr><th scope="row">You can stop whenever you like</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td></tr><tr><th scope="row">There are more than two people behind it</th><td class="us"><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="Yes"><circle cx="9" cy="9" r="7" fill="currentColor"/></svg></td><td><svg class="mark" width="18" height="18" viewBox="0 0 18 18" role="img" aria-label="No"><circle cx="9" cy="9" r="7" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/></svg></td></tr></tbody>
@@ -841,9 +835,11 @@
 </section>
 
 <section class="band" id="founders">
-  <div class="container reveal">
+  <div class="container reveal founders-row">
+    <div class="founders-copy">
     <h2>Both of us, on every seat.</h2>
     <p class="lede">There is no account manager and no junior. The two people who make your work are the two people you talk to, and we are both behind the camera and both in the edit. Diego runs what you see; Law runs everything underneath it.</p>
+    </div>
     <figure class="duo">
       <span class="duo-scrap" aria-hidden="true"></span>
       <span class="duo-paper" aria-hidden="true"></span>
@@ -868,32 +864,28 @@
 
 <section class="band-cool">
   <div class="container reveal">
-    <h2>We don&rsquo;t choose how it looks.</h2>
-    <p class="lede">The look and the direction stay yours. We make more of what you already make and put it in front of people who have never seen you, and if a piece doesn&rsquo;t look like you it&rsquo;s wrong, and we&rsquo;ll say so before you have to.</p>
-    <a class="btn-quiet" style="margin-top:20px;display:inline-block" href="what-we-run.html">What else stays yours &rarr;</a>
-  </div>
-</section>
-
-<section>
-  <div class="container reveal">
-    <h2>Four things we will not do to you.</h2>
-    <ul class="notfor">
-      <li><b>We never take a cut of your ad spend.</b> It leaves your account, not ours, so nothing we suggest is because it pays us more. No minimum either.</li>
-      <li><b>We say no on the first call, not three months in.</b> If the numbers do not work, you hear it while it is still free.</li>
-      <li><b>Nothing is held hostage.</b> The ad account, the content and the customer list are yours the whole time. Stop whenever you like and they stay with you.</li>
-      <li><b>You get an answer either way.</b> We read every enquiry ourselves and reply the same working day, including the ones we turn down.</li>
-    </ul>
-  </div>
-</section>
-
-<section class="band">
-  <div class="container reveal">
-    <h2>This isn&rsquo;t for <em>everyone</em>.</h2>
-    <ul class="notfor">
-      <li>You won&rsquo;t look at your own numbers. Then nobody can fix them, us included.</li>
-      <li>The margin&rsquo;s too thin for ads to pay for themselves. We&rsquo;d be spending your money to prove arithmetic.</li>
-      <li>You want the ads run and nothing else. That&rsquo;s one of four things we do, so you&rsquo;d be paying for three you don&rsquo;t want.</li>
-    </ul>
+    <h2>What we won&rsquo;t do, and who this isn&rsquo;t for.</h2>
+    <div class="notfor-pair">
+      <div>
+        <h3>Five things we will not do to you</h3>
+        <ul class="notfor">
+          <li><b>We don&rsquo;t choose how it looks.</b> The look and the direction stay yours. If a piece doesn&rsquo;t look like you it&rsquo;s wrong, and we&rsquo;ll say so before you have to.</li>
+          <li><b>We never take a cut of your ad spend.</b> It leaves your account, not ours, so nothing we suggest is because it pays us more. No minimum either.</li>
+          <li><b>We say no on the first call, not three months in.</b> If the numbers do not work, you hear it while it is still free.</li>
+          <li><b>Nothing is held hostage.</b> The ad account, the content and the customer list are yours the whole time. Stop whenever you like and they stay with you.</li>
+          <li><b>You get an answer either way.</b> We read every enquiry ourselves and reply the same working day, including the ones we turn down.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>This isn&rsquo;t for everyone</h3>
+        <ul class="notfor">
+          <li>You won&rsquo;t look at your own numbers. Then nobody can fix them, us included.</li>
+          <li>The margin&rsquo;s too thin for ads to pay for themselves. We&rsquo;d be spending your money to prove arithmetic.</li>
+          <li>You want the ads run and nothing else. That&rsquo;s one of four things we do, so you&rsquo;d be paying for three you don&rsquo;t want.</li>
+        </ul>
+      </div>
+    </div>
+    <a class="btn-quiet" style="margin-top:30px;display:inline-block" href="what-we-run.html">What else stays yours &rarr;</a>
   </div>
 </section>
 
@@ -918,12 +910,11 @@
   </div>
   <div class="container reveal">
     <h2>We only work with five clients at a time.</h2>
-    <p class="closing-sub">Just the two of us. We make the work and run it ourselves, so there&rsquo;s no account manager between you and the people doing it.</p>
     <p class="closing-sub">Five at a time is the whole capacity, not a launch offer. When they are full, they are full.</p>
     <p class="closing-sub">Tell us what you sell and what it costs you to make. Fifteen minutes tells us whether we can help, and if we can&rsquo;t we&rsquo;ll say so. Either way you&rsquo;ll leave knowing what a customer is actually worth to you, which is more than most people get from a call.</p>
     <div class="hero-ctas start">
       <form class="ke-start" action="apply.html" method="get">
-        <input type="text" name="b" autocomplete="organization" aria-label="What&rsquo;s your brand called?" placeholder="What&rsquo;s your brand called?">
+        <input type="text" name="b" autocomplete="organization" required aria-label="What&rsquo;s your brand called?" placeholder="What&rsquo;s your brand called?">
         <button class="ke-start-go" type="submit" aria-label="Take a seat"><svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></button>
       </form>
       <a href="mailto:diego@kaizenevol.com" class="btn-quiet">Email us directly</a>
@@ -963,9 +954,9 @@
   </div>
 </footer>
 
-<div id="waModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+<div id="waModal" role="dialog" aria-modal="true" aria-labelledby="waTitle" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
   <div style="background:#EFEDE9;border:1px solid rgba(35,33,30,0.18);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
-    <div style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
+    <div id="waTitle" style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
     <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply and call you back the same working day</span></a>
     <button id="waClose" style="margin-top:16px;background:none;border:none;color:#6E6A63;font-size:13px;cursor:pointer;font-family:inherit">Close</button>
   </div>
@@ -1017,46 +1008,26 @@
   } else { document.body.classList.add('lit'); }
 </script>
 <script>
-(function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose');
-if(!o||!m)return;o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});
-c.addEventListener('click',function(){m.style.display='none';});
-m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')m.style.display='none';});})();
+(function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose'),last=null;
+if(!o||!m)return;
+/* Focus moves INTO the dialog on open and BACK to the opener on close, and Tab stays
+   inside it while it is open. Without this a keyboard user opened it and stayed in the footer. */
+function open(e){e.preventDefault();last=document.activeElement;m.style.display='flex';var f=m.querySelector('a');if(f)f.focus();}
+function close(){m.style.display='none';if(last&&last.focus)last.focus();}
+o.addEventListener('click',open);
+c.addEventListener('click',close);
+m.addEventListener('click',function(e){if(e.target===m)close();});
+document.addEventListener('keydown',function(e){if(m.style.display!=='flex')return;
+  if(e.key==='Escape'){close();return;}
+  if(e.key==='Tab'){var f=m.querySelectorAll('a,button'),a=f[0],z=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}
+    else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}});})();
 </script>
 <!-- The silk aura behind the hero, plus the sitewide grain and typography layer. The homepage
      was the one public page not loading it, so it was the one hero with no depth behind the type. -->
 <script src="/midnight.js?v=21" defer></script>
 <script src="/seats.js" defer></script>
 <script src="/scrub.js" defer></script>
-<script>
-(function(){
-  /* Pointer only. A phone has no hover, so a tilt would fire on tap and then
-     stick there with nothing to return it to rest. */
-  if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
-  var MAX = 11;   // no Reduce Motion branch - the setting is ignored, see the note above
-
-  document.querySelectorAll('.grid.four .cell').forEach(function(host){
-    var pic = host.querySelector('picture.run-icon');
-    if (!pic) return;
-    var raf = 0, rx = 0, ry = 0;
-    function apply(){
-      raf = 0;
-      pic.style.setProperty('--rx', rx.toFixed(2) + 'deg');
-      pic.style.setProperty('--ry', ry.toFixed(2) + 'deg');
-    }
-    function queue(){ if (!raf) raf = requestAnimationFrame(apply); }
-    host.addEventListener('pointermove', function(e){
-      var r = host.getBoundingClientRect();
-      if (!r.width || !r.height) return;
-      // -0.5 .. 0.5 across the card, so the icon leans toward the cursor
-      ry =  ((e.clientX - r.left) / r.width  - 0.5) * MAX * 2;
-      rx = -((e.clientY - r.top)  / r.height - 0.5) * MAX * 2;
-      queue();
-    }, {passive:true});
-    host.addEventListener('pointerleave', function(){ rx = 0; ry = 0; queue(); }, {passive:true});
-  });
-})();
-</script>
 <script defer src="/script.js"></script>
 </body>
 </html>
