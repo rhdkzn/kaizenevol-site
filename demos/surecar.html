@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SureCar — MOT &amp; Servicing in Fishponds, Bristol</title>
+<meta name="description" content="SureCar, Unit 1 Stoke View Rd, Fishponds, Bristol. Established in 1999. MOT testing, servicing, diagnostics, repairs and fleet work. Call 0117 939 5555.">
+<meta name="theme-color" content="#14181a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%237ebd4f'/%3E%3Cpath d='M7 19c0-3 3-6 9-6s9 3 9 6z' fill='%2341799d'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#14181a;
+    --ink-2:#1d2326;
+    --ink-3:#262e32;
+    --paper:#ffffff;
+    --paper-2:#f4f6f5;
+    --line:rgba(255,255,255,.10);
+    --line-dark:rgba(20,24,26,.12);
+    --green:#7ebd4f;
+    --green-dk:#5f9c35;
+    --blue:#41799d;
+    --blue-dk:#33607d;
+    --txt:#14181a;
+    --txt-2:#55605f;
+    --txt-inv:#ffffff;
+    --txt-inv-2:rgba(255,255,255,.66);
+    --r:14px;
+    --ease:cubic-bezier(.16,1,.3,1);
+    --gut:20px;
+    --wrap:1080px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{background:var(--ink);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  h1,h2,h3{margin:0;line-height:1.08;letter-spacing:-.022em;font-weight:800}
+  p{margin:0}
+  .wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding-left:var(--gut);padding-right:var(--gut)}
+  .eyebrow{
+    font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--green-dk);margin-bottom:14px;
+  }
+  .on-dark .eyebrow{color:var(--green)}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:60;background:rgba(20,24,26,.93);
+    backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .hd{display:flex;align-items:center;justify-content:space-between;gap:12px;height:62px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
+  .brand svg{width:30px;height:30px;flex:none}
+  .brand b{
+    color:#fff;font-size:20px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;
+  }
+  .brand b i{font-style:normal;color:var(--green)}
+  .hd-call{
+    display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+    background:var(--green);color:#0f1416;font-weight:800;font-size:14.5px;
+    padding:10px 15px;border-radius:999px;white-space:nowrap;letter-spacing:-.01em;
+    transition:transform .35s var(--ease),background .25s var(--ease);
+  }
+  .hd-call:active{transform:scale(.96)}
+  .hd-call svg{width:15px;height:15px;flex:none}
+  .hd-call span.num{display:none}
+  @media(min-width:520px){.hd-call span.num{display:inline}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;background:var(--ink);color:var(--txt-inv);overflow:hidden;
+    padding:56px 0 64px;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(90% 65% at 78% 4%,rgba(126,189,79,.20),transparent 62%),
+      radial-gradient(80% 60% at 8% 100%,rgba(65,121,157,.24),transparent 64%);
+    pointer-events:none;
+  }
+  .hero::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line);
+  }
+  .hero .wrap{position:relative;z-index:1}
+  .est{
+    display:inline-flex;align-items:center;gap:9px;
+    border:1px solid rgba(126,189,79,.42);background:rgba(126,189,79,.10);
+    color:#cfe9b6;border-radius:999px;padding:7px 14px 7px 11px;
+    font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    margin-bottom:22px;
+  }
+  .est i{width:6px;height:6px;border-radius:50%;background:var(--green);flex:none;display:block}
+  h1{font-size:clamp(34px,10.2vw,62px);letter-spacing:-.035em}
+  h1 em{font-style:normal;color:var(--green);display:block}
+  .hero p.lede{
+    margin-top:18px;font-size:clamp(16.5px,4.3vw,20px);color:var(--txt-inv-2);
+    line-height:1.55;max-width:42ch;
+  }
+  .hero-cta{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    text-decoration:none;font-weight:800;font-size:16px;letter-spacing:-.01em;
+    padding:16px 22px;border-radius:12px;border:1px solid transparent;
+    transition:transform .4s var(--ease),background .3s var(--ease),border-color .3s var(--ease);
+  }
+  .btn:active{transform:scale(.975)}
+  .btn svg{width:17px;height:17px;flex:none}
+  .btn-primary{background:var(--green);color:#0f1416;box-shadow:0 8px 24px -10px rgba(126,189,79,.8)}
+  .btn-primary:hover{background:#8fcc60}
+  .btn-ghost{background:rgba(255,255,255,.05);color:#fff;border-color:rgba(255,255,255,.18)}
+  .btn-ghost:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.32)}
+  @media(max-width:400px){.hero-cta .btn{flex:1 1 100%}}
+
+  .hero-facts{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;
+    margin-top:38px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);
+    overflow:hidden;
+  }
+  .hero-facts div{background:var(--ink-2);padding:16px 15px}
+  .hero-facts dt{font-size:11px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+  .hero-facts dd{margin:6px 0 0;font-size:15.5px;font-weight:700;color:#fff;line-height:1.35}
+  @media(min-width:760px){.hero-facts{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+  /* ---------- trust bar ---------- */
+  .trust{background:var(--ink-2);color:#fff;padding:26px 0;border-bottom:1px solid var(--line)}
+  .trust-in{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+  .score{display:flex;align-items:baseline;gap:10px}
+  .score b{font-size:40px;font-weight:800;letter-spacing:-.04em;color:var(--green);line-height:1}
+  .score span{font-size:14.5px;color:var(--txt-inv-2);font-weight:600}
+  .trust small{display:block;font-size:12.5px;color:rgba(255,255,255,.42);line-height:1.5}
+  @media(min-width:760px){
+    .trust-in{flex-direction:row;align-items:center;justify-content:space-between;gap:28px}
+    .trust small{text-align:right;max-width:52ch}
+  }
+
+  /* ---------- sections ---------- */
+  section{padding:64px 0}
+  .sec-head{max-width:36ch;margin-bottom:34px}
+  .sec-head h2{font-size:clamp(27px,7.2vw,42px)}
+  .sec-head p{margin-top:14px;color:var(--txt-2);font-size:16.5px}
+  .on-dark{background:var(--ink);color:#fff}
+  .on-dark .sec-head p{color:var(--txt-inv-2)}
+  .alt{background:var(--paper-2)}
+
+  /* services */
+  .cards{display:grid;gap:14px}
+  @media(min-width:640px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(min-width:960px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .card{
+    background:#fff;border:1px solid var(--line-dark);border-radius:var(--r);
+    padding:24px 22px;position:relative;overflow:hidden;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .5s var(--ease);
+  }
+  .card::after{
+    content:"";position:absolute;left:0;top:0;height:3px;width:100%;
+    background:linear-gradient(90deg,var(--green),var(--blue));
+    transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease);
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -22px rgba(20,24,26,.45);border-color:rgba(20,24,26,.2)}
+  .card:hover::after{transform:scaleX(1)}
+  .card .ic{
+    width:42px;height:42px;border-radius:11px;display:grid;place-items:center;
+    background:rgba(126,189,79,.14);color:var(--green-dk);margin-bottom:16px;
+  }
+  .card .ic svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .card h3{font-size:19px;letter-spacing:-.02em}
+  .card p{margin-top:9px;color:var(--txt-2);font-size:15.5px;line-height:1.6}
+
+  /* MOT list */
+  .mot-grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  @media(min-width:760px){.mot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .mot-grid > div{background:var(--ink-2);padding:24px 22px}
+  .mot-grid h3{font-size:17.5px;color:#fff;display:flex;gap:11px;align-items:flex-start}
+  .mot-grid h3 svg{width:19px;height:19px;flex:none;margin-top:2px;stroke:var(--green);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .mot-grid p{margin-top:10px;color:var(--txt-inv-2);font-size:15.5px;padding-left:30px}
+
+  /* price */
+  .prices{display:grid;gap:14px;margin-top:4px}
+  @media(min-width:640px){.prices{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .price{
+    background:#fff;border:1px solid var(--line-dark);border-radius:var(--r);padding:26px 24px;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease);
+  }
+  .price:hover{transform:translateY(-3px);box-shadow:0 16px 36px -22px rgba(20,24,26,.4)}
+  .price .nm{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+  .price .amt{margin-top:10px;font-size:40px;font-weight:800;letter-spacing:-.04em;line-height:1}
+  .price .amt small{font-size:15px;font-weight:700;color:var(--txt-2);letter-spacing:0}
+  .price p{margin-top:12px;color:var(--txt-2);font-size:15.5px}
+  .fineprint{margin-top:18px;font-size:12.5px;line-height:1.65;color:var(--txt-2);opacity:.9}
+
+  /* accreditations */
+  .accreds{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(min-width:760px){.accreds{grid-template-columns:repeat(5,minmax(0,1fr))}}
+  .acc{
+    border:1px solid var(--line);border-radius:12px;background:var(--ink-2);
+    padding:20px 14px;text-align:center;
+    transition:transform .5s var(--ease),border-color .5s var(--ease),background .5s var(--ease);
+  }
+  .acc:hover{transform:translateY(-3px);border-color:rgba(126,189,79,.45);background:var(--ink-3)}
+  .acc b{display:block;font-size:15px;color:#fff;letter-spacing:-.01em;line-height:1.3}
+  .acc span{display:block;margin-top:6px;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.42);font-weight:700}
+  .awards{
+    margin-top:18px;border:1px solid rgba(126,189,79,.3);background:rgba(126,189,79,.07);
+    border-radius:12px;padding:20px 20px;
+  }
+  .awards h3{font-size:16px;color:var(--green);margin-bottom:10px}
+  .awards p{color:var(--txt-inv-2);font-size:15px;line-height:1.65}
+  .awards cite{display:block;margin-top:12px;font-style:normal;font-size:12.5px;color:rgba(255,255,255,.4)}
+
+  /* why */
+  .why{display:grid;gap:14px}
+  @media(min-width:760px){.why{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .why > div{
+    background:#fff;border:1px solid var(--line-dark);border-left:3px solid var(--green);
+    border-radius:0 var(--r) var(--r) 0;padding:22px 22px;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease);
+  }
+  .why > div:hover{transform:translateX(4px);box-shadow:0 14px 34px -24px rgba(20,24,26,.5)}
+  .why h3{font-size:18px}
+  .why p{margin-top:8px;color:var(--txt-2);font-size:15.5px}
+
+  /* reviews */
+  .revs{display:grid;gap:14px}
+  @media(min-width:900px){.revs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .rev{
+    background:#fff;border:1px solid var(--line-dark);border-radius:var(--r);padding:24px 22px;
+    display:flex;flex-direction:column;
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease);
+  }
+  .rev:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(20,24,26,.45)}
+  .rev p{font-size:16px;line-height:1.62;flex:1}
+  .rev .who{margin-top:16px;padding-top:14px;border-top:1px solid var(--line-dark)}
+  .rev .who b{display:block;font-size:14.5px}
+  .rev .who span{display:block;font-size:12.5px;color:var(--txt-2);margin-top:2px}
+  .src{margin-top:18px;font-size:12.5px;color:var(--txt-2)}
+
+  /* contact */
+  .contact-grid{display:grid;gap:14px}
+  @media(min-width:760px){.contact-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .cbox{
+    border:1px solid var(--line);background:var(--ink-2);border-radius:var(--r);padding:24px 22px;
+    transition:border-color .5s var(--ease),background .5s var(--ease);
+  }
+  .cbox:hover{border-color:rgba(126,189,79,.4);background:var(--ink-3)}
+  .cbox .lb{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+  .cbox a,.cbox address{
+    display:block;margin-top:10px;font-size:18px;font-weight:700;color:#fff;
+    text-decoration:none;font-style:normal;line-height:1.45;letter-spacing:-.015em;word-break:break-word;
+  }
+  .cbox a:hover{color:var(--green)}
+  .cbox .hrs{margin-top:10px;font-size:17px;font-weight:700;color:#fff}
+  .cbox .hrs em{display:block;font-style:normal;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.45);margin-top:5px}
+  .final{
+    margin-top:22px;border-radius:var(--r);border:1px solid rgba(126,189,79,.32);
+    background:linear-gradient(135deg,rgba(126,189,79,.12),rgba(65,121,157,.12));
+    padding:30px 24px;text-align:center;
+  }
+  .final h3{font-size:clamp(22px,6vw,30px);color:#fff}
+  .final p{margin-top:10px;color:var(--txt-inv-2);font-size:16px}
+  .final .btn{margin-top:20px}
+
+  footer{background:var(--ink);color:rgba(255,255,255,.4);padding:30px 0 96px;border-top:1px solid var(--line);font-size:13.5px}
+  .ft{display:flex;flex-direction:column;gap:8px}
+  .ft b{color:#fff;font-weight:800;font-size:15px;letter-spacing:-.01em}
+
+  /* sticky mobile call bar */
+  .bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:70;
+    padding:10px var(--gut) calc(10px + env(safe-area-inset-bottom));
+    background:rgba(20,24,26,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    transform:translateY(120%);transition:transform .55s var(--ease);
+  }
+  .bar.show{transform:translateY(0)}
+  .bar a{display:flex;width:100%;max-width:var(--wrap);margin:0 auto;text-decoration:none}
+  .bar .btn{width:100%}
+  @media(min-width:900px){.bar{display:none}footer{padding-bottom:40px}}
+
+  /* reveal motion */
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .rv.in{opacity:1;transform:none}
+  .stg > *{opacity:0;transform:translateY(20px);transition:opacity .75s var(--ease),transform .75s var(--ease)}
+  .stg.in > *{opacity:1;transform:none}
+  .hero .est,.hero h1,.hero .lede,.hero .hero-cta,.hero .hero-facts{
+    opacity:0;transform:translateY(20px);animation:rise .9s var(--ease) forwards;
+  }
+  .hero .est{animation-delay:.05s}
+  .hero h1{animation-delay:.14s}
+  .hero .lede{animation-delay:.24s}
+  .hero .hero-cta{animation-delay:.34s}
+  .hero .hero-facts{animation-delay:.44s}
+  @keyframes rise{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hd">
+    <a class="brand" href="#top" aria-label="SureCar home">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="14.5" fill="#7ebd4f"/>
+        <path d="M6.5 20.5c.4-2.2 1.6-3.6 3.2-4.6 1.3-1.9 3-3.1 6.3-3.1s5 1.2 6.3 3.1c1.6 1 2.8 2.4 3.2 4.6z" fill="#41799d"/>
+        <circle cx="11.2" cy="20.4" r="2.4" fill="#41799d"/>
+        <circle cx="20.8" cy="20.4" r="2.4" fill="#41799d"/>
+      </svg>
+      <b>Sure<i>Car</i></b>
+    </a>
+    <a class="hd-call" href="tel:+441179395555">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+      Call <span class="num">0117 939 5555</span>
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="est"><i></i>Established in 1999 · Fishponds, Bristol</div>
+      <h1>Your local MOT <em>&amp; Service Centre.</em></h1>
+      <p class="lede">One of Bristol's leading independent garages. MOT &amp; servicing, diagnostics, clutches, batteries, brakes and all repairs — at extremely competitive prices.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="tel:+441179395555">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+          0117 939 5555
+        </a>
+        <a class="btn btn-ghost" href="#find">Find the garage</a>
+      </div>
+      <dl class="hero-facts">
+        <div><dt>MOT testing</dt><dd>Five days a week</dd></div>
+        <div><dt>While you wait</dt><dd>Approx. 45 minutes</dd></div>
+        <div><dt>MOT retest</dt><dd>No charge</dd></div>
+        <div><dt>Courtesy cars</dt><dd>Book in advance</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <div class="trust">
+    <div class="wrap trust-in rv">
+      <div class="score">
+        <b>98.7%</b>
+        <span>rated from 12,728 reviews<br>on the Good Garage Scheme</span>
+      </div>
+      <small>Figure published by the Good Garage Scheme on its Surecar Ltd listing, September 2026. SureCar has been a member since 09/09/2010.</small>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">What we do</div>
+        <h2>Everything your car needs, under one roof.</h2>
+        <p>All makes and models serviced and repaired, by trained staff who tell you the cost before any work starts.</p>
+      </div>
+      <div class="cards stg">
+        <article class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h3>MOT Testing</h3>
+          <p>MOT testing five days a week. If your vehicle needs work to pass, you get a clear explanation and a quote first. We do not charge for the MOT retest after the work has been completed by us.</p>
+        </article>
+        <article class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.2c-3.1 0-5.6-2.4-5.6-5.4C6.4 12 12 3.2 12 3.2s5.6 8.8 5.6 12.6c0 3-2.5 5.4-5.6 5.4z"/><path d="M9.8 15.4c0 1.3 1 2.3 2.2 2.3"/></svg></div>
+          <h3>Servicing</h3>
+          <p>Professional maintenance work with no loss of manufacturer warranty, for both used and new cars. Service formats to suit both your vehicle and your pocket, including manufacturer service schedules for newer vehicles.</p>
+        </article>
+        <article class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l2-5 3 10 2.5-6 1.5 3h5"/></svg></div>
+          <h3>Diagnostics</h3>
+          <p>We have all the equipment and technical staff needed to resolve your diagnostic queries. Electronics are responsible for a high percentage of engine management issues — so we keep both the staff and the kit to deal with them.</p>
+        </article>
+        <article class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 3.5a5 5 0 0 0-6.4 6.4L3 15v6h6l5.1-5.1a5 5 0 0 0 6.4-6.4l-3.2 3.2-2.8-2.8z"/></svg></div>
+          <h3>Repairs</h3>
+          <p>Suspension, steering, water pump, electrics, heaters, windows, engine rebuilds, gearbox, clutch and dual mass flywheel, exhaust systems, brakes, ABS, shock absorbers and brake fluid changes.</p>
+        </article>
+        <article class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M12 7 8.5 4.5M12 7l3.5-2.5M12 17l-3.5 2.5M12 17l3.5 2.5"/><path d="M4 8l16 8M20 8 4 16"/></svg></div>
+          <h3>Air Conditioning</h3>
+          <p>Air conditioning checks, services and re-gas — so the system works when the weather turns and the screen clears when it needs to.</p>
+        </article>
+        <article class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="13" width="13" height="6" rx="3"/><path d="M6 13v6M10 13v6"/><path d="M18 16c2.2 0 2.2-2.6 0-2.6M18.5 10.4c2.4 0 2.4-3 0-3"/></svg></div>
+          <h3>Diesel Particulate Filter</h3>
+          <p>DPF repair and regeneration, plus locking wheel nut removal and replacement, and fuel contamination resolution.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOT DETAIL -->
+  <section class="on-dark" id="mot">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">MOT testing</div>
+        <h2>Booked in, tested, back on the road.</h2>
+        <p>An award winning member of the Good Garage Scheme, testing five days a week.</p>
+      </div>
+      <div class="mot-grid stg">
+        <div>
+          <h3><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Approx 45 minutes, while you wait</h3>
+          <p>A waiting area is available, however you are welcome to get a drink and explore nearby Fishponds.</p>
+        </div>
+        <div>
+          <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17h2l1.5-4.5h11L19 17h2"/><path d="M6 17h12M8 20h8"/></svg>Courtesy cars</h3>
+          <p>Book your MOT and Service together and take advantage of our courtesy cars.</p>
+        </div>
+        <div>
+          <h3><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Allow 28 days prior to your expiry date</h3>
+          <p>The Ministry of Transport allows you to test your vehicle up to 28 days prior to your expiry date without any time being lost. It is recommended that you have your MOT done early, in case any faults are found.</p>
+        </div>
+        <div>
+          <h3><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>MOT reminders for existing customers</h3>
+          <p>If you have your service and MOT carried out at our garage, we will send out a yearly reminder by email or text message before your MOT and service is due.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICING PRICES -->
+  <section class="alt" id="servicing">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Servicing</div>
+        <h2>Clear pricing, laid out before we start.</h2>
+        <p>Repair costs match any initial quote given, and all parts are available for customer inspection.</p>
+      </div>
+      <div class="prices stg">
+        <div class="price">
+          <div class="nm">Interim Service</div>
+          <div class="amt">£175 <small>+ VAT</small></div>
+          <p>Oil, Oil Filter, Air Filter and 46 point check.</p>
+        </div>
+        <div class="price">
+          <div class="nm">Full Service</div>
+          <div class="amt">£215 <small>+ VAT</small></div>
+          <p>Oil, Oil Filter, Air Filter, Pollen Filter and 51 point check.</p>
+        </div>
+      </div>
+      <p class="fineprint rv">Pricing applies to domestic vehicles up to 2000cc. Commercial, qualifying camper vans, and vehicles exceeding 2000cc will be priced accordingly — please ask for a quote at point of booking. Additional charges will apply should the vehicle require a fuel filter, platinum or multi-electrode spark plugs and special or synthetic oils. Full list of checks available at reception.</p>
+    </div>
+  </section>
+
+  <!-- ACCREDITATIONS -->
+  <section class="on-dark" id="accreditations">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Accreditations</div>
+        <h2>The schemes we answer to.</h2>
+        <p>Independent doesn't mean unaccountable. Our work is checked by the trade bodies below.</p>
+      </div>
+      <div class="accreds stg">
+        <div class="acc"><b>Good Garage Scheme</b><span>Member since 2010</span></div>
+        <div class="acc"><b>Trust My Garage</b><span>Member</span></div>
+        <div class="acc"><b>RMI</b><span>Retail Motor Industry</span></div>
+        <div class="acc"><b>TSI Code</b><span>Approved code</span></div>
+        <div class="acc"><b>AAGG</b><span>Proud member</span></div>
+      </div>
+      <div class="awards rv">
+        <h3>Award winning, repeatedly</h3>
+        <p>Winners of the Good Garage Scheme Regional Feedback Award 2010, 2013, 2014, 2015, 2019, 2020, 2021, 2022 &amp; 2023. Winners of the Good Garage Scheme National Feedback Award 2016 &amp; 2017. Regional Feedback Award Runner-Up 2018.</p>
+        <cite>As listed by the Good Garage Scheme on its Surecar Ltd garage page.</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section id="why">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Why SureCar</div>
+        <h2>Same garage, same street, since 1999.</h2>
+        <p>We are a local garage, based in Fishponds, who provide a professional and friendly atmosphere — which enables customers to make well-informed important decisions regarding the repairs and maintenance of their vehicle.</p>
+      </div>
+      <div class="why stg">
+        <div>
+          <h3>Well trained staff</h3>
+          <p>Our trained and professional staff offer honest and fair services at competitive prices. We will also notify you of costs before work commences.</p>
+        </div>
+        <div>
+          <h3>Clear pricing</h3>
+          <p>Clear pricing structure laid out, with repair costs matching any initial quote given. All parts are available for customer inspection for your peace of mind.</p>
+        </div>
+        <div>
+          <h3>MOTs five days a week</h3>
+          <p>Discounted MOTs lasting approximately 45 minutes while you wait, available five days a week.</p>
+        </div>
+        <div>
+          <h3>In the community</h3>
+          <p>We proudly sponsor local sports teams and community events.</p>
+        </div>
+        <div>
+          <h3>Fleet work</h3>
+          <p>Approved and used by fleet companies across the UK including Lloyds, Hitachi, ALD Automotive, National Service Network and ARI Fleet. Jobs are authorised over the internet through platforms such as 1link, AA and ARI.</p>
+        </div>
+        <div>
+          <h3>Collection, delivery and courtesy vehicles</h3>
+          <p>We offer both collection and delivery, and courtesy vehicles while your vehicle is in being worked on. NHS discounts available.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="alt" id="reviews">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">What our customers say</div>
+        <h2>In their words, not ours.</h2>
+      </div>
+      <div class="revs stg">
+        <blockquote class="rev">
+          <p>“These guys help look after our lease vans, they're better than the main dealer their techs are very good at fault finding and I can't recommend them enough. Great garage with great people and fantastic customer service.”</p>
+          <div class="who"><b>Lee Bircham</b><span>February 16, 2024</span></div>
+        </blockquote>
+        <blockquote class="rev">
+          <p>“Wife's car MOT'd at short notice. Excellent service and staff very efficient and informative. Will certainly return in future. My own car included — for future MOT'S and Services.”</p>
+          <div class="who"><b>Nigel Giles</b><span>December 30, 2023</span></div>
+        </blockquote>
+        <blockquote class="rev">
+          <p>“Taken my car here for the MOT and service for the last 3 years. Always professional, efficient and fairly priced!”</p>
+          <div class="who"><b>David Swift</b><span>July 22, 2022</span></div>
+        </blockquote>
+      </div>
+      <p class="src rv">Google reviews, as published on sure-car.co.uk.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="on-dark" id="find">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Find us</div>
+        <h2>Unit 1, Stoke View Rd.</h2>
+        <p>Contact us for a quote, or to book in today.</p>
+      </div>
+      <div class="contact-grid stg">
+        <div class="cbox">
+          <div class="lb">Call us</div>
+          <a href="tel:+441179395555">0117 939 5555</a>
+        </div>
+        <div class="cbox">
+          <div class="lb">Email us</div>
+          <a href="mailto:admin@sure-car.co.uk">admin@sure-car.co.uk</a>
+        </div>
+        <div class="cbox">
+          <div class="lb">Find us</div>
+          <address>Unit 1, Stoke View Rd,<br>Fishponds,<br>Bristol BS16 3AE</address>
+        </div>
+      </div>
+      <div class="contact-grid stg" style="margin-top:14px">
+        <div class="cbox" style="grid-column:1/-1">
+          <div class="lb">Opening hours</div>
+          <div class="hrs">Mon – Fri: 8:30am – 5:30pm<em>For Services and MOTs, call 0117 939 5555 to book.</em></div>
+        </div>
+      </div>
+      <div class="final rv">
+        <h3>Need an MOT, a service, or a second opinion?</h3>
+        <p>Call the garage and speak to someone who'll tell you the cost before anything gets touched.</p>
+        <a class="btn btn-primary" href="tel:+441179395555">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+          0117 939 5555
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap ft">
+    <b>SureCar Ltd</b>
+    <span>Unit 1, Stoke View Rd, Fishponds, Bristol BS16 3AE · 0117 939 5555 · admin@sure-car.co.uk</span>
+    <span>Established in 1999. MOT testing, servicing, diagnostics, repairs and fleet support.</span>
+  </div>
+</footer>
+
+<div class="bar" id="bar">
+  <a href="tel:+441179395555">
+    <span class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+      Call SureCar · 0117 939 5555
+    </span>
+  </a>
+</div>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el = e.target;
+      if(el.classList.contains('stg')){
+        Array.prototype.forEach.call(el.children, function(c,i){
+          c.style.transitionDelay = (i*0.07) + 's';
+        });
+      }
+      el.classList.add('in');
+      io.unobserve(el);
+    });
+  }, {rootMargin:'0px 0px -8% 0px', threshold:0.08});
+  document.querySelectorAll('.rv,.stg').forEach(function(el){ io.observe(el); });
+
+  var bar = document.getElementById('bar');
+  var hero = document.querySelector('.hero');
+  var bo = new IntersectionObserver(function(es){
+    bar.classList.toggle('show', !es[0].isIntersecting);
+  }, {threshold:0});
+  bo.observe(hero);
+})();
+</script>
+</body>
+</html>

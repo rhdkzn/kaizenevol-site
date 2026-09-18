@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DKI Dickson Kitchens &amp; Interiors | Fitted Kitchens, Bathrooms &amp; Bedrooms, Staple Hill, Bristol</title>
+<meta name="description" content="Independent, family run kitchen design company in Staple Hill, Bristol. Design, supply and installation of fitted kitchens, bathrooms and bedrooms. Mereway Premium Partner and Karndean retailer.">
+<meta name="theme-color" content="#1A1714">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --ink:#1A1714;
+  --ink-2:#24201B;
+  --ink-3:#2F2A23;
+  --plaster:#F3EEE5;
+  --paper:#FBF8F3;
+  --stone:#E2DACD;
+  --stone-2:#CFC5B4;
+  --clay:#A8764A;
+  --brass:#B98B57;
+  --muted:#7A7167;
+  --muted-lt:#A79D90;
+  --line:rgba(26,23,20,.12);
+  --line-dk:rgba(243,238,229,.14);
+  --serif:Georgia,"Iowan Old Style","Times New Roman",Times,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --gut:20px;
+  --maxw:1120px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--ink);-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img,svg{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3,h4,p,ul,ol,figure{margin:0}
+ul{padding:0;list-style:none}
+
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding-left:var(--gut);padding-right:var(--gut)}
+.eyebrow{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  font-weight:600;color:var(--clay);margin-bottom:18px;
+}
+.eyebrow.on-dark{color:var(--brass)}
+.dsp{font-family:var(--serif);font-weight:400;letter-spacing:-.015em;line-height:1.08}
+.lede{font-size:17px;line-height:1.68;color:var(--muted)}
+.on-dark .lede,.dark .lede{color:var(--muted-lt)}
+
+/* ============ HEADER ============ */
+.hdr{
+  position:fixed;inset:0 0 auto 0;z-index:60;
+  background:rgba(26,23,20,0);
+  border-bottom:1px solid transparent;
+  transition:background .5s var(--ease),border-color .5s var(--ease),backdrop-filter .5s var(--ease);
+}
+.hdr.stuck{
+  background:rgba(26,23,20,.92);
+  border-bottom-color:var(--line-dk);
+  -webkit-backdrop-filter:saturate(160%) blur(14px);
+  backdrop-filter:saturate(160%) blur(14px);
+}
+.hdr-in{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  height:62px;
+}
+.mark{display:flex;align-items:center;gap:9px;text-decoration:none;min-width:0}
+.mark-badge{
+  width:34px;height:34px;flex:0 0 34px;border-radius:3px;
+  background:linear-gradient(150deg,#C79A66,#A8764A 55%,#8C5F39);
+  color:#1A1714;font-family:var(--serif);font-size:13px;font-weight:700;
+  letter-spacing:.02em;display:grid;place-items:center;
+  box-shadow:0 1px 0 rgba(255,255,255,.25) inset;
+}
+.mark-txt{min-width:0}
+.mark-name{
+  font-family:var(--serif);font-size:15px;line-height:1.1;color:var(--plaster);
+  letter-spacing:.01em;white-space:nowrap;
+}
+.mark-sub{
+  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted-lt);margin-top:3px;white-space:nowrap;
+}
+.hdr-call{
+  display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;
+  padding:9px 15px;border-radius:999px;text-decoration:none;
+  background:var(--brass);color:#1A1714;
+  font-size:13px;font-weight:650;letter-spacing:.01em;white-space:nowrap;
+  transition:transform .4s var(--ease),background .3s var(--ease);
+}
+.hdr-call:active{transform:scale(.96)}
+.ico{width:14px;height:14px;flex:0 0 14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;background:var(--ink);color:var(--plaster);
+  padding:104px 0 0;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(120% 78% at 82% 4%,rgba(185,139,87,.24),transparent 62%),
+    radial-gradient(90% 60% at 4% 96%,rgba(168,118,74,.13),transparent 60%);
+  pointer-events:none;
+}
+.hero-in{position:relative;z-index:2}
+.hero h1{font-size:clamp(34px,8.6vw,64px);margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--brass)}
+.hero .lede{max-width:46ch}
+.tagline{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;
+  margin:26px 0 0;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted-lt);font-weight:600;
+}
+.tagline span{display:inline-flex;align-items:center;gap:12px}
+.tagline i{width:4px;height:4px;border-radius:50%;background:var(--brass);display:inline-block}
+.cta-row{display:flex;flex-direction:column;gap:11px;margin-top:32px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:16px 24px;border-radius:4px;text-decoration:none;
+  font-size:15px;font-weight:650;letter-spacing:.01em;
+  transition:transform .45s var(--ease),background .35s var(--ease),border-color .35s var(--ease);
+}
+.btn:active{transform:scale(.975)}
+.btn-pri{background:var(--brass);color:#1A1714;box-shadow:0 10px 30px -12px rgba(185,139,87,.7)}
+.btn-gho{border:1px solid rgba(243,238,229,.28);color:var(--plaster)}
+.btn-dark{background:var(--ink);color:var(--plaster)}
+.btn-blk{border:1px solid rgba(26,23,20,.28);color:var(--ink)}
+.hero-note{margin-top:16px;font-size:13px;color:var(--muted-lt)}
+
+/* hero image field */
+.hero-fig{
+  position:relative;margin:44px 0 0;
+  height:300px;
+  background:
+    linear-gradient(180deg,rgba(26,23,20,0) 40%,rgba(26,23,20,.55)),
+    linear-gradient(118deg,#3A3229 0%,#4A4034 32%,#6B5A46 58%,#8A7358 78%,#5A4C3C 100%);
+  border-top:1px solid var(--line-dk);
+  overflow:hidden;
+}
+.hero-fig::after{
+  content:"";position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(94deg,rgba(255,255,255,.045) 0 1px,transparent 1px 13px),
+    radial-gradient(70% 90% at 22% 12%,rgba(255,255,255,.12),transparent 60%);
+  mix-blend-mode:overlay;
+}
+.ph-tag{
+  position:absolute;left:var(--gut);bottom:16px;z-index:3;
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 11px;border-radius:3px;
+  background:rgba(26,23,20,.62);border:1px dashed rgba(243,238,229,.4);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(243,238,229,.86);font-weight:600;
+  max-width:calc(100% - var(--gut) * 2);line-height:1.35;
+}
+.ph-tag.light{
+  background:rgba(251,248,243,.72);border-color:rgba(26,23,20,.3);color:var(--muted);
+}
+
+/* ============ CREDS BAR ============ */
+.creds{background:var(--ink-2);border-top:1px solid var(--line-dk);color:var(--plaster)}
+.creds-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-dk)}
+.cred{background:var(--ink-2);padding:22px 16px;text-align:center}
+.cred b{display:block;font-family:var(--serif);font-size:19px;color:var(--brass);line-height:1.2}
+.cred span{
+  display:block;margin-top:6px;font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted-lt);font-weight:600;
+}
+
+/* ============ SECTIONS ============ */
+section{position:relative}
+.sec{padding:76px 0}
+.sec-dark{background:var(--ink);color:var(--plaster)}
+.sec-plaster{background:var(--plaster)}
+.sec-head{max-width:54ch;margin-bottom:38px}
+.sec-head h2{font-size:clamp(27px,6.6vw,42px);margin-bottom:16px}
+.rule{height:1px;background:var(--line);margin:0}
+.sec-dark .rule{background:var(--line-dk)}
+
+/* ============ WHAT THEY DO ============ */
+.rooms{display:grid;gap:18px}
+.room{
+  background:var(--paper);border:1px solid var(--line);border-radius:5px;
+  overflow:hidden;
+  transition:transform .6s var(--ease),box-shadow .6s var(--ease),border-color .6s var(--ease);
+}
+.room:hover{transform:translateY(-4px);box-shadow:0 22px 44px -26px rgba(26,23,20,.4);border-color:rgba(168,118,74,.42)}
+.room-fig{position:relative;height:168px;overflow:hidden}
+.room-fig::after{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 15px);
+}
+.fig-kit{background:linear-gradient(126deg,#3F3830 0%,#5E5040 40%,#8B7358 72%,#4B4136 100%)}
+.fig-bath{background:linear-gradient(126deg,#39403F 0%,#515A58 38%,#8A918C 70%,#454C4B 100%)}
+.fig-bed{background:linear-gradient(126deg,#3B352F 0%,#574C42 38%,#948270 72%,#4A4239 100%)}
+.room-body{padding:22px 20px 26px}
+.room-body h3{font-family:var(--serif);font-size:23px;margin-bottom:9px}
+.room-body p{font-size:14.5px;color:var(--muted);line-height:1.62}
+.room-list{margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}
+.room-list li{
+  font-size:12.5px;color:var(--muted);padding:4px 0 4px 15px;position:relative;line-height:1.5;
+}
+.room-list li::before{
+  content:"";position:absolute;left:0;top:11px;width:5px;height:1px;background:var(--clay);
+}
+
+/* ============ PARTNERS ============ */
+.partners{display:grid;gap:16px}
+.partner{
+  border:1px solid var(--line-dk);border-radius:5px;padding:26px 22px;
+  background:linear-gradient(160deg,rgba(185,139,87,.09),rgba(185,139,87,.02));
+  transition:transform .6s var(--ease),border-color .6s var(--ease);
+}
+.partner:hover{transform:translateY(-3px);border-color:rgba(185,139,87,.4)}
+.partner-kick{
+  font-size:10px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--brass);font-weight:700;margin-bottom:12px;
+}
+.partner h3{font-family:var(--serif);font-size:26px;margin-bottom:10px;letter-spacing:.01em}
+.partner p{font-size:14.5px;color:var(--muted-lt);line-height:1.64}
+.partner-note{
+  margin-top:26px;padding-top:20px;border-top:1px solid var(--line-dk);
+  font-size:12.5px;color:var(--muted-lt);line-height:1.6;
+}
+
+/* ============ RANGES ============ */
+.ranges{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.rng{
+  background:var(--paper);border:1px solid var(--line);border-radius:4px;
+  padding:15px 14px 16px;min-width:0;
+  transition:transform .5s var(--ease),border-color .5s var(--ease),background .5s var(--ease);
+}
+.rng:hover{transform:translateY(-3px);border-color:rgba(168,118,74,.45);background:#fff}
+.rng-swatch{height:5px;border-radius:99px;margin-bottom:12px;background:var(--stone-2)}
+.rng b{display:block;font-family:var(--serif);font-size:15px;font-weight:400;line-height:1.24;letter-spacing:.005em}
+.rng span{display:block;margin-top:6px;font-size:11.5px;color:var(--muted);line-height:1.42}
+.ranges-cta{
+  margin-top:22px;padding:18px 18px;border:1px dashed rgba(168,118,74,.5);border-radius:4px;
+  background:rgba(168,118,74,.05);
+}
+.ranges-cta p{font-size:14.5px;line-height:1.6}
+.ranges-cta b{color:var(--clay);letter-spacing:.02em}
+.tabs{display:flex;gap:7px;margin-bottom:22px;flex-wrap:wrap}
+.tab{
+  appearance:none;border:1px solid var(--line);background:transparent;color:var(--muted);
+  font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.05em;
+  text-transform:uppercase;padding:9px 15px;border-radius:999px;cursor:pointer;
+  transition:all .4s var(--ease);
+}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--plaster)}
+.panel[hidden]{display:none}
+
+/* ============ PROCESS ============ */
+.steps{display:grid;gap:0;margin-top:8px}
+.step{
+  display:grid;grid-template-columns:44px 1fr;gap:16px;
+  padding:24px 0;border-top:1px solid var(--line);
+}
+.step:first-child{border-top:0}
+.step-n{
+  font-family:var(--serif);font-size:15px;color:var(--clay);
+  width:38px;height:38px;border:1px solid rgba(168,118,74,.42);border-radius:50%;
+  display:grid;place-items:center;
+}
+.step h3{font-family:var(--serif);font-size:20px;margin-bottom:7px}
+.step p{font-size:14.5px;color:var(--muted);line-height:1.64}
+
+/* ============ ALSO ============ */
+.also{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{
+  border:1px solid var(--line);border-radius:999px;padding:9px 15px;
+  font-size:13px;color:var(--muted);background:var(--paper);
+  transition:transform .45s var(--ease),border-color .45s var(--ease),color .45s var(--ease);
+}
+.chip:hover{transform:translateY(-2px);border-color:rgba(168,118,74,.5);color:var(--ink)}
+
+/* ============ VISIT ============ */
+.visit-fig{
+  position:relative;height:190px;border-radius:5px;overflow:hidden;margin-bottom:28px;
+  background:linear-gradient(140deg,#EDE7DB 0%,#DCD3C2 45%,#C9BFAB 100%);
+  border:1px solid var(--line);
+}
+.visit-fig::before{
+  content:"";position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(0deg,rgba(26,23,20,.055) 0 1px,transparent 1px 26px),
+    repeating-linear-gradient(90deg,rgba(26,23,20,.055) 0 1px,transparent 1px 26px);
+}
+.pin{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);
+  width:16px;height:16px;border-radius:50% 50% 50% 0;
+  background:var(--clay);rotate:-45deg;
+  box-shadow:0 6px 16px -4px rgba(26,23,20,.5);
+}
+.pin::after{
+  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:5px;height:5px;border-radius:50%;background:var(--plaster);
+}
+.pulse{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(168,118,74,.85);
+  animation:pulse 2.8s var(--ease) infinite;
+}
+@keyframes pulse{
+  0%{opacity:.85;transform:translate(-50%,-50%) scale(1)}
+  70%{opacity:0;transform:translate(-50%,-50%) scale(5.5)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(5.5)}
+}
+.info{display:grid;gap:14px}
+.card{
+  background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:22px 20px;
+}
+.card-dark{background:var(--ink-2);border-color:var(--line-dk);color:var(--plaster)}
+.card h3{
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--clay);font-weight:700;margin-bottom:14px;
+}
+.card-dark h3{color:var(--brass)}
+.addr{font-family:var(--serif);font-size:19px;line-height:1.5;font-style:normal}
+.hours li{
+  display:flex;justify-content:space-between;gap:14px;
+  padding:9px 0;border-top:1px solid var(--line);font-size:14.5px;
+}
+.card-dark .hours li{border-top-color:var(--line-dk)}
+.hours li:first-child{border-top:0}
+.hours b{font-weight:600}
+.hours .cl{color:var(--muted)}
+.card-dark .hours .cl{color:var(--muted-lt)}
+.hours-note{margin-top:12px;font-size:12.5px;color:var(--muted)}
+.card-dark .hours-note{color:var(--muted-lt)}
+.contact-links{display:grid;gap:9px}
+.clink{
+  display:flex;align-items:center;gap:12px;text-decoration:none;
+  padding:14px 16px;border-radius:4px;border:1px solid var(--line-dk);
+  background:rgba(243,238,229,.03);
+  transition:transform .45s var(--ease),background .4s var(--ease),border-color .4s var(--ease);
+}
+.clink:active{transform:scale(.985)}
+.clink:hover{background:rgba(185,139,87,.1);border-color:rgba(185,139,87,.4)}
+.clink-ic{
+  width:36px;height:36px;flex:0 0 36px;border-radius:50%;
+  display:grid;place-items:center;background:rgba(185,139,87,.16);color:var(--brass);
+}
+.clink-t{min-width:0}
+.clink-t b{display:block;font-size:15.5px;font-weight:650;letter-spacing:.01em;word-break:break-word}
+.clink-t span{
+  display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted-lt);margin-top:3px;font-weight:600;
+}
+
+/* ============ FINAL CTA ============ */
+.final{
+  background:linear-gradient(165deg,#24201B 0%,#1A1714 60%);
+  color:var(--plaster);text-align:center;padding:78px 0;
+  border-top:1px solid var(--line-dk);
+}
+.final h2{font-size:clamp(28px,7vw,44px);margin-bottom:18px}
+.final .lede{max-width:40ch;margin:0 auto}
+.final .cta-row{margin-top:30px;max-width:420px;margin-left:auto;margin-right:auto}
+
+/* ============ FOOTER ============ */
+footer{background:#141210;color:var(--muted-lt);padding:44px 0 40px;font-size:13px}
+.foot-mark{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.foot-name{font-family:var(--serif);font-size:17px;color:var(--plaster)}
+.foot-grid{display:grid;gap:22px}
+.foot-grid a{color:var(--muted-lt);text-decoration:none}
+.foot-grid a:hover{color:var(--brass)}
+.foot-h{
+  font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);font-weight:700;margin-bottom:10px;
+}
+.foot-legal{
+  margin-top:30px;padding-top:22px;border-top:1px solid var(--line-dk);
+  font-size:11.5px;line-height:1.7;color:var(--muted);
+}
+
+/* ============ REVEAL ============ */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .95s var(--ease),transform .95s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv-d1{transition-delay:.09s}.rv-d2{transition-delay:.18s}.rv-d3{transition-delay:.27s}
+.rv-d4{transition-delay:.36s}.rv-d5{transition-delay:.45s}.rv-d6{transition-delay:.54s}
+
+/* ============ RESPONSIVE ============ */
+@media (min-width:560px){
+  :root{--gut:28px}
+  .cta-row{flex-direction:row;flex-wrap:wrap}
+  .btn{flex:1 1 auto;min-width:200px}
+  .creds-grid{grid-template-columns:repeat(4,1fr)}
+  .ranges{grid-template-columns:repeat(3,1fr)}
+  .hero-fig{height:340px;border-radius:0}
+}
+@media (min-width:860px){
+  :root{--gut:40px}
+  .sec{padding:104px 0}
+  .hero{padding-top:150px}
+  .hero-fig{height:420px}
+  .rooms{grid-template-columns:repeat(3,1fr);gap:22px}
+  .partners{grid-template-columns:1fr 1fr;gap:22px}
+  .ranges{grid-template-columns:repeat(4,1fr)}
+  .steps{grid-template-columns:1fr 1fr;column-gap:44px}
+  .step{border-top:1px solid var(--line)}
+  .step:nth-child(2){border-top:1px solid var(--line)}
+  .info{grid-template-columns:1fr 1fr;gap:22px}
+  .info .span2{grid-column:1 / -1}
+  .visit-fig{height:260px}
+  .foot-grid{grid-template-columns:1.4fr 1fr 1fr}
+  .hdr-in{height:74px}
+  .mark-badge{width:38px;height:38px;flex-basis:38px;font-size:14px}
+  .mark-name{font-size:17px}
+  .contact-links{grid-template-columns:1fr 1fr 1fr}
+}
+@media (min-width:1024px){
+  .hero h1{max-width:15ch}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="hdr" id="hdr">
+  <div class="wrap hdr-in">
+    <a class="mark" href="#top">
+      <span class="mark-badge">DKI</span>
+      <span class="mark-txt">
+        <span class="mark-name">Dickson Kitchens</span>
+        <span class="mark-sub">&amp; Interiors &middot; Bristol</span>
+      </span>
+    </a>
+    <a class="hdr-call" href="tel:01179494260">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.4 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
+      Call
+    </a>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="wrap hero-in">
+    <p class="eyebrow on-dark rv">117 High Street &middot; Staple Hill &middot; Bristol</p>
+    <h1 class="dsp rv rv-d1">Dream kitchens,<br>designed and fitted <em>in Bristol.</em></h1>
+    <p class="lede rv rv-d2">An independent, family run kitchen design company. We design, supply and install quality fitted kitchens, bedrooms and bathrooms &mdash; with our own fully qualified craftsmen.</p>
+    <p class="tagline rv rv-d3">
+      <span>Bespoke</span><i></i><span>Top Quality</span><i></i><span>Affordable</span>
+    </p>
+    <div class="cta-row rv rv-d4">
+      <a class="btn btn-pri" href="tel:01179494260">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.4 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
+        0117 949 4260
+      </a>
+      <a class="btn btn-gho" href="#visit">Visit the showroom</a>
+    </div>
+    <p class="hero-note rv rv-d5">Arrange a FREE quotation &mdash; call us now.</p>
+  </div>
+  <div class="hero-fig rv rv-d3">
+    <span class="ph-tag">Photo placeholder &mdash; showroom kitchen</span>
+  </div>
+</section>
+
+<!-- ================= CREDS ================= -->
+<div class="creds">
+  <div class="creds-grid">
+    <div class="cred rv"><b>25+</b><span>Years experience</span></div>
+    <div class="cred rv rv-d1"><b>Family run</b><span>Independent business</span></div>
+    <div class="cred rv rv-d2"><b>Design &rarr; Fit</b><span>Complete service</span></div>
+    <div class="cred rv rv-d3"><b>Free</b><span>Quotations</span></div>
+  </div>
+</div>
+
+<!-- ================= WHAT WE DO ================= -->
+<section class="sec" id="what">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow rv">What we do</p>
+      <h2 class="dsp rv rv-d1">Three rooms. One team, start to finish.</h2>
+      <p class="lede rv rv-d2">We specialise in offering a complete service from the design, to supply and installation of quality fitted Kitchens, Bedrooms and Bathrooms by our own fully qualified craftsmen.</p>
+    </div>
+
+    <div class="rooms">
+      <article class="room rv">
+        <div class="room-fig fig-kit"><span class="ph-tag">Photo placeholder &mdash; kitchens</span></div>
+        <div class="room-body">
+          <h3>Kitchens</h3>
+          <p>Bespoke fitted kitchens designed around your room, built from top quality UK cabinets and installed by our own fitters.</p>
+          <ul class="room-list">
+            <li>Design consultation in the showroom</li>
+            <li>Supply and full installation</li>
+            <li>Appliances, worktops and flooring</li>
+            <li>Supply-only service also available</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="room rv rv-d1">
+        <div class="room-fig fig-bath"><span class="ph-tag">Photo placeholder &mdash; bathrooms</span></div>
+        <div class="room-body">
+          <h3>Bathrooms</h3>
+          <p>Luxury fitted bathrooms, en-suites and cloakrooms &mdash; designed, supplied and installed as one job with one point of contact.</p>
+          <ul class="room-list">
+            <li>Full bathrooms and en-suites</li>
+            <li>Cloakrooms and utility rooms</li>
+            <li>Fitted and freestanding furniture</li>
+            <li>Flooring and lighting handled too</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="room rv rv-d2">
+        <div class="room-fig fig-bed"><span class="ph-tag">Photo placeholder &mdash; bedrooms</span></div>
+        <div class="room-body">
+          <h3>Bedrooms</h3>
+          <p>Superb fitted bedrooms and sliding wardrobes, made to use every inch of the room you actually have.</p>
+          <ul class="room-list">
+            <li>Fitted wardrobes and sliding doors</li>
+            <li>Bespoke storage solutions</li>
+            <li>Home and office furniture</li>
+            <li>Designed and fitted by our own team</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PARTNERS ================= -->
+<section class="sec sec-dark" id="partners">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow on-dark rv">Our suppliers</p>
+      <h2 class="dsp rv rv-d1">We only fit what we&rsquo;d have at home.</h2>
+      <p class="lede rv rv-d2">To provide you with the best products we have developed relationships with top kitchen suppliers and continually refer to them for training and information regarding the high quality products we offer. Our &ldquo;cutting edge&rdquo; knowledge is then passed on directly as a key benefit for our customers.</p>
+    </div>
+
+    <div class="partners">
+      <article class="partner rv">
+        <p class="partner-kick">Premium Partner</p>
+        <h3>Mereway Kitchens</h3>
+        <p>We are a Mereway Premium Partner. Their furniture is constructed using traditional materials and methods and is hand crafted in the UK &mdash; which is why it&rsquo;s on our showroom floor.</p>
+      </article>
+      <article class="partner rv rv-d1">
+        <p class="partner-kick">Retailer</p>
+        <h3>Karndean Designflooring</h3>
+        <p>We are a Karndean retailer, so the flooring can be specified, supplied and fitted as part of the same job &mdash; not left to you to arrange afterwards.</p>
+      </article>
+    </div>
+
+    <p class="partner-note rv rv-d2">In our showroom you will be able to see a true representation of the high quality furniture and standard of work we offer.</p>
+  </div>
+</section>
+
+<!-- ================= RANGES ================= -->
+<section class="sec sec-plaster" id="ranges">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow rv">Ranges &amp; finishes</p>
+      <h2 class="dsp rv rv-d1">Just a few examples from our extensive range of styles.</h2>
+      <p class="lede rv rv-d2">A few of the door styles and finishes we offer. If you don&rsquo;t see what you are looking for &mdash; please ask.</p>
+    </div>
+
+    <div class="tabs rv rv-d2" role="tablist" aria-label="Range categories">
+      <button class="tab" role="tab" id="tab-k" aria-controls="p-k" aria-selected="true">Kitchens</button>
+      <button class="tab" role="tab" id="tab-b" aria-controls="p-b" aria-selected="false">Bathrooms</button>
+      <button class="tab" role="tab" id="tab-d" aria-controls="p-d" aria-selected="false">Bedrooms</button>
+    </div>
+
+    <div class="panel rv rv-d3" id="p-k" role="tabpanel" aria-labelledby="tab-k">
+      <div class="ranges">
+        <div class="rng"><div class="rng-swatch"></div><b>Futura True Handleless</b><span>Cambridge Indigo Blue &amp; Smoked Steel</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Signature</b><span>Cashmere &amp; Aubergine</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Q-Line</b><span>Pietra Ceramica &amp; Grafite Ceramica</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Shaker In-frame</b><span>Chalk White &amp; Gunmetal Grey</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Classic Shaker</b><span>Denim Blue &amp; Dusk Blue</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Signature</b><span>Diamond Grey</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Modern Classic</b><span>Indigo Blue &amp; Priory Blue</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Lastra</b><span>Natural Oak &amp; Dust Grey Soft Matt</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Raised &amp; Fielded Shaker</b><span>Ivory &amp; Cashmere</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Futura True Handleless</b><span>Oxidised Emerald, Springfield Dark Oak &amp; Dust Grey Soft Matt</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Classic Shaker</b><span>Light Grey</span></div>
+      </div>
+    </div>
+
+    <div class="panel" id="p-b" role="tabpanel" aria-labelledby="tab-b" hidden>
+      <div class="ranges">
+        <div class="rng"><div class="rng-swatch"></div><b>Adriatic</b><span>Mussel Matt</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Vogue</b><span>Concrete Oak</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Sargasso</b><span>Pumice Matt</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Java</b><span>Willow Oak &mdash; Fitted</span></div>
+      </div>
+    </div>
+
+    <div class="panel" id="p-d" role="tabpanel" aria-labelledby="tab-d" hidden>
+      <div class="ranges">
+        <div class="rng"><div class="rng-swatch"></div><b>Sofia</b><span>Dust Grey</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Elise</b><span>Charcoal</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Sliding Wardrobes &mdash; Three Piece</b><span>Matt Mineral Anthracite &amp; Matt Mineral Silver</span></div>
+        <div class="rng"><div class="rng-swatch"></div><b>Ava Plus</b><span>Gloss Cashmere</span></div>
+      </div>
+    </div>
+
+    <div class="ranges-cta rv">
+      <p>If you don&rsquo;t see what you are looking for, <b>PLEASE ASK.</b> Come into the showroom and we&rsquo;ll go through the full range with you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow rv">How it works</p>
+      <h2 class="dsp rv rv-d1">One company, from first drawing to final handle.</h2>
+      <p class="lede rv rv-d2">Full project management is available for you, including building works, structural alterations and other interior design elements such as lighting and flooring.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step rv">
+        <div class="step-n">01</div>
+        <div>
+          <h3>Come and see it</h3>
+          <p>Visit the showroom on Staple Hill High Street and see a true representation of the furniture and the standard of work we offer &mdash; in person, not in a brochure.</p>
+        </div>
+      </div>
+      <div class="step rv rv-d1">
+        <div class="step-n">02</div>
+        <div>
+          <h3>Design &amp; free quotation</h3>
+          <p>Our experienced designers plan the room around how you actually use it, then put a free, no-obligation quotation in front of you.</p>
+        </div>
+      </div>
+      <div class="step rv rv-d2">
+        <div class="step-n">03</div>
+        <div>
+          <h3>Supply</h3>
+          <p>Top quality UK built cabinets, hand crafted using traditional materials and methods, plus appliances, worktops and flooring if you want them from us.</p>
+        </div>
+      </div>
+      <div class="step rv rv-d3">
+        <div class="step-n">04</div>
+        <div>
+          <h3>Installation</h3>
+          <p>Fitted by our own fully qualified craftsmen. Need more than a fit? We can project manage the building works and structural alterations too.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ALSO ================= -->
+<section class="sec sec-plaster" id="also">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow rv">Also from DKI</p>
+      <h2 class="dsp rv rv-d1">Not just the kitchen.</h2>
+      <p class="lede rv rv-d2">We can also design, supply and install en-suites, cloakrooms, utility rooms, lifestyle, home and office furniture. A supply only service for furniture, appliances, flooring and so on is also available.</p>
+    </div>
+    <div class="also rv rv-d3">
+      <span class="chip">En-suites</span>
+      <span class="chip">Cloakrooms</span>
+      <span class="chip">Utility rooms</span>
+      <span class="chip">Home offices</span>
+      <span class="chip">Office furniture</span>
+      <span class="chip">Lifestyle furniture</span>
+      <span class="chip">Lighting</span>
+      <span class="chip">Flooring</span>
+      <span class="chip">Appliances</span>
+      <span class="chip">Supply only</span>
+      <span class="chip">Building works</span>
+      <span class="chip">Structural alterations</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VISIT ================= -->
+<section class="sec sec-dark" id="visit">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow on-dark rv">Visit us</p>
+      <h2 class="dsp rv rv-d1">The showroom is on Staple Hill High Street.</h2>
+      <p class="lede rv rv-d2">Pop in, have a proper look at the furniture, and talk it through with a designer. Give us a call first and we&rsquo;ll make sure someone&rsquo;s free for you.</p>
+    </div>
+
+    <div class="visit-fig rv rv-d2">
+      <span class="pulse"></span>
+      <span class="pin"></span>
+      <span class="ph-tag light">Map placeholder &mdash; 117 High Street, BS16 5HF</span>
+    </div>
+
+    <div class="info">
+      <div class="card card-dark rv">
+        <h3>Showroom</h3>
+        <address class="addr">
+          DKI Dickson Kitchens<br>&amp; Interiors Ltd.<br>
+          117 High Street<br>
+          Staple Hill<br>
+          Bristol &middot; BS16 5HF
+        </address>
+      </div>
+
+      <div class="card card-dark rv rv-d1">
+        <h3>Hours of business</h3>
+        <ul class="hours">
+          <li><b>Mon &ndash; Fri</b><span>9.00am &ndash; 5.00pm</span></li>
+          <li><b>Saturday</b><span>9.30am &ndash; 5.00pm</span></li>
+          <li><b>Sunday</b><span class="cl">Closed</span></li>
+        </ul>
+        <p class="hours-note">Weekdays &mdash; please call for details.</p>
+      </div>
+
+      <div class="card card-dark span2 rv rv-d2">
+        <h3>Get in touch</h3>
+        <div class="contact-links">
+          <a class="clink" href="tel:01179494260">
+            <span class="clink-ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.4 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg></span>
+            <span class="clink-t"><b>0117 949 4260</b><span>Showroom</span></span>
+          </a>
+          <a class="clink" href="tel:07889732508">
+            <span class="clink-ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg></span>
+            <span class="clink-t"><b>07889 732 508</b><span>Mobile</span></span>
+          </a>
+          <a class="clink" href="mailto:info@dicksonkitchens.com?subject=Enquiry%20from%20website">
+            <span class="clink-ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg></span>
+            <span class="clink-t"><b>info@dicksonkitchens.com</b><span>Email</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="final">
+  <div class="wrap">
+    <p class="eyebrow on-dark rv">Free quotation</p>
+    <h2 class="dsp rv rv-d1">Arrange a FREE quotation.<br>Call us now.</h2>
+    <p class="lede rv rv-d2">Tell us what you&rsquo;ve got in mind and we&rsquo;ll tell you honestly what it takes. We look forward to hearing from you.</p>
+    <div class="cta-row rv rv-d3">
+      <a class="btn btn-pri" href="tel:01179494260">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.4 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
+        0117 949 4260
+      </a>
+      <a class="btn btn-gho" href="mailto:info@dicksonkitchens.com?subject=Enquiry%20from%20website">Email us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-mark">
+      <span class="mark-badge">DKI</span>
+      <span class="foot-name">Dickson Kitchens &amp; Interiors</span>
+    </div>
+
+    <div class="foot-grid">
+      <div>
+        <p class="foot-h">Showroom</p>
+        117 High Street, Staple Hill,<br>Bristol, UK BS16 5HF<br>
+        Mon&ndash;Fri 9.00&ndash;5.00 &middot; Sat 9.30&ndash;5.00 &middot; Sun closed
+      </div>
+      <div>
+        <p class="foot-h">Contact</p>
+        <a href="tel:01179494260">0117 949 4260</a><br>
+        <a href="tel:07889732508">07889 732 508</a><br>
+        <a href="mailto:info@dicksonkitchens.com">info@dicksonkitchens.com</a>
+      </div>
+      <div>
+        <p class="foot-h">Services</p>
+        Fitted kitchens<br>Fitted bathrooms<br>Fitted bedrooms<br>Design, supply &amp; installation
+      </div>
+    </div>
+
+    <p class="foot-legal">
+      Dickson Kitchens &amp; Interiors Limited. Registered office: 33 Hopps Road, Kingswood, Bristol, BS15 9QQ &middot; Company number 11522992.<br>
+      Site content &copy; Dickson Kitchen and Interiors Ltd.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // sticky header
+  var hdr = document.getElementById('hdr');
+  var tick = false;
+  function onScroll(){
+    if(tick) return; tick = true;
+    requestAnimationFrame(function(){
+      hdr.classList.toggle('stuck', window.scrollY > 24);
+      tick = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // scroll reveal
+  var els = document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {threshold:0.08, rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(el){ io.observe(el); });
+  } else {
+    els.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // range tabs
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(o){
+        var panel = document.getElementById(o.getAttribute('aria-controls'));
+        var on = (o === t);
+        o.setAttribute('aria-selected', on ? 'true' : 'false');
+        panel.hidden = !on;
+        if(on){
+          panel.classList.add('rv');
+          panel.classList.remove('in');
+          requestAnimationFrame(function(){
+            requestAnimationFrame(function(){ panel.classList.add('in'); });
+          });
+        }
+      });
+    });
+  });
+
+  // smooth anchors
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(ev){
+      var id = a.getAttribute('href');
+      if(id.length < 2) return;
+      var el = document.querySelector(id);
+      if(!el) return;
+      ev.preventDefault();
+      window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 54, behavior:'smooth'});
+    });
+  });
+})();
+</script>
+</body>
+</html>

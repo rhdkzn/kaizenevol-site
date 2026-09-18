@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>M &amp; D Services (Bristol) Ltd — Land Rover &amp; Campervan Specialists, Fishponds, Bristol</title>
+<meta name="description" content="Family run garage in Fishponds, Bristol with over 30 years experience. Class 4, 5 &amp; 7 MOT testing station. Land Rover, Range Rover, campervan and motorhome servicing and repairs. Call 0117 9651900.">
+<meta name="theme-color" content="#15170f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2315170f'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' font-weight='700' fill='%23b7c47a' text-anchor='middle'%3EM%26D%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#14160f;
+  --ink-2:#1c1f16;
+  --panel:#22261b;
+  --panel-2:#2b3022;
+  --line:rgba(183,196,122,.16);
+  --line-2:rgba(183,196,122,.32);
+  --olive:#b7c47a;
+  --olive-dim:#8d9a58;
+  --amber:#e8a33d;
+  --amber-dark:#c9862a;
+  --paper:#f2efe6;
+  --muted:#a7a99a;
+  --serif:Georgia,'Times New Roman',Times,serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --gutter:20px;
+  --maxw:1080px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden}
+html{background:var(--ink);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+img,svg{max-width:100%;display:block}
+a{color:inherit}
+
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter)}
+
+/* ---------- decorative texture ---------- */
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px);
+}
+
+/* ---------- header ---------- */
+header{
+  position:sticky;top:0;z-index:40;
+  background:rgba(20,22,15,.82);
+  backdrop-filter:saturate(140%) blur(10px);
+  -webkit-backdrop-filter:saturate(140%) blur(10px);
+  border-bottom:1px solid var(--line);
+  transition:box-shadow .35s ease,background .35s ease;
+}
+header.stuck{box-shadow:0 10px 30px rgba(0,0,0,.45);background:rgba(20,22,15,.94)}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px}
+.brandmark{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
+.brandmark .md{
+  flex:0 0 auto;width:38px;height:38px;border:1px solid var(--line-2);
+  display:grid;place-items:center;font-family:var(--serif);font-weight:700;
+  font-size:14px;letter-spacing:.02em;color:var(--olive);
+  background:linear-gradient(160deg,var(--panel),var(--ink-2));
+}
+.brandmark .nm{min-width:0}
+.brandmark .nm b{
+  display:block;font-family:var(--serif);font-weight:700;font-size:15px;
+  letter-spacing:.01em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.brandmark .nm span{
+  display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--olive-dim);margin-top:2px;
+}
+.hdr-call{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;
+  background:var(--amber);color:#1a1405;text-decoration:none;
+  font-weight:700;font-size:13.5px;letter-spacing:.01em;
+  padding:9px 14px;border-radius:2px;
+  box-shadow:0 2px 0 var(--amber-dark);
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.hdr-call:active{transform:translateY(2px);box-shadow:0 0 0 var(--amber-dark)}
+.hdr-call svg{width:14px;height:14px;fill:currentColor}
+.hdr-call .num{display:none}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;padding:44px 0 46px;z-index:2}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(120% 80% at 82% -10%,rgba(183,196,122,.13),transparent 58%),
+    radial-gradient(90% 70% at 10% 110%,rgba(232,163,61,.09),transparent 60%),
+    linear-gradient(180deg,#191c12 0%,var(--ink) 100%);
+}
+/* drawn terrain lines — no external assets */
+.terrain{
+  position:absolute;left:-10%;right:-10%;bottom:-6px;height:190px;z-index:0;
+  opacity:.5;
+}
+.terrain path{fill:none;stroke:var(--olive);stroke-width:1;opacity:.28}
+.hero .wrap{position:relative;z-index:2}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--olive);margin:0 0 16px;font-weight:700;
+}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--olive-dim)}
+
+h1{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(31px,8.4vw,60px);line-height:1.06;letter-spacing:-.02em;
+  margin:0 0 18px;
+}
+h1 em{font-style:normal;color:var(--olive);display:block}
+.lede{
+  font-size:clamp(16px,4.2vw,19px);color:#d5d3c6;line-height:1.62;
+  margin:0 0 26px;max-width:38ch;
+}
+.lede b{color:var(--paper);font-weight:600}
+
+.cta-row{display:flex;flex-direction:column;gap:11px;margin-bottom:26px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  text-decoration:none;font-weight:700;letter-spacing:.01em;
+  padding:16px 22px;border-radius:2px;font-size:17px;
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease;
+}
+.btn svg{width:17px;height:17px;fill:currentColor;flex:0 0 auto}
+.btn-primary{background:var(--amber);color:#1a1405;box-shadow:0 3px 0 var(--amber-dark)}
+.btn-primary:active{transform:translateY(3px);box-shadow:0 0 0 var(--amber-dark)}
+.btn-ghost{
+  background:transparent;color:var(--paper);
+  border:1px solid var(--line-2);box-shadow:inset 0 0 0 0 rgba(183,196,122,.1);
+}
+.btn-ghost:active{transform:translateY(2px)}
+
+.hours-inline{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:14px;color:var(--muted);border-left:2px solid var(--line-2);padding-left:13px;
+}
+.hours-inline b{color:var(--paper);font-weight:600}
+.dot{
+  width:8px;height:8px;border-radius:50%;background:var(--olive);flex:0 0 auto;margin-top:6px;
+  box-shadow:0 0 0 0 rgba(183,196,122,.55);animation:pulse 2.6s ease-out infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(183,196,122,.5)}
+  70%{box-shadow:0 0 0 9px rgba(183,196,122,0)}
+  100%{box-shadow:0 0 0 0 rgba(183,196,122,0)}
+}
+
+/* ---------- credential strip ---------- */
+.strip{background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;z-index:2}
+.strip-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.cred{
+  background:var(--ink-2);padding:20px 16px;text-align:center;
+}
+.cred .big{
+  font-family:var(--serif);font-size:25px;line-height:1;color:var(--olive);font-weight:700;
+  display:block;margin-bottom:7px;
+}
+.cred .lab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);line-height:1.32}
+
+/* ---------- generic section ---------- */
+section{position:relative;z-index:2}
+.sec{padding:56px 0}
+.sec-alt{background:var(--ink-2)}
+.sec-head{margin-bottom:28px}
+h2{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(25px,6.4vw,38px);line-height:1.14;letter-spacing:-.015em;margin:0 0 12px;
+}
+.sec-head p{color:var(--muted);margin:0;max-width:56ch;font-size:16px}
+
+/* ---------- specialism cards ---------- */
+.spec-list{display:grid;gap:14px}
+.spec{
+  background:linear-gradient(165deg,var(--panel) 0%,var(--ink-2) 100%);
+  border:1px solid var(--line);border-left:3px solid var(--olive-dim);
+  padding:22px 20px;border-radius:2px;position:relative;overflow:hidden;
+  transition:border-color .3s ease,transform .3s ease;
+}
+.spec::after{
+  content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;
+  background:radial-gradient(circle,rgba(183,196,122,.09),transparent 68%);
+}
+.spec:hover{border-left-color:var(--amber);transform:translateY(-2px)}
+.spec .ico{width:30px;height:30px;margin-bottom:13px;stroke:var(--olive);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.spec h3{font-family:var(--serif);font-size:20px;margin:0 0 9px;font-weight:700;letter-spacing:-.005em}
+.spec p{margin:0;color:#c3c2b4;font-size:15.5px;line-height:1.6}
+.spec .tag{
+  display:inline-block;margin-top:13px;font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--olive);border:1px solid var(--line-2);
+  padding:5px 9px;border-radius:2px;
+}
+
+/* ---------- services ---------- */
+.svc-grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.svc{
+  background:var(--ink);padding:17px 16px;display:flex;align-items:flex-start;gap:12px;
+  font-size:15.5px;line-height:1.45;transition:background .3s ease;
+}
+.sec-alt .svc{background:var(--ink-2)}
+.svc:hover{background:var(--panel)}
+.svc .tick{
+  flex:0 0 auto;width:17px;height:17px;margin-top:3px;
+  stroke:var(--olive);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.svc-note{
+  margin-top:20px;font-size:14px;color:var(--muted);
+  border-left:2px solid var(--line-2);padding-left:13px;
+}
+
+/* ---------- aircon banner ---------- */
+.aircon{
+  margin-top:26px;background:linear-gradient(135deg,rgba(232,163,61,.13),rgba(232,163,61,.04));
+  border:1px solid rgba(232,163,61,.3);border-radius:2px;padding:22px 20px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.aircon .k{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);font-weight:700}
+.aircon .v{font-family:var(--serif);font-size:23px;line-height:1.25;margin:0}
+.aircon .v strong{color:var(--amber)}
+
+/* ---------- why ---------- */
+.why{display:grid;gap:22px}
+.why-item{padding-left:20px;border-left:1px solid var(--line-2);position:relative}
+.why-item::before{
+  content:"";position:absolute;left:-4px;top:7px;width:7px;height:7px;
+  background:var(--olive);border:2px solid var(--ink-2);
+}
+.sec:not(.sec-alt) .why-item::before{border-color:var(--ink)}
+.why-item h3{font-family:var(--serif);font-size:19px;margin:0 0 7px;font-weight:700}
+.why-item p{margin:0;color:#c3c2b4;font-size:15.5px}
+.quote{
+  margin:0;font-family:var(--serif);font-style:italic;
+  font-size:clamp(19px,5vw,25px);line-height:1.42;color:var(--paper);
+}
+.quote-src{margin:12px 0 0;font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--olive-dim)}
+
+/* ---------- contact ---------- */
+.contact-card{
+  background:linear-gradient(170deg,var(--panel) 0%,var(--ink-2) 100%);
+  border:1px solid var(--line);border-radius:2px;padding:26px 20px;
+}
+.cblock{padding:18px 0;border-bottom:1px solid var(--line)}
+.cblock:first-of-type{padding-top:0}
+.cblock:last-of-type{border-bottom:0;padding-bottom:0}
+.cblock .k{
+  font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--olive);
+  font-weight:700;margin:0 0 9px;
+}
+.cblock address{font-style:normal;font-size:17px;line-height:1.55;color:var(--paper)}
+.cblock .tel{
+  font-family:var(--serif);font-size:30px;font-weight:700;color:var(--paper);
+  text-decoration:none;letter-spacing:-.01em;display:inline-block;
+  transition:color .2s ease;
+}
+.cblock .tel:hover{color:var(--amber)}
+.hours-table{width:100%;border-collapse:collapse;font-size:16px}
+.hours-table td{padding:7px 0;border-bottom:1px dashed rgba(183,196,122,.13)}
+.hours-table tr:last-child td{border-bottom:0}
+.hours-table td:last-child{text-align:right;color:var(--muted)}
+.hours-table tr.open td:last-child{color:var(--olive);font-weight:600}
+
+/* ---------- footer ---------- */
+footer{
+  background:#0e100a;border-top:1px solid var(--line);
+  padding:32px 0 calc(96px + env(safe-area-inset-bottom));
+  position:relative;z-index:2;
+}
+footer .fname{font-family:var(--serif);font-size:18px;font-weight:700;margin:0 0 9px}
+footer p{margin:0 0 5px;font-size:14px;color:var(--muted);line-height:1.55}
+footer a{color:var(--olive);text-decoration:none}
+
+/* ---------- sticky mobile call bar ---------- */
+.callbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  background:rgba(20,22,15,.95);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-top:1px solid var(--line-2);
+  padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+  transform:translateY(130%);transition:transform .45s cubic-bezier(.16,1,.3,1);
+}
+.callbar.show{transform:translateY(0)}
+.callbar a{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--amber);color:#1a1405;text-decoration:none;font-weight:700;font-size:17px;
+  padding:15px;border-radius:2px;box-shadow:0 3px 0 var(--amber-dark);
+}
+.callbar a:active{transform:translateY(3px);box-shadow:0 0 0 var(--amber-dark)}
+.callbar a svg{width:17px;height:17px;fill:currentColor}
+
+/* ---------- reveal motion ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+.hero .rv{transition-duration:.9s}
+
+/* ---------- desktop ---------- */
+@media (min-width:600px){
+  .cta-row{flex-direction:row;flex-wrap:wrap}
+  .btn{padding:16px 28px}
+  .hdr-call .num{display:inline}
+  .strip-grid{grid-template-columns:repeat(4,1fr)}
+  .spec-list{grid-template-columns:1fr 1fr}
+  .svc-grid{grid-template-columns:1fr 1fr}
+  .contact-card{padding:34px}
+}
+@media (min-width:900px){
+  body{font-size:18px}
+  :root{--gutter:32px}
+  .hero{padding:78px 0 84px}
+  .sec{padding:86px 0}
+  .svc-grid{grid-template-columns:repeat(3,1fr)}
+  .why{grid-template-columns:1fr 1fr;gap:30px 40px}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+  .contact-grid .cblock:nth-of-type(2){border-bottom:0}
+  .callbar{display:none}
+  footer{padding-bottom:36px}
+  .hero-split{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+}
+
+/* ---------- hero plate (desktop only) ---------- */
+.plate{
+  display:none;
+  border:1px solid var(--line-2);border-radius:2px;
+  background:linear-gradient(165deg,rgba(43,48,34,.9),rgba(28,31,22,.9));
+  box-shadow:0 26px 60px rgba(0,0,0,.45),inset 0 1px 0 rgba(183,196,122,.08);
+  padding:30px 30px 26px;
+}
+.plate .pl-top{
+  display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--line);
+}
+.plate .pl-top b{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:-.01em}
+.plate .pl-top span{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--olive-dim);white-space:nowrap}
+.plate dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:13px 18px;align-items:baseline}
+.plate dt{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--olive);font-weight:700}
+.plate dd{margin:0;font-size:15.5px;color:#d5d3c6;text-align:right}
+.plate .pl-foot{
+  margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--muted);letter-spacing:.03em;
+}
+@media (min-width:900px){ .plate{display:block} }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header id="hdr">
+  <div class="wrap hdr">
+    <a class="brandmark" href="#top">
+      <span class="md" aria-hidden="true">M&amp;D</span>
+      <span class="nm">
+        <b>M &amp; D Services</b>
+        <span>Bristol Ltd</span>
+      </span>
+    </a>
+    <a class="hdr-call" href="tel:+441179651900">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1z"/></svg>
+      Call<span class="num">&nbsp;0117 9651900</span>
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <svg class="terrain" viewBox="0 0 1200 190" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 150 C 120 120, 200 168, 310 140 S 520 96, 640 132 S 880 172, 1000 138 S 1140 110, 1200 128"/>
+      <path d="M0 168 C 140 140, 230 186, 350 158 S 560 116, 690 150 S 920 188, 1040 156 S 1150 132, 1200 148"/>
+      <path d="M0 128 C 100 100, 190 146, 300 116 S 500 72, 620 108 S 860 150, 980 114 S 1130 88, 1200 106"/>
+    </svg>
+    <div class="wrap">
+      <div class="hero-split">
+        <div>
+          <p class="eyebrow rv">Fishponds &middot; Bristol &middot; Est. 30+ years</p>
+          <h1 class="rv">Land&nbsp;Rover, campervan and motorhome<em>specialists.</em></h1>
+          <p class="lede rv">
+            <b>M &amp; D Services (Bristol) Ltd</b> is a family run garage with over 30 years
+            experience in the industry. A class 4, 5 &amp; 7 MOT testing station offering car,
+            camper and commercial vehicle servicing and repairs in Fishponds, Bristol.
+          </p>
+          <div class="cta-row rv">
+            <a class="btn btn-primary" href="tel:+441179651900">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1z"/></svg>
+              0117 9651900
+            </a>
+            <a class="btn btn-ghost" href="#services">See what we do</a>
+          </div>
+          <p class="hours-inline rv">
+            <span class="dot" aria-hidden="true"></span>
+            <span><b>Monday &ndash; Friday, 8.30am to 4.30pm.</b><br>Unit 1, Balaclava Road Industrial Estate, BS16 3LJ.</span>
+          </p>
+        </div>
+
+        <aside class="plate rv" aria-label="Garage details">
+          <div class="pl-top">
+            <b>The workshop</b>
+            <span>Fishponds, Bristol</span>
+          </div>
+          <dl>
+            <dt>MOT classes</dt><dd>4, 5 &amp; 7</dd>
+            <dt>Diagnostics</dt><dd>AutoLogic</dd>
+            <dt>Established</dt><dd>Over 30 years</dd>
+            <dt>Ownership</dt><dd>Family run</dd>
+            <dt>Open</dt><dd>Mon &ndash; Fri, 8.30am &ndash; 4.30pm</dd>
+          </dl>
+          <p class="pl-foot">Unit 1, Balaclava Road Industrial Estate, Bristol, BS16 3LJ</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CREDENTIALS ============ -->
+  <section class="strip">
+    <div class="wrap" style="padding-left:0;padding-right:0">
+      <div class="strip-grid">
+        <div class="cred rv"><span class="big">30+</span><span class="lab">Years in<br>the industry</span></div>
+        <div class="cred rv"><span class="big">4&middot;5&middot;7</span><span class="lab">MOT testing<br>classes</span></div>
+        <div class="cred rv"><span class="big">Family</span><span class="lab">Run<br>garage</span></div>
+        <div class="cred rv"><span class="big">AutoLogic</span><span class="lab">Land Rover<br>diagnostics</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPECIALISM ============ -->
+  <section class="sec" id="specialism">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2>The vehicles we know best</h2>
+        <p>We specialise in providing repairs and tests for large vehicles, including motor homes,
+           Land Rovers and Range Rovers.</p>
+      </div>
+      <div class="spec-list">
+
+        <article class="spec rv">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 16h18M4.5 16V11l2-4.5h11L20 11v5"/>
+            <circle cx="7.5" cy="17.5" r="2"/><circle cx="16.5" cy="17.5" r="2"/>
+            <path d="M6.5 11h11"/>
+          </svg>
+          <h3>Land Rover &amp; Range Rover</h3>
+          <p>We specialise in Land Rover servicing and repairs. We can diagnose most faults with
+             our AutoLogic diagnostic equipment.</p>
+          <span class="tag">AutoLogic diagnostics</span>
+        </article>
+
+        <article class="spec rv">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 17V8.5a1.5 1.5 0 0 1 1.5-1.5h11L20 11v6"/>
+            <path d="M2 17h20"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/>
+            <path d="M5 10h5v3H5z"/>
+          </svg>
+          <h3>Campervans &amp; motorhomes</h3>
+          <p>We can service and repair various makes and models of motorhome, plus habitation
+             checks and damp, carbon monoxide and gas checks.</p>
+          <span class="tag">Habitation checks</span>
+        </article>
+
+        <article class="spec rv">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.5" y="8" width="12" height="8" rx="1"/>
+            <path d="M14.5 10.5H18l3 3V16h-6.5z"/>
+            <circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>
+          </svg>
+          <h3>Commercial &amp; fleet</h3>
+          <p>We can perform auto repairs for fleets of vehicles quickly, alongside camper and
+             commercial vehicle servicing and repairs.</p>
+          <span class="tag">Class 7 MOT</span>
+        </article>
+
+        <article class="spec rv">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3l7.5 3.2v5c0 4.6-3.1 8.1-7.5 9.5C7.6 19.3 4.5 15.8 4.5 11.2v-5z"/>
+            <path d="M9 11.8l2.2 2.2L15.3 10"/>
+          </svg>
+          <h3>MOT testing, all makes</h3>
+          <p>With 30 years' experience, we are able to perform MOT tests and motor repairs for
+             all makes and models at our fully approved MOT testing centre.</p>
+          <span class="tag">Classes 4, 5 &amp; 7</span>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="sec sec-alt" id="services">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2>What we can do for you</h2>
+        <p>We offer a complete servicing solution to keep your vehicle on the road.</p>
+      </div>
+
+      <div class="svc-grid">
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Car servicing</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Service and repairs for all vehicles</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Exhaust replacement</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Engine repairs and replacements</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Brake pads</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Clutch repairs</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Engine diagnostics</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Autologic diagnostic for Land Rovers and Range Rovers</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Motor home habitation checks</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Damp, carbon monoxide and gas checks for motor homes</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>MOT tests on class 4, 5 &amp; 7 vehicles</div>
+        <div class="svc rv"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Air conditioning regas</div>
+      </div>
+
+      <p class="svc-note rv">
+        We use some of the latest diagnostic equipment to help keep your vehicle up to the
+        required standards.
+      </p>
+
+      <div class="aircon rv">
+        <span class="k">Air conditioning</span>
+        <p class="v">Bring your vehicle in to get your air conditioning regassed <strong>from only &pound;65.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY ============ -->
+  <section class="sec" id="about">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2>A local garage that tells you straight</h2>
+      </div>
+
+      <blockquote class="rv" style="margin:0 0 34px">
+        <p class="quote">&ldquo;Whether you are a new or existing customer we will treat you all
+          with an honest reliable service.&rdquo;</p>
+        <p class="quote-src">M &amp; D Services (Bristol) Ltd</p>
+      </blockquote>
+
+      <div class="why">
+        <div class="why-item rv">
+          <h3>Family run, three decades in</h3>
+          <p>A family run garage with over 30 years experience in the industry, based in
+             Fishponds, Bristol.</p>
+        </div>
+        <div class="why-item rv">
+          <h3>We'll point you elsewhere if we have to</h3>
+          <p>If ever we come across any vehicle repair we don't perform, we will gladly
+             recommend trusted mechanics who can help you.</p>
+        </div>
+        <div class="why-item rv">
+          <h3>Commercial or domestic, big vehicles welcome</h3>
+          <p>Whether you are a commercial customer with a fleet of vehicles or a domestic
+             customer with a large vehicle, we will cater for you.</p>
+        </div>
+        <div class="why-item rv">
+          <h3>Proper diagnostic kit</h3>
+          <p>We have state of the art latest diagnostic equipment and will give you a local,
+             friendly and experienced service.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="sec sec-alt" id="contact">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2>Book your vehicle in</h2>
+        <p>To make a booking please call us on 0117 9651900.</p>
+      </div>
+
+      <div class="contact-card rv">
+        <div class="contact-grid">
+
+          <div class="cblock">
+            <p class="k">Call the workshop</p>
+            <a class="tel" href="tel:+441179651900">0117 9651900</a>
+          </div>
+
+          <div class="cblock">
+            <p class="k">Find us</p>
+            <address>
+              Unit 1, Balaclava Road,<br>
+              Industrial Estate, Fishponds,<br>
+              Bristol, BS16 3LJ
+            </address>
+          </div>
+
+          <div class="cblock" style="grid-column:1/-1">
+            <p class="k">Opening times</p>
+            <table class="hours-table">
+              <tr class="open"><td>Monday &ndash; Friday</td><td>8.30am to 4.30pm</td></tr>
+              <tr><td>Saturday</td><td>Closed</td></tr>
+              <tr><td>Sunday</td><td>Closed</td></tr>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="fname">M &amp; D Services (Bristol) Ltd</p>
+    <p>Unit 1, Balaclava Road, Industrial Estate, Fishponds, Bristol, BS16 3LJ</p>
+    <p><a href="tel:+441179651900">0117 9651900</a></p>
+    <p style="margin-top:14px">Class 4, 5 &amp; 7 MOT testing station. Monday &ndash; Friday, 8.30am to 4.30pm.</p>
+  </div>
+</footer>
+
+<div class="callbar" id="callbar">
+  <a href="tel:+441179651900">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1z"/></svg>
+    Call 0117 9651900
+  </a>
+</div>
+
+<script>
+(function(){
+  var rv = document.querySelectorAll('.rv');
+
+  // stagger siblings so groups cascade
+  var groups = {};
+  rv.forEach(function(el){
+    var p = el.parentNode;
+    if(!groups[p.__gid]){ p.__gid = 'g' + Math.random().toString(36).slice(2); groups[p.__gid] = 0; }
+    el.style.transitionDelay = (Math.min(groups[p.__gid], 6) * 70) + 'ms';
+    groups[p.__gid]++;
+  });
+
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    rv.forEach(function(el){ io.observe(el); });
+  } else {
+    rv.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // header shadow + sticky call bar
+  var hdr = document.getElementById('hdr');
+  var bar = document.getElementById('callbar');
+  var ticking = false;
+  function onScroll(){
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    hdr.classList.toggle('stuck', y > 12);
+    bar.classList.toggle('show', y > 420);
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; window.requestAnimationFrame(onScroll); }
+  }, { passive:true });
+  onScroll();
+
+  // hero reveals immediately on load
+  window.addEventListener('load', function(){
+    document.querySelectorAll('.hero .rv').forEach(function(el){ el.classList.add('in'); });
+  });
+})();
+</script>
+
+</body>
+</html>
