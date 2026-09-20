@@ -4,9 +4,24 @@
  * half-converted; and applying it to body or headings would be a redesign
  * nobody asked for. */
 import { chromium } from 'playwright';
+import { readdirSync } from 'fs';
 const BASE = process.env.BASE || 'http://localhost:8899';
-const PAGES = ['index','contact','apply','privacy','do-i-have-to-be-on-camera',
-               'tried-ads-before','ads-for-musicians','404'];
+/* DERIVED FROM THE DIRECTORY, NOT TYPED. The hand-written list carried 'contact',
+ * and contact.html has not existed for some time: every run fetched a 404, the 404
+ * page serves a serif h1, and the guard reported a font failure on a page that is
+ * not there. A guard that cries wolf is one everybody learns to skip, which is the
+ * exact failure it exists to prevent — and this is the fourth hand-typed page list
+ * in this repo to silently stop matching the site (test-interactions, test-share-
+ * cards, test-page-hygiene were the others). So the list is now read off disk.
+ * The gated app surfaces and the scratch labs are excluded BY NAME, because those
+ * are a deliberate choice rather than a list that can go stale. */
+const NOT_PUBLIC = new Set(['crm','dashboard','portal','onboard','booked','f',
+                            'hero-lab','motion-lab','lab-cta','showcase-home']);
+const PAGES = readdirSync('.')
+  .filter(f => f.endsWith('.html'))
+  .map(f => f.replace(/\.html$/, ''))
+  .filter(n => !NOT_PUBLIC.has(n))
+  .sort();
 let pass = 0, fail = 0;
 const check = (l, ok, d='') => { (ok?pass++:fail++); console.log(`${ok?'PASS':'FAIL'}  ${l}${d?' — '+d:''}`); };
 const b = await chromium.launch({ executablePath:'/opt/pw-browsers/chromium', args:['--no-sandbox'] });

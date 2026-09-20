@@ -167,6 +167,37 @@
     /* Base cards */
     .card{background:var(--surface);border-radius:var(--radius);padding:22px 24px;box-shadow:0 4px 24px rgba(0,0,0,0.45);border:1px solid var(--border);}
     @media(max-width:640px){.cmd-summary{font-size:12px;}.cmd-center{padding:24px 20px 20px;}}
+    /* ============ PHONE (Rahaid, 2026-09-20: "just make sure it looks right on the
+       phone I seen on a few things it looks off") ============
+       THE FAULT WAS NOT COSMETIC AND IT WAS NOT IN THE PANEL IT LOOKED LIKE.
+       .snap-item was one nowrap flex line - name, stage pill, day string, CRM link -
+       whose MIN-CONTENT width is ~600px. A phone with width=device-width does not
+       scroll sideways for that: it widens the layout viewport to fit and zooms the
+       whole page out. Measured, never guessed - rendering the client list alone
+       takes innerWidth from 390 to 608, so every panel on the portal was being
+       displayed at ~64% while only this one was actually too wide. That is the
+       "looks off" on every screenshot. Isolated by rendering each panel on its own
+       (test-portal-mobile.mjs asserts the layout width against the DEVICE width,
+       because comparing scrollWidth against innerWidth cannot see this - both grow
+       together, so the old check could only ever pass).
+       Tap targets use the estate's pattern: grow the hit area, never move the mark. */
+    @media(max-width:700px){
+      .snap-item{flex-wrap:wrap;align-items:center;row-gap:8px;}
+      .snap-name{flex:1 1 100%;font-size:15px;}
+      .snap-stage{flex:0 0 auto;}
+      .snap-day{white-space:normal;flex:1 1 auto;line-height:1.45;}
+      .snap-link{flex:0 0 100%;min-height:44px;display:inline-flex;align-items:center;}
+      .res-row{align-items:flex-start;}
+      .res-nums{margin-left:0;white-space:normal;flex:1 1 100%;}
+      .dash-nav-link{min-height:44px;display:inline-flex;align-items:center;}
+      .btn-logout,.add-btn,.res-act,#funnelPick{min-height:44px;}
+      .t-del{min-height:44px;min-width:44px;}
+      /* 44px thumb target on a 17px checkbox, without moving a pixel.
+         -16px, not -14px: an absolute inset resolves against the PADDING box, so the
+         2px border on each side is outside it. -14px measured 41px, not 45. */
+      .t-check{position:relative;}
+      .t-check::before{content:'';position:absolute;inset:-16px;}
+    }
     /* Client Results — delivery proof */
     .res-gate{display:flex;align-items:center;gap:11px;padding:12px 15px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);font-size:13px;}
     .res-gate .rg-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0;}
@@ -250,6 +281,11 @@
     </div>
     <section>
       <div class="section-label">Prospect Pipeline</div>
+      <!-- WHO WE LOOK FOR, shown where he actually looks. The spec is edited in the
+           CRM's Lead Finder; the portal is the page that gets opened, so the target
+           was invisible from here and the pipeline numbers read as if they were
+           about everyone. Defaults to brand owners (Rahaid, 2026-09-20). -->
+      <div class="res-gate" id="targetLine" style="margin-bottom:14px;"></div>
       <div class="stats-row" id="prospectRow"></div>
     </section>
     <section>
@@ -524,6 +560,34 @@ function scheduleNoteSave(){clearTimeout(notesTimer);notesTimer=setTimeout(_save
 function flushNoteSave(){clearTimeout(notesTimer);_saveNotes();}
 async function loadLeads(){try{const{data,error}=await _sb.from('app_data').select('data').eq('id',LEADS_KEY).single();if(!error&&data&&Array.isArray(data.data)){localStorage.setItem(LEADS_KEY,JSON.stringify(data.data));return data.data;}}catch(e){}try{const local=localStorage.getItem(LEADS_KEY);return local?JSON.parse(local):[];}catch{return[];}}
 function getGreeting(){const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening';}
+/* ── WHO WE LOOK FOR (read-only mirror of the CRM's Lead Finder spec) ──
+   The spec is OWNED by crm.html and stored under ke_scraper. This renders it and
+   never writes it — two editors for one setting is how the two pages start
+   disagreeing about the target. Defaults to brand owners, the same defaults the
+   CRM applies, so a portal opened before the CRM has ever run shows the real
+   answer rather than a blank. */
+const SCRAPER_KEY='ke_scraper';
+const PORTAL_SEGMENTS={streetwear:'Streetwear',clothing:'Clothing',jewellery:'Jewellery',watches:'Watches',shoes:'Shoes',prints:'Prints & ceramics',music:'Music / artist',studio:'Creative studio'};
+const PORTAL_TARGET_DEFAULTS={mode:'brand',segments:['streetwear','clothing','jewellery'],minSkus:8};
+async function renderTarget(){
+  const el=document.getElementById('targetLine');if(!el)return;
+  let s=null;
+  try{const{data,error}=await _sb.from('app_data').select('data').eq(
+    'id',SCRAPER_KEY).single();if(!error&&data)s=data.data;}catch(e){}
+  if(!s){try{s=JSON.parse(localStorage.getItem(SCRAPER_KEY)||'null');}catch(e){}}
+  const spec=Object.assign({},PORTAL_TARGET_DEFAULTS,s||{});
+  const segs=(Array.isArray(spec.segments)&&spec.segments.length?spec.segments:PORTAL_TARGET_DEFAULTS.segments)
+    .map(k=>PORTAL_SEGMENTS[k]||k);
+  const brand=spec.mode!=='local';
+  const areas=(spec.areas||'').split(',').map(a=>a.trim()).filter(Boolean);
+  const minSkus=Number(spec.minSkus)||0;
+  el.className='res-gate'+(brand?' on':'');
+  el.innerHTML='<span class="rg-dot"></span><div>Looking for <b style="color:var(--text)">'+
+    (brand?'brand owners':'local businesses')+'</b> in '+esc(segs.join(', '))+
+    (areas.length?' &mdash; '+esc(areas.join(', ')):(brand?' &mdash; across the UK':''))+
+    (brand&&minSkus?' &mdash; catalogue of '+minSkus+'+':'')+
+    '. <a href="crm.html#leads" style="color:var(--purple)">Change in the CRM &rarr;</a></div>';
+}
 let _stageChart=null;
 function renderCommandCenter(leads){
   const today=new Date().toISOString().slice(0,10);
@@ -545,7 +609,7 @@ function renderCommandCenter(leads){
   renderStageChart(leads);
 }
 function renderStageChart(leads){const counts=STAGE_ORDER.map(s=>leads.filter(l=>l.stage===s).length);const labels=STAGE_ORDER.map(s=>STAGE_LABEL[s]);const colors=STAGE_ORDER.map(s=>STAGE_COLORS[s]);const canvas=document.getElementById('stageChart');if(!canvas||typeof Chart==='undefined')return;if(_stageChart){_stageChart.destroy();_stageChart=null;}_stageChart=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:counts,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+ctx.raw+' lead'+(ctx.raw!==1?'s':'');}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'rgba(247,246,244,.56)',font:{family:'Manrope',size:11}}},y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'rgba(247,246,244,.56)',font:{family:'Manrope',size:11},stepSize:1}}}}});}
-async function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';const leads=await loadLeads();renderCommandCenter(leads);}
+async function init(){document.getElementById('headerDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});const d=load();renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl)notesEl.value=d.notes||'';const leads=await loadLeads();renderCommandCenter(leads);renderTarget();}
 
 /* ---- Client Results (delivery proof — revenue lift pulls live from the Growth Step log; the
    reno-era won-jobs aggregation from commission.jobs is kept underneath while rows exist) ---- */

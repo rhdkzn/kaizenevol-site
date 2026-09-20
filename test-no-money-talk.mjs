@@ -14,6 +14,14 @@
  * ONE EXEMPTION, added the same day (Rahaid): "only on the engagement section do I
  * want mentioned about the monthly fee". So what-we-run.html's engagement block may
  * say it, and nowhere else on the site may - including the rest of that same file.
+ *
+ * 2026-09-20, Rahaid, restating his own rule verbatim: "Keep the one monthly fee
+ * when I said I don't mention prices as in I don't give a figure over the website".
+ * So the hard line is the FIGURE. The phrase stays where he put it. The exemption
+ * below had silently stopped working - it anchored on an "04 / Engagement" eyebrow,
+ * and the eyebrows came off the page on 2026-09-18 under the Impeccable ruling, so
+ * the block stopped being found and the phrase he wanted kept was reported as a
+ * breach. The anchor is now the section's own id, which a restyle does not strip.
  * The exemption is scoped to the SECTION rather than the file, and it is asserted
  * in both directions: the phrase must appear there exactly once, and must not
  * appear anywhere outside it. A one-way exemption would let the phrase quietly
@@ -58,9 +66,9 @@ const visible = s => s
   .replace(/\/\*[\s\S]*?\*\//g, ' ');
 
 /* The engagement block on what-we-run.html, cut out of the scan and checked on its
-   own terms. Matched from its eyebrow to the end of its <section>. */
+   own terms. Anchored on id="engagement" - a declared anchor, not a visual one. */
 const ENGAGEMENT_FILE = 'what-we-run.html';
-const ENGAGEMENT_RE = /<section class="lp-block tone">\s*<div class="container">\s*<p class="smallcaps lp-eyebrow">04 \/ Engagement<\/p>[\s\S]*?<\/section>/;
+const ENGAGEMENT_RE = /<section[^>]*id="engagement"[\s\S]*?<\/section>/;
 const ALLOWED_IN_ENGAGEMENT = /\bone monthly fee\b/;
 
 let fail = 0, pass = 0;

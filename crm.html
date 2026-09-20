@@ -204,6 +204,14 @@
     .toggle-wrap input[type=checkbox]{width:16px;height:16px;accent-color:var(--purple);cursor:pointer;}
     .toggle-label{font-size:13px;font-weight:600;color:var(--text);}
     .scraper-hint{font-size:11px;color:var(--muted);line-height:1.6;margin-top:-4px;}
+    /* Segment chips — the "who we look for" spec, multi-select. */
+    .seg-chips{display:flex;flex-wrap:wrap;gap:7px;}
+    .seg-chip{font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;
+      background:var(--bg);color:var(--muted);border:1.5px solid var(--border);
+      border-radius:var(--radius-pill);padding:8px 14px;min-height:36px;transition:color .18s,border-color .18s,background .18s;}
+    .seg-chip:hover{color:var(--text);border-color:var(--purple-m);}
+    .seg-chip.on{background:var(--accent);border-color:var(--accent);color:var(--void);}
+    @media(max-width:700px){.seg-chip{min-height:44px;}}
     .scraper-status-bar{font-size:12px;color:var(--muted);min-height:18px;transition:color .2s;}
     .scraper-status-bar.running{color:var(--amber);}
     .scraper-status-bar.done{color:var(--green);}
@@ -734,14 +742,37 @@
     <section class="card" data-view="leads">
       <div class="section-label">Lead Finder</div>
       <div class="scraper-setup">
+        <!-- WHO WE LOOK FOR. The five gates already lived in fitOf() and nothing
+             upstream used them: the finder searched trades and scored on Google
+             ratings, which are signals about a shopfront. This block is the spec,
+             and runScraper() reads it rather than a free-text niche. -->
+        <div class="f-label" style="margin-bottom:2px">Who we look for</div>
         <div class="scraper-row">
-          <div class="f-group" style="min-width:200px">
-            <div class="f-label">Niche</div>
-            <input type="text" class="f-input" id="scraperNiche" list="nicheList" placeholder="e.g. tattoo studio, jewellery, streetwear" onblur="saveScraperField('niche',this.value)" />
+          <div class="f-group" style="min-width:210px">
+            <div class="f-label">Target</div>
+            <select class="f-select" id="scraperMode" onchange="saveScraperField('mode',this.value);syncTargetUI();">
+              <option value="brand">Brand owners (online)</option>
+              <option value="local">Local business (shopfront)</option>
+            </select>
           </div>
+          <div class="f-group" style="flex:2;min-width:250px">
+            <div class="f-label">Segments <span style="font-weight:400;opacity:.7">— tap to include</span></div>
+            <div id="segChips" class="seg-chips"></div>
+          </div>
+          <div class="f-group" style="min-width:150px">
+            <div class="f-label">Minimum catalogue</div>
+            <select class="f-select" id="scraperMinSkus" onchange="saveScraperField('minSkus',this.value)">
+              <option value="0">Any size</option>
+              <option value="8">8+ products</option>
+              <option value="15">15+ products</option>
+              <option value="30">30+ products</option>
+            </select>
+          </div>
+        </div>
+        <div class="scraper-row">
           <div class="f-group" style="flex:2;min-width:240px">
-            <div class="f-label">Target Areas (comma-separated)</div>
-            <input type="text" class="f-input" id="scraperAreas" placeholder="e.g. Manchester, Birmingham, Leeds, Bristol" onblur="saveScraperField('areas',this.value)" />
+            <div class="f-label" id="areasLabel">Areas (comma-separated)</div>
+            <input type="text" class="f-input" id="scraperAreas" placeholder="e.g. London, Manchester, Birmingham" onblur="saveScraperField('areas',this.value)" />
           </div>
           <div class="f-group" style="min-width:170px">
             <div class="f-label">Auto-scan Interval</div>
@@ -755,7 +786,7 @@
             </select>
           </div>
         </div>
-        <div class="scraper-hint">Google Places finds <b>local</b> businesses with a shopfront or studio. Online brands and artists don't live there — bring them in by CSV (Store Leads, Meta Ad Library) or add them by hand with the Instagram handle.</div>
+        <div class="scraper-hint" id="scraperHint"></div>
         <div class="scraper-controls">
           <label class="toggle-wrap">
             <input type="checkbox" id="autoScanToggle" onchange="toggleAutoScan()" />
@@ -1576,16 +1607,110 @@ if(typeof document!=='undefined'&&document.addEventListener){
   if(typeof window!=='undefined')window.addEventListener('focus',()=>_syncWake());
 }
 /* SYNC-CORE-END */
+/* ── WHO WE LOOK FOR ──────────────────────────────────────────────────────────
+   Rahaid, 2026-09-20: "make the lead scraper and owners portal default are brand
+   owners and that we can specify what... this one doesn't need to be universal
+   it's for the agency only so just focus on who we look for."
+
+   THE SPEC ALREADY EXISTED AND NOTHING UPSTREAM USED IT. fitOf() has carried the
+   five gates since 2026-09-05 (MKT-ICP-003b) — money, twelve months, repeat
+   buyers, capacity, already spends on growth — while the finder searched a
+   free-text trade in Google Places and scored on star rating and review count.
+   Those are signals about a SHOPFRONT. An online brand has neither, so every
+   brand the finder did surface scored 1 or 2 out of 5 and sank.
+
+   So this is not a new ICP. It is the finder wired to the one we already have.
+
+   SEGMENTS mirror the ones the rest of the CRM already offers (the nicheList
+   datalist, the client-results modal), so a scraped lead and a hand-added lead
+   land in the same vocabulary. BRAND_QUERIES is the bit that does the work: a
+   segment is what we look for, and the phrases are how Places is asked for it.
+   "streetwear" alone returns shops that SELL streetwear; "streetwear brand"
+   and "clothing label" return the people who own one. */
+const SEGMENTS=[
+  {key:'streetwear',label:'Streetwear'},
+  {key:'clothing',label:'Clothing'},
+  {key:'jewellery',label:'Jewellery'},
+  {key:'watches',label:'Watches'},
+  {key:'shoes',label:'Shoes'},
+  {key:'prints',label:'Prints & ceramics'},
+  {key:'music',label:'Music / artist'},
+  {key:'studio',label:'Creative studio'},
+];
+const BRAND_QUERIES={
+  streetwear:['streetwear brand','clothing label','streetwear studio'],
+  clothing:['clothing brand','fashion label','apparel brand'],
+  jewellery:['jewellery brand','jewellery studio','independent jeweller'],
+  watches:['watch brand','watch studio'],
+  shoes:['footwear brand','sneaker brand'],
+  prints:['print studio','ceramics studio','art print brand'],
+  music:['record label','independent artist management','music studio'],
+  studio:['design studio','creative studio','branding studio'],
+};
+const LOCAL_QUERIES={
+  streetwear:['streetwear shop','clothing boutique'],
+  clothing:['clothing boutique','womenswear shop','menswear shop'],
+  jewellery:['jewellery shop','jeweller'],
+  watches:['watch shop','watch repair'],
+  shoes:['shoe shop','trainer shop'],
+  prints:['print shop','art gallery','pottery studio'],
+  music:['recording studio','music shop'],
+  studio:['tattoo studio','barber shop','photography studio'],
+};
+/* Defaults ARE brand owners. A blank spec is a first run, not a choice, so it
+   opens on what we actually sell to rather than on nothing. */
+const SCRAPER_DEFAULTS={mode:'brand',segments:['streetwear','clothing','jewellery'],minSkus:'8',interval:'20',areas:''};
+function scraperSpec(){const s=loadScraper();
+  return {mode:s.mode||SCRAPER_DEFAULTS.mode,
+          segments:(Array.isArray(s.segments)&&s.segments.length?s.segments:SCRAPER_DEFAULTS.segments).filter(k=>SEGMENTS.some(x=>x.key===k)),
+          minSkus:Number(s.minSkus==null?SCRAPER_DEFAULTS.minSkus:s.minSkus)||0,
+          areas:(s.areas||'').split(',').map(a=>a.trim()).filter(Boolean),
+          interval:s.interval||SCRAPER_DEFAULTS.interval};}
+/* Every (segment, area) pair fans into the phrases for that segment. In brand
+   mode with no areas the search still runs — a brand is national, so "no area"
+   is a legitimate spec rather than the error it was for a shopfront search. */
+function scraperQueries(spec){
+  const src=spec.mode==='brand'?BRAND_QUERIES:LOCAL_QUERIES;
+  const areas=spec.areas.length?spec.areas:(spec.mode==='brand'?['UK']:[]);
+  const out=[];
+  spec.segments.forEach(seg=>(src[seg]||[]).forEach(q=>areas.forEach(area=>out.push({segment:seg,query:q,area}))));
+  return out;
+}
+function segLabel(key){const s=SEGMENTS.find(x=>x.key===key);return s?s.label:key;}
+function toggleSegment(key){const s=loadScraper();const cur=(Array.isArray(s.segments)&&s.segments.length?s.segments:SCRAPER_DEFAULTS.segments).slice();
+  const i=cur.indexOf(key);if(i>-1){if(cur.length===1)return;cur.splice(i,1);}else cur.push(key);
+  s.segments=cur;saveScraper(s);renderSegChips();syncTargetUI();}
+function renderSegChips(){const el=document.getElementById('segChips');if(!el)return;const on=scraperSpec().segments;
+  el.innerHTML=SEGMENTS.map(s=>'<button type="button" class="seg-chip'+(on.indexOf(s.key)>-1?' on':'')+'" aria-pressed="'+(on.indexOf(s.key)>-1)+'" onclick="toggleSegment(\''+s.key+'\')">'+esc(s.label)+'</button>').join('');}
+/* The hint states what the current spec will actually do, including the number of
+   searches, so a spec that fans out to 40 Places calls says so before it is run. */
+function syncTargetUI(){const spec=scraperSpec();const brand=spec.mode==='brand';
+  const m=document.getElementById('scraperMode');if(m)m.value=spec.mode;
+  const k=document.getElementById('scraperMinSkus');if(k)k.value=String(spec.minSkus);
+  const al=document.getElementById('areasLabel');if(al)al.textContent=brand?'Areas (optional — a brand is national)':'Areas (comma-separated, required)';
+  const h=document.getElementById('scraperHint');if(!h)return;
+  const n=scraperQueries(spec).length;
+  h.innerHTML=brand
+    ? '<b>'+n+' search'+(n===1?'':'es')+'</b> for owners of '+spec.segments.map(segLabel).join(', ').toLowerCase()+' brands'+(spec.areas.length?' in '+spec.areas.join(', '):' across the UK')+'. Each hit&rsquo;s site is checked for a store platform and catalogue size'+(spec.minSkus?', and anything under <b>'+spec.minSkus+' products</b> is skipped':'')+'. A phone number is <b>not</b> required — most online brands do not list one; a website or an Instagram handle is enough.'
+    : '<b>'+n+' search'+(n===1?'':'es')+'</b> for '+spec.segments.map(segLabel).join(', ').toLowerCase()+' businesses with a shopfront or studio'+(spec.areas.length?' in '+spec.areas.join(', '):'')+'. A UK phone number is required. Rating and review count score these; they say nothing about an online brand, which is what brand mode exists for.';}
 function loadScraper(){try{return JSON.parse(localStorage.getItem(SCRAPER_KEY)||'{}')}catch(e){return{}}}
 function saveScraper(s){localStorage.setItem(SCRAPER_KEY,JSON.stringify(s));_cloudPush(SCRAPER_KEY,s);}
 // API keys (Places, Meta) live as Vercel environment variables read server-side
 // in /api/*; the old client-side key fields were removed. saveApiKey/saveGoogleKey/
 // saveMetaToken were orphaned (no inputs, no callers) and have been deleted.
-function saveScraperField(field,val){const s=loadScraper();s[field]=val;saveScraper(s);}
-function initScraper(){const s=loadScraper();if(!s.googleKey)s.googleKey='';if(!s.metaToken)s.metaToken='';if(!s.interval)s.interval='20';if(!s.niche)s.niche='';
-  /* 2026-09-06: the three-trade normalisation is gone. A saved reno search term
-     ('kitchen fitters') still works as a Places query; it is just no longer forced. */
-  saveScraper(s);document.getElementById('scraperNiche').value=s.niche;if(s.areas)document.getElementById('scraperAreas').value=s.areas;document.getElementById('scanInterval').value=s.interval;if(s.googleKey&&document.getElementById('googleKey'))document.getElementById('googleKey').value=s.googleKey;if(s.metaToken&&document.getElementById('metaToken'))document.getElementById('metaToken').value=s.metaToken;if(s.autoScan){document.getElementById('autoScanToggle').checked=true;scheduleAutoScan();}updateScraperStatus();}
+function saveScraperField(field,val){const s=loadScraper();s[field]=val;saveScraper(s);syncTargetUI();}
+function initScraper(){const s=loadScraper();if(!s.googleKey)s.googleKey='';if(!s.metaToken)s.metaToken='';if(!s.interval)s.interval='20';
+  /* The spec defaults to BRAND OWNERS. Writing the defaults back on first run
+     means the saved spec and the UI can never disagree about what a blank one
+     means — the old code left niche as '' and then refused to scan. */
+  if(!s.mode)s.mode=SCRAPER_DEFAULTS.mode;
+  if(!Array.isArray(s.segments)||!s.segments.length)s.segments=SCRAPER_DEFAULTS.segments.slice();
+  if(s.minSkus==null)s.minSkus=SCRAPER_DEFAULTS.minSkus;
+  saveScraper(s);
+  if(s.areas)document.getElementById('scraperAreas').value=s.areas;
+  document.getElementById('scanInterval').value=s.interval;
+  renderSegChips();syncTargetUI();
+  if(s.googleKey&&document.getElementById('googleKey'))document.getElementById('googleKey').value=s.googleKey;if(s.metaToken&&document.getElementById('metaToken'))document.getElementById('metaToken').value=s.metaToken;if(s.autoScan){document.getElementById('autoScanToggle').checked=true;scheduleAutoScan();}updateScraperStatus();}
 function toggleAutoScan(){const en=document.getElementById('autoScanToggle').checked;const s=loadScraper();s.autoScan=en;saveScraper(s);if(en){scheduleAutoScan();setScraperStatus('Auto-scan enabled.','done');}else{clearTimeout(autoScanTimer);autoScanTimer=null;setScraperStatus('Auto-scan disabled.','');}}
 function scheduleAutoScan(){clearTimeout(autoScanTimer);const s=loadScraper();const mins=parseInt(s.interval||'20');const last=s.lastScanTimestamp||0;const delay=Math.max(5000,last+mins*60000-Date.now());autoScanTimer=setTimeout(async()=>{await runScraper();if(loadScraper().autoScan)scheduleAutoScan();},delay);updateScraperStatus();}
 function updateScraperStatus(){const s=loadScraper();let msg='';if(s.lastScan)msg='Last scan: '+s.lastScan;if(s.autoScan&&autoScanTimer!==null){const interval=parseInt(s.interval||'20');const remaining=Math.max(0,Math.round(((s.lastScanTimestamp||0)+interval*60000-Date.now())/60000));const str=remaining<60?remaining+'m':Math.floor(remaining/60)+'h '+(remaining%60)+'m';msg+=(msg?' · ':'')+'Next scan in '+str;}setScraperStatus(msg,'');}
@@ -1604,7 +1729,104 @@ async function searchGooglePlaces(niche,area){
 }
 async function enrichPhone(placeId){return{phone:'',website:''};}
 async function checkMetaAds(name){try{const d=await(await fetch('/api/check-meta-ads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})})).json();return{running_ads:d.running_ads||false,ad_count:d.ad_count||0,ad_quality:d.ad_quality||'unknown'};}catch(e){return{running_ads:false,ad_count:0,ad_quality:'unknown'};}}
-async function runScraper(){const s=loadScraper();const niche=(s.niche||'').trim();const areas=(s.areas||'').split(',').map(a=>a.trim()).filter(Boolean);if(!niche){setScraperStatus('Type a niche above — what Google Places should search for.','error');return;}if(!areas.length){setScraperStatus('Add target areas above.','error');return;}const btn=document.getElementById('scanBtn');btn.disabled=true;let added=0;let totalFound=0;let totalDupes=0;let totalNoPhone=0;let totalChains=0;let totalErrors=0;for(const area of areas){setScraperStatus('Searching Google — '+niche+' in '+area+'...','running');try{const businesses=await searchGooglePlaces(niche,area);totalFound+=businesses.length;setScraperStatus('Found '+businesses.length+' in '+area+'. Filtering & checking ads...','running');let bIdx=0;for(const b of businesses){bIdx++;try{if(!b.name)continue;if(isExcludedLead(b.name,b.website)){totalChains++;continue;}const rating=b.rating||0;const reviews=b.reviews||0;const arr=loadLeads();if(arr.some(l=>(l.business||l.name||'').toLowerCase()===b.name.toLowerCase())){totalDupes++;continue;}let ph=(b.phone||'').trim();if(!ph&&b.placeId){const det=await enrichPhone(b.placeId);ph=det.phone||'';if(!b.website&&det.website)b.website=det.website;}if(!ph){totalNoPhone++;continue;}const phClean=ph.replace(/[^\d+]/g,'').replace(/^\+/,'+');if(!/^(\+44|0[1-9])/.test(phClean)){totalNoPhone++;continue;}setScraperStatus('Checking '+bIdx+'/'+businesses.length+' — '+b.name.slice(0,30)+'...','running');const meta=await checkMetaAds(b.name);let enrichedEmail='',enrichedQuality='',enrichedQualityReason='',enrichedSocial={ig:'',fb:'',x:''};if(b.website){try{const _er=await fetch('/api/enrich-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({website:b.website})});if(_er.ok){const _ed=await _er.json();enrichedEmail=_ed.email||'';enrichedQuality=_ed.quality||'';enrichedQualityReason=_ed.qualityReason||'';if(_ed.social)enrichedSocial={ig:_ed.social.ig||'',fb:_ed.social.fb||'',x:_ed.social.x||''};}}catch(e){}}const hasFb=(b.website||'').toLowerCase().includes('facebook.com');const score=scoreProspect(hasFb,meta.running_ads,meta.ad_quality,rating,reviews);const adNote=meta.running_ads?`${meta.ad_count} ad${meta.ad_count!==1?'s':''} running (${meta.ad_quality} quality)`:hasFb?'Facebook page, no ads':'No Facebook presence';const wqLabel={ugly:'Ugly — revamp candidate',ok:'OK — could be improved',modern:'Modern'};const siteNote=enrichedQuality?('Site: '+wqLabel[enrichedQuality]+(enrichedQualityReason?' ('+enrichedQualityReason+')':'')):'';const notes=['Score: '+score+'/5',b.address?'Address: '+b.address:'',rating?'Rating: '+rating+' ⭐ ('+reviews+' reviews)':'No rating yet',adNote,siteNote].filter(Boolean).join(' · ');const updated=loadLeads();updated.unshift({id:uid(),business:b.name,owner:'',area,niche:nicheKey(niche),phone:ph,email:enrichedEmail,website:b.website||'',social:enrichedSocial,websiteQuality:enrichedQuality,source:'Lead Scraper',stage:'new',tpsScreened:'n',tpsScreenDate:'',dialOk:'n',notes,lastContact:'',followUp:'',estimatedValue:DEFAULT_LEAD_VALUE,createdAt:Date.now()});saveLeads(updated);added++;}catch(_e){totalErrors++;console.warn('Lead skipped:',b&&b.name,_e&&_e.message);}}}catch(e){console.warn('Scraper:',e.message);setScraperStatus('Error scanning '+area+': '+e.message,'error');}}const now=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});const u=loadScraper();u.lastScan=now;u.lastScanTimestamp=Date.now();saveScraper(u);btn.disabled=false;setScraperStatus('Scan complete — '+totalFound+' found · '+added+' added'+(totalDupes?' · '+totalDupes+' dupes':'')+(totalNoPhone?' · '+totalNoPhone+' no UK number':'')+(totalChains?' · '+totalChains+' chains':'')+(totalErrors?' · '+totalErrors+' skipped':'')+(added>0?' · numbers UNSCREENED (TPS/CTPS) — not dial-ready':'')+'. Last scan: '+now,added>0?'done':'');renderLeadStats();renderLeads();}
+/* ONE SCAN, DRIVEN BY THE SPEC ABOVE — not by a free-text trade.
+   Brand mode differs from local mode in three places and they are all here:
+     1. the QUERIES come from BRAND_QUERIES, which ask for brand owners rather
+        than for shops that stock the thing;
+     2. a PHONE IS NOT REQUIRED. The old loop did `if(!ph) continue`, which threw
+        away almost every online brand before it was ever looked at — the single
+        line that made this a local-business finder whatever was typed into it;
+     3. the site is CHECKED for a store platform and catalogue size, which fills
+        two of the five fit gates off real data instead of leaving them unknown.
+   Anything it cannot establish stays unknown and is said out loud. */
+async function runScraper(){
+  const spec=scraperSpec();
+  const brand=spec.mode==='brand';
+  if(!spec.segments.length){setScraperStatus('Pick at least one segment above.','error');return;}
+  if(!brand&&!spec.areas.length){setScraperStatus('Local mode needs target areas — a shopfront search is a place search.','error');return;}
+  const jobs=scraperQueries(spec);
+  const btn=document.getElementById('scanBtn');btn.disabled=true;
+  let added=0,totalFound=0,totalDupes=0,totalNoContact=0,totalChains=0,totalSmall=0,totalErrors=0;
+  for(const job of jobs){
+    const where=job.area==='UK'?'the UK':job.area;
+    setScraperStatus('Searching — '+job.query+' in '+where+'…','running');
+    let businesses=[];
+    try{businesses=await searchGooglePlaces(job.query,job.area);}
+    catch(e){console.warn('Scraper:',e.message);setScraperStatus('Error on "'+job.query+'" in '+where+': '+e.message,'error');continue;}
+    totalFound+=businesses.length;
+    let bIdx=0;
+    for(const b of businesses){
+      bIdx++;
+      try{
+        if(!b.name)continue;
+        if(isExcludedLead(b.name,b.website)){totalChains++;continue;}
+        if(loadLeads().some(l=>(l.business||l.name||'').toLowerCase()===b.name.toLowerCase())){totalDupes++;continue;}
+        let ph=(b.phone||'').trim();
+        if(!ph&&b.placeId){const det=await enrichPhone(b.placeId);ph=det.phone||'';if(!b.website&&det.website)b.website=det.website;}
+        const phClean=ph.replace(/[^\d+]/g,'').replace(/^\+/,'+');
+        const phoneOk=!!ph&&/^(\+44|0[1-9])/.test(phClean);
+        /* Local mode still needs a dialable UK number. Brand mode needs a way to
+           REACH them, which for a brand is a website or a handle. */
+        if(!brand&&!phoneOk){totalNoContact++;continue;}
+        if(brand&&!b.website){totalNoContact++;continue;}
+        setScraperStatus('Checking '+bIdx+'/'+businesses.length+' — '+b.name.slice(0,30)+'…','running');
+        let enrichedEmail='',enrichedQuality='',enrichedQualityReason='',enrichedSocial={ig:'',fb:'',x:''};
+        if(b.website){try{const _er=await fetch('/api/enrich-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({website:b.website})});if(_er.ok){const _ed=await _er.json();enrichedEmail=_ed.email||'';enrichedQuality=_ed.quality||'';enrichedQualityReason=_ed.qualityReason||'';if(_ed.social)enrichedSocial={ig:_ed.social.ig||'',fb:_ed.social.fb||'',x:_ed.social.x||''};}}catch(e){}}
+        /* The store check. null means NOT ESTABLISHED, never "no" — so a site we
+           could not read is never scored out, and the note says which it was. */
+        let store={platform:null,skus:null,monthsTrading:null,reason:''};
+        if(brand&&b.website){try{const _sr=await fetch('/api/brand-check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({website:b.website})});if(_sr.ok)store=await _sr.json();}catch(e){store.reason='store check failed';}}
+        if(brand&&spec.minSkus&&store.skus!=null&&store.skus<spec.minSkus){totalSmall++;continue;}
+        const meta=await checkMetaAds(b.name);
+        const hasFb=(b.website||'').toLowerCase().includes('facebook.com')||!!enrichedSocial.fb;
+        const score=brand
+          ? scoreBrand(store,meta.running_ads,meta.ad_quality,!!enrichedSocial.ig)
+          : scoreProspect(hasFb,meta.running_ads,meta.ad_quality,b.rating||0,b.reviews||0);
+        const adNote=meta.running_ads?(meta.ad_count+' ad'+(meta.ad_count!==1?'s':'')+' running ('+meta.ad_quality+' quality)'):hasFb?'Facebook page, no ads':'No Facebook presence';
+        const wqLabel={ugly:'Ugly — revamp candidate',ok:'OK — could be improved',modern:'Modern'};
+        const siteNote=enrichedQuality?('Site: '+wqLabel[enrichedQuality]+(enrichedQualityReason?' ('+enrichedQualityReason+')':'')):'';
+        const storeNote=brand?('Store: '+(store.platform||'not established')+(store.skus!=null?' · '+store.skus+' products':'')+(store.reason?' ('+store.reason+')':'')):'';
+        const notes=['Score: '+score+'/5',
+          brand?'Found as: '+job.query:(b.address?'Address: '+b.address:''),
+          brand?storeNote:(b.rating?'Rating: '+b.rating+' ⭐ ('+b.reviews+' reviews)':'No rating yet'),
+          adNote,siteNote,
+          brand&&!phoneOk?'No phone listed — reach by email or DM':''].filter(Boolean).join(' · ');
+        const lead={id:uid(),business:b.name,owner:'',area:job.area==='UK'?'':job.area,niche:segLabel(job.segment),
+          phone:phoneOk?ph:'',email:enrichedEmail,website:b.website||'',social:enrichedSocial,
+          websiteQuality:enrichedQuality,source:brand?'Lead Finder — brand owners':'Lead Finder — local',
+          stage:'new',tpsScreened:'n',tpsScreenDate:'',dialOk:'n',notes,lastContact:'',followUp:'',
+          estimatedValue:DEFAULT_LEAD_VALUE,createdAt:Date.now()};
+        /* Two of the five fit gates, filled from the catalogue rather than left
+           blank for the call to guess at. The other three stay unknown on purpose. */
+        if(brand){if(store.platform)lead.platform=store.platform;if(store.monthsTrading!=null)lead.monthsTrading=store.monthsTrading;}
+        const updated=loadLeads();updated.unshift(lead);saveLeads(updated);added++;
+      }catch(_e){totalErrors++;console.warn('Lead skipped:',b&&b.name,_e&&_e.message);}
+    }
+  }
+  const now=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const u=loadScraper();u.lastScan=now;u.lastScanTimestamp=Date.now();saveScraper(u);
+  btn.disabled=false;
+  setScraperStatus('Scan complete — '+totalFound+' found · '+added+' added'
+    +(totalDupes?' · '+totalDupes+' dupes':'')
+    +(totalNoContact?' · '+totalNoContact+(brand?' with no website':' with no UK number'):'')
+    +(totalSmall?' · '+totalSmall+' under '+spec.minSkus+' products':'')
+    +(totalChains?' · '+totalChains+' chains':'')
+    +(totalErrors?' · '+totalErrors+' skipped':'')
+    +(added>0&&!brand?' · numbers UNSCREENED (TPS/CTPS) — not dial-ready':'')
+    +(added>0&&brand?' · any numbers are UNSCREENED (TPS/CTPS) — not dial-ready':'')
+    +'. Last scan: '+now,added>0?'done':'');
+  renderLeadStats();renderLeads();}
+/* A brand is scored on what a brand has, not on a star rating it will never have.
+   Running weak ads is still the easiest close — that half is the same judgement
+   scoreProspect makes, and it is the half that travels. */
+function scoreBrand(store,runningAds,adQuality,hasIg){
+  const real=store.platform==='shopify'||(store.skus!=null&&store.skus>=8);
+  if(runningAds&&['bad','low'].includes(adQuality))return 5;
+  if(runningAds&&real)return 4;
+  if(runningAds)return 3;
+  if(real&&hasIg)return 3;
+  if(real)return 2;
+  return 1;}
 
 /* ── LEADS CRM ── */
 function loadLeads(){try{return JSON.parse(localStorage.getItem(LEADS_KEY)||'[]');}catch(e){return[];}}
@@ -1612,7 +1834,7 @@ function saveLeads(arr){localStorage.setItem(LEADS_KEY,JSON.stringify(arr));_clo
 // RFC-4180-ish CSV parser — handles quoted fields, escaped quotes, commas & newlines inside quotes
 function parseCSV(text){const rows=[];let row=[],field='',inQ=false;text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');for(let i=0;i<text.length;i++){const c=text[i];if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}else if(c==='\n'){row.push(field);rows.push(row);row=[];field='';}else{field+=c;}}}if(field!==''||row.length){row.push(field);rows.push(row);}return rows;}
 // Import leads from a CSV file (e.g. Manus output). Flexible headers, dedupes by business, syncs live.
-function importCSV(event){const file=event.target.files[0];if(!file)return;const el=document.getElementById('importJsonStatus');const reader=new FileReader();reader.onload=function(e){try{const rows=parseCSV(e.target.result).filter(r=>r.some(c=>(c||'').trim()!==''));if(rows.length<2){el.textContent='CSV is empty — needs a header row plus at least one lead.';return;}const headers=rows[0].map(h=>h.trim().toLowerCase());const idx=(names)=>{for(const n of names){const k=headers.indexOf(n);if(k>-1)return k;}return -1;};const col={business:idx(['business','business name','name','company']),owner:idx(['owner','owner name','contact','contact name','director']),area:idx(['area','city','town','location']),phone:idx(['phone','phone number','tel','telephone','mobile','number']),email:idx(['email','email address','e-mail']),niche:idx(['niche','trade','category','service']),notes:idx(['notes','note','comments']),source:idx(['source']),website:idx(['website','url','web','site']),ig:idx(['instagram','insta','ig','instagram handle']),fb:idx(['facebook','fb','facebook page','facebook url']),x:idx(['x','twitter','x/twitter','twitter handle']),followers:idx(['followers','ig followers','instagram followers']),revenue:idx(['revenue','monthly revenue','revenue band']),platform:idx(['platform','store platform','store']),tps_screened:idx(['tps_screened']),tps_screen_date:idx(['tps_screen_date']),dial_ok:idx(['dial_ok']),tps_registered:idx(['tps_registered']),ctps_registered:idx(['ctps_registered']),suppressed:idx(['suppressed'])};if(col.business<0){el.textContent='No "business" column found. Required: business (optional: owner, area, phone, email, niche, notes, instagram, facebook, x).';return;}const fallbackNiche=nicheKey(loadScraper().niche||'');const arr=loadLeads();const existing=new Set(arr.map(l=>(l.business||'').toLowerCase()));let added=0,dupes=0,blank=0,screenedIn=0;for(let r=1;r<rows.length;r++){const cells=rows[r];const get=(k)=>k>-1&&cells[k]!=null?cells[k].trim():'';const applyTps=(lead)=>{if(col.tps_screened<0)return;const scr=get(col.tps_screened)==='y';const reg=get(col.tps_registered)==='y'||get(col.ctps_registered)==='y'||get(col.suppressed)==='y';lead.tpsScreened=scr?'y':'n';lead.tpsScreenDate=get(col.tps_screen_date);lead.dialOk=(col.dial_ok>-1?get(col.dial_ok)==='y':(scr&&!reg))?'y':'n';if(lead.dialOk==='y')seqRecheck(lead);if(scr)screenedIn++;};const biz=get(col.business);if(!biz){blank++;continue;}if(existing.has(biz.toLowerCase())){const ex=arr.find(x=>(x.business||'').toLowerCase()===biz.toLowerCase());if(ex&&col.tps_screened>-1){applyTps(ex);ex.updatedAt=Date.now();}dupes++;continue;}const niche=(col.niche>-1&&get(col.niche))?nicheKey(get(col.niche)):fallbackNiche;const nl={id:uid(),business:biz,owner:get(col.owner),area:get(col.area),niche,phone:get(col.phone),email:get(col.email),website:get(col.website),social:{ig:get(col.ig),fb:get(col.fb),x:get(col.x)},source:get(col.source)||'CSV Import',stage:'new',notes:get(col.notes),lastContact:'',followUp:'',nextStep:'',priority:'medium',estimatedValue:DEFAULT_LEAD_VALUE,followers:get(col.followers),revenueBand:revBand(get(col.revenue)),platform:get(col.platform),createdAt:Date.now()};applyTps(nl);arr.unshift(nl);existing.add(biz.toLowerCase());added++;}saveLeads(arr);renderLeadStats();renderLeads();renderOutreachQueue();el.textContent=added+' imported'+(screenedIn?' · '+screenedIn+' with TPS screening'+(dupes?' (dupes updated in place)':''):'')+(dupes?' · '+dupes+' dupe'+(dupes!==1?'s':'')+(col.tps_screened>-1?'':' skipped'):'')+(blank?' · '+blank+' blank':'')+'. Synced live.';setTimeout(()=>{el.textContent='';},6000);}catch(err){el.textContent='Could not parse CSV — check the format.';console.warn('CSV import:',err);}event.target.value='';};reader.readAsText(file);}
+function importCSV(event){const file=event.target.files[0];if(!file)return;const el=document.getElementById('importJsonStatus');const reader=new FileReader();reader.onload=function(e){try{const rows=parseCSV(e.target.result).filter(r=>r.some(c=>(c||'').trim()!==''));if(rows.length<2){el.textContent='CSV is empty — needs a header row plus at least one lead.';return;}const headers=rows[0].map(h=>h.trim().toLowerCase());const idx=(names)=>{for(const n of names){const k=headers.indexOf(n);if(k>-1)return k;}return -1;};const col={business:idx(['business','business name','name','company']),owner:idx(['owner','owner name','contact','contact name','director']),area:idx(['area','city','town','location']),phone:idx(['phone','phone number','tel','telephone','mobile','number']),email:idx(['email','email address','e-mail']),niche:idx(['niche','trade','category','service']),notes:idx(['notes','note','comments']),source:idx(['source']),website:idx(['website','url','web','site']),ig:idx(['instagram','insta','ig','instagram handle']),fb:idx(['facebook','fb','facebook page','facebook url']),x:idx(['x','twitter','x/twitter','twitter handle']),followers:idx(['followers','ig followers','instagram followers']),revenue:idx(['revenue','monthly revenue','revenue band']),platform:idx(['platform','store platform','store']),tps_screened:idx(['tps_screened']),tps_screen_date:idx(['tps_screen_date']),dial_ok:idx(['dial_ok']),tps_registered:idx(['tps_registered']),ctps_registered:idx(['ctps_registered']),suppressed:idx(['suppressed'])};if(col.business<0){el.textContent='No "business" column found. Required: business (optional: owner, area, phone, email, niche, notes, instagram, facebook, x).';return;}const fallbackNiche=segLabel(scraperSpec().segments[0]);const arr=loadLeads();const existing=new Set(arr.map(l=>(l.business||'').toLowerCase()));let added=0,dupes=0,blank=0,screenedIn=0;for(let r=1;r<rows.length;r++){const cells=rows[r];const get=(k)=>k>-1&&cells[k]!=null?cells[k].trim():'';const applyTps=(lead)=>{if(col.tps_screened<0)return;const scr=get(col.tps_screened)==='y';const reg=get(col.tps_registered)==='y'||get(col.ctps_registered)==='y'||get(col.suppressed)==='y';lead.tpsScreened=scr?'y':'n';lead.tpsScreenDate=get(col.tps_screen_date);lead.dialOk=(col.dial_ok>-1?get(col.dial_ok)==='y':(scr&&!reg))?'y':'n';if(lead.dialOk==='y')seqRecheck(lead);if(scr)screenedIn++;};const biz=get(col.business);if(!biz){blank++;continue;}if(existing.has(biz.toLowerCase())){const ex=arr.find(x=>(x.business||'').toLowerCase()===biz.toLowerCase());if(ex&&col.tps_screened>-1){applyTps(ex);ex.updatedAt=Date.now();}dupes++;continue;}const niche=(col.niche>-1&&get(col.niche))?nicheKey(get(col.niche)):fallbackNiche;const nl={id:uid(),business:biz,owner:get(col.owner),area:get(col.area),niche,phone:get(col.phone),email:get(col.email),website:get(col.website),social:{ig:get(col.ig),fb:get(col.fb),x:get(col.x)},source:get(col.source)||'CSV Import',stage:'new',notes:get(col.notes),lastContact:'',followUp:'',nextStep:'',priority:'medium',estimatedValue:DEFAULT_LEAD_VALUE,followers:get(col.followers),revenueBand:revBand(get(col.revenue)),platform:get(col.platform),createdAt:Date.now()};applyTps(nl);arr.unshift(nl);existing.add(biz.toLowerCase());added++;}saveLeads(arr);renderLeadStats();renderLeads();renderOutreachQueue();el.textContent=added+' imported'+(screenedIn?' · '+screenedIn+' with TPS screening'+(dupes?' (dupes updated in place)':''):'')+(dupes?' · '+dupes+' dupe'+(dupes!==1?'s':'')+(col.tps_screened>-1?'':' skipped'):'')+(blank?' · '+blank+' blank':'')+'. Synced live.';setTimeout(()=>{el.textContent='';},6000);}catch(err){el.textContent='Could not parse CSV — check the format.';console.warn('CSV import:',err);}event.target.value='';};reader.readAsText(file);}
 function exportObsidian(){const arr=loadLeads();if(!arr.length){alert('No leads to export.');return;}const date=todayStr();const SCORE_LABEL={5:'Bad ads — easiest close',4:'Decent ads — pitch better results',3:'FB page, no ads — needs education',2:'No FB, good business',1:'Low priority'};let md='---\ndate: '+date+'\ntags: [crm-export, leads]\ntype: lead-export\n---\n\n# CRM Lead Export — '+date+'\n\n> Generated from KaizenEvol CRM. Drop individual sections into pipeline/prospects/ in Obsidian.\n\n';for(const l of arr){const score=parseInt((l.notes||'').match(/Score:\s*(\d)/)?.[1]||'0');md+='---\n\n## '+l.business+'\n\n';md+='| Field | Value |\n|---|---|\n';md+='| Score | '+(score?score+'/5 — '+(SCORE_LABEL[score]||''):'—')+'|\n';md+='| Stage | '+l.stage+' |\n';md+='| Segment | '+(l.niche||'—')+' |\n';md+='| Fit | '+fitLabel(l)+' |\n';if(l.revenueBand)md+='| Revenue band | '+l.revenueBand+' |\n';if(l.estimatedValue)md+='| Est. value | £'+l.estimatedValue+'/mo |\n';md+='| Area | '+(l.area||'—')+' |\n';md+='| Phone | '+(l.phone||'—')+' |\n';md+='| Email | '+(l.email||'—')+' |\n';md+='| Source | '+l.source+' |\n';md+='| Added | '+new Date(l.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' |\n';if(l.lastContact)md+='| Last Contact | '+l.lastContact+' |\n';if(l.followUp)md+='| Follow-Up | '+l.followUp+' |\n';if(l.notes)md+='\n**Notes:** '+l.notes+'\n';md+='\n';}const blob=new Blob([md],{type:'text/markdown'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ke-leads-'+date+'.md';a.click();URL.revokeObjectURL(a.href);document.getElementById('importJsonStatus').textContent=arr.length+' leads exported — drop the file into your Obsidian vault.';setTimeout(()=>{document.getElementById('importJsonStatus').textContent='';},5000);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 // '15k', '£12,000', '10-20k', '25000' -> a revenue band key
@@ -2287,7 +2509,17 @@ function toggleForm(){const f=document.getElementById('addForm'),b=document.getE
 // Map any niche string (search term, label, or free text) to a clean tag. The
 // three reno tags survive so the 2026 lead book keeps its labels; everything
 // else is kept as typed, title-cased.
-function nicheKey(str){const t=(str||'').toLowerCase();if(t.includes('loft'))return 'Loft';if(t.includes('bathroom'))return 'Bathroom';if(t.includes('kitchen'))return 'Kitchen';const v=(str||'').trim();return v?v.charAt(0).toUpperCase()+v.slice(1):'';}
+/* Normalise a typed or imported segment onto the ones we actually look for.
+   It used to force anything containing loft/bathroom/kitchen onto those three
+   labels — the retired reno model, still stamping itself on every CSV import
+   fourteen days after canon moved. Our segments map first; anything else is
+   kept verbatim and title-cased, because an unrecognised segment is information
+   and flattening it would lose it. */
+function nicheKey(str){const t=(str||'').toLowerCase().trim();if(!t)return '';
+  const hit=SEGMENTS.find(s=>t===s.key||t===s.label.toLowerCase()||t.includes(s.key));
+  if(hit)return hit.label;
+  if(/\bbrand\b|\blabel\b/.test(t))return 'Clothing';
+  const v=(str||'').trim();return v.charAt(0).toUpperCase()+v.slice(1);}
 /* ── FIT — the five gates (MKT-ICP-003b, 2026-09-05) ──
    money (£10k+/mo) · time (12 months) · repeat buyers · capacity to ship double ·
    already spends on growth. Unknown is unknown, never a fail: the call fills it in.
