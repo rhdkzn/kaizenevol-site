@@ -107,7 +107,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         from: 'KaizenEvol Site <noreply@mail.kaizenevol.com>',
-        to: ['rahaid@kaizenevol.com'],
+        to: ['law@kaizenevol.com'],
         subject: `New inbound lead: ${businessName.trim()}${(contactName || '').trim() ? ` (${contactName.trim()})` : ''}`,
         text: [
           `New lead from the website.`,

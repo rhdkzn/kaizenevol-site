@@ -159,7 +159,7 @@ async function sendMail(to, subject, text) {
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: 'KaizenEvol <noreply@mail.kaizenevol.com>', to: Array.isArray(to) ? to : [to], reply_to: 'rahaid@kaizenevol.com', subject, text })
+      body: JSON.stringify({ from: 'KaizenEvol <noreply@mail.kaizenevol.com>', to: Array.isArray(to) ? to : [to], reply_to: 'law@kaizenevol.com', subject, text })
     });
     return r.ok;
   } catch (e) { return false; }
@@ -221,7 +221,7 @@ export default async function handler(req, res) {
       if (!signed || signed.status !== 'signed') return res.status(409).json({ error: 'Could not record the signature. Reload and try again.' });
       const view = publicView(signed);
       const link = `${SITE}/onboard?t=${token}`;
-      await sendMail('rahaid@kaizenevol.com', `Signed: ${view.business} (${name})`, `${view.business} signed the services agreement.\n\nSigned by: ${name}\nAt: ${signature.at}\nIP: ${signature.ip}\nAgreement hash: ${hash}\n\nFunnel: ${link}\nNext: they are on the payment step. When the payment shows in Stripe, open the lead in the CRM and press "Mark paid" — that creates the client.`);
+      await sendMail('law@kaizenevol.com', `Signed: ${view.business} (${name})`, `${view.business} signed the services agreement.\n\nSigned by: ${name}\nAt: ${signature.at}\nIP: ${signature.ip}\nAgreement hash: ${hash}\n\nFunnel: ${link}\nNext: they are on the payment step. When the payment shows in Stripe, open the lead in the CRM and press "Mark paid" — that creates the client.`);
       if (view.email) await sendMail(view.email, `Your signed agreement with KaizenEvol`, `Hi ${view.founder || name},\n\nThank you — the services agreement for ${view.business} is signed (${signature.at}). A copy is below and your link stays live: ${link}\n\nThe last step is setting up the monthly retainer, which the same link takes you to.\n\nRahaid\nKaizenEvol\n\n----------------\n\n${text}\n\nSigned by ${name} on ${signature.at}. Agreement hash (SHA-256): ${hash}`);
       return res.status(200).json(view);
     }

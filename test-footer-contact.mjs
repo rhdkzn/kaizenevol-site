@@ -45,7 +45,11 @@ for (const f of files) {
   /* 2026-09-11, Rahaid: "keep out my email from the website". The footer now
      carries diego@ only, and test-public-name.mjs fails if his address or his
      name reaches any reader-facing surface at all. */
-  check(`${f}: footer does not carry rahaid@`, !mails.includes('rahaid@kaizenevol.com'), mails.join(', '))
+  // Widened 2026-09-21: his primary moved to law@, and a guard that names only the OLD address
+  // silently stops guarding the moment the address changes. Both are barred from the footer.
+  check(`${f}: footer carries no owner address`,
+        !mails.includes('rahaid@kaizenevol.com') && !mails.includes('law@kaizenevol.com'),
+        mails.join(', '))
   check(`${f}: footer offers diego@`, mails.includes('diego@kaizenevol.com'), mails.join(', ') || 'no email at all')
   /* brand/DESIGN.md: every public CTA opens the WhatsApp business line. */
   check(`${f}: footer offers the WhatsApp line`, wa)
