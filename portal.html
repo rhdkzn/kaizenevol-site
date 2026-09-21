@@ -184,13 +184,20 @@
 
   window.signOut = async function(){ await sb.auth.signOut(); me = null; show('s-login'); $('who').innerHTML=''; };
 
+  /* RETAINER-BASE-START
+     An explicit retainerValue of 0 means zero pounds and must survive. `||` treats 0 as
+     absent, so a signed-but-not-billing client silently claimed the standard retainer and
+     drove MRR, the growth-step bonus and the client count with money nobody pays.
+     Absent (undefined / null / '') still falls through to the founding or standard rate. */
+  function retainerBase(c,s){s=s||{};var v=(c||{}).retainerValue;return (v===''||v==null||!isFinite(Number(v)))?((c||{}).founding?(s.foundingValue||1000):(s.retainerValue||2000)):Number(v);}
+  /* RETAINER-BASE-END */
   /* growth-step arithmetic, same as the CRM */
   function growth(c, snaps, s){
     var trig = s.stepTrigger||1.5, base = Number(c.baselineRevenue)||0;
     var latest = snaps.length ? Number(snaps[snaps.length-1].avg)||0 : 0;
     var level = base, steps = 0;
     snaps.forEach(function(x){ var v = Number(x.avg)||0; while(base && v >= level*trig){ level = level*trig; steps++; } });
-    var baseRet = Number(c.retainerValue) || (c.founding ? 1000 : (s.retainerValue||2000));
+    var baseRet = retainerBase(c, s);
     return { base: base, latest: latest, steps: steps, next: base ? Math.round(level*trig) : 0, retainer: baseRet + steps*(s.stepValue||1000), lift: (base && latest) ? Math.round((latest/base-1)*100) : null };
   }
   var TASKS = [['ob1','Discovery call done'],['ob2','Proposal sent'],['ob3','Agreement signed'],['ob4','First invoice paid'],['ob5','Baseline agreed in writing, revenue access granted'],['ob6','Access granted: Meta, store, email/SMS'],['ob7','Drop calendar and content plan agreed'],['ob8','First content batch approved'],['ob9','Live'],['lv1','Weekly numbers sent'],['lv2','Monthly strategy call'],['lv3','Monthly revenue snapshot logged'],['lv4','Email/SMS list growing'],['lv5','Creative refreshed when cost per purchase rises'],['lv6','Testimonial / case study asked for']];

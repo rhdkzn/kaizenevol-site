@@ -1369,14 +1369,21 @@ function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.i
    of one month at the new rate is due. No cap. Measured off their total revenue,
    so there is no attribution argument. Under three months trading there is no
    baseline and no step. */
-function currentRetainer(c,data){const s=(data&&data.settings)||{};const base=Number(c.retainerValue)||(c.founding?(s.foundingValue||1000):(s.retainerValue||2000));return base+growthState(c,data).steps*(s.stepValue||1000);}
+/* RETAINER-BASE-START
+   An explicit retainerValue of 0 means zero pounds and must survive. `||` treats 0 as
+   absent, so a signed-but-not-billing client silently claimed the standard retainer and
+   drove MRR, the growth-step bonus and the client count with money nobody pays.
+   Absent (undefined / null / '') still falls through to the founding or standard rate. */
+function retainerBase(c,s){s=s||{};var v=(c||{}).retainerValue;return (v===''||v==null||!isFinite(Number(v)))?((c||{}).founding?(s.foundingValue||1000):(s.retainerValue||2000)):Number(v);}
+/* RETAINER-BASE-END */
+function currentRetainer(c,data){const s=(data&&data.settings)||{};return retainerBase(c,s)+growthState(c,data).steps*(s.stepValue||1000);}
 function clientSnapshots(c,data){return (((data||{}).growth||{}).snapshots||[]).filter(x=>x.clientId===c.id).sort((a,b)=>String(a.date).localeCompare(String(b.date)));}
 function growthState(c,data){
   const s=(data&&data.settings)||{};const trig=s.stepTrigger||1.5;
   const base=Number(c.baselineRevenue)||0;if(!base)return{steps:0,level:0,next:0,bonusDue:0,fired:[]};
   let level=base,steps=0;const fired=[];
   clientSnapshots(c,data).forEach(x=>{const v=Number(x.avg)||0;while(v>=level*trig){level=level*trig;steps++;fired.push({date:x.date,level:Math.round(level)});}});
-  const retainer=(Number(c.retainerValue)||(c.founding?(s.foundingValue||1000):(s.retainerValue||2000)))+steps*(s.stepValue||1000);
+  const retainer=retainerBase(c,s)+steps*(s.stepValue||1000);
   return{steps,level:Math.round(level),next:Math.round(level*trig),bonusDue:fired.filter(f=>!(c.bonusPaid||[]).includes(f.date)).length*retainer,fired};
 }
 function setLiveDate(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.liveDate=date;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}

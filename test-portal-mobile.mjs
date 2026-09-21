@@ -15,6 +15,7 @@
  * Run: node test-portal-mobile.mjs      (needs python3 -m http.server 8899 in this dir)
  */
 import { chromium, devices } from 'playwright'
+import { existsSync } from 'node:fs'
 
 const BASE = process.env.BASE || 'http://127.0.0.1:8899'
 const WIDTHS = [360, 375, 390, 430]
@@ -41,8 +42,12 @@ const SEED_LEADS = Array.from({ length: 14 }, (_, i) => ({
   estimatedValue: 2000, lastContact: i % 3 ? '2026-09-18' : '', nextActionDate: '2026-09-01', sequenceType: 'DTC',
 }))
 
+/* The cloud box ships chromium at a fixed path; Rahaid's Windows box does not, and a
+   guard that cannot run on his machine reads as a broken page. Fall through to
+   Playwright's own resolution when the hardcoded binary is absent. */
+const PW_BIN = process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium'
 const b = await chromium.launch({
-  executablePath: '/opt/pw-browsers/chromium',
+  ...(existsSync(PW_BIN) ? { executablePath: PW_BIN } : {}),
   args: ['--ssl-version-max=tls1.2'],
 })
 
