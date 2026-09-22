@@ -331,7 +331,7 @@
       .catch(function () {
         self.go.disabled = false;
         self.go.textContent = (spec.cta && spec.cta.send) || 'Send';
-        self.err.textContent = 'That did not send. Email diego@kaizenevol.com and we will pick it up there.';
+        self.err.textContent = 'That did not send. Email law@kaizenevol.com or diego@kaizenevol.com and we will pick it up there.';
       });
   };
 

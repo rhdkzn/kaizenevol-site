@@ -42,13 +42,14 @@ for (const f of files) {
   const mails = [...new Set([...block.matchAll(/mailto:([^"?]+)/g)].map(m => m[1]))].sort()
   const wa = /id="waOpen"/.test(block)
 
-  /* 2026-09-11, Rahaid: "keep out my email from the website". The footer now
-     carries diego@ only, and test-public-name.mjs fails if his address or his
-     name reaches any reader-facing surface at all. */
-  // Widened 2026-09-21: his primary moved to law@, and a guard that names only the OLD address
-  // silently stops guarding the moment the address changes. Both are barred from the footer.
-  check(`${f}: footer carries no owner address`,
-        !mails.includes('rahaid@kaizenevol.com') && !mails.includes('law@kaizenevol.com'),
+  /* 2026-09-11, Rahaid: "keep out my email from the website" — his objection was his NAME
+     (rahaid@) being public, not a second contact address per se. test-public-name.mjs still
+     fails if his real name reaches any reader-facing surface.
+     2026-09-22, Rahaid, on adding law@ to the footer: "I only did that cus it had my name
+     it's been changed now" — law@ is the pseudonym handle, not his name, and he explicitly
+     asked for it on the site. Guard narrowed back to the actual name-carrying address. */
+  check(`${f}: footer carries no owner NAME address`,
+        !mails.includes('rahaid@kaizenevol.com'),
         mails.join(', '))
   check(`${f}: footer offers diego@`, mails.includes('diego@kaizenevol.com'), mails.join(', ') || 'no email at all')
   /* brand/DESIGN.md: every public CTA opens the WhatsApp business line. */

@@ -45,12 +45,13 @@
 
 <main>
   <div class="container" id="funnel">
-    <noscript><p class="why">This form needs JavaScript. Email <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a> and we will pick it up there.</p></noscript>
+    <noscript><p class="why">This form needs JavaScript. Email <a href="mailto:law@kaizenevol.com">law@kaizenevol.com</a> or <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a> and we will pick it up there.</p></noscript>
   </div>
 </main>
 
 <footer>
   <div class="container">
+    <a href="mailto:law@kaizenevol.com">law@kaizenevol.com</a> &nbsp;&middot;&nbsp;
     <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a> &nbsp;&middot;&nbsp;
     <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; &copy; 2026 KaizenEvol
   </div>
@@ -73,7 +74,7 @@
       .catch(function (err) {
         root.appendChild(Object.assign(document.createElement('p'), {
           className: 'why',
-          textContent: 'That funnel is not available. Email diego@kaizenevol.com and we will pick it up there.'
+          textContent: 'That funnel is not available. Email law@kaizenevol.com or diego@kaizenevol.com and we will pick it up there.'
         }));
         if (window.console) console.error(err);
       });
