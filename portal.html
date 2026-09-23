@@ -248,8 +248,9 @@
        share of sales), so retainer and growth-step figures do not describe them. Show the deal
        they actually have, in the words on their CRM card (Rahaid, 2026-09-23). */
     var trial = c.retainerValue !== undefined && c.retainerValue !== '' && Number(c.retainerValue) === 0;
-    if (trial) cells = [['Our fee now', '£0/mo', c.founding ? 'founding client' : 'no fee yet'], ['After that', c.feeAfter || 'Agreed later', c.feeAfter && c.feeAfter !== 'Agreed later' ? 'as in your agreement' : 'in writing, with you first']];
-    $('p-numbers').innerHTML = cells.map(function(x){ return '<div class="cell"><div class="k">'+x[0]+'</div><div class="v">'+x[1]+'</div><div class="s">'+esc(x[2])+'</div></div>'; }).join('');
+    if (trial && Array.isArray(c.feeCells) && c.feeCells.length) cells = c.feeCells;
+    else if (trial) cells = [['Our fee now', '£0/mo', c.founding ? 'founding client' : 'no fee yet'], ['After that', c.feeAfter || 'Agreed later', c.feeAfter && c.feeAfter !== 'Agreed later' ? 'as in your agreement' : 'in writing, with you first']];
+    $('p-numbers').innerHTML = cells.map(function(x){ return '<div class="cell"><div class="k">'+esc(x[0])+'</div><div class="v">'+esc(x[1])+'</div><div class="s">'+esc(x[2])+'</div></div>'; }).join('');
     $('p-numbers-note').textContent = trial ? (c.terms || 'No fee for now. Any paid terms are agreed with you in writing first.') : g.base ? 'Our fee only goes up when your revenue does, and only when it is up by half — measured on your total revenue, from your own records.' : 'Your baseline is agreed in writing before any spend. Until then these stay blank on purpose.';
     var today = new Date().toISOString().slice(0,10);
     var events = items.filter(function(i){ return i.kind==='event'; }).sort(function(a,b){ return String(a.on_date).localeCompare(String(b.on_date)); });
@@ -263,7 +264,7 @@
     $('p-updates').innerHTML = ups.length ? ups.map(function(u){ return '<div class="bubble"><div class="d">'+esc(dstr(u.created_at))+'</div>'+(u.title?'<b>'+esc(u.title)+'</b><br>':'')+esc(u.body||'')+(u.url?' <a href="'+esc(u.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>'; }).join('') : '<div class="empty">Nothing yet. Weekly numbers and notes from us land here.</div>';
     $('p-files').innerHTML = files.length ? files.map(function(f){ return '<li><span class="d">'+esc(dstr(f.created_at))+'</span><span><a href="#" class="t" data-p="'+esc(f.path)+'" onclick="openFile(this.dataset.p);return false">'+esc(f.name)+'</a><div class="m">'+(f.mine?'from you':'from KaizenEvol')+(f.size?' · '+fsize(f.size):'')+'</div></span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">Nothing here yet.</span></li>';
     var invs = items.filter(function(i){ return i.kind==='invoice'; }).sort(function(a,b){ return String(b.on_date||b.created_at).localeCompare(String(a.on_date||a.created_at)); });
-    $('p-invoices').innerHTML = invs.length ? invs.map(function(v){ var paid = v.status==='paid'; return '<li'+(paid?' class="done"':'')+'><span class="d">'+esc(v.on_date ? dstr(v.on_date) : dstr(v.created_at))+'</span><span><b class="t">'+esc(v.title||'Invoice')+'</b> <span class="amt">'+gbp(v.amount)+'</span><div class="m">'+(paid ? 'Paid, thank you.' : (v.url ? 'Due '+esc(dstr(v.on_date))+' · <a href="'+esc(v.url)+'" target="_blank" rel="noopener">Pay ↗</a>' : 'Due '+esc(dstr(v.on_date))+' · collected from the card on file'))+'</div></span></li>'; }).join('') : (trial ? '<li><span class="d">—</span><span class="m">Nothing to pay. Anything billed later shows here, once it has been agreed with you in writing.</span></li>' : '<li><span class="d">—</span><span class="m">Your retainer is collected each month from the card on file. Each month shows here once it has gone through, with anything one-off alongside.</span></li>');
+    $('p-invoices').innerHTML = invs.length ? invs.map(function(v){ var paid = v.status==='paid'; return '<li'+(paid?' class="done"':'')+'><span class="d">'+esc(v.on_date ? dstr(v.on_date) : dstr(v.created_at))+'</span><span><b class="t">'+esc(v.title||'Invoice')+'</b> <span class="amt">'+gbp(v.amount)+'</span><div class="m">'+(paid ? 'Paid, thank you.' : (v.url ? 'Due '+esc(dstr(v.on_date))+' · <a href="'+esc(v.url)+'" target="_blank" rel="noopener">Pay ↗</a>' : 'Due '+esc(dstr(v.on_date))+' · collected from the card on file'))+'</div></span></li>'; }).join('') : (trial ? '<li><span class="d">—</span><span class="m">'+esc(c.invoiceNote || 'Nothing to pay. Anything billed later shows here, once it has been agreed with you in writing.')+'</span></li>' : '<li><span class="d">—</span><span class="m">Your retainer is collected each month from the card on file. Each month shows here once it has gone through, with anything one-off alongside.</span></li>');
   }
 
   async function loadItems(){
@@ -305,8 +306,11 @@
   /* ── the agreement ── */
   var agreement = null;
   async function loadAgreement(){
-    var r = await sb.from('ke_portal_agreements').select('title,body,body_hash,particulars,signed_at,signed_name,signed_email,signed_image,signed_particulars,signed_hash').maybeSingle();
-    agreement = (!r.error && r.data) ? r.data : null;
+    // A failure here must never blank the rest of the portal: no agreement section, everything else loads.
+    try {
+      var r = await sb.from('ke_portal_agreements').select('title,body,body_hash,particulars,signed_at,signed_name,signed_email,signed_image,signed_particulars,signed_hash').maybeSingle();
+      agreement = (!r.error && r.data) ? r.data : null;
+    } catch(e) { agreement = null; }
   }
   function renderAgreement(){
     var w = $('p-agree-wrap');
