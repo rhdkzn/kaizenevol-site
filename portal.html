@@ -63,7 +63,7 @@
     .done .t{color:var(--muted);text-decoration:line-through}
     .btn-solid{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ink);color:var(--page);border:1px solid var(--ink);border-radius:999px;padding:12px 20px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:transform .09s cubic-bezier(.3,0,.2,1)}
     .btn-solid:active{transform:scale(.965)}.btn-solid[disabled]{opacity:.45;cursor:not-allowed}
-    input[type=email],textarea{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--hairline);padding:10px 2px;width:100%;border-radius:0}
+    input[type=email],input[type=text],textarea{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--hairline);padding:10px 2px;width:100%;border-radius:0}
     input:focus,textarea:focus{outline:none;border-bottom-color:var(--ink)}
     textarea{border:1px solid var(--hairline);padding:12px 14px;min-height:92px;resize:vertical}
     textarea:focus{outline:2px solid var(--ink);outline-offset:-1px}
@@ -75,6 +75,18 @@
     .msg{font-size:14px;color:var(--muted);min-height:20px;margin-top:10px}
     .err{color:#9a3b2f}
     .step{display:none}.step.on{display:block}
+    .agreement{margin-top:16px;border:1px solid var(--hairline);background:#fff;max-height:52vh;overflow:auto;padding:18px 20px;font-size:14px;line-height:1.65;white-space:pre-wrap}
+    .hash{font-size:11px;color:var(--stone);margin-top:8px;word-break:break-all}
+    .fld{margin-top:18px}
+    .fld label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:6px}
+    .pad-wrap{border:1px solid var(--hairline);background:#fff;position:relative;touch-action:none}
+    canvas#pad{display:block;width:100%;height:180px}
+    .pad-hint{position:absolute;left:14px;bottom:10px;font-size:12px;color:var(--stone);pointer-events:none}
+    .pad-clear{position:absolute;right:10px;top:10px;font:inherit;font-size:12px;background:none;border:1px solid var(--hairline);border-radius:999px;padding:6px 12px;min-height:32px;cursor:pointer;color:var(--muted)}
+    .agree{display:flex;gap:12px;align-items:flex-start;margin-top:18px;font-size:15px}
+    .agree input{width:18px;height:18px;margin-top:3px;flex:none;accent-color:var(--ink)}
+    .signed{margin-top:16px;padding:16px 18px;background:var(--recess);border:1px solid var(--hairline)}
+    @media(max-width:640px){.agreement{max-height:46vh;padding:14px}}
     .bubble{padding:12px 14px;border:1px solid var(--hairline);margin-top:8px;font-size:14px;max-width:62ch}
     .bubble.client{background:var(--recess);margin-left:auto}
     .bubble .d{font-size:11px;color:var(--stone);margin-bottom:4px}
@@ -120,6 +132,28 @@
     <section class="step" id="s-portal">
       <p class="smallcaps"><span id="p-name"></span> · <span id="p-terms"></span></p>
       <h1 id="p-head"></h1>
+
+      <!-- Signing the agreement inside the portal (2026-09-23). Shown only when an agreement
+           has been issued to this client (ke_portal_agreements); portal_sign() does the checks. -->
+      <div id="p-agree-wrap" style="display:none">
+        <h2 id="p-agree-h">Your agreement</h2>
+        <div id="p-agree-sign">
+          <p class="why">Read it through, fill in your details and sign at the bottom. Signing here has the same effect as signing on paper.</p>
+          <div class="agreement" id="p-agree-text"></div>
+          <div class="hash">Document fingerprint (SHA-256): <span id="p-agree-hash"></span></div>
+          <div id="p-agree-fields"></div>
+          <div class="fld"><label for="sig-name">Your full name, as your signature</label><input type="text" id="sig-name" autocomplete="name" /></div>
+          <div class="fld"><label>Draw your signature</label><div class="pad-wrap"><canvas id="pad"></canvas><span class="pad-hint" id="pad-hint">Sign here with your finger or mouse</span><button type="button" class="pad-clear" onclick="clearPad()">Clear</button></div></div>
+          <label class="agree"><input type="checkbox" id="sig-agree" /><span>I have read the agreement above and I am signing it.</span></label>
+          <div class="msg err" id="sig-err"></div>
+          <div class="row"><button class="btn-solid" id="sig-btn" onclick="signAgreement()">Sign the agreement</button></div>
+        </div>
+        <div id="p-agree-done" class="signed" style="display:none">
+          <div class="smallcaps">Signed</div>
+          <div id="p-agree-meta" style="margin-top:6px;font-size:14px"></div>
+          <div class="row" style="margin-top:12px"><button class="btn-solid" onclick="downloadAgreement()">Download your copy</button></div>
+        </div>
+      </div>
 
       <h2>The numbers</h2>
       <div class="grid" id="p-numbers"></div>
@@ -199,6 +233,7 @@
   var TASKS = [['ob1','Discovery call done'],['ob2','Proposal sent'],['ob3','Agreement signed'],['ob4','First invoice paid'],['ob5','Baseline agreed in writing, revenue access granted'],['ob6','Access granted: Meta, store, email/SMS'],['ob7','Drop calendar and content plan agreed'],['ob8','First content batch approved'],['ob9','Live'],['lv1','Weekly numbers sent'],['lv2','Monthly strategy call'],['lv3','Monthly revenue snapshot logged'],['lv4','Email/SMS list growing'],['lv5','Creative refreshed when cost per purchase rises'],['lv6','Testimonial / case study asked for']];
 
   function render(){
+    renderAgreement();
     var c = me.client||{}, s = me.settings||{}, g = growth(c, me.snapshots||[], s);
     $('p-name').textContent = c.name||''; $('p-terms').textContent = c.founding ? 'founding client' : 'client';
     $('p-head').innerHTML = 'Hello, ' + esc((c.founder||'').split(' ')[0] || c.name) + '. <em>' + (c.liveDate ? 'Live since ' + dstr(c.liveDate) + '.' : 'Onboarding.') + '</em>';
@@ -267,13 +302,85 @@
     await loadFiles(); await loadItems(); render();
   };
 
+  /* ── the agreement ── */
+  var agreement = null;
+  async function loadAgreement(){
+    var r = await sb.from('ke_portal_agreements').select('title,body,body_hash,particulars,signed_at,signed_name,signed_email,signed_image,signed_particulars,signed_hash').maybeSingle();
+    agreement = (!r.error && r.data) ? r.data : null;
+  }
+  function renderAgreement(){
+    var w = $('p-agree-wrap');
+    if(!agreement){ w.style.display = 'none'; return; }
+    w.style.display = '';
+    if(agreement.signed_at){
+      $('p-agree-h').textContent = 'Your agreement';
+      $('p-agree-sign').style.display = 'none'; $('p-agree-done').style.display = '';
+      $('p-agree-meta').textContent = 'Signed by ' + agreement.signed_name + ' on ' + dstr(agreement.signed_at) + '.';
+      return;
+    }
+    $('p-agree-h').textContent = 'Your agreement, to sign';
+    $('p-agree-sign').style.display = ''; $('p-agree-done').style.display = 'none';
+    $('p-agree-text').textContent = agreement.body;
+    $('p-agree-hash').textContent = agreement.body_hash;
+    var box = $('p-agree-fields');
+    if(!box.dataset.built){
+      box.innerHTML = (agreement.particulars||[]).filter(function(p){ return p[1] !== 'date_signed'; }).map(function(p){
+        var pre = p[1] === 'email' ? (me.email || p[2] || '') : (p[2] || '');
+        return '<div class="fld"><label for="pf-'+esc(p[1])+'">'+esc(p[0])+'</label><input type="text" id="pf-'+esc(p[1])+'" value="'+esc(pre)+'" /></div>';
+      }).join('');
+      box.dataset.built = '1';
+      setTimeout(sizePad, 50);
+    }
+  }
+  var pad = $('pad'), pctx = pad.getContext('2d'), drawing = false, last = null, padDirty = false;
+  function sizePad(){
+    var r = pad.getBoundingClientRect(); if(!r.width) return;
+    var dpr = window.devicePixelRatio || 1, img = padDirty ? pad.toDataURL() : null;
+    pad.width = Math.round(r.width*dpr); pad.height = Math.round(180*dpr);
+    pctx.setTransform(dpr,0,0,dpr,0,0); pctx.lineWidth = 2.2; pctx.lineCap = 'round'; pctx.lineJoin = 'round'; pctx.strokeStyle = '#23211E';
+    if(img){ var im = new Image(); im.onload = function(){ pctx.drawImage(im,0,0,r.width,180); }; im.src = img; }
+  }
+  function ppos(e){ var r = pad.getBoundingClientRect(); var q = e.touches ? e.touches[0] : e; return {x:q.clientX - r.left, y:q.clientY - r.top}; }
+  pad.addEventListener('pointerdown', function(e){ e.preventDefault(); drawing = true; last = ppos(e); });
+  pad.addEventListener('pointermove', function(e){ if(!drawing) return; e.preventDefault(); var q = ppos(e); pctx.beginPath(); pctx.moveTo(last.x,last.y); pctx.lineTo(q.x,q.y); pctx.stroke(); last = q; padDirty = true; $('pad-hint').style.display = 'none'; });
+  window.addEventListener('pointerup', function(){ drawing = false; });
+  window.addEventListener('resize', function(){ if(agreement && !agreement.signed_at) sizePad(); });
+  window.clearPad = function(){ pctx.clearRect(0,0,pad.width,pad.height); padDirty = false; $('pad-hint').style.display = ''; };
+  window.signAgreement = async function(){
+    var err = $('sig-err'); err.textContent = '';
+    var parts = {};
+    var missing = (agreement.particulars||[]).filter(function(p){ if(p[1]==='date_signed') return false; var v = ($('pf-'+p[1]).value||'').trim(); parts[p[1]] = v; return !v; });
+    if(missing.length){ err.textContent = 'Fill in: ' + missing[0][0] + '.'; return; }
+    var name = $('sig-name').value.trim();
+    if(name.length < 2){ err.textContent = 'Type your full name.'; return; }
+    if(!padDirty){ err.textContent = 'Draw your signature in the box.'; return; }
+    if(!$('sig-agree').checked){ err.textContent = 'Tick the box to confirm you have read the agreement.'; return; }
+    $('sig-btn').disabled = true;
+    var r = await sb.rpc('portal_sign', { p_name: name, p_image: pad.toDataURL('image/png'), p_particulars: parts, p_body_hash: agreement.body_hash });
+    $('sig-btn').disabled = false;
+    if(r.error){ err.textContent = r.error.message || 'Could not sign. Reload and try again.'; return; }
+    await loadAgreement(); await loadItems(); render();
+    window.scrollTo({ top: $('p-agree-wrap').offsetTop - 20, behavior: 'smooth' });
+  };
+  window.downloadAgreement = function(){
+    var a = agreement; if(!a || !a.signed_at) return;
+    var parts = (a.particulars||[]).map(function(p){ return esc(p[0]) + ': ' + esc((a.signed_particulars||{})[p[1]] || ''); }).join('<br>');
+    var img = /^data:image\/png;base64,/.test(a.signed_image||'') ? '<img alt="Signature" src="'+a.signed_image+'" style="max-width:320px;display:block;margin:8px 0">' : '';
+    var html = '<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(a.title)+'</title><style>body{font:15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#23211E;background:#F7F6F4;max-width:760px;margin:0 auto;padding:24px 16px}pre{white-space:pre-wrap;font:inherit}.s{border-top:1px solid #D8D4CC;margin-top:28px;padding-top:16px;font-size:14px}</style></head><body>'
+      + '<pre>'+esc(a.body)+'</pre><div class="s"><b>Particulars</b><br>'+parts+'<br><br><b>Signed by '+esc(a.signed_name)+'</b> ('+esc(a.signed_email||'')+') on '+esc(new Date(a.signed_at).toLocaleString('en-GB'))+img
+      + '<div>Signed record fingerprint (SHA-256): '+esc(a.signed_hash||'')+'</div></div></body></html>';
+    var url = URL.createObjectURL(new Blob([html], {type:'text/html'}));
+    var link = document.createElement('a'); link.href = url; link.download = 'KaizenEvol Services Agreement (signed).html';
+    document.body.appendChild(link); link.click(); link.remove(); setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  };
+
   async function boot(){
     var s = await sb.auth.getSession();
     if(!s.data || !s.data.session){ show('s-login'); return; }
     var r = await sb.rpc('portal_me');
     if(r.error || !r.data){ show('s-none'); $('who').innerHTML='<span>'+esc((s.data.session.user||{}).email||'')+'</span><button onclick="signOut()">Sign out</button>'; return; }
     me = r.data; if(!me.client || !me.client.id){ show('s-none'); return; }
-    await loadItems(); await loadFiles(); sb.rpc('portal_touch'); render(); show('s-portal');
+    await loadItems(); await loadFiles(); await loadAgreement(); sb.rpc('portal_touch'); show('s-portal'); render();
   }
   sb.auth.onAuthStateChange(function(ev){ if(ev==='SIGNED_IN'||ev==='TOKEN_REFRESHED'){ if(location.hash) history.replaceState(null,'',location.pathname); boot(); } });
   boot();
