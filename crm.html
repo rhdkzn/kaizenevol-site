@@ -2622,6 +2622,23 @@ async function emailOnboardLink(btn){const l=loadLeads().find(x=>x.id===_obLeadI
 /* The trusted write. Paid is decided here — by Diego/Rahaid seeing the payment, or by the
    Stripe check reporting stripePaid — never by the public page. Writes the client into
    ke_data, the lead to Won, and the funnel row to paid, all as the authenticated user. */
+/* The signed agreement goes into the client's portal Files the moment they become a client
+   (Rahaid, 2026-09-23), so the copy they signed is always one tap away. Written as a
+   self-contained HTML page: the exact signed text, the drawn signature, when, and the hash the
+   signature binds to. upsert, so pressing Mark paid again can only rewrite the same file.
+   A failure here never blocks creating the client; it says so and the file can be uploaded by hand. */
+async function obFileSigned(d,cid){
+  const s=d&&d.signature;if(!s||!s.text||!cid)return;
+  const img=/^data:image\/png;base64,/.test(s.image||'')?'<img alt="Signature" src="'+s.image+'" style="max-width:320px;display:block;margin:8px 0">':'';
+  const html='<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Signed Services Agreement — '+esc(d.business||'')+'</title>'
+    +'<style>body{font:15px/1.6 -apple-system,Helvetica,Arial,sans-serif;color:#23211E;background:#F7F6F4;max-width:760px;margin:0 auto;padding:24px 16px}pre{white-space:pre-wrap;font:inherit}.sig{border-top:1px solid #D8D4CC;margin-top:28px;padding-top:16px;font-size:14px;color:#4a4740}</style></head><body>'
+    +'<pre>'+esc(s.text)+'</pre><div class="sig"><b>Signed by '+esc(s.name)+'</b> on '+esc(new Date(s.at).toLocaleString('en-GB'))+img
+    +'<div>Agreement hash (SHA-256): '+esc(s.hash||'')+'</div></div></body></html>';
+  const name='Signed Services Agreement.html';
+  const{error}=await _sb.storage.from('portal').upload(cid+'/'+name,new Blob([html],{type:'text/html'}),{upsert:true,contentType:'text/html'});
+  if(error){showToast('Client created, but the signed agreement did not reach their portal: '+error.message);return;}
+  await _sb.from('ke_portal_items').insert({client_id:cid,kind:'update',author:'agency',body:'Your signed services agreement is in Files.'});
+}
 async function markOnboardPaid(btn,stripe){
   const l=loadLeads().find(x=>x.id===_obLeadId);const r=l&&obFor(l);if(!r||r.status!=='signed')return;
   if(!stripe&&!confirm('Mark '+(l.business||'this lead')+' as paid? Only do this once the first payment is in Stripe.'))return;
@@ -2639,6 +2656,7 @@ async function markOnboardPaid(btn,stripe){
       dd.clientTasks=dd.clientTasks||{};dd.clientTasks[cid]={ob2:true,ob3:true,ob4:true};
       save(dd);renderClientPipeline(dd);renderClientChecklist(dd);renderClients(dd);renderGrowth(dd);
     }
+    await obFileSigned(d,(dd.clients.find(c=>c.onboardingToken===r.id)||{}).id||cid);
     const arr=loadLeads();const L=arr.find(x=>x.id===l.id);if(L){L.stage='won';L.updatedAt=Date.now();L.nextStep='Onboarding paid — set the go-live date, agree the baseline in writing';saveLeads(arr);}
     obRenderStatus(r);renderLeads();renderLeadStats();showToast('Client created — '+(d.business||l.business));
   }catch(e){showToast('Mark paid failed');}
