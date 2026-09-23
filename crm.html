@@ -1315,6 +1315,10 @@ const CLIENT_TASKS=[
   {id:'lv5',phase:'live',text:'Creative refreshed when cost per purchase rises'},
   {id:'lv6',phase:'live',text:'Testimonial / case study requested, permission to quote recorded'},
 ];
+/* A client may carry its own checklist (c.checklist, same shape as CLIENT_TASKS) when the
+   standard retainer list does not describe their deal, e.g. the free-pilot founding clients
+   (Rahaid, 2026-09-23). Everyone else gets CLIENT_TASKS. The portal reads the same field. */
+function tasksFor(c){return Array.isArray(c&&c.checklist)&&c.checklist.length?c.checklist:CLIENT_TASKS;}
 const PHASE_ORDER=['onboarding','live'];
 const PHASE_LABELS={onboarding:'Onboarding — from yes to live',live:'Live — the four things, measured'};
 function activePhaseForStage(stageKey){return stageKey==='live'?'live':'onboarding';}
@@ -1329,11 +1333,12 @@ function renderClientChecklist(data){
     const stageInfo=getClientStage(c);
     const activePhase=activePhaseForStage(stageInfo.key);
     const activePhaseIdx=PHASE_ORDER.indexOf(activePhase);
-    const total=CLIENT_TASKS.length;
-    const done=CLIENT_TASKS.filter(t=>ct[t.id]).length;
+    const TL=tasksFor(c);
+    const total=TL.length;
+    const done=TL.filter(t=>ct[t.id]).length;
     const pct=Math.round(done/total*100);
     const phases=PHASE_ORDER.map((phase,pi)=>{
-      const tasks=CLIENT_TASKS.filter(t=>t.phase===phase);
+      const tasks=TL.filter(t=>t.phase===phase);
       const phaseDone=tasks.every(t=>ct[t.id]);
       const isCurrent=pi===activePhaseIdx;
       const isLocked=pi>activePhaseIdx;
