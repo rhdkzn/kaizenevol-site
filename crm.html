@@ -2639,6 +2639,24 @@ async function obFileSigned(d,cid){
   if(error){showToast('Client created, but the signed agreement did not reach their portal: '+error.message);return;}
   await _sb.from('ke_portal_items').insert({client_id:cid,kind:'update',author:'agency',body:'Your signed services agreement is in Files.'});
 }
+/* Mark paid also gives the new client their portal login and emails the invite
+   (Rahaid, 2026-09-23), so nobody has to remember "Invite to portal". Same writes as
+   ptInvite, minus the prompt. It never re-points an email already linked to a DIFFERENT
+   client (that would hand one client another's space); it says so instead. */
+async function obAutoInvite(cid,name,founder,email){
+  const em=String(email||'').trim().toLowerCase();
+  if(!cid||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){showToast('Client created. No email on the agreement, so press "Invite to portal" by hand.');return;}
+  try{
+    const{data:ex}=await _sb.from('ke_portal_users').select('client_id').eq('email',em).maybeSingle();
+    if(ex&&ex.client_id&&ex.client_id!==cid){showToast(em+' is already linked to another client. Portal invite skipped.');return;}
+    const{error}=await _sb.from('ke_portal_users').upsert({email:em,client_id:cid,client_name:name},{onConflict:'email'});
+    if(error){showToast('Client created, portal login not saved: '+error.message);return;}
+    const{data}=await _sb.auth.getSession();const jwt=data&&data.session&&data.session.access_token;
+    const res=await fetch('/api/portal?op=invite',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+jwt},body:JSON.stringify({email:em,clientName:name,founder})});
+    showToast(res.ok?'Portal invite emailed to '+em:'Portal login saved, but the invite email did not send');
+    if(typeof ptLoad==='function')await ptLoad();
+  }catch(e){showToast('Client created, portal invite failed. Press "Invite to portal".');}
+}
 async function markOnboardPaid(btn,stripe){
   const l=loadLeads().find(x=>x.id===_obLeadId);const r=l&&obFor(l);if(!r||r.status!=='signed')return;
   if(!stripe&&!confirm('Mark '+(l.business||'this lead')+' as paid? Only do this once the first payment is in Stripe.'))return;
@@ -2656,7 +2674,9 @@ async function markOnboardPaid(btn,stripe){
       dd.clientTasks=dd.clientTasks||{};dd.clientTasks[cid]={ob2:true,ob3:true,ob4:true};
       save(dd);renderClientPipeline(dd);renderClientChecklist(dd);renderClients(dd);renderGrowth(dd);
     }
-    await obFileSigned(d,(dd.clients.find(c=>c.onboardingToken===r.id)||{}).id||cid);
+    const newCid=(dd.clients.find(c=>c.onboardingToken===r.id)||{}).id||cid;
+    await obFileSigned(d,newCid);
+    await obAutoInvite(newCid,d.business||l.business||'',d.founder||'',d.email||'');
     const arr=loadLeads();const L=arr.find(x=>x.id===l.id);if(L){L.stage='won';L.updatedAt=Date.now();L.nextStep='Onboarding paid — set the go-live date, agree the baseline in writing';saveLeads(arr);}
     obRenderStatus(r);renderLeads();renderLeadStats();showToast('Client created — '+(d.business||l.business));
   }catch(e){showToast('Mark paid failed');}
