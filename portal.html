@@ -144,11 +144,6 @@
       <h2>Invoices</h2>
       <ul class="list" id="p-invoices"></ul>
 
-      <h2>A line to us</h2>
-      <p class="why">Anything at all — a restock date, a change of plan, a question. It lands in our CRM and we reply by email.</p>
-      <textarea id="msg-text" placeholder="Write to Law and Diego…"></textarea>
-      <div class="row" style="margin-top:12px"><button class="btn-solid" id="msg-send" onclick="sendMessage()">Send</button><span class="msg" id="msg-status" style="margin:0"></span></div>
-      <div id="p-messages" style="margin-top:14px"></div>
     </section>
 
   </div>
@@ -228,18 +223,7 @@
     $('p-files').innerHTML = files.length ? files.map(function(f){ return '<li><span class="d">'+esc(dstr(f.created_at))+'</span><span><a href="#" class="t" data-p="'+esc(f.path)+'" onclick="openFile(this.dataset.p);return false">'+esc(f.name)+'</a><div class="m">'+(f.mine?'from you':'from KaizenEvol')+(f.size?' · '+fsize(f.size):'')+'</div></span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">Nothing here yet.</span></li>';
     var invs = items.filter(function(i){ return i.kind==='invoice'; }).sort(function(a,b){ return String(b.on_date||b.created_at).localeCompare(String(a.on_date||a.created_at)); });
     $('p-invoices').innerHTML = invs.length ? invs.map(function(v){ var paid = v.status==='paid'; return '<li'+(paid?' class="done"':'')+'><span class="d">'+esc(v.on_date ? dstr(v.on_date) : dstr(v.created_at))+'</span><span><b class="t">'+esc(v.title||'Invoice')+'</b> <span class="amt">'+gbp(v.amount)+'</span><div class="m">'+(paid ? 'Paid, thank you.' : (v.url ? 'Due '+esc(dstr(v.on_date))+' · <a href="'+esc(v.url)+'" target="_blank" rel="noopener">Pay ↗</a>' : 'Due '+esc(dstr(v.on_date))+' · collected from the card on file'))+'</div></span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">Your retainer is collected each month from the card on file. Each month shows here once it has gone through, with anything one-off alongside.</span></li>';
-    var msgs = items.filter(function(i){ return i.kind==='message'; });
-    $('p-messages').innerHTML = msgs.map(function(m){ return '<div class="bubble'+(m.author==='client'?' client':'')+'"><div class="d">'+(m.author==='client'?'You':'KaizenEvol')+' · '+esc(dstr(m.created_at))+'</div>'+esc(m.body||'')+'</div>'; }).join('');
   }
-
-  window.sendMessage = async function(){
-    var txt = $('msg-text').value.trim(), st = $('msg-status'); if(!txt) return;
-    $('msg-send').disabled = true;
-    var r = await sb.from('ke_portal_items').insert({ client_id: me.client.id, kind:'message', author:'client', body: txt.slice(0,4000) });
-    $('msg-send').disabled = false;
-    if(r.error){ st.textContent = 'Could not send: ' + r.error.message; return; }
-    $('msg-text').value=''; st.textContent = 'Sent.'; await loadItems(); render();
-  };
 
   async function loadItems(){
     var r = await sb.from('ke_portal_items').select('id,kind,title,body,on_date,url,author,created_at,amount,status').eq('client_id', me.client.id).order('created_at',{ascending:false}).limit(200);
