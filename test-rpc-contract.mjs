@@ -28,7 +28,11 @@ const r = []
 const check = (n, pass, d) => r.push([n, pass, d])
 
 check(`${SQL} exists`, existsSync(SQL), 'the database layer is not recorded in the repo at all')
-const sql = existsSync(SQL) ? readFileSync(SQL, 'utf8') : ''
+/* The record is split across db/*.sql (portal_sign lives in db/portal-agreements.sql,
+   portal_access_set in db/portal-access.sql), so read every file. Reading portal.sql
+   alone left this red on main for portal_sign from 2026-09-23 (fixed 2026-09-24). */
+const sql = existsSync('db') ? readdirSync('db').filter(f => f.endsWith('.sql')).sort()
+  .map(f => readFileSync('db/' + f, 'utf8')).join('\n') : ''
 
 /* Functions the file DEFINES — matched on the create statement, never on a bare
    mention, so a name that appears only in a comment cannot satisfy the contract. */
@@ -54,8 +58,8 @@ check('the front end calls at least one rpc', called.size > 0,
   'guard that silently checks nothing is the failure mode it exists to prevent')
 
 for (const [name, where] of [...called].sort())
-  check(`rpc ${name} is defined in ${SQL}`, defined.has(name),
-    `called from ${where.join(', ')} — add the CREATE FUNCTION to ${SQL} and apply it to Supabase`)
+  check(`rpc ${name} is defined in db/*.sql`, defined.has(name),
+    `called from ${where.join(', ')} — add the CREATE FUNCTION to a db/*.sql file and apply it to Supabase`)
 
 let failed = 0
 for (const [n, pass, d] of r) { if (!pass) { failed++; console.log(`FAIL  ${n}   <- ${d || ''}`) } }

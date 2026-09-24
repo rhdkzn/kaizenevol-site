@@ -91,6 +91,23 @@
     .bubble.client{background:var(--recess);margin-left:auto}
     .bubble .d{font-size:11px;color:var(--stone);margin-bottom:4px}
     .empty{color:var(--stone);font-size:14px;padding:14px 0;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);margin-top:12px}
+    .acc{margin-top:14px;border-top:1px solid var(--hairline)}
+    .acc details{border-bottom:1px solid var(--hairline)}
+    .acc summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:22px 1fr auto;gap:12px;align-items:baseline;padding:14px 0}
+    .acc summary::-webkit-details-marker{display:none}
+    .acc summary .n{font-weight:600}
+    .acc summary .w{color:var(--muted);font-size:14px;display:block}
+    .acc .st{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);white-space:nowrap}
+    .acc .body{padding:0 0 18px 34px}
+    .acc ol{margin:8px 0 0;padding-left:20px;font-size:15px}
+    .acc ol li{margin-top:6px}
+    .acc code{font-family:inherit;font-weight:600;background:var(--recess);padding:1px 6px;border-radius:3px;word-break:break-all}
+    .acc .lvl{margin-top:12px;font-size:13px;color:var(--muted)}
+    .acc .lvl b{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-right:8px}
+    .acc .note{margin-top:10px;font-size:13px;color:var(--muted);max-width:62ch}
+    .acc .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .btn-line{display:inline-flex;align-items:center;gap:8px;background:none;color:var(--ink);border:1px solid var(--hairline);border-radius:999px;padding:11px 18px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none}
+    .acc details.is-done summary .n{color:var(--muted)}
     footer{border-top:1px solid var(--hairline);padding:22px 0;font-size:13px;color:var(--stone)}
     footer a{color:var(--stone);text-decoration:none}
     @media(max-width:720px){.grid{grid-template-columns:1fr 1fr}.list li{grid-template-columns:1fr}.list .d{order:-1}}
@@ -153,6 +170,13 @@
           <div id="p-agree-meta" style="margin-top:6px;font-size:14px"></div>
           <div class="row" style="margin-top:12px"><button class="btn-solid" onclick="downloadAgreement()">Download your copy</button></div>
         </div>
+      </div>
+
+      <div id="p-access-wrap" style="display:none">
+        <h2>Give us access</h2>
+        <p class="why" id="p-access-intro"></p>
+        <div class="acc" id="p-access"></div>
+        <div class="msg" id="p-access-msg"></div>
       </div>
 
       <h2>The numbers</h2>
@@ -232,8 +256,89 @@
   }
   var TASKS = [['ob1','Discovery call done'],['ob2','Proposal sent'],['ob3','Agreement signed'],['ob4','First invoice paid'],['ob5','Baseline agreed in writing, revenue access granted'],['ob6','Access granted: Meta, store, email/SMS'],['ob7','Drop calendar and content plan agreed'],['ob8','First content batch approved'],['ob9','Live'],['lv1','Weekly numbers sent'],['lv2','Monthly strategy call'],['lv3','Monthly revenue snapshot logged'],['lv4','Email/SMS list growing'],['lv5','Creative refreshed when cost per purchase rises'],['lv6','Testimonial / case study asked for']];
 
+  /* ── access, app by app (2026-09-24) ──
+     Moved here from a PDF whose buttons did nothing on paper. The app ids must match
+     portal_access_set() in db/portal-access.sql, which refuses any id it does not know. */
+  var PID = '25727662930249979', E1 = 'diego@kaizenevol.com', E2 = 'law@kaizenevol.com';
+  function C(t){ return '<code>'+t+'</code>'; }
+  var TIKTOK = { id:'tiktok', name:'TikTok', why:'We post and read your stats. One of only two apps where we log in as you, because TikTok has no team invite.', url:'', link:'',
+    steps:['Before the call, turn on two-step verification: '+C('Profile → ☰ → Settings and privacy → Security')+'.','Set a fresh password you do not use anywhere else.','On a quick FaceTime, tell us the password and we log in on our agency phone.','Read us the code TikTok sends to your phone.','We stay logged in on that one phone only. If we ever stop working together, change your password and we are out.'],
+    level:'Posting and analytics, on one agency phone', note:'Mark this done after the FaceTime.' };
+  var DRIVE = function(what){ return { id:'drive', name:'Google Drive', why:'One folder for everything we make posts from.', url:'', link:'',
+    steps:['Open the Drive folder we have shared with you. It is named after you.','Drop in '+what+'.','Anything private stays private in that folder.'],
+    level:'You upload, we organise', note:'' }; };
+  var ACCESS_APPS = {
+    Artist: [
+      { id:'instagram', name:'Instagram', why:'We post, schedule, handle comments and read insights. Your DMs stay yours.', url:'https://business.facebook.com/settings', link:'Open Meta Business Suite settings',
+        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'.','Paste our ID '+C(PID)+' and continue.','Pick your Instagram account and switch on Content, Community activity and Insights. Leave Messages off.','Tap '+C('Assign assets')+'.'],
+        level:'Content · Community activity · Insights', note:'This only works if your Instagram is a creator or business account connected to Meta Business Suite. If it is not, message us and we will do it with you on FaceTime.' },
+      { id:'youtube', name:'YouTube', why:'We upload, schedule and edit videos and Shorts, and read analytics. We cannot see revenue.', url:'https://studio.youtube.com', link:'Open YouTube Studio',
+        steps:['Open the YouTube Studio app (or '+C('studio.youtube.com')+') and tap your profile picture.','Go to '+C('Settings → Permissions → Invite')+'.','Enter '+C(E1)+', choose '+C('Editor (limited)')+' and send.','Repeat for '+C(E2)+'.'],
+        level:'Editor (limited), for both emails', note:'' },
+      { id:'spotify', name:'Spotify for Artists', why:'We read your listener, save and playlist data, keep your bio and photos fresh, and add Canvas and Clips.', url:'https://artists.spotify.com', link:'Open Spotify for Artists',
+        steps:['Open the Spotify for Artists app (or '+C('artists.spotify.com')+') and go to '+C('Team')+'.','Tap '+C('Invite')+', enter '+C(E1)+' and choose '+C('Editor')+'.','Repeat for '+C(E2)+'.'],
+        level:'Editor, for both emails', note:'Editors cannot see or change your payment details, and cannot add or remove team members. We check with you before changing your bio or photos.' },
+      { id:'apple', name:'Apple Music for Artists', why:'Adds your Apple listens and Shazams to the monthly numbers.', url:'https://artists.apple.com', link:'Open Apple Music for Artists', na:true,
+        steps:['Open the Apple Music for Artists app (or '+C('artists.apple.com')+') and select your artist.','Go to '+C('Account → Users → Invite User')+' (the + on web).','Enter '+C(E1)+', choose '+C('Analyst')+' and invite.','Repeat for '+C(E2)+'.'],
+        level:'Analyst, for both emails', note:'Not set up on Apple Music for Artists yet? Tap “Not relevant”.' },
+      DRIVE('your cover art, press photos, any old shoots and your upcoming release dates. Add unreleased audio only if you are happy for us to hear it'),
+      TIKTOK,
+      { id:'x', name:'X', why:'A new account for the thoughts, lyric lines and studio updates that pop into your head. A 30-day test.', url:'', link:'', na:true,
+        steps:['We set up the account with you on the same FaceTime, using your name and branding.','We log in on our agency phone the same way as TikTok, so we can read the stats.','You post 3–5 times a week, whenever something comes to you.','After 30 days we look at the numbers together and decide whether to keep it.'],
+        level:'You post · we watch and report', note:'' }
+    ],
+    Brand: [
+      { id:'meta', name:'Meta (Facebook, Instagram, ads)', why:'We run your ads, post, handle comments and read insights. Your DMs stay yours.', url:'https://business.facebook.com/settings', link:'Open Meta Business Suite settings',
+        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'.','Paste our ID '+C(PID)+' and continue.','Pick your Facebook Page, Instagram account, ad account and dataset (your pixel).','On the Page and Instagram switch on Content, Community activity, Insights and Ads; leave Messages off. On the ad account choose Manage campaigns. On the dataset choose Use. Then tap '+C('Assign assets')+'.'],
+        level:'Page and Instagram: Content · Community activity · Insights · Ads. Ad account: Manage campaigns', note:'Ad spend stays in your own ad account, on your card.' },
+      { id:'shopify', name:'Shopify', why:'We read orders and sales so the numbers are yours, not ours, and set up products for each drop.', url:'https://admin.shopify.com', link:'Open Shopify admin',
+        steps:['Open your Shopify admin and go to '+C('Settings → Users')+'.','Tap '+C('Add users')+' and enter '+C(E2)+'.','Give access to Orders, Products, Analytics and Marketing. Leave billing and store settings off.','Send the invite, then repeat for '+C(E1)+'.'],
+        level:'Staff: Orders · Products · Analytics · Marketing', note:'If your plan has no staff seats left, message us and we will sort it with you.' },
+      { id:'klaviyo', name:'Email and SMS (Klaviyo)', why:'We build the flows and send to your list, so every drop opens to your list first.', url:'https://www.klaviyo.com/login', link:'Open Klaviyo', na:true,
+        steps:['Open Klaviyo, click your account name at the bottom left and go to '+C('Settings → Users')+'.','Tap '+C('Add new user')+', enter '+C(E2)+' and choose '+C('Manager')+'.','Repeat for '+C(E1)+'.'],
+        level:'Manager, for both emails', note:'Using a different email tool, or none yet? Tap “Not relevant” and tell us which one in a message.' },
+      DRIVE('your product photos, any footage and your drop dates'),
+      TIKTOK
+    ]
+  };
+  function accessApps(c){ return ACCESS_APPS[(c||{}).segment === 'Artist' ? 'Artist' : 'Brand']; }
+  function renderAccess(){
+    var c = me.client||{}, apps = accessApps(c), acc = me.access||{};
+    var t = me.tasks||{}, list = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist : null;
+    var at = list ? list.filter(function(x){ return /^access/i.test(x.text||''); })[0] : { id:'ob6' };
+    var n = apps.filter(function(a){ return acc[a.id]; }).length;
+    // Hide once it is all done AND we have ticked it on our side, so an onboarded client is not nagged.
+    var closed = n === apps.length && at && t[at.id];
+    $('p-access-wrap').style.display = closed ? 'none' : '';
+    if (closed) return;
+    $('p-access-intro').innerHTML = 'Each step adds KaizenEvol as a partner or team member. You stay the owner and can remove us in one tap. About ten minutes. <b>' + n + ' of ' + apps.length + ' done.</b>';
+    $('p-access').innerHTML = apps.map(function(a){
+      var st = acc[a.id] && acc[a.id].state, done = !!st;
+      var btns = a.url ? '<a class="btn-line" href="'+a.url+'" target="_blank" rel="noopener">'+esc(a.link)+' ↗</a>' : '';
+      btns += done ? '<button class="btn-line" data-app="'+a.id+'" data-st="">Undo</button>'
+                   : '<button class="btn-solid" data-app="'+a.id+'" data-st="done">I\'ve done this</button>' + (a.na ? '<button class="btn-line" data-app="'+a.id+'" data-st="na">Not relevant</button>' : '');
+      return '<details class="'+(done?'is-done':'')+'"><summary><span class="box'+(done?' on':'')+'"></span><span><span class="n">'+esc(a.name)+'</span><span class="w">'+esc(a.why)+'</span></span><span class="st">'+(st==='na'?'Not relevant':done?'Done':'To do')+'</span></summary>'
+        + '<div class="body"><ol>'+a.steps.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol>'
+        + '<div class="lvl"><b>Access level</b>'+esc(a.level)+'</div>' + (a.note ? '<div class="note">'+esc(a.note)+'</div>' : '')
+        + '<div class="btns">'+btns+'</div></div></details>';
+    }).join('');
+    $('p-access-msg').textContent = n === apps.length ? 'All done, thank you. We accept every invite and confirm within one working day.' : '';
+  }
+  $('p-access').addEventListener('click', async function(e){
+    var b = e.target.closest('button[data-app]'); if(!b) return;
+    b.disabled = true; $('p-access-msg').textContent = '';
+    var r = await sb.rpc('portal_access_set', { p_app: b.dataset.app, p_state: b.dataset.st || null });
+    if (r.error) { b.disabled = false; $('p-access-msg').textContent = 'That did not save. Try again, or message us.'; $('p-access-msg').classList.add('err'); return; }
+    $('p-access-msg').classList.remove('err');
+    me.access = r.data || {};
+    var re = await sb.rpc('portal_me'); if(!re.error && re.data) me = re.data;
+    await loadItems(); render();
+    var d = document.querySelector('#p-access details [data-app="'+b.dataset.app+'"]'); if (d) d.closest('details').open = false;
+  });
+
   function render(){
     renderAgreement();
+    renderAccess();
     var c = me.client||{}, s = me.settings||{}, g = growth(c, me.snapshots||[], s);
     $('p-name').textContent = c.name||''; $('p-terms').textContent = c.founding ? 'founding client' : 'client';
     $('p-head').innerHTML = 'Hello, ' + esc((c.founder||'').split(' ')[0] || c.name) + '. <em>' + (c.liveDate ? 'Live since ' + dstr(c.liveDate) + '.' : 'Onboarding.') + '</em>';
