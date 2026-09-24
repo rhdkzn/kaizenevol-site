@@ -101,7 +101,7 @@
     .acc .body{padding:0 0 18px 34px}
     .acc ol{margin:8px 0 0;padding-left:20px;font-size:15px}
     .acc ol li{margin-top:6px}
-    .acc code{font-family:inherit;font-weight:600;background:var(--recess);padding:1px 6px;border-radius:3px;word-break:break-all}
+    .acc code{font-family:inherit;font-weight:600;background:var(--recess);padding:1px 6px;border-radius:3px;overflow-wrap:anywhere}
     .acc .lvl{margin-top:12px;font-size:13px;color:var(--muted)}
     .acc .lvl b{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-right:8px}
     .acc .note{margin-top:10px;font-size:13px;color:var(--muted);max-width:62ch}
@@ -261,8 +261,8 @@
      portal_access_set() in db/portal-access.sql, which refuses any id it does not know. */
   var PID = '25727662930249979', E1 = 'diego@kaizenevol.com', E2 = 'law@kaizenevol.com';
   function C(t){ return '<code>'+t+'</code>'; }
-  var TIKTOK = { id:'tiktok', name:'TikTok', why:'We post and read your stats. One of only two apps where we log in as you, because TikTok has no team invite.', url:'', link:'',
-    steps:['Before the call, turn on two-step verification: '+C('Profile → ☰ → Settings and privacy → Security')+'.','Set a fresh password you do not use anywhere else.','On a quick FaceTime, tell us the password and we log in on our agency phone.','Read us the code TikTok sends to your phone.','We stay logged in on that one phone only. If we ever stop working together, change your password and we are out.'],
+  var TIKTOK = { id:'tiktok', name:'TikTok', why:'We post and read your stats. TikTok has no team invite, so this one is a login we do with you on FaceTime.', url:'', link:'',
+    steps:['Before the call, turn on two-step verification: '+C('Profile → ☰ → Settings and privacy → Security')+'','Set a fresh password you do not use anywhere else.','On a quick FaceTime, tell us the password and we log in on our agency phone.','Read us the code TikTok sends to your phone.','We stay logged in on that one phone only. If we ever stop working together, change your password and we are out.'],
     level:'Posting and analytics, on one agency phone', note:'Mark this done after the FaceTime.' };
   var DRIVE = function(what){ return { id:'drive', name:'Google Drive', why:'One folder for everything we make posts from.', url:'', link:'',
     steps:['Open the Drive folder we have shared with you. It is named after you.','Drop in '+what+'.','Anything private stays private in that folder.'],
@@ -270,16 +270,16 @@
   var ACCESS_APPS = {
     Artist: [
       { id:'instagram', name:'Instagram', why:'We post, schedule, handle comments and read insights. Your DMs stay yours.', url:'https://business.facebook.com/settings', link:'Open Meta Business Suite settings',
-        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'.','Paste our ID '+C(PID)+' and continue.','Pick your Instagram account and switch on Content, Community activity and Insights. Leave Messages off.','Tap '+C('Assign assets')+'.'],
+        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'','Paste our ID '+C(PID)+' and continue.','Pick your Instagram account and switch on Content, Community activity and Insights. Leave Messages off.','Tap '+C('Assign assets')+''],
         level:'Content · Community activity · Insights', note:'This only works if your Instagram is a creator or business account connected to Meta Business Suite. If it is not, message us and we will do it with you on FaceTime.' },
       { id:'youtube', name:'YouTube', why:'We upload, schedule and edit videos and Shorts, and read analytics. We cannot see revenue.', url:'https://studio.youtube.com', link:'Open YouTube Studio',
-        steps:['Open the YouTube Studio app (or '+C('studio.youtube.com')+') and tap your profile picture.','Go to '+C('Settings → Permissions → Invite')+'.','Enter '+C(E1)+', choose '+C('Editor (limited)')+' and send.','Repeat for '+C(E2)+'.'],
+        steps:['Open the YouTube Studio app (or '+C('studio.youtube.com')+') and tap your profile picture.','Go to '+C('Settings → Permissions → Invite')+'','Enter '+C(E1)+', choose '+C('Editor (limited)')+' and send.','Repeat for '+C(E2)+''],
         level:'Editor (limited), for both emails', note:'' },
       { id:'spotify', name:'Spotify for Artists', why:'We read your listener, save and playlist data, keep your bio and photos fresh, and add Canvas and Clips.', url:'https://artists.spotify.com', link:'Open Spotify for Artists',
-        steps:['Open the Spotify for Artists app (or '+C('artists.spotify.com')+') and go to '+C('Team')+'.','Tap '+C('Invite')+', enter '+C(E1)+' and choose '+C('Editor')+'.','Repeat for '+C(E2)+'.'],
+        steps:['Open the Spotify for Artists app (or '+C('artists.spotify.com')+') and go to '+C('Team')+'','Tap '+C('Invite')+', enter '+C(E1)+' and choose '+C('Editor')+'','Repeat for '+C(E2)+''],
         level:'Editor, for both emails', note:'Editors cannot see or change your payment details, and cannot add or remove team members. We check with you before changing your bio or photos.' },
       { id:'apple', name:'Apple Music for Artists', why:'Adds your Apple listens and Shazams to the monthly numbers.', url:'https://artists.apple.com', link:'Open Apple Music for Artists', na:true,
-        steps:['Open the Apple Music for Artists app (or '+C('artists.apple.com')+') and select your artist.','Go to '+C('Account → Users → Invite User')+' (the + on web).','Enter '+C(E1)+', choose '+C('Analyst')+' and invite.','Repeat for '+C(E2)+'.'],
+        steps:['Open the Apple Music for Artists app (or '+C('artists.apple.com')+') and select your artist.','Go to '+C('Account → Users → Invite User')+' (the + on web).','Enter '+C(E1)+', choose '+C('Analyst')+' and invite.','Repeat for '+C(E2)+''],
         level:'Analyst, for both emails', note:'Not set up on Apple Music for Artists yet? Tap “Not relevant”.' },
       DRIVE('your cover art, press photos, any old shoots and your upcoming release dates. Add unreleased audio only if you are happy for us to hear it'),
       TIKTOK,
@@ -289,13 +289,13 @@
     ],
     Brand: [
       { id:'meta', name:'Meta (Facebook, Instagram, ads)', why:'We run your ads, post, handle comments and read insights. Your DMs stay yours.', url:'https://business.facebook.com/settings', link:'Open Meta Business Suite settings',
-        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'.','Paste our ID '+C(PID)+' and continue.','Pick your Facebook Page, Instagram account, ad account and dataset (your pixel).','On the Page and Instagram switch on Content, Community activity, Insights and Ads; leave Messages off. On the ad account choose Manage campaigns. On the dataset choose Use. Then tap '+C('Assign assets')+'.'],
+        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'','Paste our ID '+C(PID)+' and continue.','Pick your Facebook Page, Instagram account, ad account and dataset (your pixel).','On the Page and Instagram switch on Content, Community activity, Insights and Ads; leave Messages off. On the ad account choose Manage campaigns. On the dataset choose Use. Then tap '+C('Assign assets')+''],
         level:'Page and Instagram: Content · Community activity · Insights · Ads. Ad account: Manage campaigns', note:'Ad spend stays in your own ad account, on your card.' },
       { id:'shopify', name:'Shopify', why:'We read orders and sales so the numbers are yours, not ours, and set up products for each drop.', url:'https://admin.shopify.com', link:'Open Shopify admin',
-        steps:['Open your Shopify admin and go to '+C('Settings → Users')+'.','Tap '+C('Add users')+' and enter '+C(E2)+'.','Give access to Orders, Products, Analytics and Marketing. Leave billing and store settings off.','Send the invite, then repeat for '+C(E1)+'.'],
+        steps:['Open your Shopify admin and go to '+C('Settings → Users')+'','Tap '+C('Add users')+' and enter '+C(E2)+'','Give access to Orders, Products, Analytics and Marketing. Leave billing and store settings off.','Send the invite, then repeat for '+C(E1)+''],
         level:'Staff: Orders · Products · Analytics · Marketing', note:'If your plan has no staff seats left, message us and we will sort it with you.' },
       { id:'klaviyo', name:'Email and SMS (Klaviyo)', why:'We build the flows and send to your list, so every drop opens to your list first.', url:'https://www.klaviyo.com/login', link:'Open Klaviyo', na:true,
-        steps:['Open Klaviyo, click your account name at the bottom left and go to '+C('Settings → Users')+'.','Tap '+C('Add new user')+', enter '+C(E2)+' and choose '+C('Manager')+'.','Repeat for '+C(E1)+'.'],
+        steps:['Open Klaviyo, click your account name at the bottom left and go to '+C('Settings → Users')+'','Tap '+C('Add new user')+', enter '+C(E2)+' and choose '+C('Manager')+'','Repeat for '+C(E1)+''],
         level:'Manager, for both emails', note:'Using a different email tool, or none yet? Tap “Not relevant” and tell us which one in a message.' },
       DRIVE('your product photos, any footage and your drop dates'),
       TIKTOK
