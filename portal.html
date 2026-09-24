@@ -108,6 +108,12 @@
     .acc .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .btn-line{display:inline-flex;align-items:center;gap:8px;background:none;color:var(--ink);border:1px solid var(--hairline);border-radius:999px;padding:11px 18px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none}
     .acc details.is-done summary .n{color:var(--muted)}
+    .qs fieldset{border:0;border-top:1px solid var(--hairline);margin:18px 0 0;padding:14px 0 0}
+    .qs legend{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);padding:0}
+    .qs .fld{margin-top:14px}
+    .qs .fld label{text-transform:none;letter-spacing:0;font-size:15px;font-weight:600;color:var(--ink)}
+    .qs .hint{font-size:13px;color:var(--muted);margin-top:2px}
+    .qs textarea{min-height:70px}
     footer{border-top:1px solid var(--hairline);padding:22px 0;font-size:13px;color:var(--stone)}
     footer a{color:var(--stone);text-decoration:none}
     @media(max-width:720px){.grid{grid-template-columns:1fr 1fr}.list li{grid-template-columns:1fr}.list .d{order:-1}}
@@ -132,7 +138,7 @@
       <h1>Your space with KaizenEvol. <em>Sign in with your email.</em></h1>
       <p class="why">No password. We send a link to the email address on your agreement; open it on this device and you're in.</p>
       <div class="row">
-        <div class="f"><input type="email" id="email" placeholder="you@yourbrand.com" autocomplete="email" /></div>
+        <div class="f"><input type="email" id="email" placeholder="you@email.com" autocomplete="email" /></div>
         <button class="btn-solid" id="send" onclick="sendLink()">Send me a sign-in link</button>
       </div>
       <div class="msg" id="login-msg"></div>
@@ -172,6 +178,14 @@
         </div>
       </div>
 
+      <div id="p-setup-wrap" style="display:none">
+        <h2>Setup questions</h2>
+        <p class="why" id="p-setup-intro"></p>
+        <div class="row" id="p-setup-toggle-row" style="display:none"><button class="btn-line" id="p-setup-toggle">See or change your answers</button></div>
+        <form class="qs" id="p-setup" onsubmit="return false"></form>
+        <div class="msg" id="p-setup-msg"></div>
+      </div>
+
       <div id="p-access-wrap" style="display:none">
         <h2>Give us access</h2>
         <p class="why" id="p-access-intro"></p>
@@ -183,7 +197,7 @@
       <div class="grid" id="p-numbers"></div>
       <p class="why" id="p-numbers-note"></p>
 
-      <h2>Drop calendar</h2>
+      <h2 id="p-events-h">Drop calendar</h2>
       <ul class="list" id="p-events"></ul>
 
       <div id="p-boards"></div>
@@ -301,7 +315,106 @@
       TIKTOK
     ]
   };
-  function accessApps(c){ return ACCESS_APPS[(c||{}).segment === 'Artist' ? 'Artist' : 'Brand']; }
+  /* ── artist setup questions (2026-09-24) ──
+     The questions SKN answered on his setup form ("What we need from you", 2026-09-11),
+     rebuilt from his recorded answers (KaizenEvol clients/skn.md). Saved by
+     portal_form_submit() in db/portal-setup.sql, never into the CRM blob, because they
+     hold personal data. [key, question, hint, long?] */
+  function isArtist(){ return ((me && me.client) || {}).segment === 'Artist'; }
+  var SETUP_QS = [
+    ['You', [
+      ['legal_name','Your full legal name','For the paperwork only. It never goes on a post.'],
+      ['artist_name','Your artist name, exactly as you want it everywhere',''],
+      ['dob','Date of birth',''],
+      ['phone','Phone number (WhatsApp)',''],
+      ['based','Where you are based',''],
+      ['others','Anyone else who should be on our emails? Manager, team, family','Name and email, or "none".']
+    ]],
+    ['Your music and the paperwork', [
+      ['prs','Are you a member of PRS for Music or PPL?','These collect royalties when your songs are played. If you are not, say so. It is free to fix and we will help.'],
+      ['splits','Are the splits written down on songs you are featured on, or that feature other artists?','Who gets what share of each song.', 1],
+      ['signed','Have you signed anything? A label, publishing, management or distribution deal','Or "nothing".', 1],
+      ['distributor','Who distributes your music, and under which email?','For example DistroKid.'],
+      ['claims','Does anyone else have a claim on your releases? Co-owners, samples, producers',''],
+      ['art','Who makes your cover art, and do you own it?','We need to know before we use it in posts.']
+    ]],
+    ['What is coming', [
+      ['upcoming','Your next releases, with dates','Singles, projects, features. Include anything unreleased you want to plan around.', 1],
+      ['shows','Any shows or events coming up?','', 1]
+    ]],
+    ['Your accounts', [
+      ['handles','Your handles: Instagram, TikTok, X, SoundCloud and any others','Say which are artist accounts and which are personal.', 1],
+      ['youtube','Your YouTube channel link',''],
+      ['claimed','Have you claimed Spotify for Artists and Apple Music for Artists?','If not, we will do it with you.']
+    ]],
+    ['Content and filming', [
+      ['footage','Where is your existing footage and photos?','Camera roll, a hard drive, old shoots.'],
+      ['kit','What kit do you already own?','Mics, cameras, lights.'],
+      ['record','Where do you record, and can we film there?',''],
+      ['free','When are you free to film?','Weekdays, weekends, evenings.'],
+      ['never','Anything you would never post?','The most useful box on this page. Topics, people, places, looks.', 1]
+    ]]
+  ];
+  var setupRow = null, setupOpen = false;
+  async function loadSetup(){
+    try { var r = await sb.from('ke_portal_forms').select('answers,submitted_at').maybeSingle(); setupRow = (!r.error && r.data) ? r.data : null; } catch(e) { setupRow = null; }
+  }
+  function renderSetup(){
+    var w = $('p-setup-wrap');
+    if (!isArtist()) { w.style.display = 'none'; return; }
+    w.style.display = '';
+    var a = (setupRow && setupRow.answers) || {};
+    var sent = setupRow && setupRow.submitted_at;
+    $('p-setup-intro').textContent = sent ? 'Sent on ' + dstr(sent) + '. Thank you. You can change your answers any time.' : 'So we can plan your content around you. About ten minutes. Skip anything you do not know yet.';
+    $('p-setup-toggle-row').style.display = sent ? '' : 'none';
+    var show = !sent || setupOpen;
+    $('p-setup').style.display = show ? '' : 'none';
+    if (!show) return;
+    if ($('p-setup').dataset.built) return;
+    $('p-setup').dataset.built = '1';
+    $('p-setup').innerHTML = SETUP_QS.map(function(g){
+      return '<fieldset><legend>'+esc(g[0])+'</legend>' + g[1].map(function(q){
+        var v = esc(a[q[0]] || '');
+        var input = q[3] ? '<textarea id="q-'+q[0]+'">'+v+'</textarea>' : '<input type="text" id="q-'+q[0]+'" value="'+v+'" />';
+        return '<div class="fld"><label for="q-'+q[0]+'">'+esc(q[1])+'</label>'+(q[2]?'<div class="hint">'+esc(q[2])+'</div>':'')+input+'</div>';
+      }).join('') + '</fieldset>';
+    }).join('') + '<div class="row"><button class="btn-solid" id="p-setup-send" type="button">'+(sent?'Save changes':'Send my answers')+'</button></div>';
+    $('p-setup-send').onclick = sendSetup;
+  }
+  async function sendSetup(){
+    var ans = {}, lines = [];
+    SETUP_QS.forEach(function(g){ g[1].forEach(function(q){ var v = ($('q-'+q[0]).value || '').trim(); ans[q[0]] = v; if (v) lines.push(q[1] + ': ' + v); }); });
+    if (!lines.length) { $('p-setup-msg').textContent = 'Fill in at least one answer first.'; return; }
+    var b = $('p-setup-send'); b.disabled = true; $('p-setup-msg').textContent = 'Sending…';
+    var r = await sb.rpc('portal_form_submit', { p_answers: ans, p_summary: lines.join('\n') });
+    b.disabled = false;
+    if (r.error) { $('p-setup-msg').textContent = 'That did not send. Try again, or message us.'; return; }
+    $('p-setup-msg').textContent = 'Sent. Thank you.';
+    setupOpen = false; $('p-setup').dataset.built = '';
+    await loadSetup(); var re = await sb.rpc('portal_me'); if(!re.error && re.data) me = re.data;
+    await loadItems(); render(); window.scrollTo({ top: $('p-setup-wrap').offsetTop - 20 });
+  }
+  $('p-setup-toggle').addEventListener('click', function(){ setupOpen = !setupOpen; if (!setupOpen) $('p-setup').dataset.built = ''; renderSetup(); });
+
+  /* SoundCloud and the distributor have no team invite, so they are FaceTime logins like TikTok.
+     They are on FulaFalu's list because his plan (Diego's deck, 18 Sep) asks for them. */
+  var EXTRA_APPS = [
+    { id:'soundcloud', name:'SoundCloud', why:'We read your plays and keep your profile, tracks and names tidy in one place. SoundCloud has no team invite, so this is a login we do with you on FaceTime.', url:'', link:'',
+      steps:['Before the call, turn on two-step verification in SoundCloud settings, and set a fresh password you do not use anywhere else.','On a quick FaceTime, tell us the password and read us the code.','We log in on our agency phone only. If we ever stop working together, change your password and we are out.'],
+      level:'Stats and profile edits. Nothing is deleted without asking you', note:'If your tracks sit on more than one SoundCloud account, tell us which is which on the call.' },
+    { id:'distributor', name:'Your distributor', why:'So your releases come out under one name, and we can see what each song earns across every store.', url:'', link:'',
+      steps:['Tell us which distributor you use (DistroKid, for example) in the setup questions above.','On a quick FaceTime, tell us the password and read us the code.','We log in on our agency phone only. We never change where your money is paid.'],
+      level:'Stats and release uploads you have agreed', note:'Your payouts and bank details stay yours. We never touch them.' }
+  ];
+  function accessApps(c){
+    c = c || {};
+    if (Array.isArray(c.accessApps) && c.accessApps.length) {
+      var all = ACCESS_APPS.Artist.concat(ACCESS_APPS.Brand, EXTRA_APPS);
+      var list = c.accessApps.map(function(id){ return all.filter(function(a){ return a.id === id; })[0]; }).filter(Boolean);
+      if (list.length) return list;
+    }
+    return ACCESS_APPS[c.segment === 'Artist' ? 'Artist' : 'Brand'];
+  }
   function renderAccess(){
     var c = me.client||{}, apps = accessApps(c), acc = me.access||{};
     var t = me.tasks||{}, list = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist : null;
@@ -338,7 +451,9 @@
 
   function render(){
     renderAgreement();
+    renderSetup();
     renderAccess();
+    $('p-events-h').textContent = isArtist() ? 'Release calendar' : 'Drop calendar';
     var c = me.client||{}, s = me.settings||{}, g = growth(c, me.snapshots||[], s);
     $('p-name').textContent = c.name||''; $('p-terms').textContent = c.founding ? 'founding client' : 'client';
     $('p-head').innerHTML = 'Hello, ' + esc((c.founder||'').split(' ')[0] || c.name) + '. <em>' + (c.liveDate ? 'Live since ' + dstr(c.liveDate) + '.' : 'Onboarding.') + '</em>';
@@ -359,7 +474,7 @@
     $('p-numbers-note').textContent = trial ? (c.terms || 'No fee for now. Any paid terms are agreed with you in writing first.') : g.base ? 'Our fee only goes up when your revenue does, and only when it is up by half — measured on your total revenue, from your own records.' : 'Your baseline is agreed in writing before any spend. Until then these stay blank on purpose.';
     var today = new Date().toISOString().slice(0,10);
     var events = items.filter(function(i){ return i.kind==='event'; }).sort(function(a,b){ return String(a.on_date).localeCompare(String(b.on_date)); });
-    $('p-events').innerHTML = events.length ? events.map(function(e){ var past = e.on_date && e.on_date < today; return '<li'+(past?' class="done"':'')+'><span class="d">'+esc(dstr(e.on_date))+'</span><span><b class="t">'+esc(e.title)+'</b>'+(e.body?'<div class="m">'+esc(e.body)+'</div>':'')+'</span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">No dates yet. The drop calendar appears here once we agree it.</span></li>';
+    $('p-events').innerHTML = events.length ? events.map(function(e){ var past = e.on_date && e.on_date < today; return '<li'+(past?' class="done"':'')+'><span class="d">'+esc(dstr(e.on_date))+'</span><span><b class="t">'+esc(e.title)+'</b>'+(e.body?'<div class="m">'+esc(e.body)+'</div>':'')+'</span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">No dates yet. '+(isArtist()?'Your release dates appear here once we agree them.':'The drop calendar appears here once we agree it.')+'</span></li>';
     var bds = me.boards||[];
     $('p-boards').innerHTML = bds.map(function(b){ var cols = (b.columns||[]); return '<h2>'+esc(b.name)+'</h2><div class="grid">'+cols.map(function(c){ var ks = (b.cards||[]).filter(function(k){ return k.col===c.id; }); return '<div class="cell"><div class="k">'+esc(c.name)+' · '+ks.length+'</div>'+(ks.length?ks.map(function(k){ return '<div class="s" style="margin-top:6px"><b style="color:var(--ink)">'+esc(k.title)+'</b>'+(k.due?' · '+esc(dstr(k.due)):'')+'</div>'; }).join(''):'<div class="s" style="margin-top:6px">—</div>')+'</div>'; }).join('')+'</div>'; }).join('');
     var t = me.tasks||{};
@@ -489,7 +604,7 @@
     var r = await sb.rpc('portal_me');
     if(r.error || !r.data){ show('s-none'); $('who').innerHTML='<span>'+esc((s.data.session.user||{}).email||'')+'</span><button onclick="signOut()">Sign out</button>'; return; }
     me = r.data; if(!me.client || !me.client.id){ show('s-none'); return; }
-    await loadItems(); await loadFiles(); await loadAgreement(); sb.rpc('portal_touch'); show('s-portal'); render();
+    await loadItems(); await loadFiles(); await loadAgreement(); await loadSetup(); sb.rpc('portal_touch'); show('s-portal'); render();
   }
   sb.auth.onAuthStateChange(function(ev){ if(ev==='SIGNED_IN'||ev==='TOKEN_REFRESHED'){ if(location.hash) history.replaceState(null,'',location.pathname); boot(); } });
   boot();

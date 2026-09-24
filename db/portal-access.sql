@@ -12,7 +12,7 @@
 -- Marauder, ob6 on the standard list). It is only ever ticked here, never unticked, so a
 -- staff tick is never undone by a client changing their mind.
 --
--- The app list per segment is duplicated in portal.html (ACCESS_APPS). If you add an app,
+-- The app list per segment, and the known ids, are duplicated in portal.html (ACCESS_APPS / ALL_APPS). If you add an app,
 -- add it in both places: this function refuses an app it does not know.
 --
 -- updated_at is bumped on every write, because the CRM's saves are guarded on it; a write
@@ -40,11 +40,19 @@ begin
   select data into d from public.app_data where id = 'ke_data' for update;
   select x into c from jsonb_array_elements(coalesce(d->'clients','[]'::jsonb)) x where x->>'id' = cid limit 1;
 
-  if coalesce(c->>'segment', '') = 'Artist' then
+  -- A client may carry its own list (client.accessApps), taken from the access page of the
+  -- deck Diego gave them (FulaFalu's plan asks for Spotify for Artists, Instagram, TikTok,
+  -- SoundCloud and the distributor). Otherwise the segment default. Ids outside the known set
+  -- are dropped, so a typo in the CRM cannot create an app the portal has no steps for.
+  if jsonb_typeof(c->'accessApps') = 'array' and jsonb_array_length(c->'accessApps') > 0 then
+    select array_agg(v) into apps from jsonb_array_elements_text(c->'accessApps') v
+     where v = any(array['instagram','youtube','spotify','apple','soundcloud','distributor','drive','tiktok','x','meta','shopify','klaviyo']);
+  elsif coalesce(c->>'segment', '') = 'Artist' then
     apps := array['instagram','youtube','spotify','apple','drive','tiktok','x'];
   else
     apps := array['meta','shopify','klaviyo','drive','tiktok'];
   end if;
+  if apps is null then raise exception 'No apps set for this client.'; end if;
   if not (p_app = any(apps)) then raise exception 'Unknown app.'; end if;
 
   acc := coalesce(d->'clientAccess'->cid, '{}'::jsonb);
