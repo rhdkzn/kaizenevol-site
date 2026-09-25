@@ -231,6 +231,8 @@
       <div class="err" id="r-msg"></div>
       <p class="why" id="r-nolink" style="display:none">The payment link for your rate is being set up. Law will send it to you directly; nothing else is needed from you right now.</p>
       <p class="why" id="r-nolink-l" style="display:none">We'll send you your payment link directly, within a working day. Nothing else is needed from you right now.</p>
+      <!-- Demo rows only (data.demo on the ROW, never the URL): walk past payment without paying. Writes nothing. -->
+      <div class="actions" id="demo-row" style="display:none"><button class="btn-solid" id="demo-continue" onclick="demoContinue()">Continue to setup (demo) →</button></div>
     </section>
 
     <!-- 4 · LIVE -->
@@ -238,7 +240,7 @@
       <p class="smallcaps">Done</p>
       <div class="done-mark">Welcome, <span id="d-brand"></span>.</div>
       <p class="lead" data-lane="creative">Agreement signed, retainer set up. You're a client.</p>
-      <p class="lead" data-lane="local">Agreement signed, payment set up. You're a client.</p>
+      <p class="lead" data-lane="local" id="d-lead-l">Agreement signed, payment set up. You're a client.</p>
       <h2>What happens next</h2>
       <ul class="list" data-lane="local">
         <li><span class="n">01</span><span>Sign in to your client space and answer the setup questions: opening hours, services, booking link, where alerts go. About ten minutes.</span></li>
@@ -312,6 +314,7 @@
     $('a-hash').textContent = view.agreementHash;
     $('r-fee').textContent = gbp(view.retainer) + ' a month' + (view.founding ? ', founding rate' : '') + '. First month today, then the same date each month.';
     if(view.payUrl){ $('pay-btn').href = view.payUrl; } else { $('pay-btn').style.display='none'; $('paid-check').style.display='none'; $(LOCAL ? 'r-nolink-l' : 'r-nolink').style.display='block'; if(LOCAL) $('pay-btn').parentNode.style.display='none'; }
+    if(view.demo === true){ $('demo-row').style.display = ''; }
     if(view.signature){ showSigned(); }
     if(view.status==='paid'||view.status==='live') showStep(4);
     else if(view.status==='signed') showStep(3);
@@ -354,6 +357,14 @@
       if(!r.ok){ err.textContent = j.error || 'Could not sign. Try again.'; btn.disabled=false; btn.textContent='Sign the agreement'; return; }
       view = j; showSigned(); showStep(3);
     }catch(e){ err.textContent = 'No connection. Try again.'; btn.disabled=false; btn.textContent='Sign the agreement'; }
+  };
+
+  /* Demo only: show the Setup screen without a payment. Nothing is sent to the server, so the
+     row stays 'signed' and a real client can never reach this (the flag is on the row). */
+  window.demoContinue = function(){
+    if(!(view && view.demo === true)) return;
+    $('d-lead-l').textContent = 'Demo: this is what a client sees once their first month is paid. Nothing was charged.';
+    showStep(4);
   };
 
   /* ── payment ── */

@@ -189,6 +189,14 @@ if (typeof mod.agreementTextLocal === 'function' && typeof mod.publicView === 'f
   ok('publicView: local standard retainer defaults to 750 when unset', publicView({ id: 'E'.repeat(24), data: { ...ls, retainer: undefined } }).retainer === 750);
   ok('publicView: local hash binds the local text', v.agreementHash === agreementHash(L1));
   ok('publicView: local buy-out defaults to 1200', v.buyout === 1200);
+  /* The demo switch (Rahaid, 2026-09-25): a row flagged demo:true may walk past the payment
+     step without paying. It is read from the ROW only, never the URL, and it must not touch
+     the agreement text or its hash. */
+  const dRow = { id: 'F'.repeat(24), status: 'signed', data: { ...lf, demo: true } };
+  ok('publicView: demo row says demo', publicView(dRow).demo === true);
+  ok('publicView: normal rows are never demo', publicView(lRow).demo === false && publicView(fRow).demo === false);
+  ok('publicView: only a literal true counts as demo', publicView({ id: 'G'.repeat(24), data: { ...lf, demo: 'yes' } }).demo === false);
+  ok('demo flag does not change the agreement or its hash', agreementText({ ...lf, demo: true }) === L1);
   ok('publicView: creative view has no lane-only fields leaking', !('buyout' in vc) || vc.buyout === null);
 }
 

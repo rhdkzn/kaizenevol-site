@@ -237,7 +237,7 @@ export function publicView(row) {
   const tier = d.founding ? 'founding' : 'standard';
   const lane = laneOf(d), local = lane === 'local';
   return {
-    token: row.id, status: row.status, lane,
+    token: row.id, status: row.status, lane, demo: d.demo === true,
     business: d.business || '', founder: d.founder || '', email: d.email || '', segment: d.segment || '',
     founding: !!d.founding, retainer: Number(d.retainer) || (local ? TERMS_LOCAL : TERMS)[tier],
     step: local ? null : TERMS.step, trigger: local ? null : TERMS.trigger, buyout: local ? (Number(d.buyout) > 0 ? Number(d.buyout) : TERMS_LOCAL.buyout) : null,

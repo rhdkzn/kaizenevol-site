@@ -33,6 +33,7 @@ if (typeof mod.publicView !== 'function') {
 }
 const LOCAL = { id: 'LocalTokenLocalTokenLocal1', status: 'sent', data: { lane: 'local', business: 'Hollow Oak Barbers', founder: 'Dev Patel', founding: true, retainer: 500, email: 'dev@hollowoak.co.uk', issuedAt: '2026-09-25', proposalNotes: '' } }
 const CREATIVE = { id: 'CreativeTokenCreativeTok1', status: 'sent', data: { business: 'Marauder', founder: 'Sam Okafor', founding: true, retainer: 1000, email: 'sam@marauder.co.uk', issuedAt: '2026-09-06' } }
+const DEMO = { id: 'DemoTokenDemoTokenDemoTok1', status: 'sent', data: { ...LOCAL.data, business: 'Demo Barbers', demo: true } }
 const ROWS = { [LOCAL.id]: LOCAL, [CREATIVE.id]: CREATIVE }
 
 const PW_BIN = process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium'
@@ -105,6 +106,34 @@ if (!LIVE_TOKEN) {
     if (SHOTS) await page.screenshot({ path: `${SHOTS}/local-pay-${width}.png`, fullPage: false })
     await ctx.close()
   }
+}
+
+/* ── 2b. the DEMO row: a continue button past payment, no server write; real rows get none ── */
+if (!LIVE_TOKEN) {
+  ROWS[DEMO.id] = DEMO
+  for (const width of [375, 1280]) {
+    const { ctx, page, errors } = await open(DEMO.id, width, { signed: true })
+    const w = width + 'px'
+    await page.waitForSelector('#s3.on')
+    ok(`${w} demo: a continue-to-setup button on the payment step`, await page.isVisible('#demo-continue'))
+    const posts = []
+    page.on('request', r => { if (r.method() !== 'GET') posts.push(r.url()) })
+    await page.click('#demo-continue')
+    await page.waitForSelector('#s4.on')
+    const t = await page.innerText('#s4')
+    ok(`${w} demo: lands on the local Setup screen`, /Welcome, Demo Barbers/.test(t) && /setup questions/i.test(t), t.slice(0, 160))
+    ok(`${w} demo: says it is a demo, not a paid client`, /demo/i.test(t))
+    ok(`${w} demo: continuing writes nothing to the server`, posts.length === 0, posts.join(' '))
+    ok(`${w} demo: no script errors`, errors.length === 0, errors.join(' | '))
+    if (SHOTS) await page.screenshot({ path: `${SHOTS}/demo-pay-${width}.png`, fullPage: true })
+    await ctx.close()
+  }
+  const { ctx, page } = await open(LOCAL.id, 375, { signed: true })
+  await page.waitForSelector('#s3.on')
+  ok('real local row: NO demo button on the payment step', !(await page.isVisible('#demo-continue')))
+  await page.goto(page.url() + '&demo=1', { waitUntil: 'domcontentloaded' }); await page.waitForSelector('#s3.on')
+  ok('real local row: ?demo=1 in the URL does nothing', !(await page.isVisible('#demo-continue')))
+  await ctx.close()
 }
 
 /* ── 3. the CREATIVE link keeps its copy exactly ── */
