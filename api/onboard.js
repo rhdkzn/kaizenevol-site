@@ -49,7 +49,7 @@ function longDate(iso) { const d = iso ? new Date(iso + (iso.length === 10 ? 'T1
 /* Kaizen Ascent, the local lane (OPS-ONB-006, CRITICAL_FACTS Kaizen Ascent block, 2026-09-25).
  * Pay links come from env and have NO fallback: a local row must never borrow a creative
  * Stripe link (£1,000 on a £500 client). Unset → payUrl '' → the page says we'll send it. */
-const TERMS_LOCAL = { standard: 750, founding: 500, hosting: 20 };
+const TERMS_LOCAL = { standard: 750, founding: 500, hosting: 20, buyout: 1200 };
 export function laneOf(d) { return (d && d.lane === 'local') ? 'local' : 'creative'; }
 
 /* ── the agreement, rendered from the row (canonical text → SHA-256) ──────── */
@@ -133,13 +133,13 @@ export function agreementText(d) {
   return L.join('\n');
 }
 /* The local agreement (Kaizen Ascent). No growth step, no revenue access: those are creative
- * only. The buy-out price is a FIELD on the row (d.buyout) and not set in canon, so with no
- * figure the text names none. Clauses 6 (data), 9 (liability), 10 and 11 are the creative
+ * only. Buy-out is £1,200 flat (CRITICAL_FACTS Kaizen Ascent block); d.buyout on the row
+ * overrides it for one client. Clauses 6 (data), 9 (liability), 10 and 11 are the creative
  * agreement's reviewed wording; clause 6.2 is creative 8.2 with Twilio and Anthropic added. */
 export function agreementTextLocal(d) {
   const tier = d.founding ? 'founding' : 'standard';
   const fee = Number(d.retainer) || TERMS_LOCAL[tier];
-  const buyout = Number(d.buyout) > 0 ? Number(d.buyout) : 0;
+  const buyout = Number(d.buyout) > 0 ? Number(d.buyout) : TERMS_LOCAL.buyout;
   const brand = d.business || 'the Client', founder = d.founder || 'the Client', start = d.startDate ? longDate(d.startDate) : 'the date this Agreement is signed';
   const L = [];
   L.push(`SERVICES AGREEMENT: KAIZEN ASCENT`);
@@ -166,7 +166,8 @@ export function agreementTextLocal(d) {
   L.push(`3.1 In any calendar month in which the front office catches nothing the Client would have missed, the Client gets its next month free. "Would have missed" means a new enquiry that reached the front office outside the Client's opening hours, judged in the Client's own timezone.`);
   L.push(`3.2 It is measured by the Agency's monthly report of what the front office caught, which the Client receives. Test and demonstration messages do not count.`);
   L.push(`3.3 The free month is a credit against the next month's fee, never a refund, and it has no cash value. A credit not yet used when this Agreement ends lapses.`);
-  L.push(`3.4 The guarantee is measured against the opening hours the Client has given the Agency in writing. If no opening hours are on record, it cannot be measured and does not apply until they are.`);
+  L.push(`3.4 The guarantee is measured against the opening hours the Client has given the Agency in writing, which must be the hours the Client is actually open to customers. A change to them counts from the next calendar month. If no opening hours are on record, it cannot be measured and does not apply until they are.`);
+  L.push(`3.5 The guarantee applies from the first full calendar month after the front office goes live.`);
   L.push(``);
   L.push(`4. TERM AND ENDING`);
   L.push(`4.1 This Agreement begins on ${start} and runs for an initial term of three months. After that it continues month to month until it is ended under clause 4.2.`);
@@ -177,7 +178,7 @@ export function agreementTextLocal(d) {
   L.push(``);
   L.push(`5. THE WEBSITE`);
   L.push(`5.1 While the Client is a client, the website's design, code and hosting are the Agency's, provided to the Client under this Agreement. The Client's content and logo are always the Client's.`);
-  L.push(`5.2 When this Agreement ends, the Client may buy the website ${buyout ? `for ${gbp(buyout)}, paid once` : 'at a price the parties agree in writing'}. Buying it transfers the site files and the domain to the Client, and hosting is then the Client's.`);
+  L.push(`5.2 When this Agreement ends, the Client may buy the website for ${gbp(buyout)}, paid once. Buying it transfers the site files and the domain to the Client, and hosting is then the Client's.`);
   L.push(`5.3 After a buy-out, the Client may choose to have the Agency keep hosting the website for £20 per month, hosting only, month to month. Any edits are quoted separately.`);
   L.push(`5.4 If the Client does not buy it, the website is taken down 30 days after the last paid month, and the Agency returns the Client's content and logo.`);
   L.push(``);
@@ -239,7 +240,7 @@ export function publicView(row) {
     token: row.id, status: row.status, lane,
     business: d.business || '', founder: d.founder || '', email: d.email || '', segment: d.segment || '',
     founding: !!d.founding, retainer: Number(d.retainer) || (local ? TERMS_LOCAL : TERMS)[tier],
-    step: local ? null : TERMS.step, trigger: local ? null : TERMS.trigger, buyout: local && Number(d.buyout) > 0 ? Number(d.buyout) : null,
+    step: local ? null : TERMS.step, trigger: local ? null : TERMS.trigger, buyout: local ? (Number(d.buyout) > 0 ? Number(d.buyout) : TERMS_LOCAL.buyout) : null,
     startDate: d.startDate || '', notes: d.proposalNotes || '', drops: d.drops || '',
     agreement: text, agreementHash: agreementHash(text), signature: sig,
     payUrl: payUrl(row), paidAt: row.paid_at || null, signedAt: row.signed_at || null

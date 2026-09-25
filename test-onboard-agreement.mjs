@@ -143,16 +143,19 @@ if (typeof mod.agreementTextLocal === 'function' && typeof mod.publicView === 'f
   ok('local: 30 days notice, not before the initial term ends', /not less than 30 days' written notice/.test(L1) && /no ending may take effect before the end of the initial term/.test(L1));
   ok('local: website free, built hosted maintained', /website/i.test(L1) && /no charge/i.test(L1) && /hosted/i.test(L1));
   ok('local: AI front office named (texts, calls, emails, chat)', /texts/.test(L1) && /calls/.test(L1) && /emails/.test(L1) && /chat/.test(L1));
-  /* Buy-out: the price is not set (Rahaid's dispatch, 2026-09-25). It is a field on the row.
-     With no figure the text must not invent one; with a figure it must say it. */
+  /* Buy-out: £1,200 flat (CRITICAL_FACTS Kaizen Ascent block, OPS-ONB-006; Rahaid 2026-09-25:
+     "it's in the vault for a reason"). A figure typed on the row overrides it for that client. */
   ok('local: buy-out offered on leaving', /buy the website/i.test(L1));
-  ok('local: NO buy-out figure invented when the field is empty', !/buy the website[^\n]*£\d/i.test(L1), (L1.match(/[^\n]*buy the website[^\n]*/i) || [''])[0].slice(0, 200));
-  ok('local: buy-out figure rendered when set on the row', /buy the website[^\n]*£1,450/i.test(agreementTextLocal({ ...lf, buyout: 1450 })));
+  ok('local: buy-out defaults to £1,200 flat', /buy the website for £1,200/i.test(L1), (L1.match(/[^\n]*buy the website[^\n]*/i) || [''])[0].slice(0, 200));
+  ok('local: buy-out figure on the row overrides the default', /buy the website for £1,450/i.test(agreementTextLocal({ ...lf, buyout: 1450 })) && !/£1,200/.test(agreementTextLocal({ ...lf, buyout: 1450 })));
   ok('local: hosting after buy-out £20/mo', /£20 per month/.test(L1));
   ok('local: site taken down 30 days after last paid month if not bought', /taken down 30 days after/i.test(L1));
   ok('local: content and logo stay theirs', /content and logo/i.test(L1));
   ok('local: guarantee is a CREDIT, never a refund', /next month free/i.test(L1) && /credit/i.test(L1) && /never a refund/i.test(L1));
   ok('local: guarantee needs opening hours on record', /opening hours/i.test(L1) && /does not apply until/i.test(L1));
+  /* Mike Ross review, 2026-09-25: two ways the guarantee gave months away. */
+  ok('local: guarantee starts the first full month after the front office goes live', /first full calendar month after the front office goes live/i.test(L1));
+  ok('local: guarantee hours are the hours actually open to customers; changes count from next month', /actually open to customers/i.test(L1) && /from the next calendar month/i.test(L1));
   ok('local: Art 28 processor terms kept verbatim from creative', /documented instructions/.test(L1) && /without undue delay/.test(L1) && /delete or return/.test(L1));
   ok('local: Twilio and Anthropic named as sub-processors', /Twilio/.test(L1) && /Anthropic/.test(L1));
   ok('local: PECR warranty for marketing messages', /Privacy and Electronic Communications Regulations 2003/.test(L1) && /reactivation/i.test(L1));
@@ -185,6 +188,7 @@ if (typeof mod.agreementTextLocal === 'function' && typeof mod.publicView === 'f
   ok('publicView: local retainer 500 founding', v.retainer === 500);
   ok('publicView: local standard retainer defaults to 750 when unset', publicView({ id: 'E'.repeat(24), data: { ...ls, retainer: undefined } }).retainer === 750);
   ok('publicView: local hash binds the local text', v.agreementHash === agreementHash(L1));
+  ok('publicView: local buy-out defaults to 1200', v.buyout === 1200);
   ok('publicView: creative view has no lane-only fields leaking', !('buyout' in vc) || vc.buyout === null);
 }
 

@@ -35,7 +35,7 @@ ok('local row: lane "local"', l.lane === 'local')
 ok('local row: founding £500', l.founding === true && l.retainer === 500)
 ok('local row: standard £750', obRowData({ ...base, lane: 'local', tier: 'standard' }, lead, '2026-09-25').retainer === 750)
 ok('local row: no baseline revenue, even if one was typed', !l.baselineRevenue)
-ok('local row: buy-out empty stays empty (never invented)', !l.buyout)
+ok('local row: buy-out empty stays off the row (the agreement applies the £1,200 default)', !l.buyout)
 ok('local row: buy-out typed is stored as a number', obRowData({ ...base, lane: 'local', buyout: '1450' }, lead, '2026-09-25').buyout === 1450)
 ok('local row: segment defaults to Local', l.segment === 'Local')
 
@@ -57,7 +57,7 @@ ok('seats never go below zero', obSeatsLeft(Array(9).fill({ status: 'paid', data
 
 /* the modal itself carries the lane select and the buy-out field */
 ok('modal has a Lane select (Creative / Local)', /id="obLane"[\s\S]{0,300}value="creative"[\s\S]{0,200}value="local"/.test(html))
-ok('modal has a buy-out field', /id="obBuyout"/.test(html))
+ok('modal has a buy-out field, blank meaning the £1,200 default', /id="obBuyout"[^>]*placeholder="blank = £1,200"/.test(html))
 ok('modal shows founding seats left', /id="obSeats"/.test(html))
 
 console.log(`\n${passes} passed, ${fails} failed`)
