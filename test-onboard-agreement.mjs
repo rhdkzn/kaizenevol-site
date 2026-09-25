@@ -115,5 +115,78 @@ ok('tokens differ', newToken() !== tok);
   void mod;
 }
 
+/* ── KAIZEN ASCENT — the local lane (OPS-ONB-006, 2026-09-25) ──────────────────
+ * One onboarding row, two lanes. The creative text must not move by a single byte:
+ * every signed creative agreement is a hash of those words, and a render that drifts
+ * makes a signed client's fingerprint stop matching the document they signed. The two
+ * hashes below were taken off main BEFORE the lane existed. */
+const CREATIVE_FOUNDING_HASH = '080892daef453ea931e3d44c0249a832334a26dd78a280c091d5156acb663e3c';
+const CREATIVE_STANDARD_HASH = '4a4491c13fa91d1e9f931847b3e3a3c6ae6dce031f8b2e22338ebf26ac86887d';
+ok('creative founding text byte-identical to pre-lane main', agreementHash(t1) === CREATIVE_FOUNDING_HASH, agreementHash(t1));
+ok('creative standard text byte-identical to pre-lane main', agreementHash(agreementText({ ...standard, issuedAt: '2026-09-06' })) === CREATIVE_STANDARD_HASH);
+ok('lane:"creative" renders the same bytes as no lane', agreementText({ ...founding, lane: 'creative' }) === t1);
+
+const mod = await import('./api/onboard.js');
+ok('local agreement renderer exported', typeof mod.agreementTextLocal === 'function');
+ok('publicView exported (so the page contract is testable)', typeof mod.publicView === 'function');
+if (typeof mod.agreementTextLocal === 'function' && typeof mod.publicView === 'function') {
+  const { agreementTextLocal, publicView } = mod;
+  const lf = { lane: 'local', business: 'Hollow Oak Barbers', founder: 'Dev Patel', founding: true, retainer: 500, startDate: '2026-10-01', issuedAt: '2026-09-25', email: 'dev@hollowoak.co.uk' };
+  const ls = { ...lf, founding: false, retainer: 750, email: '' };
+  const L1 = agreementTextLocal(lf), L2 = agreementTextLocal(ls);
+  ok('agreementText routes lane:"local" to the local text', agreementText(lf) === L1);
+  ok('local render is deterministic', agreementTextLocal({ ...lf }) === L1);
+  ok('local founding fee £500, locked for life', /£500 per month/.test(L1) && /locked for life/i.test(L1));
+  ok('local standard fee £750', /£750 per month/.test(L2) && !/£500 per month/.test(L2));
+  ok('local: no setup fee', /no setup fee/i.test(L1));
+  ok('local: 3-month minimum then month to month', /initial term of three months/.test(L1) && /continues month to month/.test(L1));
+  ok('local: 30 days notice, not before the initial term ends', /not less than 30 days' written notice/.test(L1) && /no ending may take effect before the end of the initial term/.test(L1));
+  ok('local: website free, built hosted maintained', /website/i.test(L1) && /no charge/i.test(L1) && /hosted/i.test(L1));
+  ok('local: AI front office named (texts, calls, emails, chat)', /texts/.test(L1) && /calls/.test(L1) && /emails/.test(L1) && /chat/.test(L1));
+  /* Buy-out: the price is not set (Rahaid's dispatch, 2026-09-25). It is a field on the row.
+     With no figure the text must not invent one; with a figure it must say it. */
+  ok('local: buy-out offered on leaving', /buy the website/i.test(L1));
+  ok('local: NO buy-out figure invented when the field is empty', !/buy the website[^\n]*£\d/i.test(L1), (L1.match(/[^\n]*buy the website[^\n]*/i) || [''])[0].slice(0, 200));
+  ok('local: buy-out figure rendered when set on the row', /buy the website[^\n]*£1,450/i.test(agreementTextLocal({ ...lf, buyout: 1450 })));
+  ok('local: hosting after buy-out £20/mo', /£20 per month/.test(L1));
+  ok('local: site taken down 30 days after last paid month if not bought', /taken down 30 days after/i.test(L1));
+  ok('local: content and logo stay theirs', /content and logo/i.test(L1));
+  ok('local: guarantee is a CREDIT, never a refund', /next month free/i.test(L1) && /credit/i.test(L1) && /never a refund/i.test(L1));
+  ok('local: guarantee needs opening hours on record', /opening hours/i.test(L1) && /does not apply until/i.test(L1));
+  ok('local: Art 28 processor terms kept verbatim from creative', /documented instructions/.test(L1) && /without undue delay/.test(L1) && /delete or return/.test(L1));
+  ok('local: Twilio and Anthropic named as sub-processors', /Twilio/.test(L1) && /Anthropic/.test(L1));
+  ok('local: PECR warranty for marketing messages', /Privacy and Electronic Communications Regulations 2003/.test(L1) && /reactivation/i.test(L1));
+  ok('local: calls may be answered by an AI assistant, privacy notice says so', /AI assistant/.test(L1) && /privacy notice/i.test(L1));
+  ok('local: deposits to the client\'s own account, never held by us', /own account/i.test(L1) && /never holds client money/i.test(L1));
+  ok('local: liability, confidentiality, general carried over', /three months before the claim arose/.test(L1) && /three years after this Agreement ends/.test(L1) && /England and Wales/.test(L1) && /force majeure|beyond its reasonable control/.test(L1));
+  for (const dead of ['growth step', 'revenue access', 'drop', 'sell-through', 'baseline', '£1,000', '£2,000', 'Klaviyo', 'Shopify']) {
+    ok('local: creative-only term absent: ' + dead, !L1.toLowerCase().includes(dead.toLowerCase()));
+  }
+  ok('local and creative texts differ', L1 !== t1);
+
+  /* The pay link. The creative lane shipped a standard row with payUrl '' (OPS-WEB-009).
+     The local lane must never borrow a CREATIVE Stripe link (a £1,000 link on a £500 client),
+     and with its env var unset it serves '' so the page shows the honest fallback. */
+  const lRow = { id: 'CCCCCCCCCCCCCCCCCCCCCCCC', status: 'sent', data: lf };
+  const saved = { a: process.env.STRIPE_LOCAL_FOUNDING_LINK, b: process.env.STRIPE_LOCAL_STANDARD_LINK };
+  delete process.env.STRIPE_LOCAL_FOUNDING_LINK; delete process.env.STRIPE_LOCAL_STANDARD_LINK;
+  ok('local pay link: env unset → empty, never a creative link', payUrl(lRow) === '', payUrl(lRow));
+  process.env.STRIPE_LOCAL_FOUNDING_LINK = 'https://buy.stripe.com/test_local_founding';
+  process.env.STRIPE_LOCAL_STANDARD_LINK = 'https://buy.stripe.com/test_local_standard';
+  ok('local founding pay link from STRIPE_LOCAL_FOUNDING_LINK, token attached', /^https:\/\/buy\.stripe\.com\/test_local_founding\?client_reference_id=CCCC/.test(payUrl(lRow)), payUrl(lRow));
+  ok('local standard pay link from STRIPE_LOCAL_STANDARD_LINK', payUrl({ id: 'D'.repeat(24), data: ls }).startsWith('https://buy.stripe.com/test_local_standard'));
+  if (saved.a === undefined) delete process.env.STRIPE_LOCAL_FOUNDING_LINK; else process.env.STRIPE_LOCAL_FOUNDING_LINK = saved.a;
+  if (saved.b === undefined) delete process.env.STRIPE_LOCAL_STANDARD_LINK; else process.env.STRIPE_LOCAL_STANDARD_LINK = saved.b;
+  ok('creative pay links untouched by the local env vars', /^https:\/\/buy\.stripe\.com\/aFa5kF78wgpncajbPV6AM0g/.test(payUrl(fRow)));
+
+  const v = publicView(lRow), vc = publicView(fRow);
+  ok('publicView carries lane "local"', v.lane === 'local');
+  ok('publicView: creative row lane defaults to "creative"', vc.lane === 'creative');
+  ok('publicView: local retainer 500 founding', v.retainer === 500);
+  ok('publicView: local standard retainer defaults to 750 when unset', publicView({ id: 'E'.repeat(24), data: { ...ls, retainer: undefined } }).retainer === 750);
+  ok('publicView: local hash binds the local text', v.agreementHash === agreementHash(L1));
+  ok('publicView: creative view has no lane-only fields leaking', !('buyout' in vc) || vc.buyout === null);
+}
+
 console.log(fails ? `\n${fails} check(s) failed` : '\nall onboarding agreement checks passed');
 process.exit(fails ? 1 : 0);

@@ -22,6 +22,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
   <style>
+    /* Hallmark · design-system: brand/DESIGN.md · macrostructure: single-column client space (one portal, creative and local views) */
     @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
     @font-face{font-family:'Newsreader';src:url('/newsreader-italic-56f6419f.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
     :root{--page:#F7F6F4;--recess:#EFEDE9;--cool:#E8E9EA;--hairline:#D8D4CC;--stone:#8A857C;--muted:#6E6A63;--ink:#23211E;
@@ -47,6 +48,7 @@
     .why{color:var(--muted);font-size:15px}
     .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline);margin-top:16px}
     .cell{background:var(--page);padding:16px 18px}
+    .grid.fl{display:flex;flex-wrap:wrap}.grid.fl .cell{flex:1 1 150px}
     .cell .k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
     .cell .v{font-size:22px;margin-top:4px;letter-spacing:-0.02em;font-weight:300;font-variant-numeric:tabular-nums}
     .cell .s{font-size:12px;color:var(--muted);margin-top:2px}
@@ -193,9 +195,14 @@
         <div class="msg" id="p-access-msg"></div>
       </div>
 
-      <h2>The numbers</h2>
+      <h2 id="p-numbers-h">The numbers</h2>
       <div class="grid" id="p-numbers"></div>
       <p class="why" id="p-numbers-note"></p>
+
+      <div id="p-needs-wrap" style="display:none">
+        <h2>What needs you</h2>
+        <ul class="list" id="p-needs"></ul>
+      </div>
 
       <h2 id="p-events-h">Drop calendar</h2>
       <ul class="list" id="p-events"></ul>
@@ -355,26 +362,127 @@
       ['never','Anything you would never post?','The most useful box on this page. Topics, people, places, looks.', 1]
     ]]
   ];
+  /* ── Kaizen Ascent: the local view (OPS-ONB-006, 2026-09-25) ──
+     A local client sees Desk numbers, upcoming bookings and the Desk's own setup questions.
+     The answers are saved in kaizendesk/onboard.py's tenant shape (open_hours, services,
+     booking_url, deposit, notify…) so nobody asks the owner twice. */
+  function isLocal(){ var c = (me && me.client) || {}; return c.lane === 'local' || c.segment === 'Local'; }
+  var LOCAL_QS = [
+    ['Your business', [
+      ['blurb','One or two lines about the business','What you do and where. The front office uses this to introduce you.', 1],
+      ['services','Your services','Separate them with commas. For example: Skin fade, Beard trim, Kids cut.'],
+      ['hours','Opening hours, as your customers read them','For example: Mon to Sat, 9am to 6pm.'],
+      ['open_hours','Opening hours again, in this shape: mon-fri 09:00-18:00, sat 09:00-16:00','Days as mon to sun, 24-hour times. Leave a closed day out. The guarantee is measured against these, so they have to be exact.'],
+      ['booking_url','Your booking link','Where the front office books people in. For example your Fresha, Booksy or Calendly page.'],
+      ['review_url','Your Google review link','Optional. The front office sends it to happy customers.']
+    ]],
+    ['Deposits', [
+      ['deposit_amount','Deposit to hold a booking, in pounds','Leave blank for no deposits. Deposits stay off unless you switch them on.'],
+      ['deposit_link','Your own payment link for deposits','Any provider: SumUp, Square, PayPal, Fresha. The money goes to you, never through us. No link yet? Leave it blank and we will set one up with you, in your business name.']
+    ]],
+    ['Where alerts go', [
+      ['alert_whatsapp','Your WhatsApp number for alerts','When an enquiry needs you, it comes here straight away.'],
+      ['alert_email','Your email for alerts','']
+    ]],
+    ['What the front office answers', [
+      ['sms_numbers','The phone number or numbers it answers, texts and calls','Separate them with commas.'],
+      ['email_addresses','The email address or addresses it answers','Separate them with commas.'],
+      ['voice','Paste two or three real replies you have sent customers','So it writes like you, not like a robot.', 1]
+    ]]
+  ];
+  var LOCAL_TASKS = [['la1','Agreement signed'],['la2','First month paid'],['la3','Setup questions answered'],['la4','Website built and approved by you'],['la5','Front office set up in your voice'],['la6','Your number, email and site chat pointed at the front office'],['la7','Live'],['la8','Monthly report sent']];
+  /* Port of kaizendesk/caught.py parse_hours_line: all or nothing, so the guarantee is never
+     measured against a half-read schedule. */
+  var DAYS = ['mon','tue','wed','thu','fri','sat','sun'];
+  function parseHoursLine(line){
+    var out = { timezone: 'Europe/London' }, parts = String(line||'').toLowerCase().split(',');
+    for (var i = 0; i < parts.length; i++) {
+      var bits = parts[i].trim().split(/\s+/);
+      if (bits.length !== 2 || !/^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$/.test(bits[1])) return null;
+      var days = bits[0], chosen;
+      if (days.indexOf('-') > -1) {
+        var ab = days.split('-'), a = DAYS.indexOf(ab[0]), b = DAYS.indexOf(ab[1]);
+        if (ab.length !== 2 || a < 0 || b < 0) return null;
+        chosen = a <= b ? DAYS.slice(a, b + 1) : DAYS.slice(a).concat(DAYS.slice(0, b + 1));
+      } else if (DAYS.indexOf(days) > -1) chosen = [days];
+      else return null;
+      chosen.forEach(function(d){ out[d] = bits[1]; });
+    }
+    return Object.keys(out).length > 1 ? out : null;
+  }
+  function listOf(v){ return String(v||'').split(',').map(function(x){ return x.trim(); }).filter(Boolean); }
+  /* The raw text each box shows again when the form reopens. */
+  function shownAnswer(a, key){
+    if (key === 'open_hours') return a.open_hours_line || '';
+    var v = a[key];
+    return Array.isArray(v) ? v.join(', ') : (v && typeof v === 'object') ? '' : (v || '');
+  }
+  function localAnswers(raw){
+    var a = {}; Object.keys(raw).forEach(function(k){ a[k] = raw[k]; });
+    a.open_hours_line = raw.open_hours;
+    a.open_hours = raw.open_hours ? parseHoursLine(raw.open_hours) : null;
+    ['services','sms_numbers','email_addresses'].forEach(function(k){ a[k] = listOf(raw[k]); });
+    var pence = Math.round(parseFloat(String(raw.deposit_amount||'').replace(/[£\s]/g,'')) * 100);
+    a.deposit = pence > 0 ? { amount_pence: pence, payment_link: raw.deposit_link || '' } : null;
+    a.notify = { whatsapp: raw.alert_whatsapp || '', email: raw.alert_email || '' };
+    a.voice_samples = String(raw.voice||'').split(/\n\s*\n/).map(function(x){ return x.trim(); }).filter(Boolean);
+    return a;
+  }
+
+  /* The Desk panel. Reads the Desk's own JSON API (kaizendesk/main.py /api/portal/{tenant}?key=)
+     when the client row carries deskUrl + deskTenant + deskKey. Until then it says the front
+     office is not live yet: zeros here would read as a dead month to someone paying for it. */
+  var desk = null, deskState = 'off';
+  async function loadDesk(){
+    var c = (me && me.client) || {};
+    desk = null; deskState = 'off';
+    if (!isLocal() || !c.deskUrl || !c.deskTenant || !c.deskKey) return;
+    try {
+      var r = await fetch(String(c.deskUrl).replace(/\/+$/,'') + '/api/portal/' + encodeURIComponent(c.deskTenant) + '?key=' + encodeURIComponent(c.deskKey));
+      if (!r.ok) { deskState = 'error'; return; }
+      desk = await r.json(); deskState = 'on';
+    } catch(e) { deskState = 'error'; }
+  }
+  function renderLocal(){
+    $('p-numbers-h').textContent = 'Desk numbers';
+    $('p-events-h').textContent = 'Upcoming bookings';
+    var on = deskState === 'on' && desk;
+    var stats = on ? (desk.stats || []) : [];
+    $('p-numbers').style.display = stats.length ? '' : 'none'; $('p-numbers').classList.add('fl');
+    $('p-numbers').innerHTML = stats.map(function(x){ return '<div class="cell"><div class="k">'+esc(x.label)+'</div><div class="v">'+esc(x.value)+'</div></div>'; }).join('');
+    $('p-numbers-note').textContent = on ? 'The last 30 days. Your monthly report says what came in while you were closed.'
+      : deskState === 'error' ? 'Your Desk numbers could not load just now. Reload in a minute, or message us.'
+      : 'Your Desk numbers: this switches on when your front office goes live.';
+    var appts = on ? (desk.appointments || []) : [];
+    $('p-events').innerHTML = appts.length ? appts.map(function(a){ return '<li><span class="d">'+esc(a.when)+'</span><span><b class="t">'+esc(a.contact)+'</b></span></li>'; }).join('')
+      : '<li><span class="d">—</span><span class="m">'+(on ? 'Nothing booked yet.' : 'Bookings the front office makes appear here once it goes live.')+'</span></li>';
+    var leads = on ? (desk.leads || []) : [];
+    $('p-needs-wrap').style.display = on ? '' : 'none';
+    $('p-needs').innerHTML = leads.length ? leads.map(function(l){ return '<li><span class="d">'+esc(l.when)+'</span><span><b class="t">'+esc(l.contact)+'</b><div class="m">'+esc(l.reason)+(l.channel?' · '+esc(l.channel):'')+'</div></span></li>'; }).join('')
+      : '<li><span class="d">—</span><span class="m">Nothing needs you right now.</span></li>';
+  }
+
   var setupRow = null, setupOpen = false;
   async function loadSetup(){
     try { var r = await sb.from('ke_portal_forms').select('answers,submitted_at').maybeSingle(); setupRow = (!r.error && r.data) ? r.data : null; } catch(e) { setupRow = null; }
   }
   function renderSetup(){
     var w = $('p-setup-wrap');
-    if (!isArtist()) { w.style.display = 'none'; return; }
+    if (!isArtist() && !isLocal()) { w.style.display = 'none'; return; }
+    var QS = isLocal() ? LOCAL_QS : SETUP_QS;
     w.style.display = '';
     var a = (setupRow && setupRow.answers) || {};
     var sent = setupRow && setupRow.submitted_at;
-    $('p-setup-intro').textContent = sent ? 'Sent on ' + dstr(sent) + '. Thank you. You can change your answers any time.' : 'So we can plan your content around you. About ten minutes. Skip anything you do not know yet.';
+    $('p-setup-intro').textContent = sent ? 'Sent on ' + dstr(sent) + '. Thank you. You can change your answers any time.' : isLocal() ? 'So we can set up your front office and website. About ten minutes. Skip anything you do not know yet.' : 'So we can plan your content around you. About ten minutes. Skip anything you do not know yet.';
     $('p-setup-toggle-row').style.display = sent ? '' : 'none';
     var show = !sent || setupOpen;
     $('p-setup').style.display = show ? '' : 'none';
     if (!show) return;
     if ($('p-setup').dataset.built) return;
     $('p-setup').dataset.built = '1';
-    $('p-setup').innerHTML = SETUP_QS.map(function(g){
+    $('p-setup').innerHTML = QS.map(function(g){
       return '<fieldset><legend>'+esc(g[0])+'</legend>' + g[1].map(function(q){
-        var v = esc(a[q[0]] || '');
+        var v = esc(isLocal() ? shownAnswer(a, q[0]) : (a[q[0]] || ''));
         var input = q[3] ? '<textarea id="q-'+q[0]+'">'+v+'</textarea>' : '<input type="text" id="q-'+q[0]+'" value="'+v+'" />';
         return '<div class="fld"><label for="q-'+q[0]+'">'+esc(q[1])+'</label>'+(q[2]?'<div class="hint">'+esc(q[2])+'</div>':'')+input+'</div>';
       }).join('') + '</fieldset>';
@@ -383,8 +491,12 @@
   }
   async function sendSetup(){
     var ans = {}, lines = [];
-    SETUP_QS.forEach(function(g){ g[1].forEach(function(q){ var v = ($('q-'+q[0]).value || '').trim(); ans[q[0]] = v; if (v) lines.push(q[1] + ': ' + v); }); });
+    (isLocal() ? LOCAL_QS : SETUP_QS).forEach(function(g){ g[1].forEach(function(q){ var v = ($('q-'+q[0]).value || '').trim(); ans[q[0]] = v; if (v) lines.push(q[1] + ': ' + v); }); });
     if (!lines.length) { $('p-setup-msg').textContent = 'Fill in at least one answer first.'; return; }
+    if (isLocal()) {
+      if (ans.open_hours && !parseHoursLine(ans.open_hours)) { $('p-setup-msg').textContent = 'We could not read those opening hours. Use days as mon to sun and 24-hour times, like: mon-fri 09:00-18:00, sat 09:00-16:00'; $('q-open_hours').focus(); return; }
+      ans = localAnswers(ans);
+    }
     var b = $('p-setup-send'); b.disabled = true; $('p-setup-msg').textContent = 'Sending…';
     var r = await sb.rpc('portal_form_submit', { p_answers: ans, p_summary: lines.join('\n') });
     b.disabled = false;
@@ -421,7 +533,7 @@
     var at = list ? list.filter(function(x){ return /^access/i.test(x.text||''); })[0] : { id:'ob6' };
     var n = apps.filter(function(a){ return acc[a.id]; }).length;
     // Hide once it is all done AND we have ticked it on our side, so an onboarded client is not nagged.
-    var closed = n === apps.length && at && t[at.id];
+    var closed = (n === apps.length && at && t[at.id]) || (isLocal() && !(Array.isArray(c.accessApps) && c.accessApps.length));
     $('p-access-wrap').style.display = closed ? 'none' : '';
     if (closed) return;
     $('p-access-intro').innerHTML = 'Each step adds KaizenEvol as a partner or team member. You stay the owner and can remove us in one tap. About ten minutes. <b>' + n + ' of ' + apps.length + ' done.</b>';
@@ -454,6 +566,8 @@
     renderSetup();
     renderAccess();
     $('p-events-h').textContent = isArtist() ? 'Release calendar' : 'Drop calendar';
+    $('p-numbers-h').textContent = 'The numbers';
+    $('p-numbers').style.display = ''; $('p-numbers').classList.remove('fl'); $('p-needs-wrap').style.display = 'none';
     var c = me.client||{}, s = me.settings||{}, g = growth(c, me.snapshots||[], s);
     $('p-name').textContent = c.name||''; $('p-terms').textContent = c.founding ? 'founding client' : 'client';
     $('p-head').innerHTML = 'Hello, ' + esc((c.founder||'').split(' ')[0] || c.name) + '. <em>' + (c.liveDate ? 'Live since ' + dstr(c.liveDate) + '.' : 'Onboarding.') + '</em>';
@@ -471,20 +585,23 @@
     if (trial && Array.isArray(c.feeCells) && c.feeCells.length) cells = c.feeCells;
     else if (trial) cells = [['Our fee now', '£0/mo', c.founding ? 'founding client' : 'no fee yet'], ['After that', c.feeAfter || 'Agreed later', c.feeAfter && c.feeAfter !== 'Agreed later' ? 'as in your agreement' : 'in writing, with you first']];
     $('p-numbers').innerHTML = cells.map(function(x){ return '<div class="cell"><div class="k">'+esc(x[0])+'</div><div class="v">'+esc(x[1])+'</div><div class="s">'+esc(x[2])+'</div></div>'; }).join('');
+    if (isLocal()) renderLocal(); else
     $('p-numbers-note').textContent = trial ? (c.terms || 'No fee for now. Any paid terms are agreed with you in writing first.') : g.base ? 'Our fee only goes up when your revenue does, and only when it is up by half — measured on your total revenue, from your own records.' : 'Your baseline is agreed in writing before any spend. Until then these stay blank on purpose.';
     var today = new Date().toISOString().slice(0,10);
+    if (!isLocal()) {
     var events = items.filter(function(i){ return i.kind==='event'; }).sort(function(a,b){ return String(a.on_date).localeCompare(String(b.on_date)); });
     $('p-events').innerHTML = events.length ? events.map(function(e){ var past = e.on_date && e.on_date < today; return '<li'+(past?' class="done"':'')+'><span class="d">'+esc(dstr(e.on_date))+'</span><span><b class="t">'+esc(e.title)+'</b>'+(e.body?'<div class="m">'+esc(e.body)+'</div>':'')+'</span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">No dates yet. '+(isArtist()?'Your release dates appear here once we agree them.':'The drop calendar appears here once we agree it.')+'</span></li>';
+    }
     var bds = me.boards||[];
     $('p-boards').innerHTML = bds.map(function(b){ var cols = (b.columns||[]); return '<h2>'+esc(b.name)+'</h2><div class="grid">'+cols.map(function(c){ var ks = (b.cards||[]).filter(function(k){ return k.col===c.id; }); return '<div class="cell"><div class="k">'+esc(c.name)+' · '+ks.length+'</div>'+(ks.length?ks.map(function(k){ return '<div class="s" style="margin-top:6px"><b style="color:var(--ink)">'+esc(k.title)+'</b>'+(k.due?' · '+esc(dstr(k.due)):'')+'</div>'; }).join(''):'<div class="s" style="margin-top:6px">—</div>')+'</div>'; }).join('')+'</div>'; }).join('');
     var t = me.tasks||{};
-    var TL = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist.map(function(x){ return [x.id, x.text]; }) : TASKS;
+    var TL = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist.map(function(x){ return [x.id, x.text]; }) : isLocal() ? LOCAL_TASKS : TASKS;
     $('p-tasks').innerHTML = TL.map(function(x){ var on = !!t[x[0]]; return '<li'+(on?' class="done"':'')+'><span class="box'+(on?' on':'')+'"></span><span class="t">'+x[1]+'</span></li>'; }).join('');
     var ups = items.filter(function(i){ return i.kind==='update' || i.kind==='file'; });
     $('p-updates').innerHTML = ups.length ? ups.map(function(u){ return '<div class="bubble"><div class="d">'+esc(dstr(u.created_at))+'</div>'+(u.title?'<b>'+esc(u.title)+'</b><br>':'')+esc(u.body||'')+(u.url?' <a href="'+esc(u.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>'; }).join('') : '<div class="empty">Nothing yet. Weekly numbers and notes from us land here.</div>';
     $('p-files').innerHTML = files.length ? files.map(function(f){ return '<li><span class="d">'+esc(dstr(f.created_at))+'</span><span><a href="#" class="t" data-p="'+esc(f.path)+'" onclick="openFile(this.dataset.p);return false">'+esc(f.name)+'</a><div class="m">'+(f.mine?'from you':'from KaizenEvol')+(f.size?' · '+fsize(f.size):'')+'</div></span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">Nothing here yet.</span></li>';
     var invs = items.filter(function(i){ return i.kind==='invoice'; }).sort(function(a,b){ return String(b.on_date||b.created_at).localeCompare(String(a.on_date||a.created_at)); });
-    $('p-invoices').innerHTML = invs.length ? invs.map(function(v){ var paid = v.status==='paid'; return '<li'+(paid?' class="done"':'')+'><span class="d">'+esc(v.on_date ? dstr(v.on_date) : dstr(v.created_at))+'</span><span><b class="t">'+esc(v.title||'Invoice')+'</b> <span class="amt">'+gbp(v.amount)+'</span><div class="m">'+(paid ? 'Paid, thank you.' : (v.url ? 'Due '+esc(dstr(v.on_date))+' · <a href="'+esc(v.url)+'" target="_blank" rel="noopener">Pay ↗</a>' : 'Due '+esc(dstr(v.on_date))+' · collected from the card on file'))+'</div></span></li>'; }).join('') : (trial ? '<li><span class="d">—</span><span class="m">'+esc(c.invoiceNote || 'Nothing to pay. Anything billed later shows here, once it has been agreed with you in writing.')+'</span></li>' : '<li><span class="d">—</span><span class="m">Your retainer is collected each month from the card on file. Each month shows here once it has gone through, with anything one-off alongside.</span></li>');
+    $('p-invoices').innerHTML = invs.length ? invs.map(function(v){ var paid = v.status==='paid'; return '<li'+(paid?' class="done"':'')+'><span class="d">'+esc(v.on_date ? dstr(v.on_date) : dstr(v.created_at))+'</span><span><b class="t">'+esc(v.title||'Invoice')+'</b> <span class="amt">'+gbp(v.amount)+'</span><div class="m">'+(paid ? 'Paid, thank you.' : (v.url ? 'Due '+esc(dstr(v.on_date))+' · <a href="'+esc(v.url)+'" target="_blank" rel="noopener">Pay ↗</a>' : 'Due '+esc(dstr(v.on_date))+' · collected from the card on file'))+'</div></span></li>'; }).join('') : (trial ? '<li><span class="d">—</span><span class="m">'+esc(c.invoiceNote || 'Nothing to pay. Anything billed later shows here, once it has been agreed with you in writing.')+'</span></li>' : '<li><span class="d">—</span><span class="m">'+(isLocal() ? 'Your monthly payment is collected from the card on file. Each month shows here once it has gone through.' : 'Your retainer is collected each month from the card on file. Each month shows here once it has gone through, with anything one-off alongside.')+'</span></li>');
   }
 
   async function loadItems(){
@@ -604,7 +721,7 @@
     var r = await sb.rpc('portal_me');
     if(r.error || !r.data){ show('s-none'); $('who').innerHTML='<span>'+esc((s.data.session.user||{}).email||'')+'</span><button onclick="signOut()">Sign out</button>'; return; }
     me = r.data; if(!me.client || !me.client.id){ show('s-none'); return; }
-    await loadItems(); await loadFiles(); await loadAgreement(); await loadSetup(); sb.rpc('portal_touch'); show('s-portal'); render();
+    await loadItems(); await loadFiles(); await loadAgreement(); await loadSetup(); await loadDesk(); sb.rpc('portal_touch'); show('s-portal'); render();
   }
   sb.auth.onAuthStateChange(function(ev){ if(ev==='SIGNED_IN'||ev==='TOKEN_REFRESHED'){ if(location.hash) history.replaceState(null,'',location.pathname); boot(); } });
   boot();

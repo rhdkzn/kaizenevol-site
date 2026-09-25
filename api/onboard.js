@@ -46,8 +46,17 @@ function gbp(n) { return '£' + Math.round(Number(n) || 0).toLocaleString('en-GB
 function clientIp(req) { return String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim(); }
 function longDate(iso) { const d = iso ? new Date(iso + (iso.length === 10 ? 'T12:00:00' : '')) : new Date(); return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
 
+/* Kaizen Ascent, the local lane (OPS-ONB-006, CRITICAL_FACTS Kaizen Ascent block, 2026-09-25).
+ * Pay links come from env and have NO fallback: a local row must never borrow a creative
+ * Stripe link (£1,000 on a £500 client). Unset → payUrl '' → the page says we'll send it. */
+const TERMS_LOCAL = { standard: 750, founding: 500, hosting: 20 };
+export function laneOf(d) { return (d && d.lane === 'local') ? 'local' : 'creative'; }
+
 /* ── the agreement, rendered from the row (canonical text → SHA-256) ──────── */
+/* A row with no lane is creative, and its text below must stay byte-identical: every signed
+ * creative agreement is a hash of these exact words (test-onboard-agreement.mjs pins it). */
 export function agreementText(d) {
+  if (laneOf(d) === 'local') return agreementTextLocal(d);
   const tier = d.founding ? 'founding' : 'standard';
   const fee = Number(d.retainer) || TERMS[tier];
   const step = TERMS.step, trig = Math.round((TERMS.trigger - 1) * 100);
@@ -123,11 +132,93 @@ export function agreementText(d) {
   L.push(`SIGNED for the Agency by Rahaid and Diego, KaizenEvol, on ${d.issuedAt ? longDate(d.issuedAt) : longDate(new Date().toISOString().slice(0, 10))}, and issued to the Client for signature.`);
   return L.join('\n');
 }
+/* The local agreement (Kaizen Ascent). No growth step, no revenue access: those are creative
+ * only. The buy-out price is a FIELD on the row (d.buyout) and not set in canon, so with no
+ * figure the text names none. Clauses 6 (data), 9 (liability), 10 and 11 are the creative
+ * agreement's reviewed wording; clause 6.2 is creative 8.2 with Twilio and Anthropic added. */
+export function agreementTextLocal(d) {
+  const tier = d.founding ? 'founding' : 'standard';
+  const fee = Number(d.retainer) || TERMS_LOCAL[tier];
+  const buyout = Number(d.buyout) > 0 ? Number(d.buyout) : 0;
+  const brand = d.business || 'the Client', founder = d.founder || 'the Client', start = d.startDate ? longDate(d.startDate) : 'the date this Agreement is signed';
+  const L = [];
+  L.push(`SERVICES AGREEMENT: KAIZEN ASCENT`);
+  const clientEntity = d.clientEntity ? ` (${d.clientEntity})` : '';
+  const clientAddr = d.clientAddress ? `, of ${d.clientAddress}` : '';
+  L.push(`Between Rahaid and Diego, trading together as KaizenEvol ("the Agency"), Bristol, United Kingdom, and ${brand}${clientEntity}${clientAddr} ("the Client"), signed for the Client by ${founder}, who confirms they are authorised to sign for the Client.`);
+  L.push(`Version 2026-09-25 · Canon OPS-ONB-006`);
+  L.push(``);
+  L.push(`RECITALS`);
+  L.push(`WHEREAS the Agency builds websites for local businesses and runs an AI front office that answers their customers; and WHEREAS the Client wishes to engage the Agency for those services on the terms below; NOW THEREFORE the parties agree as follows.`);
+  L.push(``);
+  L.push(`1. SERVICES`);
+  L.push(`1.1 The website: a website for the Client, built, hosted and maintained by the Agency at no charge for as long as this Agreement runs. Clause 5 sets out what happens to it when this Agreement ends.`);
+  L.push(`1.2 The front office: an AI assistant, run by the Agency, that answers the Client's texts, calls, emails and website chat; books appointments; sends reminders; asks customers for reviews; follows up enquiries; and sends the Client a monthly report of what it handled.`);
+  L.push(`1.3 Enquiries that need a person are passed to the Client straight away, by WhatsApp or email, at the contacts the Client gives.`);
+  L.push(`1.4 Advertising and content production are not part of this Agreement. If the Client wants them, they are agreed separately in writing.`);
+  L.push(`1.5 Apart from the guarantee in clause 3, no number of enquiries, bookings or reviews is promised.`);
+  L.push(``);
+  L.push(`2. FEES`);
+  L.push(`2.1 The fee is ${gbp(fee)} per month${d.founding ? ' (founding rate, one of the first five clients, locked for life: it does not rise for as long as this Agreement runs)' : ' (standard rate)'}, covering the services in clause 1. It is billed monthly in advance by card through Stripe, starting on ${start}. There is no setup fee.`);
+  L.push(`2.2 Fees are exclusive of VAT, which is added if and when the Agency is registered for it.`);
+  L.push(``);
+  L.push(`3. THE GUARANTEE`);
+  L.push(`3.1 In any calendar month in which the front office catches nothing the Client would have missed, the Client gets its next month free. "Would have missed" means a new enquiry that reached the front office outside the Client's opening hours, judged in the Client's own timezone.`);
+  L.push(`3.2 It is measured by the Agency's monthly report of what the front office caught, which the Client receives. Test and demonstration messages do not count.`);
+  L.push(`3.3 The free month is a credit against the next month's fee, never a refund, and it has no cash value. A credit not yet used when this Agreement ends lapses.`);
+  L.push(`3.4 The guarantee is measured against the opening hours the Client has given the Agency in writing. If no opening hours are on record, it cannot be measured and does not apply until they are.`);
+  L.push(``);
+  L.push(`4. TERM AND ENDING`);
+  L.push(`4.1 This Agreement begins on ${start} and runs for an initial term of three months. After that it continues month to month until it is ended under clause 4.2.`);
+  L.push(`4.2 Either party may end it by not less than 30 days' written notice to the email addresses in clause 11.4, but no ending may take effect before the end of the initial term. Notice may be given during the initial term to take effect at the end of it. It ends at the end of the last month paid for, and the Agency cancels the recurring charge on that date.`);
+  L.push(`4.3 Ending does not affect rights already accrued: fees already due remain payable, and the fee for the initial term remains payable in full.`);
+  L.push(`4.4 Either party may end this Agreement immediately by written notice if the other is in material breach of it and, where the breach can be put right, has not put it right within 30 days of being asked to in writing. Clause 4.2's notice period and the initial term do not apply to an ending under this clause.`);
+  L.push(`4.5 If a payment due under this Agreement is not made within 14 days of its due date, the Agency may give the Client written notice and, if it is still unpaid 7 days after that notice, suspend the services until it is paid. Suspension does not reduce what is owed, does not extend the term, and is without prejudice to clause 4.4. The Agency will not suspend over an amount the Client is disputing in good faith and in writing.`);
+  L.push(``);
+  L.push(`5. THE WEBSITE`);
+  L.push(`5.1 While the Client is a client, the website's design, code and hosting are the Agency's, provided to the Client under this Agreement. The Client's content and logo are always the Client's.`);
+  L.push(`5.2 When this Agreement ends, the Client may buy the website ${buyout ? `for ${gbp(buyout)}, paid once` : 'at a price the parties agree in writing'}. Buying it transfers the site files and the domain to the Client, and hosting is then the Client's.`);
+  L.push(`5.3 After a buy-out, the Client may choose to have the Agency keep hosting the website for £20 per month, hosting only, month to month. Any edits are quoted separately.`);
+  L.push(`5.4 If the Client does not buy it, the website is taken down 30 days after the last paid month, and the Agency returns the Client's content and logo.`);
+  L.push(``);
+  L.push(`6. THE FRONT OFFICE'S MESSAGES AND DATA PROTECTION`);
+  L.push(`6.1 Where the Agency processes personal data of the Client's customers through the front office or the website, the Client is the controller and the Agency the processor under the UK GDPR and the Data Protection Act 2018. Subject matter and duration: the services in clause 1 for the term of this Agreement. Nature and purpose: answering and following up customer enquiries by text, call, email and website chat, booking appointments, sending reminders and review requests, and reporting to the Client. Personal data: names, contact details, message and call content, and booking details of the Client's customers and enquirers. Data subjects: the Client's customers and people who contact the Client.`);
+  L.push(`6.2 The Agency will: (a) process the personal data only on the Client's documented instructions, including this Agreement; (b) ensure the people it authorises to process it are bound by confidentiality; (c) apply appropriate technical and organisational security measures (UK GDPR Article 32); (d) engage sub-processors only under the Client's general authorisation and on equivalent terms, remaining responsible for them — at signing these are Twilio, Anthropic, Railway, SendGrid, Vercel, Stripe, Resend and Supabase, and the Agency will tell the Client before adding another; (e) assist the Client with data-subject rights requests; (f) assist the Client with security, breach notification and impact assessments (Articles 32 to 36) and notify the Client without undue delay on becoming aware of a personal-data breach; (g) at the Client's choice, delete or return the personal data when the services end; and (h) make available the information needed to demonstrate compliance and allow reasonable audits.`);
+  L.push(`6.3 Marketing messages, including reactivation messages to past customers and reminders that a customer is due again, go only to customers the Client has a lawful basis to contact. The Client warrants that it has that basis, and any consents required under the Privacy and Electronic Communications Regulations 2003, for every marketing message the front office sends on its instructions. Every such message carries a way to opt out, and an opt-out is honoured at once.`);
+  L.push(`6.4 Calls to the Client's numbers may be answered by an AI assistant. The Client's privacy notice will say so, and that the Client's messages and calls are handled by the Agency on its behalf.`);
+  L.push(``);
+  L.push(`7. DEPOSITS AND PAYMENTS`);
+  L.push(`7.1 Deposits are off unless the Client switches them on. Where they are on, customers pay through the Client's own payment link, with any provider the Client chooses, into the Client's own account. If the Client has no payment link, the Agency helps set one up in the Client's business name, paying into the Client's bank.`);
+  L.push(`7.2 The Agency never holds client money. Refunds of deposits are the Client's to decide and to make.`);
+  L.push(``);
+  L.push(`8. WHAT THE CLIENT PROVIDES`);
+  L.push(`8.1 The Client's opening hours, services, booking link, the contacts for alerts, the content and logo for the website, access to route its phone number, email and website chat to the front office, and timely approvals.`);
+  L.push(`8.2 The Client warrants that it owns or is licensed to use everything it supplies and that its services, prices and claims are lawful.`);
+  L.push(`8.3 The Agency warrants that it will perform the services with reasonable care and skill and in compliance with the laws that apply to them. This does not create a guarantee of any outcome other than the one in clause 3.`);
+  L.push(`8.4 Where the Client does not give an access, approval, answer or decision the Agency has asked for in writing, the Agency is not responsible for the delay or its effect, any dates agreed move by at least the length of the delay, and the fee continues to be payable in full for the period.`);
+  L.push(``);
+  L.push(`9. LIABILITY`);
+  L.push(`9.1 Neither party excludes liability for death or personal injury caused by negligence, for fraud, or for anything else that cannot be limited by law. Otherwise the Agency's total liability under this Agreement is limited to the fees paid by the Client in the three months before the claim arose, and neither party is liable to the other for loss of profit, revenue, goodwill or indirect loss.`);
+  L.push(`9.2 The Agency is not liable for matters outside its control: phone-network and carrier failures, outages of the services named in clause 6.2, the Client's own booking or payment systems, or what a customer chooses to do.`);
+  L.push(``);
+  L.push(`10. CONFIDENTIALITY`);
+  L.push(`10.1 Each party keeps the other's non-public information confidential, uses it only for this Agreement, and returns or destroys it on request when this Agreement ends. Nothing prevents disclosure required by law.`);
+  L.push(`10.2 These obligations continue for three years after this Agreement ends, and for as long as the information remains a trade secret in the case of a trade secret. Each party accepts that damages alone may not be an adequate remedy for a breach of this clause and that the other may seek an injunction or other equitable relief in addition to any other remedy.`);
+  L.push(``);
+  L.push(`11. GENERAL`);
+  L.push(`11.1 This Agreement is governed by the law of England and Wales and its courts have exclusive jurisdiction. 11.2 It is the entire agreement between the parties on its subject; any change must be agreed in writing (email is enough) by both parties. 11.3 It may be signed electronically, and an electronic signature has the same effect as a handwritten one. 11.4 Notices go by email: to the Agency at law@kaizenevol.com, to the Client at ${d.email || 'the email address the Client signed with'}. 11.5 Nothing in this Agreement creates a partnership, joint venture or employment relationship between the parties, and no third party may enforce any of its terms under the Contracts (Rights of Third Parties) Act 1999.`);
+  L.push(`11.6 The Agency is not engaged exclusively. It may work for other clients, including others in the Client's market, provided it complies with clause 10. 11.7 Neither party may assign or transfer this Agreement without the other's written consent, which will not be unreasonably withheld; the Agency may use subcontractors to deliver the services and remains responsible for their work. 11.8 A failure or delay in enforcing any term is not a waiver of it, and waiving a breach once does not waive any later breach. 11.9 If any term is held unenforceable it is severed and the rest of this Agreement continues in force; if severing it would defeat the parties' original intention, they will replace it with an enforceable term of equivalent effect. 11.10 Neither party is liable for failure to perform caused by something beyond its reasonable control, including fire, flood, epidemic, war, civil disruption, industrial action, failure of utilities or communications networks, or the serious illness of a person the affected party depends on to perform; the affected party will tell the other as soon as it reasonably can and the obligations affected are suspended for as long as the cause lasts. If it lasts more than two months either party may end this Agreement under clause 4.4 without the cure period.`);
+  L.push(``);
+  L.push(`SIGNED for the Agency by Rahaid and Diego, KaizenEvol, on ${d.issuedAt ? longDate(d.issuedAt) : longDate(new Date().toISOString().slice(0, 10))}, and issued to the Client for signature.`);
+  return L.join('\n');
+}
 export function agreementHash(text) { return createHash('sha256').update(text, 'utf8').digest('hex'); }
 
 export function payUrl(row) {
   const d = row.data || {};
-  const base = d.payLink || PAY_LINKS[d.founding ? 'founding' : 'standard'];
+  const base = d.payLink || (laneOf(d) === 'local'
+    ? (d.founding ? process.env.STRIPE_LOCAL_FOUNDING_LINK : process.env.STRIPE_LOCAL_STANDARD_LINK)
+    : PAY_LINKS[d.founding ? 'founding' : 'standard']);
   if (!base) return '';
   const u = new URL(base);
   u.searchParams.set('client_reference_id', row.id);
@@ -135,7 +226,7 @@ export function payUrl(row) {
   return u.toString();
 }
 
-function publicView(row) {
+export function publicView(row) {
   const d = row.data || {};
   /* A signed row serves the text that was SIGNED, never a fresh render. The signature binds
    * to a hash of the words as they stood that day; re-rendering from current canon would show
@@ -143,10 +234,12 @@ function publicView(row) {
   const text = (d.signature && d.signature.text) ? d.signature.text : agreementText(d);
   const sig = d.signature ? { name: d.signature.name, at: d.signature.at, hash: d.signature.hash } : null;
   const tier = d.founding ? 'founding' : 'standard';
+  const lane = laneOf(d), local = lane === 'local';
   return {
-    token: row.id, status: row.status,
+    token: row.id, status: row.status, lane,
     business: d.business || '', founder: d.founder || '', email: d.email || '', segment: d.segment || '',
-    founding: !!d.founding, retainer: Number(d.retainer) || TERMS[tier], step: TERMS.step, trigger: TERMS.trigger,
+    founding: !!d.founding, retainer: Number(d.retainer) || (local ? TERMS_LOCAL : TERMS)[tier],
+    step: local ? null : TERMS.step, trigger: local ? null : TERMS.trigger, buyout: local && Number(d.buyout) > 0 ? Number(d.buyout) : null,
     startDate: d.startDate || '', notes: d.proposalNotes || '', drops: d.drops || '',
     agreement: text, agreementHash: agreementHash(text), signature: sig,
     payUrl: payUrl(row), paidAt: row.paid_at || null, signedAt: row.signed_at || null
@@ -222,7 +315,7 @@ export default async function handler(req, res) {
       const view = publicView(signed);
       const link = `${SITE}/onboard?t=${token}`;
       await sendMail('law@kaizenevol.com', `Signed: ${view.business} (${name})`, `${view.business} signed the services agreement.\n\nSigned by: ${name}\nAt: ${signature.at}\nIP: ${signature.ip}\nAgreement hash: ${hash}\n\nFunnel: ${link}\nNext: they are on the payment step. When the payment shows in Stripe, open the lead in the CRM and press "Mark paid" — that creates the client.`);
-      if (view.email) await sendMail(view.email, `Your signed agreement with KaizenEvol`, `Hi ${view.founder || name},\n\nThank you — the services agreement for ${view.business} is signed (${signature.at}). A copy is below and your link stays live: ${link}\n\nThe last step is setting up the monthly retainer, which the same link takes you to.\n\nRahaid\nKaizenEvol\n\n----------------\n\n${text}\n\nSigned by ${name} on ${signature.at}. Agreement hash (SHA-256): ${hash}`);
+      if (view.email) await sendMail(view.email, `Your signed agreement with KaizenEvol`, `Hi ${view.founder || name},\n\nThank you — the services agreement for ${view.business} is signed (${signature.at}). A copy is below and your link stays live: ${link}\n\n${view.lane === 'local' ? 'The last step is setting up the monthly payment, which the same link takes you to.' : 'The last step is setting up the monthly retainer, which the same link takes you to.'}\n\nRahaid\nKaizenEvol\n\n----------------\n\n${text}\n\nSigned by ${name} on ${signature.at}. Agreement hash (SHA-256): ${hash}`);
       return res.status(200).json(view);
     }
 
@@ -240,7 +333,7 @@ export default async function handler(req, res) {
       if (!row) return res.status(404).json({ error: 'Unknown link.' });
       const view = publicView(row); if (!view.email) return res.status(400).json({ error: 'No email on this funnel.' });
       const link = `${SITE}/onboard?t=${token}`;
-      const ok = await sendMail(view.email, `${view.business} × KaizenEvol — your proposal`, `Hi ${view.founder || 'there'},\n\nHere is your proposal, the agreement to sign, and the retainer set-up, all on one link:\n\n${link}\n\nIt takes about ten minutes. Reply to this email with any question.\n\nRahaid\nKaizenEvol`);
+      const ok = await sendMail(view.email, `${view.business} × KaizenEvol — your proposal`, `Hi ${view.founder || 'there'},\n\nHere is your proposal, the agreement to sign, and the ${view.lane === 'local' ? 'payment' : 'retainer'} set-up, all on one link:\n\n${link}\n\nIt takes about ten minutes. Reply to this email with any question.\n\nRahaid\nKaizenEvol`);
       return res.status(ok ? 200 : 502).json(ok ? { sent: true, link } : { error: 'Email did not send (RESEND_API_KEY?). Copy the link and send it yourself.', link });
     }
 

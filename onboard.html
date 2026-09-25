@@ -22,6 +22,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
   <style>
+    /* Hallmark · design-system: brand/DESIGN.md · macrostructure: single-column document flow (proposal → agreement → payment → done) */
     @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
     @font-face{font-family:'Newsreader';src:url('/newsreader-italic-56f6419f.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
     :root{
@@ -88,6 +89,11 @@
     .done-mark{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(34px,1.5rem + 3vw,54px);letter-spacing:-0.02em;line-height:1.05}
     footer{border-top:1px solid var(--hairline);padding:22px 0;font-size:13px;color:var(--stone)}
     footer a{color:var(--stone);text-decoration:none}
+    /* Lanes (Kaizen Ascent, 2026-09-25): creative is the default and renders exactly as before.
+       body[data-lane=local] swaps the creative-only blocks for the local ones. */
+    main [data-lane=local]{display:none}
+    body[data-lane=local] main [data-lane=creative]{display:none}
+    body[data-lane=local] main [data-lane=local]{display:block}
     @media(max-width:640px){.grid{grid-template-columns:1fr}.steps{gap:12px;font-size:11px}.agreement{max-height:46vh;padding:16px}}
   </style>
   <link rel="stylesheet" href="/interactions.css">
@@ -109,6 +115,7 @@
     <!-- 1 · PROPOSAL -->
     <section class="step" id="s1">
       <p class="smallcaps">Proposal · <span id="p-brand-eyebrow"></span></p>
+      <div data-lane="creative">
       <h1>You've done the hard part, <span id="p-founder"></span>. <em>We build the reach.</em></h1>
       <p class="lead">Content, ads, email and SMS, and the numbers behind all three. One fee, everything delivered, measured against your own baseline.</p>
 
@@ -139,6 +146,42 @@
         <li><span class="n">—</span><span>Product and footage we can shoot or cut, and your drop calendar.</span></li>
         <li><span class="n">—</span><span>Approvals within a couple of days, so the calendar holds.</span></li>
       </ul>
+      </div>
+
+      <!-- Kaizen Ascent: the local proposal. No figures in the markup; the fee comes from the row. -->
+      <div data-lane="local">
+      <h1>You do the work, <span id="p-founder-l"></span>. <em>We answer your customers.</em></h1>
+      <p class="lead">A website, and a front office that answers your texts, calls, emails and website chat, including when you're closed. It books people in, reminds them, asks for reviews and tells you what needs you.</p>
+
+      <h2>What we run for <span id="p-brand-l"></span></h2>
+      <ul class="list">
+        <li><span class="n">01</span><span><b>Your website.</b> Built, hosted and looked after by us, at no charge while you're with us.</span></li>
+        <li><span class="n">02</span><span><b>The front office.</b> An AI assistant answers texts, calls, emails and the chat on your site, in your voice, day and night. Anything that needs you comes straight to your WhatsApp or email.</span></li>
+        <li><span class="n">03</span><span><b>Bookings, reminders and reviews.</b> It books people in through your booking link, reminds them before they come, and asks happy customers for a review.</span></li>
+        <li><span class="n">04</span><span><b>The monthly report.</b> What it caught, what came in while you were closed, what it booked, and what needs you.</span></li>
+      </ul>
+
+      <h2>The guarantee</h2>
+      <p>Any month the front office catches nothing you would have missed, you get your next month free. "Would have missed" means an enquiry that came in while you were closed, so it's measured against the opening hours you give us. It's a credit on your next month, never a refund.</p>
+
+      <h2>The terms, plainly</h2>
+      <div class="grid">
+        <div class="cell"><div class="k">Monthly</div><div class="v" id="p-fee-l"></div></div>
+        <div class="cell"><div class="k">Covers</div><div class="v">Your website and the front office. No setup fee.</div></div>
+        <div class="cell"><div class="k">Term</div><div class="v">Three months, then month to month.</div></div>
+        <div class="cell"><div class="k">Start</div><div class="v" id="p-start-l"></div></div>
+      </div>
+      <p class="why">If you leave, you can buy the website from us, or we take it down 30 days after your last paid month. Your content and logo are always yours.</p>
+      <p class="why" id="p-notes-l"></p>
+
+      <h2>What we need from you</h2>
+      <ul class="list">
+        <li><span class="n">—</span><span>Your opening hours, so the guarantee can be measured.</span></li>
+        <li><span class="n">—</span><span>Your services, your booking link, and where alerts should go.</span></li>
+        <li><span class="n">—</span><span>Your number, email and site chat pointed at the front office. We walk you through it.</span></li>
+        <li><span class="n">—</span><span>Your logo and a few photos for the website.</span></li>
+      </ul>
+      </div>
 
       <div class="actions">
         <button class="btn-solid" onclick="go(2)">Read the agreement →</button>
@@ -176,25 +219,33 @@
 
     <!-- 3 · RETAINER -->
     <section class="step" id="s3">
-      <p class="smallcaps">Retainer · <span id="r-brand-eyebrow"></span></p>
-      <h1>Set up the monthly retainer.</h1>
+      <p class="smallcaps"><span id="r-word">Retainer</span> · <span id="r-brand-eyebrow"></span></p>
+      <h1 id="r-h1">Set up the monthly retainer.</h1>
       <p class="lead" id="r-fee"></p>
-      <p class="why">Card through Stripe, billed monthly in advance. You can end it before any billing date by written notice, as the agreement says. Ad spend is separate and stays in your own ad account.</p>
+      <p class="why" data-lane="creative">Card through Stripe, billed monthly in advance. You can end it before any billing date by written notice, as the agreement says. Ad spend is separate and stays in your own ad account.</p>
+      <p class="why" data-lane="local">Card through Stripe, billed monthly in advance. Three months minimum, then month to month; after that you can end it with 30 days' written notice, as the agreement says.</p>
       <div class="actions">
         <a class="btn-solid" id="pay-btn" href="#" target="_blank" rel="noopener">Pay the first month →</a>
         <button class="btn-quiet" id="paid-check" onclick="checkPaid(true)">I've paid — check</button>
       </div>
       <div class="err" id="r-msg"></div>
       <p class="why" id="r-nolink" style="display:none">The payment link for your rate is being set up. Law will send it to you directly; nothing else is needed from you right now.</p>
+      <p class="why" id="r-nolink-l" style="display:none">We'll send you your payment link directly, within a working day. Nothing else is needed from you right now.</p>
     </section>
 
     <!-- 4 · LIVE -->
     <section class="step" id="s4">
       <p class="smallcaps">Done</p>
       <div class="done-mark">Welcome, <span id="d-brand"></span>.</div>
-      <p class="lead">Agreement signed, retainer set up. You're a client.</p>
+      <p class="lead" data-lane="creative">Agreement signed, retainer set up. You're a client.</p>
+      <p class="lead" data-lane="local">Agreement signed, payment set up. You're a client.</p>
       <h2>What happens next</h2>
-      <ul class="list">
+      <ul class="list" data-lane="local">
+        <li><span class="n">01</span><span>Sign in to your client space and answer the setup questions: opening hours, services, booking link, where alerts go. About ten minutes.</span></li>
+        <li><span class="n">02</span><span>We build your website and set up the front office in your voice. You check both before anything goes live.</span></li>
+        <li><span class="n">03</span><span>Go-live. Your number, email and site chat point at the front office, and the monthly report starts.</span></li>
+      </ul>
+      <ul class="list" data-lane="creative">
         <li><span class="n">01</span><span>Law emails you within a day to agree the <b>baseline</b> in writing and collect access.</span></li>
         <li><span class="n">02</span><span>We build the drop calendar and the first content batch, and you approve it.</span></li>
         <li><span class="n">03</span><span>Go-live. Drop one is measurement; the numbers come to you every week.</span></li>
@@ -235,8 +286,23 @@
     showStep(n);
   };
 
+  var LOCAL = false;
   function render(){
     $('loading').style.display = 'none';
+    LOCAL = view.lane === 'local';
+    if(LOCAL){
+      document.body.dataset.lane = 'local';
+      var names = ['Proposal','Agreement','Payment','Setup'];
+      document.querySelectorAll('#steps span').forEach(function(s,i){ s.textContent = names[i]; });
+      $('p-brand-l').textContent = view.business;
+      $('p-founder-l').textContent = (view.founder||'').split(' ')[0] || 'friend';
+      $('p-fee-l').textContent = gbp(view.retainer) + '/mo' + (view.founding ? ' · founding rate, locked for life' : '');
+      $('p-start-l').textContent = longDate(view.startDate);
+      $('p-notes-l').textContent = view.notes || '';
+      $('r-word').textContent = 'Payment';
+      $('r-h1').textContent = 'Set up the monthly payment.';
+      document.querySelector('label.check span').innerHTML = 'I have read the agreement above and I am signing it for <b id="a-brand"></b>. I understand the fee is billed monthly in advance, with a three-month minimum.';
+    }
     ['p-brand','p-brand-eyebrow','a-brand','a-brand-eyebrow','r-brand-eyebrow','d-brand'].forEach(function(id){ $(id).textContent = view.business; });
     $('p-founder').textContent = (view.founder||'').split(' ')[0] || 'friend';
     $('p-fee').textContent = gbp(view.retainer) + '/mo' + (view.founding ? ' · founding rate, one of the first five' : '');
@@ -245,7 +311,7 @@
     $('a-text').textContent = view.agreement;
     $('a-hash').textContent = view.agreementHash;
     $('r-fee').textContent = gbp(view.retainer) + ' a month' + (view.founding ? ', founding rate' : '') + '. First month today, then the same date each month.';
-    if(view.payUrl){ $('pay-btn').href = view.payUrl; } else { $('pay-btn').style.display='none'; $('paid-check').style.display='none'; $('r-nolink').style.display='block'; }
+    if(view.payUrl){ $('pay-btn').href = view.payUrl; } else { $('pay-btn').style.display='none'; $('paid-check').style.display='none'; $(LOCAL ? 'r-nolink-l' : 'r-nolink').style.display='block'; if(LOCAL) $('pay-btn').parentNode.style.display='none'; }
     if(view.signature){ showSigned(); }
     if(view.status==='paid'||view.status==='live') showStep(4);
     else if(view.status==='signed') showStep(3);
