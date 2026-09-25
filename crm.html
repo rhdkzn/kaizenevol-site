@@ -1278,7 +1278,7 @@ function renderClientPipeline(data){
   el.innerHTML=active.map(c=>{
     const s=getClientStage(c);
     const stageIdx=PIPE_STAGES.findIndex(p=>p.key===s.key);
-    const action=getNextAction(s.key,s.day,c.name);
+    const action=isLocalClient(c)?localNextAction(s.key,c.name):getNextAction(s.key,s.day,c.name);
     const stageLabelCls=`psl-${s.key}`;
     const nodes=PIPE_STAGES.map((p,i)=>{
       let dotCls='';let nodeCls='';
@@ -1323,9 +1323,43 @@ const CLIENT_TASKS=[
 /* A client may carry its own checklist (c.checklist, same shape as CLIENT_TASKS) when the
    standard retainer list does not describe their deal, e.g. the free-pilot founding clients
    (Rahaid, 2026-09-23). Everyone else gets CLIENT_TASKS. The portal reads the same field. */
-function tasksFor(c){return Array.isArray(c&&c.checklist)&&c.checklist.length?c.checklist:CLIENT_TASKS;}
+/* CLIENT-LANE-START — local (Kaizen Ascent) clients, day to day (2026-09-25).
+   test-crm-local-clients.mjs drives this block as shipped. The local checklist ids match
+   portal.html LOCAL_TASKS so the CRM and the client's portal tick the same list, and the
+   setup-form item starts "Onboarding form" so portal_form_submit() ticks it on its own. */
+function isLocalClient(c){return !!c&&(c.lane==='local'||c.segment==='Local');}
+const LOCAL_CLIENT_TASKS=[
+  {id:'la1',phase:'onboarding',text:'Agreement signed'},
+  {id:'la2',phase:'onboarding',text:'First month paid'},
+  {id:'la3',phase:'onboarding',text:'Onboarding form: setup questions answered in the portal'},
+  {id:'la4',phase:'onboarding',text:'Website built and approved'},
+  {id:'la5',phase:'onboarding',text:'Front office set up and tested in their voice'},
+  {id:'la6',phase:'onboarding',text:'Number, email and site chat pointed at the front office'},
+  {id:'la7',phase:'onboarding',text:'Live'},
+  {id:'la8',phase:'live',text:'Monthly report sent'},
+  {id:'la9',phase:'live',text:'Guarantee checked for the month, credit applied if due'},
+];
+function tasksForLane(c,creative){return Array.isArray(c&&c.checklist)&&c.checklist.length?c.checklist:isLocalClient(c)?LOCAL_CLIENT_TASKS:creative;}
+function localNextAction(stageKey,clientName){
+  const n=String(clientName||'').split(' ')[0];
+  if(stageKey==='onboarding')return{text:`Get ${n}'s setup questions answered in the portal (opening hours first, the guarantee needs them), build the website, set up the front office in their voice, then point their number, email and site chat at it and set the go-live date.`,cls:''};
+  if(stageKey==='live')return{text:`${n} is live. Send the monthly report, check the guarantee for the month (credit the next month if nothing was caught out of hours), and keep the website up to date.`,cls:'green-action'};
+  return{text:'',cls:''};
+}
+/* The three fields the portal's Desk panel reads (portal.html loadDesk). Blank url = disconnect. */
+function deskConnection(url,tenant,key){
+  url=String(url||'').trim();tenant=String(tenant||'').trim();key=String(key||'').trim();
+  if(!url&&!tenant&&!key)return null;
+  if(!/^https:\/\/[a-z0-9.-]+(:\d+)?(\/[^\s]*)?$/i.test(url))return{error:'The Desk address must start with https://'};
+  if(!/^[a-z0-9][a-z0-9-]*$/.test(tenant))return{error:'The Desk account name is the tenant id, lower case, like hollow-oak'};
+  if(!/^[A-Za-z0-9_-]{3,200}$/.test(key))return{error:'The portal key is missing or has odd characters'};
+  return{deskUrl:url.replace(/\/+$/,''),deskTenant:tenant,deskKey:key};
+}
+/* CLIENT-LANE-END */
+function tasksFor(c){return tasksForLane(c,CLIENT_TASKS);}
 const PHASE_ORDER=['onboarding','live'];
 const PHASE_LABELS={onboarding:'Onboarding — from yes to live',live:'Live — the four things, measured'};
+const LOCAL_PHASE_LABELS={onboarding:'Onboarding — from yes to live',live:'Live — the website and the front office'};
 function activePhaseForStage(stageKey){return stageKey==='live'?'live':'onboarding';}
 function renderClientChecklist(data){
   const el=document.getElementById('checklistContainer');
@@ -1352,7 +1386,7 @@ function renderClientChecklist(data){
       let phaseCls=isLocked?'phase-locked':'';
       let badge=isCurrent?'<span class="phase-active-badge">Current</span>':isDonePh?'<span class="phase-done-badge">Done</span>':'';
       const items=tasks.map(t=>`<div class="cl-item ${ct[t.id]?'checked':''}" onclick="toggleClientTask('${c.id}','${t.id}')"><div class="cl-box"></div><span class="cl-text">${esc(t.text)}</span></div>`).join('');
-      return`<div class="checklist-phase ${phaseCls}"><div class="checklist-phase-label ${labelCls}">${PHASE_LABELS[phase]}${badge}</div><div class="checklist-items">${items}</div></div>`;
+      return`<div class="checklist-phase ${phaseCls}"><div class="checklist-phase-label ${labelCls}">${(isLocalClient(c)?LOCAL_PHASE_LABELS:PHASE_LABELS)[phase]}${badge}</div><div class="checklist-items">${items}</div></div>`;
     }).join('');
     return`<div class="checklist-client">
       <div class="checklist-client-header">
@@ -1371,7 +1405,10 @@ function toggleClientTask(clientId,taskId){const d=load();if(!d.clientTasks)d.cl
 /* ── CLIENTS ── */
 function stClass(s){return{active:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
 function stLabel(s){return{active:'✓ Active',inactive:'○ Inactive'}[s]||s;}
-function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div><div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}).join('');}
+function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" style="margin-bottom:14px;"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div>${isLocalClient(c)?`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Monthly</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Desk</div><div class="cf-v">${c.deskTenant?'Connected · '+esc(c.deskTenant):'Not connected'} <button class="comm-status cs-pending" onclick="deskConnect('${c.id}')">${c.deskTenant?'change':'connect'}</button>`:`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired`}</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}).join('');}
+/* Connect a local client to the Desk: the three fields the portal's Desk panel reads.
+   Blank address = disconnect (the portal goes back to "switches on when your front office goes live"). */
+function deskConnect(id){const d=load();const c=d.clients.find(x=>x.id===id);if(!c)return;const u=prompt('Desk address for '+c.name+' (https://…, blank to disconnect)',c.deskUrl||'');if(u===null)return;let r=null;if(u.trim()){const t=prompt('Desk account (tenant id, e.g. hollow-oak)',c.deskTenant||'');if(t===null)return;const k=prompt('Their portal key (portal_key in the Desk tenant file)',c.deskKey||'');if(k===null)return;r=deskConnection(u,t,k);if(r&&r.error){showToast(r.error);return;}}if(r){c.deskUrl=r.deskUrl;c.deskTenant=r.deskTenant;c.deskKey=r.deskKey;}else{delete c.deskUrl;delete c.deskTenant;delete c.deskKey;}save(d);renderClients(d);showToast(r?'Desk connected — their portal numbers switch on':'Desk disconnected');}
 function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
 /* ── GROWTH STEP (FIN-PRI-004, settled 2026-09-04) ──
    Every time the trailing 3-month average revenue is up 50% on the level that
@@ -1460,10 +1497,10 @@ function portalBlock(c){
     +(u?'<span class="pt-badge on">invited · '+esc(u.email)+(u.last_seen?' · seen '+esc(String(u.last_seen).slice(0,10)):' · not yet signed in')+'</span>':'<span class="pt-badge">not invited</span>')
     +(unread?'<span class="pt-badge" style="color:var(--amber);border-color:rgba(251,191,36,.5)">'+unread+' new message'+(unread>1?'s':'')+'</span>':'')
     +'<button class="ob-btn" style="margin-left:auto" onclick="ptInvite(\''+c.id+'\')">'+(u?'Re-send invite':'Invite to portal')+'</button></div>'
-    +'<div class="pt-row"><input type="date" class="pt-inp" id="ptd_'+c.id+'" style="flex:0 0 150px" /><input type="text" class="pt-inp" id="ptt_'+c.id+'" placeholder="Drop / date title, e.g. October capsule — pre-order opens" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'event\')">+ Date</button></div>'
+    +'<div class="pt-row"><input type="date" class="pt-inp" id="ptd_'+c.id+'" style="flex:0 0 150px" /><input type="text" class="pt-inp" id="ptt_'+c.id+'" placeholder="'+(isLocalClient(c)?'Date title, e.g. Website goes live':'Drop / date title, e.g. October capsule — pre-order opens')+'" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'event\')">+ Date</button></div>'
     +'<div class="pt-row"><input type="text" class="pt-inp" id="ptu_'+c.id+'" placeholder="Update for the client — weekly numbers, a note, a link" /><input type="url" class="pt-inp" id="ptl_'+c.id+'" placeholder="Link (optional)" style="flex:0 0 220px" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'update\')">+ Update</button></div>'
     +'<div class="pt-row"><input type="file" class="pt-inp" id="ptf_'+c.id+'" multiple style="padding:5px 10px" /><button class="ob-btn" onclick="ptUpload(\''+c.id+'\')">Upload for client</button></div>'
-    +'<div class="pt-row"><input type="text" class="pt-inp" id="pti_t_'+c.id+'" placeholder="Invoice — October retainer, growth-step bonus, ad spend top-up" /><input type="number" class="pt-inp" id="pti_a_'+c.id+'" placeholder="£" min="0" step="1" style="flex:0 0 90px" /><input type="date" class="pt-inp" id="pti_d_'+c.id+'" style="flex:0 0 150px" /><input type="url" class="pt-inp" id="pti_l_'+c.id+'" placeholder="Pay link (blank = card on file)" style="flex:0 0 220px" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'invoice\')">+ Invoice</button></div>'
+    +'<div class="pt-row"><input type="text" class="pt-inp" id="pti_t_'+c.id+'" placeholder="'+(isLocalClient(c)?'Invoice — e.g. October fee, website buy-out':'Invoice — October retainer, growth-step bonus, ad spend top-up')+'" /><input type="number" class="pt-inp" id="pti_a_'+c.id+'" placeholder="£" min="0" step="1" style="flex:0 0 90px" /><input type="date" class="pt-inp" id="pti_d_'+c.id+'" style="flex:0 0 150px" /><input type="url" class="pt-inp" id="pti_l_'+c.id+'" placeholder="Pay link (blank = card on file)" style="flex:0 0 220px" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'invoice\')">+ Invoice</button></div>'
     +(events.length?'<div style="margin-top:6px">'+events.map(e=>'<span class="pt-badge" style="margin:2px 4px 2px 0">'+esc(e.on_date||'')+' · '+esc(e.title||'')+' <a href="#" onclick="ptDel('+e.id+',\''+c.id+'\');return false" style="color:var(--muted);text-decoration:none">×</a></span>').join('')+'</div>':'')
     +(files.length?'<div style="margin-top:6px">'+files.map(f=>'<span class="pt-badge" style="margin:2px 4px 2px 0">'+(f.mine?'':'from client · ')+'<a href="#" data-p="'+esc(f.path)+'" onclick="ptFileOpen(this.dataset.p);return false" style="color:inherit">'+esc(f.name)+'</a> <a href="#" data-p="'+esc(f.path)+'" onclick="ptFileDel(this.dataset.p);return false" style="color:var(--muted);text-decoration:none">×</a></span>').join('')+'</div>':'')
     +invs.map(v=>'<div class="pt-item"><span class="d">'+esc(v.on_date||String(v.created_at).slice(0,10))+'</span>'+esc(v.title||'Invoice')+' · £'+Number(v.amount||0).toLocaleString('en-GB')+' <span class="pt-badge'+(v.status==='paid'?' on':'')+'">'+(v.status==='paid'?'paid':'due')+'</span> <a href="#" onclick="ptInvPaid('+v.id+',\''+(v.status==='paid'?'due':'paid')+'\');return false" style="color:var(--green)">'+(v.status==='paid'?'mark due':'mark paid')+'</a> <a href="#" onclick="ptDel('+v.id+',\''+c.id+'\');return false" style="color:var(--muted);text-decoration:none">×</a></div>').join('')
@@ -1483,7 +1520,7 @@ async function ptRead(itemId,cid){try{await _sb.from('ke_portal_items').update({
 function renderGrowth(data){
   const el=document.getElementById('growthContainer');if(!el)return;
   if(!data.growth)data.growth={snapshots:[]};
-  const clients=(data.clients||[]).filter(c=>c.status!=='inactive');
+  const clients=(data.clients||[]).filter(c=>c.status!=='inactive'&&!isLocalClient(c));
   const opts=clients.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join('');
   const rows=clients.map(c=>{const g=growthState(c,data);const snaps=clientSnapshots(c,data);const last=snaps[snaps.length-1];
     return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+(c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString():'<span style="color:var(--amber)">set baseline</span>')+'</td>'
@@ -2702,7 +2739,7 @@ async function markOnboardPaid(btn,stripe){
     const dd=load();dd.clients=Array.isArray(dd.clients)?dd.clients:[];
     const cid='c_'+r.id.slice(0,8);
     if(!dd.clients.find(c=>c.onboardingToken===r.id||c.id===cid)){
-      const nc=obClientFromRow(d,l,r.id,now,cid);nc.signedAt=r.signed_at||null;dd.clients.push(nc);
+      const nc=obClientFromRow(d,l,r.id,now,cid);nc.signedAt=r.signed_at||null;if(isLocalClient(nc))nc.checklist=LOCAL_CLIENT_TASKS.map(t=>({...t}));dd.clients.push(nc);
       dd.clientTasks=dd.clientTasks||{};dd.clientTasks[cid]=d.lane==='local'?{la1:true,la2:true}:{ob2:true,ob3:true,ob4:true};
       save(dd);renderClientPipeline(dd);renderClientChecklist(dd);renderClients(dd);renderGrowth(dd);
     }
