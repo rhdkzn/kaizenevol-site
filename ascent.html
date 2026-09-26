@@ -27,8 +27,10 @@
      * enrichment: none photographic (no real photography available; nothing generated, nothing faked).
      *   The phone playing the example conversation is the hero's proof; two example-build captures,
      *   both labelled as made-up businesses.
-     * gate 47 (re-drawn chrome) knowingly bent: the owner asked for the phone. Plain ink edge only,
-     *   no notch, no status icons.
+     * gate 47 (re-drawn chrome) knowingly bent, and further since 2026-09-26: the owner asked for
+     *   "the phone to look like a real phone and some prestige software". So it is drawn as a current
+     *   handset in CSS/SVG (metal frame, black bezel, island, status bar, side keys, glass) with no
+     *   maker's logo or name anywhere; the screens are drawn app UI, scaled in container units.
      * polish: HP4 decorative numeral, "19:42", the time in the example conversation. Drawn with
      *   ::before so it is ornament, not reading text.
      * signature motion (the one): the phone rises and settles as the stage scrolls into place while
@@ -139,7 +141,31 @@
     .stage-time{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;will-change:transform}
     .stage-time::before{content:'19:42';position:absolute;left:0;top:0;transform:translate(-50%,-50%);font-size:clamp(150px,27vw,380px);font-weight:200;letter-spacing:-0.04em;line-height:1;color:var(--recess);white-space:nowrap;font-variant-numeric:tabular-nums}
     .demo{position:relative;margin:0;will-change:transform;transform-origin:50% 60%}
-    .phone{position:relative;margin:0 auto;height:min(640px,calc(100svh - var(--nav-h) - 150px));min-height:520px;aspect-ratio:9/18.6;border-radius:44px;background:var(--ink);box-shadow:0 60px 90px -40px var(--lift),0 24px 40px -28px var(--lift-soft)}
+    /* ── the handset ─────────────────────────────────────────────────────
+       Sized by one number, --pw (the frame's width); everything on and inside it is in
+       container units, so it is the same object at 250px and at 320px. Proportions follow
+       a current 6.1in handset: 1 : 2.06, corner 19% of the width, frame then bezel. */
+    .phone{--pw:clamp(254px,calc((100svh - var(--nav-h) - 150px) * .485),312px);
+      --metal-lo:#6F6B65; --metal:#A9A59E; --metal-hi:#E4E1DB;
+      --glass-ink:#060606; --call-red:#EB4E3D; --call-green:#3DBE5E;
+      position:relative;margin:0 auto;width:var(--pw);height:calc(var(--pw) * 2.06);border-radius:calc(var(--pw) * .19);container-type:inline-size;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,0) 9%,rgba(255,255,255,0) 91%,rgba(0,0,0,.22)),
+        linear-gradient(90deg,var(--metal-lo) 0%,var(--metal-hi) 1.6%,var(--metal) 4%,var(--metal) 96%,var(--metal-hi) 98.4%,var(--metal-lo) 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(35,33,30,.55),
+        inset 0 1.5px 0 1px rgba(255,255,255,.35),
+        0 1px 2px rgba(35,33,30,.2),
+        0 18px 30px -18px var(--lift),
+        0 70px 110px -48px var(--lift),
+        0 40px 70px -40px var(--lift-soft)}
+    /* Side keys: action and volume on the left, power on the right. Behind the frame edge. */
+    .key{position:absolute;z-index:-1;width:1.6%;border-radius:2px;background:linear-gradient(90deg,var(--metal-lo),var(--metal-hi) 45%,var(--metal) 70%,var(--metal-lo));box-shadow:0 0 0 .5px rgba(35,33,30,.35)}
+    .k-act{left:-1.1%;top:16.5%;height:4%}
+    .k-up{left:-1.1%;top:23.5%;height:7.4%}
+    .k-dn{left:-1.1%;top:32.6%;height:7.4%}
+    .k-pwr{right:-1.1%;top:26%;height:11.5%;background:linear-gradient(270deg,var(--metal-lo),var(--metal-hi) 45%,var(--metal) 70%,var(--metal-lo))}
+    .bezel{position:absolute;inset:1.35cqw;border-radius:17.6cqw;background:var(--glass-ink);box-shadow:0 0 0 .45cqw rgba(20,19,17,.55),inset 0 0 0 .35cqw #151412}
     .demo figcaption{margin-top:24px;font-size:13px;color:var(--muted);text-align:center}
     @media(min-width:980px){
       /* Desktop: the stage pins under the nav while the phone settles into place. */
@@ -155,60 +181,131 @@
       .stage-grid{gap:32px}
       .stage-phone{padding:16px 0 0}
       .steps{margin-top:0}
-      .phone{height:auto;min-height:0;width:min(292px,76vw)}
+      /* The whole handset fits under the sticky nav on a short phone (390x664 and up). */
+      .phone{--pw:max(220px,min(300px,78vw,calc((100svh - var(--nav-h) - 64px) * .485)))}
       /* On a phone the frame covers the numeral and only a stray 1 and 2 peek out. */
       .stage-time{display:none}
     }
-    .screen{position:absolute;inset:9px;border-radius:36px;background:var(--ink);overflow:hidden;text-align:left;font-size:14px;line-height:1.38}
-    .screen::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px var(--ink-hair);pointer-events:none;z-index:5}
-    .screen a{color:inherit;text-decoration:none}
-    .scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .5s var(--ease-out),visibility 0s linear .5s}
+    /* The display. A container of its own, so 1cqw inside is 1% of the glass: iOS point
+       sizes map across at about 0.255cqw per point on a 393pt-wide screen. */
+    .screen{position:absolute;inset:3.3cqw;border-radius:14.4cqw;background:var(--glass-ink);overflow:hidden;text-align:left;container-type:inline-size;font-size:4cqw;line-height:1.3;color:#fff;isolation:isolate}
+    .screen svg{display:block}
+    .scene{position:absolute;inset:0;z-index:1;opacity:0;visibility:hidden;transition:opacity .5s var(--ease-out),visibility 0s linear .5s}
     .scene.on{opacity:1;visibility:visible;transition:opacity .5s var(--ease-out),visibility 0s}
+    /* status bar, island, home bar and glass sit over every scene */
+    .sbar{position:absolute;z-index:8;top:0;left:0;right:0;height:15cqw;display:flex;justify-content:space-between;align-items:center;color:#fff;transition:color .5s var(--ease-out);pointer-events:none}
+    .sb-time,.sb-r{width:34cqw;display:flex;justify-content:center;align-items:center}
+    .sb-time{padding-left:3.2cqw;font-size:4.3cqw;font-weight:650;letter-spacing:-0.01em;font-variant-numeric:tabular-nums}
+    .sb-r{gap:1.5cqw;padding-right:3.4cqw}
+    .sb-r .sig{width:4.6cqw}
+    .sb-r .wifi{width:4.2cqw}
+    .sb-r .bat{width:6.6cqw}
+    .island{position:absolute;z-index:9;top:2.8cqw;left:50%;width:31.6cqw;height:9.3cqw;margin-left:-15.8cqw;border-radius:5cqw;background:#000}
+    .island::after{content:'';position:absolute;right:3.1cqw;top:50%;width:3.1cqw;height:3.1cqw;margin-top:-1.55cqw;border-radius:50%;background:radial-gradient(circle at 35% 35%,#2d3440 0,#10131a 45%,#050608 70%);box-shadow:0 0 0 .4cqw #0c0c0c}
+    .home{position:absolute;z-index:8;bottom:2.1cqw;left:50%;width:35cqw;height:1.3cqw;margin-left:-17.5cqw;border-radius:1cqw;background:#fff;transition:background-color .5s var(--ease-out)}
+    .screen:has(#scThread.on) .sbar{color:var(--ink)}
+    .screen:has(#scThread.on) .home{background:var(--ink)}
+    .glass{position:absolute;z-index:10;inset:0;border-radius:inherit;pointer-events:none;
+      background:linear-gradient(116deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.05) 24%,rgba(255,255,255,0) 40%),
+        linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0) 30%);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),inset 0 0 3cqw rgba(0,0,0,.18)}
+
     /* scene 1: the call nobody could take */
-    .call{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--ink);color:var(--page);text-align:center;padding:24px}
-    .call .who{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-ink)}
-    .call .num{font-size:25px;font-weight:300;letter-spacing:-0.02em;margin-top:4px}
-    .call .sub{font-size:13px;color:var(--on-ink)}
-    .ring{position:relative;width:74px;height:74px;margin:30px 0 26px;border-radius:50%;border:1px solid var(--ink-hair)}
-    .ring i{position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--on-ink);opacity:0}
-    .call.ringing .ring i{animation:ke-ring 1.6s var(--ease-out) infinite}
-    .call.ringing .ring i:nth-child(2){animation-delay:.53s}
-    .call.ringing .ring i:nth-child(3){animation-delay:1.06s}
-    @keyframes ke-ring{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.1);opacity:0}}
-    .ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;font-weight:300}
-    .missed{font-size:14px;font-weight:600;opacity:0;transform:translateY(8px);transition:opacity .4s var(--ease-out),transform .6s var(--ease-out)}
+    .call{display:flex;flex-direction:column;align-items:center;text-align:center;padding:25cqw 7cqw 46cqw;color:#fff;
+      background:
+        radial-gradient(95% 55% at 18% 6%,rgba(169,165,158,.5),rgba(169,165,158,0) 70%),
+        radial-gradient(90% 60% at 100% 100%,rgba(138,133,124,.42),rgba(138,133,124,0) 70%),
+        linear-gradient(180deg,#34312D 0%,#1E1C1A 55%,#151412 100%)}
+    .call .who{font-size:3.7cqw;font-weight:500;color:rgba(255,255,255,.66);letter-spacing:0}
+    .call .num{font-size:8.6cqw;font-weight:300;letter-spacing:-0.02em;line-height:1.1;margin-top:1.6cqw;font-variant-numeric:tabular-nums}
+    .call .sub{font-size:3.7cqw;color:rgba(255,255,255,.66);margin-top:1.4cqw}
+    .ring{position:relative;flex:none;width:34cqw;height:34cqw;margin:auto 0;border-radius:50%}
+    .ring i{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,255,255,.55);opacity:0}
+    .call.ringing .ring i{animation:ke-ring 2.1s var(--ease-out) infinite}
+    .call.ringing .ring i:nth-child(2){animation-delay:.7s}
+    .call.ringing .ring i:nth-child(3){animation-delay:1.4s}
+    @keyframes ke-ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.9);opacity:0}}
+    .ring b{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:linear-gradient(180deg,#A6A29B,#6F6B65);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 2cqw 6cqw rgba(0,0,0,.35)}
+    .ring b{display:grid;place-items:center}
+    .mono-av{font-weight:500;letter-spacing:-0.02em;color:rgba(255,255,255,.95)}
+    .ring .mono-av{font-size:12cqw;font-weight:300}
+    .ctl{position:absolute;left:0;right:0;bottom:17cqw;display:flex;justify-content:space-between;padding:0 11cqw;transition:opacity .45s var(--ease-out),transform .6s var(--ease-out)}
+    .ctl span{width:19.5cqw;height:19.5cqw;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 1.5cqw 4cqw rgba(0,0,0,.3)}
+    .ctl svg{width:8.6cqw;height:8.6cqw}
+    .ctl .dec{background:var(--call-red)}
+    .ctl .dec svg{transform:rotate(135deg)}
+    .ctl .acc{background:var(--call-green)}
+    .call.ringing .ctl .acc{animation:ke-answer 1.4s ease-in-out infinite}
+    @keyframes ke-answer{0%,100%{transform:none}50%{transform:scale(1.07)}}
+    .call.gone .ctl{opacity:0;transform:translateY(4cqw)}
+    .missed{position:absolute;left:0;right:0;bottom:21cqw;display:flex;align-items:center;justify-content:center;gap:1.8cqw;font-size:4.2cqw;font-weight:600;letter-spacing:-0.01em;opacity:0;transform:translateY(3cqw);transition:opacity .45s var(--ease-out) .15s,transform .7s var(--ease-out) .15s}
+    .missed svg{width:4.6cqw;height:4.6cqw;color:var(--call-red)}
     .call.gone .missed{opacity:1;transform:none}
-    .call.gone .ring{opacity:.35;transition:opacity .5s var(--ease-out)}
+    .call.gone .ring{opacity:.5;transition:opacity .6s var(--ease-out)}
+
     /* scene 2: the thread */
-    .thread{display:flex;flex-direction:column;background:var(--page)}
-    .th-head{padding:22px 18px 12px;border-bottom:1px solid var(--hairline);background:var(--recess)}
-    .th-head b{display:block;font-size:15px;font-weight:600}
-    .th-head span{font-size:12px;color:var(--muted)}
+    .thread{display:flex;flex-direction:column;background:var(--page);color:var(--ink)}
+    .thread::after{content:'';position:absolute;inset:0;z-index:3;background:rgba(35,33,30,.32);opacity:0;pointer-events:none;transition:opacity .7s var(--ease-out)}
+    .thread:has(.sheet-up.show)::after{opacity:1}
+    .th-head{position:relative;z-index:2;display:grid;grid-template-columns:12cqw 1fr 12cqw;align-items:start;padding:13.4cqw 3cqw 2.8cqw;background:rgba(239,237,233,.9);-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 1px 0 rgba(35,33,30,.1)}
+    .th-head .back{width:3cqw;margin:6.6cqw 0 0 2.4cqw;color:var(--ink)}
+    .th-head .act{width:5.2cqw;margin:6.2cqw 0 0 auto;justify-self:end;color:var(--ink)}
+    .th-id{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+    .th-id .av{width:13cqw;height:13cqw;border-radius:50%;overflow:hidden;background:linear-gradient(180deg,#B9B6B0,#8A857C);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+    .th-id .av{display:grid;place-items:center}
+    .th-id .av .mono-av{margin:0;font-size:4.6cqw;color:rgba(255,255,255,.95)}
+    .th-id b{display:inline-flex;align-items:center;gap:.8cqw;margin-top:1.5cqw;font-size:3cqw;font-weight:600;letter-spacing:-0.005em;font-variant-numeric:tabular-nums}
+    .th-id b svg{width:1.4cqw;color:var(--stone)}
+    .th-id span{margin-top:.3cqw;font-size:2.6cqw;color:var(--muted)}
     .msgs{position:relative;flex:1;overflow:hidden}
-    .flow{position:absolute;left:0;right:0;bottom:0;padding:12px 12px 16px;display:flex;flex-direction:column;gap:7px;transition:transform .55s var(--ease-out)}
-    .b{max-width:84%;padding:8px 12px 9px;border-radius:18px;font-size:13.5px}
+    .flow{position:absolute;left:0;right:0;bottom:0;padding:3cqw 5cqw 2.4cqw;display:flex;flex-direction:column;gap:2.2cqw;transition:transform .55s var(--ease-out)}
+    .b{position:relative;max-width:74%;padding:2cqw 3.4cqw 2.2cqw;border-radius:4.8cqw;font-size:4cqw;line-height:1.3;letter-spacing:-0.005em}
     .flow > :not(.show){display:none}
     .flow > .show{animation:ke-pop .5s var(--ease-out) both}
-    @keyframes ke-pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
-    .b.cust{align-self:flex-start;background:var(--cool);color:var(--ink);border-bottom-left-radius:6px;transform-origin:left bottom}
-    .b.fo{align-self:flex-end;background:var(--ink);color:var(--page);border-bottom-right-radius:6px;transform-origin:right bottom}
-    .meta{align-self:flex-end;font-size:11px;color:var(--muted);margin:-2px 4px 2px}
-    .note{align-self:center;font-size:11.5px;color:var(--muted);text-align:center;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:5px 10px;margin:4px 0}
-    .typing{align-self:flex-end;display:flex;gap:4px;padding:11px 13px;border-radius:18px;background:var(--ink)}
-    .typing i{width:6px;height:6px;border-radius:50%;background:var(--on-ink);animation:ke-dot 1s ease-in-out infinite}
-    .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
-    @keyframes ke-dot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-4px);opacity:1}}
-    /* scene 3: the owner's evening summary slides up over the thread */
-    .sheet-up{position:absolute;left:0;right:0;bottom:0;background:var(--page);border-top:1px solid var(--hairline);border-radius:22px 22px 0 0;box-shadow:0 -20px 40px -24px var(--lift);padding:14px 18px 26px;transform:translateY(105%);transition:transform .8s var(--ease-out)}
+    @keyframes ke-pop{from{opacity:0;transform:translateY(3cqw) scale(.94)}to{opacity:1;transform:none}}
+    /* Bubble tails, drawn the way the platform draws them: a curved nub, then a patch of
+       the thread's own ground cut into it. */
+    .b::before,.b::after{content:'';position:absolute;bottom:0;height:5cqw}
+    .b.cust{align-self:flex-start;background:var(--cool);color:var(--ink);transform-origin:left bottom}
+    .b.cust::before{left:-1.9cqw;width:5cqw;background:var(--cool);border-bottom-right-radius:4.2cqw 3.6cqw}
+    .b.cust::after{left:-6.4cqw;width:6.4cqw;background:var(--page);border-bottom-right-radius:2.6cqw}
+    .b.fo{align-self:flex-end;background:var(--ink);background-image:linear-gradient(180deg,#3A3733,var(--ink) 60%);color:var(--page);transform-origin:right bottom}
+    .b.fo::before{right:-1.9cqw;width:5cqw;background:var(--ink);border-bottom-left-radius:4.2cqw 3.6cqw}
+    .b.fo::after{right:-6.4cqw;width:6.4cqw;background:var(--page);border-bottom-left-radius:2.6cqw}
+    .meta{align-self:flex-end;display:flex;align-items:center;gap:1cqw;font-size:2.7cqw;font-weight:500;color:var(--muted);margin:-1cqw 1cqw .6cqw}
+    .meta svg{width:3.4cqw;color:var(--ink)}
+    .note{align-self:center;display:flex;align-items:center;gap:1.4cqw;font-size:2.8cqw;font-weight:500;color:var(--ink);background:rgba(35,33,30,.06);border-radius:99px;padding:1.3cqw 3.2cqw 1.3cqw 2.6cqw;margin:1.6cqw 0 .6cqw}
+    .note svg{width:3.2cqw}
+    .typing{position:relative;align-self:flex-end;display:flex;gap:1.1cqw;padding:3.2cqw 3.8cqw;border-radius:5cqw;background:var(--ink);margin-right:1.2cqw}
+    .typing::before,.typing::after{content:'';position:absolute;border-radius:50%;background:var(--ink)}
+    .typing::before{right:-.6cqw;bottom:-.4cqw;width:3cqw;height:3cqw}
+    .typing::after{right:-2.3cqw;bottom:-1.7cqw;width:1.5cqw;height:1.5cqw}
+    .typing i{width:1.9cqw;height:1.9cqw;border-radius:50%;background:var(--on-ink);animation:ke-dot 1.2s ease-in-out infinite}
+    .typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+    @keyframes ke-dot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-.9cqw);opacity:1}}
+    .compose{position:relative;display:flex;align-items:center;gap:2.4cqw;padding:1.8cqw 4cqw 9.4cqw;background:var(--page)}
+    .compose .plus{flex:none;width:8.2cqw;height:8.2cqw;border-radius:50%;display:grid;place-items:center;background:rgba(35,33,30,.07);color:var(--muted)}
+    .compose .plus svg{width:3.6cqw}
+    .compose .field{flex:1;height:8.6cqw;border-radius:99px;box-shadow:inset 0 0 0 1px rgba(35,33,30,.16);display:flex;align-items:center;justify-content:flex-end;padding-right:2.6cqw;color:var(--stone)}
+    .compose .field svg{width:3.4cqw}
+    /* scene 3: the owner's evening summary, a floating sheet concentric with the glass */
+    .sheet-up{position:absolute;z-index:4;left:2.4cqw;right:2.4cqw;bottom:2.4cqw;border-radius:12.8cqw;background:rgba(247,246,244,.96);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);box-shadow:0 -4cqw 12cqw -4cqw rgba(35,33,30,.35),inset 0 0 0 1px rgba(255,255,255,.6);padding:2.6cqw 5.4cqw 9cqw;transform:translateY(112%);transition:transform .9s var(--ease-out)}
     .sheet-up.show{transform:none}
-    .sheet-up .grab{width:38px;height:4px;border-radius:4px;background:var(--hairline);margin:0 auto 14px}
-    .sheet-up .t{font-size:19px;font-weight:300;letter-spacing:-0.02em}
-    .sheet-up .d{font-size:12px;color:var(--muted);margin-top:2px}
-    .sum{margin-top:12px}
-    .sum div{padding:9px 0 10px;border-top:1px solid var(--hairline);opacity:0;transform:translateY(8px);transition:opacity .4s var(--ease-out),transform .6s var(--ease-out)}
+    .sheet-up .grab{width:9.6cqw;height:1.3cqw;border-radius:1cqw;background:rgba(35,33,30,.18);margin:0 auto 4.4cqw}
+    .sh-top{display:flex;align-items:center;gap:3cqw}
+    .sh-top .mark{flex:none;width:10cqw;height:10cqw;border-radius:2.8cqw;display:grid;place-items:center;color:var(--page);background:linear-gradient(160deg,#4A4640,var(--ink) 70%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 1cqw 2.4cqw rgba(35,33,30,.25)}
+    .sh-top .mark svg{width:4.6cqw}
+    .sheet-up .t,.sheet-up .d{display:block}
+    .sheet-up .t{font-size:5.4cqw;font-weight:600;letter-spacing:-0.025em;line-height:1.15}
+    .sheet-up .d{font-size:3cqw;color:var(--muted);margin-top:.4cqw}
+    .sum{margin-top:4.4cqw;background:rgba(255,255,255,.78);border-radius:5.4cqw;padding:0 4cqw;box-shadow:0 0 0 1px rgba(35,33,30,.06)}
+    .sum div{display:grid;grid-template-columns:7.6cqw minmax(0,1fr);column-gap:3cqw;align-items:start;padding:3.3cqw 0 3.4cqw;opacity:0;transform:translateY(2.4cqw);transition:opacity .45s var(--ease-out),transform .7s var(--ease-out)}
+    .sum div + div{box-shadow:0 -1px 0 rgba(35,33,30,.09)}
     .sum div.show{opacity:1;transform:none}
-    .sum small{display:block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-    .sum p{font-size:13px;margin-top:2px}
+    .sum .ic{grid-row:1 / 3;width:7.6cqw;height:7.6cqw;border-radius:2.2cqw;display:grid;place-items:center;background:var(--recess);color:var(--ink);margin-top:.2cqw}
+    .sum .ic svg{width:3.8cqw}
+    .sum small{display:block;font-size:2.4cqw;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .sum p{font-size:3.5cqw;line-height:1.36;margin-top:.5cqw;color:var(--ink)}
     .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
     /* ── the ledger: what comes in, what goes out ─────────────────────────── */
@@ -368,40 +465,50 @@
         <div class="stage-time" id="stageTime" aria-hidden="true"></div>
         <figure class="demo" id="demo">
           <div class="phone" aria-hidden="true">
-            <div class="screen">
+            <i class="key k-act"></i><i class="key k-up"></i><i class="key k-dn"></i><i class="key k-pwr"></i>
+            <div class="bezel"><div class="screen">
               <div class="scene call" id="scCall">
-                <div class="who">Holt Kitchens</div>
-                <div class="ring"><i></i><i></i><i></i><b>?</b></div>
-                <div class="num">07700 900412</div>
+                <div class="who">Incoming call</div>
+                <div class="num">Holt Kitchens</div>
                 <div class="sub">Mobile &middot; 19:42</div>
-                <div class="missed">Missed call</div>
+                <div class="ring"><i></i><i></i><i></i><b><span class="mono-av">HK</span></b></div>
+                <div class="ctl"><span class="dec"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span><span class="acc"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span></div>
+                <div class="missed"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 4 12M4 6.5V12h5.5"/></svg>Missed call</div>
               </div>
               <div class="scene thread" id="scThread">
-                <div class="th-head"><b>07700 900412</b><span>New customer &middot; text message</span></div>
+                <div class="th-head">
+                  <svg class="back" viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 2 10l8 8"/></svg>
+                  <div class="th-id"><span class="av"><span class="mono-av">HK</span></span><b>Holt Kitchens<svg viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m1 1 4 4-4 4"/></svg></b><span>New customer &middot; text message</span></div>
+                  <svg class="act" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </div>
                 <div class="msgs"><div class="flow" id="flow">
                   <div class="b fo">Hi, it&rsquo;s Holt Kitchens. Sorry we missed your call just now. How can we help?</div>
-                  <div class="meta">Sent by the front office &middot; 19:42</div>
+                  <div class="meta"><svg viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m1 6.5 3.2 3.2L11 2.5M8.6 9.2l.5.5L16 2.5"/></svg>Sent by the front office &middot; 19:42</div>
                   <div class="b cust">Hi, I&rsquo;m after a new kitchen fitted. Can someone come and measure up?</div>
                   <div class="b fo">Yes, we can do that. What&rsquo;s your postcode, and roughly how big is the room?</div>
                   <div class="b cust">BS7. About 4m by 3m</div>
                   <div class="b fo">Thanks. We can come out Thursday at 10am or Saturday at 9am. Which suits you?</div>
                   <div class="b cust">Saturday please. Could you bring some worktop samples?</div>
                   <div class="b fo" data-booked>You&rsquo;re booked in for Saturday at 9am to measure up. I&rsquo;ve passed the samples request on to the team.</div>
-                  <div class="note">Reminder set for Friday evening</div>
+                  <div class="note"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.4a4.2 4.2 0 0 0-4.2 4.2v2.8L2.4 10.9h11.2L12.2 8.4V5.6A4.2 4.2 0 0 0 8 1.4zM6.3 12.2a1.7 1.7 0 0 0 3.4 0z"/></svg>Reminder set for Friday evening</div>
                   <div class="typing"><i></i><i></i><i></i></div>
                 </div></div>
+                <div class="compose"><span class="plus"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 1.5v11M1.5 7h11"/></svg></span><span class="field"><svg viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3.2" y="1" width="5.6" height="10" rx="2.8"/><path d="M1 8.6a5 5 0 0 0 10 0M6 13.6V17"/></svg></span></div>
                 <div class="sheet-up" id="sheet">
                   <div class="grab"></div>
-                  <div class="t">Your evening summary</div>
-                  <div class="d">Tuesday</div>
+                  <div class="sh-top"><span class="mark"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.6 10.1A6 6 0 0 1 5.9 2.4a6 6 0 1 0 7.7 7.7z"/></svg></span><span><span class="t">Your evening summary</span><span class="d">Tuesday</span></span></div>
                   <div class="sum">
-                    <div><small>Who called</small><p>07700 900412, a new customer wanting a kitchen fitted.</p></div>
-                    <div><small>What got booked</small><p>Measure-up visit, Saturday 9am, BS7.</p></div>
-                    <div><small>What needs you</small><p>They&rsquo;d like worktop samples brought to the visit.</p></div>
+                    <div><i class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></i><small>Who called</small><p>A new customer wanting a kitchen fitted.</p></div>
+                    <div><i class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="1.8" y="2.8" width="12.4" height="11.4" rx="2.4"/><path d="M1.8 6.6h12.4M5.2 1.2v3M10.8 1.2v3" stroke-linecap="round"/><path d="m5.6 10.2 1.7 1.6 3.2-3.4" stroke-linecap="round"/></svg></i><small>What got booked</small><p>Measure-up visit, Saturday 9am, BS7.</p></div>
+                    <div><i class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 14.8V1.8M3.2 2.4h8.6l-1.9 3 1.9 3H3.2"/></svg></i><small>What needs you</small><p>They&rsquo;d like worktop samples brought to the visit.</p></div>
                   </div>
                 </div>
               </div>
-            </div>
+              <div class="sbar"><span class="sb-time">19:42</span><span class="sb-r"><svg class="sig" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx=".9"/><rect x="5" y="5.5" width="3" height="6.5" rx=".9"/><rect x="10" y="3" width="3" height="9" rx=".9"/><rect x="15" y="0" width="3" height="12" rx=".9"/></svg><svg class="wifi" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M1.4 4.4a9.4 9.4 0 0 1 13.2 0M4 7.1a5.7 5.7 0 0 1 8 0"/><circle cx="8" cy="10.1" r="1.4" fill="currentColor" stroke="none"/></svg><svg class="bat" viewBox="0 0 27 13" fill="currentColor"><rect x=".6" y=".6" width="22.6" height="11.8" rx="3.6" fill="none" stroke="currentColor" stroke-width="1.1" opacity=".42"/><rect x="2.3" y="2.3" width="15.6" height="8.4" rx="2.1"/><path d="M24.6 4.4v4.2c.95-.3 1.6-1.15 1.6-2.1s-.65-1.8-1.6-2.1z" opacity=".45"/></svg></span></div>
+              <div class="island"></div>
+              <div class="home"></div>
+              <div class="glass"></div>
+            </div></div>
           </div>
           <p class="sr">Example conversation. A customer calls Holt Kitchens at 19:42 and nobody can pick up. The front office texts them straight away: &ldquo;Hi, it&rsquo;s Holt Kitchens. Sorry we missed your call just now. How can we help?&rdquo; The customer wants a new kitchen fitted and asks for a measure-up. The front office asks for the postcode and room size, offers Thursday at 10am or Saturday at 9am, books Saturday at 9am, and passes on a request for worktop samples. A reminder is set for Friday evening. That evening the owner&rsquo;s summary lists who called, what got booked, and what needs them: bring worktop samples.</p>
           <figcaption>Example conversation. The business and the customer are made up.</figcaption>
@@ -459,7 +566,7 @@
   <div class="container site-grid">
     <div class="site-copy rise">
       <h2>A proper website, built and hosted for you.</h2>
-      <p>It&rsquo;s free while you&rsquo;re with us. If you ever leave, you can keep the site.</p>
+      <p>It&rsquo;s free while you&rsquo;re with us. If you ever leave, you can buy the site and keep it.</p>
       <p class="small">These are example builds we made to show what a local business site can look like. The businesses are made up.</p>
     </div>
     <div class="strip" id="strip">
@@ -489,7 +596,7 @@
     <dl class="sheet">
       <div class="rise"><dt>Ads and content</dt><dd>They can be added later, once the front office shows enquiries turning into bookings.</dd></div>
       <div class="rise"><dt>How long</dt><dd>Three months to start, then month to month.</dd></div>
-      <div class="rise"><dt>If you leave</dt><dd>You can keep the site.</dd></div>
+      <div class="rise"><dt>If you leave</dt><dd>You can buy the site and keep it.</dd></div>
     </dl>
   </div>
 </section>
