@@ -19,7 +19,11 @@
      * footer: Ft2-style single band + the estate's contact column (test-footer-contact parity)
      * sections: hero (centred, per DESIGN layout ruling) · the map (signature) · guarantee (scroll-scrubbed statement)
      *           · the website (H6-ish photographic strip, example builds) · F3 terms sheet · dark closing · footer
-     * enrichment: none drawn — the diagram IS the image; two example-build captures of made-up businesses
+     * enrichment: E-hero · hand-built HTML/CSS phone playing an example conversation (owner's ask, round two);
+ *   the diagram IS the second image; two example-build captures of made-up businesses
+ * gate 47 (re-drawn chrome) knowingly bent: the owner asked for a phone. Chrome kept to a plain
+ *   rounded ink edge, no notch, no speaker slit, no fake status icons.
+ * mobile map (round two): inputs collapse to a 2x2 of titles, outputs to rule-separated rows, no boxes
      * motion: MAX. No reduced-motion branch anywhere, on purpose (brand/DESIGN.md, test-reduced-motion).
      * pre-emit critique: P4 H4 E4 S5 R4 V5
      */
@@ -31,6 +35,7 @@
       --ink-hair:rgba(247,246,244,.18);
       --on-ink:rgba(247,246,244,.8);
       --veil:rgba(247,246,244,.86);
+      --lift:rgba(35,33,30,.28);
       --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
       --ease-out:cubic-bezier(0.16, 1, 0.3, 1);
       --ease-press:cubic-bezier(.3,0,.2,1);
@@ -71,7 +76,7 @@
     a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 
     /* ── hero: centred at every width (brand/DESIGN.md, layout) ─────────── */
-    .hero{padding:96px 0 128px;text-align:center}
+    .hero{padding:76px 0 112px;text-align:center}
     .hero .smallcaps{color:var(--muted)}
     .hero h1{max-width:16ch;margin:22px auto 0}
     .hero-sub{max-width:52ch;margin:26px auto 0;font-size:18px;color:var(--ink)}
@@ -205,6 +210,83 @@
     /* ── hero entrance on load ─────────────────────────────────────────── */
     .js .hero .enter{opacity:0;transform:translateY(20px)}
     .lit .hero .enter{opacity:1;transform:none;transition:opacity .9s var(--ease-out),transform .9s var(--ease-out);transition-delay:calc(var(--i,0) * 110ms)}
+
+    /* ── the example conversation: a phone playing the product ─────────── */
+    .demo{margin:64px auto 0;width:min(290px,78vw)}
+    .phone{position:relative;aspect-ratio:9/18.6;border-radius:42px;background:var(--ink);padding:9px;box-shadow:0 40px 70px -34px var(--lift)}
+    .screen{position:relative;height:100%;border-radius:34px;background:var(--ink);overflow:hidden;text-align:left;font-size:14px;line-height:1.38}
+    .screen::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px var(--ink-hair);pointer-events:none;z-index:5}
+    .scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .5s var(--ease-out),visibility 0s linear .5s}
+    .scene.on{opacity:1;visibility:visible;transition:opacity .5s var(--ease-out),visibility 0s}
+    /* scene 1: the call nobody could take */
+    .call{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--ink);color:var(--page);text-align:center;padding:24px}
+    .call .who{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--on-ink)}
+    .call .num{font-size:25px;font-weight:300;letter-spacing:-0.02em;margin-top:4px}
+    .call .sub{font-size:13px;color:var(--on-ink)}
+    .ring{position:relative;width:74px;height:74px;margin:30px 0 26px;border-radius:50%;border:1px solid var(--ink-hair)}
+    .ring i{position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--on-ink);opacity:0}
+    .call.ringing .ring i{animation:ke-ring 1.6s var(--ease-out) infinite}
+    .call.ringing .ring i:nth-child(2){animation-delay:.53s}
+    .call.ringing .ring i:nth-child(3){animation-delay:1.06s}
+    @keyframes ke-ring{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.1);opacity:0}}
+    .ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;font-weight:300}
+    .missed{font-size:14px;font-weight:600;opacity:0;transform:translateY(8px);transition:opacity .4s var(--ease-out),transform .6s var(--ease-out)}
+    .call.gone .missed{opacity:1;transform:none}
+    .call.gone .ring{opacity:.35;transition:opacity .5s var(--ease-out)}
+    /* scene 2: the thread */
+    .thread{display:flex;flex-direction:column;background:var(--page)}
+    .th-head{padding:22px 18px 12px;border-bottom:1px solid var(--hairline);background:var(--recess)}
+    .th-head b{display:block;font-size:15px;font-weight:600}
+    .th-head span{font-size:12px;color:var(--muted)}
+    .msgs{position:relative;flex:1;overflow:hidden}
+    .flow{position:absolute;left:0;right:0;bottom:0;padding:12px 12px 16px;display:flex;flex-direction:column;gap:7px;transition:transform .55s var(--ease-out)}
+    .b{max-width:84%;padding:8px 12px 9px;border-radius:18px;font-size:13.5px}
+    .flow > :not(.show){display:none}
+    .flow > .show{animation:ke-pop .5s var(--ease-out) both}
+    @keyframes ke-pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+    .b.cust{align-self:flex-start;background:var(--cool);color:var(--ink);border-bottom-left-radius:6px;transform-origin:left bottom}
+    .b.fo{align-self:flex-end;background:var(--ink);color:var(--page);border-bottom-right-radius:6px;transform-origin:right bottom}
+    .meta{align-self:flex-end;font-size:11px;color:var(--muted);margin:-2px 4px 2px}
+    .note{align-self:center;font-size:11.5px;color:var(--muted);text-align:center;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:5px 10px;margin:4px 0}
+    .typing{align-self:flex-end;display:flex;gap:4px;padding:11px 13px;border-radius:18px;background:var(--ink)}
+    .typing i{width:6px;height:6px;border-radius:50%;background:var(--on-ink);animation:ke-dot 1s ease-in-out infinite}
+    .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+    @keyframes ke-dot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-4px);opacity:1}}
+    /* scene 3: the owner's evening summary slides up over the thread */
+    .sheet-up{position:absolute;left:0;right:0;bottom:0;background:var(--page);border-top:1px solid var(--hairline);border-radius:22px 22px 0 0;box-shadow:0 -20px 40px -24px var(--lift);padding:14px 18px 26px;transform:translateY(105%);transition:transform .8s var(--ease-out)}
+    .sheet-up.show{transform:none}
+    .sheet-up .grab{width:38px;height:4px;border-radius:4px;background:var(--hairline);margin:0 auto 14px}
+    .sheet-up .t{font-size:19px;font-weight:300;letter-spacing:-0.02em}
+    .sheet-up .d{font-size:12px;color:var(--muted);margin-top:2px}
+    .sum{margin-top:12px}
+    .sum div{padding:9px 0 10px;border-top:1px solid var(--hairline);opacity:0;transform:translateY(8px);transition:opacity .4s var(--ease-out),transform .6s var(--ease-out)}
+    .sum div.show{opacity:1;transform:none}
+    .sum small{display:block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .sum p{font-size:13px;margin-top:2px}
+    .demo figcaption{margin-top:18px;font-size:13px;color:var(--muted);text-align:center}
+    .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+    @media(max-width:640px){.demo{margin-top:48px}}
+
+    /* ── the map on a phone, round two: a short story, not eleven boxes ──
+       Inputs become a 2x2 of titles (their one-liners only said "answered" four ways);
+       outputs become rows on a rule. The facts stay, the box chrome goes. */
+    @media(max-width:979px){
+      .map-sec{padding:76px 0 84px}
+      .map{margin-top:44px}
+      .col.in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px}
+      .col.in .lbl{grid-column:1/-1}
+      .col.in .node{margin:0;padding:11px 0 12px;border:0;border-top:1px solid var(--hairline);background:none}
+      .col.in .node h3{font-size:15.5px}
+      .col.in .node p{display:none}
+      .hub{margin:26px 0}
+      .hub-node{padding:22px 22px 24px}
+      .col.out .node{margin:0;padding:12px 0 13px;border:0;border-top:1px solid var(--hairline);background:none}
+      .col.out .node h3{font-size:16px}
+      .col.out .node p{font-size:14px;margin-top:2px}
+      .col.out .lbl.second{margin-top:26px}
+      /* the title already says it, and the phone above has just shown it */
+      .col.out .node.terse p{display:none}
+    }
   </style>
   <link rel="stylesheet" href="/interactions.css">
   <script src="/utm.js"></script>
@@ -233,6 +315,47 @@
       <a class="btn-solid" href="apply-local.html">Tell us about your business <svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></a>
       <a class="btn-quiet" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27m%20asking%20about%20Kaizen%20Ascent" target="_blank" rel="noopener">Or message us on WhatsApp</a>
     </div>
+
+    <figure class="demo enter" style="--i:4" id="demo">
+      <div class="phone" aria-hidden="true">
+        <div class="screen">
+          <div class="scene call" id="scCall">
+            <div class="who">Holt Kitchens</div>
+            <div class="ring"><i></i><i></i><i></i><b>?</b></div>
+            <div class="num">07700 900412</div>
+            <div class="sub">Mobile &middot; 19:42</div>
+            <div class="missed">Missed call</div>
+          </div>
+          <div class="scene thread" id="scThread">
+            <div class="th-head"><b>07700 900412</b><span>New customer &middot; text message</span></div>
+            <div class="msgs"><div class="flow" id="flow">
+              <div class="b fo">Hi, it&rsquo;s Holt Kitchens. Sorry we missed your call just now. How can we help?</div>
+              <div class="meta">Sent by the front office &middot; 19:42</div>
+              <div class="b cust">Hi, I&rsquo;m after a new kitchen fitted. Can someone come and measure up?</div>
+              <div class="b fo">Yes, we can do that. What&rsquo;s your postcode, and roughly how big is the room?</div>
+              <div class="b cust">BS7. About 4m by 3m</div>
+              <div class="b fo">Thanks. We can come out Thursday at 10am or Saturday at 9am. Which suits you?</div>
+              <div class="b cust">Saturday please. Could you bring some worktop samples?</div>
+              <div class="b fo">You&rsquo;re booked in for Saturday at 9am to measure up. I&rsquo;ve passed the samples request on to the team.</div>
+              <div class="note">Reminder set for Friday evening</div>
+              <div class="typing"><i></i><i></i><i></i></div>
+            </div></div>
+            <div class="sheet-up" id="sheet">
+              <div class="grab"></div>
+              <div class="t">Your evening summary</div>
+              <div class="d">Tuesday</div>
+              <div class="sum">
+                <div><small>Who called</small><p>07700 900412, a new customer wanting a kitchen fitted.</p></div>
+                <div><small>What got booked</small><p>Measure-up visit, Saturday 9am, BS7.</p></div>
+                <div><small>What needs you</small><p>They&rsquo;d like worktop samples brought to the visit.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="sr">Example conversation. A customer calls Holt Kitchens at 19:42 and nobody can pick up. The front office texts them straight away: &ldquo;Hi, it&rsquo;s Holt Kitchens. Sorry we missed your call just now. How can we help?&rdquo; The customer wants a new kitchen fitted and asks for a measure-up. The front office asks for the postcode and room size, offers Thursday at 10am or Saturday at 9am, books Saturday at 9am, and passes on a request for worktop samples. A reminder is set for Friday evening. That evening the owner&rsquo;s summary lists who called, what got booked, and what needs them: bring worktop samples.</p>
+      <figcaption>Example conversation. The business and the customer are made up.</figcaption>
+    </figure>
   </div>
 </header>
 
@@ -264,10 +387,10 @@
       <div class="col out">
         <p class="lbl" style="--i:6">To your customer</p>
         <div class="node" data-out style="--i:7"><h3>Booked in</h3><p>A reminder, plus your deposit link if you take one. It&rsquo;s your own payment link, so the money goes straight to you.</p></div>
-        <div class="node" data-out style="--i:8"><h3>A chase if they don&rsquo;t show</h3><p>No-shows get followed up for you.</p></div>
-        <div class="node" data-out style="--i:9"><h3>A nudge when they&rsquo;re due again</h3><p>Your regulars get a reminder when it&rsquo;s time to come back.</p></div>
+        <div class="node terse" data-out style="--i:8"><h3>A chase if they don&rsquo;t show</h3><p>No-shows get followed up for you.</p></div>
+        <div class="node terse" data-out style="--i:9"><h3>A nudge when they&rsquo;re due again</h3><p>Your regulars get a reminder when it&rsquo;s time to come back.</p></div>
         <p class="lbl second" style="--i:10">To you</p>
-        <div class="node" data-out style="--i:11"><h3>A summary every evening</h3><p>Who called, what got booked, and what needs you.</p></div>
+        <div class="node terse" data-out style="--i:11"><h3>A summary every evening</h3><p>Who called, what got booked, and what needs you.</p></div>
         <div class="node" data-out style="--i:12"><h3>The &ldquo;we caught&rdquo; report, monthly</h3><p>Every enquiry that came in, and how many landed outside your opening hours.</p></div>
         <div class="node" data-out style="--i:13"><h3>Review replies, drafted</h3><p>Replies to your Google reviews, written for you to approve. Nothing is posted until you do.</p></div>
       </div>
@@ -390,8 +513,11 @@
   var ins=[].slice.call(map.querySelectorAll('[data-in]')), outs=[].slice.call(map.querySelectorAll('[data-out]'));
   var paths=[], dots=[], rail=null, railInk=null, railLen=0, wide=false, visible=false, drawn=false;
 
-  function box(el){var m=map.getBoundingClientRect(), r=el.getBoundingClientRect();
-    return {l:r.left-m.left, t:r.top-m.top, r:r.right-m.left, b:r.bottom-m.top, h:r.height, w:r.width};}
+  /* Measured WITHOUT the reveal offset: a node still waiting to rise sits 18px low, and
+     wiring to that position leaves every tick 18px under its label once it lands. */
+  function box(el){var m=map.getBoundingClientRect(), r=el.getBoundingClientRect(), dy=0;
+    try{ dy=new DOMMatrix(getComputedStyle(el).transform).m42||0; }catch(e){}
+    return {l:r.left-m.left, t:r.top-m.top-dy, r:r.right-m.left, b:r.bottom-m.top-dy, h:r.height, w:r.width};}
   function mk(tag,attrs){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
   function curve(sx,sy,ex,ey){var dx=(ex-sx)*.55;return 'M'+sx+' '+sy+' C'+(sx+dx)+' '+sy+','+(ex-dx)+' '+ey+','+ex+' '+ey;}
 
@@ -416,13 +542,13 @@
         dots.push({c:c,p:p,off:(i*0.137)%1});
       });
     } else {
-      var all=ins.concat([hub]).concat(outs), x=-18;
+      var all=[map.querySelector('.col.in')].concat([hub]).concat(outs), x=-18;
       var top=box(all[0]).t+18, bot=box(all[all.length-1]).t+box(all[all.length-1]).h/2;
       rail=mk('path',{d:'M'+x+' '+top+' L'+x+' '+bot,'class':'rail'}); svg.appendChild(rail);
       railInk=mk('path',{d:'M'+x+' '+top+' L'+x+' '+bot,'class':'rail-ink'}); svg.appendChild(railInk);
       railLen=bot-top; railInk.style.strokeDasharray=railLen; railInk.style.strokeDashoffset=railLen;
-      all.forEach(function(n){var b=box(n), y=Math.min(b.t+26,b.t+b.h/2);
-        svg.appendChild(mk('path',{d:'M'+x+' '+y+' L30 '+y}));});
+      all.forEach(function(n){var b=box(n), y=(n===hub)?b.t+b.h/2:Math.min(b.t+24,b.t+b.h/2);
+        svg.appendChild(mk('path',{d:'M'+x+' '+y+' L18 '+y}));});
       for(var k=0;k<3;k++){var c=mk('circle',{r:3.5,cx:x,cy:top}); svg.appendChild(c); dots.push({c:c,off:k/3,x:x,top:top,len:railLen});}
       scrub();
     }
@@ -488,6 +614,59 @@
   }
   window.addEventListener('scroll',onScroll,{passive:true});
   onScroll();
+})();
+</script>
+<script>
+/* The example conversation. Plays when on screen, loops, holds while a pointer or focus
+   is on it (WCAG 2.2.2). Same motion for every visitor: no reduced-motion branch. */
+(function(){
+  'use strict';
+  var demo=document.getElementById('demo'); if(!demo) return;
+  var call=document.getElementById('scCall'), thread=document.getElementById('scThread'),
+      flow=document.getElementById('flow'), sheet=document.getElementById('sheet');
+  var items=[].slice.call(flow.children).filter(function(n){return !n.classList.contains('typing');});
+  var typing=flow.querySelector('.typing'), sums=[].slice.call(sheet.querySelectorAll('.sum div'));
+  var inView=false, held=false, run=0;
+  function wait(ms,id){return new Promise(function(res){var left=ms,last=performance.now();
+    (function step(now){ if(id!==run) return; var dt=now-last; last=now;
+      if(inView&&!held) left-=dt; if(left<=0) res(); else requestAnimationFrame(step);})(last);});}
+  /* The thread is pinned to the bottom, so a new bubble pushes the old ones up. FLIP it so
+     the push glides instead of jumping. */
+  function toggle(n,on){var h0=flow.offsetHeight; n.classList.toggle('show',on); var d=flow.offsetHeight-h0;
+    flow.style.transition='none'; flow.style.transform='translateY('+d+'px)'; void flow.offsetHeight;
+    flow.style.transition=''; flow.style.transform='';}
+  function reset(){
+    items.forEach(function(n){n.classList.remove('show');}); typing.classList.remove('show'); flow.style.transform='';
+    sums.forEach(function(n){n.classList.remove('show');}); sheet.classList.remove('show');
+    call.classList.remove('ringing','gone'); thread.classList.remove('on'); call.classList.add('on');}
+  async function play(){
+    var id=++run;
+    while(id===run){
+      reset();
+      await wait(400,id); call.classList.add('ringing');
+      await wait(3400,id); call.classList.remove('ringing'); call.classList.add('gone');
+      await wait(1500,id); call.classList.remove('on'); thread.classList.add('on');
+      await wait(600,id);
+      for(var i=0;i<items.length;i++){
+        var n=items[i]; if(id!==run) return;
+        if(n.classList.contains('fo')){ toggle(typing,true); await wait(1100,id); typing.classList.remove('show'); }
+        else if(n.classList.contains('cust')) await wait(900,id);
+        toggle(n,true);
+        await wait(n.classList.contains('meta')||n.classList.contains('note')?500:1500,id);
+      }
+      await wait(1600,id); sheet.classList.add('show');
+      await wait(700,id);
+      for(var k=0;k<sums.length;k++){ sums[k].classList.add('show'); await wait(650,id); }
+      await wait(5200,id);
+    }
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){inView=e.isIntersecting;});},{threshold:.25});
+  io.observe(demo);
+  demo.addEventListener('pointerenter',function(){held=true;});
+  demo.addEventListener('pointerleave',function(){held=false;});
+  demo.addEventListener('focusin',function(){held=true;});
+  demo.addEventListener('focusout',function(){held=false;});
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(play); else play();
 })();
 </script>
 <script>
