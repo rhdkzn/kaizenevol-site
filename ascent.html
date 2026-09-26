@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="theme-color" content="#F7F6F4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex" />
+  <title>Kaizen Ascent, a front office for local businesses by KaizenEvol</title>
+  <meta name="description" content="Kaizen Ascent answers the calls you miss, your texts, emails and website chat, day and night, and books the job. We build and host your website too." />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <script>document.documentElement.className+=" js";</script>
+  <style>
+    /* Hallmark · design-system: brand/DESIGN.md · macrostructure: 19 Map / Diagram · tone: utilitarian
+     * genre: editorial · theme: locked system (brand/DESIGN.md v3, light mixed neutrals, no accent)
+     * nav: N9 edge-aligned minimal (mark left, one CTA right, no side doors)
+     * footer: Ft2-style single band + the estate's contact column (test-footer-contact parity)
+     * sections: hero (centred, per DESIGN layout ruling) · the map (signature) · guarantee (scroll-scrubbed statement)
+     *           · the website (H6-ish photographic strip, example builds) · F3 terms sheet · dark closing · footer
+     * enrichment: none drawn — the diagram IS the image; two example-build captures of made-up businesses
+     * motion: MAX. No reduced-motion branch anywhere, on purpose (brand/DESIGN.md, test-reduced-motion).
+     * pre-emit critique: P4 H4 E4 S5 R4 V5
+     */
+    @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+
+    :root{
+      --page:#F7F6F4; --recess:#EFEDE9; --cool:#E8E9EA; --hairline:#D8D4CC;
+      --stone:#8A857C; --muted:#6E6A63; --ink:#23211E;
+      --ink-hair:rgba(247,246,244,.18);
+      --on-ink:rgba(247,246,244,.8);
+      --veil:rgba(247,246,244,.86);
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+      --ease-out:cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-press:cubic-bezier(.3,0,.2,1);
+      --maxw:1120px;
+      --gut:24px;
+    }
+    *{box-sizing:border-box}
+    /* The phone canvas. The last band is the footer, on --recess, so html paints --recess:
+       overscroll, the home-indicator area and the toolbar collapse all show the footer's
+       ground instead of a pale strip under it. */
+    html{background:var(--recess);overflow-x:clip;scroll-behavior:smooth}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
+    a{color:var(--ink)}
+    img{max-width:100%;display:block}
+    h1,h2,h3{font-weight:300;letter-spacing:-0.04em;line-height:1.06;margin:0;overflow-wrap:anywhere;min-width:0;text-wrap:balance}
+    h1{font-size:clamp(44px,2rem + 4.4vw,80px);font-weight:200}
+    h2{font-size:clamp(30px,1.4rem + 2.2vw,48px)}
+    h3{font-size:clamp(18px,1rem + .4vw,21px);font-weight:600;letter-spacing:-0.02em;line-height:1.3}
+    p{margin:0}
+
+    /* ── nav: mark left, one way in right ───────────────────────────────── */
+    nav{position:sticky;top:0;z-index:40;background:var(--veil);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
+    .nav-inner{display:flex;align-items:center;gap:16px;height:66px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-0.02em}
+    .nav-logo img{height:30px;width:auto}
+    .nav-one{list-style:none;display:flex;align-items:center;margin:0 0 0 auto;padding:0}
+    .nav-one a.btn-solid{background:transparent;border-radius:0;color:var(--ink);font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:14px 1px;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:7px;text-decoration-color:var(--hairline);white-space:nowrap;transition:text-decoration-color .18s var(--ease-out)}
+    .nav-one a.btn-solid:hover{text-decoration-color:var(--ink)}
+
+    /* ── buttons ───────────────────────────────────────────────────────── */
+    .btn-solid{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:var(--page);padding:17px 28px;border-radius:980px;font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap;min-height:52px}
+    .btn-solid svg{transition:transform .5s var(--ease-out)}
+    .btn-solid:hover svg{transform:translateX(4px)}
+    .btn-solid:hover{color:var(--page)}
+    .btn-quiet{color:var(--muted);text-decoration:none;font-size:15px;font-weight:500;border-bottom:1px solid var(--hairline);padding:12px 0 2px;display:inline-block;white-space:nowrap;transition:color .2s var(--ease-out),border-color .2s var(--ease-out)}
+    .btn-quiet:hover{color:var(--ink);border-color:var(--ink)}
+    a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+
+    /* ── hero: centred at every width (brand/DESIGN.md, layout) ─────────── */
+    .hero{padding:96px 0 128px;text-align:center}
+    .hero .smallcaps{color:var(--muted)}
+    .hero h1{max-width:16ch;margin:22px auto 0}
+    .hero-sub{max-width:52ch;margin:26px auto 0;font-size:18px;color:var(--ink)}
+    .hero-ctas{margin-top:38px;display:flex;flex-direction:column;align-items:center;gap:14px}
+    @media(max-width:640px){
+      .hero{padding:52px 0 72px}
+      .hero h1{font-size:clamp(40px,11vw,50px);font-weight:300;letter-spacing:-0.035em;max-width:13ch}
+      .hero-sub{font-size:17px;max-width:32ch}
+    }
+
+    /* ── the map ────────────────────────────────────────────────────────── */
+    .map-sec{background:var(--recess);padding:104px 0 112px;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+    .map-head h2{max-width:17ch}
+    .map-head p{margin-top:20px;font-size:17px;color:var(--muted);max-width:44ch}
+    .map{position:relative;margin-top:64px;display:grid;gap:0}
+    .wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+    .wires path{fill:none;stroke:var(--stone);stroke-width:1.25}
+    .wires .rail{stroke:var(--hairline);stroke-width:2}
+    .wires .rail-ink{stroke:var(--ink);stroke-width:2}
+    .wires circle{fill:var(--ink)}
+    .col,.hub{position:relative;z-index:1;min-width:0}
+    .lbl{font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+    .col .lbl + .node{margin-top:0}
+    .node{background:var(--page);border:1px solid var(--hairline);padding:16px 18px 17px;margin-top:12px}
+    .node h3{font-size:17px}
+    .node p{margin-top:4px;font-size:14.5px;color:var(--muted);line-height:1.5}
+    .hub-node{background:var(--ink);color:var(--page);border-color:var(--ink);padding:30px 28px 32px}
+    .hub-node h3{font-size:clamp(24px,1.1rem + 1vw,30px);font-weight:300;letter-spacing:-0.03em;line-height:1.1}
+    .hub-node p{color:var(--on-ink);font-size:15px;margin-top:12px}
+    .col.out .lbl.second{margin-top:34px}
+
+    /* Phone and tablet: one column hung off a rail. The rail draws with the reader's own
+       scroll, so it is never finished before they reach it. */
+    @media(max-width:979px){
+      .map{padding-left:30px}
+      .col.in,.hub,.col.out{grid-column:1}
+      .hub{margin:30px 0}
+      .col.out{margin-top:0}
+    }
+    /* Desktop: inputs left, the front office centre, outputs right; beziers join them. */
+    @media(min-width:980px){
+      .map{grid-template-columns:minmax(0,1fr) minmax(0,.95fr) minmax(0,1fr);column-gap:92px;align-items:center}
+      .hub{align-self:center}
+      .col.in .node{margin-top:18px}
+    }
+
+    /* Nodes ink on. Every node is observed ON ITS OWN, so on a phone (where the map is
+       three screens tall) each one animates as it arrives rather than all at once off
+       screen. Desktop staggers them in reading order. */
+    .js .node{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease-out),transform .9s var(--ease-out)}
+    .js .node.in{opacity:1;transform:none}
+    .js .lbl{opacity:0;transition:opacity .6s var(--ease-out)}
+    .js .lbl.in{opacity:1}
+    @media(min-width:980px){
+      .js .node.in,.js .lbl.in{transition-delay:calc(var(--i,0) * 90ms)}
+    }
+
+    /* ── guarantee: one statement, lit word by word by the scroll ─────────── */
+    .promise{padding:128px 0 120px}
+    .promise-line{font-size:clamp(28px,1rem + 3vw,60px);font-weight:300;letter-spacing:-0.04em;line-height:1.08;max-width:19ch;margin:0}
+    .promise-line .w{color:var(--stone);transition:color .35s var(--ease-out)}
+    .promise-line .w.lit{color:var(--ink)}
+    .promise-note{margin-top:36px;max-width:50ch;font-size:17px;color:var(--muted)}
+
+    /* ── the website ────────────────────────────────────────────────────── */
+    .site-sec{background:var(--cool);padding:104px 0 96px;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+    .site-grid{display:grid;gap:56px}
+    .site-copy p{margin-top:20px;font-size:17px;color:var(--ink);max-width:40ch}
+    .site-copy p.small{font-size:14.5px;color:var(--muted)}
+    .strip{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(-1 * var(--gut));padding:10px var(--gut) 18px;scrollbar-width:none}
+    .strip::-webkit-scrollbar{display:none}
+    .shot{flex:0 0 62%;scroll-snap-align:start;margin:0;will-change:transform}
+    .shot img{width:100%;height:auto;aspect-ratio:390/844;object-fit:cover;object-position:top;border:1px solid var(--hairline);border-radius:22px;background:var(--page)}
+    .shot figcaption{margin-top:12px;font-size:13px;color:var(--muted);line-height:1.4}
+    .shot figcaption b{color:var(--ink);font-weight:600}
+    @media(min-width:980px){
+      .site-grid{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:center;gap:72px}
+      .strip{overflow:visible;margin:0;padding:0;gap:24px;align-items:flex-start}
+      .shot{flex:1 1 0}
+      .shot:nth-child(2){margin-top:72px}
+      .shot:nth-child(3){margin-top:24px}
+    }
+
+    /* ── terms sheet ────────────────────────────────────────────────────── */
+    .terms{padding:112px 0 104px}
+    .terms-grid{display:grid;gap:40px}
+    .terms-grid h2{max-width:14ch}
+    .terms-grid .lead{margin-top:20px;font-size:17px;color:var(--muted);max-width:40ch}
+    .sheet{margin:0;border-top:1px solid var(--ink)}
+    .sheet div{display:grid;gap:4px;padding:20px 0 21px;border-bottom:1px solid var(--hairline)}
+    .sheet dt{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+    .sheet dd{margin:0;font-size:16px;color:var(--muted);max-width:52ch}
+    @media(min-width:760px){.sheet div{grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:24px}}
+    @media(min-width:980px){.terms-grid{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:72px}}
+    .js .sheet div{opacity:0;transform:translateY(12px);transition:opacity .6s var(--ease-out),transform .8s var(--ease-out)}
+    .js .sheet div.in{opacity:1;transform:none}
+
+    /* Section heads rise in on their own, line reveal style. */
+    .js .rise{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease-out),transform .9s var(--ease-out)}
+    .js .rise.in{opacity:1;transform:none}
+
+    /* ── the one dark anchor ────────────────────────────────────────────── */
+    .last{background:var(--ink);color:var(--page);padding:120px 0 128px;text-align:center;overflow:hidden;position:relative}
+    .last h2{max-width:16ch;margin:0 auto}
+    .last p{margin:22px auto 0;max-width:44ch;font-size:17px;color:var(--on-ink)}
+    .last .hero-ctas{margin-top:40px}
+    .last .btn-solid{background:var(--page);color:var(--ink)}
+    .last .btn-solid:hover{color:var(--ink)}
+    .last .btn-quiet{color:var(--on-ink);border-color:var(--ink-hair)}
+    .last .btn-quiet:hover{color:var(--page);border-color:var(--page)}
+    .last a:focus-visible{outline-color:var(--page)}
+
+    /* ── footer ─────────────────────────────────────────────────────────── */
+    footer{background:var(--recess);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
+    .f-grid{display:grid;gap:34px}
+    @media(min-width:760px){.f-grid{grid-template-columns:2fr 1fr}}
+    footer .smallcaps{margin-bottom:6px}
+    footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column}
+    footer ul li:not(.footer-social) > a{display:inline-flex;align-items:center;min-height:44px}
+    footer a{color:var(--muted);text-decoration:none}
+    footer a:hover{color:var(--ink)}
+    footer .btn-solid{padding:12px 20px;min-height:44px;font-size:13px;color:var(--page);margin-top:14px}
+    footer .btn-solid:hover{color:var(--page)}
+    .f-note{margin:12px 0 0;max-width:38ch;color:var(--muted)}
+    .f-bottom{margin-top:40px;padding-top:20px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+    .footer-social{display:flex;gap:28px;align-items:center;margin-top:6px}
+    .footer-social a{display:inline-flex;align-items:center;color:var(--muted);transition:color .2s;padding:13px;margin:-13px}
+    .footer-social a:hover{color:var(--ink)}
+    .footer-social svg{width:18px;height:18px;display:block}
+
+    /* ── hero entrance on load ─────────────────────────────────────────── */
+    .js .hero .enter{opacity:0;transform:translateY(20px)}
+    .lit .hero .enter{opacity:1;transform:none;transition:opacity .9s var(--ease-out),transform .9s var(--ease-out);transition-delay:calc(var(--i,0) * 110ms)}
+  </style>
+  <link rel="stylesheet" href="/interactions.css">
+  <script src="/utm.js"></script>
+  <script src="/transitions.js" defer></script>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="nav-logo">
+      <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
+    </div>
+    <ul class="nav-one">
+      <li><a class="btn-solid" href="apply-local.html">Tell us about your business</a></li>
+    </ul>
+  </div>
+</nav>
+<main style="view-transition-name:ke-main-ascent">
+
+<header class="hero">
+  <div class="container">
+    <div class="smallcaps enter" style="--i:0">For local businesses</div>
+    <h1 class="enter" style="--i:1">The phone rings while your hands are full.</h1>
+    <p class="hero-sub enter" style="--i:2">Kaizen Ascent answers the calls you miss, your texts, your emails and your website chat, day and night, and books the job. We build and host you a proper website to go with it.</p>
+    <div class="hero-ctas enter" style="--i:3">
+      <a class="btn-solid" href="apply-local.html">Tell us about your business <svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></a>
+      <a class="btn-quiet" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27m%20asking%20about%20Kaizen%20Ascent" target="_blank" rel="noopener">Or message us on WhatsApp</a>
+    </div>
+  </div>
+</header>
+
+<section class="map-sec" id="how">
+  <div class="container">
+    <div class="map-head rise">
+      <h2>Four ways in. One front office. A booked job out.</h2>
+      <p>This is the part that works when you can&rsquo;t pick up: up a ladder, on a site visit, with a patient, or after you&rsquo;ve closed for the night.</p>
+    </div>
+
+    <div class="map" id="map">
+      <svg class="wires" id="wires" aria-hidden="true"></svg>
+
+      <div class="col in">
+        <p class="lbl" style="--i:0">Comes in</p>
+        <div class="node" data-in style="--i:1"><h3>A call you miss</h3><p>Answered, and the job gets booked in.</p></div>
+        <div class="node" data-in style="--i:2"><h3>A text</h3><p>Answered while you&rsquo;re still on the job.</p></div>
+        <div class="node" data-in style="--i:3"><h3>An email</h3><p>Answered, even after you&rsquo;ve closed.</p></div>
+        <div class="node" data-in style="--i:4"><h3>Your website chat</h3><p>Answered there and then, day or night.</p></div>
+      </div>
+
+      <div class="hub">
+        <div class="node hub-node" id="hub" style="--i:5">
+          <h3>The front office</h3>
+          <p>Answers every enquiry, books the job, sends the reminders and chases the no-shows. Day and night.</p>
+        </div>
+      </div>
+
+      <div class="col out">
+        <p class="lbl" style="--i:6">To your customer</p>
+        <div class="node" data-out style="--i:7"><h3>Booked in</h3><p>A reminder, plus your deposit link if you take one. It&rsquo;s your own payment link, so the money goes straight to you.</p></div>
+        <div class="node" data-out style="--i:8"><h3>A chase if they don&rsquo;t show</h3><p>No-shows get followed up for you.</p></div>
+        <div class="node" data-out style="--i:9"><h3>A nudge when they&rsquo;re due again</h3><p>Your regulars get a reminder when it&rsquo;s time to come back.</p></div>
+        <p class="lbl second" style="--i:10">To you</p>
+        <div class="node" data-out style="--i:11"><h3>A summary every evening</h3><p>Who called, what got booked, and what needs you.</p></div>
+        <div class="node" data-out style="--i:12"><h3>The &ldquo;we caught&rdquo; report, monthly</h3><p>Every enquiry that came in, and how many landed outside your opening hours.</p></div>
+        <div class="node" data-out style="--i:13"><h3>Review replies, drafted</h3><p>Replies to your Google reviews, written for you to approve. Nothing is posted until you do.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="promise">
+  <div class="container">
+    <h2 class="promise-line" id="promise">Any month it catches nothing you would have missed, the next month is free.</h2>
+    <p class="promise-note rise">The monthly report lists every enquiry and how many came in outside your opening hours, so you can see what it caught for yourself.</p>
+  </div>
+</section>
+
+<section class="site-sec">
+  <div class="container site-grid">
+    <div class="site-copy rise">
+      <h2>A proper website, built and hosted for you.</h2>
+      <p>It&rsquo;s free while you&rsquo;re with us. If you ever leave, you can keep the site.</p>
+      <p class="small">These are example builds we made to show what a local business site can look like. The businesses are made up.</p>
+    </div>
+    <div class="strip" id="strip">
+      <figure class="shot" data-depth="-0.06">
+        <img src="/assets/ascent/example-lofts.jpg" alt="Example build: the opening screen of a loft conversion firm&rsquo;s website on a phone" width="780" height="1688" loading="lazy" decoding="async">
+        <figcaption><b>Example build.</b> A loft conversion firm, made up for the demo</figcaption>
+      </figure>
+      <figure class="shot" data-depth="0.05">
+        <img src="/assets/ascent/example-bakery.jpg" alt="Example build: the opening screen of a bakery&rsquo;s website on a phone" width="780" height="1688" loading="lazy" decoding="async">
+        <figcaption><b>Example build.</b> A bakery, made up for the demo</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="terms">
+  <div class="container terms-grid">
+    <div class="rise">
+      <h2>Fix the leak before you buy traffic.</h2>
+      <p class="lead">Paying for more enquiries makes little sense while some of them go unanswered. So the front office comes first.</p>
+    </div>
+    <dl class="sheet">
+      <div><dt>Who it&rsquo;s for</dt><dd>Local businesses that already get enquiries and lose some to missed calls and slow replies. Home renovation first: kitchens, bathrooms and lofts. Also roofers, plumbers and heating engineers, dentists, beauty and aesthetics clinics, gyms, restaurants and garages.</dd></div>
+      <div><dt>Ads and content</dt><dd>They can be added later, once the front office shows enquiries turning into bookings.</dd></div>
+      <div><dt>How long</dt><dd>Three months to start, then month to month.</dd></div>
+      <div><dt>If you leave</dt><dd>You can keep the site.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="last" id="start">
+  <div class="container rise">
+    <h2>Stop losing the enquiries you already get.</h2>
+    <p>Start with a few questions and we&rsquo;ll come back to you.</p>
+    <div class="hero-ctas">
+      <a class="btn-solid" href="apply-local.html">Tell us about your business <svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></a>
+      <a class="btn-quiet" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27m%20asking%20about%20Kaizen%20Ascent" target="_blank" rel="noopener">Or message us on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>
+  <div class="container">
+    <div class="f-grid">
+      <div>
+        <div class="nav-logo"><img src="brand/v3/ke-mark-ink-256.png" alt="" style="height:22px" onerror="this.style.display='none'"></div>
+        <p class="f-note">Kaizen Ascent is a KaizenEvol service for local businesses.</p>
+      </div>
+      <div>
+        <div class="smallcaps">Contact</div>
+        <ul>
+          <li><a href="mailto:law@kaizenevol.com">law@kaizenevol.com</a></li>
+          <li><a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a></li>
+          <li class="footer-social"><a href="https://www.instagram.com/kaizenevol/" target="_blank" rel="noopener noreferrer" aria-label="KaizenEvol on Instagram"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="https://www.facebook.com/p/KaizenEvol-61590237975968/" target="_blank" rel="noopener noreferrer" aria-label="KaizenEvol on Facebook"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg></a></li>
+        </ul>
+        <a class="btn-solid" href="#" id="waOpen">Message us</a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 KaizenEvol</span>
+      <span>United Kingdom</span>
+    </div>
+  </div>
+</footer>
+
+<div id="waModal" role="dialog" aria-modal="true" aria-labelledby="waTitle" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:#EFEDE9;border:1px solid rgba(35,33,30,0.18);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+    <div id="waTitle" style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
+    <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27m%20asking%20about%20Kaizen%20Ascent" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply and call you back the same working day</span></a>
+    <button id="waClose" style="margin-top:16px;background:none;border:none;color:#6E6A63;font-size:13px;cursor:pointer;font-family:inherit;min-height:44px">Close</button>
+  </div>
+</div>
+
+<script>
+/* Motion is MAX and identical for every visitor. There is deliberately no reduced-motion
+   branch on this page (brand/DESIGN.md, "Motion vs Reduce Motion"). */
+(function(){
+  'use strict';
+  var NS='http://www.w3.org/2000/svg';
+
+  /* Hero entrance on load. */
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.classList.add('lit'); }); });
+
+  /* Reveal: every element observed on its own, so a phone animates each one as it arrives. */
+  var reveal=document.querySelectorAll('.node, .lbl, .rise, .sheet div');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+    });},{rootMargin:'0px 0px -10% 0px'});
+    reveal.forEach(function(el){io.observe(el);});
+  } else { reveal.forEach(function(el){el.classList.add('in');}); }
+
+  /* ── The map's wires ───────────────────────────────────────────────────
+     Desktop: a curve from each way in to the front office, and from the front office to
+     each thing that goes out, with enquiries travelling along them.
+     Phone: one rail down the left edge that draws with the reader's scroll, with a tick to
+     every node and enquiries travelling down it. */
+  var map=document.getElementById('map'), svg=document.getElementById('wires'), hub=document.getElementById('hub');
+  if(!map||!svg||!hub) return;
+  var ins=[].slice.call(map.querySelectorAll('[data-in]')), outs=[].slice.call(map.querySelectorAll('[data-out]'));
+  var paths=[], dots=[], rail=null, railInk=null, railLen=0, wide=false, visible=false, drawn=false;
+
+  function box(el){var m=map.getBoundingClientRect(), r=el.getBoundingClientRect();
+    return {l:r.left-m.left, t:r.top-m.top, r:r.right-m.left, b:r.bottom-m.top, h:r.height, w:r.width};}
+  function mk(tag,attrs){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
+  function curve(sx,sy,ex,ey){var dx=(ex-sx)*.55;return 'M'+sx+' '+sy+' C'+(sx+dx)+' '+sy+','+(ex-dx)+' '+ey+','+ex+' '+ey;}
+
+  function build(){
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    paths=[]; dots=[]; rail=railInk=null;
+    wide=window.matchMedia('(min-width:980px)').matches;
+    var H=box(hub);
+    if(wide){
+      ins.forEach(function(n,i){var b=box(n);
+        var ey=H.t+H.h*(i+1)/(ins.length+1);
+        paths.push({d:curve(b.r,b.t+b.h/2,H.l,ey),o:i*.07});});
+      outs.forEach(function(n,i){var b=box(n);
+        var sy=H.t+H.h*(i+1)/(outs.length+1);
+        paths.push({d:curve(H.r,sy,b.l,b.t+b.h/2),o:.35+i*.06});});
+      paths.forEach(function(p,i){
+        var el=mk('path',{d:p.d}); svg.appendChild(el);
+        var L=el.getTotalLength(); p.el=el; p.len=L;
+        el.style.strokeDasharray=L; el.style.strokeDashoffset=drawn?0:L;
+        el.style.transition='stroke-dashoffset 1.1s cubic-bezier(0.16, 1, 0.3, 1) '+(i*70)+'ms';
+        var c=mk('circle',{r:3.2,cx:-20,cy:-20}); svg.appendChild(c);
+        dots.push({c:c,p:p,off:(i*0.137)%1});
+      });
+    } else {
+      var all=ins.concat([hub]).concat(outs), x=-18;
+      var top=box(all[0]).t+18, bot=box(all[all.length-1]).t+box(all[all.length-1]).h/2;
+      rail=mk('path',{d:'M'+x+' '+top+' L'+x+' '+bot,'class':'rail'}); svg.appendChild(rail);
+      railInk=mk('path',{d:'M'+x+' '+top+' L'+x+' '+bot,'class':'rail-ink'}); svg.appendChild(railInk);
+      railLen=bot-top; railInk.style.strokeDasharray=railLen; railInk.style.strokeDashoffset=railLen;
+      all.forEach(function(n){var b=box(n), y=Math.min(b.t+26,b.t+b.h/2);
+        svg.appendChild(mk('path',{d:'M'+x+' '+y+' L30 '+y}));});
+      for(var k=0;k<3;k++){var c=mk('circle',{r:3.5,cx:x,cy:top}); svg.appendChild(c); dots.push({c:c,off:k/3,x:x,top:top,len:railLen});}
+      scrub();
+    }
+  }
+
+  function scrub(){
+    if(wide||!railInk) return;
+    var m=map.getBoundingClientRect(), vh=window.innerHeight;
+    var p=(vh*.72-m.top)/m.height; p=Math.max(0,Math.min(1,p));
+    railInk.style.strokeDashoffset=railLen*(1-p);
+  }
+
+  function drawIn(){ if(drawn) return; drawn=true; paths.forEach(function(p){ if(p.el) p.el.style.strokeDashoffset=0; }); }
+
+  var t0=performance.now();
+  function tick(now){
+    if(visible){
+      var t=(now-t0)/1000;
+      dots.forEach(function(d){
+        if(wide){
+          if(!drawn){d.c.setAttribute('cx',-20);return;}
+          var u=((t*.32)+d.off)%1, pt=d.p.el.getPointAtLength(u*d.p.len);
+          d.c.setAttribute('cx',pt.x); d.c.setAttribute('cy',pt.y);
+          d.c.style.opacity=u<.08?u/.08:(u>.92?(1-u)/.08:1);
+        } else {
+          var v=((t*.12)+d.off)%1;
+          d.c.setAttribute('cy',d.top+v*d.len);
+          d.c.style.opacity=v<.05?v/.05:(v>.95?(1-v)/.05:1);
+        }
+      });
+    }
+    requestAnimationFrame(tick);
+  }
+
+  var mio=new IntersectionObserver(function(es){es.forEach(function(e){
+    visible=e.isIntersecting; if(e.isIntersecting&&e.intersectionRatio>.2) drawIn();
+  });},{threshold:[0,.2,.4]});
+  mio.observe(map);
+
+  var rt; function rebuild(){clearTimeout(rt); rt=setTimeout(build,120);}
+  window.addEventListener('resize',rebuild,{passive:true});
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(build); else build();
+  window.addEventListener('load',build);
+  requestAnimationFrame(tick);
+
+  /* ── The guarantee, lit word by word as it scrolls through the screen ─── */
+  var pl=document.getElementById('promise'), words=[];
+  if(pl){
+    var txt=pl.textContent.trim().split(/\s+/); pl.textContent='';
+    txt.forEach(function(w,i){var s=document.createElement('span'); s.className='w'; s.textContent=w;
+      pl.appendChild(s); if(i<txt.length-1) pl.appendChild(document.createTextNode(' ')); words.push(s);});
+  }
+  /* ── The example builds drift at their own depth as the page scrolls ─── */
+  var shots=[].slice.call(document.querySelectorAll('.shot'));
+  function onScroll(){
+    var vh=window.innerHeight;
+    if(pl){var r=pl.getBoundingClientRect(), p=(vh*.85-r.top)/(vh*.55+r.height*.5);
+      p=Math.max(0,Math.min(1,p)); var n=Math.round(p*words.length);
+      for(var i=0;i<words.length;i++) words[i].classList.toggle('lit',i<n);}
+    if(window.innerWidth>=980) shots.forEach(function(s){var r=s.getBoundingClientRect(), c=(r.top+r.height/2-vh/2);
+      s.style.transform='translate3d(0,'+(c*parseFloat(s.dataset.depth||0))+'px,0)';});
+    scrub();
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+})();
+</script>
+<script>
+(function(){var o=document.getElementById('waOpen'),m=document.getElementById('waModal'),c=document.getElementById('waClose'),last=null;
+if(!o||!m)return;
+function open(e){e.preventDefault();last=document.activeElement;m.style.display='flex';var f=m.querySelector('a');if(f)f.focus();}
+function close(){m.style.display='none';if(last&&last.focus)last.focus();}
+o.addEventListener('click',open);
+c.addEventListener('click',close);
+m.addEventListener('click',function(e){if(e.target===m)close();});
+document.addEventListener('keydown',function(e){if(m.style.display!=='flex')return;
+  if(e.key==='Escape'){close();return;}
+  if(e.key==='Tab'){var f=m.querySelectorAll('a,button'),a=f[0],z=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}
+    else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}});})();
+</script>
+<script defer src="/script.js"></script>
+</body>
+</html>

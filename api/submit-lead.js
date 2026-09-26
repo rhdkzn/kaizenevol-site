@@ -20,6 +20,10 @@ export default async function handler(req, res) {
     if (!Object.keys(attribution).length) attribution = null;
   }
 
+  /* Kaizen Ascent (local businesses) posts lane:'local' from apply-local.html. Only that
+     exact value is honoured; anything else is the creative lane, as before. */
+  const local = !!(req.body && req.body.lane === 'local');
+
   // Homepage one-pager posts { name, trade, contact, message } — contact is a phone OR an email.
   const { name, contact } = req.body || {};
   if (name && !businessName) {
@@ -59,13 +63,15 @@ export default async function handler(req, res) {
     area: '',
     niche: (trade || '').trim(),
     source: 'Website',
+    ...(local ? { lane: 'local', segment: 'Local' } : {}),
     /* Additive: `source` keeps its existing value so nothing in the CRM changes
        behaviour. Campaign detail rides alongside it. */
     attribution,
     stage: 'new',
     score: 0,
-    estimatedValue: 2000,
+    estimatedValue: local ? 750 : 2000,
     notes: [
+      local ? 'Kaizen Ascent (local)' : '',
       trade ? `Service: ${trade}` : '',
       monthlyBudget ? `Ad budget: ${monthlyBudget}` : '',
       message ? `Message: ${message.trim()}` : '',
@@ -108,7 +114,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         from: 'KaizenEvol Site <noreply@mail.kaizenevol.com>',
         to: ['law@kaizenevol.com'],
-        subject: `New inbound lead: ${businessName.trim()}${(contactName || '').trim() ? ` (${contactName.trim()})` : ''}`,
+        subject: `${local ? '[Kaizen Ascent] ' : ''}New inbound lead: ${businessName.trim()}${(contactName || '').trim() ? ` (${contactName.trim()})` : ''}`,
         text: [
           `New lead from the website.`,
           ``,

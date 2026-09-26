@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="theme-color" content="#F7F6F4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Tell us about your business, Kaizen Ascent</title>
+  <meta name="robots" content="noindex" />
+  <meta name="description" content="A few questions about your business so we know whether we can help. We reply either way." />
+  <link rel="canonical" href="https://kaizenevol.com/apply-local.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kaizenevol.com/apply-local.html" />
+  <meta property="og:site_name" content="KaizenEvol" />
+  <meta property="og:title" content="Tell us about your business, Kaizen Ascent" />
+  <meta property="og:description" content="A few questions about your business so we know whether we can help. We reply either way." />
+  <meta property="og:image" content="https://kaizenevol.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tell us about your business, Kaizen Ascent" />
+  <meta name="twitter:description" content="A few questions about your business so we know whether we can help. We reply either way." />
+  <meta name="twitter:image" content="https://kaizenevol.com/og-image.png" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <style>
+    @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+    @font-face{font-family:'Newsreader';src:url('/newsreader-italic-56f6419f.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
+    :root{
+      --page:#F7F6F4;--recess:#EFEDE9;--cool:#E8E9EA;--hairline:#D8D4CC;
+      --stone:#8A857C;--muted:#6E6A63;--ink:#23211E;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+      --serif:'Newsreader',Georgia,serif;--el-ease:cubic-bezier(.16,1,.3,1);
+    }
+    *{box-sizing:border-box}
+    /* Canvas matches the last band — see the note on the content pages. */
+    html{background:var(--page)}
+    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;overflow-x:clip}
+    /* Chromium's default placeholder is #757575 on this ground: 4.27:1. --muted clears 4.5. */
+    ::placeholder{color:var(--muted);opacity:1}
+    .container{max-width:640px;margin:0 auto;padding:0 24px;width:100%}
+    a{color:var(--ink)}
+    em{font-family:var(--serif);font-style:italic;font-weight:300}
+    .smallcaps{font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}
+
+    .top{padding:26px 0;border-bottom:1px solid var(--hairline)}
+    .top-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brandline{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-0.02em;font-size:15px;padding:12px;margin:-12px}
+    .brandline img{height:20px;width:auto}
+    .count{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+    main{flex:1;display:flex;align-items:center;padding:44px 0 60px}
+    .step{display:none}
+    .step.on{display:block}
+    .q{font-weight:200;letter-spacing:-0.035em;line-height:1.1;font-size:clamp(27px,1.3rem + 2.1vw,40px);margin:14px 0 0;text-wrap:balance}
+    .why{color:var(--muted);font-size:15px;margin:14px 0 0;max-width:46ch}
+    .answer{margin:30px 0 0}
+    input[type=text],input[type=email],input[type=url],input[type=tel],textarea{
+      font:inherit;font-size:17px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--hairline);
+      padding:10px 2px;width:100%;border-radius:0}
+    input:focus,textarea:focus{outline:none;border-bottom-color:var(--ink)}
+    textarea{min-height:96px;resize:vertical;border:1px solid var(--hairline);padding:12px 14px}
+    textarea:focus{outline:2px solid var(--ink);outline-offset:-1px}
+    .opts{display:flex;flex-direction:column;gap:1px;background:var(--hairline);border:1px solid var(--hairline)}
+    .opt{background:var(--page);border:0;font:inherit;font-size:15.5px;text-align:left;padding:14px 16px;cursor:pointer;color:var(--ink);transition:background .2s var(--el-ease)}
+    .opt:hover{background:var(--recess)}
+    .opt:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+    .opt[aria-pressed=true]{background:var(--ink);color:var(--page)}
+    .nav{display:flex;align-items:center;gap:18px;margin:30px 0 0}
+    .go{font:inherit;background:var(--ink);color:var(--page);border:0;border-radius:980px;padding:13px 30px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .25s var(--el-ease)}
+    .go:hover{opacity:.88}
+    .back{background:none;border:0;font:inherit;font-size:13.5px;color:var(--muted);cursor:pointer;padding:0}
+    .back:hover{color:var(--ink)}
+    .err{color:#8A2B2B;font-size:13.5px;margin:14px 0 0;min-height:1.2em}
+    .review{background:var(--recess);padding:22px 24px;margin:26px 0 0;font-size:14px}
+    .review dl{margin:0;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:8px 20px}
+    .review dt{color:var(--muted);font-size:12.5px}
+    .review dd{margin:0;overflow-wrap:anywhere}
+    .done h2{font-weight:200;letter-spacing:-0.035em;font-size:clamp(28px,1.3rem + 2vw,38px);margin:0}
+    .done p{color:var(--muted);margin:16px 0 0}
+    /* The read-back. It is the only part of this page that tells them something they did
+       not already know, so it gets the ink: body colour, a rule above it, and the lede in
+       the page's own voice. 2026-09-11, RES-CMP-013. */
+    .read{margin:22px 0 0;padding:20px 0 4px;border-top:1px solid var(--hairline)}
+    .read p{color:var(--ink);margin:12px 0 0}
+    .read .read-lede{color:var(--muted);margin:0}
+    .read .read-note{color:var(--muted);font-size:13px;margin-top:16px}
+    footer{border-top:1px solid var(--hairline);padding:22px 0 34px;font-size:13px;color:var(--muted)}
+    footer a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;min-height:44px;min-width:44px}
+    /* No prefers-reduced-motion override. Rahaid, standing: the setting is ignored. */
+    /* No JS: every step is visible and it is an ordinary form. */
+    .nojs .step{display:block;margin-bottom:38px}
+    .nojs .nav,.nojs .count{display:none}
+    .nojs .nojs-send{display:block!important}
+    .nojs-send{display:none}
+  </style>
+  <link rel="stylesheet" href="/interactions.css">
+  <script src="/utm.js"></script>
+<script src="/transitions.js" defer></script>
+  <script type="speculationrules">
+  {"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*\\?*"}}]},"eagerness":"moderate"}]}
+  </script>
+</head>
+<body class="nojs">
+
+<div class="top">
+  <div class="container top-inner">
+    <a class="brandline" href="ascent.html"><img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'"></a>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+</div>
+
+<main style="view-transition-name:ke-main-apply">
+  <div class="container">
+    <form id="f" novalidate>
+
+      <section class="step on" data-key="businessName" data-type="text">
+        <div class="smallcaps">Tell us about your business</div>
+        <h1 class="q">What&rsquo;s your business called?</h1>
+        <div class="answer"><input type="text" id="businessName" aria-label="Business name" autocomplete="organization" placeholder="Business name" /></div>
+      </section>
+
+      <section class="step" data-key="trade" data-type="text">
+        <h2 class="q">What do you do?</h2>
+        <p class="why">Kitchens, bathrooms, lofts, roofing, plumbing, a dental practice, a gym. Whatever it is.</p>
+        <div class="answer"><input type="text" id="trade" aria-label="What your business does" placeholder="What you do" /></div>
+      </section>
+
+      <section class="step" data-key="businessUrl" data-type="text">
+        <h2 class="q">Where can we find you?</h2>
+        <p class="why">Your website, your Google listing or your Instagram. Leave it blank if you have none. That is part of what we fix.</p>
+        <div class="answer"><input type="text" inputmode="url" autocomplete="url" id="businessUrl" aria-label="Your website, Google listing or Instagram" placeholder="yoursite.co.uk or @yourbusiness" /></div>
+      </section>
+
+      <section class="step" data-key="enquiries" data-type="choice">
+        <h2 class="q">Roughly how many enquiries do you get a week?</h2>
+        <p class="why">Calls, texts, emails and messages asking for a price or a booking. A rough guess is fine. The front office works on the enquiries you already get, so this is the number that tells us whether it will pay for itself.</p>
+        <div class="answer opts" role="group" aria-label="Enquiries a week">
+          <button type="button" class="opt">Under 5</button>
+          <button type="button" class="opt">5 &ndash; 15</button>
+          <button type="button" class="opt">15 &ndash; 40</button>
+          <button type="button" class="opt">Over 40</button>
+          <button type="button" class="opt">Not sure</button>
+        </div>
+      </section>
+
+      <section class="step" data-key="missed" data-type="choice">
+        <h2 class="q">How often does one go unanswered?</h2>
+        <p class="why">A call you could not pick up, a message you got to the next day. Nobody answers every one.</p>
+        <div class="answer opts" role="group" aria-label="How often an enquiry goes unanswered">
+          <button type="button" class="opt">Most days</button>
+          <button type="button" class="opt">A few times a week</button>
+          <button type="button" class="opt">Now and then</button>
+          <button type="button" class="opt">Not sure</button>
+        </div>
+      </section>
+
+      <section class="step" data-key="message" data-type="long">
+        <h2 class="q">Anything else we should know?</h2>
+        <p class="why">How you take bookings now, what tends to slip, or a question for us.</p>
+        <div class="answer"><textarea id="message" aria-label="Anything else we should know" placeholder="Optional"></textarea></div>
+      </section>
+
+      <section class="step" data-key="email" data-type="email">
+        <h2 class="q">Who are we speaking to, and how do we reach you?</h2>
+        <div class="answer"><input type="text" id="contactName" aria-label="Your name" autocomplete="name" placeholder="Your name" /></div>
+        <p class="why">A phone number or an email, whichever you check. We read these ourselves and reply either way.</p>
+        <div class="answer"><input type="tel" id="phone" aria-label="Your phone number" autocomplete="tel" placeholder="Phone number" /></div>
+        <div class="answer"><input type="email" id="email" aria-label="Your email address" autocomplete="email" placeholder="Email address" /></div>
+        <div class="review" id="review" hidden></div>
+      </section>
+
+      <p class="err" id="err" role="alert"></p>
+      <div class="nav" id="nav">
+        <button type="button" class="go" id="go">Continue</button>
+        <button type="button" class="back" id="back" hidden>Back</button>
+      </div>
+      <div class="nojs-send"><button type="submit" class="go">Send it</button></div>
+    </form>
+
+    <div id="done" hidden class="done">
+      <div class="smallcaps">Sent</div>
+      <h2 tabindex="-1">Got it.</h2>
+      <p>We read these in order and reply either way, the same working day. If it is urgent, email <a href="mailto:law@kaizenevol.com">law@kaizenevol.com</a> or <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a> and say so.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <a href="mailto:law@kaizenevol.com">law@kaizenevol.com</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a> &nbsp;&middot;&nbsp;
+    <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; &copy; 2026 KaizenEvol
+  </div>
+</footer>
+
+<script>
+(function(){
+  document.body.classList.remove('nojs');           // JS is here, so run the one-at-a-time flow
+  var steps = [].slice.call(document.querySelectorAll('.step'));
+  var f = document.getElementById('f'), go = document.getElementById('go'), back = document.getElementById('back');
+  var err = document.getElementById('err'), count = document.getElementById('count');
+  var review = document.getElementById('review'), done = document.getElementById('done');
+  var data = {}, i = 0;
+  /* Nine answers lived only in memory: an app-switch that made Safari reload the tab lost all of
+     them (critique, 2026-09-18). Mirrored to sessionStorage on every step; cleared on send. */
+  try { var saved = JSON.parse(sessionStorage.getItem('ke-apply-local') || 'null');
+        if (saved && saved.data) { data = saved.data; i = Math.min(saved.i | 0, steps.length - 1); } } catch (e) {}
+  function save(){ try { sessionStorage.setItem('ke-apply-local', JSON.stringify({ data: data, i: i })); } catch (e) {} }
+
+  function render(){
+    steps.forEach(function(s,n){ s.classList.toggle('on', n===i); });
+    count.textContent = (i+1) + ' of ' + steps.length;
+    back.hidden = i === 0;
+    go.textContent = i === steps.length-1 ? 'Send it' : 'Continue';
+    err.textContent = '';
+    if (i === steps.length-1) showReview();
+    /* Put a restored or earlier answer back into the step it belongs to. */
+    var cur = steps[i];
+    cur.querySelectorAll('input,textarea').forEach(function(fl){ var k = fl.id || cur.dataset.key; if (data[k] && !fl.value) fl.value = data[k]; });
+    cur.querySelectorAll('.opt').forEach(function(o){ o.setAttribute('aria-pressed', data[cur.dataset.key] === o.textContent.trim() ? 'true' : 'false'); });
+    var field = steps[i].querySelector('input,textarea');
+    if (field) { field.focus(); }
+    else { var b = steps[i].querySelector('.opt'); if (b) b.focus(); }
+  }
+
+  function showReview(){
+    var rows = '';
+    steps.slice(0,-1).forEach(function(s){
+      var k = s.dataset.key, v = data[k];
+      if (k === 'email' && data.contactName) {
+        rows += '<dt>Name</dt><dd>' + String(data.contactName).replace(/</g,'&lt;') + '</dd>';
+      }
+      if (!v) return;
+      var label = s.querySelector('.q').textContent.replace(/\?$/,'');
+      rows += '<dt>' + label + '</dt><dd>' + String(v).replace(/</g,'&lt;') + '</dd>';
+    });
+    review.innerHTML = rows ? '<dl>' + rows + '</dl>' : '';
+    review.hidden = !rows;
+  }
+
+  steps.forEach(function(s){
+    s.querySelectorAll('.opt').forEach(function(b){
+      b.addEventListener('click', function(){
+        s.querySelectorAll('.opt').forEach(function(o){ o.setAttribute('aria-pressed','false'); });
+        b.setAttribute('aria-pressed','true');
+        data[s.dataset.key] = b.textContent.trim();
+        setTimeout(next, 140);                       // a beat, so the selection is visible
+      });
+    });
+  });
+
+  function capture(){
+    /* querySelector (singular) was fine while every step had at most one field. The
+       final step now asks for the name AND the email on one screen, so it would have
+       captured the NAME into data.email and never captured the address — every
+       application arriving with nobody to reply to. Key by the element's own id, which
+       matches data-key on every single-field step, and fall back for anything unnamed. */
+    var s = steps[i], fields = s.querySelectorAll('input,textarea');
+    for (var n = 0; n < fields.length; n++) {
+      data[fields[n].id || s.dataset.key] = fields[n].value.trim();
+    }
+    return s;
+  }
+
+  function valid(s){
+    var k = s.dataset.key, v = (data[k]||'').trim();
+    if (k === 'businessName' && !v) return 'The business name, please.';
+    if (k === 'email') {
+      var ph = (data.phone || '').replace(/[^0-9+]/g, '');
+      if (!v && ph.length < 10) return 'A phone number or an email, so we can reply.';
+      if (v && (v.indexOf('@') < 1 || v.indexOf('.') < 0)) return 'That email does not look right.';
+    }
+    return '';
+  }
+
+  function next(){
+    var s = capture(), problem = valid(s);
+    if (problem) { err.textContent = problem; var fl = s.querySelector('input,textarea'); if (fl) fl.focus(); return; }
+    if (i < steps.length-1) { i++; save(); render(); return; }
+    send();
+  }
+
+  function send(){
+    go.disabled = true; err.textContent = ''; go.textContent = 'Sending…';
+    fetch('/api/submit-lead', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        lane: 'local',
+        businessName: data.businessName, businessUrl: data.businessUrl,
+        contactName: data.contactName, email: data.email, phone: data.phone, trade: data.trade,
+        attribution: window.keAttribution ? window.keAttribution() : null,
+        message: 'Enquiries a week: ' + (data.enquiries || 'not given')
+               + '\nUnanswered: ' + (data.missed || 'not given')
+               + (data.message ? '\n\n' + data.message : '')
+      })
+    }).then(function(r){ if(!r.ok) throw 0; })
+      .then(function(){
+        f.hidden = true; count.textContent='';
+        try { sessionStorage.removeItem('ke-apply-local'); } catch (e) {}
+        /* Meta Lead — success branch only. See funnel-engine.js for why it is guarded
+           twice and why nothing but a label is sent. */
+        try { if (window.keTrackLead) window.keTrackLead({ content_name: 'apply-local' }); }
+        catch (e) {}
+        done.hidden = false; done.querySelector('h2').focus && done.querySelector('h2').focus(); })
+      .catch(function(){
+        go.disabled = false; go.textContent = 'Send it';
+        err.textContent = 'That did not send. Email law@kaizenevol.com or diego@kaizenevol.com and we will pick it up there.';
+      });
+  }
+
+  go.addEventListener('click', next);
+  back.addEventListener('click', function(){ capture(); if (i>0){ i--; save(); render(); } });
+  f.addEventListener('submit', function(e){ e.preventDefault(); next(); });
+  f.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') { e.preventDefault(); next(); }
+  });
+  /* The homepage hero no longer has an Apply button — it asks the first question of this
+     form and sends the answer across in ?b= (2026-09-07). Take it, fill step one, and open
+     on step two, so answering in the hero is not made pointless by asking again here. An
+     empty or whitespace-only value is ignored and the form starts where it always did. */
+  (function seed(){
+    var b;
+    try { b = new URLSearchParams(location.search).get('b'); } catch (e) { return; }
+    if (!b || !b.trim()) return;
+    b = b.trim().slice(0, 120);
+    var field = document.getElementById('businessName');
+    if (!field) return;
+    field.value = b;
+    data.businessName = b;
+    i = 1;
+    save();
+  })();
+
+  render();
+})();
+</script>
+<script defer src="/script.js"></script>
+</body>
+</html>
