@@ -20,6 +20,9 @@
      * footer: the estate's contact column (test-footer-contact parity), on --recess
      * sections: marquee hero · the stage (signature) · the ledger · the guarantee · the website spread
      *           · who it's for + terms sheet · dark closing · footer
+     * set pieces shared with the homepage: silk aura in the hero (midnight.js), grain + vignette,
+ *   scroll-scrubbed film under the dark closing (scrub.js, .scrub). Not class .closing: that
+ *   contract carries the agency's seats note and brand field, which are not Ascent's.
      * enrichment: none photographic (no real photography available; nothing generated, nothing faked).
      *   The phone playing the example conversation is the hero's proof; two example-build captures,
      *   both labelled as made-up businesses.
@@ -95,12 +98,15 @@
     @media(min-width:640px){.ctas{flex-direction:row;justify-content:center;gap:36px}}
 
     /* ── hero: one statement, centred at every width (brand/DESIGN.md, layout) ─ */
-    .hero{padding:clamp(64px,9vh,112px) 0 clamp(96px,14vh,168px);text-align:center}
+    .hero{position:relative;padding:clamp(64px,9vh,112px) 0 clamp(96px,14vh,168px);text-align:center;min-height:calc(100svh - var(--nav-h));display:flex;align-items:center;border-bottom:1px solid var(--hairline);overflow:clip}
+    /* The silk aura (midnight.js) paints a canvas at z-index 0 inside .hero; the copy sits over it. */
+    .hero > .container{position:relative;z-index:1;width:100%}
     .hero h1{font-size:var(--text-display);font-weight:200;letter-spacing:-0.04em;line-height:1;max-width:12ch;margin:0 auto}
     .hero-sub{text-wrap:balance;max-width:44ch;margin:40px auto 0;font-size:var(--text-lede);line-height:1.55;color:var(--ink)}
     .hero .ctas{margin-top:48px}
     @media(max-width:640px){
       .hero{padding:48px 0 72px}
+      .stage{padding-top:var(--space-xl)}
       .hero-sub{margin-top:28px;max-width:34ch}
       .hero .ctas{margin-top:36px}
     }
@@ -485,7 +491,17 @@
   </div>
 </section>
 
-<section class="last" id="start">
+<section class="last scrub" id="start" data-scrub>
+  <div class="scrub-media" aria-hidden="true">
+    <picture>
+      <source media="(max-width: 860px)" srcset="/assets/loop/loop-mobile-poster.jpg">
+      <img src="/assets/loop/loop-poster.jpg" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+    </picture>
+    <div class="scrub-frames"
+      data-sprite="/assets/loop/frames.webp" data-sprite-mobile="/assets/loop/frames-mobile.webp"
+      data-cols="6" data-rows="8" data-frames="48" data-tile="640x360" data-tile-mobile="480x270"></div>
+    <div class="scrub-scrim"></div>
+  </div>
   <div class="container rise">
     <h2>Stop losing the enquiries you already get.</h2>
     <p>Start with a few questions and we&rsquo;ll come back to you.</p>
@@ -664,6 +680,10 @@ document.addEventListener('keydown',function(e){if(m.style.display!=='flex')retu
     if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}
     else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}});})();
 </script>
+<!-- The homepage's set pieces: the silk aura behind the hero plus grain and vignette
+     (midnight.js), and the scroll-scrubbed film under the dark closing (scrub.js). -->
+<script src="/midnight.js?v=22" defer></script>
+<script src="/scrub.js" defer></script>
 <script defer src="/script.js"></script>
 </body>
 </html>
