@@ -1,0 +1,85 @@
+{
+  "capturedFrom": "main 180f98d, before three client types (2026-09-27)",
+  "rows": {
+    "officeFounding": {
+      "lane": "local",
+      "business": "Hollow Oak Barbers",
+      "founder": "Dev Patel",
+      "founding": true,
+      "retainer": 500,
+      "email": "dev@hollowoak.co.uk",
+      "issuedAt": "2026-09-25",
+      "segment": "Local"
+    },
+    "officeStandard": {
+      "lane": "local",
+      "business": "Hollow Oak Barbers",
+      "founder": "Dev Patel",
+      "founding": false,
+      "retainer": 750,
+      "email": "dev@hollowoak.co.uk",
+      "issuedAt": "2026-09-25",
+      "startDate": "2026-10-01",
+      "segment": "Local"
+    },
+    "officeBuyout": {
+      "lane": "local",
+      "business": "Kiln Street Dental",
+      "founder": "Ana Silva",
+      "founding": true,
+      "retainer": 500,
+      "buyout": 1450,
+      "email": "ana@kiln.co.uk",
+      "issuedAt": "2026-09-26",
+      "clientEntity": "Kiln Street Dental Ltd, 01234567",
+      "clientAddress": "4 Kiln Street, Bristol",
+      "segment": "Local"
+    },
+    "officeNoRetainer": {
+      "lane": "local",
+      "business": "Hollow Oak Barbers",
+      "founder": "Dev Patel",
+      "founding": false,
+      "email": "dev@hollowoak.co.uk",
+      "issuedAt": "2026-09-25"
+    },
+    "artist": {
+      "business": "Nova Reyes",
+      "founder": "Nova Reyes",
+      "founding": true,
+      "retainer": 1000,
+      "email": "nova@novareyes.com",
+      "issuedAt": "2026-09-27",
+      "segment": "Artist"
+    },
+    "brand": {
+      "business": "Marauder",
+      "founder": "Sam Okafor",
+      "founding": false,
+      "retainer": 2000,
+      "email": "sam@marauder.co.uk",
+      "issuedAt": "2026-09-27",
+      "segment": "Streetwear"
+    }
+  },
+  "agreements": {
+    "officeFounding": "237df8bce9d068bd3406addc49191cce2569bfeeb05e5c4b11cbb71060fa7ad2",
+    "officeStandard": "13ee3512fd4954764a395784a9dff8a5f88d8d4b41a0e02d40f82277c02158f2",
+    "officeBuyout": "e73cf053e255066b42004c27e62784e4f382736603eaa2a244bf0af2d9e0d17d",
+    "officeNoRetainer": "d9d6c90572984da5a816555e69d94955c891f1f658e038f80833aed0350f0632",
+    "artist": "7954f262070e5ce458991209335d18c2969672033c9d487748524f5838f68927",
+    "brand": "4444ab47403eb8bbc5710152f7fb6112d369189a91a9aaf0f55181865ccd75ce"
+  },
+  "pages": {
+    "officeFounding": {
+      "proposal": "PROPOSAL · HOLLOW OAK BARBERS\n\nYou do the work, Dev. We answer your customers.\n\nA website, and a front office that answers your texts, calls, emails and website chat, including when you're closed. It books people in, reminds them, asks for reviews and tells you what needs you.\n\nWhat we run for Hollow Oak Barbers\n01\nYour website. Built, hosted and looked after by us, at no charge while you're with us.\n02\nThe front office. An AI assistant answers texts, calls, emails and the chat on your site, in your voice, day and night. Anything that needs you comes straight to your WhatsApp or email.\n03\nBookings, reminders and reviews. It books people in through your booking link, reminds them before they come, and asks happy customers for a review.\n04\nThe monthly report. What it caught, what came in while you were closed, what it booked, and what needs you.\nThe guarantee\n\nAny month the front office catches nothing you would have missed, you get your next month free. \"Would have missed\" means an enquiry that came in while you were closed, so it's measured against the opening hours you give us. It starts from your first full month live, and it's a credit on your next month, never a refund.\n\nThe terms, plainly\nMONTHLY\n£500/mo · founding rate, locked for life\nCOVERS\nYour website and the front office. No setup fee.\nTERM\nThree months, then month to month.\nSTART\nOn signing\n\nIf you leave, you can buy the website from us, or we take it down 30 days after your last paid month. Your content and logo are always yours.\n\nWhat we need from you\n—\nYour opening hours, so the guarantee can be measured.\n—\nYour services, your booking link, and where alerts should go.\n—\nYour number, email and site chat pointed at the front office. We walk you through it.\n—\nYour logo and a few photos for the website.\nRead the agreement →\nAbout ten minutes, all on this page.",
+      "payment": "PAYMENT · HOLLOW OAK BARBERS\n\nSet up the monthly payment.\n\n£500 a month, founding rate. First month today, then the same date each month.\n\nCard through Stripe, billed monthly in advance. Three months minimum, then month to month; after that you can end it with 30 days' written notice, as the agreement says.\n\nWe'll send you your payment link directly, within a working day. Nothing else is needed from you right now.",
+      "done": "DONE\n\nWelcome, Hollow Oak Barbers.\n\nAgreement signed, payment set up. You're a client.\n\nWhat happens next\n01\nSign in to your client space and answer the setup questions: opening hours, services, booking link, where alerts go. About ten minutes.\n02\nWe build your website and set up the front office in your voice. You check both before anything goes live.\n03\nGo-live. Your number, email and site chat point at the front office, and the monthly report starts.\n\nYour client space is at kaizenevol.com/portal — sign in with this email once Law has switched it on. Questions any time: law@kaizenevol.com or diego@kaizenevol.com. A copy of your signed agreement was emailed to you."
+    },
+    "officeStandard": {
+      "proposal": "PROPOSAL · HOLLOW OAK BARBERS\n\nYou do the work, Dev. We answer your customers.\n\nA website, and a front office that answers your texts, calls, emails and website chat, including when you're closed. It books people in, reminds them, asks for reviews and tells you what needs you.\n\nWhat we run for Hollow Oak Barbers\n01\nYour website. Built, hosted and looked after by us, at no charge while you're with us.\n02\nThe front office. An AI assistant answers texts, calls, emails and the chat on your site, in your voice, day and night. Anything that needs you comes straight to your WhatsApp or email.\n03\nBookings, reminders and reviews. It books people in through your booking link, reminds them before they come, and asks happy customers for a review.\n04\nThe monthly report. What it caught, what came in while you were closed, what it booked, and what needs you.\nThe guarantee\n\nAny month the front office catches nothing you would have missed, you get your next month free. \"Would have missed\" means an enquiry that came in while you were closed, so it's measured against the opening hours you give us. It starts from your first full month live, and it's a credit on your next month, never a refund.\n\nThe terms, plainly\nMONTHLY\n£750/mo\nCOVERS\nYour website and the front office. No setup fee.\nTERM\nThree months, then month to month.\nSTART\n1 October 2026\n\nIf you leave, you can buy the website from us, or we take it down 30 days after your last paid month. Your content and logo are always yours.\n\nWhat we need from you\n—\nYour opening hours, so the guarantee can be measured.\n—\nYour services, your booking link, and where alerts should go.\n—\nYour number, email and site chat pointed at the front office. We walk you through it.\n—\nYour logo and a few photos for the website.\nRead the agreement →\nAbout ten minutes, all on this page.",
+      "payment": "PAYMENT · HOLLOW OAK BARBERS\n\nSet up the monthly payment.\n\n£750 a month. First month today, then the same date each month.\n\nCard through Stripe, billed monthly in advance. Three months minimum, then month to month; after that you can end it with 30 days' written notice, as the agreement says.\n\nWe'll send you your payment link directly, within a working day. Nothing else is needed from you right now.",
+      "done": "DONE\n\nWelcome, Hollow Oak Barbers.\n\nAgreement signed, payment set up. You're a client.\n\nWhat happens next\n01\nSign in to your client space and answer the setup questions: opening hours, services, booking link, where alerts go. About ten minutes.\n02\nWe build your website and set up the front office in your voice. You check both before anything goes live.\n03\nGo-live. Your number, email and site chat point at the front office, and the monthly report starts.\n\nYour client space is at kaizenevol.com/portal — sign in with this email once Law has switched it on. Questions any time: law@kaizenevol.com or diego@kaizenevol.com. A copy of your signed agreement was emailed to you."
+    }
+  }
+}

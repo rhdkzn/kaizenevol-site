@@ -99,6 +99,12 @@
        Brand copy is the default and renders exactly as before. */
     body:not([data-seg=artist]) main [data-seg=artist]{display:none}
     body[data-seg=artist] main [data-seg=brand]{display:none}
+    /* Kaizen Ascent parts (2026-09-27): a local row takes the AI office, ads + socials, or both.
+       No data-parts on body = the AI office alone, which renders exactly as before. data-show
+       lists the part sets an element belongs to; anything not listed for the row is hidden. */
+    body:not([data-parts]) main [data-show]:not([data-show~=office]){display:none}
+    body[data-parts=ads] main [data-show]:not([data-show~=ads]){display:none}
+    body[data-parts=both] main [data-show]:not([data-show~=both]){display:none}
     @media(max-width:640px){.grid{grid-template-columns:1fr}.steps{gap:12px;font-size:11px}.agreement{max-height:46vh;padding:16px}}
   </style>
   <link rel="stylesheet" href="/interactions.css">
@@ -157,24 +163,30 @@
 
       <!-- Kaizen Ascent: the local proposal. No figures in the markup; the fee comes from the row. -->
       <div data-lane="local">
-      <h1>You do the work, <span id="p-founder-l"></span>. <em>We answer your customers.</em></h1>
-      <p class="lead">A website, and a front office that answers your texts, calls, emails and website chat, including when you're closed. It books people in, reminds them, asks for reviews and tells you what needs you.</p>
+      <h1>You do the work, <span id="p-founder-l"></span>. <em data-show="office">We answer your customers.</em><em data-show="ads">We bring you customers.</em><em data-show="both">We bring customers in and answer them.</em></h1>
+      <p class="lead" data-show="ads">Ads on Facebook and Instagram and posts on your socials, run by us to bring you enquiries, and a website to send them to.</p>
+      <p class="lead" data-show="both">Ads and socials that bring you enquiries, a website to send them to, and a front office that answers your texts, calls, emails and website chat, including when you're closed.</p>
+      <p class="lead" data-show="office">A website, and a front office that answers your texts, calls, emails and website chat, including when you're closed. It books people in, reminds them, asks for reviews and tells you what needs you.</p>
 
       <h2>What we run for <span id="p-brand-l"></span></h2>
-      <ul class="list">
+      <ul class="list" id="p-list-l">
         <li><span class="n">01</span><span><b>Your website.</b> Built, hosted and looked after by us, at no charge while you're with us.</span></li>
-        <li><span class="n">02</span><span><b>The front office.</b> An AI assistant answers texts, calls, emails and the chat on your site, in your voice, day and night. Anything that needs you comes straight to your WhatsApp or email.</span></li>
-        <li><span class="n">03</span><span><b>Bookings, reminders and reviews.</b> It books people in through your booking link, reminds them before they come, and asks happy customers for a review.</span></li>
-        <li><span class="n">04</span><span><b>The monthly report.</b> What it caught, what came in while you were closed, what it booked, and what needs you.</span></li>
+        <li data-show="ads both"><span class="n">02</span><span><b>Ads and socials.</b> Ads on Facebook and Instagram, and posts on your social accounts, planned, made and run by us to bring you enquiries. Ad spend is yours, paid direct to Meta.</span></li>
+        <li data-show="office both"><span class="n">02</span><span><b>The front office.</b> An AI assistant answers texts, calls, emails and the chat on your site, in your voice, day and night. Anything that needs you comes straight to your WhatsApp or email.</span></li>
+        <li data-show="office both"><span class="n">03</span><span><b>Bookings, reminders and reviews.</b> It books people in through your booking link, reminds them before they come, and asks happy customers for a review.</span></li>
+        <li data-show="office both"><span class="n">04</span><span><b>The monthly report.</b> What it caught, what came in while you were closed, what it booked, and what needs you.</span></li>
+        <li data-show="ads"><span class="n">03</span><span><b>The monthly report.</b> What the ads and posts brought in, and what they cost you at Meta.</span></li>
       </ul>
 
-      <h2>The guarantee</h2>
-      <p>Any month the front office catches nothing you would have missed, you get your next month free. "Would have missed" means an enquiry that came in while you were closed, so it's measured against the opening hours you give us. It starts from your first full month live, and it's a credit on your next month, never a refund.</p>
+      <h2>The guarantee<span data-show="both">s</span></h2>
+      <p data-show="both">Front office: any month it catches nothing you would have missed, your next month's front office fee is free. "Would have missed" means an enquiry that came in while you were closed, so it's measured against the opening hours you give us. It starts from your first full month live, and it's a credit on your next month, never a refund.</p>
+      <p data-show="ads both"><span data-show="both">Ads and socials: any</span><span data-show="ads">Any</span> month our ads and socials bring you no enquiries at all, your next month's ads and socials fee is free. It holds while you keep running the ad budget we agree at the start, it starts from your first full month of ads, and it's a credit on your next month, never a refund.</p>
+      <p data-show="office">Any month the front office catches nothing you would have missed, you get your next month free. "Would have missed" means an enquiry that came in while you were closed, so it's measured against the opening hours you give us. It starts from your first full month live, and it's a credit on your next month, never a refund.</p>
 
       <h2>The terms, plainly</h2>
       <div class="grid">
         <div class="cell"><div class="k">Monthly</div><div class="v" id="p-fee-l"></div></div>
-        <div class="cell"><div class="k">Covers</div><div class="v">Your website and the front office. No setup fee.</div></div>
+        <div class="cell"><div class="k">Covers</div><div class="v" data-show="office">Your website and the front office. No setup fee.</div><div class="v" data-show="ads">Your website and the ads and socials. No setup fee. Ad spend is yours, paid direct to Meta.</div><div class="v" data-show="both">Your website, the ads and socials, and the front office. No setup fee. Ad spend is yours, paid direct to Meta.</div></div>
         <div class="cell"><div class="k">Term</div><div class="v">Three months, then month to month.</div></div>
         <div class="cell"><div class="k">Start</div><div class="v" id="p-start-l"></div></div>
       </div>
@@ -183,9 +195,12 @@
 
       <h2>What we need from you</h2>
       <ul class="list">
-        <li><span class="n">—</span><span>Your opening hours, so the guarantee can be measured.</span></li>
-        <li><span class="n">—</span><span>Your services, your booking link, and where alerts should go.</span></li>
-        <li><span class="n">—</span><span>Your number, email and site chat pointed at the front office. We walk you through it.</span></li>
+        <li data-show="office both"><span class="n">—</span><span>Your opening hours, so the guarantee can be measured.</span></li>
+        <li data-show="office both"><span class="n">—</span><span>Your services, your booking link, and where alerts should go.</span></li>
+        <li data-show="ads"><span class="n">—</span><span>Your services, and where enquiries should go.</span></li>
+        <li data-show="ads both"><span class="n">—</span><span>Access to your Facebook and Instagram, your Meta Business Manager and your ad account.</span></li>
+        <li data-show="ads both"><span class="n">—</span><span>An ad budget we agree before any spend, paid by you straight to Meta.</span></li>
+        <li data-show="office both"><span class="n">—</span><span>Your number, email and site chat pointed at the front office. We walk you through it.</span></li>
         <li><span class="n">—</span><span>Your logo and a few photos for the website.</span></li>
       </ul>
       </div>
@@ -201,6 +216,7 @@
       <p class="smallcaps">Agreement · <span id="a-brand-eyebrow"></span></p>
       <h1>The agreement, in full.</h1>
       <p class="why">Read it through. It says what the proposal says, in the words that count. Signing here has the same effect as signing on paper.</p>
+      <p class="err" id="a-unruled" style="display:none">One clause, what counts as an enquiry from our ads and socials, is still being settled. You can read the agreement now; we'll send you the final version to sign.</p>
       <div class="agreement" id="a-text"></div>
       <div class="hash">Document fingerprint (SHA-256): <span id="a-hash"></span></div>
 
@@ -231,8 +247,10 @@
       <p class="lead" id="r-fee"></p>
       <p class="why" data-lane="creative">Card through Stripe, billed monthly in advance. You can end it before any billing date by written notice, as the agreement says. Ad spend is separate and stays in your own ad account.</p>
       <p class="why" data-lane="local">Card through Stripe, billed monthly in advance. Three months minimum, then month to month; after that you can end it with 30 days' written notice, as the agreement says.</p>
+      <p class="why" data-show="ads both">Ad spend is separate: you pay Meta for it directly, from your own ad account.</p>
       <div class="actions">
         <a class="btn-solid" id="pay-btn" href="#" target="_blank" rel="noopener">Pay the first month →</a>
+        <a class="btn-solid" id="pay-btn-ads" href="#" target="_blank" rel="noopener" style="display:none">Pay ads and socials →</a>
         <button class="btn-quiet" id="paid-check" onclick="checkPaid(true)">I've paid — check</button>
       </div>
       <div class="err" id="r-msg"></div>
@@ -250,9 +268,12 @@
       <p class="lead" data-lane="local" id="d-lead-l">Agreement signed, payment set up. You're a client.</p>
       <h2>What happens next</h2>
       <ul class="list" data-lane="local">
-        <li><span class="n">01</span><span>Sign in to your client space and answer the setup questions: opening hours, services, booking link, where alerts go. About ten minutes.</span></li>
-        <li><span class="n">02</span><span>We build your website and set up the front office in your voice. You check both before anything goes live.</span></li>
-        <li><span class="n">03</span><span>Go-live. Your number, email and site chat point at the front office, and the monthly report starts.</span></li>
+        <li data-show="office both"><span class="n">01</span><span>Sign in to your client space and answer the setup questions: opening hours, services, booking link, where alerts go. About ten minutes.</span></li>
+        <li data-show="ads"><span class="n">01</span><span>Law emails you within a day to agree your ad budget in writing and collect access to your Facebook, Instagram and ad account.</span></li>
+        <li data-show="office"><span class="n">02</span><span>We build your website and set up the front office in your voice. You check both before anything goes live.</span></li>
+        <li data-show="ads both"><span class="n">02</span><span>We build your website, agree your ad budget with you, and plan the first ads and posts<span data-show="both">, and set up the front office in your voice</span>. You check it all before anything goes live.</span></li>
+        <li data-show="office"><span class="n">03</span><span>Go-live. Your number, email and site chat point at the front office, and the monthly report starts.</span></li>
+        <li data-show="ads both"><span class="n">03</span><span>Go-live. The ads start and the posts go out<span data-show="both">, your number, email and site chat point at the front office</span>, and the monthly report starts.</span></li>
       </ul>
       <ul class="list" data-lane="creative">
         <li><span class="n">01</span><span>Law emails you within a day to agree the <b>baseline</b> in writing and collect access.</span></li>
@@ -307,7 +328,12 @@
       document.querySelectorAll('#steps span').forEach(function(s,i){ s.textContent = names[i]; });
       $('p-brand-l').textContent = view.business;
       $('p-founder-l').textContent = (view.founder||'').split(' ')[0] || 'friend';
-      $('p-fee-l').textContent = gbp(view.retainer) + '/mo' + (view.founding ? ' · founding rate, locked for life' : '');
+      var parts = (view.parts || ['office']).join(), both = parts === 'ads,office';
+      if(parts !== 'office') document.body.dataset.parts = both ? 'both' : 'ads';
+      $('p-fee-l').textContent = both
+        ? gbp(view.retainer) + '/mo: ads and socials ' + gbp(view.fees.ads) + ', front office ' + gbp(view.fees.office) + (view.founding ? ' · founding rates, locked for life' : '')
+        : gbp(view.retainer) + '/mo' + (view.founding ? ' · founding rate, locked for life' : '');
+      if(parts !== 'office'){ var k = 0; document.querySelectorAll('#p-list-l > li').forEach(function(li){ if(getComputedStyle(li).display !== 'none') li.querySelector('.n').textContent = ('0' + (++k)).slice(-2); }); }
       $('p-start-l').textContent = longDate(view.startDate);
       $('p-notes-l').textContent = view.notes || '';
       $('r-word').textContent = 'Payment';
@@ -322,7 +348,11 @@
     $('a-text').textContent = view.agreement;
     $('a-hash').textContent = view.agreementHash;
     $('r-fee').textContent = gbp(view.retainer) + ' a month' + (view.founding ? ', founding rate' : '') + '. First month today, then the same date each month.';
-    if(view.payUrl){ $('pay-btn').href = view.payUrl; } else { $('pay-btn').style.display='none'; $('paid-check').style.display='none'; $(LOCAL ? 'r-nolink-l' : 'r-nolink').style.display='block'; if(LOCAL) $('pay-btn').parentNode.style.display='none'; }
+    var twoPay = LOCAL && view.fees && view.fees.ads && view.fees.office;
+    if(twoPay) $('r-fee').textContent = gbp(view.retainer) + ' a month' + (view.founding ? ', founding rates' : '') + ', paid as two monthly payments: ' + gbp(view.fees.office) + ' for the front office and ' + gbp(view.fees.ads) + ' for ads and socials. First month today, then the same date each month.';
+    if(view.unruled) $('a-unruled').style.display = 'block';
+    if(twoPay && view.payUrl && view.payUrlAds){ $('pay-btn').href = view.payUrl; $('pay-btn').textContent = 'Pay the front office →'; $('pay-btn-ads').href = view.payUrlAds; $('pay-btn-ads').style.display = ''; }
+    else if(view.payUrl && !twoPay){ $('pay-btn').href = view.payUrl; } else { $('pay-btn').style.display='none'; $('paid-check').style.display='none'; $(LOCAL ? 'r-nolink-l' : 'r-nolink').style.display='block'; if(LOCAL) $('pay-btn').parentNode.style.display='none'; }
     if(view.demo === true){ $('demo-row').style.display = ''; }
     if(view.signature){ showSigned(); }
     if(view.status==='paid'||view.status==='live') showStep(4);

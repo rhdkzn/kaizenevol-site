@@ -56,7 +56,7 @@ ok('local seats left: counted separately', obSeatsLeft(rows, 'local') === 4, obS
 ok('seats never go below zero', obSeatsLeft(Array(9).fill({ status: 'paid', data: { lane: 'local', founding: true } }), 'local') === 0)
 
 /* the modal itself carries the lane select and the buy-out field */
-ok('modal has a Lane select (Creative / Local)', /id="obLane"[\s\S]{0,300}value="creative"[\s\S]{0,200}value="local"/.test(html))
+ok('modal has a Client type select (Artist / Brand owner / Local; three types, 2026-09-27)', /id="obLane"[\s\S]{0,300}value="artist"[\s\S]{0,200}value="brand"[\s\S]{0,200}value="local"/.test(html))
 ok('modal has a buy-out field, blank meaning the £1,200 default', /id="obBuyout"[^>]*placeholder="blank = £1,200"/.test(html))
 ok('modal shows founding seats left', /id="obSeats"/.test(html))
 

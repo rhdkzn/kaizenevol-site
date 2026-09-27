@@ -51,6 +51,27 @@ function longDate(iso) { const d = iso ? new Date(iso + (iso.length === 10 ? 'T1
  * Stripe link (£1,000 on a £500 client). Unset → payUrl '' → the page says we'll send it. */
 const TERMS_LOCAL = { standard: 750, founding: 500, hosting: 20, buyout: 1200 };
 export function laneOf(d) { return (d && d.lane === 'local') ? 'local' : 'creative'; }
+/* Three client types (Rahaid, 2026-09-27): artist, brand owner, local business. Artist and brand
+ * are both the creative lane; an artist is segment 'Artist' (the test portal.html and onboard.html
+ * already use), not a lane of its own, so no creative row's agreement text can move.
+ * A local row picks its parts: ads + socials, the AI office, or both; the website comes free with
+ * either. A local row with no parts key is the AI office alone, as every row before 2026-09-27 was. */
+const TERMS_ADS = { standard: 1000, founding: 750 };
+export function partsOf(d) {
+  if (laneOf(d) !== 'local') return null;
+  const p = Array.isArray(d.parts) ? d.parts : [];
+  const ads = p.includes('ads'), office = p.includes('office') || !ads;
+  return ads && office ? ['ads', 'office'] : ads ? ['ads'] : ['office'];
+}
+function localFees(d) {
+  const tier = d.founding ? 'founding' : 'standard', parts = partsOf(d);
+  const ads = parts.includes('ads') ? TERMS_ADS[tier] : 0;
+  const office = parts.includes('office') ? (ads ? TERMS_LOCAL[tier] : (Number(d.retainer) || TERMS_LOCAL[tier])) : 0;
+  return { ads, office, total: ads + office };
+}
+/* What counts as an enquiry "from us" is NOT ruled (CRITICAL_FACTS, 2026-09-27). The clause carries
+ * this marker until Rahaid rules it, and op=sign refuses a real row whose text still holds it. */
+const UNRULED = '[PLACEHOLDER, NOT RULED';
 
 /* ── the agreement, rendered from the row (canonical text → SHA-256) ──────── */
 /* A row with no lane is creative, and its text below must stay byte-identical: every signed
@@ -135,39 +156,80 @@ export function agreementText(d) {
 /* The local agreement (Kaizen Ascent). No growth step, no revenue access: those are creative
  * only. Buy-out is £1,200 flat (CRITICAL_FACTS Kaizen Ascent block); d.buyout on the row
  * overrides it for one client. Clauses 6 (data), 9 (liability), 10 and 11 are the creative
- * agreement's reviewed wording; clause 6.2 is creative 8.2 with Twilio and Anthropic added. */
+ * agreement's reviewed wording; clause 6.2 is creative 8.2 with Twilio and Anthropic added.
+ * A row WITHOUT ads + socials takes the `!ads` branch everywhere below, and that branch is the
+ * 2026-09-25 text byte for byte (test-three-client-types.mjs pins it against main). The ads
+ * wording (2026-09-27) is new and has had no review yet. */
 export function agreementTextLocal(d) {
   const tier = d.founding ? 'founding' : 'standard';
   const fee = Number(d.retainer) || TERMS_LOCAL[tier];
   const buyout = Number(d.buyout) > 0 ? Number(d.buyout) : TERMS_LOCAL.buyout;
   const brand = d.business || 'the Client', founder = d.founder || 'the Client', start = d.startDate ? longDate(d.startDate) : 'the date this Agreement is signed';
+  const parts = partsOf(d), ads = parts.includes('ads'), office = parts.includes('office'), fees = localFees(d);
   const L = [];
   L.push(`SERVICES AGREEMENT: KAIZEN ASCENT`);
   const clientEntity = d.clientEntity ? ` (${d.clientEntity})` : '';
   const clientAddr = d.clientAddress ? `, of ${d.clientAddress}` : '';
   L.push(`Between Rahaid and Diego, trading together as KaizenEvol ("the Agency"), Bristol, United Kingdom, and ${brand}${clientEntity}${clientAddr} ("the Client"), signed for the Client by ${founder}, who confirms they are authorised to sign for the Client.`);
-  L.push(`Version 2026-09-25 · Canon OPS-ONB-006`);
+  L.push(ads ? `Version 2026-09-27 · Canon OPS-ONB-006` : `Version 2026-09-25 · Canon OPS-ONB-006`);
   L.push(``);
   L.push(`RECITALS`);
-  L.push(`WHEREAS the Agency builds websites for local businesses and runs an AI front office that answers their customers; and WHEREAS the Client wishes to engage the Agency for those services on the terms below; NOW THEREFORE the parties agree as follows.`);
+  if (!ads) L.push(`WHEREAS the Agency builds websites for local businesses and runs an AI front office that answers their customers; and WHEREAS the Client wishes to engage the Agency for those services on the terms below; NOW THEREFORE the parties agree as follows.`);
+  else L.push(`WHEREAS the Agency builds websites for local businesses, runs paid advertising and social media for them${office ? ', and runs an AI front office that answers their customers' : ''}; and WHEREAS the Client wishes to engage the Agency for those services on the terms below; NOW THEREFORE the parties agree as follows.`);
   L.push(``);
   L.push(`1. SERVICES`);
   L.push(`1.1 The website: a website for the Client, built, hosted and maintained by the Agency at no charge for as long as this Agreement runs. Clause 5 sets out what happens to it when this Agreement ends.`);
-  L.push(`1.2 The front office: an AI assistant, run by the Agency, that answers the Client's texts, calls, emails and website chat; books appointments; sends reminders; asks customers for reviews; follows up enquiries; and sends the Client a monthly report of what it handled.`);
-  L.push(`1.3 Enquiries that need a person are passed to the Client straight away, by WhatsApp or email, at the contacts the Client gives.`);
-  L.push(`1.4 Advertising and content production are not part of this Agreement. If the Client wants them, they are agreed separately in writing.`);
-  L.push(`1.5 Apart from the guarantee in clause 3, no number of enquiries, bookings or reviews is promised.`);
+  if (!ads) {
+    L.push(`1.2 The front office: an AI assistant, run by the Agency, that answers the Client's texts, calls, emails and website chat; books appointments; sends reminders; asks customers for reviews; follows up enquiries; and sends the Client a monthly report of what it handled.`);
+    L.push(`1.3 Enquiries that need a person are passed to the Client straight away, by WhatsApp or email, at the contacts the Client gives.`);
+    L.push(`1.4 Advertising and content production are not part of this Agreement. If the Client wants them, they are agreed separately in writing.`);
+    L.push(`1.5 Apart from the guarantee in clause 3, no number of enquiries, bookings or reviews is promised.`);
+  } else {
+    const S = [];
+    S.push(`Ads and socials: paid advertising on Meta (Facebook and Instagram) run by the Agency for the Client, and posts planned, produced and published by the Agency on the Client's social media accounts, with a monthly report to the Client of what they brought in.`);
+    S.push(`The advertising budget is agreed with the Client in writing before any spend ("the Agreed Ad Budget"). Ad spend is paid by the Client directly to Meta, from the Client's own advertising account, and is not part of the Agency's fees.`);
+    if (office) {
+      S.push(`The front office: an AI assistant, run by the Agency, that answers the Client's texts, calls, emails and website chat; books appointments; sends reminders; asks customers for reviews; follows up enquiries; and sends the Client a monthly report of what it handled.`);
+      S.push(`Enquiries that need a person are passed to the Client straight away, by WhatsApp or email, at the contacts the Client gives.`);
+    } else {
+      S.push(`The AI front office is not part of this Agreement. If the Client wants it, it is agreed separately in writing.`);
+    }
+    S.push(`Apart from the ${office ? 'guarantees' : 'guarantee'} in clause 3, no number of enquiries, bookings, reviews or sales is promised.`);
+    S.forEach((s, i) => L.push(`1.${i + 2} ${s}`));
+  }
   L.push(``);
   L.push(`2. FEES`);
-  L.push(`2.1 The fee is ${gbp(fee)} per month${d.founding ? ' (founding rate, one of the first five clients, locked for life: it does not rise for as long as this Agreement runs)' : ' (standard rate)'}, covering the services in clause 1. It is billed monthly in advance by card through Stripe, starting on ${start}. There is no setup fee.`);
+  if (!ads) L.push(`2.1 The fee is ${gbp(fee)} per month${d.founding ? ' (founding rate, one of the first five clients, locked for life: it does not rise for as long as this Agreement runs)' : ' (standard rate)'}, covering the services in clause 1. It is billed monthly in advance by card through Stripe, starting on ${start}. There is no setup fee.`);
+  else if (!office) L.push(`2.1 The fee for ads and socials is ${gbp(fees.ads)} per month${d.founding ? ' (founding rate, one of the first five clients, locked for life: it does not rise for as long as this Agreement runs)' : ' (standard rate)'}, covering the services in clause 1. It is billed monthly in advance by card through Stripe, starting on ${start}. There is no setup fee.`);
+  else L.push(`2.1 The fees are ${gbp(fees.ads)} per month for ads and socials and ${gbp(fees.office)} per month for the front office, ${gbp(fees.total)} per month in total${d.founding ? ' (founding rates, one of the first five clients, locked for life: they do not rise for as long as this Agreement runs)' : ' (standard rates)'}, covering the services in clause 1. They are billed monthly in advance by card through Stripe, starting on ${start}. There is no setup fee.`);
   L.push(`2.2 Fees are exclusive of VAT, which is added if and when the Agency is registered for it.`);
+  if (ads) L.push(`2.3 Ad spend is paid by the Client directly to Meta and is not part of the Agency's fees.`);
   L.push(``);
-  L.push(`3. THE GUARANTEE`);
-  L.push(`3.1 In any calendar month in which the front office catches nothing the Client would have missed, the Client gets its next month free. "Would have missed" means a new enquiry that reached the front office outside the Client's opening hours, judged in the Client's own timezone.`);
-  L.push(`3.2 It is measured by the Agency's monthly report of what the front office caught, which the Client receives. Test and demonstration messages do not count.`);
-  L.push(`3.3 The free month is a credit against the next month's fee, never a refund, and it has no cash value. A credit not yet used when this Agreement ends lapses.`);
-  L.push(`3.4 The guarantee is measured against the opening hours the Client has given the Agency in writing, which must be the hours the Client is actually open to customers. A change to them counts from the next calendar month. If no opening hours are on record, it cannot be measured and does not apply until they are.`);
-  L.push(`3.5 The guarantee applies from the first full calendar month after the front office goes live.`);
+  if (!ads) {
+    L.push(`3. THE GUARANTEE`);
+    L.push(`3.1 In any calendar month in which the front office catches nothing the Client would have missed, the Client gets its next month free. "Would have missed" means a new enquiry that reached the front office outside the Client's opening hours, judged in the Client's own timezone.`);
+    L.push(`3.2 It is measured by the Agency's monthly report of what the front office caught, which the Client receives. Test and demonstration messages do not count.`);
+    L.push(`3.3 The free month is a credit against the next month's fee, never a refund, and it has no cash value. A credit not yet used when this Agreement ends lapses.`);
+    L.push(`3.4 The guarantee is measured against the opening hours the Client has given the Agency in writing, which must be the hours the Client is actually open to customers. A change to them counts from the next calendar month. If no opening hours are on record, it cannot be measured and does not apply until they are.`);
+    L.push(`3.5 The guarantee applies from the first full calendar month after the front office goes live.`);
+  } else {
+    const G = [];
+    if (office) {
+      G.push(`The front office: in any calendar month in which the front office catches nothing the Client would have missed, the Client gets its next month's front office fee free. "Would have missed" means a new enquiry that reached the front office outside the Client's opening hours, judged in the Client's own timezone.`);
+      G.push(`It is measured by the Agency's monthly report of what the front office caught, which the Client receives. Test and demonstration messages do not count.`);
+      G.push(`The free month is a credit against the next month's front office fee, never a refund, and it has no cash value. A credit not yet used when this Agreement ends lapses.`);
+      G.push(`The front office guarantee is measured against the opening hours the Client has given the Agency in writing, which must be the hours the Client is actually open to customers. A change to them counts from the next calendar month. If no opening hours are on record, it cannot be measured and does not apply until they are.`);
+      G.push(`The front office guarantee applies from the first full calendar month after the front office goes live.`);
+    }
+    G.push(`${office ? 'Ads and socials: in' : 'In'} any calendar month in which the Agency's ads and socials bring the Client no enquiries at all, the Client's next month's ads and socials fee is free.`);
+    G.push(`${UNRULED}: what counts as an enquiry brought by the Agency's ads and socials is still to be decided by the Agency and written here before this Agreement is signed. Until it is, this clause has no agreed definition.]`);
+    G.push(`It is measured by the Agency's monthly report of what the ads and socials brought in, which the Client receives. Test and demonstration messages do not count.`);
+    G.push(`The ads and socials guarantee applies only while the Client keeps running the Agreed Ad Budget in clause 1.3. It does not apply to a month in which the Client paused, stopped or reduced the ad spend below the Agreed Ad Budget.`);
+    G.push(`The free month is a credit against the next month's ads and socials fee, never a refund, and it has no cash value. A credit not yet used when this Agreement ends lapses.`);
+    G.push(`The ads and socials guarantee applies from the first full calendar month after the ads go live.`);
+    L.push(office ? `3. THE GUARANTEES` : `3. THE GUARANTEE`);
+    G.forEach((g, i) => L.push(`3.${i + 1} ${g}`));
+  }
   L.push(``);
   L.push(`4. TERM AND ENDING`);
   L.push(`4.1 This Agreement begins on ${start} and runs for an initial term of three months. After that it continues month to month until it is ended under clause 4.2.`);
@@ -182,25 +244,51 @@ export function agreementTextLocal(d) {
   L.push(`5.3 After a buy-out, the Client may choose to have the Agency keep hosting the website for £20 per month, hosting only, month to month. Any edits are quoted separately.`);
   L.push(`5.4 If the Client does not buy it, the website is taken down 30 days after the last paid month, and the Agency returns the Client's content and logo.`);
   L.push(``);
-  L.push(`6. THE FRONT OFFICE'S MESSAGES AND DATA PROTECTION`);
-  L.push(`6.1 Where the Agency processes personal data of the Client's customers through the front office or the website, the Client is the controller and the Agency the processor under the UK GDPR and the Data Protection Act 2018. Subject matter and duration: the services in clause 1 for the term of this Agreement. Nature and purpose: answering and following up customer enquiries by text, call, email and website chat, booking appointments, sending reminders and review requests, and reporting to the Client. Personal data: names, contact details, message and call content, and booking details of the Client's customers and enquirers. Data subjects: the Client's customers and people who contact the Client.`);
-  L.push(`6.2 The Agency will: (a) process the personal data only on the Client's documented instructions, including this Agreement; (b) ensure the people it authorises to process it are bound by confidentiality; (c) apply appropriate technical and organisational security measures (UK GDPR Article 32); (d) engage sub-processors only under the Client's general authorisation and on equivalent terms, remaining responsible for them — at signing these are Twilio, Anthropic, Railway, SendGrid, Vercel, Stripe, Resend and Supabase, and the Agency will tell the Client before adding another; (e) assist the Client with data-subject rights requests; (f) assist the Client with security, breach notification and impact assessments (Articles 32 to 36) and notify the Client without undue delay on becoming aware of a personal-data breach; (g) at the Client's choice, delete or return the personal data when the services end; and (h) make available the information needed to demonstrate compliance and allow reasonable audits.`);
-  L.push(`6.3 Marketing messages, including reactivation messages to past customers and reminders that a customer is due again, go only to customers the Client has a lawful basis to contact. The Client warrants that it has that basis, and any consents required under the Privacy and Electronic Communications Regulations 2003, for every marketing message the front office sends on its instructions. Every such message carries a way to opt out, and an opt-out is honoured at once.`);
-  L.push(`6.4 Calls to the Client's numbers may be answered by an AI assistant. The Client's privacy notice will say so, and that the Client's messages and calls are handled by the Agency on its behalf.`);
-  L.push(``);
-  L.push(`7. DEPOSITS AND PAYMENTS`);
-  L.push(`7.1 Deposits are off unless the Client switches them on. Where they are on, customers pay through the Client's own payment link, with any provider the Client chooses, into the Client's own account. If the Client has no payment link, the Agency helps set one up in the Client's business name, paying into the Client's bank.`);
-  L.push(`7.2 The Agency never holds client money. Refunds of deposits are the Client's to decide and to make.`);
-  L.push(``);
+  if (!ads) {
+    L.push(`6. THE FRONT OFFICE'S MESSAGES AND DATA PROTECTION`);
+    L.push(`6.1 Where the Agency processes personal data of the Client's customers through the front office or the website, the Client is the controller and the Agency the processor under the UK GDPR and the Data Protection Act 2018. Subject matter and duration: the services in clause 1 for the term of this Agreement. Nature and purpose: answering and following up customer enquiries by text, call, email and website chat, booking appointments, sending reminders and review requests, and reporting to the Client. Personal data: names, contact details, message and call content, and booking details of the Client's customers and enquirers. Data subjects: the Client's customers and people who contact the Client.`);
+    L.push(`6.2 The Agency will: (a) process the personal data only on the Client's documented instructions, including this Agreement; (b) ensure the people it authorises to process it are bound by confidentiality; (c) apply appropriate technical and organisational security measures (UK GDPR Article 32); (d) engage sub-processors only under the Client's general authorisation and on equivalent terms, remaining responsible for them — at signing these are Twilio, Anthropic, Railway, SendGrid, Vercel, Stripe, Resend and Supabase, and the Agency will tell the Client before adding another; (e) assist the Client with data-subject rights requests; (f) assist the Client with security, breach notification and impact assessments (Articles 32 to 36) and notify the Client without undue delay on becoming aware of a personal-data breach; (g) at the Client's choice, delete or return the personal data when the services end; and (h) make available the information needed to demonstrate compliance and allow reasonable audits.`);
+    L.push(`6.3 Marketing messages, including reactivation messages to past customers and reminders that a customer is due again, go only to customers the Client has a lawful basis to contact. The Client warrants that it has that basis, and any consents required under the Privacy and Electronic Communications Regulations 2003, for every marketing message the front office sends on its instructions. Every such message carries a way to opt out, and an opt-out is honoured at once.`);
+    L.push(`6.4 Calls to the Client's numbers may be answered by an AI assistant. The Client's privacy notice will say so, and that the Client's messages and calls are handled by the Agency on its behalf.`);
+    L.push(``);
+  } else {
+    L.push(`6. DATA PROTECTION${office ? " AND THE FRONT OFFICE'S MESSAGES" : ''}`);
+    L.push(`6.1 Where the Agency processes personal data of the Client's customers through the advertising, the social media accounts${office ? ', the front office' : ''} or the website, the Client is the controller and the Agency the processor under the UK GDPR and the Data Protection Act 2018. Subject matter and duration: the services in clause 1 for the term of this Agreement. Nature and purpose: running advertising campaigns and social media accounts, ${office ? 'answering and following up customer enquiries by text, call, email and website chat, booking appointments, sending reminders and review requests, ' : 'passing on the enquiries they bring in, '}and measuring and reporting results to the Client. Personal data: names, contact details, message${office ? ' and call' : ''} content, engagement data${office ? ' and booking details' : ''} of the Client's customers, enquirers and people who respond to its advertising. Data subjects: the Client's customers, its audience and people who contact the Client.`);
+    L.push(`6.2 The Agency will: (a) process the personal data only on the Client's documented instructions, including this Agreement; (b) ensure the people it authorises to process it are bound by confidentiality; (c) apply appropriate technical and organisational security measures (UK GDPR Article 32); (d) engage sub-processors only under the Client's general authorisation and on equivalent terms, remaining responsible for them — at signing these are ${office ? 'Meta, Twilio, Anthropic, Railway, SendGrid, Vercel, Stripe, Resend and Supabase' : 'Meta, Vercel, Stripe, Resend and Supabase'}, and the Agency will tell the Client before adding another; (e) assist the Client with data-subject rights requests; (f) assist the Client with security, breach notification and impact assessments (Articles 32 to 36) and notify the Client without undue delay on becoming aware of a personal-data breach; (g) at the Client's choice, delete or return the personal data when the services end; and (h) make available the information needed to demonstrate compliance and allow reasonable audits.`);
+    const D = [];
+    D.push(`Any customer list the Client gives the Agency to use in advertising (for example to build an audience) must be one the Client has a lawful basis to use that way, and the Client warrants that it has.`);
+    if (office) {
+      D.push(`Marketing messages, including reactivation messages to past customers and reminders that a customer is due again, go only to customers the Client has a lawful basis to contact. The Client warrants that it has that basis, and any consents required under the Privacy and Electronic Communications Regulations 2003, for every marketing message the front office sends on its instructions. Every such message carries a way to opt out, and an opt-out is honoured at once.`);
+      D.push(`Calls to the Client's numbers may be answered by an AI assistant. The Client's privacy notice will say so, and that the Client's messages and calls are handled by the Agency on its behalf.`);
+    }
+    D.forEach((x, i) => L.push(`6.${i + 3} ${x}`));
+    L.push(``);
+  }
+  if (!ads) {
+    L.push(`7. DEPOSITS AND PAYMENTS`);
+    L.push(`7.1 Deposits are off unless the Client switches them on. Where they are on, customers pay through the Client's own payment link, with any provider the Client chooses, into the Client's own account. If the Client has no payment link, the Agency helps set one up in the Client's business name, paying into the Client's bank.`);
+    L.push(`7.2 The Agency never holds client money. Refunds of deposits are the Client's to decide and to make.`);
+    L.push(``);
+  } else {
+    L.push(office ? `7. DEPOSITS, PAYMENTS AND AD SPEND` : `7. PAYMENTS AND AD SPEND`);
+    const P = [];
+    if (office) P.push(`Deposits are off unless the Client switches them on. Where they are on, customers pay through the Client's own payment link, with any provider the Client chooses, into the Client's own account. If the Client has no payment link, the Agency helps set one up in the Client's business name, paying into the Client's bank.`);
+    P.push(`The ads run from the Client's own Meta advertising account, and the Client pays Meta for them directly. The Agency is given access to run them and never pays ad spend on the Client's behalf.`);
+    P.push(office ? `The Agency never holds client money. Refunds of deposits are the Client's to decide and to make.` : `The Agency never holds client money.`);
+    P.forEach((x, i) => L.push(`7.${i + 1} ${x}`));
+    L.push(``);
+  }
   L.push(`8. WHAT THE CLIENT PROVIDES`);
-  L.push(`8.1 The Client's opening hours, services, booking link, the contacts for alerts, the content and logo for the website, access to route its phone number, email and website chat to the front office, and timely approvals.`);
+  if (!ads) L.push(`8.1 The Client's opening hours, services, booking link, the contacts for alerts, the content and logo for the website, access to route its phone number, email and website chat to the front office, and timely approvals.`);
+  else L.push(`8.1 ${office ? "The Client's opening hours, services, booking link, the contacts for alerts" : "The Client's services, the contacts for enquiries"}, the content and logo for the website, photos and footage the Agency can use, access to the Client's Meta Business Manager, advertising account and social media accounts${office ? ', access to route its phone number, email and website chat to the front office' : ''}, the Agreed Ad Budget, and timely approvals.`);
   L.push(`8.2 The Client warrants that it owns or is licensed to use everything it supplies and that its services, prices and claims are lawful.`);
-  L.push(`8.3 The Agency warrants that it will perform the services with reasonable care and skill and in compliance with the laws that apply to them. This does not create a guarantee of any outcome other than the one in clause 3.`);
+  L.push(`8.3 The Agency warrants that it will perform the services with reasonable care and skill and in compliance with the laws that apply to them. This does not create a guarantee of any outcome other than ${ads && office ? 'the ones' : 'the one'} in clause 3.`);
   L.push(`8.4 Where the Client does not give an access, approval, answer or decision the Agency has asked for in writing, the Agency is not responsible for the delay or its effect, any dates agreed move by at least the length of the delay, and the fee continues to be payable in full for the period.`);
   L.push(``);
   L.push(`9. LIABILITY`);
   L.push(`9.1 Neither party excludes liability for death or personal injury caused by negligence, for fraud, or for anything else that cannot be limited by law. Otherwise the Agency's total liability under this Agreement is limited to the fees paid by the Client in the three months before the claim arose, and neither party is liable to the other for loss of profit, revenue, goodwill or indirect loss.`);
-  L.push(`9.2 The Agency is not liable for matters outside its control: phone-network and carrier failures, outages of the services named in clause 6.2, the Client's own booking or payment systems, or what a customer chooses to do.`);
+  if (!ads) L.push(`9.2 The Agency is not liable for matters outside its control: phone-network and carrier failures, outages of the services named in clause 6.2, the Client's own booking or payment systems, or what a customer chooses to do.`);
+  else L.push(`9.2 The Agency is not liable for matters outside its control: ${office ? 'phone-network and carrier failures, ' : ''}outages of the services named in clause 6.2, advertising-platform decisions, account restrictions, algorithm or policy changes, tracking limitations, the Client's own booking or payment systems, or what a customer chooses to do.`);
   L.push(``);
   L.push(`10. CONFIDENTIALITY`);
   L.push(`10.1 Each party keeps the other's non-public information confidential, uses it only for this Agreement, and returns or destroys it on request when this Agreement ends. Nothing prevents disclosure required by law.`);
@@ -215,10 +303,28 @@ export function agreementTextLocal(d) {
 }
 export function agreementHash(text) { return createHash('sha256').update(text, 'utf8').digest('hex'); }
 
+/* A local row's links: the AI office link (STRIPE_LOCAL_*_LINK) for the office, the ads + socials
+ * link (STRIPE_LOCAL_ADS_FOUNDING_LINK = £750, STRIPE_LOCAL_ADS_STANDARD_LINK = £1,000) for the ads.
+ * Ads only → payUrl is the ads link. Both → payUrl is the office link and payUrlAds the ads link.
+ * Same rule as before: no fallback, unset → '' → the page says we will send it. */
+function withToken(base, row) {
+  if (!base) return '';
+  const d = row.data || {};
+  const u = new URL(base);
+  u.searchParams.set('client_reference_id', row.id);
+  if (d.email) u.searchParams.set('prefilled_email', d.email);
+  return u.toString();
+}
+function adsLink(d) { return d.founding ? process.env.STRIPE_LOCAL_ADS_FOUNDING_LINK : process.env.STRIPE_LOCAL_ADS_STANDARD_LINK; }
+export function payUrlAds(row) {
+  const d = row.data || {}, parts = partsOf(d);
+  return parts && parts.length === 2 ? withToken(adsLink(d), row) : '';
+}
 export function payUrl(row) {
   const d = row.data || {};
-  const base = d.payLink || (laneOf(d) === 'local'
-    ? (d.founding ? process.env.STRIPE_LOCAL_FOUNDING_LINK : process.env.STRIPE_LOCAL_STANDARD_LINK)
+  const local = laneOf(d) === 'local', adsOnly = local && partsOf(d).join() === 'ads';
+  const base = d.payLink || (local
+    ? (adsOnly ? adsLink(d) : d.founding ? process.env.STRIPE_LOCAL_FOUNDING_LINK : process.env.STRIPE_LOCAL_STANDARD_LINK)
     : PAY_LINKS[d.founding ? 'founding' : 'standard']);
   if (!base) return '';
   const u = new URL(base);
@@ -235,15 +341,16 @@ export function publicView(row) {
   const text = (d.signature && d.signature.text) ? d.signature.text : agreementText(d);
   const sig = d.signature ? { name: d.signature.name, at: d.signature.at, hash: d.signature.hash } : null;
   const tier = d.founding ? 'founding' : 'standard';
-  const lane = laneOf(d), local = lane === 'local';
+  const lane = laneOf(d), local = lane === 'local', fees = local ? localFees(d) : null;
   return {
     token: row.id, status: row.status, lane, demo: d.demo === true,
     business: d.business || '', founder: d.founder || '', email: d.email || '', segment: d.segment || '',
-    founding: !!d.founding, retainer: Number(d.retainer) || (local ? TERMS_LOCAL : TERMS)[tier],
+    founding: !!d.founding, retainer: local ? fees.total : (Number(d.retainer) || TERMS[tier]),
+    parts: partsOf(d), fees: local ? { ads: fees.ads, office: fees.office } : null, unruled: text.includes(UNRULED),
     step: local ? null : TERMS.step, trigger: local ? null : TERMS.trigger, buyout: local ? (Number(d.buyout) > 0 ? Number(d.buyout) : TERMS_LOCAL.buyout) : null,
     startDate: d.startDate || '', notes: d.proposalNotes || '', drops: d.drops || '',
     agreement: text, agreementHash: agreementHash(text), signature: sig,
-    payUrl: payUrl(row), paidAt: row.paid_at || null, signedAt: row.signed_at || null
+    payUrl: payUrl(row), payUrlAds: payUrlAds(row), paidAt: row.paid_at || null, signedAt: row.signed_at || null
   };
 }
 
@@ -309,6 +416,7 @@ export default async function handler(req, res) {
       if (!/^data:image\/png;base64,[A-Za-z0-9+/=]{200,}$/.test(image) || image.length > 200000) return res.status(400).json({ error: 'Draw your signature.' });
       const text = agreementText(row.data || {});
       const hash = agreementHash(text);
+      if (text.includes(UNRULED) && (row.data || {}).demo !== true) return res.status(409).json({ error: 'This agreement is not ready to sign yet: one clause is still being settled. We will send you the final version.' });
       if (b.hash && b.hash !== hash) return res.status(409).json({ error: 'The agreement changed while you were reading it. Reload and read it again.' });
       const signature = { name, image, at: new Date().toISOString(), ip: clientIp(req), ua: String(req.headers['user-agent'] || '').slice(0, 300), hash, text };
       const signed = await rpc('onboard_sign', { tok: token, sig: signature });
