@@ -94,6 +94,11 @@
     main [data-lane=local]{display:none}
     body[data-lane=local] main [data-lane=creative]{display:none}
     body[data-lane=local] main [data-lane=local]{display:block}
+    /* Artists (2026-09-26): inside the creative lane, segment 'Artist' swaps the brand words
+       (drops, sell-through, store) for an artist's (releases, streams, shows, merch).
+       Brand copy is the default and renders exactly as before. */
+    body:not([data-seg=artist]) main [data-seg=artist]{display:none}
+    body[data-seg=artist] main [data-seg=brand]{display:none}
     @media(max-width:640px){.grid{grid-template-columns:1fr}.steps{gap:12px;font-size:11px}.agreement{max-height:46vh;padding:16px}}
   </style>
   <link rel="stylesheet" href="/interactions.css">
@@ -121,29 +126,31 @@
 
       <h2>The four things we run for <span id="p-brand"></span></h2>
       <ul class="list">
-        <li><span class="n">01</span><span><b>Content and creative social.</b> Planned against your drop calendar, produced and published by us. Your aesthetic, our volume.</span></li>
-        <li><span class="n">02</span><span><b>Paid ads.</b> Run against your gross profit, not platform-reported return. The budget ceiling is set off your margin so you never spend past what the product supports.</span></li>
-        <li><span class="n">03</span><span><b>Email and SMS.</b> Your owned list, so drop day opens to people who already want it.</span></li>
-        <li><span class="n">04</span><span><b>Growth management.</b> Sell-through per drop, revenue per send, cost per purchase against margin. You see the same numbers we do.</span></li>
+        <li><span class="n">01</span><span data-seg="brand"><b>Content and creative social.</b> Planned against your drop calendar, produced and published by us. Your aesthetic, our volume.</span><span data-seg="artist"><b>Content and creative social.</b> Planned against your release calendar, produced and published by us. Your sound and your look, our volume.</span></li>
+        <li><span class="n">02</span><span data-seg="brand"><b>Paid ads.</b> Run against your gross profit, not platform-reported return. The budget ceiling is set off your margin so you never spend past what the product supports.</span><span data-seg="artist"><b>Paid ads.</b> Judged on what they bring in, not platform-reported return. The budget ceiling is agreed with you before any spend, so you never spend past what your music, shows and merch support.</span></li>
+        <li><span class="n">03</span><span data-seg="brand"><b>Email and SMS.</b> Your owned list, so drop day opens to people who already want it.</span><span data-seg="artist"><b>Email and SMS.</b> Your own list of fans, so release day opens to people already waiting for it.</span></li>
+        <li><span class="n">04</span><span data-seg="brand"><b>Growth management.</b> Sell-through per drop, revenue per send, cost per purchase against margin. You see the same numbers we do.</span><span data-seg="artist"><b>Growth management.</b> Streams and listeners per release, revenue per send, cost per new fan. You see the same numbers we do.</span></li>
       </ul>
 
-      <h2>How the first drop works</h2>
-      <p>Drop one is measurement. We agree your baseline before a penny is spent, run the four things, and read what happens. From drop two we scale against a sell-through target we set with you in writing. No guesswork, no promise we can't back.</p>
+      <h2 data-seg="brand">How the first drop works</h2>
+      <h2 data-seg="artist">How the first release works</h2>
+      <p data-seg="brand">Drop one is measurement. We agree your baseline before a penny is spent, run the four things, and read what happens. From drop two we scale against a sell-through target we set with you in writing. No guesswork, no promise we can't back.</p>
+      <p data-seg="artist">Release one is measurement. We agree your baseline before a penny is spent, run the four things, and read what happens. From release two we scale against a streams and listeners target we set with you in writing. No guesswork, no promise we can't back.</p>
 
       <h2>The terms, plainly</h2>
       <div class="grid">
         <div class="cell"><div class="k">Retainer</div><div class="v" id="p-fee"></div></div>
         <div class="cell"><div class="k">Covers</div><div class="v">All four things. Ad spend is yours, paid direct to the platforms.</div></div>
-        <div class="cell"><div class="k">Growth step</div><div class="v">Our fee only goes up when your revenue does, and only when it's up by half.</div></div>
+        <div class="cell"><div class="k">Growth step</div><div class="v" data-seg="brand">Our fee only goes up when your revenue does, and only when it's up by half.</div><div class="v" data-seg="artist">Our fee only goes up when your income does, from streams, shows and merch, and only when it's up by half.</div></div>
         <div class="cell"><div class="k">Start</div><div class="v" id="p-start"></div></div>
       </div>
       <p class="why" id="p-notes"></p>
 
       <h2>What we need from you</h2>
       <ul class="list">
-        <li><span class="n">—</span><span>Read access to your store and payment records, so the baseline is your number, not ours.</span></li>
-        <li><span class="n">—</span><span>Access to Meta Business Manager, your store platform and your email/SMS tool.</span></li>
-        <li><span class="n">—</span><span>Product and footage we can shoot or cut, and your drop calendar.</span></li>
+        <li><span class="n">—</span><span data-seg="brand">Read access to your store and payment records, so the baseline is your number, not ours.</span><span data-seg="artist">Read access to your distributor, your merch store if you have one, and your payment records, so the baseline is your number, not ours.</span></li>
+        <li><span class="n">—</span><span data-seg="brand">Access to Meta Business Manager, your store platform and your email/SMS tool.</span><span data-seg="artist">Access to Meta Business Manager, Spotify for Artists, your merch store if you have one, and your email/SMS tool.</span></li>
+        <li><span class="n">—</span><span data-seg="brand">Product and footage we can shoot or cut, and your drop calendar.</span><span data-seg="artist">Footage we can cut, shows we can film, and your release calendar.</span></li>
         <li><span class="n">—</span><span>Approvals within a couple of days, so the calendar holds.</span></li>
       </ul>
       </div>
@@ -249,8 +256,8 @@
       </ul>
       <ul class="list" data-lane="creative">
         <li><span class="n">01</span><span>Law emails you within a day to agree the <b>baseline</b> in writing and collect access.</span></li>
-        <li><span class="n">02</span><span>We build the drop calendar and the first content batch, and you approve it.</span></li>
-        <li><span class="n">03</span><span>Go-live. Drop one is measurement; the numbers come to you every week.</span></li>
+        <li><span class="n">02</span><span data-seg="brand">We build the drop calendar and the first content batch, and you approve it.</span><span data-seg="artist">We build the release calendar and the first content batch, and you approve it.</span></li>
+        <li><span class="n">03</span><span data-seg="brand">Go-live. Drop one is measurement; the numbers come to you every week.</span><span data-seg="artist">Go-live. Release one is measurement; the numbers come to you every week.</span></li>
       </ul>
       <p class="why">Your client space is at <a href="/portal">kaizenevol.com/portal</a> — sign in with this email once Law has switched it on. Questions any time: <a href="mailto:law@kaizenevol.com">law@kaizenevol.com</a> or <a href="mailto:diego@kaizenevol.com">diego@kaizenevol.com</a>. A copy of your signed agreement was emailed to you.</p>
     </section>
@@ -292,6 +299,8 @@
   function render(){
     $('loading').style.display = 'none';
     LOCAL = view.lane === 'local';
+    /* The same test portal.html uses: exactly 'Artist'. Anything else keeps the brand copy. */
+    if(!LOCAL && view.segment === 'Artist') document.body.dataset.seg = 'artist';
     if(LOCAL){
       document.body.dataset.lane = 'local';
       var names = ['Proposal','Agreement','Payment','Setup'];
