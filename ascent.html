@@ -5,25 +5,36 @@
   <meta name="theme-color" content="#F7F6F4" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex" />
-  <title>Kaizen Ascent, a front office for local businesses by KaizenEvol</title>
-  <meta name="description" content="Kaizen Ascent answers the calls you miss, your texts, emails and website chat, day and night, and books the job. We build and host your website too." />
+  <title>Kaizen Ascent, ads, a front office and a website for local businesses by KaizenEvol</title>
+  <meta name="description" content="Kaizen Ascent runs your Facebook and Instagram ads and socials, and an AI front office answers every call, text, email and chat and books the job. Your website comes free with either." />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="preload" href="/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/newsreader-italic-56f6419f.woff2" as="font" type="font/woff2" crossorigin />
   <script>document.documentElement.className+=" js";</script>
   <style>
-    /* Hallmark · design-system: brand/DESIGN.md · macrostructure: 19 Map / Diagram · tone: utilitarian
+    /* Hallmark · design-system: brand/DESIGN.md · macrostructure: 15 Split Studio · tone: utilitarian
+     * (redesign 2026-09-28: was 19 Map / Diagram; the map is kept as the front office's proof block)
      * genre: editorial · theme: locked system (brand/DESIGN.md v3, light mixed neutrals, no accent)
      * nav: N9 edge-aligned minimal (mark left, one CTA right, no side doors)
      * footer: Ft2-style single band + the estate's contact column (test-footer-contact parity)
-     * sections: hero (centred, per DESIGN layout ruling) · the map (signature) · guarantee (scroll-scrubbed statement)
-     *           · the website (H6-ish photographic strip, example builds) · F3 terms sheet · dark closing · footer
-     * enrichment: none drawn — the diagram IS the image; two example-build captures of made-up businesses
+     * sections: hero (centred, per DESIGN layout ruling) · the three parts (pick one or both, website under both)
+     *           · ads + socials (split: copy | who-does-what ledger) · the front office (split head + the map)
+     *           · two guarantees (scroll-lit statements) · the website (split, reversed: builds | copy)
+     *           · F3 terms sheet · dark closing · footer
+     * enrichment: none drawn; the ledger and the map ARE the proof; two example-build captures of made-up businesses
+     * brand pass 2026-09-28 (Rahaid: "make it look like it's a service part of KaizenEvol"): the estate's
+     *   silk hero (midnight.js), Newsreader italic heading tails, the 改善 band mark, --cell panels,
+     *   the scroll-scrubbed loop film closing (scrub.js), the KE mark + service lockup, a 3-column footer.
+     *   Deliberately NOT: the creative nav links, the seats note, the apply.html start field (lane rules),
+     *   the founders collage (Rahaid, same day).
      * motion: MAX. No reduced-motion branch anywhere, on purpose (brand/DESIGN.md, test-reduced-motion).
-     * pre-emit critique: P4 H4 E4 S5 R4 V5
+     * pre-emit critique: P4 H4 E4 S5 R4 V4
+     * slop: 58 gates run 2026-09-28; 6 (centred hero) and 27 (reduced motion) held by brand/DESIGN.md rulings, not fixed
      */
     @font-face{font-family:'Manrope';src:url('/manrope.woff2') format('woff2');font-weight:200 800;font-style:normal;font-display:swap}
+    @font-face{font-family:'Newsreader';src:url('/newsreader-italic-56f6419f.woff2') format('woff2');font-weight:300;font-style:italic;font-display:swap}
 
     :root{
       --page:#F7F6F4; --recess:#EFEDE9; --cool:#E8E9EA; --hairline:#D8D4CC;
@@ -31,7 +42,11 @@
       --ink-hair:rgba(247,246,244,.18);
       --on-ink:rgba(247,246,244,.8);
       --veil:rgba(247,246,244,.86);
+      --line-soft:rgba(35,33,30,.18);
+      --wa:#25D366; --wa-ink:#08110b;
       --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+      --serif:'Newsreader',Georgia,'Times New Roman',serif;
+      --band:rgba(233,230,224,.55); --band-cool:rgba(232,233,234,.62); --cell:rgba(252,252,250,.86); --section:rgba(247,246,244,.55);
       --ease-out:cubic-bezier(0.16, 1, 0.3, 1);
       --ease-press:cubic-bezier(.3,0,.2,1);
       --maxw:1120px;
@@ -41,8 +56,8 @@
     /* The phone canvas. The last band is the footer, on --recess, so html paints --recess:
        overscroll, the home-indicator area and the toolbar collapse all show the footer's
        ground instead of a pale strip under it. */
-    html{background:var(--recess);overflow-x:clip;scroll-behavior:smooth}
-    body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+    html{background:var(--recess);overflow-x:clip;scroll-behavior:smooth;overscroll-behavior-y:none}
+    body{position:relative;z-index:0;overscroll-behavior-y:none;margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
     .container{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
     a{color:var(--ink)}
     img{max-width:100%;display:block}
@@ -51,12 +66,38 @@
     h2{font-size:clamp(30px,1.4rem + 2.2vw,48px)}
     h3{font-size:clamp(18px,1rem + .4vw,21px);font-weight:600;letter-spacing:-0.02em;line-height:1.3}
     p{margin:0}
+    /* The house accent: Newsreader italic on the last words of a heading, never in running copy (brand/DESIGN.md, Type). */
+    h1 em,h2 em,h3 em{font-family:var(--serif);font-style:italic;font-weight:300;letter-spacing:-0.02em}
+    section{background:var(--section)}
+    section.band{position:relative;overflow:clip;background:var(--band);border-block:1px solid var(--hairline)}
+    section.band > .container{position:relative;z-index:1}
+    section.band::before{
+      content:"";position:absolute;z-index:0;pointer-events:none;
+      /* Vertically centred in the section and hung HALF OFF the right edge, per Rahaid:
+         "increase the size, remember only half the characters show". The stack is
+         2048/4376, so its width is height x 0.468 and half of that is height x 0.234 -
+         which is the negative inset that puts the cut exactly down the middle of each
+         character. Tied to --kzh so the two stay in step at any size. */
+      --kzh:620px;
+      right:calc(var(--kzh) * -0.234);top:50%;height:var(--kzh);aspect-ratio:2048/4376;
+      transform:translateY(-50%);
+      background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%202048%204376%22%3E%3Cg%20transform%3D%22translate%280%2C2048%29%20scale%281%2C-1%29%22%3E%3Cpath%20d%3D%22M304%20928V264Q304%20213%20335%20201Q366%20191%20484%20191Q647%20191%20674%20209Q730%20243%20748%20535L801%20518Q801%20297%20820%20248Q835%20203%20891%20203Q882%20110%20793%2094Q704%2082%20490%2082Q281%2082%20236%20109Q185%20136%20185%20246V1040Q248%201014%20316%20979H670V1460H121L103%201511H651L727%201613Q851%201515%20851%201485Q851%201470%20834%201460L785%201427V809H670V928ZM1457%20392Q1648%20163%201962%209Q1902%20-37%201860%20-108Q1560%2073%201393%20296Q1155%20-7%20748%20-145L719%20-98Q1117%2072%201328%20396Q1170%20654%201098%201043Q994%20810%20854%20638L811%20670Q1065%201077%201145%201690Q1340%201650%201340%201608Q1340%201584%201256%201565Q1226%201415%201180%201262H1727L1823%201393Q1888%201332%201952%201248L1932%201211H1711Q1649%20700%201457%20392ZM1387%20490Q1537%20781%201584%201211H1164Q1155%201186%201139%201143Q1239%20717%201387%20490Z%22%20fill%3D%22%23C9C3B7%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%280%2C4376%29%20scale%281%2C-1%29%22%3E%3Cpath%20d%3D%22M543%20370H1478L1561%20458Q1690%20369%201690%20339Q1690%20327%201669%20313L1618%20278V-147H1499V-39H518V-147H397V442Q453%20421%20543%20370ZM518%20319V12H1499V319ZM1278%20592Q1347%20715%201397%20877Q1571%20819%201571%20780Q1571%20756%201487%20750Q1420%20660%201349%20592H1706L1810%20721Q1890%20648%201943%20578L1921%20541H149L125%20592H952V893H168L143%20944H952V1118H346L323%201169H952V1331H221L200%201382H1143Q1215%201512%201268%201699Q1454%201638%201454%201595Q1454%201566%201364%201560Q1305%201477%201222%201394Q1216%201385%201210%201382H1638L1734%201505Q1810%201440%201872%201368L1849%201331H1073V1169H1515L1614%201278Q1696%201209%201743%201151L1720%201118H1073V944H1681L1782%201063Q1859%201004%201921%20930L1898%20893H1073V592ZM473%20874Q713%20798%20713%20676Q713%20602%20643%20602Q598%20602%20580%20665Q552%20765%20449%20838ZM600%201694Q852%201608%20852%201479Q852%201434%20811%201405Q794%201395%20776%201395Q723%201395%20711%201465Q690%201563%20576%201659Z%22%20fill%3D%22%23C9C3B7%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat center/contain;
+      opacity:.5;
+    }
+    @media(max-width:719px){
+      section.band::before{--kzh:400px;right:calc(var(--kzh) * -0.234);opacity:.4}
+    }
+
 
     /* ── nav: mark left, one way in right ───────────────────────────────── */
     nav{position:sticky;top:0;z-index:40;background:var(--veil);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
     .nav-inner{display:flex;align-items:center;gap:16px;height:66px}
     .nav-logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-0.02em}
     .nav-logo img{height:30px;width:auto}
+    nav .nav-logo{text-decoration:none;color:var(--ink);padding:7px;margin:-7px}
+    .nav-svc{display:inline-flex;margin-left:-4px;align-items:center;gap:12px;font-size:14px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap}
+    .nav-svc::before{content:"";width:1px;height:20px;background:var(--hairline)}
+    @media(max-width:420px){.nav-svc{display:none}}
     .nav-one{list-style:none;display:flex;align-items:center;margin:0 0 0 auto;padding:0}
     .nav-one a.btn-solid{background:transparent;border-radius:0;color:var(--ink);font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:14px 1px;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:7px;text-decoration-color:var(--hairline);white-space:nowrap;transition:text-decoration-color .18s var(--ease-out)}
     .nav-one a.btn-solid:hover{text-decoration-color:var(--ink)}
@@ -69,9 +110,14 @@
     .btn-quiet{color:var(--muted);text-decoration:none;font-size:15px;font-weight:500;border-bottom:1px solid var(--hairline);padding:12px 0 2px;display:inline-block;white-space:nowrap;transition:color .2s var(--ease-out),border-color .2s var(--ease-out)}
     .btn-quiet:hover{color:var(--ink);border-color:var(--ink)}
     a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+    .btn-solid:active{transform:translateY(1px)}
+    .btn-quiet:active{color:var(--ink)}
+    [aria-disabled="true"]{opacity:.55;cursor:not-allowed;pointer-events:none}
 
     /* ── hero: centred at every width (brand/DESIGN.md, layout) ─────────── */
-    .hero{padding:96px 0 128px;text-align:center}
+    .hero{padding:96px 0 128px;text-align:center;background:var(--section);border-bottom:1px solid var(--hairline);position:relative;overflow:clip}
+    header.hero > *{position:relative;z-index:1}
+    .hero-note{margin-top:20px;font-size:13px;color:var(--muted)}
     .hero .smallcaps{color:var(--muted)}
     .hero h1{max-width:16ch;margin:22px auto 0}
     .hero-sub{max-width:52ch;margin:26px auto 0;font-size:18px;color:var(--ink)}
@@ -82,10 +128,69 @@
       .hero-sub{font-size:17px;max-width:32ch}
     }
 
+    /* ── the three parts: two monthly parts joined by "or both", the website under both ── */
+    .parts{padding:104px 0 112px}
+    .parts-head h2{max-width:18ch}
+    .parts-head p{margin-top:20px;font-size:17px;color:var(--muted);max-width:46ch}
+    .pick{margin-top:56px;display:grid;gap:0}
+    .part{position:relative;border:1px solid var(--hairline);border-top:1px solid var(--ink);background:var(--cell);padding:32px 28px;display:flex;flex-direction:column;min-width:0}
+    .part h3{font-size:clamp(26px,1.2rem + 1.4vw,36px);font-weight:300;letter-spacing:-0.035em;line-height:1.08}
+    .part p{margin-top:16px;font-size:16px;color:var(--ink);max-width:45ch}
+    .part .keep{margin-top:20px;padding-top:16px;border-top:1px solid var(--hairline);font-size:14.5px;color:var(--muted);max-width:45ch}
+    .part .keep b{color:var(--ink);font-weight:600}
+    .part .btn-quiet{align-self:flex-start;margin-top:auto}
+    .part .more{margin-top:24px}
+    .join{display:flex;align-items:center;justify-content:center;position:relative;padding:20px 0}
+    .join span{position:relative;z-index:1;background:var(--cell);border:1px solid var(--hairline);border-radius:980px;padding:8px 16px;font-size:13px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+    .join::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--ink);transform-origin:top;transform:scaleY(var(--draw,1));transition:transform 1s var(--ease-out)}
+    .free{margin-top:0;border:1px solid var(--hairline);border-top:none;background:var(--cell);color:var(--ink);padding:24px 28px;display:grid;gap:8px}
+    .free h3{font-size:clamp(20px,1rem + .8vw,26px);font-weight:300;letter-spacing:-0.03em;line-height:1.15}
+    .free p{color:var(--muted);font-size:15px;max-width:52ch}
+    .free a{color:var(--ink);white-space:nowrap;display:inline-block}
+    @media(min-width:900px){
+      .pick{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+      .join{padding:0 24px}
+      .join::before{left:0;right:0;top:50%;bottom:auto;width:auto;height:1px;transform-origin:left;transform:scaleX(var(--draw,1))}
+      .free{grid-column:1 / -1;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;margin-top:24px;border-top:1px solid var(--hairline)}
+    }
+    .js .join{--draw:0}
+    .js .join.in{--draw:1}
+    .js .part,.js .free{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease-out),transform .9s var(--ease-out)}
+    .js .part.in,.js .free.in{opacity:1;transform:none;transition-delay:calc(var(--i,0) * 110ms)}
+
+    /* ── split studio rows: copy one side, proof the other ──────────────── */
+    .split{padding:112px 0;border-top:1px solid var(--hairline)}
+    .split-grid{display:grid;gap:48px}
+    .split-copy h2{max-width:15ch}
+    .split-copy p{margin-top:20px;font-size:17px;color:var(--ink);max-width:45ch}
+    .split-copy p.small{font-size:14.5px;color:var(--muted)}
+    @media(min-width:980px){
+      .split-grid{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:80px;align-items:start}
+      .split-copy{position:sticky;top:120px}
+    }
+
+    /* The ledger: who does what, us one column, them the other. */
+    .ledger{margin:0;border-top:1px solid var(--ink)}
+    .ledger-cols{display:grid;gap:0}
+    .ledger-col{min-width:0}
+    .ledger-col + .ledger-col{border-top:1px solid var(--ink)}
+    .ledger h3{font-size:13px;font-weight:700;letter-spacing:.02em;padding:20px 0 4px}
+    .ledger ul{list-style:none;margin:0;padding:0}
+    .ledger li{padding:16px 0;border-bottom:1px solid var(--hairline);font-size:17px;line-height:1.45;color:var(--ink)}
+    .ledger li:last-child{border-bottom:none}
+    .ledger-foot{border-top:1px solid var(--ink);padding:20px 0 0;font-size:15px;color:var(--muted)}
+    @media(min-width:760px){
+      .ledger-cols{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:0}
+      .ledger-col + .ledger-col{border-top:none;border-left:1px solid var(--ink);padding-left:28px}
+      .ledger-col:first-child{padding-right:28px}
+    }
+    .js .ledger li{opacity:0;transform:translateX(-14px);transition:opacity .6s var(--ease-out),transform .8s var(--ease-out)}
+    .js .ledger li.in{opacity:1;transform:none;transition-delay:calc(var(--i,0) * 90ms)}
+
     /* ── the map ────────────────────────────────────────────────────────── */
-    .map-sec{background:var(--recess);padding:104px 0 112px;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+    .map-sec{padding:104px 0 112px}
     .map-head h2{max-width:17ch}
-    .map-head p{margin-top:20px;font-size:17px;color:var(--muted);max-width:44ch}
+    .map-head p{margin-top:20px;font-size:17px;color:var(--muted);max-width:45ch}
     .map{position:relative;margin-top:64px;display:grid;gap:0}
     .wires{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
     .wires path{fill:none;stroke:var(--stone);stroke-width:1.25}
@@ -131,15 +236,19 @@
 
     /* ── guarantee: one statement, lit word by word by the scroll ─────────── */
     .promise{padding:128px 0 120px}
-    .promise-line{font-size:clamp(28px,1rem + 3vw,60px);font-weight:300;letter-spacing:-0.04em;line-height:1.08;max-width:19ch;margin:0}
+    .promise-line{font-size:clamp(28px,1rem + 3vw,60px);font-weight:300;letter-spacing:-0.04em;line-height:1.08;max-width:19ch;margin:0;overflow-wrap:anywhere;min-width:0}
     .promise-line .w{color:var(--stone);transition:color .35s var(--ease-out)}
     .promise-line .w.lit{color:var(--ink)}
-    .promise-note{margin-top:36px;max-width:50ch;font-size:17px;color:var(--muted)}
+    .promise-note{margin-top:28px;max-width:50ch;font-size:17px;color:var(--muted)}
+    .promise-item + .promise-item{margin-top:104px;padding-top:56px;border-top:1px solid var(--hairline)}
+    .promise-for{font-size:17px;font-weight:600;letter-spacing:-0.01em;color:var(--ink);margin-bottom:20px}
+    .promise-head{margin-bottom:72px}
+    .promise-head h2{max-width:16ch}
 
     /* ── the website ────────────────────────────────────────────────────── */
-    .site-sec{background:var(--cool);padding:104px 0 96px;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+    .site-sec{background:var(--band-cool);padding:104px 0 96px;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
     .site-grid{display:grid;gap:56px}
-    .site-copy p{margin-top:20px;font-size:17px;color:var(--ink);max-width:40ch}
+    .site-copy p{margin-top:20px;font-size:17px;color:var(--ink);max-width:45ch}
     .site-copy p.small{font-size:14.5px;color:var(--muted)}
     .strip{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(-1 * var(--gut));padding:10px var(--gut) 18px;scrollbar-width:none}
     .strip::-webkit-scrollbar{display:none}
@@ -159,7 +268,7 @@
     .terms{padding:112px 0 104px}
     .terms-grid{display:grid;gap:40px}
     .terms-grid h2{max-width:14ch}
-    .terms-grid .lead{margin-top:20px;font-size:17px;color:var(--muted);max-width:40ch}
+    .terms-grid .lead{margin-top:20px;font-size:17px;color:var(--muted);max-width:45ch}
     .sheet{margin:0;border-top:1px solid var(--ink)}
     .sheet div{display:grid;gap:4px;padding:20px 0 21px;border-bottom:1px solid var(--hairline)}
     .sheet dt{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
@@ -174,9 +283,9 @@
     .js .rise.in{opacity:1;transform:none}
 
     /* ── the one dark anchor ────────────────────────────────────────────── */
-    .last{background:var(--ink);color:var(--page);padding:120px 0 128px;text-align:center;overflow:hidden;position:relative}
+    .last{padding:120px 0 128px;text-align:center}
     .last h2{max-width:16ch;margin:0 auto}
-    .last p{margin:22px auto 0;max-width:44ch;font-size:17px;color:var(--on-ink)}
+    .last p{margin:22px auto 0;max-width:45ch;font-size:16px}
     .last .hero-ctas{margin-top:40px}
     .last .btn-solid{background:var(--page);color:var(--ink)}
     .last .btn-solid:hover{color:var(--ink)}
@@ -185,9 +294,9 @@
     .last a:focus-visible{outline-color:var(--page)}
 
     /* ── footer ─────────────────────────────────────────────────────────── */
-    footer{background:var(--recess);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
+    footer{background:var(--band);border-top:1px solid var(--hairline);padding:56px 0 40px;font-size:14px}
     .f-grid{display:grid;gap:34px}
-    @media(min-width:760px){.f-grid{grid-template-columns:2fr 1fr}}
+    @media(min-width:760px){.f-grid{grid-template-columns:2fr 1fr 1fr}}
     footer .smallcaps{margin-bottom:6px}
     footer ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column}
     footer ul li:not(.footer-social) > a{display:inline-flex;align-items:center;min-height:44px}
@@ -207,16 +316,20 @@
     .lit .hero .enter{opacity:1;transform:none;transition:opacity .9s var(--ease-out),transform .9s var(--ease-out);transition-delay:calc(var(--i,0) * 110ms)}
   </style>
   <link rel="stylesheet" href="/interactions.css">
+  <link rel="stylesheet" href="/kaizen-mark.css">
   <script src="/utm.js"></script>
   <script src="/transitions.js" defer></script>
+  <script src="/midnight.js?v=22" defer></script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
 <nav>
   <div class="container nav-inner">
-    <div class="nav-logo">
+    <a class="nav-logo" href="index.html">
       <img src="brand/v3/ke-mark-ink-256.png" alt="KaizenEvol" onerror="this.style.display='none'">
-    </div>
+    </a>
+    <span class="nav-svc" aria-hidden="true">Kaizen Ascent</span>
     <ul class="nav-one">
       <li><a class="btn-solid" href="apply-local.html">Tell us about your business</a></li>
     </ul>
@@ -227,20 +340,81 @@
 <header class="hero">
   <div class="container">
     <div class="smallcaps enter" style="--i:0">For local businesses</div>
-    <h1 class="enter" style="--i:1">The phone rings while your hands are full.</h1>
-    <p class="hero-sub enter" style="--i:2">Kaizen Ascent answers the calls you miss, your texts, your emails and your website chat, day and night, and books the job. We build and host you a proper website to go with it.</p>
+    <h1 class="enter" style="--i:1">More jobs in. None of them <em>missed</em>.</h1>
+    <p class="hero-sub enter" style="--i:2">We run your ads and socials to bring the work in, and an AI front office answers every call, text, email and chat and books the job. Pick one or both. Your website comes free with either.</p>
     <div class="hero-ctas enter" style="--i:3">
       <a class="btn-solid" href="apply-local.html">Tell us about your business <svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></a>
       <a class="btn-quiet" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27m%20asking%20about%20Kaizen%20Ascent" target="_blank" rel="noopener">Or message us on WhatsApp</a>
     </div>
+    <p class="hero-note enter" style="--i:4">A KaizenEvol service. We reply and call you back the same working day.</p>
   </div>
 </header>
 
-<section class="map-sec" id="how">
+<section class="parts band" id="parts">
+  <div class="container">
+    <div class="parts-head rise">
+      <h2>Pick one part or both. The website comes <em>free</em>.</h2>
+      <p>Kaizen Ascent is three parts. Two of them run every month, and you choose which. The third, your website, comes with either.</p>
+    </div>
+
+    <div class="pick">
+      <article class="part" style="--i:0">
+        <h3>Ads and socials</h3>
+        <p>We run your Facebook and Instagram ads and keep your social media going, so people nearby find you and get in touch.</p>
+        <p class="keep"><b>The guarantee.</b> A month our ads and socials bring you no booked jobs, the next month of ads and socials is free.</p>
+        <p class="more"><a class="btn-quiet" href="#ads">How ads and socials work</a></p>
+      </article>
+      <div class="join" aria-hidden="true"><span>or both</span></div>
+      <article class="part" style="--i:1">
+        <h3>The AI front office</h3>
+        <p>It answers your missed calls, texts, emails and website chat, day and night, and books the job.</p>
+        <p class="keep"><b>The guarantee.</b> A month it catches nothing you would have missed, the next month is free.</p>
+        <p class="more"><a class="btn-quiet" href="#how">How the front office works</a></p>
+      </article>
+      <div class="free" style="--i:2">
+        <h3>Plus a website, free with <em>either part</em>.</h3>
+        <p>We build it and we host it. <a href="#site">See example builds</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="split ads-sec" id="ads">
+  <div class="container split-grid">
+    <div class="split-copy rise">
+      <h2>Ads and socials that bring the work <em>in</em>.</h2>
+      <p>We run your Facebook and Instagram ads and keep your social media going, so the people near you who need the work see a business that is open and ready.</p>
+      <p class="small">You pay the ad budget to Meta yourself. It is separate from us and never goes through us.</p>
+    </div>
+    <div class="ledger">
+      <div class="ledger-cols">
+        <div class="ledger-col">
+          <h3>We do</h3>
+          <ul>
+            <li style="--i:0">Run your Facebook and Instagram ads.</li>
+            <li style="--i:1">Keep your social media going.</li>
+            <li style="--i:2">Track which booked jobs came from them.</li>
+          </ul>
+        </div>
+        <div class="ledger-col">
+          <h3>You do</h3>
+          <ul>
+            <li style="--i:3">Agree an ad budget with us at the start.</li>
+            <li style="--i:4">Pay it to Meta directly, from your own account.</li>
+            <li style="--i:5">Keep that budget running.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="ledger-foot">Keep the agreed budget running and the guarantee holds: a month with no booked jobs from our ads and socials, the next month of ads and socials is free.</p>
+    </div>
+  </div>
+</section>
+
+<section class="map-sec band" id="how">
   <div class="container">
     <div class="map-head rise">
-      <h2>Four ways in. One front office. A booked job out.</h2>
-      <p>This is the part that works when you can&rsquo;t pick up: up a ladder, on a site visit, with a patient, or after you&rsquo;ve closed for the night.</p>
+      <h2>Four ways in. One front office. A booked job <em>out</em>.</h2>
+      <p>The AI front office is the part that works when you can&rsquo;t pick up: up a ladder, on a site visit, with a patient, or after you&rsquo;ve closed for the night.</p>
     </div>
 
     <div class="map" id="map">
@@ -275,18 +449,27 @@
   </div>
 </section>
 
-<section class="promise">
+<section class="promise" id="guarantees">
   <div class="container">
-    <h2 class="promise-line" id="promise">Any month it catches nothing you would have missed, the next month is free.</h2>
-    <p class="promise-note rise">The monthly report lists every enquiry and how many came in outside your opening hours, so you can see what it caught for yourself.</p>
+    <div class="promise-head rise"><h2>Two guarantees, one for <em>each part</em>.</h2></div>
+    <div class="promise-item">
+      <h3 class="promise-for rise">For ads and socials</h3>
+      <p class="promise-line" data-lit>A month our ads and socials bring you no booked jobs, the next month of ads and socials is free.</p>
+      <p class="promise-note rise">As long as you keep the ad budget we agreed at the start running. A booked job counts when the booking came from our ads or posts, as shown in the booking and tracking records we keep. An enquiry that does not become a booking does not count.</p>
+    </div>
+    <div class="promise-item">
+      <h3 class="promise-for rise">For the AI front office</h3>
+      <p class="promise-line" data-lit>Any month it catches nothing you would have missed, the next month is free.</p>
+      <p class="promise-note rise">The monthly report lists every enquiry and how many came in outside your opening hours, so you can see what it caught for yourself.</p>
+    </div>
   </div>
 </section>
 
-<section class="site-sec">
+<section class="site-sec" id="site">
   <div class="container site-grid">
     <div class="site-copy rise">
-      <h2>A proper website, built and hosted for you.</h2>
-      <p>It&rsquo;s free while you&rsquo;re with us. If you ever leave, you can buy the site and keep it.</p>
+      <h2>A proper website, free with <em>either part</em>.</h2>
+      <p>We build it and we host it. It&rsquo;s free while you&rsquo;re with us. If you ever leave, you can buy the site and keep it.</p>
       <p class="small">These are example builds we made to show what a local business site can look like. The businesses are made up.</p>
     </div>
     <div class="strip" id="strip">
@@ -305,22 +488,33 @@
 <section class="terms">
   <div class="container terms-grid">
     <div class="rise">
-      <h2>Fix the leak before you buy traffic.</h2>
-      <p class="lead">Paying for more enquiries makes little sense while some of them go unanswered. So the front office comes first.</p>
+      <h2>How the parts fit <em>together</em>.</h2>
+      <p class="lead">Ads and socials bring enquiries in. The front office makes sure none of them go unanswered. Take one, or take both.</p>
     </div>
     <dl class="sheet">
       <div><dt>Who it&rsquo;s for</dt><dd>Local businesses that already get enquiries and lose some to missed calls and slow replies. Home renovation first: kitchens, bathrooms and lofts. Also roofers, plumbers and heating engineers, dentists, beauty and aesthetics clinics, gyms, restaurants and garages.</dd></div>
-      <div><dt>Ads and content</dt><dd>They can be added later, once the front office shows enquiries turning into bookings.</dd></div>
+      <div><dt>What you choose</dt><dd>Ads and socials, the AI front office, or both. The website comes free with either.</dd></div>
+      <div><dt>Your ad budget</dt><dd>Agreed with us at the start and paid by you to Meta directly, from your own account. It never goes through us.</dd></div>
       <div><dt>How long</dt><dd>Three months to start, then month to month.</dd></div>
       <div><dt>If you leave</dt><dd>You can buy the site and keep it.</dd></div>
     </dl>
   </div>
 </section>
 
-<section class="last" id="start">
+<section class="scrub last" id="start" data-scrub>
+  <div class="scrub-media" aria-hidden="true">
+    <picture>
+      <source media="(max-width: 860px)" srcset="/assets/loop/loop-mobile-poster.jpg">
+      <img src="/assets/loop/loop-poster.jpg" alt="" width="1920" height="1080" decoding="async" loading="lazy">
+    </picture>
+    <div class="scrub-frames"
+      data-sprite="/assets/loop/frames.webp" data-sprite-mobile="/assets/loop/frames-mobile.webp"
+      data-cols="6" data-rows="8" data-frames="48" data-tile="640x360" data-tile-mobile="480x270"></div>
+    <div class="scrub-scrim"></div>
+  </div>
   <div class="container rise">
-    <h2>Stop losing the enquiries you already get.</h2>
-    <p>Start with a few questions and we&rsquo;ll come back to you.</p>
+    <h2>More jobs in, and every one <em>answered</em>.</h2>
+    <p class="closing-sub">Tell us about your business and which part you&rsquo;re after. We&rsquo;ll come back to you the same working day.</p>
     <div class="hero-ctas">
       <a class="btn-solid" href="apply-local.html">Tell us about your business <svg width="15" height="11" viewBox="0 0 17 12" aria-hidden="true"><path d="M0 5h11.6L7.9 1.3 9.2 0 15.2 6l-6 6-1.3-1.3L11.6 7H0z" fill="currentColor"/></svg></a>
       <a class="btn-quiet" href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27m%20asking%20about%20Kaizen%20Ascent" target="_blank" rel="noopener">Or message us on WhatsApp</a>
@@ -334,7 +528,16 @@
     <div class="f-grid">
       <div>
         <div class="nav-logo"><img src="brand/v3/ke-mark-ink-256.png" alt="" style="height:22px" onerror="this.style.display='none'"></div>
-        <p class="f-note">Kaizen Ascent is a KaizenEvol service for local businesses.</p>
+        <p class="f-note">Kaizen Ascent is the KaizenEvol service for local businesses: ads and socials, an AI front office, and a website.</p>
+      </div>
+      <div>
+        <div class="smallcaps">The service</div>
+        <ul>
+          <li><a href="#parts">The three parts</a></li>
+          <li><a href="#guarantees">The guarantees</a></li>
+          <li><a href="apply-local.html">Get in touch</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
       </div>
       <div>
         <div class="smallcaps">Contact</div>
@@ -353,11 +556,11 @@
   </div>
 </footer>
 
-<div id="waModal" role="dialog" aria-modal="true" aria-labelledby="waTitle" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(247,246,244,0.86);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
-  <div style="background:#EFEDE9;border:1px solid rgba(35,33,30,0.18);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
+<div id="waModal" role="dialog" aria-modal="true" aria-labelledby="waTitle" style="display:none;position:fixed;inset:0;z-index:200;background:var(--veil);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--recess);border:1px solid var(--line-soft);border-radius:8px;padding:28px 26px;max-width:340px;width:100%;text-align:center">
     <div id="waTitle" style="font-weight:700;font-size:16px;margin-bottom:18px">Message us on WhatsApp</div>
-    <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27m%20asking%20about%20Kaizen%20Ascent" target="_blank" rel="noopener" style="display:block;background:#25D366;color:#08110b;font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply and call you back the same working day</span></a>
-    <button id="waClose" style="margin-top:16px;background:none;border:none;color:#6E6A63;font-size:13px;cursor:pointer;font-family:inherit;min-height:44px">Close</button>
+    <a href="https://wa.me/447405472460?text=Hi%20KaizenEvol%2C%20I%27m%20asking%20about%20Kaizen%20Ascent" target="_blank" rel="noopener" style="display:block;background:var(--wa);color:var(--wa-ink);font-weight:700;border-radius:4px;padding:13px 16px;text-decoration:none;margin-bottom:10px">KaizenEvol <span style="display:block;font-size:12px;font-weight:500;opacity:.8">We reply and call you back the same working day</span></a>
+    <button id="waClose" style="margin-top:16px;background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;font-family:inherit;min-height:44px">Close</button>
   </div>
 </div>
 
@@ -372,7 +575,7 @@
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.classList.add('lit'); }); });
 
   /* Reveal: every element observed on its own, so a phone animates each one as it arrives. */
-  var reveal=document.querySelectorAll('.node, .lbl, .rise, .sheet div');
+  var reveal=document.querySelectorAll('.node, .lbl, .rise, .sheet div, .part, .free, .join, .ledger li');
   if('IntersectionObserver' in window){
     var io=new IntersectionObserver(function(es){es.forEach(function(e){
       if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
@@ -469,19 +672,19 @@
   requestAnimationFrame(tick);
 
   /* ── The guarantee, lit word by word as it scrolls through the screen ─── */
-  var pl=document.getElementById('promise'), words=[];
-  if(pl){
-    var txt=pl.textContent.trim().split(/\s+/); pl.textContent='';
+  var lines=[].slice.call(document.querySelectorAll('[data-lit]')).map(function(pl){
+    var words=[], txt=pl.textContent.trim().split(/\s+/); pl.textContent='';
     txt.forEach(function(w,i){var s=document.createElement('span'); s.className='w'; s.textContent=w;
       pl.appendChild(s); if(i<txt.length-1) pl.appendChild(document.createTextNode(' ')); words.push(s);});
-  }
+    return {el:pl, words:words};
+  });
   /* ── The example builds drift at their own depth as the page scrolls ─── */
   var shots=[].slice.call(document.querySelectorAll('.shot'));
   function onScroll(){
     var vh=window.innerHeight;
-    if(pl){var r=pl.getBoundingClientRect(), p=(vh*.85-r.top)/(vh*.55+r.height*.5);
-      p=Math.max(0,Math.min(1,p)); var n=Math.round(p*words.length);
-      for(var i=0;i<words.length;i++) words[i].classList.toggle('lit',i<n);}
+    lines.forEach(function(L){var r=L.el.getBoundingClientRect(), p=(vh*.85-r.top)/(vh*.55+r.height*.5);
+      p=Math.max(0,Math.min(1,p)); var n=Math.round(p*L.words.length);
+      for(var i=0;i<L.words.length;i++) L.words[i].classList.toggle('lit',i<n);});
     if(window.innerWidth>=980) shots.forEach(function(s){var r=s.getBoundingClientRect(), c=(r.top+r.height/2-vh/2);
       s.style.transform='translate3d(0,'+(c*parseFloat(s.dataset.depth||0))+'px,0)';});
     scrub();
@@ -504,6 +707,7 @@ document.addEventListener('keydown',function(e){if(m.style.display!=='flex')retu
     if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}
     else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}});})();
 </script>
+<script src="/scrub.js" defer></script>
 <script defer src="/script.js"></script>
 </body>
 </html>
