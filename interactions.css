@@ -644,7 +644,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
    fade reads generated. The house move, carried over from the home page. */
 @keyframes ke-lp-mask {
   from { clip-path: inset(0 0 104% 0); transform: translateY(13px) }
-  to   { clip-path: inset(-14% -8% -22% 0); transform: none }
+  to   { clip-path: inset(-14% -8% -22% -8%); transform: none }
 }
 @keyframes ke-lp-rise { from { opacity: 0; transform: translateY(9px) } to { opacity: 1; transform: none } }
 @keyframes ke-lp-card { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
@@ -676,7 +676,7 @@ footer img, footer .nav-logo img, footer .brand img { view-transition-name: none
   .motion :is(.lp-block, .lp-next).in .lp-eyebrow { opacity: 1 }
   .motion :is(.lp-block, .lp-next).in .lp-eyebrow::before { transform: scaleX(1) }
   .motion :is(.lp-block, .lp-next).in h2,
-  .motion .lp-block.in h3 { clip-path: inset(-14% -8% -22% 0); transform: none }
+  .motion .lp-block.in h3 { clip-path: inset(-14% -8% -22% -8%); transform: none }
   .motion :is(.lp-block, .lp-next).in .closing-sub,
   .motion :is(.lp-block, .lp-next).in .hero-ctas.start,
   .motion :is(.lp-block, .lp-next).in .closing-note,

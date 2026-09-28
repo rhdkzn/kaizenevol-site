@@ -200,7 +200,11 @@
        because the start state is translateY(-.85em) with opacity:0 - the word hides
        ABOVE the mask, so the bottom edge does no masking work. */
     .ln{display:inline-block;overflow:hidden;vertical-align:top;
-        padding-bottom:.18em;margin-bottom:-.18em}
+        padding-bottom:.18em;margin-bottom:-.18em;
+        /* Same trick sideways: an italic serif leans past its own box, so the mask sliced
+           the left of the g in "growing" (Rahaid, 2026-09-28). Headroom both sides, taken
+           straight back as negative margin, so word spacing does not move. */
+        padding-inline:.14em;margin-inline:-.14em}
     .js .ln > span{display:inline-block;transform:translateY(-.85em) rotateX(-62deg);opacity:0;
       transform-origin:50% 100%;transition:transform .62s var(--el-ease),opacity .5s var(--el-ease)}
     .lit .ln > span{transform:none;opacity:1}
@@ -238,7 +242,7 @@
       /* a heading is masked, never faded — type rising out of an edge reads made, a fade reads generated */
       .js .reveal h2{clip-path:inset(0 0 104% 0);transform:translateY(14px);
         transition:clip-path .95s var(--spring),transform .95s var(--spring)}
-      .reveal.in h2{clip-path:inset(-14% -8% -20% 0);transform:none}
+      .reveal.in h2{clip-path:inset(-14% -8% -20% -8%);transform:none}
 
       .js .reveal .lede{opacity:0;transform:translateY(8px);
         transition:opacity .8s var(--el-ease) .14s,transform .8s var(--el-ease) .14s}
@@ -270,7 +274,7 @@
       .js .reveal h2{animation:ke-mask linear both;
         animation-timeline:view();animation-range:entry 13% entry 48%}
       @keyframes ke-mask{from{clip-path:inset(0 0 104% 0);transform:translateY(14px)}
-        to{clip-path:inset(-14% -8% -20% 0);transform:none}}
+        to{clip-path:inset(-14% -8% -20% -8%);transform:none}}
 
       .js .reveal .lede{animation:ke-lift linear both;
         animation-timeline:view();animation-range:entry 24% entry 62%}
