@@ -315,6 +315,69 @@ p{margin:0}
 .ps__row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-xs) var(--space-lg)}
 .ps__label{color:var(--color-muted);margin-right:var(--space-xs)}
 
+/* ── reviews: a moving rail of full cards (auto-advances, pauses on hover / touch / focus; swipeable) ── */
+.reviews{padding-bottom:var(--space-3xl)}
+.rv-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--space-md);margin-bottom:var(--space-xl)}
+.rv-head h2{font-size:var(--text-xl)}
+.rv-head .g-link{margin-top:0}
+.rv-rail{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-mask:linear-gradient(90deg,transparent,var(--color-ink) 6%,var(--color-ink) 94%,transparent);mask:linear-gradient(90deg,transparent,var(--color-ink) 6%,var(--color-ink) 94%,transparent)}
+.rv-rail::-webkit-scrollbar{display:none}
+.rv-rail:focus-visible{outline:2px solid var(--color-focus);outline-offset:-2px}
+.rv-track{display:flex;gap:var(--space-md);width:max-content;margin:0;padding:var(--space-xs) var(--page-gutter);list-style:none}
+.rv{flex:none;width:min(24rem,82vw)}
+.rv figure{height:100%;display:flex;flex-direction:column;gap:var(--space-md);margin:0;padding:var(--space-xl);border:1px solid var(--color-rule);border-radius:var(--radius-md);background:var(--color-paper-2);transition:border-color var(--dur-short) var(--ease-out),transform var(--dur-short) var(--ease-out)}
+.rv figure:hover{border-color:var(--color-accent)}
+.rv blockquote{flex:1;margin:0;font-size:var(--text-md);font-weight:300;line-height:1.5;color:var(--color-ink)}
+.rv figcaption{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:var(--space-sm);align-items:center;font-size:var(--text-sm);color:var(--color-muted)}
+.rv figcaption b{color:var(--color-ink);font-weight:600}
+.rv figcaption span:last-child{grid-column:2}
+.rv__av{grid-row:span 2;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:var(--color-accent-ink);font:700 var(--text-sm)/1 var(--font-display)}
+.stars{display:flex;gap:2px;color:var(--color-accent-hi)}
+.stars svg{width:18px;height:18px}
+.trust{display:flex;flex-wrap:wrap;gap:var(--space-xs) var(--space-lg);margin-top:var(--space-xl);padding-top:0;padding-bottom:0;list-style:none;font-size:var(--text-xs);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-muted)}
+.trust li{display:flex;align-items:center;gap:var(--space-xs);white-space:nowrap}
+.trust li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--color-accent-hi)}
+@media (max-width:60rem){ .rv figure{padding:var(--space-lg)} .rv blockquote{font-size:var(--text-base)} .rv-rail{-webkit-mask:linear-gradient(90deg,var(--color-ink) 90%,transparent);mask:linear-gradient(90deg,var(--color-ink) 90%,transparent)} .trust{gap:var(--space-2xs) var(--space-md)} }
+
+/* ── process: a line that draws itself as you scroll past ── */
+.process__h{font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-muted);margin-bottom:var(--space-md)}
+.steps{--p:0;position:relative}
+.steps::after{content:"";position:absolute;left:calc(0.9rem - 1px);top:var(--space-lg);bottom:var(--space-lg);width:2px;background:var(--color-accent-hi);transform-origin:50% 0;transform:scaleY(var(--p));pointer-events:none}
+.steps::before{content:"";position:absolute;left:calc(0.9rem - 1px);top:var(--space-lg);bottom:var(--space-lg);width:2px;background:var(--color-rule-2)}
+.steps li{position:relative;grid-template-columns:3.2rem minmax(0,1fr);row-gap:var(--space-2xs);align-items:baseline;border-top:0;padding:var(--space-md) 0}
+.steps li:last-child{border-bottom:0}
+.steps li::before{position:relative;z-index:1;display:grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--color-paper);box-shadow:inset 0 0 0 2px var(--color-rule);font-size:var(--text-xs);line-height:1;transition:background-color var(--dur-long) var(--ease-out),box-shadow var(--dur-long) var(--ease-out),color var(--dur-long) var(--ease-out)}
+.steps li.is-on::before{background:var(--color-accent);box-shadow:inset 0 0 0 2px var(--color-accent);color:var(--color-accent-ink)}
+.steps b{grid-column:2;font-weight:500;font-size:var(--text-md)}
+.steps li > span{grid-column:2;font-size:var(--text-sm);font-weight:350;color:var(--color-muted);line-height:1.5}
+
+/* ── featured article under the prices ── */
+.read{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr);gap:var(--space-lg);align-items:center;margin-top:var(--space-xl);padding:var(--space-sm);border:1px solid var(--color-rule);border-radius:var(--radius-md);text-decoration:none;color:inherit;transition:border-color var(--dur-short) var(--ease-out),background-color var(--dur-short) var(--ease-out)}
+.read:hover{border-color:var(--color-ink-2)}
+.read:active{background:var(--color-paper-3)}
+.read img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius-sm)}
+.read__txt{display:grid;gap:var(--space-2xs)}
+.read__k{font-size:var(--text-xs);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-hi)}
+.read b{font-family:var(--font-display);font-weight:600;font-size:var(--text-md);letter-spacing:-0.01em;line-height:1.2}
+.read .go{display:inline-flex;align-items:center;gap:var(--space-xs);font-size:var(--text-sm);font-weight:600;color:var(--color-muted);white-space:nowrap}
+.read .go svg{width:16px;height:16px;transition:transform var(--dur-short) var(--ease-out)}
+.read:hover .go svg{transform:translateX(4px)}
+@media (max-width:40rem){ .read{grid-template-columns:minmax(0,5.5rem) minmax(0,1fr);gap:var(--space-md)} .read b{font-size:var(--text-base)} }
+
+/* ── instagram: the real work, one row ── */
+.insta__grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:var(--space-2xl);align-items:center}
+.insta__txt h2{font-size:var(--text-xl)}
+.insta__txt p{margin-top:var(--space-sm);color:var(--color-ink-2)}
+.insta__txt .btn{margin-top:var(--space-lg)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-sm);margin:0;padding:0;list-style:none}
+.tiles a{position:relative;display:block;overflow:hidden;border-radius:var(--radius-sm);aspect-ratio:1/1;background:var(--color-paper-3)}
+.tiles img{width:100%;height:100%;display:block;object-fit:cover;transition:transform 700ms var(--ease-out)}
+.tiles a:hover img{transform:scale(1.06)}
+.tiles a:active img{transform:scale(1.02)}
+.tiles span{position:absolute;left:var(--space-xs);bottom:var(--space-xs);padding:var(--space-2xs) var(--space-xs);border-radius:var(--radius-pill);background:var(--color-scrim-2);font:600 var(--text-xs)/1 var(--font-body);letter-spacing:0.06em;text-transform:uppercase;color:var(--color-ink)}
+.tiles span.is-after{background:var(--color-accent);color:var(--color-accent-ink)}
+@media (max-width:60rem){ .insta__grid{grid-template-columns:minmax(0,1fr);gap:var(--space-xl)} .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
 /* ── C4 sticky bottom bar (phones) ───────────────────────── */
 .dock{display:none}
 @media (max-width:60rem){
@@ -355,7 +418,7 @@ p{margin:0}
 </header>
 <div class="sheet" id="sheet" aria-label="Site menu">
   <ul><li style="--i:0"><a href="#work">The work<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li><li style="--i:1"><a href="#book">Prices<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li><li style="--i:2"><a href="#reviews">Reviews<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li><li style="--i:3"><a href="#areas">Areas<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li><li style="--i:4"><a href="news/index.html">News<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li></ul>
-  <div class="sheet__btns"><a class="btn btn--wa" href="https://wa.me/447544190171" aria-label="Message ADZ Valeting on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.2.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg></a><a class="btn btn--book" href="#book">Book a valet from £70</a></div>
+  <div class="sheet__btns"><a class="btn btn--wa" href="https://wa.me/447544190171" aria-label="Message ADZ Valeting on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.2.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg></a><a class="btn btn--book" href="https://cal.com/adzvaleting-5dbfki">Book a valet</a></div>
 </div>
 
 <main id="top">
@@ -439,27 +502,23 @@ p{margin:0}
       <div class="ask">
         <a class="btn btn--ghost" href="https://wa.me/447544190171"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.3-.6-.4Z"/></svg>Ask first on WhatsApp</a>
       </div>
+      <a class="read" href="news/car-valet-vs-car-detail-whats-the-difference.html">
+        <img src="assets/img/car-valet-vs-car-detail-whats-the-difference-600.webp" alt="" width="600" height="400" loading="lazy" decoding="async">
+        <span class="read__txt"><span class="read__k">Not sure which? · 5 min read</span><b>Car Valet vs. Car Detail: What’s the Difference?</b><span class="go">Read the guide <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+      </a>
     </div>
   </div>
 </section>
 
-<section class="row" id="reviews" aria-labelledby="h-reviews">
-  <div class="wrap split">
-    <div class="split__text" data-in>
-      <h2 id="h-reviews" class="sr">What customers say</h2>
-      <figure class="big-quote" style="--i:0">
-        <blockquote>“Best car detailing service in Bristol area. Young lads putting their hearts to it. Top quality and attention to details.”</blockquote>
-        <figcaption><b>Michal Z.</b>, Google review</figcaption>
-      </figure>
-      <a class="g-link" style="--i:1" href="https://www.google.com/maps/place/ADZ+valeting/@51.4280632,-3.0447449,10z/data=!4m8!3m7!1s0x4b5b11f1e4b88397:0xf3d6929846c60815!8m2!3d51.4280972!4d-2.7151181!9m1!1b1!16s%2Fg%2F11z9p9n_1v">Read every review on Google <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-    </div>
-    <ul class="quotes" data-in>
-      <li style="--i:0"><blockquote>“Absolutely thrilled with the service. They went above and beyond to make my car look brand new. Not only did they tackle all the dog hair, crumbs, and sand, but the finish is sparkling. The attention to detail and the care they put into their work is exceptional.”</blockquote><cite>Jenni B.</cite></li>
-      <li style="--i:2"><blockquote>“They’ve washed and valeted my car twice now and I’ve been very happy with the results both times. The attention to detail is second to none — inside and outside very well-cleaned and polished. Customer service is excellent with communication very good throughout. Highly recommend.”</blockquote><cite>Kate S.</cite></li>
-      <li style="--i:3"><blockquote>“Great service, good communication. I left my car with the boys for a couple of hours and they done a really good job. My car looks so clean now — definitely will be using them regularly. Highly recommend.”</blockquote><cite>Izabela D.</cite></li>
-      <li style="--i:4"><blockquote>“Absolutely fantastic service and results. They do all my cars. Highly recommend.”</blockquote><cite>Tavros A.</cite></li>
-    </ul>
+<section class="row reviews" id="reviews" aria-labelledby="h-reviews">
+  <div class="wrap rv-head" data-in>
+    <h2 id="h-reviews" style="--i:0">Trusted by enthusiasts.</h2>
+    <a class="g-link" style="--i:1" href="https://www.google.com/maps/place/ADZ+valeting/@51.4280632,-3.0447449,10z/data=!4m8!3m7!1s0x4b5b11f1e4b88397:0xf3d6929846c60815!8m2!3d51.4280972!4d-2.7151181!9m1!1b1!16s%2Fg%2F11z9p9n_1v">Read our reviews on Google <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
   </div>
+  <div class="rv-rail" id="rv-rail" tabindex="0" role="region" aria-label="Customer reviews. Moves on its own; hover, touch or focus to pause">
+    <ul class="rv-track"><li class="rv"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“Best car detailing service in Bristol area. Young lads putting their hearts to it. Top quality and attention to details.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">M</span><b>Michal Z.</b><span>Google review</span></figcaption></figure></li><li class="rv"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“Absolutely thrilled with the service. They went above and beyond to make my car look brand new. Not only did they tackle all the dog hair, crumbs, and sand, but the finish is sparkling. The attention to detail and the care they put into their work is exceptional.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">J</span><b>Jenni B.</b><span>Google review</span></figcaption></figure></li><li class="rv"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“They’ve washed and valeted my car twice now and I’ve been very happy with the results both times. The attention to detail is second to none — inside and outside very well-cleaned and polished. Customer service is excellent with communication very good throughout. Highly recommend.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">K</span><b>Kate S.</b><span>Google review</span></figcaption></figure></li><li class="rv"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“Great service, good communication. I left my car with the boys for a couple of hours and they done a really good job. My car looks so clean now — definitely will be using them regularly. Highly recommend.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">I</span><b>Izabela D.</b><span>Google review</span></figcaption></figure></li><li class="rv"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“Absolutely fantastic service and results. They do all my cars. Highly recommend.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">T</span><b>Tavros A.</b><span>Google review</span></figcaption></figure></li><li class="rv" aria-hidden="true"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“Best car detailing service in Bristol area. Young lads putting their hearts to it. Top quality and attention to details.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">M</span><b>Michal Z.</b><span>Google review</span></figcaption></figure></li><li class="rv" aria-hidden="true"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“Absolutely thrilled with the service. They went above and beyond to make my car look brand new. Not only did they tackle all the dog hair, crumbs, and sand, but the finish is sparkling. The attention to detail and the care they put into their work is exceptional.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">J</span><b>Jenni B.</b><span>Google review</span></figcaption></figure></li><li class="rv" aria-hidden="true"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“They’ve washed and valeted my car twice now and I’ve been very happy with the results both times. The attention to detail is second to none — inside and outside very well-cleaned and polished. Customer service is excellent with communication very good throughout. Highly recommend.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">K</span><b>Kate S.</b><span>Google review</span></figcaption></figure></li><li class="rv" aria-hidden="true"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“Great service, good communication. I left my car with the boys for a couple of hours and they done a really good job. My car looks so clean now — definitely will be using them regularly. Highly recommend.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">I</span><b>Izabela D.</b><span>Google review</span></figcaption></figure></li><li class="rv" aria-hidden="true"><figure><span class="stars" role="img" aria-label="5 stars"><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg><svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 1.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.6 7.7l5.8-.8z"/></svg></span><blockquote>“Absolutely fantastic service and results. They do all my cars. Highly recommend.”</blockquote><figcaption><span class="rv__av" aria-hidden="true">T</span><b>Tavros A.</b><span>Google review</span></figcaption></figure></li></ul>
+  </div>
+  <ul class="wrap trust" aria-label="Our promise"><li>100% satisfaction guarantee</li><li>Attention to detail</li><li>Premium products only</li></ul>
 </section>
 
 <section class="row" id="areas" aria-labelledby="h-areas">
@@ -470,15 +529,26 @@ p{margin:0}
         <li>Bristol</li><li>Bath</li><li>Clifton</li><li>Southville</li><li>Bedminster</li><li>Fishponds</li><li>Kingswood</li><li>Keynsham</li><li>Nailsea</li>
       </ul>
     </div>
-    <div data-in>
-      <h3 class="sr">How a booking goes</h3>
-      <ol class="steps" style="--i:0">
-        <li>Enquire &amp; Book</li>
-        <li>Vehicle Inspection</li>
-        <li>Precision Detailing</li>
-        <li>Handover</li>
+    <div class="process">
+      <h3 class="process__h">Our process</h3>
+      <ol class="steps" id="steps">
+        <li><b>Enquire &amp; Book</b><span>Consultation to understand the exact needs of your vehicle.</span></li>
+        <li><b>Vehicle Inspection</b><span>Detailed assessment of paint depth and overall condition.</span></li>
+        <li><b>Precision Detailing</b><span>Meticulous cleaning, decontamination, and correction.</span></li>
+        <li><b>Handover</b><span>Final presentation and aftercare advice.</span></li>
       </ol>
     </div>
+  </div>
+</section>
+
+<section class="row insta" aria-labelledby="h-insta">
+  <div class="wrap insta__grid">
+    <div class="insta__txt" data-in>
+      <h2 id="h-insta" style="--i:0">See our work.</h2>
+      <p style="--i:1">Our latest transformations on Instagram.</p>
+      <a class="btn btn--ghost" style="--i:2" href="https://www.instagram.com/adz.valeting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>Follow @adz.valeting</a>
+    </div>
+    <ul class="tiles" data-in aria-label="BMW M3, before and after, by ADZ Valeting"><li style="--i:0"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-ext-before.webp" alt="BMW M3 exterior, before" width="600" height="600" loading="lazy" decoding="async"><span>Before</span></a></li><li style="--i:1"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-ext-after.webp" alt="BMW M3 exterior, after" width="600" height="600" loading="lazy" decoding="async"><span class="is-after">After</span></a></li><li style="--i:2"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-int-before.webp" alt="BMW M3 interior, before" width="600" height="600" loading="lazy" decoding="async"><span>Before</span></a></li><li style="--i:3"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-int-after.webp" alt="BMW M3 interior, after" width="600" height="600" loading="lazy" decoding="async"><span class="is-after">After</span></a></li></ul>
   </div>
 </section>
 
@@ -501,7 +571,7 @@ p{margin:0}
 
 <nav class="dock" id="dock" aria-label="Quick booking">
   <a class="btn btn--wa" href="https://wa.me/447544190171" aria-label="Message ADZ Valeting on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.3-.6-.4Z"/></svg></a>
-  <a class="btn btn--book" href="#book">Book a valet from £70</a>
+  <a class="btn btn--book" href="https://cal.com/adzvaleting-5dbfki">Book a valet</a>
 </nav>
 
 <script>
@@ -607,6 +677,41 @@ p{margin:0}
     sheet.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
     addEventListener('keydown', e => { if (e.key === 'Escape' && sheet.classList.contains('is-open')) { setOpen(false); mBtn.focus(); } });
     addEventListener('resize', () => { if (innerWidth > 960 && sheet.classList.contains('is-open')) setOpen(false); });
+  }
+
+  /* Reviews rail: drifts on its own, stops the moment a hand or a keyboard is on it */
+  const rail = document.getElementById('rv-rail');
+  if (rail) {
+    let hold = 0, last = 0, pos = 0;
+    const pause = ms => { hold = performance.now() + ms; };
+    ['pointerenter', 'pointerdown', 'touchstart', 'focusin', 'wheel'].forEach(ev => rail.addEventListener(ev, () => pause(ev === 'pointerenter' || ev === 'focusin' ? 1e9 : 3500), { passive: true }));
+    rail.addEventListener('pointerleave', () => pause(600));
+    rail.addEventListener('focusout', () => pause(600));
+    const drift = now => {
+      const dt = last ? Math.min(64, now - last) : 16; last = now;
+      const half = rail.scrollWidth / 2;
+      if (now > hold) {
+        pos = (Math.abs(pos - rail.scrollLeft) > 2 ? rail.scrollLeft : pos) + dt * 0.035;
+        if (pos >= half) pos -= half;
+        rail.scrollLeft = pos;
+      } else { pos = rail.scrollLeft; if (pos >= half) { pos -= half; rail.scrollLeft = pos; } }
+      requestAnimationFrame(drift);
+    };
+    requestAnimationFrame(drift);
+  }
+
+  /* Process: the line fills and each step lights as you pass it */
+  const steps = document.getElementById('steps');
+  if (steps) {
+    const lis = [...steps.children];
+    let st = false;
+    const fill = () => {
+      const r = steps.getBoundingClientRect(), mark = innerHeight * 0.62;
+      steps.style.setProperty('--p', Math.max(0, Math.min(1, (mark - r.top) / r.height)).toFixed(3));
+      lis.forEach(li => li.classList.toggle('is-on', li.getBoundingClientRect().top + 12 < mark));
+    };
+    addEventListener('scroll', () => { if (st) return; st = true; requestAnimationFrame(() => { fill(); st = false; }); }, { passive: true });
+    fill();
   }
 
   /* One staggered entrance per block, as it arrives */
