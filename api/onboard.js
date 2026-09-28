@@ -69,8 +69,8 @@ function localFees(d) {
   const office = parts.includes('office') ? (ads ? TERMS_LOCAL[tier] : (Number(d.retainer) || TERMS_LOCAL[tier])) : 0;
   return { ads, office, total: ads + office };
 }
-/* What counts as an enquiry "from us" is NOT ruled (CRITICAL_FACTS, 2026-09-27). The clause carries
- * this marker until Rahaid rules it, and op=sign refuses a real row whose text still holds it. */
+/* Ruled 2026-09-28 (Rahaid: "Booked job"): the ads guarantee counts booked jobs from our ads or socials.
+ * The marker and the op=sign refusal stay as a guard for any future clause left unruled. */
 const UNRULED = '[PLACEHOLDER, NOT RULED';
 
 /* ── the agreement, rendered from the row (canonical text → SHA-256) ──────── */
@@ -221,9 +221,9 @@ export function agreementTextLocal(d) {
       G.push(`The front office guarantee is measured against the opening hours the Client has given the Agency in writing, which must be the hours the Client is actually open to customers. A change to them counts from the next calendar month. If no opening hours are on record, it cannot be measured and does not apply until they are.`);
       G.push(`The front office guarantee applies from the first full calendar month after the front office goes live.`);
     }
-    G.push(`${office ? 'Ads and socials: in' : 'In'} any calendar month in which the Agency's ads and socials bring the Client no enquiries at all, the Client's next month's ads and socials fee is free.`);
-    G.push(`${UNRULED}: what counts as an enquiry brought by the Agency's ads and socials is still to be decided by the Agency and written here before this Agreement is signed. Until it is, this clause has no agreed definition.]`);
-    G.push(`It is measured by the Agency's monthly report of what the ads and socials brought in, which the Client receives. Test and demonstration messages do not count.`);
+    G.push(`${office ? 'Ads and socials: in' : 'In'} any calendar month in which the Agency's ads and socials bring the Client no booked jobs at all, the Client's next month's ads and socials fee is free.`);
+    G.push(`A booked job means a customer booking for the Client's services that came from the Agency's ads or social posts, as shown in the booking and tracking records the Agency keeps. An enquiry that does not become a booking does not count.`);
+    G.push(`It is measured by the Agency's monthly report of what the ads and socials brought in, which the Client receives. Test and demonstration bookings do not count.`);
     G.push(`The ads and socials guarantee applies only while the Client keeps running the Agreed Ad Budget in clause 1.3. It does not apply to a month in which the Client paused, stopped or reduced the ad spend below the Agreed Ad Budget.`);
     G.push(`The free month is a credit against the next month's ads and socials fee, never a refund, and it has no cash value. A credit not yet used when this Agreement ends lapses.`);
     G.push(`The ads and socials guarantee applies from the first full calendar month after the ads go live.`);

@@ -55,10 +55,10 @@ function adsCommon(t, label) {
   ok(`${label}: the website is free while the agreement runs`, has(t, 'at no charge for as long as this Agreement runs'))
   ok(`${label}: website buy-out £1,200 and £20/mo hosting after`, has(t, 'buy the website for £1,200') && has(t, '£20 per month, hosting only'))
   ok(`${label}: ad spend paid by the client to Meta, separate from the fee`, /paid by the Client directly to Meta/.test(t) && /not part of the Agency's fees/.test(t))
-  ok(`${label}: ads guarantee: zero enquiries → next month's ads + socials fee free`, /no enquiries at all/.test(t) && /next month's ads and socials fee is free/.test(t))
+  ok(`${label}: ads guarantee: zero booked jobs → next month's ads + socials fee free`, /no booked jobs at all/.test(t) && /next month's ads and socials fee is free/.test(t))
   ok(`${label}: ads guarantee is a credit, never a refund`, /credit against the next month's ads and socials fee, never a refund/.test(t))
   ok(`${label}: ads guarantee only while the agreed ad budget keeps running`, /only while the Client keeps running the Agreed Ad Budget/.test(t))
-  ok(`${label}: what counts as an enquiry is a MARKED placeholder, not a decision`, PLACEHOLDER.test(t), (t.match(/3\.\d+ [^\n]*enquir[^\n]*/g) || []).join(' | ').slice(0, 300))
+  ok(`${label}: counts BOOKED JOBS from our ads/socials (Rahaid 2026-09-28), no placeholder left`, !PLACEHOLDER.test(t) && /A booked job means a customer booking/.test(t), (t.match(/3\.\d+ [^\n]*book[^\n]*/g) || []).join(' | ').slice(0, 300))
   ok(`${label}: carries the 2026-09-27 version line`, has(t, 'Version 2026-09-27'))
 }
 const adsF = agreementText(local(['ads'], true)), adsS = agreementText(local(['ads'], false))
@@ -111,7 +111,7 @@ ok('creative → never an ads link', publicView(row('I'.repeat(24), B.rows.brand
   const res = { code: 0, body: null, setHeader() {}, status(c) { this.code = c; return this }, json(b) { this.body = b; return this } }
   const img = 'data:image/png;base64,' + 'A'.repeat(400)
   await mod.default({ method: 'POST', query: { op: 'sign', t: hold.id }, body: { name: 'Dev Patel', image: img, agreed: true }, headers: {}, socket: {} }, res)
-  ok('sign: a real ads row is refused while the enquiry definition is a placeholder', res.code === 409 && !calls.some(u => u.includes('onboard_sign')), res.code + ' ' + JSON.stringify(res.body))
+  ok('sign: a real ads row now reaches the signing call (booked-job definition ruled; the stub cannot record it)', !/not ready to sign/.test(JSON.stringify(res.body)) && calls.some(u => u.includes('onboard_sign')), res.code + ' ' + JSON.stringify(res.body))
   calls.length = 0; hold.data = { ...hold.data, demo: true }
   await mod.default({ method: 'POST', query: { op: 'sign', t: hold.id }, body: { name: 'Dev Patel', image: img, agreed: true }, headers: {}, socket: {} }, res)
   ok('sign: a demo ads row may still be walked through', calls.some(u => u.includes('onboard_sign')), calls.join(' '))
@@ -203,7 +203,7 @@ for (const width of [390, 1440]) {
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/ads-proposal-${width}.png`, fullPage: true })
   await page.click('#s1 .btn-solid'); await page.waitForSelector('#s2.on')
   ok(`${w} ads only: agreement step shows the ads agreement`, /THE GUARANTEE/.test(await page.innerText('#a-text')) && /ads and socials is £750/.test(await page.innerText('#a-text')))
-  ok(`${w} ads only: the page warns the enquiry definition is not settled`, await page.isVisible('#a-unruled'))
+  ok(`${w} ads only: no 'not settled' warning now the definition is ruled`, !(await page.isVisible('#a-unruled')))
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/ads-agreement-${width}.png`, fullPage: false })
   await ctx.close()
 }
