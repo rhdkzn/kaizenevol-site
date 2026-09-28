@@ -17,7 +17,7 @@
  * colour provenance: NOT invented. Accent = the client's live button fill rgb(36,115,219) = #2473DB, converted to OKLCH (56.6% 0.176 257.2).
  *   Fill lightness nudged 56.6% → 55% so white button text clears WCAG 4.5:1 (4.43 → 4.74); hue + chroma untouched.
  *   Neutrals tinted toward the same 257° hue. WhatsApp green is the second hue and appears ONLY on WhatsApp controls.
- * site: this is the home of a multi-page rebuild (demos/adz/): news/index.html + 9 articles in news/, 404.html; shared CSS for those in assets/adz.css
+ * site: this is the home of a multi-page rebuild (demos/adz/): news/index.html + 9 articles in news/, 404.html; each page carries its own inline CSS; shared fonts/images in assets/
  * nav: N10 floating-on-scroll morph (off the atmospheric table on purpose — N5 and N9 are already used by sibling demos)
  * footer: Ft6 letter close (off the atmospheric table on purpose — Ft1/Ft2/Ft5 all used by sibling demos); signed with the client's own values line
  * CTA: C4 sticky bottom bar below 60rem only (one-thumb booking on a phone)
@@ -139,6 +139,40 @@ p{margin:0}
   .nav__m a{display:inline-flex;align-items:center;min-height:44px;font-size:var(--text-sm);font-weight:500;line-height:1;color:var(--color-ink-2);text-decoration:none;white-space:nowrap}
   .nav__m a:active{color:var(--color-accent-hi)}
   .nav.is-floating .nav__inner{padding-right:var(--space-lg)}
+}
+
+/* ── phone menu: one button, a sheet with every route ────── */
+.nav__menu{display:none}
+.sheet{display:none}
+@media (max-width:60rem){
+  .nav__m{display:none}
+  .nav__menu{display:inline-flex;align-items:center;gap:var(--space-xs);min-height:44px;margin-left:auto;padding:0 var(--space-md);border:1px solid var(--color-rule);border-radius:var(--radius-pill);background:var(--color-paper-2);color:var(--color-ink);font:600 var(--text-sm)/1 var(--font-body);white-space:nowrap;cursor:pointer;
+    transition:background-color var(--dur-short) var(--ease-out),border-color var(--dur-short) var(--ease-out),transform var(--dur-micro) var(--ease-out)}
+  .nav__menu:hover{border-color:var(--color-ink-2)}
+  .nav__menu:active{transform:translateY(1px) scale(0.985)}
+  .nav__menu:disabled{opacity:0.55;cursor:not-allowed}
+  .nav__menu svg{width:18px;height:18px}
+  .nav__menu .x{display:none}
+  .nav__menu[aria-expanded="true"]{background:var(--color-ink);border-color:var(--color-ink);color:var(--color-paper)}
+  .nav__menu[aria-expanded="true"] .x{display:block}
+  .nav__menu[aria-expanded="true"] .b{display:none}
+  .nav.is-floating .nav__inner{padding-right:var(--space-xs)}
+  .sheet{display:block;position:fixed;left:0;right:0;top:0;z-index:calc(var(--z-nav) - 1);padding:calc(var(--nav-h) + var(--space-lg)) var(--page-gutter) var(--space-xl);background:var(--color-scrim-2);border-bottom:1px solid var(--color-rule);box-shadow:0 24px 48px -24px var(--color-shadow);
+    transform:translateY(-100%);visibility:hidden;transition:transform var(--dur-long) var(--ease-out),visibility 0s linear var(--dur-long)}
+  .sheet.is-open{transform:none;visibility:visible;transition:transform var(--dur-long) var(--ease-out),visibility 0s}
+  .sheet ul{list-style:none;margin:0;padding:0}
+  .sheet li{border-top:1px solid var(--color-rule-2);opacity:0;transform:translateY(-8px);transition:opacity var(--dur-short) var(--ease-out),transform var(--dur-short) var(--ease-out)}
+  .sheet.is-open li{opacity:1;transform:none;transition:opacity var(--dur-long) var(--ease-out),transform var(--dur-long) var(--ease-out);transition-delay:calc(80ms + var(--i,0) * 45ms)}
+  .sheet li a{display:flex;align-items:center;justify-content:space-between;min-height:56px;font-family:var(--font-display);font-weight:600;font-size:var(--text-lg);letter-spacing:-0.01em;color:var(--color-ink);text-decoration:none;white-space:nowrap}
+  .sheet li a:active{color:var(--color-accent-hi)}
+  .sheet li a[aria-current="page"]{color:var(--color-accent-hi)}
+  .sheet li a svg{width:20px;height:20px;color:var(--color-muted)}
+  .sheet__btns{display:flex;gap:var(--space-xs);margin-top:var(--space-lg)}
+  .sheet__btns .btn{min-height:52px}
+  .sheet__btns .btn--book{flex:1}
+  .sheet__btns .btn--wa{width:52px;padding:0}
+  body.menu-open{overflow:hidden}
+  body.menu-open .dock{transform:translateY(110%)}
 }
 
 /* ── the compare instrument (before | after) ─────────────── */
@@ -316,9 +350,13 @@ p{margin:0}
       <li><a href="news/index.html">News</a></li>
     </ul>
     <a class="btn btn--book" href="#book">Book</a>
-    <p class="nav__m"><a href="#book">Prices</a><a href="news/index.html">News</a></p>
+    <button class="nav__menu" id="menu-btn" type="button" aria-expanded="false" aria-controls="sheet"><span class="t">Menu</span><svg class="b" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   </div>
 </header>
+<div class="sheet" id="sheet" aria-label="Site menu">
+  <ul><li style="--i:0"><a href="#work">The work<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li><li style="--i:1"><a href="#book">Prices<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li><li style="--i:2"><a href="#reviews">Reviews<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li><li style="--i:3"><a href="#areas">Areas<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li><li style="--i:4"><a href="news/index.html">News<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li></ul>
+  <div class="sheet__btns"><a class="btn btn--wa" href="https://wa.me/447544190171" aria-label="Message ADZ Valeting on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.2.7 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg></a><a class="btn btn--book" href="#book">Book a valet from £70</a></div>
+</div>
 
 <main id="top">
 
@@ -555,6 +593,20 @@ p{margin:0}
     };
     addEventListener('scroll', () => { if (t2) return; t2 = true; requestAnimationFrame(() => { scrub(); t2 = false; }); }, { passive: true });
     scrub();
+  }
+
+  /* Phone menu: the bar keeps the logo, the sheet holds every route */
+  const mBtn = document.getElementById('menu-btn'), sheet = document.getElementById('sheet');
+  if (mBtn && sheet) {
+    const setOpen = v => {
+      mBtn.setAttribute('aria-expanded', String(v)); mBtn.querySelector('.t').textContent = v ? 'Close' : 'Menu';
+      sheet.classList.toggle('is-open', v); document.body.classList.toggle('menu-open', v);
+      if (v) nav.classList.remove('is-floating'); else { floating = false; onScroll(); }
+    };
+    mBtn.addEventListener('click', () => setOpen(mBtn.getAttribute('aria-expanded') !== 'true'));
+    sheet.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && sheet.classList.contains('is-open')) { setOpen(false); mBtn.focus(); } });
+    addEventListener('resize', () => { if (innerWidth > 960 && sheet.classList.contains('is-open')) setOpen(false); });
   }
 
   /* One staggered entrance per block, as it arrives */
