@@ -368,8 +368,9 @@ p{margin:0}
 .insta__grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:var(--space-2xl);align-items:center}
 .insta__txt h2{font-size:var(--text-xl)}
 .insta__txt p{margin-top:var(--space-sm);color:var(--color-ink-2)}
-.insta__txt .btn{margin-top:var(--space-lg)}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-sm);margin:0;padding:0;list-style:none}
+.btn--icon{width:48px;padding:0}
+.insta__btns{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-xs);margin-top:var(--space-lg)}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-sm);margin:0;padding:0;list-style:none}
 .tiles a{position:relative;display:block;overflow:hidden;border-radius:var(--radius-sm);aspect-ratio:1/1;background:var(--color-paper-3)}
 .tiles img{width:100%;height:100%;display:block;object-fit:cover;transition:transform 700ms var(--ease-out)}
 .tiles a:hover img{transform:scale(1.06)}
@@ -545,10 +546,10 @@ p{margin:0}
   <div class="wrap insta__grid">
     <div class="insta__txt" data-in>
       <h2 id="h-insta" style="--i:0">See our work.</h2>
-      <p style="--i:1">Our latest transformations on Instagram.</p>
-      <a class="btn btn--ghost" style="--i:2" href="https://www.instagram.com/adz.valeting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>Follow @adz.valeting</a>
+      <p style="--i:1">Recent jobs, straight from our Instagram and Facebook.</p>
+      <div class="insta__btns" style="--i:2"><a class="btn btn--ghost" href="https://www.instagram.com/adz.valeting"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>Follow @adz.valeting</a><a class="btn btn--ghost btn--icon" href="https://www.facebook.com/adzvaleting/" aria-label="ADZ Valeting on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.5 1.6-1.5h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.5V14h2.7v8z"/></svg></a></div>
     </div>
-    <ul class="tiles" data-in aria-label="BMW M3, before and after, by ADZ Valeting"><li style="--i:0"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-ext-before.webp" alt="BMW M3 exterior, before" width="600" height="600" loading="lazy" decoding="async"><span>Before</span></a></li><li style="--i:1"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-ext-after.webp" alt="BMW M3 exterior, after" width="600" height="600" loading="lazy" decoding="async"><span class="is-after">After</span></a></li><li style="--i:2"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-int-before.webp" alt="BMW M3 interior, before" width="600" height="600" loading="lazy" decoding="async"><span>Before</span></a></li><li style="--i:3"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-int-after.webp" alt="BMW M3 interior, after" width="600" height="600" loading="lazy" decoding="async"><span class="is-after">After</span></a></li></ul>
+    <ul class="tiles" data-in aria-label="Recent work by ADZ Valeting"><li style="--i:0"><a href="https://www.facebook.com/adzvaleting/"><img src="assets/img/fb-abarth-front.webp" alt="Blue Abarth 595 after a detail" width="414" height="414" loading="lazy" decoding="async"></a></li><li style="--i:1"><a href="https://www.facebook.com/adzvaleting/"><img src="assets/img/fb-interior-red.webp" alt="Car interior after a valet" width="600" height="600" loading="lazy" decoding="async"></a></li><li style="--i:2"><a href="https://www.instagram.com/adz.valeting"><img src="assets/img/bmw-ext-after.webp" alt="BMW M3 exterior after a detail" width="600" height="600" loading="lazy" decoding="async"></a></li><li style="--i:3"><a href="https://www.facebook.com/adzvaleting/"><img src="assets/img/fb-leather-seats.webp" alt="Tan leather seats after cleaning" width="414" height="414" loading="lazy" decoding="async"></a></li><li style="--i:4"><a href="https://www.facebook.com/adzvaleting/"><img src="assets/img/fb-corsa.webp" alt="Black Vauxhall Corsa after a valet" width="414" height="414" loading="lazy" decoding="async"></a></li><li style="--i:5"><a href="https://www.facebook.com/adzvaleting/"><img src="assets/img/fb-abarth-rear.webp" alt="Blue Abarth 595, rear three-quarter" width="414" height="414" loading="lazy" decoding="async"></a></li></ul>
   </div>
 </section>
 
