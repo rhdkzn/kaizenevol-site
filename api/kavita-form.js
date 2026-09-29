@@ -163,14 +163,13 @@ export default async function handler(req, res) {
           to: [replyTo],
           reply_to: TO,
           subject: isWaiver ? 'Your Reformer Pilates waiver — copy for your records' : 'We got your message — Reformer Pilates',
-          text: [
-            isWaiver ? 'Thanks for signing. Here is a copy of the form you submitted, for your records.'
-                     : 'Thanks for getting in touch. Here is a copy of your message; we will reply soon.',
-            '',
-            ...lines,
-            '',
-            'Questions? Just reply to this email.',
-          ].join('\n'),
+          /* The enquiry copy does NOT echo what was typed: free text sent to any
+             address from our domain is exactly what a spammer wants. The waiver
+             copy has to carry the answers, because a record is its whole point. */
+          text: (isWaiver
+            ? ['Thanks for signing. Here is a copy of the form you submitted, for your records.', '', ...lines, '']
+            : ['Thanks for getting in touch. We have your message and will reply soon.', '']
+          ).concat('Questions? Just reply to this email.').join('\n'),
         }),
       });
       if (!c.ok) console.error('kavita-form: customer copy refused', c.status, await c.text().catch(() => ''));
