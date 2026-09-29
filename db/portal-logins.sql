@@ -13,16 +13,14 @@
 --   * Staff read it one login at a time through portal_login_reveal(), which checks is_staff(),
 --     the same check behind every staff_all policy (db/portal.sql). The CRM signs in as one
 --     shared account (CRM_EMAIL in crm.html), which is the one row in ke_staff.
---   * Once we are logged in, staff delete it (portal_login_delete). Anything left after 14 days
---     is deleted by portal_login_purge(). Reveal also refuses anything older than 14 days, so
---     the limit holds even before the scheduled purge runs.
+--   * KEPT, not expired (Rahaid, 2026-09-29: "We don't want to lose these passwords... securely
+--     secure them"). The first version deleted each login after 14 days; that is removed
+--     (migration portal_logins_keep drops portal_login_purge). A login lives until the client
+--     replaces it or staff delete it with portal_login_delete, which is for offboarding.
 --
 -- The login-type app ids are duplicated in portal.html (LOGIN_APPS) and crm.html
 -- (PL_APPS). If you add one, add it in all three places: portal_login_set refuses any other id.
 --
--- pg_cron: available on the project but NOT enabled as of 2026-09-29. The schedule at the
--- bottom only runs if it is. Enable it first (Dashboard, Integrations, Cron), then re-run
--- that block. Until then, the 14-day limit is enforced by reveal and by every save.
 
 CREATE TABLE IF NOT EXISTS public.ke_portal_logins (
   client_id  text NOT NULL,
@@ -48,25 +46,6 @@ CREATE POLICY client_read_self ON public.ke_portal_logins FOR SELECT TO authenti
 REVOKE ALL ON public.ke_portal_logins FROM public, anon, authenticated;
 GRANT SELECT (client_id, app, saved_at) ON public.ke_portal_logins TO authenticated;
 
--- Deletes every login saved more than 14 days ago, secret first. Not callable from the pages.
-CREATE OR REPLACE FUNCTION public.portal_login_purge()
- RETURNS integer
- LANGUAGE plpgsql
- SECURITY DEFINER
- SET search_path TO 'public'
-AS $function$
-declare
-  n integer;
-begin
-  delete from vault.secrets s using public.ke_portal_logins l
-   where s.id = l.secret_id and l.saved_at < now() - interval '14 days';
-  delete from public.ke_portal_logins where saved_at < now() - interval '14 days';
-  get diagnostics n = row_count;
-  return n;
-end $function$;
-
-REVOKE ALL ON FUNCTION public.portal_login_purge() FROM public, anon, authenticated;
-
 -- The signed-in client saves (or replaces) the login for one app.
 CREATE OR REPLACE FUNCTION public.portal_login_set(p_app text, p_user text, p_pass text)
  RETURNS jsonb
@@ -87,8 +66,6 @@ begin
   end if;
   if p_user is null or length(btrim(p_user)) = 0 or length(p_user) > 200 then raise exception 'Add your username or email.'; end if;
   if p_pass is null or length(p_pass) = 0 or length(p_pass) > 200 then raise exception 'Add your password.'; end if;
-
-  perform public.portal_login_purge();
 
   -- Replace, never stack: the old secret goes before the new one is made.
   select secret_id into old from public.ke_portal_logins where client_id = cid and app = p_app for update;
@@ -129,9 +106,8 @@ declare
   sec text;
 begin
   if not public.is_staff() then raise exception 'Staff only.'; end if;
-  perform public.portal_login_purge();
   select * into l from public.ke_portal_logins where client_id = p_client_id and app = p_app;
-  if not found or l.saved_at < now() - interval '14 days' then raise exception 'No saved login for that app.'; end if;
+  if not found then raise exception 'No saved login for that app.'; end if;
   select decrypted_secret into sec from vault.decrypted_secrets where id = l.secret_id;
   if sec is null then raise exception 'No saved login for that app.'; end if;
   return sec::jsonb || jsonb_build_object('saved_at', l.saved_at);
@@ -160,12 +136,6 @@ end $function$;
 REVOKE ALL ON FUNCTION public.portal_login_delete(text, text) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.portal_login_delete(text, text) TO authenticated;
 
--- Hourly purge, only if pg_cron is enabled (it was not on 2026-09-29; see the header).
-DO $cron$
-begin
-  if exists (select 1 from pg_extension where extname = 'pg_cron') then
-    perform cron.schedule('portal-login-purge', '17 * * * *', 'select public.portal_login_purge()');
-  else
-    raise notice 'pg_cron is not enabled: the hourly purge is not scheduled. Reveal and save still enforce 14 days.';
-  end if;
-end $cron$;
+
+-- The 14-day purge from the first version is gone: logins are kept until replaced or deleted.
+DROP FUNCTION IF EXISTS public.portal_login_purge();

@@ -547,7 +547,7 @@
   function loginBlock(id){
     if (LOGIN_APPS.indexOf(id) < 0) return '';
     var saved = logins[id];
-    var tip = '<div class="note">Keep two-step verification on. When we log in you get a code from us by text, or on a 30-second FaceTime. Only we can read this, and we delete it once we are in, or after 14 days. Rather do it all on FaceTime? Message us.</div>';
+    var tip = '<div class="note">Keep two-step verification on. When we log in you get a code from us by text, or on a 30-second FaceTime. Only we can read it. We keep it locked away so we never have to ask you twice, and delete it if we stop working together. Rather do it all on FaceTime? Message us.</div>';
     if (saved && !loginOpen[id]) return '<div class="login-wrap"><div class="saved-line">Saved ' + esc(dstr(saved)) + '. <button type="button" class="btn-link" data-login-replace="'+id+'">Replace</button></div>' + tip + '</div>';
     return '<div class="login-wrap"><form class="login" data-app="'+id+'" autocomplete="off">'
       + '<div class="fld"><label for="lu-'+id+'">Username or email</label><input type="text" name="user" id="lu-'+id+'" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" /></div>'
