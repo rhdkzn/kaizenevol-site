@@ -1489,6 +1489,15 @@ function bdDelCard(){const d=bdBoards(),b=bdCurrent(d);if(!b||!_bdCard)return;if
 let _ptUsers={},_ptItems={},_ptFiles={};
 async function ptLoad(){try{const u=await _sb.from('ke_portal_users').select('email,client_id,client_name,invited_at,last_seen');_ptUsers={};(u.data||[]).forEach(r=>{_ptUsers[r.client_id]=r;});const i=await _sb.from('ke_portal_items').select('id,client_id,kind,title,body,on_date,url,author,created_at,read_by_staff,amount,status').order('created_at',{ascending:false}).limit(500);_ptItems={};(i.data||[]).forEach(r=>{(_ptItems[r.client_id]=_ptItems[r.client_id]||[]).push(r);});}catch(e){console.warn('portal:',e);}
   try{const root=await _sb.storage.from('portal').list('',{limit:200});_ptFiles={};for(const d of (root.data||[])){if(d.id)continue;const cid=d.name;const a=await _sb.storage.from('portal').list(cid,{limit:200});const b=await _sb.storage.from('portal').list(cid+'/from-client',{limit:200});_ptFiles[cid]=[...(a.data||[]).filter(f=>f.id).map(f=>({name:f.name,path:cid+'/'+f.name,size:(f.metadata||{}).size,created_at:f.created_at,mine:true})),...(b.data||[]).filter(f=>f.id).map(f=>({name:f.name.replace(/^[a-z0-9]+-/,''),path:cid+'/from-client/'+f.name,size:(f.metadata||{}).size,created_at:f.created_at,mine:false}))].sort((x,y)=>String(y.created_at).localeCompare(String(x.created_at)));}}catch(e){console.warn('portal files:',e);}}
+/* Access, app by app (2026-09-29, Diego: "how do we see what they put down"). The client marks each app
+   done or not relevant in the portal (portal_access_set, db/portal-access.sql); this reads the same
+   data.clientAccess[<id>]. App list mirrors that function: client.accessApps, else the segment default. */
+const ACCESS_NAMES={instagram:'Instagram',youtube:'YouTube',spotify:'Spotify',apple:'Apple Music',soundcloud:'SoundCloud',distributor:'Distributor',drive:'Drive',tiktok:'TikTok',x:'X',meta:'Meta',shopify:'Shopify',klaviyo:'Klaviyo'};
+function accessLine(c){
+  let apps=Array.isArray(c.accessApps)&&c.accessApps.length?c.accessApps.filter(a=>ACCESS_NAMES[a]):(c.segment==='Artist'?['instagram','youtube','spotify','apple','drive','tiktok','x']:['meta','shopify','klaviyo','drive','tiktok']);
+  const acc=((load().clientAccess)||{})[c.id]||{};const done=apps.filter(a=>acc[a]).length;
+  return '<div style="margin-top:6px"><span class="cf-l" style="margin:0 6px 0 0">Access '+done+'/'+apps.length+'</span>'+apps.map(a=>{const st=acc[a]&&acc[a].state;const on=st==='done';return '<span class="pt-badge'+(on?' on':'')+'" style="margin:2px 4px 2px 0;display:inline-block;white-space:nowrap">'+esc(ACCESS_NAMES[a])+' · '+(on?'done':st==='na'?'not relevant':'not yet')+'</span>';}).join('')+'</div>';
+}
 function portalBlock(c){
   const u=_ptUsers[c.id];const items=_ptItems[c.id]||[];const msgs=items.filter(x=>x.kind==='message'&&x.author==='client');const unread=msgs.filter(x=>!x.read_by_staff).length;
   const events=items.filter(x=>x.kind==='event').sort((a,b)=>String(a.on_date).localeCompare(String(b.on_date)));
@@ -1497,6 +1506,7 @@ function portalBlock(c){
     +(u?'<span class="pt-badge on">invited · '+esc(u.email)+(u.last_seen?' · seen '+esc(String(u.last_seen).slice(0,10)):' · not yet signed in')+'</span>':'<span class="pt-badge">not invited</span>')
     +(unread?'<span class="pt-badge" style="color:var(--amber);border-color:rgba(251,191,36,.5)">'+unread+' new message'+(unread>1?'s':'')+'</span>':'')
     +'<button class="ob-btn" style="margin-left:auto" onclick="ptInvite(\''+c.id+'\')">'+(u?'Re-send invite':'Invite to portal')+'</button></div>'
+    +accessLine(c)
     +'<div class="pt-row"><input type="date" class="pt-inp" id="ptd_'+c.id+'" style="flex:0 0 150px" /><input type="text" class="pt-inp" id="ptt_'+c.id+'" placeholder="'+(isLocalClient(c)?'Date title, e.g. Website goes live':'Drop / date title, e.g. October capsule — pre-order opens')+'" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'event\')">+ Date</button></div>'
     +'<div class="pt-row"><input type="text" class="pt-inp" id="ptu_'+c.id+'" placeholder="Update for the client — weekly numbers, a note, a link" /><input type="url" class="pt-inp" id="ptl_'+c.id+'" placeholder="Link (optional)" style="flex:0 0 220px" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'update\')">+ Update</button></div>'
     +'<div class="pt-row"><input type="file" class="pt-inp" id="ptf_'+c.id+'" multiple style="padding:5px 10px" /><button class="ob-btn" onclick="ptUpload(\''+c.id+'\')">Upload for client</button></div>'
