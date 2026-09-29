@@ -35,5 +35,17 @@ ok('artist card: Instagram done', /Instagram · done/.test(got.a))
 ok('artist card: Apple Music not relevant', /Apple Music · not relevant/.test(got.a))
 ok('artist card: YouTube not yet', /YouTube · not yet/.test(got.a))
 ok('custom list: uses the client own apps, drops unknown ids', /Access 1\/2/i.test(got.f) && /SoundCloud · not yet/.test(got.f) && !/bogus|YouTube/i.test(got.f), got.f.slice(0, 400))
+/* Diego, 2026-09-29: "I can't open them, clicking them does nothing" — the pipeline cards at the top of
+   the Clients tab. Tapping one must bring that client's full card into view. */
+const tap = await page.evaluate(async () => {
+  document.getElementById('app').style.display = 'block'; document.getElementById('gate').style.display = 'none'; showView('clients')
+  renderClientPipeline(load()); renderClients(load()); window.scrollTo(0, 0)
+  const pc = [...document.querySelectorAll('#pipelineTrack .pipe-client')].find(e => e.textContent.includes('Custom Artist'))
+  if (!pc) return { err: 'no pipeline card' }
+  pc.click(); await new Promise(r => setTimeout(r, 1200))
+  const card = document.getElementById('card_c_f'); if (!card) return { err: 'no card id' }
+  const r = card.getBoundingClientRect(); return { top: r.top, h: innerHeight, rh: r.height, scrolled: scrollY, app: getComputedStyle(document.getElementById('app')).display }
+})
+ok('tapping a pipeline card scrolls to that client card', !tap.err && tap.scrolled > 0 && tap.top >= 0 && tap.top < tap.h, JSON.stringify(tap))
 await browser.close()
 console.log(`\n${passes} passed, ${fails} failed`); process.exit(fails ? 1 : 0)
