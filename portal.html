@@ -335,6 +335,8 @@
      portal_form_submit() in db/portal-setup.sql, never into the CRM blob, because they
      hold personal data. [key, question, hint, long?] */
   function isArtist(){ return ((me && me.client) || {}).segment === 'Artist'; }
+  /* An artist has a release, a brand a drop (2026-09-29). Same helper as crm.html dropWord(). */
+  function dropWord(){ var a = isArtist() && !isLocal(); return { word: a ? 'release' : 'drop', Word: a ? 'Release' : 'Drop', swap: function(s){ return a ? String(s).replace(/\bdrop\b/g, 'release').replace(/\bDrop\b/g, 'Release') : s; } }; }
   var SETUP_QS = [
     ['You', [
       ['legal_name','Your full legal name','For the paperwork only. It never goes on a post.'],
@@ -619,7 +621,7 @@
     renderAgreement();
     renderSetup();
     renderAccess();
-    $('p-events-h').textContent = isArtist() ? 'Release calendar' : 'Drop calendar';
+    $('p-events-h').textContent = dropWord().Word + ' calendar';
     $('p-numbers-h').textContent = 'The numbers';
     $('p-numbers').style.display = ''; $('p-numbers').classList.remove('fl'); $('p-needs-wrap').style.display = 'none';
     var c = me.client||{}, s = me.settings||{}, g = growth(c, me.snapshots||[], s);
@@ -649,7 +651,7 @@
     var bds = me.boards||[];
     $('p-boards').innerHTML = bds.map(function(b){ var cols = (b.columns||[]); return '<h2>'+esc(b.name)+'</h2><div class="grid">'+cols.map(function(c){ var ks = (b.cards||[]).filter(function(k){ return k.col===c.id; }); return '<div class="cell"><div class="k">'+esc(c.name)+' · '+ks.length+'</div>'+(ks.length?ks.map(function(k){ return '<div class="s" style="margin-top:6px"><b style="color:var(--ink)">'+esc(k.title)+'</b>'+(k.due?' · '+esc(dstr(k.due)):'')+'</div>'; }).join(''):'<div class="s" style="margin-top:6px">—</div>')+'</div>'; }).join('')+'</div>'; }).join('');
     var t = me.tasks||{};
-    var TL = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist.map(function(x){ return [x.id, x.text]; }) : isLocal() ? LOCAL_TASKS : TASKS;
+    var TL = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist.map(function(x){ return [x.id, x.text]; }) : isLocal() ? LOCAL_TASKS : TASKS.map(function(x){ return [x[0], dropWord().swap(x[1])]; });
     $('p-tasks').innerHTML = TL.map(function(x){ var on = !!t[x[0]]; return '<li'+(on?' class="done"':'')+'><span class="box'+(on?' on':'')+'"></span><span class="t">'+x[1]+'</span></li>'; }).join('');
     var ups = items.filter(function(i){ return i.kind==='update' || i.kind==='file'; });
     $('p-updates').innerHTML = ups.length ? ups.map(function(u){ return '<div class="bubble"><div class="d">'+esc(dstr(u.created_at))+'</div>'+(u.title?'<b>'+esc(u.title)+'</b><br>':'')+esc(u.body||'')+(u.url?' <a href="'+esc(u.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>'; }).join('') : '<div class="empty">Nothing yet. Weekly numbers and notes from us land here.</div>';
