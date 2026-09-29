@@ -1432,8 +1432,8 @@ function stLabel(s){return{active:'✓ Active',inactive:'○ Inactive'}[s]||s;}
 /* One client's full card: fields, go-live date, portal block. Unchanged markup, now shown inside the open row. */
 function clientCardHTML(c,data){const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" id="card_${esc(c.id)}" style="margin-bottom:14px;scroll-margin-top:120px"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div>${isLocalClient(c)?`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Monthly</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Desk</div><div class="cf-v">${c.deskTenant?'Connected · '+esc(c.deskTenant):'Not connected'} <button class="comm-status cs-pending" onclick="deskConnect('${c.id}')">${c.deskTenant?'change':'connect'}</button>`:`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired`}</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}
 /* ── CLIENTS, compact (2026-09-29) ──
-   One row per client: name, stage, next action on one line, and badges for checklist, access and
-   unread portal messages. The open client (one at a time) is kept in localStorage so the re-render
+   One row per client: name, stage, next action on one line, and badges for checklist, access,
+   unread portal messages and any growth-step bonus due (so it shows without opening the client). The open client (one at a time) is kept in localStorage so the re-render
    on every realtime save does not collapse it. */
 const CL_OPEN_KEY='crm_open_client';
 let _clQuery='',_clStatus='all';
@@ -1450,11 +1450,11 @@ function toggleClient(id){
 function clientRowHTML(c,data,open){
   const s=getClientStage(c);const active=c.status!=='inactive';
   const next=active?clientNextAction(c).text:'Inactive. Set it back to Active on the card to pick it up again.';
-  const acc=accessCount(c);const unread=ptUnread(c);const p=checklistProgress(c,data);
+  const acc=accessCount(c);const unread=ptUnread(c);const p=checklistProgress(c,data);const bonus=active&&!isLocalClient(c)?growthState(c,data).bonusDue:0;
   return`<div class="clr-item${open?' open':''}"><button type="button" class="clr" data-id="${esc(c.id)}" aria-expanded="${open}" onclick="toggleClient('${esc(c.id)}')">`
     +`<span class="clr-top"><span class="clr-name">${esc(c.name)}</span><span class="pipe-stage-label psl-${s.key}">${s.label}</span><span class="clr-chev" aria-hidden="true">›</span></span>`
     +`<span class="clr-next">${esc(next)}</span>`
-    +`<span class="clr-badges">${active?`<span class="pt-badge clr-chk">${p.done}/${p.total} tasks</span>`:''}<span class="pt-badge${acc.total&&acc.done===acc.total?' on':''}">Access ${acc.done}/${acc.total}</span>${unread?`<span class="pt-badge unread">${unread} new</span>`:''}</span>`
+    +`<span class="clr-badges">${active?`<span class="pt-badge clr-chk">${p.done}/${p.total} tasks</span>`:''}<span class="pt-badge${acc.total&&acc.done===acc.total?' on':''}">Access ${acc.done}/${acc.total}</span>${unread?`<span class="pt-badge unread">${unread} new</span>`:''}${bonus?`<span class="pt-badge unread">£${bonus.toLocaleString('en-GB')} bonus due</span>`:''}</span>`
     +`</button>${open?`<div class="clr-body">${active?'<div class="pipeline-track" id="pipelineTrack"></div><div class="checklist-clients" id="checklistContainer"></div>':''}${clientCardHTML(c,data)}${active&&!isLocalClient(c)?'<div id="growthContainer"></div>':''}</div>`:''}</div>`;
 }
 function renderClients(data){
