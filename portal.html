@@ -110,6 +110,13 @@
     .acc .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .btn-line{display:inline-flex;align-items:center;gap:8px;background:none;color:var(--ink);border:1px solid var(--hairline);border-radius:999px;padding:11px 18px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none}
     .acc details.is-done summary .n{color:var(--muted)}
+    .login-wrap{margin-top:14px;padding:14px 16px;border:1px solid var(--hairline);background:#fff}
+    .login-wrap .fld:first-child{margin-top:0}
+    .login-wrap input[type=password]{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--hairline);padding:10px 2px;width:100%;border-radius:0}
+    .login-wrap input[type=password]:focus{outline:none;border-bottom-color:var(--ink)}
+    .login-wrap .note{margin-top:12px}
+    .saved-line{font-size:15px}
+    .btn-link{font:inherit;font-weight:600;background:none;border:0;padding:6px 2px;min-height:32px;cursor:pointer;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
     .qs fieldset{border:0;border-top:1px solid var(--hairline);margin:18px 0 0;padding:14px 0 0}
     .qs legend{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);padding:0}
     .qs .fld{margin-top:14px}
@@ -282,9 +289,9 @@
      portal_access_set() in db/portal-access.sql, which refuses any id it does not know. */
   var PID = '25727662930249979', E1 = 'diego@kaizenevol.com', E2 = 'law@kaizenevol.com';
   function C(t){ return '<code>'+t+'</code>'; }
-  var TIKTOK = { id:'tiktok', name:'TikTok', why:'We post and read your stats. TikTok has no team invite, so this one is a login we do with you on FaceTime.', url:'', link:'',
-    steps:['Before the call, turn on two-step verification: '+C('Profile → ☰ → Settings and privacy → Security')+'','Set a fresh password you do not use anywhere else.','On a quick FaceTime, tell us the password and we log in on our agency phone.','Read us the code TikTok sends to your phone.','We stay logged in on that one phone only. If we ever stop working together, change your password and we are out.'],
-    level:'Posting and analytics, on one agency phone', note:'Mark this done after the FaceTime.' };
+  var TIKTOK = { id:'tiktok', name:'TikTok', why:'We post and read your stats. TikTok has no team invite, so this one needs your login.', url:'', link:'',
+    steps:['Turn on two-step verification: '+C('Profile → ☰ → Settings and privacy → Security')+'','Set a fresh password you do not use anywhere else.','Put your username or email and the password in the box below.','When we log in, TikTok sends you a code. We text you for it, or ask on a 30-second FaceTime.','We stay logged in on one agency phone only. If we ever stop working together, change your password and we are out.'],
+    level:'Posting and analytics, on one agency phone', note:'Mark this done once you have saved your login.' };
   var DRIVE = function(what){ return { id:'drive', name:'Google Drive', why:'One folder for everything we make posts from.', url:'', link:'',
     steps:['Open the Drive folder we have shared with you. It is named after you.','Drop in '+what+'.','Anything private stays private in that folder.'],
     level:'You upload, we organise', note:'' }; };
@@ -305,7 +312,7 @@
       DRIVE('your cover art, press photos, any old shoots and your upcoming release dates. Add unreleased audio only if you are happy for us to hear it'),
       TIKTOK,
       { id:'x', name:'X', why:'A new account for the thoughts, lyric lines and studio updates that pop into your head. A 30-day test.', url:'', link:'', na:true,
-        steps:['We set up the account with you on the same FaceTime, using your name and branding.','We log in on our agency phone the same way as TikTok, so we can read the stats.','You post 3–5 times a week, whenever something comes to you.','After 30 days we look at the numbers together and decide whether to keep it.'],
+        steps:['We set up the account with you on a FaceTime, using your name and branding.','Once it is set up, put the username and password in the box below, so we can read the stats on our agency phone.','You post 3–5 times a week, whenever something comes to you.','After 30 days we look at the numbers together and decide whether to keep it.'],
         level:'You post · we watch and report', note:'' }
     ],
     Brand: [
@@ -509,14 +516,14 @@
   }
   $('p-setup-toggle').addEventListener('click', function(){ setupOpen = !setupOpen; if (!setupOpen) $('p-setup').dataset.built = ''; renderSetup(); });
 
-  /* SoundCloud and the distributor have no team invite, so they are FaceTime logins like TikTok.
+  /* SoundCloud and the distributor have no team invite, so they take the client's login like TikTok.
      They are on FulaFalu's list because his plan (Diego's deck, 18 Sep) asks for them. */
   var EXTRA_APPS = [
-    { id:'soundcloud', name:'SoundCloud', why:'We read your plays and keep your profile, tracks and names tidy in one place. SoundCloud has no team invite, so this is a login we do with you on FaceTime.', url:'', link:'',
-      steps:['Before the call, turn on two-step verification in SoundCloud settings, and set a fresh password you do not use anywhere else.','On a quick FaceTime, tell us the password and read us the code.','We log in on our agency phone only. If we ever stop working together, change your password and we are out.'],
-      level:'Stats and profile edits. Nothing is deleted without asking you', note:'If your tracks sit on more than one SoundCloud account, tell us which is which on the call.' },
+    { id:'soundcloud', name:'SoundCloud', why:'We read your plays and keep your profile, tracks and names tidy in one place. SoundCloud has no team invite, so this one needs your login.', url:'', link:'',
+      steps:['Turn on two-step verification in SoundCloud settings, and set a fresh password you do not use anywhere else.','Put your username or email and the password in the box below.','When we log in, SoundCloud sends you a code. We text you for it, or ask on a 30-second FaceTime.','We log in on our agency phone only. If we ever stop working together, change your password and we are out.'],
+      level:'Stats and profile edits. Nothing is deleted without asking you', note:'If your tracks sit on more than one SoundCloud account, tell us which is which in a message.' },
     { id:'distributor', name:'Your distributor', why:'So your releases come out under one name, and we can see what each song earns across every store.', url:'', link:'',
-      steps:['Tell us which distributor you use (DistroKid, for example) in the setup questions above.','On a quick FaceTime, tell us the password and read us the code.','We log in on our agency phone only. We never change where your money is paid.'],
+      steps:['Tell us which distributor you use (DistroKid, for example) in the setup questions above.','Turn on two-step verification in its settings, then put your username or email and the password in the box below.','When we log in, it sends you a code. We text you for it, or ask on a 30-second FaceTime.','We log in on our agency phone only. We never change where your money is paid.'],
       level:'Stats and release uploads you have agreed', note:'Your payouts and bank details stay yours. We never touch them.' }
   ];
   function accessApps(c){
@@ -527,6 +534,26 @@
       if (list.length) return list;
     }
     return ACCESS_APPS[c.segment === 'Artist' ? 'Artist' : 'Brand'];
+  }
+  /* ── logins for the apps with no team invite (2026-09-29) ──
+     The client types the login here. portal_login_set (db/portal-logins.sql) puts it in
+     Supabase Vault, never in the CRM blob. It is write-only: we load which apps have one
+     saved and when (ke_portal_logins), never the login itself, so the page cannot show it
+     back. Ids must match LOGIN_APPS in that function. */
+  var LOGIN_APPS = ['tiktok','soundcloud','distributor','x'], logins = {}, loginOpen = {};
+  async function loadLogins(){
+    try { var r = await sb.from('ke_portal_logins').select('app,saved_at'); logins = {}; ((!r.error && r.data) || []).forEach(function(l){ logins[l.app] = l.saved_at; }); } catch(e) { logins = {}; }
+  }
+  function loginBlock(id){
+    if (LOGIN_APPS.indexOf(id) < 0) return '';
+    var saved = logins[id];
+    var tip = '<div class="note">Keep two-step verification on. When we log in you get a code from us by text, or on a 30-second FaceTime. Only we can read this, and we delete it once we are in, or after 14 days. Rather do it all on FaceTime? Message us.</div>';
+    if (saved && !loginOpen[id]) return '<div class="login-wrap"><div class="saved-line">Saved ' + esc(dstr(saved)) + '. <button type="button" class="btn-link" data-login-replace="'+id+'">Replace</button></div>' + tip + '</div>';
+    return '<div class="login-wrap"><form class="login" data-app="'+id+'" autocomplete="off">'
+      + '<div class="fld"><label for="lu-'+id+'">Username or email</label><input type="text" name="user" id="lu-'+id+'" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" /></div>'
+      + '<div class="fld"><label for="lp-'+id+'">Password</label><input type="password" name="pass" id="lp-'+id+'" autocomplete="new-password" maxlength="200" /></div>'
+      + '<div class="btns"><button type="submit" class="btn-solid">Save login</button>' + (saved ? '<button type="button" class="btn-line" data-login-cancel="'+id+'">Keep the saved one</button>' : '') + '</div>'
+      + '</form>' + tip + '</div>';
   }
   function renderAccess(){
     var c = me.client||{}, apps = accessApps(c), acc = me.access||{};
@@ -546,6 +573,7 @@
       return '<details class="'+(done?'is-done':'')+'"><summary><span class="box'+(done?' on':'')+'"></span><span><span class="n">'+esc(a.name)+'</span><span class="w">'+esc(a.why)+'</span></span><span class="st">'+(st==='na'?'Not relevant':done?'Done':'To do')+'</span></summary>'
         + '<div class="body"><ol>'+a.steps.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol>'
         + '<div class="lvl"><b>Access level</b>'+esc(a.level)+'</div>' + (a.note ? '<div class="note">'+esc(a.note)+'</div>' : '')
+        + loginBlock(a.id)
         + '<div class="btns">'+btns+'</div></div></details>';
     }).join('');
     $('p-access-msg').textContent = n === apps.length ? 'All done, thank you. We accept every invite and confirm within one working day.' : '';
@@ -561,6 +589,27 @@
     await loadItems(); render();
     var d = document.querySelector('#p-access details [data-app="'+b.dataset.app+'"]'); if (d) d.closest('details').open = false;
   });
+
+  $('p-access').addEventListener('click', function(e){
+    var b = e.target.closest('[data-login-replace],[data-login-cancel]'); if (!b) return;
+    var id = b.dataset.loginReplace || b.dataset.loginCancel;
+    loginOpen[id] = !!b.dataset.loginReplace; renderAccess(); reopen(id);
+  });
+  $('p-access').addEventListener('submit', async function(e){
+    var f = e.target.closest('form.login'); if (!f) return;
+    e.preventDefault();
+    var id = f.dataset.app, u = f.elements.user.value.trim(), p = f.elements.pass.value;
+    if (!u || !p) { $('p-access-msg').textContent = 'Add the username or email and the password.'; $('p-access-msg').classList.add('err'); return; }
+    // Out of the page as soon as it is read: the field is cleared before the save goes.
+    f.elements.pass.value = ''; f.elements.user.value = '';
+    var btn = f.querySelector('button[type=submit]'); btn.disabled = true; $('p-access-msg').textContent = 'Saving…'; $('p-access-msg').classList.remove('err');
+    var r = await sb.rpc('portal_login_set', { p_app: id, p_user: u, p_pass: p });
+    p = null; u = null;
+    if (r.error) { btn.disabled = false; $('p-access-msg').textContent = 'That did not save. Type it again, or message us.'; $('p-access-msg').classList.add('err'); return; }
+    loginOpen[id] = false; await loadLogins(); renderAccess(); reopen(id);
+    $('p-access-msg').textContent = 'Saved. We will text you when we log in.';
+  });
+  function reopen(id){ var el = document.querySelector('#p-access [data-app="'+id+'"]'); if (el) el.closest('details').open = true; }
 
   function render(){
     renderAgreement();
@@ -722,7 +771,7 @@
     var r = await sb.rpc('portal_me');
     if(r.error || !r.data){ show('s-none'); $('who').innerHTML='<span>'+esc((s.data.session.user||{}).email||'')+'</span><button onclick="signOut()">Sign out</button>'; return; }
     me = r.data; if(!me.client || !me.client.id){ show('s-none'); return; }
-    await loadItems(); await loadFiles(); await loadAgreement(); await loadSetup(); await loadDesk(); sb.rpc('portal_touch'); show('s-portal'); render();
+    await loadItems(); await loadFiles(); await loadAgreement(); await loadSetup(); await loadDesk(); await loadLogins(); sb.rpc('portal_touch'); show('s-portal'); render();
   }
   sb.auth.onAuthStateChange(function(ev){ if(ev==='SIGNED_IN'||ev==='TOKEN_REFRESHED'){ if(location.hash) history.replaceState(null,'',location.pathname); boot(); } });
   boot();

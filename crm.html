@@ -1490,7 +1490,7 @@ function bdDelCard(){const d=bdBoards(),b=bdCurrent(d);if(!b||!_bdCard)return;if
    updates from us, and messages from them. Staff policy on both (ke_staff), client policies
    scoped by their email. The portal page reads its slice through portal_me(). */
 let _ptUsers={},_ptItems={},_ptFiles={};
-async function ptLoad(){try{const u=await _sb.from('ke_portal_users').select('email,client_id,client_name,invited_at,last_seen');_ptUsers={};(u.data||[]).forEach(r=>{_ptUsers[r.client_id]=r;});const i=await _sb.from('ke_portal_items').select('id,client_id,kind,title,body,on_date,url,author,created_at,read_by_staff,amount,status').order('created_at',{ascending:false}).limit(500);_ptItems={};(i.data||[]).forEach(r=>{(_ptItems[r.client_id]=_ptItems[r.client_id]||[]).push(r);});}catch(e){console.warn('portal:',e);}
+async function ptLoad(){await plLoad();try{const u=await _sb.from('ke_portal_users').select('email,client_id,client_name,invited_at,last_seen');_ptUsers={};(u.data||[]).forEach(r=>{_ptUsers[r.client_id]=r;});const i=await _sb.from('ke_portal_items').select('id,client_id,kind,title,body,on_date,url,author,created_at,read_by_staff,amount,status').order('created_at',{ascending:false}).limit(500);_ptItems={};(i.data||[]).forEach(r=>{(_ptItems[r.client_id]=_ptItems[r.client_id]||[]).push(r);});}catch(e){console.warn('portal:',e);}
   try{const root=await _sb.storage.from('portal').list('',{limit:200});_ptFiles={};for(const d of (root.data||[])){if(d.id)continue;const cid=d.name;const a=await _sb.storage.from('portal').list(cid,{limit:200});const b=await _sb.storage.from('portal').list(cid+'/from-client',{limit:200});_ptFiles[cid]=[...(a.data||[]).filter(f=>f.id).map(f=>({name:f.name,path:cid+'/'+f.name,size:(f.metadata||{}).size,created_at:f.created_at,mine:true})),...(b.data||[]).filter(f=>f.id).map(f=>({name:f.name.replace(/^[a-z0-9]+-/,''),path:cid+'/from-client/'+f.name,size:(f.metadata||{}).size,created_at:f.created_at,mine:false}))].sort((x,y)=>String(y.created_at).localeCompare(String(x.created_at)));}}catch(e){console.warn('portal files:',e);}}
 /* Access, app by app (2026-09-29, Diego: "how do we see what they put down"). The client marks each app
    done or not relevant in the portal (portal_access_set, db/portal-access.sql); this reads the same
@@ -1501,6 +1501,21 @@ function accessLine(c){
   const acc=((load().clientAccess)||{})[c.id]||{};const done=apps.filter(a=>acc[a]).length;
   return '<div style="margin-top:6px"><span class="cf-l" style="margin:0 6px 0 0">Access '+done+'/'+apps.length+'</span>'+apps.map(a=>{const st=acc[a]&&acc[a].state;const on=st==='done';return '<span class="pt-badge'+(on?' on':'')+'" style="margin:2px 4px 2px 0;display:inline-block;white-space:nowrap">'+esc(ACCESS_NAMES[a])+' · '+(on?'done':st==='na'?'not relevant':'not yet')+'</span>';}).join('')+'</div>';
 }
+/* Client logins for the apps with no team invite (2026-09-29). The client saves them in the portal
+   (portal_login_set, db/portal-logins.sql); they live in Supabase Vault, never in ke_data. _plSaved holds
+   only which apps have one and when. Reveal fetches it from portal_login_reveal (staff only) and writes it
+   into this one span for this click: a re-render rebuilds the card without it, and it is never stored. */
+const PL_APPS=['tiktok','soundcloud','distributor','x'];let _plSaved={};
+async function plLoad(){try{const r=await _sb.from('ke_portal_logins').select('client_id,app,saved_at');_plSaved={};(r.data||[]).forEach(x=>{(_plSaved[x.client_id]=_plSaved[x.client_id]||{})[x.app]=x.saved_at;});}catch(e){console.warn('portal logins:',e);}}
+function loginLine(c){
+  const s=_plSaved[c.id]||{};const apps=PL_APPS.filter(a=>s[a]);if(!apps.length)return '';
+  return '<div class="pl-wrap" style="margin-top:6px">'+apps.map(a=>'<div class="pt-item" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"><span class="cf-l" style="margin:0">'+esc(ACCESS_NAMES[a])+' login</span><span class="d" style="margin:0">saved '+esc(String(s[a]).slice(0,10))+'</span><span class="pl-out" id="plo_'+esc(c.id)+'_'+a+'" style="font-family:var(--mono,monospace);overflow-wrap:anywhere"></span><button class="ob-btn" data-pl="reveal" data-app="'+a+'" onclick="plReveal(\''+c.id+'\',\''+a+'\',this)">Reveal</button><button class="ob-btn" data-pl="delete" data-app="'+a+'" onclick="plDelete(\''+c.id+'\',\''+a+'\')">Logged in, delete password</button></div>').join('')+'</div>';
+}
+async function plReveal(cid,app,btn){const out=document.getElementById('plo_'+cid+'_'+app);if(!out)return;if(out.textContent){out.textContent='';btn.textContent='Reveal';return;}
+  btn.disabled=true;try{const{data,error}=await _sb.rpc('portal_login_reveal',{p_client_id:cid,p_app:app});if(error||!data){showToast('Could not reveal: '+((error&&error.message)||'nothing saved'));return;}
+  out.textContent=(data.user||'')+'  ·  '+(data.pass||'');btn.textContent='Hide';setTimeout(()=>{if(out.isConnected){out.textContent='';btn.textContent='Reveal';}},60000);}catch(e){showToast('Could not reveal');}finally{btn.disabled=false;}}
+async function plDelete(cid,app){if(!confirm('Delete the saved '+ACCESS_NAMES[app]+' password? Do this once you are logged in.'))return;
+  try{const{error}=await _sb.rpc('portal_login_delete',{p_client_id:cid,p_app:app});if(error){showToast('Could not delete: '+error.message);return;}await plLoad();renderClients(load());showToast(ACCESS_NAMES[app]+' password deleted');}catch(e){showToast('Delete failed');}}
 function portalBlock(c){
   const u=_ptUsers[c.id];const items=_ptItems[c.id]||[];const msgs=items.filter(x=>x.kind==='message'&&x.author==='client');const unread=msgs.filter(x=>!x.read_by_staff).length;
   const events=items.filter(x=>x.kind==='event').sort((a,b)=>String(a.on_date).localeCompare(String(b.on_date)));
@@ -1509,7 +1524,7 @@ function portalBlock(c){
     +(u?'<span class="pt-badge on">invited · '+esc(u.email)+(u.last_seen?' · seen '+esc(String(u.last_seen).slice(0,10)):' · not yet signed in')+'</span>':'<span class="pt-badge">not invited</span>')
     +(unread?'<span class="pt-badge" style="color:var(--amber);border-color:rgba(251,191,36,.5)">'+unread+' new message'+(unread>1?'s':'')+'</span>':'')
     +'<button class="ob-btn" style="margin-left:auto" onclick="ptInvite(\''+c.id+'\')">'+(u?'Re-send invite':'Invite to portal')+'</button></div>'
-    +accessLine(c)
+    +accessLine(c)+loginLine(c)
     +'<div class="pt-row"><input type="date" class="pt-inp" id="ptd_'+c.id+'" style="flex:0 0 150px" /><input type="text" class="pt-inp" id="ptt_'+c.id+'" placeholder="'+(isLocalClient(c)?'Date title, e.g. Website goes live':'Drop / date title, e.g. October capsule — pre-order opens')+'" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'event\')">+ Date</button></div>'
     +'<div class="pt-row"><input type="text" class="pt-inp" id="ptu_'+c.id+'" placeholder="Update for the client — weekly numbers, a note, a link" /><input type="url" class="pt-inp" id="ptl_'+c.id+'" placeholder="Link (optional)" style="flex:0 0 220px" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'update\')">+ Update</button></div>'
     +'<div class="pt-row"><input type="file" class="pt-inp" id="ptf_'+c.id+'" multiple style="padding:5px 10px" /><button class="ob-btn" onclick="ptUpload(\''+c.id+'\')">Upload for client</button></div>'
