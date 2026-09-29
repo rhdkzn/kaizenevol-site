@@ -33,9 +33,17 @@ const PAGES = ['index.html', 'apply.html', 'what-we-run.html', 'privacy.html',
                // hand-typed-list gap that had left it out of test-interactions.mjs.
                // f.html is the generic funnel host and an AD destination; it had no share
                // tags at all, and its runtime document.title is invisible to a scraper.
-               'kaizen-loop.html', 'f.html'];
+               'kaizen-loop.html', 'f.html',
+               // 2026-09-28: the Kaizen Ascent page is the link we send local businesses.
+               // It had no share tags at all, so a pasted link previewed as a bare URL.
+               'ascent.html'];
 const CARD = 'og-image.png';
 const CARD_URL = 'https://kaizenevol.com/og-image.png';
+/* ONE exception to the one card: the local lane. The shared card reads "Creative
+   growth agency for brands and artists", which is the wrong business to show a
+   plumber. Its own card is built from the same template (brand/v3/og-card-ascent.html). */
+const OWN_CARD = { 'ascent.html': 'og-ascent.png' };
+const cardFor = p => OWN_CARD[p] || CARD;
 const W = 1200, H = 630;
 
 const grab = (html, re) => { const m = html.match(re); return m ? m[1].trim() : null; };
@@ -46,12 +54,11 @@ const check = (n, pass, d) => r.push({ n, pass, d });
 /* The card itself: it must exist, and the dimensions every page declares must
    be the dimensions the file actually has. A PNG's width and height live at
    byte 16 and 20 of the IHDR chunk. */
-if (!existsSync(CARD)) {
-  check('the share card exists', false, `${CARD} missing`);
-} else {
-  const b = readFileSync(CARD);
+for (const card of new Set([CARD, ...Object.values(OWN_CARD)])) {
+  if (!existsSync(card)) { check(`${card} exists`, false, `${card} missing`); continue; }
+  const b = readFileSync(card);
   const w = b.readUInt32BE(16), h = b.readUInt32BE(20);
-  check('the share card is the declared size', w === W && h === H, `${w}x${h}, declared ${W}x${H}`);
+  check(`${card} is the declared size`, w === W && h === H, `${w}x${h}, declared ${W}x${H}`);
 }
 
 for (const p of PAGES) {
@@ -74,7 +81,7 @@ for (const p of PAGES) {
   for (const [label, re] of [['og:image', /property="og:image" content="([^"]*)"/],
                              ['twitter:image', /name="twitter:image" content="([^"]*)"/]]) {
     const v = grab(html, re);
-    if (v !== null) check(`${p} ${label} points at the card`, v === CARD_URL, v);
+    if (v !== null) check(`${p} ${label} points at the card`, v === `https://kaizenevol.com/${cardFor(p)}`, v);
   }
 
   const dw = grab(html, /property="og:image:width" content="([^"]*)"/);
