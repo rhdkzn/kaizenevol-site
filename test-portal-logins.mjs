@@ -126,6 +126,7 @@ const phone = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch:
   await page.evaluate(async () => {
     document.getElementById('app').style.display = 'block'; document.getElementById('gate').style.display = 'none'; showView('clients')
     await ptLoad(); renderClients(load())
+    openClientCard('c_art01') // the compact Clients tab (PR #104) renders a card only when its row is open
   })
   const card = () => page.locator('#card_c_art01')
   ok('crm: the card has a Reveal button for the saved TikTok login', await card().locator('[data-pl="reveal"][data-app="tiktok"]').count() === 1)

@@ -411,6 +411,27 @@
     .pt-item .d{font-size:10px;color:var(--muted);margin-right:6px;}
     .pt-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);border:1px solid var(--border);color:var(--muted);}
     .pt-badge.on{color:var(--green);border-color:rgba(74,222,128,.5);}
+    /* Clients tab, compact rows (2026-09-29) */
+    .clr-bar{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
+    .clr-bar .pt-inp{min-width:0;padding:9px 12px;font-size:13px;}
+    .clr-bar .mini-select{padding:8px 10px;font-size:13px;}
+    .clr-list{display:flex;flex-direction:column;gap:8px;}
+    .clr{display:flex;flex-direction:column;gap:5px;scroll-margin-top:120px;width:100%;text-align:left;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:var(--sans);cursor:pointer;transition:border-color .15s;}
+    .clr:hover,.clr-item.open .clr{border-color:var(--purple-m);}
+    .clr-top{display:flex;align-items:center;gap:8px;min-width:0;}
+    .clr-name{font-size:14px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .clr-top .pipe-stage-label{padding:2px 10px;flex-shrink:0;}
+    .clr-chev{color:var(--muted);font-size:16px;line-height:1;flex-shrink:0;transition:transform .15s;}
+    .clr-item.open .clr-chev{transform:rotate(90deg);}
+    .clr-next{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .clr-badges{display:flex;gap:6px;flex-wrap:wrap;}
+    .clr-badges .pt-badge.unread{color:var(--amber);border-color:rgba(251,191,36,.5);}
+    .clr-body{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+    .clr-body .card{margin-bottom:0!important;}
+    /* the row above already shows the name and stage; keep them for screen readers, not on screen */
+    .clr-body .pipe-client-header,.clr-body .checklist-client-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;}
+    .clr-body .checklist-client-header{justify-content:flex-end;}
+    @media(max-width:640px){.clr-body .pipe-client,.clr-body .checklist-client,.clr-body .card{padding:16px 14px;}.clr-bar .pt-inp{font-size:16px;}}
     .re-engage-btn{padding:3px 10px;font-size:11px;font-weight:700;border-radius:var(--radius-pill);border:1.5px solid rgba(245,158,11,.35);color:#fbbf24;background:rgba(245,158,11,.07);cursor:pointer;font-family:var(--sans);transition:all .15s;}
     .re-engage-btn:hover{background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.6);}
     .wq-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);}
@@ -697,27 +718,15 @@
       <div class="kanban-wrap" id="bdWrap"></div>
     </section>
 
-    <section data-view="clients">
-      <div class="section-label">Client Pipeline</div>
-      <div class="pipeline-track" id="pipelineTrack"></div>
-    </section>
-
-    <!-- CLIENT CHECKLIST -->
-    <section data-view="clients">
-      <div class="section-label">Client Checklist</div>
-      <div class="checklist-clients" id="checklistContainer"></div>
-    </section>
-
-    <!-- CLIENTS -->
+    <!-- CLIENTS (2026-09-29) — one compact row per client. Tapping a row opens that client in place:
+         pipeline stage, checklist, the full card (portal block included) and the growth step.
+         Before, the tab repeated every client in four sections (pipeline, checklist, clients, growth):
+         14,439px tall at 390px with six clients, growing four blocks per client. #pipelineTrack,
+         #checklistContainer and #growthContainer now live inside the open client, one of each. -->
     <section data-view="clients">
       <div class="section-label">Clients</div>
-      <div id="clientsContainer"></div>
-    </section>
-
-    <!-- GROWTH STEP TRACKER -->
-    <section data-view="clients">
-      <div class="section-label">Growth Step</div>
-      <div id="growthContainer"></div>
+      <div class="clr-bar"><input type="search" class="pt-inp" id="clientSearch" placeholder="Search clients by name" aria-label="Search clients by name" oninput="clFilter()" /><select class="mini-select" id="clientStatusFilter" aria-label="Filter clients by stage" onchange="clFilter()"><option value="all">All</option><option value="onboarding">Onboarding</option><option value="live">Live</option><option value="inactive">Inactive</option></select></div>
+      <div class="clr-list" id="clientsContainer"></div>
       <div id="commissionContainer" style="margin-top:14px"></div>
     </section>
 
@@ -1271,17 +1280,25 @@ function getNextAction(stageKey,day,clientName){
     default:return{text:'',cls:''};
   }
 }
-/* Tapping a pipeline card jumps to that client's full card further down the Clients tab (2026-09-29,
-   Diego: "I can't open them, clicking them does nothing"). */
-function openClientCard(id){const el=document.getElementById('card_'+id);if(!el)return;el.scrollIntoView({behavior:'smooth',block:'start'});el.style.outline='2px solid var(--green)';setTimeout(()=>{el.style.outline=''},1600);}
+function clientNextAction(c){const s=getClientStage(c);return isLocalClient(c)?localNextAction(s.key,c.name):getNextAction(s.key,s.day,c.name);}
+/* Opens that client's row on the Clients tab and brings it into view (2026-09-29, Diego: "I can't open
+   them, clicking them does nothing"). Clears the search and stage filter if they would hide it. */
+function openClientCard(id){
+  const d=load();const c=(d.clients||[]).find(x=>x.id===id);if(!c)return;
+  if(!clMatches(c)){_clQuery='';_clStatus='all';const q=document.getElementById('clientSearch'),st=document.getElementById('clientStatusFilter');if(q)q.value='';if(st)st.value='all';}
+  clSetOpen(id);renderClients(d);
+  const row=document.querySelector('.clr[data-id="'+CSS.escape(id)+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'start'});
+}
+/* Renders the open client's stage track into #pipelineTrack, which only exists inside the open row. */
 function renderClientPipeline(data){
-  const el=document.getElementById('pipelineTrack');
-  const active=data.clients.filter(c=>c.status!=='inactive');
-  if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;">No active clients.</div>';return;}
+  const el=document.getElementById('pipelineTrack');if(!el)return;
+  const openId=clOpenId();
+  const active=data.clients.filter(c=>c.status!=='inactive'&&c.id===openId);
+  if(!active.length){el.innerHTML='';return;}
   el.innerHTML=active.map(c=>{
     const s=getClientStage(c);
     const stageIdx=PIPE_STAGES.findIndex(p=>p.key===s.key);
-    const action=isLocalClient(c)?localNextAction(s.key,c.name):getNextAction(s.key,s.day,c.name);
+    const action=clientNextAction(c);
     const stageLabelCls=`psl-${s.key}`;
     const nodes=PIPE_STAGES.map((p,i)=>{
       let dotCls='';let nodeCls='';
@@ -1293,7 +1310,7 @@ function renderClientPipeline(data){
       return`<div class="pipe-stage-node ${nodeCls}"><div class="pipe-node-dot ${dotCls}"></div><div class="pipe-stage-name">${p.label}</div></div>`;
     }).join('');
     const progressRow=s.key==='live'?`<div class="pipe-progress-row"><div class="pipe-progress-meta">Live since ${esc(c.liveDate)} &mdash; day ${s.day}</div></div>`:'';
-    return`<div class="pipe-client" style="cursor:pointer" title="Open ${esc(c.name)}'s card" onclick="openClientCard('${esc(c.id)}')">
+    return`<div class="pipe-client">
       <div class="pipe-client-header"><div class="pipe-client-name">${esc(c.name)}</div><span class="pipe-stage-label ${stageLabelCls}">${s.label}</span></div>
       <div class="pipe-stages">${nodes}</div>
       ${progressRow}
@@ -1364,10 +1381,14 @@ const PHASE_ORDER=['onboarding','live'];
 const PHASE_LABELS={onboarding:'Onboarding — from yes to live',live:'Live — the four things, measured'};
 const LOCAL_PHASE_LABELS={onboarding:'Onboarding — from yes to live',live:'Live — the website and the front office'};
 function activePhaseForStage(stageKey){return stageKey==='live'?'live':'onboarding';}
+function checklistProgress(c,data){const ct=((data&&data.clientTasks)||{})[c.id]||{};const TL=tasksFor(c);return{done:TL.filter(t=>ct[t.id]).length,total:TL.length};}
+/* Renders the open client's checklist into #checklistContainer (inside the open row) and keeps the
+   row's n/N badge in step, so a tick updates both without re-rendering the card's inputs. */
 function renderClientChecklist(data){
-  const el=document.getElementById('checklistContainer');
-  const active=data.clients.filter(c=>c.status!=='inactive');
-  if(!active.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;">No active clients.</div>';return;}
+  const el=document.getElementById('checklistContainer');if(!el)return;
+  const openId=clOpenId();
+  const active=data.clients.filter(c=>c.status!=='inactive'&&c.id===openId);
+  if(!active.length){el.innerHTML='';return;}
   if(!data.clientTasks)data.clientTasks={};
   el.innerHTML=active.map(c=>{
     if(!data.clientTasks[c.id])data.clientTasks[c.id]={};
@@ -1376,8 +1397,7 @@ function renderClientChecklist(data){
     const activePhase=activePhaseForStage(stageInfo.key);
     const activePhaseIdx=PHASE_ORDER.indexOf(activePhase);
     const TL=tasksFor(c);
-    const total=TL.length;
-    const done=TL.filter(t=>ct[t.id]).length;
+    const{done,total}=checklistProgress(c,data);
     const pct=Math.round(done/total*100);
     const phases=PHASE_ORDER.map((phase,pi)=>{
       const tasks=TL.filter(t=>t.phase===phase);
@@ -1402,13 +1422,47 @@ function renderClientChecklist(data){
       <div class="checklist-phases">${phases}</div>
     </div>`;
   }).join('');
+  active.forEach(c=>{const b=document.querySelector('.clr[data-id="'+CSS.escape(c.id)+'"] .clr-chk');if(b){const p=checklistProgress(c,data);b.textContent=p.done+'/'+p.total+' tasks';}});
 }
 function toggleClientTask(clientId,taskId){const d=load();if(!d.clientTasks)d.clientTasks={};if(!d.clientTasks[clientId])d.clientTasks[clientId]={};d.clientTasks[clientId][taskId]=!d.clientTasks[clientId][taskId];save(d);renderClientChecklist(d);}
 
 /* ── CLIENTS ── */
 function stClass(s){return{active:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
 function stLabel(s){return{active:'✓ Active',inactive:'○ Inactive'}[s]||s;}
-function renderClients(data){document.getElementById('clientsContainer').innerHTML=data.clients.map(c=>{const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" id="card_${esc(c.id)}" style="margin-bottom:14px;scroll-margin-top:120px"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div>${isLocalClient(c)?`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Monthly</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Desk</div><div class="cf-v">${c.deskTenant?'Connected · '+esc(c.deskTenant):'Not connected'} <button class="comm-status cs-pending" onclick="deskConnect('${c.id}')">${c.deskTenant?'change':'connect'}</button>`:`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired`}</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}).join('');}
+/* One client's full card: fields, go-live date, portal block. Unchanged markup, now shown inside the open row. */
+function clientCardHTML(c,data){const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" id="card_${esc(c.id)}" style="margin-bottom:14px;scroll-margin-top:120px"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div>${isLocalClient(c)?`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Monthly</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Desk</div><div class="cf-v">${c.deskTenant?'Connected · '+esc(c.deskTenant):'Not connected'} <button class="comm-status cs-pending" onclick="deskConnect('${c.id}')">${c.deskTenant?'change':'connect'}</button>`:`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired`}</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}
+/* ── CLIENTS, compact (2026-09-29) ──
+   One row per client: name, stage, next action on one line, and badges for checklist, access and
+   unread portal messages. The open client (one at a time) is kept in localStorage so the re-render
+   on every realtime save does not collapse it. */
+const CL_OPEN_KEY='crm_open_client';
+let _clQuery='',_clStatus='all';
+function clOpenId(){try{return localStorage.getItem(CL_OPEN_KEY)||'';}catch(e){return '';}}
+function clSetOpen(id){try{if(id)localStorage.setItem(CL_OPEN_KEY,id);else localStorage.removeItem(CL_OPEN_KEY);}catch(e){}}
+function clMatches(c){const q=_clQuery.trim().toLowerCase();return(!q||String(c.name||'').toLowerCase().includes(q))&&(_clStatus==='all'||getClientStage(c).key===_clStatus);}
+function clFilter(){const q=document.getElementById('clientSearch'),st=document.getElementById('clientStatusFilter');_clQuery=q?q.value:'';_clStatus=st?st.value:'all';renderClients(load());}
+function toggleClient(id){
+  const opening=clOpenId()!==id;clSetOpen(opening?id:'');renderClients(load());
+  /* closing the client above can pull this row off screen; bring it back */
+  const row=document.querySelector('.clr[data-id="'+CSS.escape(id)+'"]');if(!row)return;const r=row.getBoundingClientRect();
+  if(r.top<120||r.top>innerHeight-80)row.scrollIntoView({block:'start'});
+}
+function clientRowHTML(c,data,open){
+  const s=getClientStage(c);const active=c.status!=='inactive';
+  const next=active?clientNextAction(c).text:'Inactive. Set it back to Active on the card to pick it up again.';
+  const acc=accessCount(c);const unread=ptUnread(c);const p=checklistProgress(c,data);
+  return`<div class="clr-item${open?' open':''}"><button type="button" class="clr" data-id="${esc(c.id)}" aria-expanded="${open}" onclick="toggleClient('${esc(c.id)}')">`
+    +`<span class="clr-top"><span class="clr-name">${esc(c.name)}</span><span class="pipe-stage-label psl-${s.key}">${s.label}</span><span class="clr-chev" aria-hidden="true">›</span></span>`
+    +`<span class="clr-next">${esc(next)}</span>`
+    +`<span class="clr-badges">${active?`<span class="pt-badge clr-chk">${p.done}/${p.total} tasks</span>`:''}<span class="pt-badge${acc.total&&acc.done===acc.total?' on':''}">Access ${acc.done}/${acc.total}</span>${unread?`<span class="pt-badge unread">${unread} new</span>`:''}</span>`
+    +`</button>${open?`<div class="clr-body">${active?'<div class="pipeline-track" id="pipelineTrack"></div><div class="checklist-clients" id="checklistContainer"></div>':''}${clientCardHTML(c,data)}${active&&!isLocalClient(c)?'<div id="growthContainer"></div>':''}</div>`:''}</div>`;
+}
+function renderClients(data){
+  const host=document.getElementById('clientsContainer');if(!host)return;
+  const all=data.clients||[];const list=all.filter(clMatches);const openId=clOpenId();
+  host.innerHTML=list.length?list.map(c=>clientRowHTML(c,data,c.id===openId)).join(''):'<div style="color:var(--muted);font-size:13px;">'+(all.length?'No clients match.':'No clients yet.')+'</div>';
+  if(list.some(c=>c.id===openId)){renderClientPipeline(data);renderClientChecklist(data);renderGrowth(data);}
+}
 /* Connect a local client to the Desk: the three fields the portal's Desk panel reads.
    Blank address = disconnect (the portal goes back to "switches on when your front office goes live"). */
 function deskConnect(id){const d=load();const c=d.clients.find(x=>x.id===id);if(!c)return;const u=prompt('Desk address for '+c.name+' (https://…, blank to disconnect)',c.deskUrl||'');if(u===null)return;let r=null;if(u.trim()){const t=prompt('Desk account (tenant id, e.g. hollow-oak)',c.deskTenant||'');if(t===null)return;const k=prompt('Their portal key (portal_key in the Desk tenant file)',c.deskKey||'');if(k===null)return;r=deskConnection(u,t,k);if(r&&r.error){showToast(r.error);return;}}if(r){c.deskUrl=r.deskUrl;c.deskTenant=r.deskTenant;c.deskKey=r.deskKey;}else{delete c.deskUrl;delete c.deskTenant;delete c.deskKey;}save(d);renderClients(d);showToast(r?'Desk connected — their portal numbers switch on':'Desk disconnected');}
@@ -1496,8 +1550,10 @@ async function ptLoad(){await plLoad();try{const u=await _sb.from('ke_portal_use
    done or not relevant in the portal (portal_access_set, db/portal-access.sql); this reads the same
    data.clientAccess[<id>]. App list mirrors that function: client.accessApps, else the segment default. */
 const ACCESS_NAMES={instagram:'Instagram',youtube:'YouTube',spotify:'Spotify',apple:'Apple Music',soundcloud:'SoundCloud',distributor:'Distributor',drive:'Drive',tiktok:'TikTok',x:'X',meta:'Meta',shopify:'Shopify',klaviyo:'Klaviyo'};
+function accessApps(c){return Array.isArray(c.accessApps)&&c.accessApps.length?c.accessApps.filter(a=>ACCESS_NAMES[a]):(c.segment==='Artist'?['instagram','youtube','spotify','apple','drive','tiktok','x']:['meta','shopify','klaviyo','drive','tiktok']);}
+function accessCount(c){const apps=accessApps(c);const acc=((load().clientAccess)||{})[c.id]||{};return{done:apps.filter(a=>acc[a]).length,total:apps.length};}
 function accessLine(c){
-  let apps=Array.isArray(c.accessApps)&&c.accessApps.length?c.accessApps.filter(a=>ACCESS_NAMES[a]):(c.segment==='Artist'?['instagram','youtube','spotify','apple','drive','tiktok','x']:['meta','shopify','klaviyo','drive','tiktok']);
+  const apps=accessApps(c);
   const acc=((load().clientAccess)||{})[c.id]||{};const done=apps.filter(a=>acc[a]).length;
   return '<div style="margin-top:6px"><span class="cf-l" style="margin:0 6px 0 0">Access '+done+'/'+apps.length+'</span>'+apps.map(a=>{const st=acc[a]&&acc[a].state;const on=st==='done';return '<span class="pt-badge'+(on?' on':'')+'" style="margin:2px 4px 2px 0;display:inline-block;white-space:nowrap">'+esc(ACCESS_NAMES[a])+' · '+(on?'done':st==='na'?'not relevant':'not yet')+'</span>';}).join('')+'</div>';
 }
@@ -1516,8 +1572,9 @@ async function plReveal(cid,app,btn){const out=document.getElementById('plo_'+ci
   out.textContent=(data.user||'')+'  ·  '+(data.pass||'');btn.textContent='Hide';setTimeout(()=>{if(out.isConnected){out.textContent='';btn.textContent='Reveal';}},60000);}catch(e){showToast('Could not reveal');}finally{btn.disabled=false;}}
 async function plDelete(cid,app){if(!confirm('Delete the saved '+ACCESS_NAMES[app]+' password? Do this once you are logged in.'))return;
   try{const{error}=await _sb.rpc('portal_login_delete',{p_client_id:cid,p_app:app});if(error){showToast('Could not delete: '+error.message);return;}await plLoad();renderClients(load());showToast(ACCESS_NAMES[app]+' password deleted');}catch(e){showToast('Delete failed');}}
+function ptUnread(c){return(_ptItems[c.id]||[]).filter(x=>x.kind==='message'&&x.author==='client'&&!x.read_by_staff).length;}
 function portalBlock(c){
-  const u=_ptUsers[c.id];const items=_ptItems[c.id]||[];const msgs=items.filter(x=>x.kind==='message'&&x.author==='client');const unread=msgs.filter(x=>!x.read_by_staff).length;
+  const u=_ptUsers[c.id];const items=_ptItems[c.id]||[];const msgs=items.filter(x=>x.kind==='message'&&x.author==='client');const unread=ptUnread(c);
   const events=items.filter(x=>x.kind==='event').sort((a,b)=>String(a.on_date).localeCompare(String(b.on_date)));
   const files=_ptFiles[c.id]||[];const invs=items.filter(x=>x.kind==='invoice').sort((a,b)=>String(b.on_date||b.created_at).localeCompare(String(a.on_date||a.created_at)));
   return '<div class="pt-wrap"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="cf-l" style="margin:0">Client portal</span>'
@@ -1548,7 +1605,9 @@ async function ptRead(itemId,cid){try{await _sb.from('ke_portal_items').update({
 function renderGrowth(data){
   const el=document.getElementById('growthContainer');if(!el)return;
   if(!data.growth)data.growth={snapshots:[]};
-  const clients=(data.clients||[]).filter(c=>c.status!=='inactive'&&!isLocalClient(c));
+  const openId=clOpenId();
+  const clients=(data.clients||[]).filter(c=>c.status!=='inactive'&&!isLocalClient(c)&&c.id===openId);
+  if(!clients.length){el.innerHTML='';return;}
   const opts=clients.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join('');
   const rows=clients.map(c=>{const g=growthState(c,data);const snaps=clientSnapshots(c,data);const last=snaps[snaps.length-1];
     return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+(c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString():'<span style="color:var(--amber)">set baseline</span>')+'</td>'

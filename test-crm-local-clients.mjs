@@ -68,13 +68,16 @@ await page.route('**/@supabase/supabase-js@2**', r => r.fulfill({ contentType: '
 await page.addInitScript(d => localStorage.setItem('ke_data', d), JSON.stringify(SEED))
 await page.goto((process.env.BASE || 'http://127.0.0.1:8899') + '/crm.html', { waitUntil: 'domcontentloaded' })
 await page.waitForTimeout(600)
+/* The Clients tab opens one client at a time (2026-09-29): open each, read its panels, then the other. */
 const got = await page.evaluate(() => {
-  const d = load(); renderClients(d); renderGrowth(d); renderClientChecklist(d); renderClientPipeline(d)
   const card = name => [...document.querySelectorAll('#clientsContainer .card')].find(c => c.innerText.includes(name))?.innerText || ''
   const chk = name => [...document.querySelectorAll('#checklistContainer .checklist-client')].find(c => c.innerText.includes(name))?.innerText || ''
   const pipe = name => [...document.querySelectorAll('#pipelineTrack .pipe-client')].find(c => c.textContent.includes(name))?.textContent || ''
   const ph = name => [...(([...document.querySelectorAll('#clientsContainer .card')].find(c => c.innerText.includes(name)) || document.createElement('div')).querySelectorAll('[placeholder]'))].map(e => e.placeholder).join(' | ')
-  return { lph: ph('Hollow Oak'), bph: ph('Marauder'), lcard: card('Hollow Oak'), bcard: card('Marauder'), growth: document.getElementById('growthContainer')?.innerText || '', lchk: chk('Hollow Oak'), bchk: chk('Marauder'), lpipe: pipe('Hollow Oak'), bpipe: pipe('Marauder') }
+  const growth = () => document.getElementById('growthContainer')?.innerText || ''
+  openClientCard('c_l'); const l = { lph: ph('Hollow Oak'), lcard: card('Hollow Oak'), lgrowth: growth(), lchk: chk('Hollow Oak'), lpipe: pipe('Hollow Oak') }
+  openClientCard('c_b'); const b = { bph: ph('Marauder'), bcard: card('Marauder'), bgrowth: growth(), bchk: chk('Marauder'), bpipe: pipe('Marauder') }
+  return { ...l, ...b, growth: b.bgrowth + l.lgrowth }
 })
 ok('CRM renders with no script errors', errors.length === 0, errors.join(' | '))
 ok('local card: no Baseline, Growth steps or Ad Spend', got.lcard && !/baseline|growth steps|ad spend/i.test(got.lcard), got.lcard.slice(0, 300))
@@ -93,7 +96,7 @@ ok('pipeline: creative next step unchanged', /Drop one is measurement/.test(got.
 
 /* connecting the Desk from the card writes the three fields onto the client */
 page.on('dialog', d => { const m = d.message(); d.accept(/address/i.test(m) ? 'https://desk.kaizenevol.com' : /key/i.test(m) ? 'k3y-abc' : /tenant|account/i.test(m) ? 'hollow-oak' : '') })
-const after = await page.evaluate(() => { deskConnect('c_l'); const c = load().clients.find(x => x.id === 'c_l'); return { c, card: [...document.querySelectorAll('#clientsContainer .card')].find(x => x.innerText.includes('Hollow Oak'))?.innerText || '' } })
+const after = await page.evaluate(() => { openClientCard('c_l'); deskConnect('c_l'); const c = load().clients.find(x => x.id === 'c_l'); return { c, card: [...document.querySelectorAll('#clientsContainer .card')].find(x => x.innerText.includes('Hollow Oak'))?.innerText || '' } })
 ok('Connect Desk stores deskUrl, deskTenant, deskKey on the client', after.c.deskUrl === 'https://desk.kaizenevol.com' && after.c.deskTenant === 'hollow-oak' && after.c.deskKey === 'k3y-abc', JSON.stringify(after.c))
 ok('card then shows the Desk as connected', /connected/i.test(after.card) && !/not connected/i.test(after.card), after.card.slice(0, 300))
 await browser.close()
