@@ -23,7 +23,7 @@ const SMALL = new Set(['a','an','and','the','or','of','to','in','on','for','with
   'but','so','if','per','&','are','was','be','can','do','does'])
 /* Names that are capitalised because they are names, not because of Title Case. */
 const PROPER = new Set(['kaizenevol','kaizenreach','kaizendesk','kaizenforge','meta','google',
-  'uk','instagram','facebook','whatsapp','bristol','ico','british','ai',
+  'uk','instagram','facebook','whatsapp','facetime','bristol','ico','british','ai',
   /* product names and the Desk agents */
   'forge','one','pro','care','swift','slate','kudos','revival','sentinel'])
 /* 'house' is NOT here. It was, for "Companies House", and it capitalised the common

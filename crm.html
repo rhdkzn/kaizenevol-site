@@ -1572,6 +1572,9 @@ async function plReveal(cid,app,btn){const out=document.getElementById('plo_'+ci
   out.textContent=(data.user||'')+'  ·  '+(data.pass||'');btn.textContent='Hide';setTimeout(()=>{if(out.isConnected){out.textContent='';btn.textContent='Reveal';}},60000);}catch(e){showToast('Could not reveal');}finally{btn.disabled=false;}}
 async function plDelete(cid,app){if(!confirm('Delete the saved '+ACCESS_NAMES[app]+' password for good? Only do this when we stop working with them. It cannot be got back.'))return;
   try{const{error}=await _sb.rpc('portal_login_delete',{p_client_id:cid,p_app:app});if(error){showToast('Could not delete: '+error.message);return;}await plLoad();renderClients(load());showToast(ACCESS_NAMES[app]+' password deleted');}catch(e){showToast('Delete failed');}}
+/* The client's Drive folder link (2026-09-29). The portal's Drive step links to it, or says the
+   folder is on its way when this is blank. https only. */
+function driveSet(id){const d=load();const c=d.clients.find(x=>x.id===id);if(!c)return;const u=prompt('Drive folder link for '+c.name+' (https://drive.google.com/…, blank to remove)',c.driveUrl||'');if(u===null)return;const v=u.trim();if(v&&!/^https:\/\//.test(v)){showToast('Use the full https:// link');return;}if(v)c.driveUrl=v;else delete c.driveUrl;save(d);renderClients(d);showToast(v?'Drive folder linked in their portal':'Drive link removed');}
 function ptUnread(c){return(_ptItems[c.id]||[]).filter(x=>x.kind==='message'&&x.author==='client'&&!x.read_by_staff).length;}
 function portalBlock(c){
   const u=_ptUsers[c.id];const items=_ptItems[c.id]||[];const msgs=items.filter(x=>x.kind==='message'&&x.author==='client');const unread=ptUnread(c);
@@ -1582,6 +1585,7 @@ function portalBlock(c){
     +(unread?'<span class="pt-badge" style="color:var(--amber);border-color:rgba(251,191,36,.5)">'+unread+' new message'+(unread>1?'s':'')+'</span>':'')
     +'<button class="ob-btn" style="margin-left:auto" onclick="ptInvite(\''+c.id+'\')">'+(u?'Re-send invite':'Invite to portal')+'</button></div>'
     +accessLine(c)+loginLine(c)
+    +'<div class="pt-row" style="align-items:center"><span class="cf-l" style="margin:0">Drive folder</span>'+(c.driveUrl?'<a href="'+esc(c.driveUrl)+'" target="_blank" rel="noopener" style="color:var(--green)">open ↗</a>':'<span class="pt-badge">not shared yet</span>')+'<button class="ob-btn" onclick="driveSet(\''+c.id+'\')">'+(c.driveUrl?'Change':'Add link')+'</button></div>'
     +'<div class="pt-row"><input type="date" class="pt-inp" id="ptd_'+c.id+'" style="flex:0 0 150px" /><input type="text" class="pt-inp" id="ptt_'+c.id+'" placeholder="'+(isLocalClient(c)?'Date title, e.g. Website goes live':'Drop / date title, e.g. October capsule — pre-order opens')+'" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'event\')">+ Date</button></div>'
     +'<div class="pt-row"><input type="text" class="pt-inp" id="ptu_'+c.id+'" placeholder="Update for the client — weekly numbers, a note, a link" /><input type="url" class="pt-inp" id="ptl_'+c.id+'" placeholder="Link (optional)" style="flex:0 0 220px" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'update\')">+ Update</button></div>'
     +'<div class="pt-row"><input type="file" class="pt-inp" id="ptf_'+c.id+'" multiple style="padding:5px 10px" /><button class="ob-btn" onclick="ptUpload(\''+c.id+'\')">Upload for client</button></div>'

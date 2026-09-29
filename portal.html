@@ -123,6 +123,24 @@
     .qs .fld label{text-transform:none;letter-spacing:0;font-size:15px;font-weight:600;color:var(--ink)}
     .qs .hint{font-size:13px;color:var(--muted);margin-top:2px}
     .qs textarea{min-height:70px}
+    /* Getting started strip, pay card and message box (2026-09-29): one line of progress at the
+       top, the bill where the client sees it, and somewhere to actually message us. */
+    .progress{margin-top:22px;padding:16px 18px;border:1px solid var(--hairline);background:#fff}
+    .progress .pg-n{font-size:17px;margin-top:4px}
+    .progress .bar{height:4px;background:var(--recess);margin-top:10px}
+    .progress .bar i{display:block;height:100%;background:var(--ink)}
+    .progress .steps{list-style:none;margin:12px 0 0;padding:0}
+    .progress .steps li{display:flex;gap:12px;align-items:baseline;padding:8px 0;border-top:1px solid var(--hairline);font-size:15px}
+    .progress .steps a{color:var(--ink);font-weight:600;text-underline-offset:3px}
+    .progress .steps li.done a{color:var(--muted);font-weight:400;text-decoration:line-through}
+    .progress .steps .c{margin-left:auto;font-size:12px;color:var(--stone);white-space:nowrap}
+    .pay-card{margin-top:14px;padding:16px 18px;border:1px solid var(--ink);background:#fff}
+    .pay-card .pay-t{font-size:17px;font-weight:600;margin-top:4px}
+    .btn-solid.wide{width:100%;margin-top:14px;min-height:48px;font-size:16px;text-decoration:none}
+    .bubble{white-space:pre-wrap;overflow-wrap:anywhere}
+    .msg-box{margin-top:16px}
+    .msg-box label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:6px}
+    .hours-read{font-size:13px;color:var(--muted);margin-top:6px;min-height:18px}
     footer{border-top:1px solid var(--hairline);padding:22px 0;font-size:13px;color:var(--stone)}
     footer a{color:var(--stone);text-decoration:none}
     @media(max-width:720px){.grid{grid-template-columns:1fr 1fr}.list li{grid-template-columns:1fr}.list .d{order:-1}}
@@ -164,6 +182,7 @@
     <section class="step" id="s-portal">
       <p class="smallcaps"><span id="p-name"></span> · <span id="p-terms"></span></p>
       <h1 id="p-head"></h1>
+      <div class="progress" id="p-progress" style="display:none"></div>
 
       <!-- Signing the agreement inside the portal (2026-09-23). Shown only when an agreement
            has been issued to this client (ke_portal_agreements); portal_sign() does the checks. -->
@@ -185,6 +204,11 @@
           <div id="p-agree-meta" style="margin-top:6px;font-size:14px"></div>
           <div class="row" style="margin-top:12px"><button class="btn-solid" onclick="downloadAgreement()">Download your copy</button></div>
         </div>
+      </div>
+
+      <div id="p-pay-wrap" style="display:none">
+        <h2>To pay</h2>
+        <div id="p-pay"></div>
       </div>
 
       <div id="p-setup-wrap" style="display:none">
@@ -219,15 +243,23 @@
       <h2>Where we are</h2>
       <ul class="list check" id="p-tasks"></ul>
 
-      <h2>Updates from us</h2>
-      <div id="p-updates"></div>
+      <div id="p-msg-wrap">
+        <h2>Messages</h2>
+        <p class="why">Ask us anything here. We reply in this thread, and our updates and weekly notes land here too.</p>
+        <div id="p-updates"></div>
+        <form class="msg-box" id="p-msg" onsubmit="return false">
+          <label for="msg-body">Message us</label>
+          <textarea id="msg-body" maxlength="4000" placeholder="Type your message"></textarea>
+          <div class="row" style="margin-top:12px"><button class="btn-solid" id="msg-send" type="submit">Send</button><span class="msg" id="msg-status" style="margin:0"></span></div>
+        </form>
+      </div>
 
-      <h2>Files</h2>
+      <h2 id="p-files-h">Files</h2>
       <p class="why">Briefs, reports, your signed agreement, finished creative. Send us things here too: raw footage, product shots, brand files. Up to 50 MB each; for anything bigger, send a link.</p>
       <ul class="list" id="p-files"></ul>
       <div class="row" style="margin-top:12px"><label class="btn-solid" for="file-inp">Send us a file</label><input type="file" id="file-inp" multiple style="display:none" onchange="uploadFiles(this)" /><span class="msg" id="file-status" style="margin:0"></span></div>
 
-      <h2>Invoices</h2>
+      <h2 id="p-invoices-h">Invoices</h2>
       <ul class="list" id="p-invoices"></ul>
 
     </section>
@@ -251,6 +283,9 @@
   var me = null, items = [], files = [];
   function gbp(n){ return '£' + Math.round(Number(n)||0).toLocaleString('en-GB'); }
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function attr(s){ return esc(s).replace(/"/g,'&quot;'); }
+  /* Every "message us" in the copy is a link to the message box (2026-09-29). Takes escaped HTML. */
+  function msgUs(h){ return String(h).replace(/\b(message us|in a message)\b/gi, '<a href="#p-msg" class="to-msg">$1</a>'); }
   function fsize(b){ b = Number(b)||0; return b >= 1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1, Math.round(b/1024))+' KB'; }
   function dstr(d){ if(!d) return ''; var x = new Date(d.length===10 ? d+'T12:00:00' : d); return x.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
   function show(id){ ['s-login','s-none','s-portal'].forEach(function(s){ $(s).classList.toggle('on', s===id); }); }
@@ -289,16 +324,20 @@
      portal_access_set() in db/portal-access.sql, which refuses any id it does not know. */
   var PID = '25727662930249979', E1 = 'diego@kaizenevol.com', E2 = 'law@kaizenevol.com';
   function C(t){ return '<code>'+t+'</code>'; }
+  var COPY_PID = '<button type="button" class="btn-link" data-copy="'+PID+'">Copy ID</button>';
   var TIKTOK = { id:'tiktok', name:'TikTok', why:'We post and read your stats. TikTok has no team invite, so this one needs your login.', url:'', link:'',
-    steps:['Turn on two-step verification: '+C('Profile → ☰ → Settings and privacy → Security')+'','Set a fresh password you do not use anywhere else.','Put your username or email and the password in the box below.','When we log in, TikTok sends you a code. We text you for it, or ask on a 30-second FaceTime.','We stay logged in on one agency phone only. If we ever stop working together, change your password and we are out.'],
-    level:'Posting and analytics, on one agency phone', note:'Mark this done once you have saved your login.' };
+    steps:['Turn on two-step verification: '+C('Profile → ☰ → Settings and privacy → Security')+'','Set a fresh password you do not use anywhere else.','Put your username or email and the password in the box below.','When we log in, TikTok sends you a code. We text you to ask for it, or we do it on a 30-second FaceTime.','We stay logged in on one agency phone only. If we ever stop working together, change your password and we are out.'],
+    level:'Posting and analytics, on one agency phone', note:'' };
   var DRIVE = function(what){ return { id:'drive', name:'Google Drive', why:'One folder for everything we make posts from.', url:'', link:'',
-    steps:['Open the Drive folder we have shared with you. It is named after you.','Drop in '+what+'.','Anything private stays private in that folder.'],
+    steps:['DRIVE_LINK','Drop in '+what+'.','Anything private stays private in that folder.'],
     level:'You upload, we organise', note:'' }; };
+  /* The Drive folder is per client (client.driveUrl, set in the CRM). No link yet: say so, not "open the folder". */
+  function driveUrl(){ var u = String(((me && me.client) || {}).driveUrl || ''); return /^https:\/\//.test(u) ? u : ''; }
+  function driveStep(){ var u = driveUrl(); return u ? 'Open <a href="'+attr(u)+'" target="_blank" rel="noopener">your Drive folder ↗</a>. It is named after you.' : 'We\'ll share your folder shortly. It is named after you, and Google emails you when it is ready.'; }
   var ACCESS_APPS = {
     Artist: [
       { id:'instagram', name:'Instagram', why:'We post, schedule, handle comments and read insights. Your DMs stay yours.', url:'https://business.facebook.com/settings', link:'Open Meta Business Suite settings',
-        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'','Paste our ID '+C(PID)+' and continue.','Pick your Instagram account and switch on Content, Community activity and Insights. Leave Messages off.','Tap '+C('Assign assets')+''],
+        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'','Paste our ID '+C(PID)+' '+COPY_PID+' and continue.','Pick your Instagram account and switch on Content, Community activity and Insights. Leave Messages off.','Tap '+C('Assign assets')+''],
         level:'Content · Community activity · Insights', note:'This only works if your Instagram is a creator or business account connected to Meta Business Suite. If it is not, message us and we will do it with you on FaceTime.' },
       { id:'youtube', name:'YouTube', why:'We upload, schedule and edit videos and Shorts, and read analytics. We cannot see revenue.', url:'https://studio.youtube.com', link:'Open YouTube Studio',
         steps:['Open the YouTube Studio app (or '+C('studio.youtube.com')+') and tap your profile picture.','Go to '+C('Settings → Permissions → Invite')+'','Enter '+C(E1)+', choose '+C('Editor (limited)')+' and send.','Repeat for '+C(E2)+''],
@@ -317,7 +356,7 @@
     ],
     Brand: [
       { id:'meta', name:'Meta (Facebook, Instagram, ads)', why:'We run your ads, post, handle comments and read insights. Your DMs stay yours.', url:'https://business.facebook.com/settings', link:'Open Meta Business Suite settings',
-        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'','Paste our ID '+C(PID)+' and continue.','Pick your Facebook Page, Instagram account, ad account and dataset (your pixel).','On the Page and Instagram switch on Content, Community activity, Insights and Ads; leave Messages off. On the ad account choose Manage campaigns. On the dataset choose Use. Then tap '+C('Assign assets')+''],
+        steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'','Paste our ID '+C(PID)+' '+COPY_PID+' and continue.','Pick your Facebook Page, Instagram account, ad account and dataset (your pixel).','On the Page and Instagram switch on Content, Community activity, Insights and Ads; leave Messages off. On the ad account choose Manage campaigns. On the dataset choose Use. Then tap '+C('Assign assets')+''],
         level:'Page and Instagram: Content · Community activity · Insights · Ads. Ad account: Manage campaigns', note:'Ad spend stays in your own ad account, on your card.' },
       { id:'shopify', name:'Shopify', why:'We read orders and sales so the numbers are yours, not ours, and set up products for each drop.', url:'https://admin.shopify.com', link:'Open Shopify admin',
         steps:['Open your Shopify admin and go to '+C('Settings → Users')+'','Tap '+C('Add users')+' and enter '+C(E2)+'','Give access to Orders, Products, Analytics and Marketing. Leave billing and store settings off.','Send the invite, then repeat for '+C(E1)+''],
@@ -335,6 +374,8 @@
      portal_form_submit() in db/portal-setup.sql, never into the CRM blob, because they
      hold personal data. [key, question, hint, long?] */
   function isArtist(){ return ((me && me.client) || {}).segment === 'Artist'; }
+  /* Handles, the YouTube link and "have you claimed Spotify / Apple Music for Artists" were
+     asked here AND in Give us access. They live in Give us access only now (2026-09-29). */
   var SETUP_QS = [
     ['You', [
       ['legal_name','Your full legal name','For the paperwork only. It never goes on a post.'],
@@ -348,18 +389,13 @@
       ['prs','Are you a member of PRS for Music or PPL?','These collect royalties when your songs are played. If you are not, say so. It is free to fix and we will help.'],
       ['splits','Are the splits written down on songs you are featured on, or that feature other artists?','Who gets what share of each song.', 1],
       ['signed','Have you signed anything? A label, publishing, management or distribution deal','Or "nothing".', 1],
-      ['distributor','Who distributes your music, and under which email?','For example DistroKid.'],
+      ['distributor','Who distributes your music?','For example DistroKid. The login goes in Give us access, below.'],
       ['claims','Does anyone else have a claim on your releases? Co-owners, samples, producers',''],
       ['art','Who makes your cover art, and do you own it?','We need to know before we use it in posts.']
     ]],
     ['What is coming', [
       ['upcoming','Your next releases, with dates','Singles, projects, features. Include anything unreleased you want to plan around.', 1],
       ['shows','Any shows or events coming up?','', 1]
-    ]],
-    ['Your accounts', [
-      ['handles','Your handles: Instagram, TikTok, X, SoundCloud and any others','Say which are artist accounts and which are personal.', 1],
-      ['youtube','Your YouTube channel link',''],
-      ['claimed','Have you claimed Spotify for Artists and Apple Music for Artists?','If not, we will do it with you.']
     ]],
     ['Content and filming', [
       ['footage','Where is your existing footage and photos?','Camera roll, a hard drive, old shoots.'],
@@ -378,8 +414,7 @@
     ['Your business', [
       ['blurb','One or two lines about the business','What you do and where. The front office uses this to introduce you.', 1],
       ['services','Your services','Separate them with commas. For example: Skin fade, Beard trim, Kids cut.'],
-      ['hours','Opening hours, as your customers read them','For example: Mon to Sat, 9am to 6pm.'],
-      ['open_hours','Opening hours again, in this shape: mon-fri 09:00-18:00, sat 09:00-16:00','Days as mon to sun, 24-hour times. Leave a closed day out. The guarantee is measured against these, so they have to be exact.'],
+      ['open_hours','Opening hours','Write them as you would for a customer, for example: Mon-Fri 9am-6pm, Sat 10am-4pm. Leave closed days out. 24-hour times work too: mon-fri 09:00-18:00. The guarantee is measured against these, so check what we read below.'],
       ['booking_url','Your booking link','Where the front office books people in. For example your Fresha, Booksy or Calendly page.'],
       ['review_url','Your Google review link','Optional. The front office sends it to happy customers.']
     ]],
@@ -397,6 +432,11 @@
       ['voice','Paste two or three real replies you have sent customers','So it writes like you, not like a robot.', 1]
     ]]
   ];
+  /* Artists with no custom checklist get the artist list, not the ecom one (2026-09-29). Same ids
+     and wording as the artist checklist the CRM carries on SKN's and FulaFalu's cards (a1..a11,
+     l1..l5), so both sides tick one list. a4 "Onboarding form" and a7 "Access" are the items
+     portal_form_submit() and portal_access_set() look for by their opening words. */
+  var ARTIST_TASKS = [['a1','Discovery call done'],['a2','Brand Read done and sent'],['a3','Deck presented'],['a4','Onboarding form returned'],['a6','Portal login set up'],['a5','Agreement signed'],['a7','Access in: your apps'],['a8','Release date and drop plan agreed'],['a9','First footage in the Content folder'],['a10','First content batch approved'],['a11','Live'],['l1','Five metrics checked every 2 weeks'],['l2','Content cycle every 2 weeks: shoot, edit, approve, schedule'],['l3','Monthly read and meeting held'],['l4','Paid terms discussed once the music is paying'],['l5','Testimonial asked for, permission to quote recorded']];
   /* Same ids as crm.html LOCAL_CLIENT_TASKS, so both sides tick one list. */
   var LOCAL_TASKS = [['la1','Agreement signed'],['la2','First month paid'],['la3','Setup questions answered'],['la4','Website built and approved by you'],['la5','Front office set up in your voice'],['la6','Your number, email and site chat pointed at the front office'],['la7','Live'],['la8','Monthly report sent'],['la9','Guarantee checked for the month']];
   /* Port of kaizendesk/caught.py parse_hours_line: all or nothing, so the guarantee is never
@@ -418,17 +458,76 @@
     }
     return Object.keys(out).length > 1 ? out : null;
   }
+  /* Opening hours as people write them (2026-09-29): "Mon-Fri 9am-6pm, Sat 10am-4pm",
+     "Mon to Sat, 9am to 6pm", "weekdays 9-5pm". Turned into the same shape parseHoursLine gives,
+     so the Desk and the guarantee read exactly what they read before. Still all or nothing: a bare
+     "9 till 6" (am or pm?) or a word it does not know is refused, never guessed. */
+  var DAY_RE = /^(mon(?:days?)?|tue(?:s(?:days?)?)?|wed(?:nesdays?)?|thu(?:r(?:s(?:days?)?)?)?|fri(?:days?)?|sat(?:urdays?)?|sun(?:days?)?)\b/;
+  var TIME_RE = /^(\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?/;
+  function hhmm(h, m){ return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m; }
+  function parsePlainHours(line){
+    var t = ' ' + String(line||'').toLowerCase().replace(/[\u2013\u2014]/g, '-').replace(/\b(to|till|til|until|through|thru)\b/g, '-')
+      .replace(/\b(noon|midday)\b/g, '12pm').replace(/\bevery ?day\b|\bdaily\b|\b7 days( a week)?\b/g, 'mon-sun')
+      .replace(/\bweekdays\b/g, 'mon-fri').replace(/\bweekends?\b/g, 'sat-sun') + ' ';
+    // "Sun closed" drops the days just named; "closed on Sundays" drops the next ones, up to a comma.
+    var out = { timezone: 'Europe/London' }, days = [], i = 0, any = false, closedNext = false;
+    function day(){ var m = DAY_RE.exec(t.slice(i)); if (!m) return null; i += m[0].length; return DAYS.indexOf(m[1].slice(0,3)); }
+    function time(){ var m = TIME_RE.exec(t.slice(i)); if (!m) return null; i += m[0].length; return { h: +m[1], m: m[2] ? +m[2] : 0, ap: m[3] || '', colon: !!m[2] }; }
+    function to24(x, ap){ var h = x.h; if (ap) { if (h < 1 || h > 12) return null; h = h % 12 + (ap === 'pm' ? 12 : 0); } else if (h > 23) return null; return x.m > 59 ? null : h * 60 + x.m; }
+    while (i < t.length) {
+      var ch = t[i];
+      if (ch === ',' || ch === ';' || ch === '\n') closedNext = false;
+      if (/[\s,;&\/:.]/.test(ch)) { i++; continue; }
+      var w = /^(and|open|opening|from|hours|closed|on|are|we|is|times)\b/.exec(t.slice(i));
+      if (w) { if (w[1] === 'closed') { if (days.length) days = []; else closedNext = true; } i += w[0].length; continue; }
+      var a = day();
+      if (a !== null) {
+        var save = i, span; while (t[i] === ' ') i++;
+        if (t[i] === '-') { i++; while (t[i] === ' ') i++; var b = day(); if (b === null) return null;
+          span = a <= b ? DAYS.slice(a, b + 1) : DAYS.slice(a).concat(DAYS.slice(0, b + 1)); }
+        else { i = save; span = [DAYS[a]]; }
+        if (!closedNext) days = days.concat(span);
+        continue;
+      }
+      var x = time();
+      if (x) {
+        while (t[i] === ' ') i++; if (t[i] !== '-') return null; i++; while (t[i] === ' ') i++;
+        var y = time(); if (!y) return null;
+        // "9-5pm": the open time borrows am/pm from the close. Neither side marked and no colon: refuse.
+        var yap = y.ap || (!y.colon && x.ap) || '', xap = x.ap || (!x.colon && yap ? (yap === 'pm' && x.h > y.h && x.h < 12 ? 'am' : yap) : '');
+        if ((!xap && !x.colon) || (!yap && !y.colon)) return null;
+        var o = to24(x, xap), c = to24(y, yap);
+        if (o === null || c === null || c <= o || !days.length) return null;
+        days.forEach(function(d){ out[d] = hhmm(Math.floor(o/60), o%60) + '-' + hhmm(Math.floor(c/60), c%60); });
+        days = []; any = true; continue;
+      }
+      return null;
+    }
+    if (days.length) return null;
+    return any ? out : null;
+  }
+  function readHours(line){ return parseHoursLine(line) || parsePlainHours(line); }
+  /* What we read, back in the client's words, so they can check it before they send. */
+  function hoursSaid(h){
+    if (!h) return '';
+    var runs = [], names = { mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat', sun:'Sun' };
+    DAYS.forEach(function(d){ var last = runs[runs.length-1]; if (h[d] && last && last.v === h[d] && last.end === DAYS.indexOf(d) - 1) last.end++; else if (h[d]) runs.push({ start: DAYS.indexOf(d), end: DAYS.indexOf(d), v: h[d] }); });
+    return runs.map(function(r){ return names[DAYS[r.start]] + (r.end > r.start ? '-' + names[DAYS[r.end]] : '') + ' ' + r.v; }).join(', ') + '. Closed on any day not listed.';
+  }
   function listOf(v){ return String(v||'').split(',').map(function(x){ return x.trim(); }).filter(Boolean); }
   /* The raw text each box shows again when the form reopens. */
   function shownAnswer(a, key){
-    if (key === 'open_hours') return a.open_hours_line || '';
+    if (key === 'open_hours') return a.open_hours_line || a.hours || '';
     var v = a[key];
     return Array.isArray(v) ? v.join(', ') : (v && typeof v === 'object') ? '' : (v || '');
   }
   function localAnswers(raw){
     var a = {}; Object.keys(raw).forEach(function(k){ a[k] = raw[k]; });
+    // One box now. What they typed is also kept as `hours` (the customer-facing wording the old
+    // second box held); open_hours stays the structured value the Desk and the guarantee read.
+    a.hours = raw.open_hours || '';
     a.open_hours_line = raw.open_hours;
-    a.open_hours = raw.open_hours ? parseHoursLine(raw.open_hours) : null;
+    a.open_hours = raw.open_hours ? readHours(raw.open_hours) : null;
     ['services','sms_numbers','email_addresses'].forEach(function(k){ a[k] = listOf(raw[k]); });
     var pence = Math.round(parseFloat(String(raw.deposit_amount||'').replace(/[£\s]/g,'')) * 100);
     a.deposit = pence > 0 ? { amount_pence: pence, payment_link: raw.deposit_link || '' } : null;
@@ -458,8 +557,8 @@
     var stats = on ? (desk.stats || []) : [];
     $('p-numbers').style.display = stats.length ? '' : 'none'; $('p-numbers').classList.add('fl');
     $('p-numbers').innerHTML = stats.map(function(x){ return '<div class="cell"><div class="k">'+esc(x.label)+'</div><div class="v">'+esc(x.value)+'</div></div>'; }).join('');
-    $('p-numbers-note').textContent = on ? 'The last 30 days. Your monthly report says what came in while you were closed.'
-      : deskState === 'error' ? 'Your Desk numbers could not load just now. Reload in a minute, or message us.'
+    $('p-numbers-note').innerHTML = on ? 'The last 30 days. Your monthly report says what came in while you were closed.'
+      : deskState === 'error' ? msgUs('Your Desk numbers could not load just now. Reload in a minute, or message us.')
       : 'Your Desk numbers: this switches on when your front office goes live.';
     var appts = on ? (desk.appointments || []) : [];
     $('p-events').innerHTML = appts.length ? appts.map(function(a){ return '<li><span class="d">'+esc(a.when)+'</span><span><b class="t">'+esc(a.contact)+'</b></span></li>'; }).join('')
@@ -492,23 +591,30 @@
       return '<fieldset><legend>'+esc(g[0])+'</legend>' + g[1].map(function(q){
         var v = esc(isLocal() ? shownAnswer(a, q[0]) : (a[q[0]] || ''));
         var input = q[3] ? '<textarea id="q-'+q[0]+'">'+v+'</textarea>' : '<input type="text" id="q-'+q[0]+'" value="'+v+'" />';
-        return '<div class="fld"><label for="q-'+q[0]+'">'+esc(q[1])+'</label>'+(q[2]?'<div class="hint">'+esc(q[2])+'</div>':'')+input+'</div>';
+        var read = q[0] === 'open_hours' ? '<div class="hours-read" id="q-open_hours-read" aria-live="polite"></div>' : '';
+        return '<div class="fld"><label for="q-'+q[0]+'">'+esc(q[1])+'</label>'+(q[2]?'<div class="hint">'+esc(q[2])+'</div>':'')+input+read+'</div>';
       }).join('') + '</fieldset>';
     }).join('') + '<div class="row"><button class="btn-solid" id="p-setup-send" type="button">'+(sent?'Save changes':'Send my answers')+'</button></div>';
     $('p-setup-send').onclick = sendSetup;
+    if ($('q-open_hours')) { $('q-open_hours').addEventListener('input', hoursEcho); hoursEcho(); }
+  }
+  function hoursEcho(){
+    var v = ($('q-open_hours').value || '').trim(), h = v ? readHours(v) : null;
+    $('q-open_hours-read').textContent = !v ? '' : h ? 'We read this as: ' + hoursSaid(h) : 'We cannot read that yet. Add am or pm to each time, like Mon-Fri 9am-6pm.';
   }
   async function sendSetup(){
     var ans = {}, lines = [];
     (isLocal() ? LOCAL_QS : SETUP_QS).forEach(function(g){ g[1].forEach(function(q){ var v = ($('q-'+q[0]).value || '').trim(); ans[q[0]] = v; if (v) lines.push(q[1] + ': ' + v); }); });
     if (!lines.length) { $('p-setup-msg').textContent = 'Fill in at least one answer first.'; return; }
     if (isLocal()) {
-      if (ans.open_hours && !parseHoursLine(ans.open_hours)) { $('p-setup-msg').textContent = 'We could not read those opening hours. Use days as mon to sun and 24-hour times, like: mon-fri 09:00-18:00, sat 09:00-16:00'; $('q-open_hours').focus(); return; }
+      if (ans.open_hours && !readHours(ans.open_hours)) { $('p-setup-msg').textContent = 'We could not read those opening hours. Write the days and times with am or pm, like: Mon-Fri 9am-6pm, Sat 10am-4pm'; $('q-open_hours').focus(); return; }
       ans = localAnswers(ans);
     }
+    var prev = (setupRow && setupRow.answers) || {}; ans = Object.assign({}, prev, ans);
     var b = $('p-setup-send'); b.disabled = true; $('p-setup-msg').textContent = 'Sending…';
     var r = await sb.rpc('portal_form_submit', { p_answers: ans, p_summary: lines.join('\n') });
     b.disabled = false;
-    if (r.error) { $('p-setup-msg').textContent = 'That did not send. Try again, or message us.'; return; }
+    if (r.error) { $('p-setup-msg').innerHTML = msgUs('That did not send. Try again, or message us.'); return; }
     $('p-setup-msg').textContent = 'Sent. Thank you.';
     setupOpen = false; $('p-setup').dataset.built = '';
     await loadSetup(); var re = await sb.rpc('portal_me'); if(!re.error && re.data) me = re.data;
@@ -520,10 +626,10 @@
      They are on FulaFalu's list because his plan (Diego's deck, 18 Sep) asks for them. */
   var EXTRA_APPS = [
     { id:'soundcloud', name:'SoundCloud', why:'We read your plays and keep your profile, tracks and names tidy in one place. SoundCloud has no team invite, so this one needs your login.', url:'', link:'',
-      steps:['Turn on two-step verification in SoundCloud settings, and set a fresh password you do not use anywhere else.','Put your username or email and the password in the box below.','When we log in, SoundCloud sends you a code. We text you for it, or ask on a 30-second FaceTime.','We log in on our agency phone only. If we ever stop working together, change your password and we are out.'],
+      steps:['Turn on two-step verification in SoundCloud settings, and set a fresh password you do not use anywhere else.','Put your username or email and the password in the box below.','When we log in, SoundCloud sends you a code. We text you to ask for it, or we do it on a 30-second FaceTime.','We log in on our agency phone only. If we ever stop working together, change your password and we are out.'],
       level:'Stats and profile edits. Nothing is deleted without asking you', note:'If your tracks sit on more than one SoundCloud account, tell us which is which in a message.' },
     { id:'distributor', name:'Your distributor', why:'So your releases come out under one name, and we can see what each song earns across every store.', url:'', link:'',
-      steps:['Tell us which distributor you use (DistroKid, for example) in the setup questions above.','Turn on two-step verification in its settings, then put your username or email and the password in the box below.','When we log in, it sends you a code. We text you for it, or ask on a 30-second FaceTime.','We log in on our agency phone only. We never change where your money is paid.'],
+      steps:['Tell us which distributor you use (DistroKid, for example) in the setup questions above.','Turn on two-step verification in its settings, then put your username or email and the password in the box below.','When we log in, it sends you a code. We text you to ask for it, or we do it on a 30-second FaceTime.','We log in on our agency phone only. We never change where your money is paid.'],
       level:'Stats and release uploads you have agreed', note:'Your payouts and bank details stay yours. We never touch them.' }
   ];
   function accessApps(c){
@@ -547,7 +653,7 @@
   function loginBlock(id){
     if (LOGIN_APPS.indexOf(id) < 0) return '';
     var saved = logins[id];
-    var tip = '<div class="note">Keep two-step verification on. When we log in you get a code from us by text, or on a 30-second FaceTime. Only we can read it. We keep it locked away so we never have to ask you twice, and delete it if we stop working together. Rather do it all on FaceTime? Message us.</div>';
+    var tip = '<div class="note">Keep two-step verification on. When we log in, the app sends you a code. We text you to ask for it, or we do it on a 30-second FaceTime. Only we can read your login. We keep it locked away so we never have to ask you twice, and delete it if we stop working together. Saving it here marks this step done. Rather do it all on FaceTime? ' + msgUs('Message us') + '.</div>';
     if (saved && !loginOpen[id]) return '<div class="login-wrap"><div class="saved-line">Saved ' + esc(dstr(saved)) + '. <button type="button" class="btn-link" data-login-replace="'+id+'">Replace</button></div>' + tip + '</div>';
     return '<div class="login-wrap"><form class="login" data-app="'+id+'" autocomplete="off">'
       + '<div class="fld"><label for="lu-'+id+'">Username or email</label><input type="text" name="user" id="lu-'+id+'" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" /></div>'
@@ -555,24 +661,37 @@
       + '<div class="btns"><button type="submit" class="btn-solid">Save login</button>' + (saved ? '<button type="button" class="btn-line" data-login-cancel="'+id+'">Keep the saved one</button>' : '') + '</div>'
       + '</form>' + tip + '</div>';
   }
-  function renderAccess(){
+  /* Where access stands. null when the client has no access section at all (a local client with
+     no accessApps set). Shared by the access section and the progress strip. */
+  function accessInfo(){
     var c = me.client||{}, apps = accessApps(c), acc = me.access||{};
+    if (isLocal() && !(Array.isArray(c.accessApps) && c.accessApps.length)) return null;
     var t = me.tasks||{}, list = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist : null;
-    var at = list ? list.filter(function(x){ return /^access/i.test(x.text||''); })[0] : { id:'ob6' };
+    var at = list ? list.filter(function(x){ return /^access/i.test(x.text||''); })[0] : null;
+    // No custom list: artists tick a7 on the artist list; portal_access_set still ticks ob6 then.
+    var ticked = at ? !!t[at.id] : list ? false : !!(t.ob6 || (isArtist() && t.a7));
     var n = apps.filter(function(a){ return acc[a.id]; }).length;
+    return { apps: apps, acc: acc, n: n, all: n === apps.length, ticked: ticked };
+  }
+  function renderAccess(){
+    var info = accessInfo();
     // Hide once it is all done AND we have ticked it on our side, so an onboarded client is not nagged.
-    var closed = (n === apps.length && at && t[at.id]) || (isLocal() && !(Array.isArray(c.accessApps) && c.accessApps.length));
+    var closed = !info || (info.all && info.ticked);
     $('p-access-wrap').style.display = closed ? 'none' : '';
     if (closed) return;
+    var apps = info.apps, acc = info.acc, n = info.n;
     $('p-access-intro').innerHTML = 'Each step adds KaizenEvol as a partner or team member. You stay the owner and can remove us in one tap. About ten minutes. <b>' + n + ' of ' + apps.length + ' done.</b>';
     $('p-access').innerHTML = apps.map(function(a){
       var st = acc[a.id] && acc[a.id].state, done = !!st;
-      var btns = a.url ? '<a class="btn-line" href="'+a.url+'" target="_blank" rel="noopener">'+esc(a.link)+' ↗</a>' : '';
+      var url = a.id === 'drive' ? driveUrl() : a.url, link = a.id === 'drive' ? 'Open your folder' : a.link;
+      var btns = url ? '<a class="btn-line" href="'+attr(url)+'" target="_blank" rel="noopener">'+esc(link)+' ↗</a>' : '';
+      // The login apps are done by saving the login; the button is only for the FaceTime route.
+      var byLogin = LOGIN_APPS.indexOf(a.id) > -1;
       btns += done ? '<button class="btn-line" data-app="'+a.id+'" data-st="">Undo</button>'
-                   : '<button class="btn-solid" data-app="'+a.id+'" data-st="done">I\'ve done this</button>' + (a.na ? '<button class="btn-line" data-app="'+a.id+'" data-st="na">Not relevant</button>' : '');
+                   : (byLogin ? '<button class="btn-link" data-app="'+a.id+'" data-st="done">Did it on FaceTime instead</button>' : '<button class="btn-solid" data-app="'+a.id+'" data-st="done">I\'ve done this</button>') + (a.na ? '<button class="btn-line" data-app="'+a.id+'" data-st="na">Not relevant</button>' : '');
       return '<details class="'+(done?'is-done':'')+'"><summary><span class="box'+(done?' on':'')+'"></span><span><span class="n">'+esc(a.name)+'</span><span class="w">'+esc(a.why)+'</span></span><span class="st">'+(st==='na'?'Not relevant':done?'Done':'To do')+'</span></summary>'
-        + '<div class="body"><ol>'+a.steps.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol>'
-        + '<div class="lvl"><b>Access level</b>'+esc(a.level)+'</div>' + (a.note ? '<div class="note">'+esc(a.note)+'</div>' : '')
+        + '<div class="body"><ol>'+a.steps.map(function(x){ return '<li>'+(x === 'DRIVE_LINK' ? driveStep() : x)+'</li>'; }).join('')+'</ol>'
+        + '<div class="lvl"><b>Access level</b>'+esc(a.level)+'</div>' + (a.note ? '<div class="note">'+msgUs(esc(a.note))+'</div>' : '')
         + loginBlock(a.id)
         + '<div class="btns">'+btns+'</div></div></details>';
     }).join('');
@@ -582,7 +701,7 @@
     var b = e.target.closest('button[data-app]'); if(!b) return;
     b.disabled = true; $('p-access-msg').textContent = '';
     var r = await sb.rpc('portal_access_set', { p_app: b.dataset.app, p_state: b.dataset.st || null });
-    if (r.error) { b.disabled = false; $('p-access-msg').textContent = 'That did not save. Try again, or message us.'; $('p-access-msg').classList.add('err'); return; }
+    if (r.error) { b.disabled = false; $('p-access-msg').innerHTML = msgUs('That did not save. Try again, or message us.'); $('p-access-msg').classList.add('err'); return; }
     $('p-access-msg').classList.remove('err');
     me.access = r.data || {};
     var re = await sb.rpc('portal_me'); if(!re.error && re.data) me = re.data;
@@ -590,6 +709,12 @@
     var d = document.querySelector('#p-access details [data-app="'+b.dataset.app+'"]'); if (d) d.closest('details').open = false;
   });
 
+  $('p-access').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-copy]'); if (!b) return;
+    var v = b.dataset.copy, done = function(){ b.textContent = 'Copied'; setTimeout(function(){ b.textContent = 'Copy ID'; }, 2000); };
+    var fallback = function(){ var ta = document.createElement('textarea'); ta.value = v; ta.setAttribute('readonly',''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch(x) {} ta.remove(); done(); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done, fallback); else fallback();
+  });
   $('p-access').addEventListener('click', function(e){
     var b = e.target.closest('[data-login-replace],[data-login-cancel]'); if (!b) return;
     var id = b.dataset.loginReplace || b.dataset.loginCancel;
@@ -605,16 +730,84 @@
     var btn = f.querySelector('button[type=submit]'); btn.disabled = true; $('p-access-msg').textContent = 'Saving…'; $('p-access-msg').classList.remove('err');
     var r = await sb.rpc('portal_login_set', { p_app: id, p_user: u, p_pass: p });
     p = null; u = null;
-    if (r.error) { btn.disabled = false; $('p-access-msg').textContent = 'That did not save. Type it again, or message us.'; $('p-access-msg').classList.add('err'); return; }
-    loginOpen[id] = false; await loadLogins(); renderAccess(); reopen(id);
-    $('p-access-msg').textContent = 'Saved. We will text you when we log in.';
+    if (r.error) { btn.disabled = false; $('p-access-msg').innerHTML = msgUs('That did not save. Type it again, or message us.'); $('p-access-msg').classList.add('err'); return; }
+    // Saving the login IS doing this step: mark it done with the same call "I've done this" makes.
+    if (!((me.access||{})[id])) {
+      var a = await sb.rpc('portal_access_set', { p_app: id, p_state: 'done' });
+      if (!a.error) { if (a.data) me.access = a.data; var re = await sb.rpc('portal_me'); if (!re.error && re.data) me = re.data; }
+    }
+    loginOpen[id] = false; await loadLogins(); render(); reopen(id);
+    $('p-access-msg').textContent = 'Saved, and marked done. We will text you when we log in.';
   });
   function reopen(id){ var el = document.querySelector('#p-access [data-app="'+id+'"]'); if (el) el.closest('details').open = true; }
 
+  /* ── getting started, paying, messages (2026-09-29) ──
+     A phone walk-through found the invoice ~8,600px down, no message box, and nothing saying how
+     far along the client is. Everything here is derived from state the page already loads. */
+  function byDue(a, b){ return String(a.on_date||a.created_at).localeCompare(String(b.on_date||b.created_at)); }
+  function invoices(){ return items.filter(function(i){ return i.kind==='invoice'; }); }
+  function payable(v){ return v.status !== 'paid' && /^https:\/\//.test(String(v.url||'')); }
+  function progressSteps(){
+    var steps = [], invs = invoices().sort(byDue), info = accessInfo(), t = me.tasks||{};
+    if (agreement) steps.push({ label: 'Sign your agreement', done: !!agreement.signed_at, to: 'p-agree-wrap' });
+    if (invs.length) steps.push({ label: 'Pay your first invoice', done: invs[0].status === 'paid', to: payable(invs[0]) ? 'p-pay-wrap' : 'p-invoices-h' });
+    if (isArtist() || isLocal()) steps.push({ label: 'Answer the setup questions', done: !!(setupRow && setupRow.submitted_at), to: 'p-setup-wrap' });
+    if (info) steps.push({ label: 'Give us access', done: info.all || info.ticked, to: 'p-access-wrap', count: info.all || info.ticked ? '' : info.n + ' of ' + info.apps.length });
+    if (!isLocal()) steps.push({ label: 'Send us your files', done: files.some(function(f){ return f.mine; }) || !!(me.access||{}).drive, to: 'p-files-h' });
+    return steps;
+  }
+  function renderProgress(){
+    var el = $('p-progress'), steps = progressSteps(), n = steps.filter(function(x){ return x.done; }).length;
+    var all = steps.length && n === steps.length;
+    // Once they are live and nothing is left, the strip has done its job.
+    if (!steps.length || (all && (me.client||{}).liveDate)) { el.style.display = 'none'; return; }
+    el.style.display = '';
+    if (all) { el.innerHTML = '<div class="smallcaps">'+n+' of '+n+' done</div><div class="pg-n"><b>You\'re all set.</b> Here\'s what happens next.</div>'
+      + '<p class="why">We start work. What we make and our notes land in Messages, below. Anything you need, <a href="#p-msg" class="to-msg">message us</a>.</p>'; return; }
+    el.innerHTML = '<div class="smallcaps">Getting started</div><div class="pg-n"><b>'+n+' of '+steps.length+' done</b></div>'
+      + '<div class="bar"><i style="width:'+Math.round(n/steps.length*100)+'%"></i></div>'
+      + '<ul class="steps">'+steps.map(function(x){ return '<li'+(x.done?' class="done"':'')+'><span class="box'+(x.done?' on':'')+'"></span><a href="#'+x.to+'">'+esc(x.label)+'</a>'+(x.count?'<span class="c">'+esc(x.count)+'</span>':'')+'</li>'; }).join('')+'</ul>';
+  }
+  function renderPay(){
+    var due = invoices().filter(payable).sort(byDue);
+    $('p-pay-wrap').style.display = due.length ? '' : 'none';
+    $('p-pay').innerHTML = due.map(function(v){ var when = v.on_date ? 'Due ' + esc(dstr(v.on_date)) : 'Due now';
+      return '<div class="pay-card"><div class="smallcaps">'+when+'</div><div class="pay-t">'+esc(v.title||'Invoice')+'</div>'
+      + '<a class="btn-solid wide" href="'+attr(v.url)+'" target="_blank" rel="noopener">Pay '+gbp(v.amount)+'</a></div>'; }).join('');
+  }
+  function renderThread(){
+    // items come newest first; the thread reads oldest to newest, down to the box.
+    var th = items.filter(function(i){ return i.kind==='update' || i.kind==='file' || i.kind==='message'; }).slice(0, 40).reverse();
+    $('p-updates').innerHTML = th.length ? th.map(function(u){
+      var mine = u.kind === 'message' && u.author === 'client';
+      return '<div class="bubble'+(mine?' client':'')+'"><div class="d">'+(mine?'You':'KaizenEvol')+' · '+esc(dstr(u.created_at))+'</div>'+(u.title && !(mine && u.title === 'Message')?'<b>'+esc(u.title)+'</b>\n':'')+esc(u.body||'')+(u.url?' <a href="'+attr(u.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>';
+    }).join('') : '<div class="empty">Nothing yet. Ask us anything in the box below. Our weekly numbers and notes land here too.</div>';
+  }
+  $('p-msg').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var t = $('msg-body'), st = $('msg-status'), body = (t.value || '').trim();
+    if (!body) { st.textContent = 'Write your message first.'; t.focus(); return; }
+    $('msg-send').disabled = true; st.textContent = 'Sending…';
+    var r = await sb.from('ke_portal_items').insert({ client_id: me.client.id, kind: 'message', author: 'client', title: 'Message', body: body });
+    $('msg-send').disabled = false;
+    if (!r || r.error) { st.textContent = 'That did not send. Try again, or email law@kaizenevol.com.'; return; }
+    t.value = ''; st.textContent = 'Sent. We reply here.';
+    await loadItems(); renderThread();
+  });
+  // Every "message us" goes to the box and opens the keyboard.
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href="#p-msg"]'); if (!a) return;
+    e.preventDefault();
+    $('p-msg-wrap').scrollIntoView({ block: 'start' });
+    $('msg-body').focus({ preventScroll: true });
+  });
+
   function render(){
     renderAgreement();
+    renderPay();
     renderSetup();
     renderAccess();
+    renderProgress();
     $('p-events-h').textContent = isArtist() ? 'Release calendar' : 'Drop calendar';
     $('p-numbers-h').textContent = 'The numbers';
     $('p-numbers').style.display = ''; $('p-numbers').classList.remove('fl'); $('p-needs-wrap').style.display = 'none';
@@ -645,13 +838,12 @@
     var bds = me.boards||[];
     $('p-boards').innerHTML = bds.map(function(b){ var cols = (b.columns||[]); return '<h2>'+esc(b.name)+'</h2><div class="grid">'+cols.map(function(c){ var ks = (b.cards||[]).filter(function(k){ return k.col===c.id; }); return '<div class="cell"><div class="k">'+esc(c.name)+' · '+ks.length+'</div>'+(ks.length?ks.map(function(k){ return '<div class="s" style="margin-top:6px"><b style="color:var(--ink)">'+esc(k.title)+'</b>'+(k.due?' · '+esc(dstr(k.due)):'')+'</div>'; }).join(''):'<div class="s" style="margin-top:6px">—</div>')+'</div>'; }).join('')+'</div>'; }).join('');
     var t = me.tasks||{};
-    var TL = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist.map(function(x){ return [x.id, x.text]; }) : isLocal() ? LOCAL_TASKS : TASKS;
+    var TL = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist.map(function(x){ return [x.id, x.text]; }) : isLocal() ? LOCAL_TASKS : isArtist() ? ARTIST_TASKS : TASKS;
     $('p-tasks').innerHTML = TL.map(function(x){ var on = !!t[x[0]]; return '<li'+(on?' class="done"':'')+'><span class="box'+(on?' on':'')+'"></span><span class="t">'+x[1]+'</span></li>'; }).join('');
-    var ups = items.filter(function(i){ return i.kind==='update' || i.kind==='file'; });
-    $('p-updates').innerHTML = ups.length ? ups.map(function(u){ return '<div class="bubble"><div class="d">'+esc(dstr(u.created_at))+'</div>'+(u.title?'<b>'+esc(u.title)+'</b><br>':'')+esc(u.body||'')+(u.url?' <a href="'+esc(u.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>'; }).join('') : '<div class="empty">Nothing yet. Weekly numbers and notes from us land here.</div>';
+    renderThread();
     $('p-files').innerHTML = files.length ? files.map(function(f){ return '<li><span class="d">'+esc(dstr(f.created_at))+'</span><span><a href="#" class="t" data-p="'+esc(f.path)+'" onclick="openFile(this.dataset.p);return false">'+esc(f.name)+'</a><div class="m">'+(f.mine?'from you':'from KaizenEvol')+(f.size?' · '+fsize(f.size):'')+'</div></span></li>'; }).join('') : '<li><span class="d">—</span><span class="m">Nothing here yet.</span></li>';
     var invs = items.filter(function(i){ return i.kind==='invoice'; }).sort(function(a,b){ return String(b.on_date||b.created_at).localeCompare(String(a.on_date||a.created_at)); });
-    $('p-invoices').innerHTML = invs.length ? invs.map(function(v){ var paid = v.status==='paid'; return '<li'+(paid?' class="done"':'')+'><span class="d">'+esc(v.on_date ? dstr(v.on_date) : dstr(v.created_at))+'</span><span><b class="t">'+esc(v.title||'Invoice')+'</b> <span class="amt">'+gbp(v.amount)+'</span><div class="m">'+(paid ? 'Paid, thank you.' : (v.url ? 'Due '+esc(dstr(v.on_date))+' · <a href="'+esc(v.url)+'" target="_blank" rel="noopener">Pay ↗</a>' : 'Due '+esc(dstr(v.on_date))+' · collected from the card on file'))+'</div></span></li>'; }).join('') : (trial ? '<li><span class="d">—</span><span class="m">'+esc(c.invoiceNote || 'Nothing to pay. Anything billed later shows here, once it has been agreed with you in writing.')+'</span></li>' : '<li><span class="d">—</span><span class="m">'+(isLocal() ? 'Your monthly payment is collected from the card on file. Each month shows here once it has gone through.' : 'Your retainer is collected each month from the card on file. Each month shows here once it has gone through, with anything one-off alongside.')+'</span></li>');
+    $('p-invoices').innerHTML = invs.length ? invs.map(function(v){ var paid = v.status==='paid'; return '<li'+(paid?' class="done"':'')+'><span class="d">'+esc(v.on_date ? dstr(v.on_date) : dstr(v.created_at))+'</span><span><b class="t">'+esc(v.title||'Invoice')+'</b> <span class="amt">'+gbp(v.amount)+'</span><div class="m">'+(paid ? 'Paid, thank you.' : (v.url ? 'Due '+esc(dstr(v.on_date))+' · <a href="'+attr(v.url)+'" target="_blank" rel="noopener">Pay ↗</a>' : 'Due '+esc(dstr(v.on_date))+' · collected from the card on file'))+'</div></span></li>'; }).join('') : (trial ? '<li><span class="d">—</span><span class="m">'+esc(c.invoiceNote || 'Nothing to pay. Anything billed later shows here, once it has been agreed with you in writing.')+'</span></li>' : '<li><span class="d">—</span><span class="m">'+(isLocal() ? 'Your monthly payment is collected from the card on file. Each month shows here once it has gone through.' : 'Your retainer is collected each month from the card on file. Each month shows here once it has gone through, with anything one-off alongside.')+'</span></li>');
   }
 
   async function loadItems(){
@@ -672,14 +864,14 @@
   window.openFile = async function(path){
     var st = $('file-status'); st.textContent = 'Fetching…';
     var r = await sb.storage.from('portal').createSignedUrl(path, 600, { download: true });
-    if(r.error || !r.data){ st.textContent = 'Could not fetch that file. Reply to any email from us and we will send it.'; return; }
+    if(r.error || !r.data){ st.innerHTML = msgUs('Could not fetch that file. Try again, or message us and we will send it.'); return; }
     st.textContent = ''; location.href = r.data.signedUrl;
   };
   window.uploadFiles = async function(inp){
     var st = $('file-status'), list = Array.prototype.slice.call(inp.files||[]); if(!list.length) return;
     var cid = me.client.id, sent = [];
     for(var i=0; i<list.length; i++){ var f = list[i];
-      if(f.size > 50*1024*1024){ st.textContent = f.name + ' is over 50 MB. Send a link in the box below instead.'; continue; }
+      if(f.size > 50*1024*1024){ st.innerHTML = esc(f.name) + ' is over 50 MB. Send us a link ' + msgUs('in a message') + ' instead.'; continue; }
       var safe = f.name.replace(/[^\w.\-() ]+/g, '_').slice(0, 120);
       st.textContent = 'Sending ' + f.name + '…';
       var r = await sb.storage.from('portal').upload(cid + '/from-client/' + Date.now().toString(36) + '-' + safe, f, { upsert: false, contentType: f.type || undefined });
