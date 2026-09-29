@@ -560,17 +560,21 @@
     var t = me.tasks||{}, list = (Array.isArray(c.checklist) && c.checklist.length) ? c.checklist : null;
     var at = list ? list.filter(function(x){ return /^access/i.test(x.text||''); })[0] : { id:'ob6' };
     var n = apps.filter(function(a){ return acc[a.id]; }).length;
+    /* A login app ticked done with no login saved (FulaFalu ticked all five on 27 Sep, before the
+       password box existed, so the section hid and he could not reach the box). Keep it open. */
+    var needLogin = function(a){ return LOGIN_APPS.indexOf(a.id) >= 0 && acc[a.id] && acc[a.id].state === 'done' && !logins[a.id]; };
+    var missing = apps.filter(needLogin);
     // Hide once it is all done AND we have ticked it on our side, so an onboarded client is not nagged.
-    var closed = (n === apps.length && at && t[at.id]) || (isLocal() && !(Array.isArray(c.accessApps) && c.accessApps.length));
+    var closed = (n === apps.length && at && t[at.id] && !missing.length) || (isLocal() && !(Array.isArray(c.accessApps) && c.accessApps.length));
     $('p-access-wrap').style.display = closed ? 'none' : '';
     if (closed) return;
-    $('p-access-intro').innerHTML = 'Each step adds KaizenEvol as a partner or team member. You stay the owner and can remove us in one tap. About ten minutes. <b>' + n + ' of ' + apps.length + ' done.</b>';
+    $('p-access-intro').innerHTML = 'Each step adds KaizenEvol as a partner or team member. You stay the owner and can remove us in one tap. About ten minutes. <b>' + n + ' of ' + apps.length + ' done.</b>' + (missing.length ? ' <b>Add your login for ' + missing.map(function(a){ return esc(a.name); }).join(', ') + ' below.</b>' : '');
     $('p-access').innerHTML = apps.map(function(a){
-      var st = acc[a.id] && acc[a.id].state, done = !!st;
+      var st = acc[a.id] && acc[a.id].state, done = !!st, need = needLogin(a);
       var btns = a.url ? '<a class="btn-line" href="'+a.url+'" target="_blank" rel="noopener">'+esc(a.link)+' ↗</a>' : '';
       btns += done ? '<button class="btn-line" data-app="'+a.id+'" data-st="">Undo</button>'
                    : '<button class="btn-solid" data-app="'+a.id+'" data-st="done">I\'ve done this</button>' + (a.na ? '<button class="btn-line" data-app="'+a.id+'" data-st="na">Not relevant</button>' : '');
-      return '<details class="'+(done?'is-done':'')+'"><summary><span class="box'+(done?' on':'')+'"></span><span><span class="n">'+esc(a.name)+'</span><span class="w">'+esc(a.why)+'</span></span><span class="st">'+(st==='na'?'Not relevant':done?'Done':'To do')+'</span></summary>'
+      return '<details class="'+(done&&!need?'is-done':'')+'"'+(need?' open':'')+'><summary><span class="box'+(done?' on':'')+'"></span><span><span class="n">'+esc(a.name)+'</span><span class="w">'+esc(a.why)+'</span></span><span class="st">'+(need?'Add login':st==='na'?'Not relevant':done?'Done':'To do')+'</span></summary>'
         + '<div class="body"><ol>'+a.steps.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol>'
         + '<div class="lvl"><b>Access level</b>'+esc(a.level)+'</div>' + (a.note ? '<div class="note">'+esc(a.note)+'</div>' : '')
         + loginBlock(a.id)
