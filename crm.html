@@ -160,6 +160,15 @@
     .cf{flex:1;min-width:110px;}
     .cf-l{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
     .cf-v{font-size:13px;font-weight:500;color:var(--text);}
+    /* Edit details, inline on the open client card (2026-09-29) */
+    .ce-form{margin-bottom:12px;}
+    .ce-apps{display:flex;flex-wrap:wrap;gap:6px;}
+    .ce-app,.ce-check{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text);cursor:pointer;}
+    .ce-app{padding:4px 10px;border:1.5px solid var(--border);border-radius:var(--radius-pill);}
+    .ce-app input,.ce-check input{accent-color:var(--purple);margin:0;}
+    .ce-check{margin:0 0 12px;}
+    .ce-note{font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.5;}
+    .ce-err{font-size:12px;font-weight:600;color:var(--red);min-height:16px;margin-bottom:8px;}
     .trial-section{margin-top:14px;}
     .trial-bar{height:7px;background:var(--purple-l);border-radius:4px;overflow:hidden;margin:5px 0;}
     .trial-fill{height:100%;background:var(--purple);border-radius:4px;transition:width .4s;}
@@ -1272,15 +1281,15 @@ function getClientStage(c){
 
 /* ── CLIENT PIPELINE ── */
 const PIPE_STAGES=[{key:'onboarding',label:'Onboarding'},{key:'live',label:'Live'}];
-function getNextAction(stageKey,day,clientName){
-  const n=clientName.split(' ')[0];
+function getNextAction(stageKey,day,clientName,c){
+  const n=clientName.split(' ')[0];const w=dropWord(c);
   switch(stageKey){
-    case 'onboarding':return{text:`Run ${n} through onboarding: agreement, first invoice, revenue baseline in writing, access to the ad account, the store and email/SMS, then the drop calendar and the go-live date.`,cls:''};
-    case 'live':return{text:`${n} is live. Drop one is measurement — content, ads, email/SMS running, sell-through target set in writing off their baseline. Log the trailing 3-month revenue every month; the growth step fires when it is up 50%.`,cls:'green-action'};
+    case 'onboarding':return{text:`Run ${n} through onboarding: agreement, first invoice, revenue baseline in writing, access to the ad account, the store and email/SMS, then the ${w.word} calendar and the go-live date.`,cls:''};
+    case 'live':return{text:`${n} is live. ${w.Word} one is measurement — content, ads, email/SMS running, sell-through target set in writing off their baseline. Log the trailing 3-month revenue every month; the growth step fires when it is up 50%.`,cls:'green-action'};
     default:return{text:'',cls:''};
   }
 }
-function clientNextAction(c){const s=getClientStage(c);return isLocalClient(c)?localNextAction(s.key,c.name):getNextAction(s.key,s.day,c.name);}
+function clientNextAction(c){const s=getClientStage(c);return isLocalClient(c)?localNextAction(s.key,c.name):getNextAction(s.key,s.day,c.name,c);}
 /* Opens that client's row on the Clients tab and brings it into view (2026-09-29, Diego: "I can't open
    them, clicking them does nothing"). Clears the search and stage filter if they would hide it. */
 function openClientCard(id){
@@ -1376,7 +1385,16 @@ function deskConnection(url,tenant,key){
   return{deskUrl:url.replace(/\/+$/,''),deskTenant:tenant,deskKey:key};
 }
 /* CLIENT-LANE-END */
-function tasksFor(c){return tasksForLane(c,CLIENT_TASKS);}
+/* The word for a client's date (2026-09-29, Rahaid and Diego): an Artist has a release, a Brand a
+   drop. Local clients have neither and keep their own copy. One helper so every string agrees;
+   swap() turns a brand line into the artist one. portal.html has the same helper. */
+function dropWord(c){const a=!!c&&c.segment==='Artist'&&!isLocalClient(c);
+  return a?{word:'release',Word:'Release',example:'Single out, pre-save opens',swap:s=>String(s).replace(/\bdrop\b/g,'release').replace(/\bDrop\b/g,'Release')}
+          :{word:'drop',Word:'Drop',example:'October capsule, pre-order opens',swap:s=>String(s)};}
+/* The standard list in the client's word. Only the default text changes; ids stay, so ticks
+   stored in clientTasks still line up, and a stored c.checklist is never rewritten. */
+function creativeTasks(c){const w=dropWord(c);return w.word==='drop'?CLIENT_TASKS:CLIENT_TASKS.map(t=>({...t,text:w.swap(t.text)}));}
+function tasksFor(c){return tasksForLane(c,creativeTasks(c));}
 const PHASE_ORDER=['onboarding','live'];
 const PHASE_LABELS={onboarding:'Onboarding — from yes to live',live:'Live — the four things, measured'};
 const LOCAL_PHASE_LABELS={onboarding:'Onboarding — from yes to live',live:'Live — the website and the front office'};
@@ -1430,7 +1448,7 @@ function toggleClientTask(clientId,taskId){const d=load();if(!d.clientTasks)d.cl
 function stClass(s){return{active:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
 function stLabel(s){return{active:'✓ Active',inactive:'○ Inactive'}[s]||s;}
 /* One client's full card: fields, go-live date, portal block. Unchanged markup, now shown inside the open row. */
-function clientCardHTML(c,data){const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" id="card_${esc(c.id)}" style="margin-bottom:14px;scroll-margin-top:120px"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select></div></div>${isLocalClient(c)?`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Monthly</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Desk</div><div class="cf-v">${c.deskTenant?'Connected · '+esc(c.deskTenant):'Not connected'} <button class="comm-status cs-pending" onclick="deskConnect('${c.id}')">${c.deskTenant?'change':'connect'}</button>`:`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired`}</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}
+function clientCardHTML(c,data){if(_clEdit&&_clEdit.id===c.id)return clientEditHTML(c);const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" id="card_${esc(c.id)}" style="margin-bottom:14px;scroll-margin-top:120px"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select><button type="button" class="ob-btn" onclick="clEditStart('${esc(c.id)}')">Edit details</button></div></div>${clContactLine(c)}${isLocalClient(c)?`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Monthly</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Desk</div><div class="cf-v">${c.deskTenant?'Connected · '+esc(c.deskTenant):'Not connected'} <button class="comm-status cs-pending" onclick="deskConnect('${c.id}')">${c.deskTenant?'change':'connect'}</button>`:`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired`}</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}
 /* ── CLIENTS, compact (2026-09-29) ──
    One row per client: name, stage, next action on one line, and badges for checklist, access and
    unread portal messages. The open client (one at a time) is kept in localStorage so the re-render
@@ -1460,12 +1478,82 @@ function clientRowHTML(c,data,open){
 function renderClients(data){
   const host=document.getElementById('clientsContainer');if(!host)return;
   const all=data.clients||[];const list=all.filter(clMatches);const openId=clOpenId();
+  const ae=document.activeElement,keep=_clEdit&&ae&&ae.closest&&ae.closest('form.ce-form')?{n:ae.name,v:ae.value,s:ae.selectionStart}:null;
   host.innerHTML=list.length?list.map(c=>clientRowHTML(c,data,c.id===openId)).join(''):'<div style="color:var(--muted);font-size:13px;">'+(all.length?'No clients match.':'No clients yet.')+'</div>';
   if(list.some(c=>c.id===openId)){renderClientPipeline(data);renderClientChecklist(data);renderGrowth(data);}
+  /* a realtime re-render mid-edit rebuilds the form from the draft; put the cursor back */
+  const f=keep&&host.querySelector('form.ce-form');const el=f&&(keep.n==='accessApps'?f.querySelector('input[name="accessApps"][value="'+CSS.escape(keep.v)+'"]'):f.elements[keep.n]);
+  if(el){el.focus({preventScroll:true});try{if(keep.s!=null)el.setSelectionRange(keep.s,keep.s);}catch(e){}}
 }
 /* Connect a local client to the Desk: the three fields the portal's Desk panel reads.
    Blank address = disconnect (the portal goes back to "switches on when your front office goes live"). */
 function deskConnect(id){const d=load();const c=d.clients.find(x=>x.id===id);if(!c)return;const u=prompt('Desk address for '+c.name+' (https://…, blank to disconnect)',c.deskUrl||'');if(u===null)return;let r=null;if(u.trim()){const t=prompt('Desk account (tenant id, e.g. hollow-oak)',c.deskTenant||'');if(t===null)return;const k=prompt('Their portal key (portal_key in the Desk tenant file)',c.deskKey||'');if(k===null)return;r=deskConnection(u,t,k);if(r&&r.error){showToast(r.error);return;}}if(r){c.deskUrl=r.deskUrl;c.deskTenant=r.deskTenant;c.deskKey=r.deskKey;}else{delete c.deskUrl;delete c.deskTenant;delete c.deskKey;}save(d);renderClients(d);showToast(r?'Desk connected — their portal numbers switch on':'Desk disconnected');}
+/* ── EDIT CLIENT DETAILS (2026-09-29, Rahaid and Diego: "edit details on the CRM directly") ──
+   Edit details turns the open card into a form over the keys the card and the portal read. It saves
+   through load()/save(), so realtime sync and the updated_at guard work as for any other edit. While
+   editing, _clEdit.draft holds what is typed, so a realtime re-render rebuilds the form without losing it.
+   Portal logins, the access line and Desk keys are not here: Re-send invite and Desk connect own them. */
+let _clEdit=null;
+function clContactLine(c){const bits=[c.segment,c.founder,c.email,c.phone].map(x=>String(x||'').trim()).filter(Boolean);return bits.length?'<div class="ce-note">'+bits.map(esc).join(' · ')+'</div>':'';}
+const CE_SEGMENTS=['Artist','Brand','Local'];
+function clEditValues(c){return{name:c.name||'',founder:c.founder||'',email:c.email||'',phone:c.phone||'',segment:c.segment||'',status:c.status==='inactive'?'inactive':'active',terms:c.terms||'',retainerValue:c.retainerValue==null?'':String(c.retainerValue),founding:!!c.founding,adSpend:c.adSpend||'',baselineRevenue:c.baselineRevenue?String(c.baselineRevenue):'',liveDate:c.liveDate||'',feeAfter:c.feeAfter||'',invoiceNote:c.invoiceNote||'',accessApps:accessApps(c)};}
+function clEditRead(f){const g=n=>f.elements[n]?String(f.elements[n].value):'';return{name:g('name'),founder:g('founder'),email:g('email'),phone:g('phone'),segment:g('segment'),status:g('status'),terms:g('terms'),retainerValue:g('retainerValue'),founding:!!(f.elements.founding&&f.elements.founding.checked),adSpend:g('adSpend'),baselineRevenue:g('baselineRevenue'),liveDate:g('liveDate'),feeAfter:g('feeAfter'),invoiceNote:g('invoiceNote'),accessApps:[...f.querySelectorAll('input[name="accessApps"]:checked')].map(e=>e.value)};}
+function clientEditHTML(c){
+  const v=_clEdit.draft||clEditValues(c),id=esc(c.id),local=v.segment==='Local'||(v.segment===(c.segment||'')&&isLocalClient(c));
+  const segs=CE_SEGMENTS.includes(v.segment)?CE_SEGMENTS:[v.segment,...CE_SEGMENTS];
+  const inp=(label,n,type,attrs)=>`<div class="km-field${n==='adSpend'?' ce-adspend':''}"${n==='adSpend'&&local?' style="display:none"':''}><label class="km-label" for="ce_${n}_${id}">${label}</label><input class="km-inp" id="ce_${n}_${id}" name="${n}" type="${type||'text'}" value="${esc(v[n])}"${attrs||''} /></div>`;
+  return`<div class="card" id="card_${id}" style="margin-bottom:14px;scroll-margin-top:120px"><div class="client-head"><div class="client-name">Edit ${esc(c.name)}</div></div>`
+    +`<form class="ce-form" novalidate data-id="${id}" oninput="clEditDraft(this,event)" onchange="clEditDraft(this,event)" onsubmit="clEditSave(this);return false">`
+    +`<div class="km-row">${inp('Name','name','text',' required autocomplete="off"')}${inp('Founder / contact','founder','text',' autocomplete="off"')}</div>`
+    +`<div class="km-row">${inp('Email','email','email',' autocomplete="off"')}${inp('Phone','phone','tel',' autocomplete="off"')}</div>`
+    +`<div class="km-row"><div class="km-field"><label class="km-label" for="ce_segment_${id}">Segment</label><select class="km-select" id="ce_segment_${id}" name="segment" onchange="clEditSeg(this)">${segs.map(s=>`<option value="${esc(s)}"${s===v.segment?' selected':''}>${esc(s||'Not set')}</option>`).join('')}</select></div>`
+    +`<div class="km-field"><label class="km-label" for="ce_status_${id}">Status</label><select class="km-select" id="ce_status_${id}" name="status"><option value="active"${v.status==='active'?' selected':''}>Active</option><option value="inactive"${v.status==='inactive'?' selected':''}>Inactive</option></select></div></div>`
+    +inp('Terms (their portal shows these)','terms')
+    +`<div class="km-row">${inp('Retainer £/mo','retainerValue','number',' min="0" step="1" inputmode="numeric" placeholder="blank = standard rate"')}${inp('Baseline £/mo (3-mo avg)','baselineRevenue','number',' min="0" step="1" inputmode="numeric" placeholder="not set"')}</div>`
+    +`<div class="km-row">${inp('Ad spend','adSpend')}${inp('Go-live date','liveDate','date')}</div>`
+    +`<div class="km-row">${inp('Fee after trial','feeAfter','text',' placeholder="Agreed later"')}${inp('Invoice note','invoiceNote','text',' placeholder="portal default"')}</div>`
+    +`<label class="ce-check"><input type="checkbox" name="founding"${v.founding?' checked':''} /> Founding client</label>`
+    +`<div class="km-field"><div class="km-label">Access: the apps their portal asks for</div><div class="ce-apps">${Object.keys(ACCESS_NAMES).map(a=>`<label class="ce-app"><input type="checkbox" name="accessApps" value="${a}"${v.accessApps.includes(a)?' checked':''} /> ${esc(ACCESS_NAMES[a])}</label>`).join('')}</div></div>`
+    +`<div class="ce-note">Changing the email here does not move their portal login. Use Re-send invite for that.</div>`
+    +`<div class="ce-err" role="alert">${esc(_clEdit.err||'')}</div>`
+    +`<div class="form-actions"><button type="submit" class="btn-save">Save</button><button type="button" class="btn-cancel" onclick="clEditCancel()">Cancel</button></div></form>${portalBlock(c)}</div>`;
+}
+function clEditStart(id){_clEdit={id,draft:null,appsTouched:false,err:''};clSetOpen(id);renderClients(load());const card=document.getElementById('card_'+id);if(card)card.scrollIntoView({block:'start'});}
+function clEditCancel(){_clEdit=null;renderClients(load());}
+function clEditDraft(f,ev){if(!_clEdit||_clEdit.id!==f.dataset.id)return;if(ev&&ev.target&&ev.target.name==='accessApps')_clEdit.appsTouched=true;_clEdit.draft=clEditRead(f);}
+/* A new segment brings its default apps along, unless the apps were set by hand. */
+function clEditSeg(sel){
+  const f=sel.form;if(!_clEdit||!f)return;const c=(load().clients||[]).find(x=>x.id===_clEdit.id)||{};
+  if(!_clEdit.appsTouched&&!(Array.isArray(c.accessApps)&&c.accessApps.length)){const def=accessApps({segment:sel.value});f.querySelectorAll('input[name="accessApps"]').forEach(e=>{e.checked=def.includes(e.value);});}
+  const ad=f.querySelector('.ce-adspend');if(ad)ad.style.display=sel.value==='Local'?'none':'';
+  _clEdit.draft=clEditRead(f);
+}
+function clEditSave(f){
+  if(!_clEdit||_clEdit.id!==f.dataset.id)return;const id=_clEdit.id,v=clEditRead(f);_clEdit.draft=v;
+  const t=s=>String(s||'').trim(),num=s=>t(s)===''||/^\d+(\.\d+)?$/.test(t(s));
+  const err=!t(v.name)?'Name is needed.':t(v.email)&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t(v.email))?'That email does not look right.':!num(v.retainerValue)?'Retainer must be a number of pounds, or blank.':!num(v.baselineRevenue)?'Baseline must be a number of pounds, or blank.':'';
+  if(err){_clEdit.err=err;const box=f.querySelector('.ce-err');if(box)box.textContent=err;showToast(err);return;}
+  const d=load();const c=(d.clients||[]).find(x=>x.id===id);if(!c){clEditCancel();return;}
+  const wasLocal=isLocalClient(c),hadApps=Array.isArray(c.accessApps)&&c.accessApps.length;
+  const opt=(k,val)=>{if(val)c[k]=val;else delete c[k];};
+  c.name=t(v.name);c.founder=t(v.founder);c.email=t(v.email);opt('phone',t(v.phone));
+  /* Segment: same lane rules as onboarding (obClientFromRow). Local sets lane:'local' and the local
+     checklist; leaving Local clears the lane and the untouched local list, never a custom one. */
+  if(v.segment!==(c.segment||'')){c.segment=v.segment;if(v.segment==='Local')c.lane='local';else if(wasLocal)delete c.lane;}
+  const nowLocal=isLocalClient(c),ids=l=>(l||[]).map(x=>x.id).join();
+  if(nowLocal&&!wasLocal&&!(Array.isArray(c.checklist)&&c.checklist.length))c.checklist=LOCAL_CLIENT_TASKS.map(x=>({...x}));
+  if(!nowLocal&&wasLocal&&Array.isArray(c.checklist)&&ids(c.checklist)===ids(LOCAL_CLIENT_TASKS))delete c.checklist;
+  if(nowLocal)delete c.adSpend;else opt('adSpend',t(v.adSpend));
+  c.status=v.status==='inactive'?'inactive':'active';c.terms=t(v.terms);
+  if(t(v.retainerValue)==='')delete c.retainerValue;else c.retainerValue=Number(t(v.retainerValue));
+  c.founding=!!v.founding;c.baselineRevenue=Number(t(v.baselineRevenue))||0;
+  c.liveDate=v.liveDate||'';if(!c.liveDate)delete c.trialStartDate;   /* else load() puts the old date back */
+  opt('feeAfter',t(v.feeAfter));opt('invoiceNote',t(v.invoiceNote));
+  /* accessApps stays unset while it is just the segment default, as before this form existed */
+  const def=accessApps({segment:c.segment}),same=v.accessApps.length===def.length&&def.every(a=>v.accessApps.includes(a));
+  if(!v.accessApps.length||(!hadApps&&same))delete c.accessApps;else c.accessApps=Object.keys(ACCESS_NAMES).filter(a=>v.accessApps.includes(a));
+  _clEdit=null;save(d);openClientCard(id);renderCommission(load());showToast('Saved '+c.name);
+}
 function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.status=status;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
 /* ── GROWTH STEP (FIN-PRI-004, settled 2026-09-04) ──
    Every time the trailing 3-month average revenue is up 50% on the level that
@@ -1586,7 +1674,7 @@ function portalBlock(c){
     +'<button class="ob-btn" style="margin-left:auto" onclick="ptInvite(\''+c.id+'\')">'+(u?'Re-send invite':'Invite to portal')+'</button></div>'
     +accessLine(c)+loginLine(c)
     +'<div class="pt-row" style="align-items:center"><span class="cf-l" style="margin:0">Drive folder</span>'+(c.driveUrl?'<a href="'+esc(c.driveUrl)+'" target="_blank" rel="noopener" style="color:var(--green)">open ↗</a>':'<span class="pt-badge">not shared yet</span>')+'<button class="ob-btn" onclick="driveSet(\''+c.id+'\')">'+(c.driveUrl?'Change':'Add link')+'</button></div>'
-    +'<div class="pt-row"><input type="date" class="pt-inp" id="ptd_'+c.id+'" style="flex:0 0 150px" /><input type="text" class="pt-inp" id="ptt_'+c.id+'" placeholder="'+(isLocalClient(c)?'Date title, e.g. Website goes live':'Drop / date title, e.g. October capsule — pre-order opens')+'" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'event\')">+ Date</button></div>'
+    +'<div class="pt-row"><input type="date" class="pt-inp" id="ptd_'+c.id+'" style="flex:0 0 150px" /><input type="text" class="pt-inp" id="ptt_'+c.id+'" placeholder="'+(isLocalClient(c)?'Date title, e.g. Website goes live':dropWord(c).Word+' / date title, e.g. '+dropWord(c).example)+'" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'event\')">+ Date</button></div>'
     +'<div class="pt-row"><input type="text" class="pt-inp" id="ptu_'+c.id+'" placeholder="Update for the client — weekly numbers, a note, a link" /><input type="url" class="pt-inp" id="ptl_'+c.id+'" placeholder="Link (optional)" style="flex:0 0 220px" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'update\')">+ Update</button></div>'
     +'<div class="pt-row"><input type="file" class="pt-inp" id="ptf_'+c.id+'" multiple style="padding:5px 10px" /><button class="ob-btn" onclick="ptUpload(\''+c.id+'\')">Upload for client</button></div>'
     +'<div class="pt-row"><input type="text" class="pt-inp" id="pti_t_'+c.id+'" placeholder="'+(isLocalClient(c)?'Invoice — e.g. October fee, website buy-out':'Invoice — October retainer, growth-step bonus, ad spend top-up')+'" /><input type="number" class="pt-inp" id="pti_a_'+c.id+'" placeholder="£" min="0" step="1" style="flex:0 0 90px" /><input type="date" class="pt-inp" id="pti_d_'+c.id+'" style="flex:0 0 150px" /><input type="url" class="pt-inp" id="pti_l_'+c.id+'" placeholder="Pay link (blank = card on file)" style="flex:0 0 220px" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'invoice\')">+ Invoice</button></div>'

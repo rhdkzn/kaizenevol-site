@@ -376,6 +376,8 @@
   function isArtist(){ return ((me && me.client) || {}).segment === 'Artist'; }
   /* Handles, the YouTube link and "have you claimed Spotify / Apple Music for Artists" were
      asked here AND in Give us access. They live in Give us access only now (2026-09-29). */
+  /* An artist has a release, a brand a drop (2026-09-29). Same helper as crm.html dropWord(). */
+  function dropWord(){ var a = isArtist() && !isLocal(); return { word: a ? 'release' : 'drop', Word: a ? 'Release' : 'Drop', swap: function(s){ return a ? String(s).replace(/\bdrop\b/g, 'release').replace(/\bDrop\b/g, 'Release') : s; } }; }
   var SETUP_QS = [
     ['You', [
       ['legal_name','Your full legal name','For the paperwork only. It never goes on a post.'],
@@ -436,7 +438,7 @@
      and wording as the artist checklist the CRM carries on SKN's and FulaFalu's cards (a1..a11,
      l1..l5), so both sides tick one list. a4 "Onboarding form" and a7 "Access" are the items
      portal_form_submit() and portal_access_set() look for by their opening words. */
-  var ARTIST_TASKS = [['a1','Discovery call done'],['a2','Brand Read done and sent'],['a3','Deck presented'],['a4','Onboarding form returned'],['a6','Portal login set up'],['a5','Agreement signed'],['a7','Access in: your apps'],['a8','Release date and drop plan agreed'],['a9','First footage in the Content folder'],['a10','First content batch approved'],['a11','Live'],['l1','Five metrics checked every 2 weeks'],['l2','Content cycle every 2 weeks: shoot, edit, approve, schedule'],['l3','Monthly read and meeting held'],['l4','Paid terms discussed once the music is paying'],['l5','Testimonial asked for, permission to quote recorded']];
+  var ARTIST_TASKS = [['a1','Discovery call done'],['a2','Brand Read done and sent'],['a3','Deck presented'],['a4','Onboarding form returned'],['a6','Portal login set up'],['a5','Agreement signed'],['a7','Access in: your apps'],['a8','Release date and release plan agreed'],['a9','First footage in the Content folder'],['a10','First content batch approved'],['a11','Live'],['l1','Five metrics checked every 2 weeks'],['l2','Content cycle every 2 weeks: shoot, edit, approve, schedule'],['l3','Monthly read and meeting held'],['l4','Paid terms discussed once the music is paying'],['l5','Testimonial asked for, permission to quote recorded']];
   /* Same ids as crm.html LOCAL_CLIENT_TASKS, so both sides tick one list. */
   var LOCAL_TASKS = [['la1','Agreement signed'],['la2','First month paid'],['la3','Setup questions answered'],['la4','Website built and approved by you'],['la5','Front office set up in your voice'],['la6','Your number, email and site chat pointed at the front office'],['la7','Live'],['la8','Monthly report sent'],['la9','Guarantee checked for the month']];
   /* Port of kaizendesk/caught.py parse_hours_line: all or nothing, so the guarantee is never
@@ -676,20 +678,24 @@
   function renderAccess(){
     var info = accessInfo();
     // Hide once it is all done AND we have ticked it on our side, so an onboarded client is not nagged.
-    var closed = !info || (info.all && info.ticked);
+    /* A login app ticked done with no login saved (FulaFalu ticked all five on 27 Sep, before the
+       password box existed, so the section hid and he could not reach the box). Keep it open. */
+    var needLogin = function(a){ return info && LOGIN_APPS.indexOf(a.id) >= 0 && info.acc[a.id] && info.acc[a.id].state === 'done' && !logins[a.id]; };
+    var missing = info ? info.apps.filter(needLogin) : [];
+    var closed = !info || (info.all && info.ticked && !missing.length);
     $('p-access-wrap').style.display = closed ? 'none' : '';
     if (closed) return;
     var apps = info.apps, acc = info.acc, n = info.n;
-    $('p-access-intro').innerHTML = 'Each step adds KaizenEvol as a partner or team member. You stay the owner and can remove us in one tap. About ten minutes. <b>' + n + ' of ' + apps.length + ' done.</b>';
+    $('p-access-intro').innerHTML = 'Each step adds KaizenEvol as a partner or team member. You stay the owner and can remove us in one tap. About ten minutes. <b>' + n + ' of ' + apps.length + ' done.</b>' + (missing.length ? ' <b>Add your login for ' + missing.map(function(a){ return esc(a.name); }).join(', ') + ' below.</b>' : '');
     $('p-access').innerHTML = apps.map(function(a){
-      var st = acc[a.id] && acc[a.id].state, done = !!st;
+      var st = acc[a.id] && acc[a.id].state, done = !!st, need = needLogin(a);
       var url = a.id === 'drive' ? driveUrl() : a.url, link = a.id === 'drive' ? 'Open your folder' : a.link;
       var btns = url ? '<a class="btn-line" href="'+attr(url)+'" target="_blank" rel="noopener">'+esc(link)+' ↗</a>' : '';
       // The login apps are done by saving the login; the button is only for the FaceTime route.
       var byLogin = LOGIN_APPS.indexOf(a.id) > -1;
       btns += done ? '<button class="btn-line" data-app="'+a.id+'" data-st="">Undo</button>'
                    : (byLogin ? '<button class="btn-link" data-app="'+a.id+'" data-st="done">Did it on FaceTime instead</button>' : '<button class="btn-solid" data-app="'+a.id+'" data-st="done">I\'ve done this</button>') + (a.na ? '<button class="btn-line" data-app="'+a.id+'" data-st="na">Not relevant</button>' : '');
-      return '<details class="'+(done?'is-done':'')+'"><summary><span class="box'+(done?' on':'')+'"></span><span><span class="n">'+esc(a.name)+'</span><span class="w">'+esc(a.why)+'</span></span><span class="st">'+(st==='na'?'Not relevant':done?'Done':'To do')+'</span></summary>'
+      return '<details class="'+(done&&!need?'is-done':'')+'"'+(need?' open':'')+'><summary><span class="box'+(done?' on':'')+'"></span><span><span class="n">'+esc(a.name)+'</span><span class="w">'+esc(a.why)+'</span></span><span class="st">'+(need?'Add login':st==='na'?'Not relevant':done?'Done':'To do')+'</span></summary>'
         + '<div class="body"><ol>'+a.steps.map(function(x){ return '<li>'+(x === 'DRIVE_LINK' ? driveStep() : x)+'</li>'; }).join('')+'</ol>'
         + '<div class="lvl"><b>Access level</b>'+esc(a.level)+'</div>' + (a.note ? '<div class="note">'+msgUs(esc(a.note))+'</div>' : '')
         + loginBlock(a.id)
@@ -808,7 +814,7 @@
     renderSetup();
     renderAccess();
     renderProgress();
-    $('p-events-h').textContent = isArtist() ? 'Release calendar' : 'Drop calendar';
+    $('p-events-h').textContent = dropWord().Word + ' calendar';
     $('p-numbers-h').textContent = 'The numbers';
     $('p-numbers').style.display = ''; $('p-numbers').classList.remove('fl'); $('p-needs-wrap').style.display = 'none';
     var c = me.client||{}, s = me.settings||{}, g = growth(c, me.snapshots||[], s);

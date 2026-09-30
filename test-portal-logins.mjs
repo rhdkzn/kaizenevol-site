@@ -37,6 +37,31 @@ const PW_BIN = process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium'
 const browser = await chromium.launch({ ...(existsSync(PW_BIN) ? { executablePath: PW_BIN } : {}) })
 const phone = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }
 
+/* ── 0. FulaFalu's real state, 2026-09-29 ──
+   He ticked all five apps done on 27 Sep, before the password box existed, and the Access item
+   was ticked with it. The access section then hid entirely, so he could not reach the box.
+   A done login app with no saved login must keep the section open and show its box. */
+{
+  const me0 = { email: 'fula@example.com', client: { ...CLIENT, accessApps: ['spotify', 'instagram', 'tiktok', 'soundcloud', 'distributor'], checklist: [{ id: 'a7', phase: 'onboarding', text: 'Access granted' }] }, settings: {}, snapshots: [], tasks: { a7: true },
+    access: { spotify: { state: 'done' }, instagram: { state: 'done' }, tiktok: { state: 'done' }, soundcloud: { state: 'done' }, distributor: { state: 'done' } }, boards: [] }
+  const stub0 = `window.supabase = { createClient: function(){
+    var me = ${JSON.stringify(me0)};
+    function q(){ var o = { select: function(){ return o; }, eq: function(){ return o; }, order: function(){ return o; }, limit: function(){ return Promise.resolve({ data: [] }); }, maybeSingle: function(){ return Promise.resolve({ data: null }); }, insert: function(){ return Promise.resolve({}); }, then: function(f, r){ return Promise.resolve({ data: [] }).then(f, r); } }; return o; }
+    return { auth: { getSession: function(){ return Promise.resolve({ data: { session: { user: { email: 'fula@example.com' } } } }); }, onAuthStateChange: function(){}, signOut: function(){ return Promise.resolve(); } },
+      rpc: function(n){ return Promise.resolve({ data: n === 'portal_me' ? me : null }); }, from: q,
+      storage: { from: function(){ return { list: function(){ return Promise.resolve({ data: [] }); } }; } } };
+  } };`
+  const ctx0 = await browser.newContext(phone)
+  const p0 = await ctx0.newPage()
+  await p0.route('**/@supabase/supabase-js@2**', r => r.fulfill({ status: 200, contentType: 'application/javascript', body: stub0 }))
+  await p0.goto(BASE + '/portal.html', { waitUntil: 'domcontentloaded' })
+  await p0.waitForSelector('#s-portal.on', { timeout: 15000 }); await p0.waitForTimeout(300)
+  ok('all-done client with no saved logins: access section still shows', await p0.isVisible('#p-access-wrap'))
+  const vis = await p0.$$eval('#p-access form.login[data-app]', fs => fs.filter(f => f.offsetParent !== null).map(f => f.dataset.app).sort())
+  ok('all-done client: the three login boxes are visible without tapping', JSON.stringify(vis) === JSON.stringify(['distributor', 'soundcloud', 'tiktok']), JSON.stringify(vis))
+  await ctx0.close()
+}
+
 /* ── 1. the portal ── */
 {
   const stub = `window.__calls = [];

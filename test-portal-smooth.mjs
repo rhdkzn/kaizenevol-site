@@ -117,7 +117,7 @@ const guard = async (name, fn) => { try { await fn() } catch (e) { ok(name, fals
 
   // 5. artist checklist
   const tasks = await page.innerText('#p-tasks')
-  ok('5 artist: "Where we are" is the artist list', /Onboarding form returned/.test(tasks) && /Release date and drop plan agreed/.test(tasks), tasks)
+  ok('5 artist: "Where we are" is the artist list', /Onboarding form returned/.test(tasks) && /Release date and release plan agreed/.test(tasks) && !/\bdrop/i.test(tasks), tasks)
   ok('5 artist: no ecom items (Meta, store, drop calendar, email/SMS)', !/Meta|store|Drop calendar|Email\/SMS/i.test(tasks), tasks)
   const ticked = await page.$$eval('#p-tasks li.done', ls => ls.map(l => l.innerText.trim()))
   ok('5 artist: a CRM tick on a4 ticks "Onboarding form returned" (same ids as the CRM)', ticked.length === 1 && /Onboarding form returned/.test(ticked[0]), JSON.stringify(ticked))

@@ -224,6 +224,40 @@
     .res-field input:focus,.res-field select:focus{border-color:var(--purple);}
     .res-two{display:flex;gap:11px;}
     .res-two>*{flex:1;}
+    /* Client inputs: what clients typed into portal.html, one row per client, opened in place. */
+    .ci-list{display:flex;flex-direction:column;gap:10px;}
+    .ci-item{background:var(--bg);border-radius:var(--radius-sm);border:1.5px solid var(--border);transition:border-color .2s;}
+    .ci-item:hover,.ci-item.open{border-color:var(--purple-m);}
+    .ci-row{width:100%;display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:12px 18px;min-height:44px;background:none;border:none;color:var(--text);font-family:var(--sans);text-align:left;cursor:pointer;}
+    .ci-name{font-size:14px;font-weight:700;flex:1 1 160px;min-width:0;overflow-wrap:anywhere;}
+    .ci-chips{display:flex;flex-wrap:wrap;gap:6px;}
+    .ci-chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--radius-pill);background:var(--purple-l);color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;}
+    .ci-chip.on{color:var(--text);}
+    .ci-chip.warn{color:var(--amber);background:rgba(251,191,36,.12);}
+    .ci-caret{font-size:12px;color:var(--muted);transition:transform .2s;}
+    .ci-item.open .ci-caret{transform:rotate(90deg);}
+    .ci-body{padding:4px 18px 16px;display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--border);}
+    .ci-h{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:10px 0 6px;}
+    .ci-line{font-size:13px;line-height:1.55;overflow-wrap:anywhere;}
+    .ci-line .d{color:var(--muted);font-size:12px;margin-right:6px;}
+    .ci-login{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+    .ci-login:last-child{border-bottom:none;}
+    .ci-out{font-family:ui-monospace,Menlo,Consolas,monospace;overflow-wrap:anywhere;flex:1 1 100%;}
+    .ci-out:empty{display:none;}
+    .ci-qa{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:6px 16px;font-size:13px;line-height:1.5;}
+    .ci-qa dt{color:var(--muted);}
+    .ci-qa dd{white-space:pre-wrap;overflow-wrap:anywhere;}
+    .ci-msg{font-size:13px;line-height:1.55;padding:9px 12px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);white-space:pre-wrap;overflow-wrap:anywhere;}
+    .ci-msg.unread{border-color:rgba(251,191,36,.5);}
+    .ci-msg + .ci-msg{margin-top:6px;}
+    .ci-empty{font-size:13px;color:var(--muted);}
+    @media(max-width:700px){
+      .ci-qa{grid-template-columns:1fr;gap:2px;}
+      .ci-qa dd{margin-bottom:8px;}
+      .ci-row{padding:12px 14px;}
+      .ci-body{padding:4px 14px 14px;}
+      .ci-login .res-act,.ci-file{min-height:44px;display:inline-flex;align-items:center;}
+    }
     #resToast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--void);padding:10px 18px;border-radius:var(--radius-pill);font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s;z-index:200;box-shadow:0 6px 24px rgba(0,0,0,.4);}
   
   /* ============ CROSS-DOCUMENT VIEW TRANSITIONS — content rises into place, nav holds ============ */
@@ -328,6 +362,10 @@
       <div class="section-label">Clients</div>
       <div class="snapshot-list" id="snapshotList"></div>
     </section>
+    <section id="clientInputsSection">
+      <div class="section-label">Client inputs &mdash; what they put in their portal</div>
+      <div class="ci-list" id="clientInputs"><div class="ci-empty">Loading what clients have sent&hellip;</div></div>
+    </section>
     <section id="resultsSection">
       <div class="section-label">Client Results &mdash; delivery proof</div>
       <div class="stats-row" id="resultsStatsRow"></div>
@@ -430,10 +468,11 @@ async function attemptLogin(){
 function openSession(){localStorage.setItem(SESSION_KEY,JSON.stringify({token:Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''),expires_at:Date.now()+86400000}));}
 /* Ask Supabase whether there is a session — the database is the only opinion that counts. */
 async function checkSession(){try{const {data}=await _sb.auth.getSession();if(data&&data.session){clearLockout();showDashboard();return;}}catch(e){console.warn('Session check:',e);}localStorage.removeItem(SESSION_KEY);initGateUI();applyLockoutUI();}
-let _dashChannel=null;
-function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}stopIdleWatch();localStorage.removeItem(SESSION_KEY);try{_sb.auth.signOut();}catch(e){}document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
-function renderAll(d){renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);const notesEl=document.getElementById('notesArea');if(notesEl&&document.activeElement!==notesEl)notesEl.value=d.notes||'';}
-async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();loadFunnels();try{const remote=await _cloudPull(DATA_KEY);if(remote&&typeof remote==='object'&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};if(!Array.isArray(remote.clients)||remote.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);const _ni=merged.clients.findIndex(c=>c.id==='nav');if(_ni!==-1){merged.clients.splice(_ni,1);if(merged.metrics)delete merged.metrics.nav;_cloudPush(DATA_KEY,merged);}localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}else if(!remote){_cloudPush(DATA_KEY,load());}}catch(e){console.warn('Initial sync:',e);}if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}}).subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});}
+/* _ciReloadT: a client's access and setup saves bump ke_data, so each realtime change re-reads the client inputs (debounced). */
+let _dashChannel=null,_ciReloadT=null;
+function logout(){if(_dashChannel){_sb.removeChannel(_dashChannel);_dashChannel=null;}clearTimeout(_ciReloadT);_ci={loaded:false,logins:{},forms:{},msgs:{},files:{},agreements:{},error:''};_ciOpen=null;renderClientInputs();stopIdleWatch();localStorage.removeItem(SESSION_KEY);try{_sb.auth.signOut();}catch(e){}document.getElementById('dashboard').style.display='none';document.getElementById('gate').style.display='flex';document.getElementById('gateInput').value='';document.getElementById('gateLockout').textContent='';applyLockoutUI();}
+function renderAll(d){renderStats(d);renderRevenue(d);renderSnapshot(d);renderTasks(d);renderResults(d);renderClientInputs(d);const notesEl=document.getElementById('notesArea');if(notesEl&&document.activeElement!==notesEl)notesEl.value=d.notes||'';}
+async function showDashboard(){document.getElementById('gate').style.display='none';document.getElementById('dashboard').style.display='block';startIdleWatch();init();loadFunnels();try{const remote=await _cloudPull(DATA_KEY);if(remote&&typeof remote==='object'&&Object.keys(remote).length>0){const merged={...structuredClone(DEFAULTS),...remote};if(!Array.isArray(remote.clients)||remote.clients.length===0)merged.clients=structuredClone(DEFAULTS.clients);const _ni=merged.clients.findIndex(c=>c.id==='nav');if(_ni!==-1){merged.clients.splice(_ni,1);if(merged.metrics)delete merged.metrics.nav;_cloudPush(DATA_KEY,merged);}localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);}else if(!remote){_cloudPush(DATA_KEY,load());}}catch(e){console.warn('Initial sync:',e);}ciLoad();if(_dashChannel){_sb.removeChannel(_dashChannel);}_dashChannel=_sb.channel('dash_sync').on('postgres_changes',{event:'*',schema:'public',table:'app_data',filter:'id=eq.'+DATA_KEY},payload=>{const d=payload.new?.data;if(d&&typeof d==='object'){const merged={...structuredClone(DEFAULTS),...d};localStorage.setItem(DATA_KEY,JSON.stringify(merged));renderAll(merged);clearTimeout(_ciReloadT);_ciReloadT=setTimeout(ciLoad,1000);}}).subscribe((status,err)=>{if(err)console.warn('Realtime:',err);});}
 /* ── Funnels: where people give up ───────────────────────────────────────────
    Reads ke_funnel_events, which holds which step a visit reached and nothing a
    visitor typed. Aggregated here rather than in SQL so the shape stays obvious and
@@ -693,6 +732,118 @@ function saveResult(e){const name=document.getElementById('res_name').value.trim
   if(i>-1)d.results[i]={...d.results[i],...rec};else{rec.id='r'+Math.random().toString(36).slice(2,9);d.results.push(rec);}
   save(d);renderResults(d);resToast('Saved');}
 function delResult(enc){const name=decodeURIComponent(enc);if(!confirm('Clear the ad-spend overlay for '+name+'? The Growth Step log is untouched.'))return;const d=load();d.results=(d.results||[]).filter(x=>resNorm(x.name)!==resNorm(name));save(d);renderResults(d);}
+
+/* ── CLIENT INPUTS (2026-09-29, Rahaid: "make sure whatever they input comes on our owners portal") ──
+   Everything a client types into portal.html, per client. Until now it was only on the CRM client card.
+   Sources, all read as the signed-in staff account (is_staff(): the same CRM_EMAIL the CRM uses):
+     access    ke_data.clientAccess[<id>][<app>] = {state:'done'|'na', at}   (db/portal-access.sql)
+     logins    ke_portal_logins (which apps, when) + portal_login_reveal / portal_login_delete (db/portal-logins.sql)
+     setup     ke_portal_forms.answers                                     (db/portal-setup.sql)
+     messages  ke_portal_items kind='message' author='client'              (db/portal.sql)
+     files     storage 'portal' <id>/from-client/                          (db/portal.sql)
+     agreement ke_portal_agreements signed_at / signed_name                (db/portal-agreements.sql)
+   The helpers below are copies of crm.html's (ACCESS_NAMES, accessApps, plReveal, ptFileOpen): the two
+   pages share no JS, so if one changes, change the other.
+   PASSWORDS: Reveal writes the login into one span for that click and clears it after 60s. The list is
+   rebuilt from cached rows on every render, and the rows never hold a password, so a re-render drops it.
+   It is never written to localStorage or kept in a variable. */
+const ACCESS_NAMES={instagram:'Instagram',youtube:'YouTube',spotify:'Spotify',apple:'Apple Music',soundcloud:'SoundCloud',distributor:'Distributor',drive:'Drive',tiktok:'TikTok',x:'X',meta:'Meta',shopify:'Shopify',klaviyo:'Klaviyo'};
+function accessApps(c){return Array.isArray(c.accessApps)&&c.accessApps.length?c.accessApps.filter(a=>ACCESS_NAMES[a]):(c.segment==='Artist'?['instagram','youtube','spotify','apple','drive','tiktok','x']:['meta','shopify','klaviyo','drive','tiktok']);}
+/* Question text, copied from portal.html SETUP_QS (artists) and LOCAL_QS (Kaizen Ascent). Order is the form's order. */
+const CI_QS=[['legal_name','Your full legal name'],['artist_name','Your artist name, exactly as you want it everywhere'],['dob','Date of birth'],['phone','Phone number (WhatsApp)'],['based','Where you are based'],['others','Anyone else who should be on our emails? Manager, team, family'],
+  ['prs','Are you a member of PRS for Music or PPL?'],['splits','Are the splits written down on songs you are featured on, or that feature other artists?'],['signed','Have you signed anything? A label, publishing, management or distribution deal'],['distributor','Who distributes your music, and under which email?'],['claims','Does anyone else have a claim on your releases? Co-owners, samples, producers'],['art','Who makes your cover art, and do you own it?'],
+  ['upcoming','Your next releases, with dates'],['shows','Any shows or events coming up?'],
+  ['handles','Your handles: Instagram, TikTok, X, SoundCloud and any others'],['youtube','Your YouTube channel link'],['claimed','Have you claimed Spotify for Artists and Apple Music for Artists?'],
+  ['footage','Where is your existing footage and photos?'],['kit','What kit do you already own?'],['record','Where do you record, and can we film there?'],['free','When are you free to film?'],['never','Anything you would never post?'],
+  ['blurb','One or two lines about the business'],['services','Your services'],['hours','Opening hours, as your customers read them'],['open_hours','Opening hours (exact)'],['booking_url','Your booking link'],['review_url','Your Google review link'],
+  ['deposit_amount','Deposit to hold a booking, in pounds'],['deposit_link','Your own payment link for deposits'],['alert_whatsapp','Your WhatsApp number for alerts'],['alert_email','Your email for alerts'],
+  ['sms_numbers','The phone number or numbers it answers, texts and calls'],['email_addresses','The email address or addresses it answers'],['voice','Two or three real replies sent to customers']];
+/* portal.html's localAnswers() also stores machine copies (parsed hours, deposit, notify, voice split). They repeat
+   an answer above, so they are not shown twice. */
+const CI_DERIVED=['open_hours_line','deposit','notify','voice_samples'];
+let _ci={loaded:false,logins:{},forms:{},msgs:{},files:{},agreements:{},error:''};
+let _ciOpen=null;
+async function ciLoad(){
+  const next={loaded:true,logins:{},forms:{},msgs:{},files:{},agreements:{},error:''};
+  const bad=[];
+  const put=(map,k,v)=>{(map[k]=map[k]||[]).push(v);};
+  try{const r=await _sb.from('ke_portal_logins').select('client_id,app,saved_at');if(r.error)throw r.error;(r.data||[]).forEach(x=>{(next.logins[x.client_id]=next.logins[x.client_id]||{})[x.app]=x.saved_at;});}catch(e){bad.push('logins');console.warn('client inputs, logins:',e);}
+  try{const r=await _sb.from('ke_portal_forms').select('client_id,answers,submitted_at,submitted_by');if(r.error)throw r.error;(r.data||[]).forEach(x=>{next.forms[x.client_id]=x;});}catch(e){bad.push('setup answers');console.warn('client inputs, setup:',e);}
+  try{const r=await _sb.from('ke_portal_items').select('id,client_id,kind,title,body,author,created_at,read_by_staff').eq('kind','message').eq('author','client').order('created_at',{ascending:false}).limit(500);if(r.error)throw r.error;(r.data||[]).forEach(x=>put(next.msgs,x.client_id,x));}catch(e){bad.push('messages');console.warn('client inputs, messages:',e);}
+  try{const r=await _sb.from('ke_portal_agreements').select('client_id,title,particulars,signed_at,signed_name,signed_particulars');if(r.error)throw r.error;(r.data||[]).forEach(x=>{next.agreements[x.client_id]=x;});}catch(e){bad.push('agreements');console.warn('client inputs, agreements:',e);}
+  const ids=[...new Set(((load().clients)||[]).map(c=>c.id).filter(Boolean))];
+  for(const cid of ids){try{const r=await _sb.storage.from('portal').list(cid+'/from-client',{limit:200,sortBy:{column:'created_at',order:'desc'}});if(r.error)throw r.error;const fs=(r.data||[]).filter(f=>f.id).map(f=>({name:f.name.replace(/^[a-z0-9]+-/,''),path:cid+'/from-client/'+f.name,created_at:f.created_at}));fs.sort((x,y)=>String(y.created_at).localeCompare(String(x.created_at)));if(fs.length)next.files[cid]=fs;}catch(e){if(!bad.includes('files'))bad.push('files');console.warn('client inputs, files:',e);}}
+  /* Under RLS a read that is not allowed comes back EMPTY, not as an error (see loadFunnels). So an empty
+     list with no session must say it could not read, never "nothing from them". */
+  let signedIn=false;try{const{data}=await _sb.auth.getSession();signedIn=!!(data&&data.session);}catch(e){}
+  if(!signedIn)next.error='Not signed in, so client inputs cannot be read. This is not a report that clients sent nothing. Sign in again and reload.';
+  else if(bad.length)next.error='Could not read: '+bad.join(', ')+'. What shows below may be missing those.';
+  _ci=next;renderClientInputs(load());
+}
+function ciAccess(c,d){const apps=accessApps(c);const acc=((d.clientAccess)||{})[c.id]||{};return{apps,acc,done:apps.filter(a=>acc[a]).length};}
+function ciDate(s){if(!s)return '';const t=new Date(s);return isNaN(t)?String(s).slice(0,10):t.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function ciAnswer(v){if(Array.isArray(v))return v.map(x=>String(x)).join(', ');if(v&&typeof v==='object')return '';return v==null?'':String(v);}
+function ciAnswers(a){
+  a=a||{};const out=[];const used=new Set(CI_DERIVED);
+  CI_QS.forEach(([k,q])=>{used.add(k);const v=k==='open_hours'&&a.open_hours_line!=null?a.open_hours_line:ciAnswer(a[k]);if(String(v).trim())out.push([q,v]);});
+  /* A key the form gained after this list was copied still shows, under its own name. */
+  Object.keys(a).forEach(k=>{if(used.has(k))return;const v=ciAnswer(a[k]);if(String(v).trim())out.push([k.replace(/_/g,' '),v]);});
+  return out;
+}
+function ciHasAny(cid,d){const acc=((d.clientAccess)||{})[cid]||{};return Object.keys(acc).length>0||!!(_ci.logins[cid]&&Object.keys(_ci.logins[cid]).length)||!!_ci.forms[cid]||!!(_ci.msgs[cid]||[]).length||!!(_ci.files[cid]||[]).length||!!(_ci.agreements[cid]&&_ci.agreements[cid].signed_at);}
+function renderClientInputs(data){
+  const el=document.getElementById('clientInputs');if(!el)return;
+  if(!_ci.loaded){el.innerHTML='<div class="ci-empty">Loading what clients have sent&hellip;</div>';return;}
+  const d=data||load();
+  const clients=(d.clients||[]).filter(c=>c&&c.id&&(c.status!=='inactive'||ciHasAny(c.id,d)));
+  const note=_ci.error?'<div class="res-gate" style="margin-bottom:4px;"><span class="rg-dot"></span><div>'+esc(_ci.error)+'</div></div>':'';
+  if(!clients.length){el.innerHTML=note+'<div class="ci-empty">No clients yet.</div>';return;}
+  el.innerHTML=note+clients.map(c=>{
+    const ax=ciAccess(c,d);const logins=_ci.logins[c.id]||{};const nLogins=Object.keys(logins).length;
+    const form=_ci.forms[c.id];const msgs=(_ci.msgs[c.id]||[]).slice().sort((x,y)=>String(y.created_at).localeCompare(String(x.created_at)));const unread=msgs.filter(m=>!m.read_by_staff).length;
+    const files=_ci.files[c.id]||[];const ag=_ci.agreements[c.id];const signed=!!(ag&&ag.signed_at);
+    const open=_ciOpen===c.id;const any=ciHasAny(c.id,d);
+    const chips=
+      '<span class="ci-chip'+(signed?' on':'')+'" data-ci="agreement">'+(signed?'Agreement signed '+esc(ciDate(ag.signed_at)):ag?'Agreement not signed':'No agreement issued')+'</span>'+
+      '<span class="ci-chip'+(ax.done===ax.apps.length&&ax.apps.length?' on':'')+'" data-ci="access">Access '+ax.done+'/'+ax.apps.length+'</span>'+
+      '<span class="ci-chip'+(nLogins?' on':'')+'" data-ci="logins">'+nLogins+' login'+(nLogins===1?'':'s')+' saved</span>'+
+      '<span class="ci-chip'+(form?' on':'')+'" data-ci="setup">'+(form?'Setup answered':'Setup not answered')+'</span>'+
+      '<span class="ci-chip'+(unread?' warn':'')+'" data-ci="unread">'+unread+' unread</span>'+
+      '<span class="ci-chip'+(files.length?' on':'')+'" data-ci="files">'+files.length+' file'+(files.length===1?'':'s')+'</span>';
+    let body='';
+    if(open){
+      if(!any){body='<div class="ci-empty" style="padding-top:12px;">Nothing from them yet.</div>';}
+      else{
+        const agLine=signed?'<div class="ci-line">'+esc(ag.title||'Services Agreement')+': signed by <b>'+esc(ag.signed_name||'')+'</b> on '+esc(ciDate(ag.signed_at))+'</div>'+
+            (ag.particulars||[]).filter(p=>p&&p[1]&&(ag.signed_particulars||{})[p[1]]).map(p=>'<div class="ci-line"><span class="d">'+esc(p[0])+'</span>'+esc((ag.signed_particulars||{})[p[1]])+'</div>').join('')
+          :'<div class="ci-empty">'+(ag?esc(ag.title||'Services Agreement')+' issued, not signed yet.':'No agreement issued in the portal.')+'</div>';
+        const accLine=ax.apps.map(a=>{const x=ax.acc[a];const st=x&&x.state;return '<div class="ci-line" data-ci-app="'+esc(a)+'"><span class="d">'+esc(ACCESS_NAMES[a])+'</span>'+(st==='done'?'done':st==='na'?'not relevant':'not yet')+(x&&x.at?' <span class="d">· '+esc(ciDate(x.at))+'</span>':'')+'</div>';}).join('');
+        const logLine=nLogins?Object.keys(logins).map(a=>'<div class="ci-login" data-ci-login="'+esc(a)+'"><b>'+esc(ACCESS_NAMES[a]||a)+'</b><span class="d" style="color:var(--muted);font-size:12px;">saved '+esc(ciDate(logins[a]))+'</span><span style="margin-left:auto;display:inline-flex;gap:4px;"><button class="res-act" data-pl="reveal" data-cid="'+esc(c.id)+'" data-app="'+esc(a)+'" onclick="ciReveal(this)">Reveal</button><button class="res-act del" data-pl="delete" data-cid="'+esc(c.id)+'" data-app="'+esc(a)+'" onclick="ciLoginDelete(this)">Delete password</button></span><span class="ci-out" id="ci_plo_'+esc(c.id)+'_'+esc(a)+'"></span></div>').join(''):'<div class="ci-empty">No logins saved.</div>';
+        const qa=form?ciAnswers(form.answers):[];
+        const setupLine=form?'<div class="ci-line"><span class="d">Sent '+esc(ciDate(form.submitted_at))+'</span></div>'+(qa.length?'<dl class="ci-qa">'+qa.map(([q,v])=>'<dt>'+esc(q)+'</dt><dd>'+esc(v)+'</dd>').join('')+'</dl>':'<div class="ci-empty">Sent with every box empty.</div>'):'<div class="ci-empty">Not answered yet.</div>';
+        const msgLine=msgs.length?msgs.map(m=>'<div class="ci-msg'+(m.read_by_staff?'':' unread')+'"><div class="d" style="color:var(--muted);font-size:12px;margin-bottom:3px;">'+esc(ciDate(m.created_at))+(m.title?' · '+esc(m.title):'')+(m.read_by_staff?'':' · unread')+'</div>'+esc(m.body||'')+'</div>').join(''):'<div class="ci-empty">No messages.</div>';
+        const fileLine=files.length?files.map(f=>'<div class="ci-line"><span class="d">'+esc(ciDate(f.created_at))+'</span><a href="#" class="ci-file" style="color:var(--purple);text-decoration:underline;" data-p="'+esc(f.path)+'" onclick="ciFileOpen(this.dataset.p);return false">'+esc(f.name)+'</a></div>').join(''):'<div class="ci-empty">No files.</div>';
+        body='<div><div class="ci-h">Agreement</div>'+agLine+'</div>'+
+          '<div><div class="ci-h">Access '+ax.done+'/'+ax.apps.length+'</div>'+accLine+'</div>'+
+          '<div><div class="ci-h">Logins</div>'+logLine+'</div>'+
+          '<div><div class="ci-h">Setup answers</div>'+setupLine+'</div>'+
+          '<div><div class="ci-h">Messages from them</div>'+msgLine+'</div>'+
+          '<div><div class="ci-h">Files from them</div>'+fileLine+'</div>'+
+          '<a href="crm.html" class="snap-link" style="align-self:flex-start;">Reply or manage in the CRM &rarr;</a>';
+      }
+    }
+    return '<div class="ci-item'+(open?' open':'')+'" data-cid="'+esc(c.id)+'">'+
+      '<button type="button" class="ci-row" aria-expanded="'+open+'" data-cid="'+esc(c.id)+'" onclick="ciToggle(this.dataset.cid)"><span class="ci-name">'+esc(c.name||c.id)+'</span><span class="ci-chips">'+chips+'</span><span class="ci-caret" aria-hidden="true">&#9656;</span></button>'+
+      (open?'<div class="ci-body">'+body+'</div>':'')+'</div>';
+  }).join('');
+}
+function ciToggle(cid){_ciOpen=_ciOpen===cid?null:cid;renderClientInputs(load());}
+async function ciReveal(btn){const cid=btn.dataset.cid,app=btn.dataset.app;const out=document.getElementById('ci_plo_'+cid+'_'+app);if(!out)return;if(out.textContent){out.textContent='';btn.textContent='Reveal';return;}
+  btn.disabled=true;try{const{data,error}=await _sb.rpc('portal_login_reveal',{p_client_id:cid,p_app:app});if(error||!data){resToast('Could not reveal: '+((error&&error.message)||'nothing saved'));return;}
+  out.textContent=(data.user||'')+'  ·  '+(data.pass||'');btn.textContent='Hide';setTimeout(()=>{if(out.isConnected){out.textContent='';btn.textContent='Reveal';}},60000);}catch(e){resToast('Could not reveal');}finally{btn.disabled=false;}}
+async function ciLoginDelete(btn){const cid=btn.dataset.cid,app=btn.dataset.app;if(!confirm('Delete the saved '+ACCESS_NAMES[app]+' password for good? Only do this when we stop working with them. It cannot be got back.'))return;
+  try{const{error}=await _sb.rpc('portal_login_delete',{p_client_id:cid,p_app:app});if(error){resToast('Could not delete: '+error.message);return;}await ciLoad();resToast(ACCESS_NAMES[app]+' password deleted');}catch(e){resToast('Delete failed');}}
+async function ciFileOpen(path){const{data,error}=await _sb.storage.from('portal').createSignedUrl(path,600,{download:true});if(error||!data){resToast('Could not fetch the file');return;}location.href=data.signedUrl;}
 checkSession();
 </script>
 </body>
