@@ -7,7 +7,7 @@ Two founders, no account managers: **Diego** (content and social, what people se
 grow the social presence, and keep in touch with past buyers.
 
 Positioning the copy must hold to:
-- **Five clients at a time.** It is the whole capacity, not a launch offer.
+- **Five artists and five brands at a time** (Rahaid, 2026-09-30; was five clients). It is the whole capacity, not a launch offer.
 - **Judged against two numbers** set before any spend: what a customer is worth, and what
   sales were already doing without us (the Kaizen Loop).
 - **We never take a cut of ad spend.** Ad accounts, content and customer lists stay the client's.
@@ -32,7 +32,7 @@ Positioning the copy must hold to:
 - If a check can't actually be run, say that plainly instead of guessing.
 
 ## Decisions already made (don't undo without asking)
-- **Seat marks show the cap only.** `data-seats="5"` with no `data-taken`. Only show occupancy
+- **Seat marks show the cap only.** `data-seats="5,5"` (five artists, five brands, drawn as two groups) with no `data-taken`. Only show occupancy
   (`data-taken="N"`) once N is 3 or more. See the comment in `kaizen-mark.css`. (2026-09-28)
 - URLs and domains: confirm exact spelling before using them in copy or links.
 

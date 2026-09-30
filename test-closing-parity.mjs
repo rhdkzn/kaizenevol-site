@@ -101,6 +101,7 @@ async function read(f) {
       email: !!s.querySelector('a[href^="mailto:"]'),
       note: note ? note.textContent.trim() : null,
       seats: s.querySelectorAll('.closing-note .seats i').length,
+      seatGroups: [...s.querySelectorAll('.closing-note .seats')].map(g => g.querySelectorAll('i').length).join(','),
     };
   });
   await p.close();
@@ -150,7 +151,8 @@ for (const f of PAGES) {
   check(`${f}: offers email as the second route`, r.email);
   check(`${f}: the quiet link is a link, not a pill`, r.quietRadius === ref.quietRadius,
         `radius ${r.quietRadius}px vs ${ref.quietRadius}px`);
-  check(`${f}: carries the seats note`, r.seats === 5, `${r.seats} marks`);
+  // Five artists and five brands (Rahaid, 2026-09-30): two groups of five marks.
+  check(`${f}: carries the seats note`, r.seatGroups === '5,5', `${r.seatGroups} marks`);
   check(`${f}: the note reads the same as everywhere else`,
         /Every seat gets both of us, start to finish\./.test(r.note || ''), r.note);
 
