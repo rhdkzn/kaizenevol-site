@@ -158,6 +158,9 @@ const phone = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch:
   ok('crm: no Reveal button for apps with nothing saved', await card().locator('[data-pl="reveal"]').count() === 1)
   ok('crm: the password is not in the card before Reveal', !(await card().innerHTML()).includes(PASS))
   try {
+  // Centre it first: the CRM's sticky header can sit over a button scrolled only just into view.
+  await card().locator('[data-pl="reveal"][data-app="tiktok"]').evaluate(el => el.scrollIntoView({ block: 'center' }))
+  await page.waitForTimeout(150)
   await card().locator('[data-pl="reveal"][data-app="tiktok"]').click({ timeout: 3000 })
   await page.waitForTimeout(300)
   const rv = await page.evaluate(() => (window.__calls.find(c => c[0] === 'portal_login_reveal') || [])[1])
@@ -170,6 +173,9 @@ const phone = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch:
   await page.evaluate(() => renderClients(load()))
   ok('crm: a re-render does not bring the password back', !(await card().innerHTML()).includes(PASS))
   if (SHOTS) await card().screenshot({ path: `${SHOTS}/crm-card-390.png` })
+  // Centre it first: the CRM's sticky header can sit over a button scrolled only just into view.
+  await card().locator('[data-pl="delete"][data-app="tiktok"]').evaluate(el => el.scrollIntoView({ block: 'center' }))
+  await page.waitForTimeout(150)
   await card().locator('[data-pl="delete"][data-app="tiktok"]').click({ timeout: 3000 })
   await page.waitForTimeout(400)
   const del = await page.evaluate(() => (window.__calls.find(c => c[0] === 'portal_login_delete') || [])[1])

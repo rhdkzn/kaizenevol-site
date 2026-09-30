@@ -440,7 +440,7 @@
     /* the row above already shows the name and stage; keep them for screen readers, not on screen */
     .clr-body .pipe-client-header,.clr-body .checklist-client-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;}
     .clr-body .checklist-client-header{justify-content:flex-end;}
-    @media(max-width:640px){.clr-body .pipe-client,.clr-body .checklist-client,.clr-body .card{padding:16px 14px;}.clr-bar .pt-inp{font-size:16px;}}
+    @media(max-width:640px){.clr-bar{flex-wrap:wrap;}.clr-bar #clientSearch{flex:1 1 100%;}.clr-bar .mini-select{flex:1 1 0;}.clr-body .pipe-client,.clr-body .checklist-client,.clr-body .card{padding:16px 14px;}.clr-bar .pt-inp{font-size:16px;}}
     .re-engage-btn{padding:3px 10px;font-size:11px;font-weight:700;border-radius:var(--radius-pill);border:1.5px solid rgba(245,158,11,.35);color:#fbbf24;background:rgba(245,158,11,.07);cursor:pointer;font-family:var(--sans);transition:all .15s;}
     .re-engage-btn:hover{background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.6);}
     .wq-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);}
@@ -734,7 +734,7 @@
          #checklistContainer and #growthContainer now live inside the open client, one of each. -->
     <section data-view="clients">
       <div class="section-label">Clients</div>
-      <div class="clr-bar"><input type="search" class="pt-inp" id="clientSearch" placeholder="Search clients by name" aria-label="Search clients by name" oninput="clFilter()" /><select class="mini-select" id="clientStatusFilter" aria-label="Filter clients by stage" onchange="clFilter()"><option value="all">All</option><option value="onboarding">Onboarding</option><option value="live">Live</option><option value="inactive">Inactive</option></select></div>
+      <div class="clr-bar"><input type="search" class="pt-inp" id="clientSearch" placeholder="Search clients by name" aria-label="Search clients by name" oninput="clFilter()" /><select class="mini-select" id="clientStatusFilter" aria-label="Filter clients by stage" onchange="clFilter()"><option value="all">All</option><option value="onboarding">Onboarding</option><option value="live">Live</option><option value="inactive">Inactive</option></select><select class="mini-select" id="clientKindFilter" aria-label="Filter clients by type" onchange="clFilter()"><option value="all">All types</option><option value="artist">Artists</option><option value="brand">Brands</option><option value="local">Local</option></select></div>
       <div class="clr-list" id="clientsContainer"></div>
       <div id="commissionContainer" style="margin-top:14px"></div>
     </section>
@@ -1294,7 +1294,7 @@ function clientNextAction(c){const s=getClientStage(c);return isLocalClient(c)?l
    them, clicking them does nothing"). Clears the search and stage filter if they would hide it. */
 function openClientCard(id){
   const d=load();const c=(d.clients||[]).find(x=>x.id===id);if(!c)return;
-  if(!clMatches(c)){_clQuery='';_clStatus='all';const q=document.getElementById('clientSearch'),st=document.getElementById('clientStatusFilter');if(q)q.value='';if(st)st.value='all';}
+  if(!clMatches(c)){_clQuery='';_clStatus='all';_clKind='all';const q=document.getElementById('clientSearch'),st=document.getElementById('clientStatusFilter'),kd=document.getElementById('clientKindFilter');if(q)q.value='';if(st)st.value='all';if(kd)kd.value='all';}
   clSetOpen(id);renderClients(d);
   const row=document.querySelector('.clr[data-id="'+CSS.escape(id)+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -1454,11 +1454,15 @@ function clientCardHTML(c,data){if(_clEdit&&_clEdit.id===c.id)return clientEditH
    unread portal messages. The open client (one at a time) is kept in localStorage so the re-render
    on every realtime save does not collapse it. */
 const CL_OPEN_KEY='crm_open_client';
-let _clQuery='',_clStatus='all';
+let _clQuery='',_clStatus='all',_clKind='all';
+/* Artist, brand or local business (Rahaid, 2026-09-30: "it should be able to distinguish between
+   artist/brand/local business"). Same rules as isLocalClient() and dropWord(). */
+function clientKind(c){return isLocalClient(c)?'local':(c&&c.segment==='Artist')?'artist':'brand';}
+const KIND_LABEL={artist:'Artist',brand:'Brand',local:'Local'};
 function clOpenId(){try{return localStorage.getItem(CL_OPEN_KEY)||'';}catch(e){return '';}}
 function clSetOpen(id){try{if(id)localStorage.setItem(CL_OPEN_KEY,id);else localStorage.removeItem(CL_OPEN_KEY);}catch(e){}}
-function clMatches(c){const q=_clQuery.trim().toLowerCase();return(!q||String(c.name||'').toLowerCase().includes(q))&&(_clStatus==='all'||getClientStage(c).key===_clStatus);}
-function clFilter(){const q=document.getElementById('clientSearch'),st=document.getElementById('clientStatusFilter');_clQuery=q?q.value:'';_clStatus=st?st.value:'all';renderClients(load());}
+function clMatches(c){const q=_clQuery.trim().toLowerCase();return(!q||String(c.name||'').toLowerCase().includes(q))&&(_clStatus==='all'||getClientStage(c).key===_clStatus)&&(_clKind==='all'||clientKind(c)===_clKind);}
+function clFilter(){const q=document.getElementById('clientSearch'),st=document.getElementById('clientStatusFilter');_clQuery=q?q.value:'';_clStatus=st?st.value:'all';const kd=document.getElementById('clientKindFilter');_clKind=kd?kd.value:'all';renderClients(load());}
 function toggleClient(id){
   const opening=clOpenId()!==id;clSetOpen(opening?id:'');renderClients(load());
   /* closing the client above can pull this row off screen; bring it back */
@@ -1470,7 +1474,7 @@ function clientRowHTML(c,data,open){
   const next=active?clientNextAction(c).text:'Inactive. Set it back to Active on the card to pick it up again.';
   const acc=accessCount(c);const unread=ptUnread(c);const p=checklistProgress(c,data);
   return`<div class="clr-item${open?' open':''}"><button type="button" class="clr" data-id="${esc(c.id)}" aria-expanded="${open}" onclick="toggleClient('${esc(c.id)}')">`
-    +`<span class="clr-top"><span class="clr-name">${esc(c.name)}</span><span class="pipe-stage-label psl-${s.key}">${s.label}</span><span class="clr-chev" aria-hidden="true">›</span></span>`
+    +`<span class="clr-top"><span class="clr-name">${esc(c.name)}</span><span class="pt-badge clr-kind" data-kind="${clientKind(c)}">${KIND_LABEL[clientKind(c)]}</span><span class="pipe-stage-label psl-${s.key}">${s.label}</span><span class="clr-chev" aria-hidden="true">›</span></span>`
     +`<span class="clr-next">${esc(next)}</span>`
     +`<span class="clr-badges">${active?`<span class="pt-badge clr-chk">${p.done}/${p.total} tasks</span>`:''}<span class="pt-badge${acc.total&&acc.done===acc.total?' on':''}">Access ${acc.done}/${acc.total}</span>${unread?`<span class="pt-badge unread">${unread} new</span>`:''}</span>`
     +`</button>${open?`<div class="clr-body">${active?'<div class="pipeline-track" id="pipelineTrack"></div><div class="checklist-clients" id="checklistContainer"></div>':''}${clientCardHTML(c,data)}${active&&!isLocalClient(c)?'<div id="growthContainer"></div>':''}</div>`:''}</div>`;
