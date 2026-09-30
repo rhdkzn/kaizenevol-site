@@ -27,7 +27,9 @@ ok('creative row: founding £1,000', c.founding === true && c.retainer === 1000)
 ok('creative row: standard £2,000', obRowData({ ...base, lane: 'creative', tier: 'standard' }, lead, '2026-09-25').retainer === 2000)
 ok('creative row: baseline kept', c.baselineRevenue === 8000)
 ok('creative row: no buy-out key', !('buyout' in c))
-ok('creative row: same key set as before lanes', JSON.stringify(Object.keys(c)) === JSON.stringify(['business','founder','email','segment','founding','retainer','startDate','baselineRevenue','proposalNotes','clientEntity','clientAddress','issuedAt','createdBy']), Object.keys(c).join(','))
+/* Seat ladder (Rahaid, 2026-09-30): a creative row now also carries tier, appended last, so the
+   agreement can name the seat. Every key it had before is still there, in the same order. */
+ok('creative row: same key set as before lanes, plus tier (seat ladder)', JSON.stringify(Object.keys(c)) === JSON.stringify(['business','founder','email','segment','founding','retainer','startDate','baselineRevenue','proposalNotes','clientEntity','clientAddress','issuedAt','createdBy','tier']), Object.keys(c).join(','))
 
 /* local */
 const l = obRowData({ ...base, lane: 'local', baseline: '8000' }, lead, '2026-09-25')

@@ -32,6 +32,31 @@ const PAY_LINKS = {
 };
 const TERMS = { standard: 2000, founding: 1000, step: 1000, trigger: 1.5 };
 
+/* The seat ladder (Rahaid, 2026-09-30): five artists and five brands at a time, each lane priced
+ * by seat. Seats 1-3 founding, seats 4-5 'second', then standard for anyone taking a seat that
+ * opens. A row takes the ladder only when it carries tier AND segment Artist or Brand (the CRM
+ * writes both from 2026-09-30). A row without them is a pre-ladder row and renders the old
+ * words byte for byte: its hash may already be sitting in a client's inbox. */
+export const SEAT_LADDER = {
+  Brand:  { founding: 1000, second: 1500, standard: 2000, word: 'brand' },
+  Artist: { founding: 500,  second: 750,  standard: 1000, word: 'artist' }
+};
+export function seatOf(d) {
+  if (!d || laneOf(d) === 'local') return null;
+  const seg = SEAT_LADDER[d.segment], tier = d.tier;
+  if (!seg || !['founding', 'second', 'standard'].includes(tier)) return null;
+  return { segment: d.segment, tier, word: seg.word, fee: seg[tier], standard: seg.standard };
+}
+/* The Stripe links on file are £1,000 (founding) and £2,000 (standard): right for a founding or
+ * standard brand and wrong for every other seat. Those seats read their own env link and have NO
+ * fallback, same rule as the local lane: unset means payUrl '' and the page says we will send it. */
+const SEAT_PAY_ENV = {
+  'Brand:second': 'STRIPE_BRAND_SECOND_LINK',
+  'Artist:founding': 'STRIPE_ARTIST_FOUNDING_LINK',
+  'Artist:second': 'STRIPE_ARTIST_SECOND_LINK',
+  'Artist:standard': 'STRIPE_ARTIST_STANDARD_LINK'
+};
+
 /* ── helpers ─────────────────────────────────────────────────────────────── */
 async function rpc(name, args) {
   const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
@@ -57,8 +82,9 @@ export function laneOf(d) { return (d && d.lane === 'local') ? 'local' : 'creati
  * creative agreement is a hash of these exact words (test-onboard-agreement.mjs pins it). */
 export function agreementText(d) {
   if (laneOf(d) === 'local') return agreementTextLocal(d);
-  const tier = d.founding ? 'founding' : 'standard';
-  const fee = Number(d.retainer) || TERMS[tier];
+  const seat = seatOf(d);
+  const tier = seat ? seat.tier : (d.founding ? 'founding' : 'standard');
+  const fee = Number(d.retainer) || (seat ? seat.fee : TERMS[tier]);
   const step = TERMS.step, trig = Math.round((TERMS.trigger - 1) * 100);
   const brand = d.business || 'the Client', founder = d.founder || 'the Client', start = d.startDate ? longDate(d.startDate) : 'the date this Agreement is signed';
   const L = [];
@@ -79,10 +105,13 @@ export function agreementText(d) {
   L.push(`1.5 Drop one is measurement. From drop two the Agency scales against a sell-through target set with the Client in writing, off the Client's own baseline. No outcome is guaranteed and no refund attaches to any result.`);
   L.push(``);
   L.push(`2. FEES`);
-  L.push(`2.1 The retainer is ${gbp(fee)} per month${d.founding ? ' (founding rate, one of the first five clients)' : ' (standard rate)'}, covering all four services in clause 1. It is billed monthly in advance by card through Stripe, starting on ${start}.`);
+  const tierWords = seat
+    ? { founding: ` (founding rate, one of the Agency's first three ${seat.word} clients)`, second: ` (one of the Agency's first five ${seat.word} clients)`, standard: ' (standard rate)' }[tier]
+    : (d.founding ? ' (founding rate, one of the first five clients)' : ' (standard rate)');
+  L.push(`2.1 The retainer is ${gbp(fee)} per month${tierWords}, covering all four services in clause 1. It is billed monthly in advance by card through Stripe, starting on ${start}.`);
   L.push(`2.2 Advertising spend is paid by the Client directly to the advertising platforms and is not part of the retainer.`);
   L.push(`2.3 Fees are exclusive of VAT, which is added if and when the Agency is registered for it.`);
-  if (d.founding) L.push(`2.4 The founding rate is a discount for one of the Agency's first five clients. It ends at the first growth step under clause 3, at which point the retainer becomes the standard rate of ${gbp(TERMS.standard)} per month in place of the ${gbp(step)} increase in clause 3.2; any later step then applies from the standard rate.`);
+  if (seat ? tier === 'founding' : d.founding) L.push(`2.4 The founding rate is a discount for one of the Agency's first ${seat ? 'three ' + seat.word : 'five'} clients. It ends at the first growth step under clause 3, at which point the retainer becomes the standard rate of ${gbp(seat ? seat.standard : TERMS.standard)} per month in place of the ${gbp(step)} increase in clause 3.2; any later step then applies from the standard rate.`);
   L.push(``);
   L.push(`3. THE GROWTH STEP`);
   L.push(`3.1 Baseline: the Client's trailing three-month average monthly revenue at signing, agreed in writing before any spend. One number.`);
@@ -217,8 +246,10 @@ export function agreementHash(text) { return createHash('sha256').update(text, '
 
 export function payUrl(row) {
   const d = row.data || {};
+  const seat = seatOf(d), env = seat && SEAT_PAY_ENV[seat.segment + ':' + seat.tier];
   const base = d.payLink || (laneOf(d) === 'local'
     ? (d.founding ? process.env.STRIPE_LOCAL_FOUNDING_LINK : process.env.STRIPE_LOCAL_STANDARD_LINK)
+    : seat ? (env ? process.env[env] : PAY_LINKS[seat.tier])
     : PAY_LINKS[d.founding ? 'founding' : 'standard']);
   if (!base) return '';
   const u = new URL(base);
@@ -235,11 +266,12 @@ export function publicView(row) {
   const text = (d.signature && d.signature.text) ? d.signature.text : agreementText(d);
   const sig = d.signature ? { name: d.signature.name, at: d.signature.at, hash: d.signature.hash } : null;
   const tier = d.founding ? 'founding' : 'standard';
-  const lane = laneOf(d), local = lane === 'local';
+  const lane = laneOf(d), local = lane === 'local', seat = seatOf(d);
   return {
     token: row.id, status: row.status, lane, demo: d.demo === true,
     business: d.business || '', founder: d.founder || '', email: d.email || '', segment: d.segment || '',
-    founding: !!d.founding, retainer: Number(d.retainer) || (local ? TERMS_LOCAL : TERMS)[tier],
+    tier: seat ? seat.tier : '', seatWord: seat ? seat.word : '',
+    founding: seat ? seat.tier === 'founding' : !!d.founding, retainer: Number(d.retainer) || (seat ? seat.fee : (local ? TERMS_LOCAL : TERMS)[tier]),
     step: local ? null : TERMS.step, trigger: local ? null : TERMS.trigger, buyout: local ? (Number(d.buyout) > 0 ? Number(d.buyout) : TERMS_LOCAL.buyout) : null,
     startDate: d.startDate || '', notes: d.proposalNotes || '', drops: d.drops || '',
     agreement: text, agreementHash: agreementHash(text), signature: sig,

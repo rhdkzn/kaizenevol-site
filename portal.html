@@ -306,16 +306,28 @@
      absent, so a signed-but-not-billing client silently claimed the standard retainer and
      drove MRR, the growth-step bonus and the client count with money nobody pays.
      Absent (undefined / null / '') still falls through to the founding or standard rate. */
-  function retainerBase(c,s){s=s||{};var v=(c||{}).retainerValue;return (v===''||v==null||!isFinite(Number(v)))?((c||{}).founding?(s.foundingValue||1000):(s.retainerValue||2000)):Number(v);}
+  /* Seat ladder (2026-09-30), same as the CRM: a client with c.tier is priced by seat per lane;
+     founding becomes the lane's standard rate at the first growth step (agreement clause 2.4). */
+  var SEAT_LADDER={Brand:{founding:1000,second:1500,standard:2000},Artist:{founding:500,second:750,standard:1000}};
+  function seatPrice(c,tier){c=c||{};if(c.lane==='local'||c.segment==='Local')return null;var t=tier||c.tier;var l=SEAT_LADDER[c.segment==='Artist'?'Artist':'Brand'];return (t&&l[t])||null;}
+  function retainerBase(c,s){s=s||{};var v=(c||{}).retainerValue;return (v===''||v==null||!isFinite(Number(v)))?(seatPrice(c)||((c||{}).founding?(s.foundingValue||1000):(s.retainerValue||2000))):Number(v);}
+  function steppedRetainer(c,s,steps){s=s||{};var step=s.stepValue||1000,std=(c||{}).tier==='founding'?seatPrice(c,'standard'):null;return (steps>0&&std)?std+(steps-1)*step:retainerBase(c,s)+steps*step;}
   /* RETAINER-BASE-END */
+  /* The words under the retainer. A seat-ladder client (c.tier) reads its own seat; founding
+     turns into the standard rate at the first step, as clause 2.4 says. No tier: as before. */
+  function rateWords(c, g){
+    if (c.tier === 'second') return 'one of our first five ' + (c.segment === 'Artist' ? 'artists' : 'brands');
+    if (c.tier === 'founding') return g.steps ? 'standard rate' : 'founding rate, one of our first three ' + (c.segment === 'Artist' ? 'artists' : 'brands');
+    if (c.tier === 'standard') return 'standard rate';
+    return c.founding ? 'founding rate' : 'standard rate';
+  }
   /* growth-step arithmetic, same as the CRM */
   function growth(c, snaps, s){
     var trig = s.stepTrigger||1.5, base = Number(c.baselineRevenue)||0;
     var latest = snaps.length ? Number(snaps[snaps.length-1].avg)||0 : 0;
     var level = base, steps = 0;
     snaps.forEach(function(x){ var v = Number(x.avg)||0; while(base && v >= level*trig){ level = level*trig; steps++; } });
-    var baseRet = retainerBase(c, s);
-    return { base: base, latest: latest, steps: steps, next: base ? Math.round(level*trig) : 0, retainer: baseRet + steps*(s.stepValue||1000), lift: (base && latest) ? Math.round((latest/base-1)*100) : null };
+    return { base: base, latest: latest, steps: steps, next: base ? Math.round(level*trig) : 0, retainer: steppedRetainer(c, s, steps), lift: (base && latest) ? Math.round((latest/base-1)*100) : null };
   }
   var TASKS = [['ob1','Discovery call done'],['ob2','Proposal sent'],['ob3','Agreement signed'],['ob4','First invoice paid'],['ob5','Baseline agreed in writing, revenue access granted'],['ob6','Access granted: Meta, store, email/SMS'],['ob7','Drop calendar and content plan agreed'],['ob8','First content batch approved'],['ob9','Live'],['lv1','Weekly numbers sent'],['lv2','Monthly strategy call'],['lv3','Monthly revenue snapshot logged'],['lv4','Email/SMS list growing'],['lv5','Creative refreshed when cost per purchase rises'],['lv6','Testimonial / case study asked for']];
 
@@ -825,7 +837,7 @@
       ['Baseline', g.base ? gbp(g.base)+'/mo' : '—', 'trailing 3-month average at signing'],
       ['Latest 3-mo average', g.latest ? gbp(g.latest)+'/mo' : '—', g.lift==null ? 'logged monthly' : (g.lift>=0?'+':'')+g.lift+'% on baseline'],
       ['Next growth step at', g.next ? gbp(g.next)+'/mo' : '—', g.steps ? g.steps+' step'+(g.steps>1?'s':'')+' so far' : 'none yet'],
-      ['Retainer', gbp(g.retainer)+'/mo', c.founding ? 'founding rate' : 'standard rate']
+      ['Retainer', gbp(g.retainer)+'/mo', rateWords(c, g)]
     ];
     /* A client on retainerValue 0 is on a trial deal (free pilot, or a free window then a
        share of sales), so retainer and growth-step figures do not describe them. Show the deal

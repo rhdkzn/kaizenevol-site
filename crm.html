@@ -1091,20 +1091,20 @@
     <div id="obForm">
       <div class="km-row">
         <div class="km-field"><div class="km-label">Lane</div><select class="km-select" id="obLane" onchange="obLaneChanged()"><option value="creative">Creative (artists, brands)</option><option value="local">Local (Kaizen Ascent)</option></select></div>
-        <div class="km-field"><div class="km-label">Founding seats left</div><div class="km-info" id="obSeats" style="margin:0">—</div></div>
+        <div class="km-field"><div class="km-label" id="obSeatsL">Founding seats left</div><div class="km-info" id="obSeats" style="margin:0">—</div></div>
       </div>
       <div class="km-row">
         <div class="km-field"><div class="km-label">Founder (signs)</div><input type="text" class="km-inp" id="obFounder" placeholder="Full name" /></div>
         <div class="km-field"><div class="km-label">Email</div><input type="email" class="km-inp" id="obEmail" placeholder="founder@brand.com" /></div>
       </div>
       <div class="km-row">
-        <div class="km-field"><div class="km-label">Rate</div><select class="km-select" id="obTier"><option value="founding">Founding — £1,000/mo (first five)</option><option value="standard">Standard — £2,000/mo</option></select></div>
+        <div class="km-field"><div class="km-label">Rate</div><select class="km-select" id="obTier" onchange="obSeatsShow()"><option value="founding">Founding</option><option value="second">Seats 4-5</option><option value="standard">Standard</option></select></div>
         <div class="km-field"><div class="km-label">Start date</div><input type="date" class="km-inp" id="obStart" /></div>
       </div>
       <div class="km-row">
         <div class="km-field" id="obBaselineF"><div class="km-label">Baseline (3-mo avg £, if known)</div><input type="number" class="km-inp" id="obBaseline" min="0" placeholder="agreed in writing later if blank" /></div>
         <div class="km-field" id="obBuyoutF" style="display:none"><div class="km-label">Website buy-out £</div><input type="number" class="km-inp" id="obBuyout" min="0" placeholder="blank = £1,200" /></div>
-        <div class="km-field"><div class="km-label">Segment</div><input type="text" class="km-inp" id="obSegment" list="nicheList" /></div>
+        <div class="km-field" id="obSegmentF"><div class="km-label">Artist or brand</div><select class="km-select" id="obSegment" onchange="obTierLabels();obSeatsShow()"><option value="Brand">Brand</option><option value="Artist">Artist</option></select></div>
       </div>
       <div class="km-row">
         <div class="km-field"><div class="km-label">Client legal entity (optional)</div><input type="text" class="km-inp" id="obEntity" placeholder="e.g. Marauder Apparel Ltd, 12345678 — or sole trader" /></div>
@@ -1335,7 +1335,7 @@ function renderClientPipeline(data){
 const CLIENT_TASKS=[
   {id:'ob1',phase:'onboarding',text:'Discovery call done — five gates confirmed on the call (repeat buyers, can ship double)'},
   {id:'ob2',phase:'onboarding',text:'Proposal sent'},
-  {id:'ob3',phase:'onboarding',text:'Retainer agreement signed (£2,000/mo standard · £1,000/mo founding, first five)'},
+  {id:'ob3',phase:'onboarding',text:'Retainer agreement signed at the agreed seat price'},
   {id:'ob4',phase:'onboarding',text:'First invoice raised and paid'},
   {id:'ob5',phase:'onboarding',text:'Revenue baseline agreed in writing — trailing 3-month average — and revenue access granted'},
   {id:'ob6',phase:'onboarding',text:'Access granted: Meta Business Manager + pixel, the store (Shopify), email/SMS (Klaviyo)'},
@@ -1500,8 +1500,16 @@ function deskConnect(id){const d=load();const c=d.clients.find(x=>x.id===id);if(
 let _clEdit=null;
 function clContactLine(c){const bits=[c.segment,c.founder,c.email,c.phone].map(x=>String(x||'').trim()).filter(Boolean);return bits.length?'<div class="ce-note">'+bits.map(esc).join(' · ')+'</div>':'';}
 const CE_SEGMENTS=['Artist','Brand','Local'];
-function clEditValues(c){return{name:c.name||'',founder:c.founder||'',email:c.email||'',phone:c.phone||'',segment:c.segment||'',status:c.status==='inactive'?'inactive':'active',terms:c.terms||'',retainerValue:c.retainerValue==null?'':String(c.retainerValue),founding:!!c.founding,adSpend:c.adSpend||'',baselineRevenue:c.baselineRevenue?String(c.baselineRevenue):'',liveDate:c.liveDate||'',feeAfter:c.feeAfter||'',invoiceNote:c.invoiceNote||'',accessApps:accessApps(c)};}
-function clEditRead(f){const g=n=>f.elements[n]?String(f.elements[n].value):'';return{name:g('name'),founder:g('founder'),email:g('email'),phone:g('phone'),segment:g('segment'),status:g('status'),terms:g('terms'),retainerValue:g('retainerValue'),founding:!!(f.elements.founding&&f.elements.founding.checked),adSpend:g('adSpend'),baselineRevenue:g('baselineRevenue'),liveDate:g('liveDate'),feeAfter:g('feeAfter'),invoiceNote:g('invoiceNote'),accessApps:[...f.querySelectorAll('input[name="accessApps"]:checked')].map(e=>e.value)};}
+/* Price tier (seat ladder, 2026-09-30). Picking one fills Retainer with the seat price for the
+   segment (still editable) and sets the Founding tick to match. "Not set" leaves both alone, so a
+   pre-ladder client or a free pilot on £0 is never repriced by opening this form. */
+const CE_TIERS=[['','Not set'],['founding','Founding'],['second','Seats 4-5'],['standard','Standard']];
+function ceTierHint(seg,tier){const p=tier?seatPrice({segment:seg},tier):null;return p?'£'+p.toLocaleString('en-GB')+'/mo for '+(seg==='Artist'?'an artist':'a brand'):'Pick a tier to fill the retainer';}
+function clEditTierFill(f){const seg=f.elements.segment.value,tier=f.elements.tier.value,box=f.querySelector('.ce-tier-price');if(box)box.textContent=ceTierHint(seg,tier);if(!tier||seg==='Local')return;
+  const p=seatPrice({segment:seg},tier);if(p)f.elements.retainerValue.value=String(p);if(f.elements.founding)f.elements.founding.checked=tier==='founding';}
+function clEditTier(sel){const f=sel.form;if(!_clEdit||!f)return;clEditTierFill(f);_clEdit.draft=clEditRead(f);}
+function clEditValues(c){return{name:c.name||'',founder:c.founder||'',email:c.email||'',phone:c.phone||'',segment:c.segment||'',status:c.status==='inactive'?'inactive':'active',terms:c.terms||'',retainerValue:c.retainerValue==null?'':String(c.retainerValue),tier:c.tier||'',founding:!!c.founding,adSpend:c.adSpend||'',baselineRevenue:c.baselineRevenue?String(c.baselineRevenue):'',liveDate:c.liveDate||'',feeAfter:c.feeAfter||'',invoiceNote:c.invoiceNote||'',accessApps:accessApps(c)};}
+function clEditRead(f){const g=n=>f.elements[n]?String(f.elements[n].value):'';return{name:g('name'),founder:g('founder'),email:g('email'),phone:g('phone'),segment:g('segment'),status:g('status'),terms:g('terms'),retainerValue:g('retainerValue'),tier:g('tier'),founding:!!(f.elements.founding&&f.elements.founding.checked),adSpend:g('adSpend'),baselineRevenue:g('baselineRevenue'),liveDate:g('liveDate'),feeAfter:g('feeAfter'),invoiceNote:g('invoiceNote'),accessApps:[...f.querySelectorAll('input[name="accessApps"]:checked')].map(e=>e.value)};}
 function clientEditHTML(c){
   const v=_clEdit.draft||clEditValues(c),id=esc(c.id),local=v.segment==='Local'||(v.segment===(c.segment||'')&&isLocalClient(c));
   const segs=CE_SEGMENTS.includes(v.segment)?CE_SEGMENTS:[v.segment,...CE_SEGMENTS];
@@ -1513,7 +1521,8 @@ function clientEditHTML(c){
     +`<div class="km-row"><div class="km-field"><label class="km-label" for="ce_segment_${id}">Segment</label><select class="km-select" id="ce_segment_${id}" name="segment" onchange="clEditSeg(this)">${segs.map(s=>`<option value="${esc(s)}"${s===v.segment?' selected':''}>${esc(s||'Not set')}</option>`).join('')}</select></div>`
     +`<div class="km-field"><label class="km-label" for="ce_status_${id}">Status</label><select class="km-select" id="ce_status_${id}" name="status"><option value="active"${v.status==='active'?' selected':''}>Active</option><option value="inactive"${v.status==='inactive'?' selected':''}>Inactive</option></select></div></div>`
     +inp('Terms (their portal shows these)','terms')
-    +`<div class="km-row">${inp('Retainer £/mo','retainerValue','number',' min="0" step="1" inputmode="numeric" placeholder="blank = standard rate"')}${inp('Baseline £/mo (3-mo avg)','baselineRevenue','number',' min="0" step="1" inputmode="numeric" placeholder="not set"')}</div>`
+    +`<div class="km-row ce-tier-row"${local?' style="display:none"':''}><div class="km-field"><label class="km-label" for="ce_tier_${id}">Price tier</label><select class="km-select" id="ce_tier_${id}" name="tier" onchange="clEditTier(this)">${CE_TIERS.map(([k,n])=>`<option value="${k}"${k===v.tier?' selected':''}>${esc(n)}</option>`).join('')}</select></div><div class="km-field"><div class="km-label">Seat price</div><div class="km-info ce-tier-price" style="margin:0">${esc(ceTierHint(v.segment,v.tier))}</div></div></div>`
+    +`<div class="km-row">${inp('Retainer £/mo','retainerValue','number',' min="0" step="1" inputmode="numeric" placeholder="blank = tier or standard rate"')}${inp('Baseline £/mo (3-mo avg)','baselineRevenue','number',' min="0" step="1" inputmode="numeric" placeholder="not set"')}</div>`
     +`<div class="km-row">${inp('Ad spend','adSpend')}${inp('Go-live date','liveDate','date')}</div>`
     +`<div class="km-row">${inp('Fee after trial','feeAfter','text',' placeholder="Agreed later"')}${inp('Invoice note','invoiceNote','text',' placeholder="portal default"')}</div>`
     +`<label class="ce-check"><input type="checkbox" name="founding"${v.founding?' checked':''} /> Founding client</label>`
@@ -1530,6 +1539,8 @@ function clEditSeg(sel){
   const f=sel.form;if(!_clEdit||!f)return;const c=(load().clients||[]).find(x=>x.id===_clEdit.id)||{};
   if(!_clEdit.appsTouched&&!(Array.isArray(c.accessApps)&&c.accessApps.length)){const def=accessApps({segment:sel.value});f.querySelectorAll('input[name="accessApps"]').forEach(e=>{e.checked=def.includes(e.value);});}
   const ad=f.querySelector('.ce-adspend');if(ad)ad.style.display=sel.value==='Local'?'none':'';
+  const tr=f.querySelector('.ce-tier-row');if(tr)tr.style.display=sel.value==='Local'?'none':'';
+  clEditTierFill(f);
   _clEdit.draft=clEditRead(f);
 }
 function clEditSave(f){
@@ -1551,6 +1562,7 @@ function clEditSave(f){
   c.status=v.status==='inactive'?'inactive':'active';c.terms=t(v.terms);
   if(t(v.retainerValue)==='')delete c.retainerValue;else c.retainerValue=Number(t(v.retainerValue));
   c.founding=!!v.founding;c.baselineRevenue=Number(t(v.baselineRevenue))||0;
+  opt('tier',!nowLocal&&['founding','second','standard'].includes(v.tier)?v.tier:'');
   c.liveDate=v.liveDate||'';if(!c.liveDate)delete c.trialStartDate;   /* else load() puts the old date back */
   opt('feeAfter',t(v.feeAfter));opt('invoiceNote',t(v.invoiceNote));
   /* accessApps stays unset while it is just the segment default, as before this form existed */
@@ -1570,16 +1582,24 @@ function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.i
    absent, so a signed-but-not-billing client silently claimed the standard retainer and
    drove MRR, the growth-step bonus and the client count with money nobody pays.
    Absent (undefined / null / '') still falls through to the founding or standard rate. */
-function retainerBase(c,s){s=s||{};var v=(c||{}).retainerValue;return (v===''||v==null||!isFinite(Number(v)))?((c||{}).founding?(s.foundingValue||1000):(s.retainerValue||2000)):Number(v);}
+/* The seat ladder (Rahaid, 2026-09-30): five artists and five brands, priced per lane by seat.
+   Mirrors SEAT_LADDER in api/onboard.js. A client with c.tier takes its price from here when
+   retainerValue is absent; a client with no tier (pre-ladder, free pilots) keeps the old
+   settings pair. Founding ends at the first growth step, where the retainer becomes the lane's
+   standard rate instead of rising by the step (agreement clause 2.4). */
+var SEAT_LADDER={Brand:{founding:1000,second:1500,standard:2000},Artist:{founding:500,second:750,standard:1000}};
+function seatPrice(c,tier){c=c||{};if(c.lane==='local'||c.segment==='Local')return null;var t=tier||c.tier;var l=SEAT_LADDER[c.segment==='Artist'?'Artist':'Brand'];return (t&&l[t])||null;}
+function retainerBase(c,s){s=s||{};var v=(c||{}).retainerValue;return (v===''||v==null||!isFinite(Number(v)))?(seatPrice(c)||((c||{}).founding?(s.foundingValue||1000):(s.retainerValue||2000))):Number(v);}
+function steppedRetainer(c,s,steps){s=s||{};var step=s.stepValue||1000,std=(c||{}).tier==='founding'?seatPrice(c,'standard'):null;return (steps>0&&std)?std+(steps-1)*step:retainerBase(c,s)+steps*step;}
 /* RETAINER-BASE-END */
-function currentRetainer(c,data){const s=(data&&data.settings)||{};return retainerBase(c,s)+growthState(c,data).steps*(s.stepValue||1000);}
+function currentRetainer(c,data){const s=(data&&data.settings)||{};return steppedRetainer(c,s,growthState(c,data).steps);}
 function clientSnapshots(c,data){return (((data||{}).growth||{}).snapshots||[]).filter(x=>x.clientId===c.id).sort((a,b)=>String(a.date).localeCompare(String(b.date)));}
 function growthState(c,data){
   const s=(data&&data.settings)||{};const trig=s.stepTrigger||1.5;
   const base=Number(c.baselineRevenue)||0;if(!base)return{steps:0,level:0,next:0,bonusDue:0,fired:[]};
   let level=base,steps=0;const fired=[];
   clientSnapshots(c,data).forEach(x=>{const v=Number(x.avg)||0;while(v>=level*trig){level=level*trig;steps++;fired.push({date:x.date,level:Math.round(level)});}});
-  const retainer=retainerBase(c,s)+steps*(s.stepValue||1000);
+  const retainer=steppedRetainer(c,s,steps);
   return{steps,level:Math.round(level),next:Math.round(level*trig),bonusDue:fired.filter(f=>!(c.bonusPaid||[]).includes(f.date)).length*retainer,fired};
 }
 function setLiveDate(id,date){const d=load();const c=d.clients.find(x=>x.id===id);if(c){c.liveDate=date;save(d);renderClientPipeline(d);renderClientChecklist(d);renderClients(d);}}
@@ -2827,25 +2847,43 @@ function initEmail(){renderOutreachQueue();}
    2026-09-25). test-crm-onboard-lane.mjs drives this block as shipped. A creative row keeps the
    exact keys it had before lanes existed; a local row carries lane:'local', £500/£750 and an
    optional buy-out price (a field, never a default: the price is not set in canon). */
+const OB_LADDER={Brand:{founding:1000,second:1500,standard:2000},Artist:{founding:500,second:750,standard:1000}};
+const OB_TIER_NAME={founding:'Founding',second:'Seats 4-5',standard:'Standard'};
+function obSeg(d){return d&&d.segment==='Artist'?'Artist':'Brand';}
+/* The words for a creative row's rate: ladder rows name their seat, pre-ladder rows keep the old pair. */
+function obRateText(d){if(d.tier&&OB_TIER_NAME[d.tier]){const seg=obSeg(d);return OB_TIER_NAME[d.tier]+' £'+Number(Number(d.retainer)||OB_LADDER[seg][d.tier]).toLocaleString('en-GB')+'/mo';}return d.founding?'Founding £1,000/mo':'Standard £2,000/mo';}
 function obRowData(f,l,today){
   const local=f.lane==='local',founding=f.tier==='founding';
-  const d={business:l.business||'',founder:f.founder,email:f.email,segment:(f.segment||'').trim()||(local?'Local':l.niche||''),founding,retainer:local?(founding?500:750):(founding?1000:2000),startDate:f.start||'',baselineRevenue:local?0:(Number(f.baseline)||0),proposalNotes:(f.notes||'').trim(),clientEntity:(f.entity||'').trim(),clientAddress:(f.address||'').trim(),issuedAt:today,createdBy:'crm'};
-  if(local){d.lane='local';const b=Number(f.buyout);if(b>0)d.buyout=b;}
+  /* creative: segment is Artist or Brand and the tier is one of the seat ladder's three (2026-09-30) */
+  const seg=f.segment==='Artist'?'Artist':'Brand',tier=['founding','second','standard'].includes(f.tier)?f.tier:'standard';
+  const d={business:l.business||'',founder:f.founder,email:f.email,segment:local?((f.segment||'').trim()||'Local'):seg,founding,retainer:local?(founding?500:750):OB_LADDER[seg][tier],startDate:f.start||'',baselineRevenue:local?0:(Number(f.baseline)||0),proposalNotes:(f.notes||'').trim(),clientEntity:(f.entity||'').trim(),clientAddress:(f.address||'').trim(),issuedAt:today,createdBy:'crm'};
+  if(local){d.lane='local';const b=Number(f.buyout);if(b>0)d.buyout=b;}else d.tier=tier;
   return d;
 }
 function obClientFromRow(d,l,token,now,cid){
   const local=d.lane==='local';
-  const c={id:cid,name:d.business||l.business||'New client',status:'active',terms:local?(d.founding?'Founding £500/mo':'Standard £750/mo'):(d.founding?'Founding £1,000/mo':'Standard £2,000/mo'),adSpend:'per drop',retainerValue:Number(d.retainer)||(local?(d.founding?500:750):(d.founding?1000:2000)),founding:!!d.founding,baselineRevenue:Number(d.baselineRevenue)||0,liveDate:'',founder:d.founder||'',email:d.email||'',segment:d.segment||l.niche||'',onboardingToken:token,signedAt:null,paidAt:now};
-  if(local){delete c.adSpend;c.lane='local';}
+  const c={id:cid,name:d.business||l.business||'New client',status:'active',terms:local?(d.founding?'Founding £500/mo':'Standard £750/mo'):obRateText(d),adSpend:'per drop',retainerValue:Number(d.retainer)||(local?(d.founding?500:750):d.tier&&OB_TIER_NAME[d.tier]?OB_LADDER[obSeg(d)][d.tier]:(d.founding?1000:2000)),founding:!!d.founding,baselineRevenue:Number(d.baselineRevenue)||0,liveDate:'',founder:d.founder||'',email:d.email||'',segment:d.segment||l.niche||'',onboardingToken:token,signedAt:null,paidAt:now};
+  if(local){delete c.adSpend;c.lane='local';}else if(d.tier&&OB_TIER_NAME[d.tier])c.tier=d.tier;
   return c;
 }
-function obSeatsLeft(rows,lane){
-  const n=(rows||[]).filter(r=>{const d=r.data||{};return d.founding&&((d.lane==='local'?'local':'creative')===lane)&&['signed','paid','live'].includes(r.status);}).length;
-  return Math.max(0,5-n);
+/* Founding seats. Local: five. Creative with a segment: three per lane, artists and brands
+   counted apart (a pre-ladder founding row counts in the lane its segment points to). */
+function obSeatsLeft(rows,lane,seg){
+  const n=(rows||[]).filter(r=>{const d=r.data||{};return d.founding&&((d.lane==='local'?'local':'creative')===lane)&&(!seg||lane==='local'||obSeg(d)===seg)&&['signed','paid','live'].includes(r.status);}).length;
+  return Math.max(0,(seg&&lane!=='local'?3:5)-n);
 }
 /* OB-LANE-END */
 let _obRows={};let _obLeadId=null;
-async function obLaneChanged(){const lane=document.getElementById('obLane').value,local=lane==='local';const t=document.getElementById('obTier');t.options[0].text=local?'Founding — £500/mo, locked':'Founding — £1,000/mo (first five)';t.options[1].text=local?'Standard — £750/mo':'Standard — £2,000/mo';document.getElementById('obBaselineF').style.display=local?'none':'';document.getElementById('obBuyoutF').style.display=local?'':'none';document.getElementById('obSeats').textContent='…';let rows=Object.values(_obRows);try{const{data}=await _sb.from('ke_onboarding').select('status,data');if(Array.isArray(data))rows=data;}catch(e){}document.getElementById('obSeats').textContent=obSeatsLeft(rows,lane)+' of 5';}
+/* The Rate select reads out the price for the lane and, on the creative lane, for artist or brand.
+   Local keeps its two rates: the seats 4-5 option is hidden there (Kaizen Ascent is not on the ladder). */
+function obTierLabels(){const local=document.getElementById('obLane').value==='local',t=document.getElementById('obTier'),seg=document.getElementById('obSegment').value==='Artist'?'Artist':'Brand',L=OB_LADDER[seg],gbp=n=>'£'+n.toLocaleString('en-GB');
+  const o={};[...t.options].forEach(x=>o[x.value]=x);
+  o.founding.text=local?'Founding — £500/mo, locked':'Founding — '+gbp(L.founding)+'/mo';
+  o.second.text='Seats 4-5 — '+gbp(L.second)+'/mo';o.second.hidden=local;o.second.disabled=local;if(local&&t.value==='second')t.value='founding';
+  o.standard.text=local?'Standard — £750/mo':'Standard — '+gbp(L.standard)+'/mo';}
+let _obSeatRows=null;
+function obSeatsShow(){const lane=document.getElementById('obLane').value,local=lane==='local',seg=document.getElementById('obSegment').value;document.getElementById('obSeatsL').textContent=local?'Founding seats left':'Founding '+seg.toLowerCase()+' seats left';if(!_obSeatRows){document.getElementById('obSeats').textContent='…';return;}document.getElementById('obSeats').textContent=local?obSeatsLeft(_obSeatRows,lane)+' of 5':obSeatsLeft(_obSeatRows,lane,seg)+' of 3';}
+async function obLaneChanged(){const lane=document.getElementById('obLane').value,local=lane==='local';obTierLabels();document.getElementById('obSegmentF').style.display=local?'none':'';document.getElementById('obBaselineF').style.display=local?'none':'';document.getElementById('obBuyoutF').style.display=local?'':'none';_obSeatRows=null;obSeatsShow();let rows=Object.values(_obRows);try{const{data}=await _sb.from('ke_onboarding').select('status,data');if(Array.isArray(data))rows=data;}catch(e){}_obSeatRows=rows;obSeatsShow();}
 function obToken(){const b=new Uint8Array(24);crypto.getRandomValues(b);let s='';b.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
 /* Website leads land in ke_inbound (INSERT-only for the public form). The CRM pulls them
    here, appends to ke_leads (deduped by business name), and marks them imported. */
@@ -2865,10 +2903,10 @@ async function obLoadAll(){try{const{data,error}=await _sb.from('ke_onboarding')
 function obFor(l){return _obRows[l.id]||null;}
 function obBadge(l){const r=obFor(l);if(!r)return '';const lab={sent:'Link sent',viewed:'Viewed',signed:'Signed ✓ · awaiting payment',paid:'Paid ✓',live:'Live'}[r.status]||r.status;return '<button class="ob-badge '+esc(r.status)+'" onclick="openOnboard(\''+l.id+'\')" title="Open the onboarding funnel">'+lab+'</button>';}
 function obRowHtml(l){if(l.stage==='won'||l.stage==='lost')return obFor(l)?'<div style="margin-bottom:6px">'+obBadge(l)+'</div>':'';const r=obFor(l);return '<div style="margin-bottom:6px">'+(r?obBadge(l):'<button class="ob-btn" onclick="openOnboard(\''+l.id+'\')">Onboarding link →</button>')+'</div>';}
-function openOnboard(id){const l=loadLeads().find(x=>x.id===id);if(!l)return;_obLeadId=id;document.getElementById('obName').textContent=l.business||'';const r=obFor(l);document.getElementById('obForm').style.display=r?'none':'';document.getElementById('obStatus').style.display=r?'':'none';if(!r){document.getElementById('obFounder').value=l.owner||'';document.getElementById('obEmail').value=l.email||'';document.getElementById('obSegment').value=l.niche||'';document.getElementById('obLane').value='creative';document.getElementById('obBuyout').value='';obLaneChanged();document.getElementById('obTier').value='founding';document.getElementById('obStart').value='';document.getElementById('obBaseline').value='';document.getElementById('obNotes').value='';document.getElementById('obEntity').value='';document.getElementById('obAddress').value='';}else obRenderStatus(r);document.getElementById('obModal').classList.add('open');}
+function openOnboard(id){const l=loadLeads().find(x=>x.id===id);if(!l)return;_obLeadId=id;document.getElementById('obName').textContent=l.business||'';const r=obFor(l);document.getElementById('obForm').style.display=r?'none':'';document.getElementById('obStatus').style.display=r?'':'none';if(!r){document.getElementById('obFounder').value=l.owner||'';document.getElementById('obEmail').value=l.email||'';document.getElementById('obSegment').value=/artist|music|musician|singer|rapper|band|producer|\bdj\b/i.test(String(l.niche||''))?'Artist':'Brand';document.getElementById('obLane').value='creative';document.getElementById('obBuyout').value='';obLaneChanged();document.getElementById('obTier').value='founding';document.getElementById('obStart').value='';document.getElementById('obBaseline').value='';document.getElementById('obNotes').value='';document.getElementById('obEntity').value='';document.getElementById('obAddress').value='';}else obRenderStatus(r);document.getElementById('obModal').classList.add('open');}
 function closeOnboard(){document.getElementById('obModal').classList.remove('open');_obLeadId=null;}
-function obRenderStatus(r){const d=r.data||{};const link=location.origin+'/onboard?t='+r.id;document.getElementById('obLink').textContent=link;const steps=[['sent','Link created'],['viewed','Opened'],['signed','Agreement signed'],['paid','First month paid'],['live','Live']];const order=['sent','viewed','signed','paid','live'];const at=order.indexOf(r.status);document.getElementById('obInfo').innerHTML=steps.map((s,i)=>'<span style="margin-right:12px;'+(i<=at?'color:var(--text);font-weight:700':'')+'">'+(i<=at?'● ':'○ ')+s[1]+'</span>').join('')+'<div style="margin-top:8px">'+esc(d.founder||'')+' · '+esc(d.email||'')+' · '+(d.lane==='local'?(d.founding?'local · founding £500/mo':'local · standard £750/mo')+' · buy-out £'+Number(d.buyout||1200).toLocaleString('en-GB'):(d.founding?'founding £1,000/mo':'standard £2,000/mo'))+(d.signature?' · signed by '+esc(d.signature.name)+' '+esc(String(d.signature.at||'').slice(0,10)):'')+(r.paid_at?' · paid '+esc(String(r.paid_at).slice(0,10)):'')+'</div>';const mp=document.getElementById('obMarkPaid');if(mp)mp.style.display=r.status==='signed'?'':'none';document.getElementById('obHint').textContent=r.status==='signed'?'Signed. When the first payment shows in Stripe (or Check finds it, once the Stripe key is on Vercel), press Mark paid — that creates the client, moves the lead to Won and tells the prospect they are live.':r.status==='paid'?(d.lane==='local'?'Paid — the client is in the Clients tab and the lead is Won. They answer the Desk setup questions in the portal; then build the site and set up the Desk.':'Paid — the client is in the Clients tab and the lead is Won. Set the go-live date and agree the baseline in writing.'):'The prospect sees the proposal, then the agreement, then the Stripe page. You get an email at each step.';}
-async function createOnboard(){if(!_obLeadId)return;const l=loadLeads().find(x=>x.id===_obLeadId);if(!l)return;const founder=document.getElementById('obFounder').value.trim(),email=document.getElementById('obEmail').value.trim();if(!founder||!email||!email.includes('@')){showToast('Founder name and a real email are needed');return;}const v=id=>document.getElementById(id).value;const row={id:obToken(),lead_id:l.id,status:'sent',data:obRowData({lane:v('obLane'),tier:v('obTier'),founder,email,segment:v('obSegment'),start:v('obStart'),baseline:v('obBaseline'),notes:v('obNotes'),entity:v('obEntity'),address:v('obAddress'),buyout:v('obBuyout')},l,todayStr())};try{const{error}=await _sb.from('ke_onboarding').insert(row);if(error){showToast('Could not create: '+error.message);return;}}catch(e){showToast('Could not create the link');return;}_obRows[l.id]=row;if(!l.owner){l.owner=founder;}if(!l.email){l.email=email;}if(l.stage==='new'||l.stage==='contacted'){l.stage='proposal';}l.updatedAt=Date.now();const arr=loadLeads();const i=arr.findIndex(x=>x.id===l.id);if(i>-1){arr[i]=l;saveLeads(arr);}document.getElementById('obForm').style.display='none';document.getElementById('obStatus').style.display='';obRenderStatus(row);renderLeads();renderLeadStats();showToast('Onboarding link created');}
+function obRenderStatus(r){const d=r.data||{};const link=location.origin+'/onboard?t='+r.id;document.getElementById('obLink').textContent=link;const steps=[['sent','Link created'],['viewed','Opened'],['signed','Agreement signed'],['paid','First month paid'],['live','Live']];const order=['sent','viewed','signed','paid','live'];const at=order.indexOf(r.status);document.getElementById('obInfo').innerHTML=steps.map((s,i)=>'<span style="margin-right:12px;'+(i<=at?'color:var(--text);font-weight:700':'')+'">'+(i<=at?'● ':'○ ')+s[1]+'</span>').join('')+'<div style="margin-top:8px">'+esc(d.founder||'')+' · '+esc(d.email||'')+' · '+(d.lane==='local'?(d.founding?'local · founding £500/mo':'local · standard £750/mo')+' · buy-out £'+Number(d.buyout||1200).toLocaleString('en-GB'):(d.tier?obSeg(d).toLowerCase()+' · ':'')+obRateText(d).toLowerCase())+(d.signature?' · signed by '+esc(d.signature.name)+' '+esc(String(d.signature.at||'').slice(0,10)):'')+(r.paid_at?' · paid '+esc(String(r.paid_at).slice(0,10)):'')+'</div>';const mp=document.getElementById('obMarkPaid');if(mp)mp.style.display=r.status==='signed'?'':'none';document.getElementById('obHint').textContent=r.status==='signed'?'Signed. When the first payment shows in Stripe (or Check finds it, once the Stripe key is on Vercel), press Mark paid — that creates the client, moves the lead to Won and tells the prospect they are live.':r.status==='paid'?(d.lane==='local'?'Paid — the client is in the Clients tab and the lead is Won. They answer the Desk setup questions in the portal; then build the site and set up the Desk.':'Paid — the client is in the Clients tab and the lead is Won. Set the go-live date and agree the baseline in writing.'):'The prospect sees the proposal, then the agreement, then the Stripe page. You get an email at each step.';}
+async function createOnboard(){if(!_obLeadId)return;const l=loadLeads().find(x=>x.id===_obLeadId);if(!l)return;const founder=document.getElementById('obFounder').value.trim(),email=document.getElementById('obEmail').value.trim();if(!founder||!email||!email.includes('@')){showToast('Founder name and a real email are needed');return;}const v=id=>document.getElementById(id).value;const row={id:obToken(),lead_id:l.id,status:'sent',data:obRowData({lane:v('obLane'),tier:v('obTier'),founder,email,segment:v('obLane')==='local'?'':v('obSegment'),start:v('obStart'),baseline:v('obBaseline'),notes:v('obNotes'),entity:v('obEntity'),address:v('obAddress'),buyout:v('obBuyout')},l,todayStr())};try{const{error}=await _sb.from('ke_onboarding').insert(row);if(error){showToast('Could not create: '+error.message);return;}}catch(e){showToast('Could not create the link');return;}_obRows[l.id]=row;if(!l.owner){l.owner=founder;}if(!l.email){l.email=email;}if(l.stage==='new'||l.stage==='contacted'){l.stage='proposal';}l.updatedAt=Date.now();const arr=loadLeads();const i=arr.findIndex(x=>x.id===l.id);if(i>-1){arr[i]=l;saveLeads(arr);}document.getElementById('obForm').style.display='none';document.getElementById('obStatus').style.display='';obRenderStatus(row);renderLeads();renderLeadStats();showToast('Onboarding link created');}
 function copyOnboardLink(btn){const t=document.getElementById('obLink').textContent;navigator.clipboard.writeText(t).then(()=>{btn.textContent='Copied ✓';setTimeout(()=>btn.textContent='Copy link',1500);}).catch(()=>showToast('Copy failed — select the link and copy'));}
 async function emailOnboardLink(btn){const l=loadLeads().find(x=>x.id===_obLeadId);const r=l&&obFor(l);if(!r)return;btn.disabled=true;try{const{data}=await _sb.auth.getSession();const jwt=data&&data.session&&data.session.access_token;const res=await fetch('/api/onboard?op=send&t='+encodeURIComponent(r.id),{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+jwt},body:'{}'});const j=await res.json();showToast(res.ok?'Emailed to '+(r.data||{}).email:(j.error||'Email failed'));}catch(e){showToast('Email failed');}btn.disabled=false;}
 /* The trusted write. Paid is decided here — by Diego/Rahaid seeing the payment, or by the

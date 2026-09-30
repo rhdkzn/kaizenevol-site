@@ -307,7 +307,10 @@
     }
     ['p-brand','p-brand-eyebrow','a-brand','a-brand-eyebrow','r-brand-eyebrow','d-brand'].forEach(function(id){ $(id).textContent = view.business; });
     $('p-founder').textContent = (view.founder||'').split(' ')[0] || 'friend';
-    $('p-fee').textContent = gbp(view.retainer) + '/mo' + (view.founding ? ' · founding rate, one of the first five' : '');
+    /* A seat-ladder row (view.tier set) names its own seat; a pre-ladder row keeps its old words. */
+    $('p-fee').textContent = gbp(view.retainer) + '/mo' + (view.tier
+      ? ({ founding: ' · founding rate, one of the first three ' + view.seatWord + 's', second: ' · one of the first five ' + view.seatWord + 's', standard: '' }[view.tier] || '')
+      : (view.founding ? ' · founding rate, one of the first five' : ''));
     $('p-start').textContent = longDate(view.startDate);
     $('p-notes').textContent = view.notes || '';
     $('a-text').textContent = view.agreement;
