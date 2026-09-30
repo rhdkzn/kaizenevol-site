@@ -32,8 +32,10 @@ Positioning the copy must hold to:
 - If a check can't actually be run, say that plainly instead of guessing.
 
 ## Decisions already made (don't undo without asking)
-- **Seat marks show the cap only.** `data-seats="5,5"` (five artists, five brands, drawn as two groups) with no `data-taken`. Only show occupancy
-  (`data-taken="N"`) once N is 3 or more. See the comment in `kaizen-mark.css`. (2026-09-28)
+- **Seat marks show real occupancy (Rahaid, 2026-09-30: "Update the count tho"; replaces the 2026-09-28 cap-only rule).**
+  `data-seats="5,5" data-taken="A,B" data-seat-labels="Artists,Brands"`: A = artist clients, B = brand clients.
+  As of 2026-09-30: artists 2 (SKN, FulaFalu), brands 1 (Marauder). VAIROS is Rahaid's own label and is NOT shown as a
+  filled seat (canon: never present it to a prospect as a client). Update data-taken on every page when a client is won or lost.
 - URLs and domains: confirm exact spelling before using them in copy or links.
 
 ## Clients and side work (context only)
