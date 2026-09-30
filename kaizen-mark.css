@@ -63,3 +63,9 @@ section:not(.closing) .container > .smallcaps::before{ left:40px; width:140px; }
 .seats i{width:7px;height:7px;border:1px solid var(--kz-seat,#8A857C);border-radius:1px;
          opacity:.55;display:block}
 .seats i.taken{background:var(--kz-seat,#8A857C);opacity:.85}
+/* Labelled groups (data-seat-labels): the marks get a line of their own, one named group
+   per lane, and the sentence sits underneath. */
+.seat-set{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 22px;margin-bottom:8px}
+.seat-group{display:inline-flex;align-items:center;white-space:nowrap}
+.seat-group .seats{margin-right:8px;transform:none}
+.seat-label{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--kz-seat,#8A857C)}
