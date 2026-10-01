@@ -1546,7 +1546,7 @@ function clEditSeg(sel){
 function clEditSave(f){
   if(!_clEdit||_clEdit.id!==f.dataset.id)return;const id=_clEdit.id,v=clEditRead(f);_clEdit.draft=v;
   const t=s=>String(s||'').trim(),num=s=>t(s)===''||/^\d+(\.\d+)?$/.test(t(s));
-  const err=!t(v.name)?'Name is needed.':t(v.email)&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t(v.email))?'That email does not look right.':!num(v.retainerValue)?'Retainer must be a number of pounds, or blank.':!num(v.baselineRevenue)?'Baseline must be a number of pounds, or blank.':'';
+  const err=!t(v.name)?'Name is needed.':!CE_SEGMENTS.includes(v.segment)?'Pick Artist, Brand or Local: it sets their price, access list and checklist.':t(v.email)&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t(v.email))?'That email does not look right.':!num(v.retainerValue)?'Retainer must be a number of pounds, or blank.':!num(v.baselineRevenue)?'Baseline must be a number of pounds, or blank.':'';
   if(err){_clEdit.err=err;const box=f.querySelector('.ce-err');if(box)box.textContent=err;showToast(err);return;}
   const d=load();const c=(d.clients||[]).find(x=>x.id===id);if(!c){clEditCancel();return;}
   const wasLocal=isLocalClient(c),hadApps=Array.isArray(c.accessApps)&&c.accessApps.length;

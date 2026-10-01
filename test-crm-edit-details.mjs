@@ -28,6 +28,7 @@ const SEED = {
     C('c2', 'Northside Records', { segment: 'Artist' }),
     C('c3', 'Nova Ray', { segment: 'Artist', liveDate: '2026-08-10' }),
     C('c4', 'Hollow Oak Barbers', { lane: 'local', segment: 'Local', retainerValue: 500 }),
+    C('c5', 'Untyped Client', {}),
   ],
   clientTasks: {}, growth: { snapshots: [] },
   settings: { retainerValue: 2000, foundingValue: 1000, stepValue: 1000, stepTrigger: 1.5 },
@@ -121,6 +122,12 @@ const openRow = (page, id) => page.evaluate(id => { if (clOpenId() !== id) toggl
     const b = load().clients.find(c => c.id === 'c2'); return { r1, r2: { lane: b.lane, local: isLocalClient(b), chk: b.checklist, tasks: tasksFor(b).map(t => t.id)[0], seg: b.segment } } })
   ok('segment Local: lane local and the local checklist', lane.r1.lane === 'local' && lane.r1.local && lane.r1.tasks === 'la1', JSON.stringify(lane.r1))
   ok('segment back to Brand: lane cleared, creative checklist again', !lane.r2.lane && !lane.r2.local && lane.r2.tasks === 'ob1' && lane.r2.seg === 'Brand', JSON.stringify(lane.r2))
+  /* a client with no segment cannot be saved until it is typed (2026-10-01) */
+  const untyped = await page.evaluate(() => { clEditStart('c5'); const f = document.querySelector('#card_c5 form.ce-form'); f.querySelector('button[type=submit]').click()
+    const r1 = { seg: load().clients.find(c => c.id === 'c5').segment || '', formStill: !!document.querySelector('#card_c5 form.ce-form'), err: (document.querySelector('#card_c5 .ce-err') || {}).textContent || '' }
+    const g = document.querySelector('#card_c5 form.ce-form'); g.querySelector('[name=segment]').value = 'Artist'; g.querySelector('[name=segment]').dispatchEvent(new Event('change', { bubbles: true })); g.querySelector('button[type=submit]').click()
+    return { r1, seg2: load().clients.find(c => c.id === 'c5').segment } })
+  ok('no segment is refused until Artist, Brand or Local is picked', untyped.r1.seg === '' && untyped.r1.formStill && /Artist, Brand or Local/.test(untyped.r1.err) && untyped.seg2 === 'Artist', JSON.stringify(untyped))
   } catch (e) { ok('edit details: the flow runs to the end', false, e.message.split('\n')[0]) }
   ok('CRM: no script errors', errors.length === 0, errors.join(' | '))
   await page.close()
