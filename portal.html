@@ -306,18 +306,18 @@
      absent, so a signed-but-not-billing client silently claimed the standard retainer and
      drove MRR, the growth-step bonus and the client count with money nobody pays.
      Absent (undefined / null / '') still falls through to the founding or standard rate. */
-  /* Seat ladder (2026-09-30), same as the CRM: a client with c.tier is priced by seat per lane;
-     founding becomes the lane's standard rate at the first growth step (agreement clause 2.4). */
-  var SEAT_LADDER={Brand:{founding:1000,second:1500,standard:2000},Artist:{founding:500,second:750,standard:1000}};
-  function seatPrice(c,tier){c=c||{};if(c.lane==='local'||c.segment==='Local')return null;var t=tier||c.tier;var l=SEAT_LADDER[c.segment==='Artist'?'Artist':'Brand'];return (t&&l[t])||null;}
+  /* Seat ladder (2026-09-30; two prices per lane from 2026-10-01), same as the CRM: a client with
+     c.tier is priced by seat per lane; founding becomes the lane's standard rate at the first growth
+     step (agreement clause 2.4). */
+  var SEAT_LADDER={Brand:{founding:1000,standard:2000},Artist:{founding:500,standard:1000}};
+  function seatPrice(c,tier){c=c||{};if(c.lane==='local'||c.segment==='Local')return null;var t=tier||c.tier;if(t==='second')t='founding';var l=SEAT_LADDER[c.segment==='Artist'?'Artist':'Brand'];return (t&&l[t])||null;}
   function retainerBase(c,s){s=s||{};var v=(c||{}).retainerValue;return (v===''||v==null||!isFinite(Number(v)))?(seatPrice(c)||((c||{}).founding?(s.foundingValue||1000):(s.retainerValue||2000))):Number(v);}
-  function steppedRetainer(c,s,steps){s=s||{};var step=s.stepValue||1000,std=(c||{}).tier==='founding'?seatPrice(c,'standard'):null;return (steps>0&&std)?std+(steps-1)*step:retainerBase(c,s)+steps*step;}
+  function steppedRetainer(c,s,steps){s=s||{};var step=s.stepValue||1000,tr=(c||{}).tier,std=(tr==='founding'||tr==='second')?seatPrice(c,'standard'):null;return (steps>0&&std)?std+(steps-1)*step:retainerBase(c,s)+steps*step;}
   /* RETAINER-BASE-END */
   /* The words under the retainer. A seat-ladder client (c.tier) reads its own seat; founding
      turns into the standard rate at the first step, as clause 2.4 says. No tier: as before. */
   function rateWords(c, g){
-    if (c.tier === 'second') return 'one of our first five ' + (c.segment === 'Artist' ? 'artists' : 'brands');
-    if (c.tier === 'founding') return g.steps ? 'standard rate' : 'founding rate, one of our first three ' + (c.segment === 'Artist' ? 'artists' : 'brands');
+    if (c.tier === 'founding' || c.tier === 'second') return g.steps ? 'standard rate' : 'founding rate, one of our first five ' + (c.segment === 'Artist' ? 'artists' : 'brands');
     if (c.tier === 'standard') return 'standard rate';
     return c.founding ? 'founding rate' : 'standard rate';
   }

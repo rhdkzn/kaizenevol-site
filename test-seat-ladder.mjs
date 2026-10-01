@@ -1,9 +1,10 @@
-/* The seat ladder (Rahaid, 2026-09-30). Replaces "£1,000/mo founding for the first five clients,
- * £2,000 standard".
+/* The seat ladder (Rahaid, 2026-09-30; two prices per lane from 2026-10-01). Replaces "£1,000/mo
+ * founding for the first five clients, £2,000 standard".
  *
  *   Five artists and five brands at a time, priced per lane by seat:
- *     Brands   seats 1-3 £1,000 (founding) · seats 4-5 £1,500 · standard £2,000
- *     Artists  seats 1-3 £500   (founding) · seats 4-5 £750   · standard £1,000
+ *     Brands   seats 1-5 £1,000 (founding) · standard £2,000
+ *     Artists  seats 1-5 £500   (founding) · standard £1,000
+ *   The seats 4-5 tier ('second', £1,500 / £750) is gone; a stored row carrying it reads as founding.
  *   The growth step is unchanged on top. Founding ends at the first step (clause 2.4).
  *
  * Part 1 (node) renders the creative agreement for every lane and tier and checks clause 2.1
@@ -31,8 +32,14 @@ const line = (t, n) => (t.split('\n').find(l => l.startsWith(n + ' ')) || '')
 
 /* ── Part 1: the agreement ── */
 const LADDER = {
-  Brand:  { founding: 1000, second: 1500, standard: 2000 },
-  Artist: { founding: 500,  second: 750,  standard: 1000 },
+  Brand:  { founding: 1000, standard: 2000 },
+  Artist: { founding: 500,  standard: 1000 },
+}
+const TIERS = ['founding', 'standard']
+/* the live links (Law, 2026-10-01); the retired £1,500 brand and £750 artist links must never appear */
+const LINKS = {
+  'Brand:founding': 'https://buy.stripe.com/aFa5kF78wgpncajbPV6AM0g', 'Brand:standard': 'https://buy.stripe.com/fZu00l64s8WV6PZaLR6AM0h',
+  'Artist:founding': 'https://buy.stripe.com/eVqbJ3dwU4GF7U3cTZ6AM0i', 'Artist:standard': 'https://buy.stripe.com/8x25kFgJ6a0Z2zJ6vB6AM0k',
 }
 const gbp = n => '£' + n.toLocaleString('en-GB')
 const row = (segment, tier, extra) => ({ business: 'Kiln & Co', founder: 'Priya Nair', segment, tier, founding: tier === 'founding', startDate: '2026-10-01', issuedAt: '2026-09-30', email: 'p@kiln.co', ...extra })
@@ -42,17 +49,17 @@ const rest = t => t.split('\n').filter(l => !/^2\.(1|4) /.test(l)).join('\n')
 
 for (const seg of ['Brand', 'Artist']) {
   const w = seg.toLowerCase()
-  for (const tier of ['founding', 'second', 'standard']) {
+  for (const tier of TIERS) {
     const fee = LADDER[seg][tier], t = api.agreementText(row(seg, tier, { retainer: fee }))
     const c21 = line(t, '2.1'), c24 = line(t, '2.4')
-    const words = { founding: `(founding rate, one of the Agency's first three ${w} clients)`, second: `(one of the Agency's first five ${w} clients)`, standard: '(standard rate)' }[tier]
+    const words = { founding: `(founding rate, one of the Agency's first five ${w} clients)`, standard: '(standard rate)' }[tier]
     ok(`${seg} ${tier}: 2.1 states ${gbp(fee)} per month`, c21.startsWith(`2.1 The retainer is ${gbp(fee)} per month `), c21)
     ok(`${seg} ${tier}: 2.1 names the tier in words`, c21.includes(`per month ${words}, covering all four services`), c21)
     ok(`${seg} ${tier}: the old "first five clients" rule is gone`, !/first five clients\b/.test(t) && !/first five clients/.test(c21))
     ok(`${seg} ${tier}: same figure with no retainer on the row`, line(api.agreementText(row(seg, tier)), '2.1') === c21)
     if (tier === 'founding') {
       ok(`${seg} founding: 2.4 ends the discount at the first step, into ${gbp(LADDER[seg].standard)}`,
-        c24 === `2.4 The founding rate is a discount for one of the Agency's first three ${w} clients. It ends at the first growth step under clause 3, at which point the retainer becomes the standard rate of ${gbp(LADDER[seg].standard)} per month in place of the £1,000 increase in clause 3.2; any later step then applies from the standard rate.`, c24)
+        c24 === `2.4 The founding rate is a discount for one of the Agency's first five ${w} clients. It ends at the first growth step under clause 3, at which point the retainer becomes the standard rate of ${gbp(LADDER[seg].standard)} per month in place of the £1,000 increase in clause 3.2; any later step then applies from the standard rate.`, c24)
     } else {
       ok(`${seg} ${tier}: no clause 2.4 (the step in clause 3.2 applies from the tier price)`, !c24, c24)
     }
@@ -61,24 +68,32 @@ for (const seg of ['Brand', 'Artist']) {
     ok(`${seg} ${tier}: no em dash added to 2.1 or 2.4`, !/—/.test(c21 + c24))
     ok(`${seg} ${tier}: an edited retainer still wins`, line(api.agreementText(row(seg, tier, { retainer: 1234 })), '2.1').includes('£1,234 per month'))
 
-    /* Stripe: the links on file are £1,000 (founding) and £2,000 (standard). A seat may use one
-       only when that IS its price; every other seat gets its own env link or nothing. */
-    const envName = { 'Brand:second': 'STRIPE_BRAND_SECOND_LINK', 'Artist:founding': 'STRIPE_ARTIST_FOUNDING_LINK', 'Artist:second': 'STRIPE_ARTIST_SECOND_LINK', 'Artist:standard': 'STRIPE_ARTIST_STANDARD_LINK' }[seg + ':' + tier]
+    /* Stripe: every seat has its own live link for its own amount. Artist seats read their env
+       link first (set on Vercel or not), falling back to the live link. */
+    const envName = { 'Artist:founding': 'STRIPE_ARTIST_FOUNDING_LINK', 'Artist:standard': 'STRIPE_ARTIST_STANDARD_LINK' }[seg + ':' + tier]
     const r = { id: 'S'.repeat(24), data: row(seg, tier, { retainer: fee }) }
+    const saved = envName && process.env[envName]; if (envName) delete process.env[envName]
+    ok(`${seg} ${tier}: env unset → the live ${gbp(fee)} link`, api.payUrl(r).startsWith(LINKS[seg + ':' + tier] + '?client_reference_id=SSSS'), api.payUrl(r))
     if (envName) {
-      const saved = process.env[envName]; delete process.env[envName]
-      ok(`${seg} ${tier}: env unset → no pay link (never a creative link for another amount)`, api.payUrl(r) === '', api.payUrl(r))
       process.env[envName] = 'https://buy.stripe.com/test_' + w + '_' + tier
-      ok(`${seg} ${tier}: pay link from ${envName}`, api.payUrl(r).startsWith('https://buy.stripe.com/test_' + w + '_' + tier + '?client_reference_id=SSSS'), api.payUrl(r))
-      if (saved === undefined) delete process.env[envName]; else process.env[envName] = saved
-    } else {
-      ok(`${seg} ${tier}: uses the ${gbp(fee)} link on file`, api.payUrl(r).startsWith(tier === 'founding' ? 'https://buy.stripe.com/aFa5kF78wgpncajbPV6AM0g' : 'https://buy.stripe.com/'), api.payUrl(r))
+      ok(`${seg} ${tier}: ${envName} wins when set`, api.payUrl(r).startsWith('https://buy.stripe.com/test_' + w + '_' + tier + '?client_reference_id=SSSS'), api.payUrl(r))
+      if (saved === undefined || saved === false) delete process.env[envName]; else process.env[envName] = saved
     }
 
     const v = api.publicView(r)
     ok(`${seg} ${tier}: the page gets the seat (tier, word, fee)`, v.tier === tier && v.seatWord === w && v.retainer === fee && v.founding === (tier === 'founding'), JSON.stringify({ tier: v.tier, w: v.seatWord, r: v.retainer, f: v.founding }))
   }
 }
+/* A row stored with the retired 'second' tier must not crash and reads as founding (seats 1-5). */
+for (const seg of ['Brand', 'Artist']) {
+  const r2 = { id: 'Q'.repeat(24), data: row(seg, 'second') }
+  let t2 = '', v2 = null, u2 = ''
+  try { t2 = api.agreementText(r2.data); v2 = api.publicView(r2); u2 = api.payUrl(r2) } catch (e) { t2 = 'THREW ' + e.message }
+  ok(`${seg} legacy 'second' row renders as founding`, line(t2, '2.1') === line(api.agreementText(row(seg, 'founding')), '2.1'), line(t2, '2.1') || t2)
+  ok(`${seg} legacy 'second' row: view founding at ${gbp(LADDER[seg].founding)}, founding pay link`, v2 && v2.tier === 'founding' && v2.retainer === LADDER[seg].founding && u2.startsWith(LINKS[seg + ':founding']), JSON.stringify(v2 && { t: v2.tier, r: v2.retainer, u: u2 }))
+}
+const src = readFileSync(new URL('./api/onboard.js', import.meta.url), 'utf8')
+ok('onboard.js: no seats 4-5 tier, env var or "first three" wording left', !/second:\s*\d|STRIPE_\w*SECOND|first three/.test(src))
 ok('brand and artist founding texts differ', api.agreementText(row('Brand', 'founding')) !== api.agreementText(row('Artist', 'founding')))
 
 /* Pre-ladder rows and the local lane: byte for byte what main rendered. The hashes were taken
@@ -104,11 +119,13 @@ for (const f of ['crm.html', 'portal.html']) {
   ok(`${f}: retainerBase and steppedRetainer found`, !!(h && h.steppedRetainer), 'no steppedRetainer between the RETAINER-BASE markers')
   if (!h || !h.steppedRetainer) continue
   const S = { foundingValue: 1000, retainerValue: 2000, stepValue: 1000 }
-  for (const seg of ['Brand', 'Artist']) for (const tier of ['founding', 'second', 'standard'])
+  for (const seg of ['Brand', 'Artist']) for (const tier of TIERS)
     ok(`${f}: ${seg} ${tier} with no retainerValue → ${gbp(LADDER[seg][tier])}`, h.retainerBase({ segment: seg, tier }, S) === LADDER[seg][tier], h.retainerBase({ segment: seg, tier }, S))
   ok(`${f}: artist founding after one step is £1,000 (clause 2.4), not £1,500`, h.steppedRetainer({ segment: 'Artist', tier: 'founding', retainerValue: 500 }, S, 1) === 1000)
   ok(`${f}: artist founding after two steps is £2,000`, h.steppedRetainer({ segment: 'Artist', tier: 'founding', retainerValue: 500 }, S, 2) === 2000)
-  ok(`${f}: brand seats 4-5 after one step is £2,500 (step on the tier price)`, h.steppedRetainer({ segment: 'Brand', tier: 'second', retainerValue: 1500 }, S, 1) === 2500)
+  ok(`${f}: brand standard after one step is £3,000 (step on the tier price)`, h.steppedRetainer({ segment: 'Brand', tier: 'standard', retainerValue: 2000 }, S, 1) === 3000)
+  ok(`${f}: a legacy 'second' brand with no retainerValue prices as founding £1,000`, h.retainerBase({ segment: 'Brand', tier: 'second' }, S) === 1000)
+  ok(`${f}: a legacy 'second' artist steps into £1,000 like founding`, h.steppedRetainer({ segment: 'Artist', tier: 'second' }, S, 1) === 1000)
   ok(`${f}: free pilot (founding, £0, no tier) stays £0`, h.retainerBase({ segment: 'Artist', founding: true, retainerValue: 0 }, S) === 0 && h.steppedRetainer({ segment: 'Artist', founding: true, retainerValue: 0 }, S, 0) === 0)
   ok(`${f}: pre-ladder founding client (no tier) still £1,000 then +£1,000 per step`, h.retainerBase({ founding: true }, S) === 1000 && h.steppedRetainer({ founding: true }, S, 1) === 2000)
   ok(`${f}: a local client is never priced off the ladder`, h.retainerBase({ lane: 'local', segment: 'Local', tier: 'founding', founding: true }, S) === 1000)
@@ -119,19 +136,21 @@ for (const f of ['crm.html', 'portal.html']) {
   let rw = null; try { rw = new Function(html.slice(i, j + 4) + '; return rateWords;')() } catch (e) { }
   ok('portal: rateWords found', !!rw)
   if (rw) {
-    ok('portal: artist seats 4-5 reads "one of our first five artists"', rw({ segment: 'Artist', tier: 'second' }, { steps: 0 }) === 'one of our first five artists')
-    ok('portal: brand founding reads its seat', rw({ segment: 'Brand', tier: 'founding', founding: true }, { steps: 0 }) === 'founding rate, one of our first three brands')
+    ok('portal: artist founding reads "founding rate, one of our first five artists"', rw({ segment: 'Artist', tier: 'founding', founding: true }, { steps: 0 }) === 'founding rate, one of our first five artists')
+    ok('portal: brand founding reads its seat', rw({ segment: 'Brand', tier: 'founding', founding: true }, { steps: 0 }) === 'founding rate, one of our first five brands')
+    ok('portal: a legacy "second" row reads as founding', rw({ segment: 'Brand', tier: 'second' }, { steps: 0 }) === 'founding rate, one of our first five brands')
     ok('portal: founding reads standard rate once a step has fired', rw({ segment: 'Artist', tier: 'founding', founding: true }, { steps: 1 }) === 'standard rate')
     ok('portal: pre-ladder founding client reads as before', rw({ founding: true }, { steps: 0 }) === 'founding rate')
   }
   const crm = readFileSync(new URL('./crm.html', import.meta.url), 'utf8')
   ok('crm: default checklist no longer quotes the old rule', /Retainer agreement signed at the agreed seat price/.test(crm) && !/£1,000\/mo founding, first five/.test(crm))
-  ok('crm: onboarding Rate select offers the three tiers', /id="obTier"[^>]*>[\s\S]{0,80}value="founding"[\s\S]{0,80}value="second"[\s\S]{0,80}value="standard"/.test(crm))
+  ok('crm: onboarding Rate select offers the two tiers', /id="obTier"[^>]*><option value="founding">[^<]*<\/option><option value="standard">[^<]*<\/option><\/select>/.test(crm))
+  ok('crm: no Seats 4-5 tier left anywhere', !/Seats 4-5|second:\s*\d|'second',/.test(crm))
   const a = crm.indexOf('/* OB-LANE-START'), b = crm.indexOf('/* OB-LANE-END */')
   const { obRowData, obClientFromRow, obSeatsLeft } = new Function(crm.slice(a, b) + '\n;return {obRowData, obClientFromRow, obSeatsLeft};')()
   const lead = { id: 'L1', business: 'Nova Ray', niche: 'Music' }
   const base = { lane: 'creative', founder: 'Nova Ray', email: 'n@r.co', start: '', baseline: '', notes: '', entity: '', address: '', buyout: '' }
-  for (const seg of ['Brand', 'Artist']) for (const tier of ['founding', 'second', 'standard']) {
+  for (const seg of ['Brand', 'Artist']) for (const tier of TIERS) {
     const d = obRowData({ ...base, segment: seg, tier }, lead, '2026-09-30'), c = obClientFromRow(d, lead, 'tok', 'now', 'c_1')
     ok(`crm onboarding row: ${seg} ${tier} → ${gbp(LADDER[seg][tier])}, tier and segment on the row`, d.retainer === LADDER[seg][tier] && d.tier === tier && d.segment === seg && d.founding === (tier === 'founding'), JSON.stringify(d))
     ok(`crm Mark paid: ${seg} ${tier} client carries the tier and price`, c.tier === tier && c.retainerValue === LADDER[seg][tier] && c.founding === (tier === 'founding'), JSON.stringify(c))
@@ -139,8 +158,10 @@ for (const f of ['crm.html', 'portal.html']) {
   }
   const loc = obRowData({ ...base, lane: 'local', segment: '', tier: 'founding' }, lead, '2026-09-30')
   ok('crm onboarding row: local unchanged (£500, no tier, segment Local)', loc.retainer === 500 && !('tier' in loc) && loc.segment === 'Local' && loc.lane === 'local')
+  ok('crm onboarding row: a stray "second" tier falls back to standard, never £1,500', obRowData({ ...base, segment: 'Brand', tier: 'second' }, lead, '2026-10-01').retainer === 2000)
   const rows = [{ status: 'paid', data: { founding: true, segment: 'Artist', tier: 'founding' } }, { status: 'signed', data: { founding: true, segment: 'Brand', tier: 'founding' } }, { status: 'live', data: { founding: true, segment: 'Artist', tier: 'founding' } }]
-  ok('crm founding seats: counted per lane out of three', obSeatsLeft(rows, 'creative', 'Artist') === 1 && obSeatsLeft(rows, 'creative', 'Brand') === 2)
+  ok('crm founding seats: counted per lane out of five', obSeatsLeft(rows, 'creative', 'Artist') === 3 && obSeatsLeft(rows, 'creative', 'Brand') === 4)
+  ok('crm founding seats: local still out of five', obSeatsLeft([{ status: 'paid', data: { founding: true, lane: 'local' } }], 'local') === 4)
 }
 
 /* ── Part 3: the Edit details form, in a browser ── */
@@ -170,8 +191,8 @@ if (browser) {
     const pick = (id, tier) => page.evaluate(([id, tier]) => { const s = document.querySelector('#card_' + id + ' select[name=tier]'); if (!s) return null; s.value = tier; s.dispatchEvent(new Event('change', { bubbles: true })); const f = s.form; return { r: f.elements.retainerValue.value, f: f.elements.founding.checked, hint: (f.querySelector('.ce-tier-price') || {}).textContent || '' } }, [id, tier])
     for (const [id, seg] of [['c_art', 'Artist'], ['c_brand', 'Brand']]) {
       await edit(id); await page.waitForTimeout(100)
-      ok(`${seg}: Edit details has a Price tier select (Not set / Founding / Seats 4-5 / Standard)`, await page.evaluate(id => { const s = document.querySelector('#card_' + id + ' select[name=tier]'); return !!s && [...s.options].map(o => o.value).join() === ',founding,second,standard' }, id))
-      for (const tier of ['second', 'standard', 'founding']) {
+      ok(`${seg}: Edit details has a Price tier select (Not set / Founding / Standard)`, await page.evaluate(id => { const s = document.querySelector('#card_' + id + ' select[name=tier]'); return !!s && [...s.options].map(o => o.value).join() === ',founding,standard' }, id))
+      for (const tier of ['standard', 'founding']) {
         const got = await pick(id, tier)
         ok(`${seg}: tier ${tier} fills retainer ${LADDER[seg][tier]}`, got && got.r === String(LADDER[seg][tier]) && got.f === (tier === 'founding'), JSON.stringify(got))
       }
@@ -180,9 +201,9 @@ if (browser) {
     }
     /* changing the segment with a tier set re-prices for the new lane */
     await edit('c_brand'); await page.waitForTimeout(100)
-    await pick('c_brand', 'second')
+    await pick('c_brand', 'standard')
     const reseg = await page.evaluate(() => { const f = document.querySelector('#card_c_brand form.ce-form'); f.elements.segment.value = 'Artist'; f.elements.segment.dispatchEvent(new Event('change', { bubbles: true })); return f.elements.retainerValue.value })
-    ok('segment Brand → Artist with tier Seats 4-5 re-fills £750', reseg === '750', reseg)
+    ok('segment Brand → Artist with tier Standard re-fills £1,000', reseg === '1000', reseg)
     const loc = await page.evaluate(() => { const f = document.querySelector('#card_c_brand form.ce-form'); f.elements.segment.value = 'Local'; f.elements.segment.dispatchEvent(new Event('change', { bubbles: true })); const tr = f.querySelector('.ce-tier-row'); return tr ? tr.style.display : 'missing' })
     ok('segment Local hides the tier (local is not on the ladder)', loc === 'none', loc)
     await page.evaluate(() => clEditCancel())

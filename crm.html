@@ -1098,7 +1098,7 @@
         <div class="km-field"><div class="km-label">Email</div><input type="email" class="km-inp" id="obEmail" placeholder="founder@brand.com" /></div>
       </div>
       <div class="km-row">
-        <div class="km-field"><div class="km-label">Rate</div><select class="km-select" id="obTier" onchange="obSeatsShow()"><option value="founding">Founding</option><option value="second">Seats 4-5</option><option value="standard">Standard</option></select></div>
+        <div class="km-field"><div class="km-label">Rate</div><select class="km-select" id="obTier" onchange="obSeatsShow()"><option value="founding">Founding</option><option value="standard">Standard</option></select></div>
         <div class="km-field"><div class="km-label">Start date</div><input type="date" class="km-inp" id="obStart" /></div>
       </div>
       <div class="km-row">
@@ -1503,12 +1503,12 @@ const CE_SEGMENTS=['Artist','Brand','Local'];
 /* Price tier (seat ladder, 2026-09-30). Picking one fills Retainer with the seat price for the
    segment (still editable) and sets the Founding tick to match. "Not set" leaves both alone, so a
    pre-ladder client or a free pilot on £0 is never repriced by opening this form. */
-const CE_TIERS=[['','Not set'],['founding','Founding'],['second','Seats 4-5'],['standard','Standard']];
+const CE_TIERS=[['','Not set'],['founding','Founding'],['standard','Standard']];
 function ceTierHint(seg,tier){const p=tier?seatPrice({segment:seg},tier):null;return p?'£'+p.toLocaleString('en-GB')+'/mo for '+(seg==='Artist'?'an artist':'a brand'):'Pick a tier to fill the retainer';}
 function clEditTierFill(f){const seg=f.elements.segment.value,tier=f.elements.tier.value,box=f.querySelector('.ce-tier-price');if(box)box.textContent=ceTierHint(seg,tier);if(!tier||seg==='Local')return;
   const p=seatPrice({segment:seg},tier);if(p)f.elements.retainerValue.value=String(p);if(f.elements.founding)f.elements.founding.checked=tier==='founding';}
 function clEditTier(sel){const f=sel.form;if(!_clEdit||!f)return;clEditTierFill(f);_clEdit.draft=clEditRead(f);}
-function clEditValues(c){return{name:c.name||'',founder:c.founder||'',email:c.email||'',phone:c.phone||'',segment:c.segment||'',status:c.status==='inactive'?'inactive':'active',terms:c.terms||'',retainerValue:c.retainerValue==null?'':String(c.retainerValue),tier:c.tier||'',founding:!!c.founding,adSpend:c.adSpend||'',baselineRevenue:c.baselineRevenue?String(c.baselineRevenue):'',liveDate:c.liveDate||'',feeAfter:c.feeAfter||'',invoiceNote:c.invoiceNote||'',accessApps:accessApps(c)};}
+function clEditValues(c){return{name:c.name||'',founder:c.founder||'',email:c.email||'',phone:c.phone||'',segment:c.segment||'',status:c.status==='inactive'?'inactive':'active',terms:c.terms||'',retainerValue:c.retainerValue==null?'':String(c.retainerValue),tier:c.tier==='second'?'founding':(c.tier||''),founding:!!c.founding,adSpend:c.adSpend||'',baselineRevenue:c.baselineRevenue?String(c.baselineRevenue):'',liveDate:c.liveDate||'',feeAfter:c.feeAfter||'',invoiceNote:c.invoiceNote||'',accessApps:accessApps(c)};}
 function clEditRead(f){const g=n=>f.elements[n]?String(f.elements[n].value):'';return{name:g('name'),founder:g('founder'),email:g('email'),phone:g('phone'),segment:g('segment'),status:g('status'),terms:g('terms'),retainerValue:g('retainerValue'),tier:g('tier'),founding:!!(f.elements.founding&&f.elements.founding.checked),adSpend:g('adSpend'),baselineRevenue:g('baselineRevenue'),liveDate:g('liveDate'),feeAfter:g('feeAfter'),invoiceNote:g('invoiceNote'),accessApps:[...f.querySelectorAll('input[name="accessApps"]:checked')].map(e=>e.value)};}
 function clientEditHTML(c){
   const v=_clEdit.draft||clEditValues(c),id=esc(c.id),local=v.segment==='Local'||(v.segment===(c.segment||'')&&isLocalClient(c));
@@ -1562,7 +1562,7 @@ function clEditSave(f){
   c.status=v.status==='inactive'?'inactive':'active';c.terms=t(v.terms);
   if(t(v.retainerValue)==='')delete c.retainerValue;else c.retainerValue=Number(t(v.retainerValue));
   c.founding=!!v.founding;c.baselineRevenue=Number(t(v.baselineRevenue))||0;
-  opt('tier',!nowLocal&&['founding','second','standard'].includes(v.tier)?v.tier:'');
+  opt('tier',!nowLocal&&['founding','standard'].includes(v.tier)?v.tier:'');
   c.liveDate=v.liveDate||'';if(!c.liveDate)delete c.trialStartDate;   /* else load() puts the old date back */
   opt('feeAfter',t(v.feeAfter));opt('invoiceNote',t(v.invoiceNote));
   /* accessApps stays unset while it is just the segment default, as before this form existed */
@@ -1582,15 +1582,16 @@ function setClientStatus(id,status){const d=load();const c=d.clients.find(x=>x.i
    absent, so a signed-but-not-billing client silently claimed the standard retainer and
    drove MRR, the growth-step bonus and the client count with money nobody pays.
    Absent (undefined / null / '') still falls through to the founding or standard rate. */
-/* The seat ladder (Rahaid, 2026-09-30): five artists and five brands, priced per lane by seat.
+/* The seat ladder (Rahaid, 2026-09-30; two prices per lane from 2026-10-01): five artists and five
+   brands, priced per lane by seat, founding for seats 1-5. A retired 'second' tier reads as founding.
    Mirrors SEAT_LADDER in api/onboard.js. A client with c.tier takes its price from here when
    retainerValue is absent; a client with no tier (pre-ladder, free pilots) keeps the old
    settings pair. Founding ends at the first growth step, where the retainer becomes the lane's
    standard rate instead of rising by the step (agreement clause 2.4). */
-var SEAT_LADDER={Brand:{founding:1000,second:1500,standard:2000},Artist:{founding:500,second:750,standard:1000}};
-function seatPrice(c,tier){c=c||{};if(c.lane==='local'||c.segment==='Local')return null;var t=tier||c.tier;var l=SEAT_LADDER[c.segment==='Artist'?'Artist':'Brand'];return (t&&l[t])||null;}
+var SEAT_LADDER={Brand:{founding:1000,standard:2000},Artist:{founding:500,standard:1000}};
+function seatPrice(c,tier){c=c||{};if(c.lane==='local'||c.segment==='Local')return null;var t=tier||c.tier;if(t==='second')t='founding';var l=SEAT_LADDER[c.segment==='Artist'?'Artist':'Brand'];return (t&&l[t])||null;}
 function retainerBase(c,s){s=s||{};var v=(c||{}).retainerValue;return (v===''||v==null||!isFinite(Number(v)))?(seatPrice(c)||((c||{}).founding?(s.foundingValue||1000):(s.retainerValue||2000))):Number(v);}
-function steppedRetainer(c,s,steps){s=s||{};var step=s.stepValue||1000,std=(c||{}).tier==='founding'?seatPrice(c,'standard'):null;return (steps>0&&std)?std+(steps-1)*step:retainerBase(c,s)+steps*step;}
+function steppedRetainer(c,s,steps){s=s||{};var step=s.stepValue||1000,tr=(c||{}).tier,std=(tr==='founding'||tr==='second')?seatPrice(c,'standard'):null;return (steps>0&&std)?std+(steps-1)*step:retainerBase(c,s)+steps*step;}
 /* RETAINER-BASE-END */
 function currentRetainer(c,data){const s=(data&&data.settings)||{};return steppedRetainer(c,s,growthState(c,data).steps);}
 function clientSnapshots(c,data){return (((data||{}).growth||{}).snapshots||[]).filter(x=>x.clientId===c.id).sort((a,b)=>String(a.date).localeCompare(String(b.date)));}
@@ -2847,15 +2848,15 @@ function initEmail(){renderOutreachQueue();}
    2026-09-25). test-crm-onboard-lane.mjs drives this block as shipped. A creative row keeps the
    exact keys it had before lanes existed; a local row carries lane:'local', £500/£750 and an
    optional buy-out price (a field, never a default: the price is not set in canon). */
-const OB_LADDER={Brand:{founding:1000,second:1500,standard:2000},Artist:{founding:500,second:750,standard:1000}};
-const OB_TIER_NAME={founding:'Founding',second:'Seats 4-5',standard:'Standard'};
+const OB_LADDER={Brand:{founding:1000,standard:2000},Artist:{founding:500,standard:1000}};
+const OB_TIER_NAME={founding:'Founding',standard:'Standard'};
 function obSeg(d){return d&&d.segment==='Artist'?'Artist':'Brand';}
 /* The words for a creative row's rate: ladder rows name their seat, pre-ladder rows keep the old pair. */
 function obRateText(d){if(d.tier&&OB_TIER_NAME[d.tier]){const seg=obSeg(d);return OB_TIER_NAME[d.tier]+' £'+Number(Number(d.retainer)||OB_LADDER[seg][d.tier]).toLocaleString('en-GB')+'/mo';}return d.founding?'Founding £1,000/mo':'Standard £2,000/mo';}
 function obRowData(f,l,today){
   const local=f.lane==='local',founding=f.tier==='founding';
-  /* creative: segment is Artist or Brand and the tier is one of the seat ladder's three (2026-09-30) */
-  const seg=f.segment==='Artist'?'Artist':'Brand',tier=['founding','second','standard'].includes(f.tier)?f.tier:'standard';
+  /* creative: segment is Artist or Brand and the tier is one of the seat ladder's two (2026-10-01) */
+  const seg=f.segment==='Artist'?'Artist':'Brand',tier=['founding','standard'].includes(f.tier)?f.tier:'standard';
   const d={business:l.business||'',founder:f.founder,email:f.email,segment:local?((f.segment||'').trim()||'Local'):seg,founding,retainer:local?(founding?500:750):OB_LADDER[seg][tier],startDate:f.start||'',baselineRevenue:local?0:(Number(f.baseline)||0),proposalNotes:(f.notes||'').trim(),clientEntity:(f.entity||'').trim(),clientAddress:(f.address||'').trim(),issuedAt:today,createdBy:'crm'};
   if(local){d.lane='local';const b=Number(f.buyout);if(b>0)d.buyout=b;}else d.tier=tier;
   return d;
@@ -2866,23 +2867,22 @@ function obClientFromRow(d,l,token,now,cid){
   if(local){delete c.adSpend;c.lane='local';}else if(d.tier&&OB_TIER_NAME[d.tier])c.tier=d.tier;
   return c;
 }
-/* Founding seats. Local: five. Creative with a segment: three per lane, artists and brands
+/* Founding seats. Local: five. Creative with a segment: five per lane, artists and brands
    counted apart (a pre-ladder founding row counts in the lane its segment points to). */
 function obSeatsLeft(rows,lane,seg){
   const n=(rows||[]).filter(r=>{const d=r.data||{};return d.founding&&((d.lane==='local'?'local':'creative')===lane)&&(!seg||lane==='local'||obSeg(d)===seg)&&['signed','paid','live'].includes(r.status);}).length;
-  return Math.max(0,(seg&&lane!=='local'?3:5)-n);
+  return Math.max(0,5-n);
 }
 /* OB-LANE-END */
 let _obRows={};let _obLeadId=null;
 /* The Rate select reads out the price for the lane and, on the creative lane, for artist or brand.
-   Local keeps its two rates: the seats 4-5 option is hidden there (Kaizen Ascent is not on the ladder). */
+   Local keeps its own two rates (Kaizen Ascent is not on the ladder). */
 function obTierLabels(){const local=document.getElementById('obLane').value==='local',t=document.getElementById('obTier'),seg=document.getElementById('obSegment').value==='Artist'?'Artist':'Brand',L=OB_LADDER[seg],gbp=n=>'£'+n.toLocaleString('en-GB');
   const o={};[...t.options].forEach(x=>o[x.value]=x);
   o.founding.text=local?'Founding — £500/mo, locked':'Founding — '+gbp(L.founding)+'/mo';
-  o.second.text='Seats 4-5 — '+gbp(L.second)+'/mo';o.second.hidden=local;o.second.disabled=local;if(local&&t.value==='second')t.value='founding';
   o.standard.text=local?'Standard — £750/mo':'Standard — '+gbp(L.standard)+'/mo';}
 let _obSeatRows=null;
-function obSeatsShow(){const lane=document.getElementById('obLane').value,local=lane==='local',seg=document.getElementById('obSegment').value;document.getElementById('obSeatsL').textContent=local?'Founding seats left':'Founding '+seg.toLowerCase()+' seats left';if(!_obSeatRows){document.getElementById('obSeats').textContent='…';return;}document.getElementById('obSeats').textContent=local?obSeatsLeft(_obSeatRows,lane)+' of 5':obSeatsLeft(_obSeatRows,lane,seg)+' of 3';}
+function obSeatsShow(){const lane=document.getElementById('obLane').value,local=lane==='local',seg=document.getElementById('obSegment').value;document.getElementById('obSeatsL').textContent=local?'Founding seats left':'Founding '+seg.toLowerCase()+' seats left';if(!_obSeatRows){document.getElementById('obSeats').textContent='…';return;}document.getElementById('obSeats').textContent=local?obSeatsLeft(_obSeatRows,lane)+' of 5':obSeatsLeft(_obSeatRows,lane,seg)+' of 5';}
 async function obLaneChanged(){const lane=document.getElementById('obLane').value,local=lane==='local';obTierLabels();document.getElementById('obSegmentF').style.display=local?'none':'';document.getElementById('obBaselineF').style.display=local?'none':'';document.getElementById('obBuyoutF').style.display=local?'':'none';_obSeatRows=null;obSeatsShow();let rows=Object.values(_obRows);try{const{data}=await _sb.from('ke_onboarding').select('status,data');if(Array.isArray(data))rows=data;}catch(e){}_obSeatRows=rows;obSeatsShow();}
 function obToken(){const b=new Uint8Array(24);crypto.getRandomValues(b);let s='';b.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
 /* Website leads land in ke_inbound (INSERT-only for the public form). The CRM pulls them
