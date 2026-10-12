@@ -441,35 +441,6 @@
     .clr-body .pipe-client-header,.clr-body .checklist-client-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;}
     .clr-body .checklist-client-header{justify-content:flex-end;}
     @media(max-width:640px){.clr-bar{flex-wrap:wrap;}.clr-bar #clientSearch{flex:1 1 100%;}.clr-bar .mini-select{flex:1 1 0;}.clr-body .pipe-client,.clr-body .checklist-client,.clr-body .card{padding:16px 14px;}.clr-bar .pt-inp{font-size:16px;}}
-    /* MESSAGES (2026-10-12) — every portal conversation, chat style. Them on the left, us on the right. */
-    .msg-tab-n{display:inline-block;min-width:18px;margin-left:6px;padding:0 6px;border-radius:var(--radius-pill);background:var(--amber);color:var(--bg);font-size:11px;line-height:18px;text-align:center;}
-    .msg-tab-n:empty{display:none;}
-    .msg-shell{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - 230px);min-height:440px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);}
-    .msg-list{overflow-y:auto;border-right:1px solid var(--border);}
-    .msg-conv{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:13px 14px;border:0;border-bottom:1px solid var(--border);background:none;color:var(--text);font-family:var(--sans);cursor:pointer;}
-    .msg-conv:hover,.msg-conv.on{background:var(--purple-l);}
-    .msg-conv-main{flex:1;min-width:0;}
-    .msg-conv-top{display:flex;gap:8px;align-items:baseline;}
-    .msg-conv-name{flex:1;min-width:0;font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .msg-conv-t{font-size:11px;color:var(--muted);white-space:nowrap;}
-    .msg-conv-p{margin-top:3px;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .msg-conv.unread .msg-conv-name,.msg-conv.unread .msg-conv-p{color:var(--text);}
-    .msg-dot{flex:0 0 8px;width:8px;height:8px;margin-top:6px;border-radius:50%;background:var(--amber);visibility:hidden;}
-    .msg-conv.unread .msg-dot{visibility:visible;}
-    .msg-pane{display:flex;flex-direction:column;min-width:0;min-height:0;}
-    .msg-head{display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 16px;border-bottom:1px solid var(--border);}
-    .msg-back{display:none;}
-    .msg-name{font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .msg-thread{flex:1;min-height:0;overflow-y:auto;padding:8px 16px 16px;}
-    .msg-bub{width:fit-content;max-width:78%;margin-top:10px;padding:9px 12px;border:1px solid rgba(251,191,36,.45);border-radius:14px 14px 14px 4px;background:var(--bg);font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;}
-    .msg-bub.us{margin-left:auto;border-color:var(--purple-m);border-radius:14px 14px 4px 14px;background:var(--purple-l);}
-    .msg-bub .d{margin-bottom:3px;font-size:10px;color:var(--muted);white-space:normal;}
-    .msg-bub a{color:var(--green);}
-    .msg-form{display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid var(--border);}
-    .msg-form[hidden]{display:none;}
-    .msg-form .pt-inp{resize:none;min-height:42px;max-height:140px;font-size:14px;line-height:1.4;}
-    .msg-empty{padding:24px 16px;font-size:13px;color:var(--muted);}
-    @media(max-width:760px){.msg-shell{grid-template-columns:1fr;height:calc(100dvh - 190px);min-height:380px;}.msg-list{border-right:0;}.msg-pane{display:none;}.msg-shell.open .msg-pane{display:flex;}.msg-shell.open .msg-list{display:none;}.msg-back{display:inline-flex;}.msg-bub{max-width:86%;}.msg-form .pt-inp{font-size:16px;}}
     .re-engage-btn{padding:3px 10px;font-size:11px;font-weight:700;border-radius:var(--radius-pill);border:1.5px solid rgba(245,158,11,.35);color:#fbbf24;background:rgba(245,158,11,.07);cursor:pointer;font-family:var(--sans);transition:all .15s;}
     .re-engage-btn:hover{background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.6);}
     .wq-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);}
@@ -710,7 +681,6 @@
        (296 due) the old single scroll measured 83 phone-screens tall. -->
   <nav class="crm-tabs" id="crmTabs">
     <button class="crm-tab active" data-tab="today" onclick="showView('today')">Today</button>
-    <button class="crm-tab" data-tab="messages" onclick="showView('messages')">Messages<span class="msg-tab-n" id="msgTabCount"></span></button>
     <button class="crm-tab" data-tab="outreach" onclick="showView('outreach')">Outreach</button>
     <button class="crm-tab" data-tab="leads" onclick="showView('leads')">Leads</button>
     <button class="crm-tab" data-tab="clients" onclick="showView('clients')">Clients</button>
@@ -755,21 +725,6 @@
       <div class="bd-bar" id="bdBar"></div>
       <div class="bd-head" id="bdHead"></div>
       <div class="kanban-wrap" id="bdWrap"></div>
-    </section>
-
-    <!-- MESSAGES (2026-10-12, Rahaid: "messages should live on a like messages page ... see all past
-         conversations"). Every client's portal thread in full, newest conversation first. At phone
-         width it is one column: the list, then the thread with a back button. -->
-    <section data-view="messages">
-      <div class="section-label">Messages</div>
-      <div class="msg-shell" id="msgShell">
-        <div class="msg-list" id="msgList"></div>
-        <div class="msg-pane">
-          <div class="msg-head"><button type="button" class="ob-btn msg-back" onclick="msgBack()">← All</button><div class="msg-name" id="msgName"></div></div>
-          <div class="msg-thread" id="msgThread"></div>
-          <form class="msg-form" id="msgForm" onsubmit="msgSend(event)" hidden><textarea class="pt-inp" id="msgReply" rows="1" placeholder="Reply in their portal" aria-label="Reply" onkeydown="msgKey(event)"></textarea><button type="submit" class="btn-save" id="msgSendBtn" style="padding:10px 18px;font-size:13px">Send</button></form>
-        </div>
-      </div>
     </section>
 
     <!-- CLIENTS (2026-09-29) — one compact row per client. Tapping a row opens that client in place:
@@ -1275,11 +1230,10 @@ async function _adoptLeads(remote,opts){
 }
 /* LEAD-SYNC-END */
 async function _liveSyncLeads(){const remote=await _cloudPull(LEADS_KEY);await _adoptLeads(remote,{rerender:!_notesFocused});}
-function showView(v,noPull){
+function showView(v){
   document.querySelectorAll('#app section[data-view]').forEach(s=>{s.style.display=(s.dataset.view===v)?'':'none';});
   document.querySelectorAll('.crm-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===v));
   try{localStorage.setItem('crm_view',v);}catch(e){}
-  if(v==='messages'&&!noPull&&typeof _sb!=='undefined'&&_sb&&document.getElementById('app').style.display==='block')ptLoad().then(()=>renderClients(load()));
   window.scrollTo({top:0});
 }
 async function showApp(){
@@ -1704,8 +1658,7 @@ function bdDelCard(){const d=bdBoards(),b=bdCurrent(d);if(!b||!_bdCard)return;if
    scoped by their email. The portal page reads its slice through portal_me(). */
 let _ptUsers={},_ptItems={},_ptFiles={};
 async function ptLoad(){await plLoad();try{const u=await _sb.from('ke_portal_users').select('email,client_id,client_name,invited_at,last_seen');_ptUsers={};(u.data||[]).forEach(r=>{_ptUsers[r.client_id]=r;});const i=await _sb.from('ke_portal_items').select('id,client_id,kind,title,body,on_date,url,author,created_at,read_by_staff,amount,status').order('created_at',{ascending:false}).limit(500);_ptItems={};(i.data||[]).forEach(r=>{(_ptItems[r.client_id]=_ptItems[r.client_id]||[]).push(r);});}catch(e){console.warn('portal:',e);}
-  try{const root=await _sb.storage.from('portal').list('',{limit:200});_ptFiles={};for(const d of (root.data||[])){if(d.id)continue;const cid=d.name;const a=await _sb.storage.from('portal').list(cid,{limit:200});const b=await _sb.storage.from('portal').list(cid+'/from-client',{limit:200});_ptFiles[cid]=[...(a.data||[]).filter(f=>f.id).map(f=>({name:f.name,path:cid+'/'+f.name,size:(f.metadata||{}).size,created_at:f.created_at,mine:true})),...(b.data||[]).filter(f=>f.id).map(f=>({name:f.name.replace(/^[a-z0-9]+-/,''),path:cid+'/from-client/'+f.name,size:(f.metadata||{}).size,created_at:f.created_at,mine:false}))].sort((x,y)=>String(y.created_at).localeCompare(String(x.created_at)));}}catch(e){console.warn('portal files:',e);}
-  if(typeof msgRender==='function')msgRender();}
+  try{const root=await _sb.storage.from('portal').list('',{limit:200});_ptFiles={};for(const d of (root.data||[])){if(d.id)continue;const cid=d.name;const a=await _sb.storage.from('portal').list(cid,{limit:200});const b=await _sb.storage.from('portal').list(cid+'/from-client',{limit:200});_ptFiles[cid]=[...(a.data||[]).filter(f=>f.id).map(f=>({name:f.name,path:cid+'/'+f.name,size:(f.metadata||{}).size,created_at:f.created_at,mine:true})),...(b.data||[]).filter(f=>f.id).map(f=>({name:f.name.replace(/^[a-z0-9]+-/,''),path:cid+'/from-client/'+f.name,size:(f.metadata||{}).size,created_at:f.created_at,mine:false}))].sort((x,y)=>String(y.created_at).localeCompare(String(x.created_at)));}}catch(e){console.warn('portal files:',e);}}
 /* Access, app by app (2026-09-29, Diego: "how do we see what they put down"). The client marks each app
    done or not relevant in the portal (portal_access_set, db/portal-access.sql); this reads the same
    data.clientAccess[<id>]. App list mirrors that function: client.accessApps, else the segment default. */
@@ -1743,7 +1696,6 @@ function portalBlock(c){
   return '<div class="pt-wrap"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="cf-l" style="margin:0">Client portal</span>'
     +(u?'<span class="pt-badge on">invited · '+esc(u.email)+(u.last_seen?' · seen '+esc(String(u.last_seen).slice(0,10)):' · not yet signed in')+'</span>':'<span class="pt-badge">not invited</span>')
     +(unread?'<span class="pt-badge" style="color:var(--amber);border-color:rgba(251,191,36,.5)">'+unread+' new message'+(unread>1?'s':'')+'</span>':'')
-    +(msgs.length?'<a href="#" onclick="msgGo(\''+c.id+'\');return false" style="color:var(--green);font-size:12px">Open in Messages</a>':'')
     +'<button class="ob-btn" style="margin-left:auto" onclick="ptInvite(\''+c.id+'\')">'+(u?'Re-send invite':'Invite to portal')+'</button></div>'
     +accessLine(c)+loginLine(c)
     +'<div class="pt-row" style="align-items:center"><span class="cf-l" style="margin:0">Drive folder</span>'+(c.driveUrl?'<a href="'+esc(c.driveUrl)+'" target="_blank" rel="noopener" style="color:var(--green)">open ↗</a>':'<span class="pt-badge">not shared yet</span>')+'<button class="ob-btn" onclick="driveSet(\''+c.id+'\')">'+(c.driveUrl?'Change':'Add link')+'</button></div>'
@@ -1766,52 +1718,6 @@ async function ptFileOpen(path){const{data,error}=await _sb.storage.from('portal
 async function ptFileDel(path){if(!confirm('Remove '+path.split('/').pop()+' from the client portal?'))return;const{error}=await _sb.storage.from('portal').remove([path]);if(error){showToast('Could not remove: '+error.message);return;}await ptLoad();renderClients(load());}
 async function ptInvPaid(itemId,status){try{const{error}=await _sb.from('ke_portal_items').update({status}).eq('id',itemId);if(error){showToast('Could not update: '+error.message);return;}await ptLoad();renderClients(load());}catch(e){}}
 async function ptRead(itemId,cid){try{await _sb.from('ke_portal_items').update({read_by_staff:true}).eq('id',itemId);await ptLoad();renderClients(load());}catch(e){}}
-/* ── MESSAGES (2026-10-12) ──
-   One conversation per client, built from _ptItems (ptLoad) — nothing new is stored. The thread is the
-   same mix portal.html's renderThread() shows the client: their messages, ours, and our updates and
-   files, oldest to newest. Replies insert the row ptAdd(id,'message') inserts, so they land in the
-   client's portal thread. Opening a conversation marks its client messages read, as ptRead does. */
-let _msgOpen=null;
-function msgThread(cid){return(_ptItems[cid]||[]).filter(x=>x.kind==='message'||x.kind==='update'||x.kind==='file').sort((a,b)=>String(a.created_at).localeCompare(String(b.created_at)));}
-function msgName(cid){const c=(load().clients||[]).find(x=>x.id===cid);return(c&&c.name)||(_ptUsers[cid]&&_ptUsers[cid].client_name)||cid;}
-function msgWhen(ts,full){const d=new Date(ts);if(isNaN(d))return'';const now=new Date();const t=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-  const day=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:d.getFullYear()===now.getFullYear()?undefined:'numeric'});
-  return full?day+', '+t:(d.toDateString()===now.toDateString()?t:day);}
-function msgConvs(){return Object.keys(_ptItems).filter(cid=>_ptItems[cid].some(x=>x.kind==='message')).map(cid=>{const th=msgThread(cid);return{cid,last:th[th.length-1],unread:ptUnread({id:cid})};}).sort((a,b)=>String(b.last.created_at).localeCompare(String(a.last.created_at)));}
-function msgRender(){
-  const total=Object.keys(_ptItems).reduce((n,cid)=>n+ptUnread({id:cid}),0);const tab=document.getElementById('msgTabCount');if(tab)tab.textContent=total?String(total):'';
-  const list=document.getElementById('msgList');if(!list)return;const convs=msgConvs();
-  list.innerHTML=convs.length?convs.map(v=>'<button type="button" class="msg-conv'+(v.unread?' unread':'')+(v.cid===_msgOpen?' on':'')+'" data-cid="'+esc(v.cid)+'" onclick="msgOpen(this.dataset.cid)"><span class="msg-dot"></span><span class="msg-conv-main"><span class="msg-conv-top"><span class="msg-conv-name">'+esc(msgName(v.cid))+'</span><span class="msg-conv-t">'+esc(msgWhen(v.last.created_at))+'</span></span><span class="msg-conv-p" style="display:block">'+(v.last.author==='client'?'':'You: ')+esc(v.last.body||v.last.title||'')+'</span></span></button>').join('')
-    :'<div class="msg-empty">No portal messages yet. When a client writes to us in their portal, the conversation shows here.</div>';
-  msgPaneRender();
-}
-function msgPaneRender(){
-  const shell=document.getElementById('msgShell'),th=document.getElementById('msgThread'),form=document.getElementById('msgForm');if(!shell)return;
-  shell.classList.toggle('open',!!_msgOpen);document.getElementById('msgName').textContent=_msgOpen?msgName(_msgOpen):'';form.hidden=!_msgOpen;
-  if(!_msgOpen){th.innerHTML='<div class="msg-empty">Pick a conversation.</div>';th.dataset.cid='';return;}
-  const nm=msgName(_msgOpen);const atEnd=th.dataset.cid!==_msgOpen||th.scrollHeight-th.scrollTop-th.clientHeight<60;
-  th.innerHTML=msgThread(_msgOpen).map(m=>{const us=m.author!=='client';
-    return '<div class="msg-bub'+(us?' us':'')+'"><div class="d">'+(us?'KaizenEvol':esc(nm))+' · '+esc(msgWhen(m.created_at,true))+(m.kind==='message'?'':' · '+(m.kind==='file'?'file':'update'))+'</div>'
-      +(m.title&&m.kind!=='message'?'<b>'+esc(m.title)+'</b>\n':'')+esc(m.body||'')+(m.url&&/^https?:\/\//i.test(m.url)?' <a href="'+esc(m.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>';}).join('');
-  th.dataset.cid=_msgOpen;if(atEnd)th.scrollTop=th.scrollHeight;
-}
-async function msgOpen(cid){
-  if(cid!==_msgOpen){const box=document.getElementById('msgReply');if(box)box.value='';}
-  _msgOpen=cid;
-  const unread=(_ptItems[cid]||[]).filter(x=>x.kind==='message'&&x.author==='client'&&!x.read_by_staff);
-  unread.forEach(x=>{x.read_by_staff=true;});msgRender();
-  if(!unread.length)return;
-  try{const{error}=await _sb.from('ke_portal_items').update({read_by_staff:true}).in('id',unread.map(x=>x.id));if(error)showToast('Could not mark read: '+error.message);await ptLoad();renderClients(load());}catch(e){}
-}
-function msgBack(){_msgOpen=null;msgRender();}
-function msgGo(cid){showView('messages',true);msgOpen(cid);}
-function msgKey(e){if(e.key==='Enter'&&!e.shiftKey&&!matchMedia('(pointer:coarse)').matches){e.preventDefault();document.getElementById('msgForm').requestSubmit();}}
-async function msgSend(e){
-  e.preventDefault();const cid=_msgOpen,box=document.getElementById('msgReply'),btn=document.getElementById('msgSendBtn');const b=box.value.trim();
-  if(!cid)return;if(!b){box.focus();return;}btn.disabled=true;
-  try{const{error}=await _sb.from('ke_portal_items').insert({client_id:cid,kind:'message',author:'agency',body:b});if(error){showToast('Could not send: '+error.message);return;}
-    box.value='';await ptLoad();renderClients(load());showToast('Reply posted');}catch(err){showToast('Send failed');}finally{btn.disabled=false;}
-}
 /* ── GROWTH STEP TRACKER (replaces the 10%-bonus job log of the reno model, 2026-09-06) ── */
 function renderGrowth(data){
   const el=document.getElementById('growthContainer');if(!el)return;
