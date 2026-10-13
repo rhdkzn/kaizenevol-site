@@ -95,6 +95,7 @@ const card = (page, id) => page.evaluate(id => load().clients.find(c => c.id ===
   ok('history: date · by · why', /2026-10-01 · Rahaid · signed/.test(cardTxt))
   ok('sales log: rate from the terms, fee per month', /fee rate 20% of net sales/i.test(cardTxt) && /Net £4,000/.test(cardTxt) && /Fee £800/.test(cardTxt) && /Fee £300/.test(cardTxt), cardTxt.slice(cardTxt.indexOf('Sales log'), cardTxt.indexOf('Sales log') + 200))
   ok('old two-step track is not shown for a staged card', (await page.$$eval('#pipelineTrack .pipe-client', e => e.length)) === 0)
+  ok('staged card: old Active/Inactive select hidden', !(await page.$('#card_c_mr select[onchange^="setClientStatus"]')))
   if (SHOTS) await page.locator('#card_c_mr').screenshot({ path: SHOTS + '/overhaul-1440-marauder-card.png' })
 
   /* sales log add */
@@ -148,6 +149,7 @@ const card = (page, id) => page.evaluate(id => load().clients.find(c => c.id ===
   /* the card with none of the new fields */
   await page.click('.clr[data-id="c_old"]'); await page.waitForTimeout(150)
   const oldTxt = await page.innerText('#card_c_old')
+  ok('bare card keeps the old Active/Inactive select', !!(await page.$('#card_c_old select[onchange^="setClientStatus"]')))
   ok('bare card: no stage, old status shown, nothing breaks', /No stage yet\. Showing the old status: Live \(old status\)/.test(oldTxt) && !/Sales log/.test(oldTxt))
 
   /* filter by stage, and by old status */
@@ -181,13 +183,26 @@ const card = (page, id) => page.evaluate(id => load().clients.find(c => c.id ===
   await page.close()
 }
 
+/* ── 375: the money table must fit, not clip (Law, 2026-10-13) ── */
+{
+  const { page, errors } = await boot({ width: 375, height: 812 }, true)
+  const m = await page.evaluate(() => { const e = document.querySelector('.ov-money'); return { sw: e.scrollWidth, cw: e.clientWidth, right: e.getBoundingClientRect().right, rows: [...e.querySelectorAll('.ov-m')].map(r => r.scrollWidth <= r.clientWidth + 1) } })
+  ok('375: money table has no hidden overflow (scrollWidth <= clientWidth)', m.sw <= m.cw && m.right <= 375 && m.rows.every(Boolean), JSON.stringify(m))
+  ok('375: every money figure is labelled', await page.$$eval('.ov-m:not(.ov-mh) span', els => els.filter(e => e.offsetParent).every(e => /\w/.test(getComputedStyle(e, '::before').content))))
+  if (SHOTS) await page.locator('.ov-money').screenshot({ path: SHOTS + '/overhaul-375-money.png' })
+  ok('no page errors (375)', errors.length === 0, errors.join(' | '))
+  await page.close()
+}
+
 /* ── 390 ── */
 {
   const { page, errors } = await boot({ width: 390, height: 844 }, true)
   /* the header's Log out button and the growth-step table (#growthContainer) overflow 390px on main
      already; this checks everything else in the Clients view */
-  const over = () => page.evaluate(() => [...document.querySelectorAll('section[data-view="clients"] *')].filter(e => e.offsetParent !== null && !e.closest('.ov-money') && !e.closest('#growthContainer') && e.getBoundingClientRect().right > 390.5).map(e => e.className).slice(0, 5))
-  ok('390: overview fits (money table scrolls in its own box)', (await over()).length === 0, (await over()).join(','))
+  const over = () => page.evaluate(() => [...document.querySelectorAll('section[data-view="clients"] *')].filter(e => e.offsetParent !== null && !e.closest('#growthContainer') && e.getBoundingClientRect().right > 390.5).map(e => e.className).slice(0, 5))
+  ok('390: overview fits', (await over()).length === 0, (await over()).join(','))
+  const m390 = await page.evaluate(() => { const e = document.querySelector('.ov-money'); return [e.scrollWidth, e.clientWidth] })
+  ok('390: money table has no hidden overflow (scrollWidth <= clientWidth)', m390[0] <= m390[1], JSON.stringify(m390))
   if (SHOTS) await page.screenshot({ path: SHOTS + '/overhaul-390-overview.png', fullPage: true })
   await page.tap('.clr[data-id="c_mr"]'); await page.waitForTimeout(150)
   ok('390: open card fits', (await over()).length === 0, (await over()).join(','))
