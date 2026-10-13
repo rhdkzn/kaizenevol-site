@@ -138,8 +138,6 @@
     .pay-card .pay-t{font-size:17px;font-weight:600;margin-top:4px}
     .btn-solid.wide{width:100%;margin-top:14px;min-height:48px;font-size:16px;text-decoration:none}
     .bubble{white-space:pre-wrap;overflow-wrap:anywhere}
-    .msg-box{margin-top:16px}
-    .msg-box label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);margin-bottom:6px}
     .hours-read{font-size:13px;color:var(--muted);margin-top:6px;min-height:18px}
     footer{border-top:1px solid var(--hairline);padding:22px 0;font-size:13px;color:var(--stone)}
     footer a{color:var(--stone);text-decoration:none}
@@ -244,14 +242,9 @@
       <ul class="list check" id="p-tasks"></ul>
 
       <div id="p-msg-wrap">
-        <h2>Messages</h2>
-        <p class="why">Ask us anything here. We reply in this thread, and our updates and weekly notes land here too.</p>
+        <h2>Updates</h2>
+        <p class="why">Our updates and weekly notes land here. To reach us, text or call Diego.</p>
         <div id="p-updates"></div>
-        <form class="msg-box" id="p-msg" onsubmit="return false">
-          <label for="msg-body">Message us</label>
-          <textarea id="msg-body" maxlength="4000" placeholder="Type your message"></textarea>
-          <div class="row" style="margin-top:12px"><button class="btn-solid" id="msg-send" type="submit">Send</button><span class="msg" id="msg-status" style="margin:0"></span></div>
-        </form>
       </div>
 
       <h2 id="p-files-h">Files</h2>
@@ -284,8 +277,9 @@
   function gbp(n){ return '£' + Math.round(Number(n)||0).toLocaleString('en-GB'); }
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function attr(s){ return esc(s).replace(/"/g,'&quot;'); }
-  /* Every "message us" in the copy is a link to the message box (2026-09-29). Takes escaped HTML. */
-  function msgUs(h){ return String(h).replace(/\b(message us|in a message)\b/gi, '<a href="#p-msg" class="to-msg">$1</a>'); }
+  /* The portal message box is gone (2026-10-12, Diego: clients text or call, approvals are ticked on our
+     side). Copy that said "message us" now says to text or call Diego. Takes escaped HTML. */
+  function msgUs(h){ return String(h).replace(/\bmessage us\b/gi, 'text or call Diego').replace(/\bin a message\b/gi, 'by text'); }
   function fsize(b){ b = Number(b)||0; return b >= 1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1, Math.round(b/1024))+' KB'; }
   function dstr(d){ if(!d) return ''; var x = new Date(d.length===10 ? d+'T12:00:00' : d); return x.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
   function show(id){ ['s-login','s-none','s-portal'].forEach(function(s){ $(s).classList.toggle('on', s===id); }); }
@@ -350,7 +344,7 @@
     Artist: [
       { id:'instagram', name:'Instagram', why:'We post, schedule, handle comments and read insights. Your DMs stay yours.', url:'https://business.facebook.com/settings', link:'Open Meta Business Suite settings',
         steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'','Paste our ID '+C(PID)+' '+COPY_PID+' and continue.','Pick your Instagram account and switch on Content, Community activity and Insights. Leave Messages off.','Tap '+C('Assign assets')+''],
-        level:'Content · Community activity · Insights', note:'This only works if your Instagram is a creator or business account connected to Meta Business Suite. If it is not, message us and we will do it with you on FaceTime.' },
+        level:'Content · Community activity · Insights', note:'This only works if your Instagram is a creator or business account connected to Meta Business Suite. If it is not, text or call Diego and we will do it with you on FaceTime.' },
       { id:'youtube', name:'YouTube', why:'We upload, schedule and edit videos and Shorts, and read analytics. We cannot see revenue.', url:'https://studio.youtube.com', link:'Open YouTube Studio',
         steps:['Open the YouTube Studio app (or '+C('studio.youtube.com')+') and tap your profile picture.','Go to '+C('Settings → Permissions → Invite')+'','Enter '+C(E1)+', choose '+C('Editor (limited)')+' and send.','Repeat for '+C(E2)+''],
         level:'Editor (limited), for both emails', note:'' },
@@ -371,11 +365,11 @@
         steps:['Open '+C('business.facebook.com/settings')+'. On a phone, tick “Desktop site” in your browser first.','Under Users, tap '+C('Partners → Add → Give a partner access to your assets')+'','Paste our ID '+C(PID)+' '+COPY_PID+' and continue.','Pick your Facebook Page, Instagram account, ad account and dataset (your pixel).','On the Page and Instagram switch on Content, Community activity, Insights and Ads; leave Messages off. On the ad account choose Manage campaigns. On the dataset choose Use. Then tap '+C('Assign assets')+''],
         level:'Page and Instagram: Content · Community activity · Insights · Ads. Ad account: Manage campaigns', note:'Ad spend stays in your own ad account, on your card.' },
       { id:'shopify', name:'Shopify', why:'We read orders and sales so the numbers are yours, not ours, and set up products for each drop.', url:'https://admin.shopify.com', link:'Open Shopify admin',
-        steps:['Open '+C('admin.shopify.com')+' in your browser, not the Shopify app. The app does not show the code you need. On a phone, switch your browser to “Desktop site” first.','Go to '+C('Settings → Users → Security')+' and find Collaborators.','Copy your 4-digit '+C('collaborator request code')+' and send it to us in a message here, with your '+C('.myshopify.com')+' address (it is under '+C('Settings → Domains')+'). No code showing? Your store is set to accept requests without one, so just send the address.','We send an access request from our Shopify Partner account for Orders, Products, Customers, Marketing, Discounts, Analytics, Online store, and Apps and channels. Finance, billing and store settings stay yours.','When Shopify emails you, go to '+C('Settings → Users')+', tap the '+C('Requests')+' filter, open ours and tap '+C('Accept request')+''],
+        steps:['Open '+C('admin.shopify.com')+' in your browser, not the Shopify app. The app does not show the code you need. On a phone, switch your browser to “Desktop site” first.','Go to '+C('Settings → Users → Security')+' and find Collaborators.','Copy your 4-digit '+C('collaborator request code')+' and text it to Diego, with your '+C('.myshopify.com')+' address (it is under '+C('Settings → Domains')+'). No code showing? Your store is set to accept requests without one, so just send the address.','We send an access request from our Shopify Partner account for Orders, Products, Customers, Marketing, Discounts, Analytics, Online store, and Apps and channels. Finance, billing and store settings stay yours.','When Shopify emails you, go to '+C('Settings → Users')+', tap the '+C('Requests')+' filter, open ours and tap '+C('Accept request')+''],
         level:'Collaborator: Orders · Products · Customers · Marketing · Discounts · Analytics · Online store · Apps and channels', note:'Collaborator access does not use up your staff seats, so it works on every plan, Basic included.' },
       { id:'klaviyo', name:'Email and SMS (Klaviyo)', why:'We build the flows and send to your list, so every drop opens to your list first.', url:'https://www.klaviyo.com/login', link:'Open Klaviyo', na:true,
         steps:['Open Klaviyo, click your account name at the bottom left and go to '+C('Settings → Users')+'','Tap '+C('Add new user')+', enter '+C(E2)+' and choose '+C('Manager')+'. Then send it.','We get an email invite and accept it. That is the only login we need.'],
-        level:'Manager, one login: '+E2, note:'Using a different email tool, or none yet? Tap “Not relevant” and tell us which one in a message.' },
+        level:'Manager, one login: '+E2, note:'Using a different email tool, or none yet? Tap “Not relevant” and text Diego which one.' },
       DRIVE('your product photos, any footage and your drop dates'),
       TIKTOK
     ]
@@ -641,7 +635,7 @@
   var EXTRA_APPS = [
     { id:'soundcloud', name:'SoundCloud', why:'We read your plays and keep your profile, tracks and names tidy in one place. SoundCloud has no team invite, so this one needs your login.', url:'', link:'',
       steps:['Turn on two-step verification in SoundCloud settings, and set a fresh password you do not use anywhere else.','Put your username or email and the password in the box below.','When we log in, SoundCloud sends you a code. We text you to ask for it, or we do it on a 30-second FaceTime.','We log in on our agency phone only. If we ever stop working together, change your password and we are out.'],
-      level:'Stats and profile edits. Nothing is deleted without asking you', note:'If your tracks sit on more than one SoundCloud account, tell us which is which in a message.' },
+      level:'Stats and profile edits. Nothing is deleted without asking you', note:'If your tracks sit on more than one SoundCloud account, text Diego which is which.' },
     { id:'distributor', name:'Your distributor', why:'So your releases come out under one name, and we can see what each song earns across every store.', url:'', link:'',
       steps:['Tell us which distributor you use (DistroKid, for example) in the setup questions above.','Turn on two-step verification in its settings, then put your username or email and the password in the box below.','When we log in, it sends you a code. We text you to ask for it, or we do it on a 30-second FaceTime.','We log in on our agency phone only. We never change where your money is paid.'],
       level:'Stats and release uploads you have agreed', note:'Your payouts and bank details stay yours. We never touch them.' }
@@ -781,7 +775,7 @@
     if (!steps.length || (all && (me.client||{}).liveDate)) { el.style.display = 'none'; return; }
     el.style.display = '';
     if (all) { el.innerHTML = '<div class="smallcaps">'+n+' of '+n+' done</div><div class="pg-n"><b>You\'re all set.</b> Here\'s what happens next.</div>'
-      + '<p class="why">We start work. What we make and our notes land in Messages, below. Anything you need, <a href="#p-msg" class="to-msg">message us</a>.</p>'; return; }
+      + '<p class="why">We start work. What we make and our notes land in Updates, below. Anything you need, text or call Diego.</p>'; return; }
     el.innerHTML = '<div class="smallcaps">Getting started</div><div class="pg-n"><b>'+n+' of '+steps.length+' done</b></div>'
       + '<div class="bar"><i style="width:'+Math.round(n/steps.length*100)+'%"></i></div>'
       + '<ul class="steps">'+steps.map(function(x){ return '<li'+(x.done?' class="done"':'')+'><span class="box'+(x.done?' on':'')+'"></span><a href="#'+x.to+'">'+esc(x.label)+'</a>'+(x.count?'<span class="c">'+esc(x.count)+'</span>':'')+'</li>'; }).join('')+'</ul>';
@@ -794,31 +788,13 @@
       + '<a class="btn-solid wide" href="'+attr(v.url)+'" target="_blank" rel="noopener">Pay '+gbp(v.amount)+'</a></div>'; }).join('');
   }
   function renderThread(){
-    // items come newest first; the thread reads oldest to newest, down to the box.
+    // items come newest first; the thread reads oldest to newest. Old client messages stay, read-only.
     var th = items.filter(function(i){ return i.kind==='update' || i.kind==='file' || i.kind==='message'; }).slice(0, 40).reverse();
     $('p-updates').innerHTML = th.length ? th.map(function(u){
       var mine = u.kind === 'message' && u.author === 'client';
       return '<div class="bubble'+(mine?' client':'')+'"><div class="d">'+(mine?'You':'KaizenEvol')+' · '+esc(dstr(u.created_at))+'</div>'+(u.title && !(mine && u.title === 'Message')?'<b>'+esc(u.title)+'</b>\n':'')+esc(u.body||'')+(u.url?' <a href="'+attr(u.url)+'" target="_blank" rel="noopener">Open ↗</a>':'')+'</div>';
-    }).join('') : '<div class="empty">Nothing yet. Ask us anything in the box below. Our weekly numbers and notes land here too.</div>';
+    }).join('') : '<div class="empty">Nothing yet. Our weekly numbers and notes land here. To reach us, text or call Diego.</div>';
   }
-  $('p-msg').addEventListener('submit', async function(e){
-    e.preventDefault();
-    var t = $('msg-body'), st = $('msg-status'), body = (t.value || '').trim();
-    if (!body) { st.textContent = 'Write your message first.'; t.focus(); return; }
-    $('msg-send').disabled = true; st.textContent = 'Sending…';
-    var r = await sb.from('ke_portal_items').insert({ client_id: me.client.id, kind: 'message', author: 'client', title: 'Message', body: body });
-    $('msg-send').disabled = false;
-    if (!r || r.error) { st.textContent = 'That did not send. Try again, or email law@kaizenevol.com.'; return; }
-    t.value = ''; st.textContent = 'Sent. We reply here.';
-    await loadItems(); renderThread();
-  });
-  // Every "message us" goes to the box and opens the keyboard.
-  document.addEventListener('click', function(e){
-    var a = e.target.closest('a[href="#p-msg"]'); if (!a) return;
-    e.preventDefault();
-    $('p-msg-wrap').scrollIntoView({ block: 'start' });
-    $('msg-body').focus({ preventScroll: true });
-  });
 
   function render(){
     renderAgreement();

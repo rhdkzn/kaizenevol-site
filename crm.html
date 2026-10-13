@@ -441,6 +441,62 @@
     .clr-body .pipe-client-header,.clr-body .checklist-client-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;}
     .clr-body .checklist-client-header{justify-content:flex-end;}
     @media(max-width:640px){.clr-bar{flex-wrap:wrap;}.clr-bar #clientSearch{flex:1 1 100%;}.clr-bar .mini-select{flex:1 1 0;}.clr-body .pipe-client,.clr-body .checklist-client,.clr-body .card{padding:16px 14px;}.clr-bar .pt-inp{font-size:16px;}}
+    /* STAGE SPINE, OVERVIEW, PLAYBOOK (2026-10-12, Diego's CRM overhaul) */
+    .psl-st-book,.psl-st-audit,.psl-st-onboard,.psl-st-build,.psl-st-unknown{background:rgba(216,212,204,0.15);color:#D8D4CC;}
+    .psl-st-deliver{background:rgba(247,246,244,0.18);color:#F7F6F4;}
+    .psl-st-retain{background:rgba(34,197,94,0.15);color:#4ade80;}
+    .sp-wrap{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+    .sp-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .sp-link{margin-left:auto;font-size:12px;color:var(--green);}
+    .sp-spine{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:10px;}
+    .sp-step{font-size:11px;font-weight:700;text-align:center;padding:7px 2px;border-radius:var(--radius-sm);border:1px solid var(--border);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .sp-step.done{color:var(--text);background:var(--purple-l);}
+    .sp-step.on{color:var(--bg);background:var(--accent);border-color:var(--accent);}
+    .sp-rule{font-size:12px;margin-top:8px;color:var(--text);}
+    .sp-rule b{display:inline-block;min-width:38px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+    .sp-ticks{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;}
+    .sp-tick{font-family:var(--sans);font-size:12px;padding:5px 10px;border-radius:var(--radius-pill);border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;}
+    span.sp-tick{cursor:default;}
+    .sp-tick.on{color:var(--green);border-color:rgba(74,222,128,.5);}
+    .sp-tick i,.sp-hist i,.ov-w i{font-style:normal;font-size:10px;color:var(--muted);}
+    .sp-grid{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+    .sp-f .pt-inp{width:100%;box-sizing:border-box;}
+    .sp-f .pt-row .pt-inp{width:auto;}
+    .sp-lbl{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+    .sp-late{color:var(--amber);}
+    .sp-sub{margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);}
+    .sp-h{font-size:12px;font-weight:800;margin-bottom:6px;}
+    .sp-h .sp-lbl{margin:0 0 0 6px;}
+    .sp-batch{margin-bottom:8px;}
+    .sp-bn{font-size:12px;font-weight:700;margin-bottom:4px;}
+    .sp-x{color:var(--muted);text-decoration:none;margin-left:6px;}
+    .sp-none{font-size:12px;color:var(--muted);margin:4px 0 8px;}
+    .sp-sales{display:flex;flex-direction:column;gap:4px;}
+    .sp-sr{display:grid;grid-template-columns:80px 1fr 1fr 2fr auto;gap:8px;font-size:12px;align-items:center;}
+    .sp-hist{font-size:12px;margin-top:4px;}
+    .ov-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+    .ov-bar .sp-lbl{margin:0;display:flex;align-items:center;gap:6px;}
+    .ov-rows{display:flex;flex-direction:column;gap:6px;}
+    .ov-row{display:grid;grid-template-columns:minmax(120px,1.2fr) auto 1.4fr 2fr;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:12px;}
+    .ov-row .ov-c:nth-child(5){grid-column:3/-1;}
+    .ov-name{font-family:var(--sans);font-size:13px;font-weight:700;color:var(--text);background:none;border:0;padding:0;text-align:left;cursor:pointer;}
+    .ov-c i{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:4px;}
+    .ov-c.late,.ov-w.late{color:var(--amber);}
+    .ov-waits{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px;}
+    .ov-wait{padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);}
+    .ov-w{font-size:12px;margin-top:4px;}
+    .ov-money{margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);overflow-x:auto;}
+    .ov-m{display:grid;grid-template-columns:minmax(110px,1.4fr) repeat(5,minmax(70px,1fr));gap:8px;font-size:12px;padding:5px 0;border-top:1px solid var(--border);min-width:560px;}
+    .ov-m span{text-align:right;}
+    .ov-mh{font-size:10px;color:var(--muted);border-top:0;}
+    .ov-mt{font-weight:800;}
+    #ovDash{margin-bottom:22px;}
+    .pb-item{padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);margin-bottom:10px;}
+    .pb-head{display:flex;align-items:center;gap:10px;justify-content:space-between;}
+    .pb-t{font-size:15px;font-weight:800;}
+    .pb-b{font-size:13px;color:var(--muted);margin-top:6px;white-space:pre-wrap;overflow-wrap:anywhere;}
+    #mrText,#pbB{width:100%;box-sizing:border-box;min-height:320px;font-family:var(--mono,monospace);font-size:12px;resize:vertical;}
+    @media(max-width:640px){.ov-money{overflow-x:visible;}.ov-m{grid-template-columns:1fr 1fr;min-width:0;row-gap:6px;padding:8px 0;}.ov-m b{grid-column:1/-1;}.ov-m span{text-align:left;}.ov-m span::before{content:attr(data-l);display:block;font-size:10px;color:var(--muted);}.ov-m span:empty{display:none;}.ov-mh{display:none;}.ov-row{grid-template-columns:1fr auto;}.ov-row .ov-c,.ov-row .ov-c:nth-child(5){grid-column:1/-1;}.sp-step{font-size:10px;padding:6px 0;}.sp-sr{grid-template-columns:70px 1fr 1fr auto;}.sp-sr .sp-note{grid-column:1/-1;grid-row:2;}.sp-f .pt-row .pt-inp{flex:1 1 100%!important;}.sp-f .pt-inp{font-size:16px;}}
     .re-engage-btn{padding:3px 10px;font-size:11px;font-weight:700;border-radius:var(--radius-pill);border:1.5px solid rgba(245,158,11,.35);color:#fbbf24;background:rgba(245,158,11,.07);cursor:pointer;font-family:var(--sans);transition:all .15s;}
     .re-engage-btn:hover{background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.6);}
     .wq-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);}
@@ -685,6 +741,7 @@
     <button class="crm-tab" data-tab="leads" onclick="showView('leads')">Leads</button>
     <button class="crm-tab" data-tab="clients" onclick="showView('clients')">Clients</button>
     <button class="crm-tab" data-tab="boards" onclick="showView('boards')">Boards</button>
+    <button class="crm-tab" data-tab="playbook" onclick="showView('playbook')">Playbook</button>
   </nav>
   <main class="main">
 
@@ -727,15 +784,23 @@
       <div class="kanban-wrap" id="bdWrap"></div>
     </section>
 
+    <!-- PLAYBOOK (2026-10-12, Diego) — SOPs from ke_data.playbook. Ships with five titles, no content. -->
+    <section data-view="playbook">
+      <div class="section-label">Playbook</div>
+      <div id="pbList"></div>
+    </section>
+
     <!-- CLIENTS (2026-09-29) — one compact row per client. Tapping a row opens that client in place:
          pipeline stage, checklist, the full card (portal block included) and the growth step.
          Before, the tab repeated every client in four sections (pipeline, checklist, clients, growth):
          14,439px tall at 390px with six clients, growing four blocks per client. #pipelineTrack,
          #checklistContainer and #growthContainer now live inside the open client, one of each. -->
     <section data-view="clients">
+      <div id="ovDash"></div>
       <div class="section-label">Clients</div>
-      <div class="clr-bar"><input type="search" class="pt-inp" id="clientSearch" placeholder="Search clients by name" aria-label="Search clients by name" oninput="clFilter()" /><select class="mini-select" id="clientStatusFilter" aria-label="Filter clients by stage" onchange="clFilter()"><option value="all">All</option><option value="onboarding">Onboarding</option><option value="live">Live</option><option value="inactive">Inactive</option></select><select class="mini-select" id="clientKindFilter" aria-label="Filter clients by type" onchange="clFilter()"><option value="all">All types</option><option value="artist">Artists</option><option value="brand">Brands</option><option value="local">Local</option></select></div>
+      <div class="clr-bar"><input type="search" class="pt-inp" id="clientSearch" placeholder="Search clients by name" aria-label="Search clients by name" oninput="clFilter()" /><select class="mini-select" id="clientStatusFilter" aria-label="Filter clients by stage" onchange="clFilter()"><option value="all">All</option><option value="st-book">Book</option><option value="st-audit">Audit</option><option value="st-onboard">Onboard</option><option value="st-build">Build</option><option value="st-deliver">Deliver</option><option value="st-retain">Retain</option><option value="onboarding">Onboarding (old status)</option><option value="live">Live (old status)</option><option value="inactive">Inactive</option></select><select class="mini-select" id="clientKindFilter" aria-label="Filter clients by type" onchange="clFilter()"><option value="all">All types</option><option value="artist">Artists</option><option value="brand">Brands</option><option value="local">Local</option></select></div>
       <div class="clr-list" id="clientsContainer"></div>
+      <datalist id="spPeople"><option value="Diego"><option value="Rahaid"><option value="Law"><option value="Levi"></datalist>
       <div id="commissionContainer" style="margin-top:14px"></div>
     </section>
 
@@ -1068,6 +1133,21 @@
   </div>
 </div>
 <!-- ONBOARDING FUNNEL MODAL (2026-09-06) — one link: proposal → agreement → Stripe → client space -->
+<div class="modal-ov" id="mrModal" onclick="if(event.target===this)mondayClose()">
+  <div class="modal-box" style="max-width:640px">
+    <div class="modal-hdr"><div><div class="modal-ttl">Monday report</div><div class="modal-sub">Built from the cards. Nothing is sent anywhere: copy it where you need it.</div></div><button class="modal-x" onclick="mondayClose()">×</button></div>
+    <textarea class="pt-inp" id="mrText" readonly aria-label="Monday report"></textarea>
+    <div class="form-actions"><button type="button" class="btn-save" onclick="mondayCopy()">Copy</button><button type="button" class="btn-cancel" onclick="mondayClose()">Close</button></div>
+  </div>
+</div>
+<div class="modal-ov" id="pbModal" onclick="if(event.target===this)pbClose()">
+  <div class="modal-box" style="max-width:640px">
+    <div class="modal-hdr"><div><div class="modal-ttl">Edit SOP</div></div><button class="modal-x" onclick="pbClose()">×</button></div>
+    <input type="text" class="pt-inp" id="pbT" aria-label="Title" style="width:100%;box-sizing:border-box;margin-bottom:8px" />
+    <textarea class="pt-inp" id="pbB" aria-label="Body"></textarea>
+    <div class="form-actions"><button type="button" class="btn-save" onclick="pbSave()">Save</button><button type="button" class="btn-cancel" onclick="pbClose()">Cancel</button></div>
+  </div>
+</div>
 <div class="modal-ov" id="bdModal" onclick="if(event.target===this)bdClose()">
   <div class="modal-box">
     <div class="modal-hdr"><div><div class="modal-ttl" id="bdmTitle">Card</div><div class="modal-sub" id="bdmSub"></div></div><button class="modal-x" onclick="bdClose()">×</button></div>
@@ -1302,7 +1382,7 @@ function openClientCard(id){
 function renderClientPipeline(data){
   const el=document.getElementById('pipelineTrack');if(!el)return;
   const openId=clOpenId();
-  const active=data.clients.filter(c=>c.status!=='inactive'&&c.id===openId);
+  const active=data.clients.filter(c=>c.status!=='inactive'&&c.id===openId&&!stageOf(c));
   if(!active.length){el.innerHTML='';return;}
   el.innerHTML=active.map(c=>{
     const s=getClientStage(c);
@@ -1448,7 +1528,7 @@ function toggleClientTask(clientId,taskId){const d=load();if(!d.clientTasks)d.cl
 function stClass(s){return{active:'st-retainer',inactive:'st-inactive'}[s]||'st-inactive';}
 function stLabel(s){return{active:'✓ Active',inactive:'○ Inactive'}[s]||s;}
 /* One client's full card: fields, go-live date, portal block. Unchanged markup, now shown inside the open row. */
-function clientCardHTML(c,data){if(_clEdit&&_clEdit.id===c.id)return clientEditHTML(c);const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" id="card_${esc(c.id)}" style="margin-bottom:14px;scroll-margin-top:120px"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="status-badge ${stClass(c.status)}">${stLabel(c.status)}</span><select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select><button type="button" class="ob-btn" onclick="clEditStart('${esc(c.id)}')">Edit details</button></div></div>${clContactLine(c)}${isLocalClient(c)?`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Monthly</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Desk</div><div class="cf-v">${c.deskTenant?'Connected · '+esc(c.deskTenant):'Not connected'} <button class="comm-status cs-pending" onclick="deskConnect('${c.id}')">${c.deskTenant?'change':'connect'}</button>`:`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired`}</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}
+function clientCardHTML(c,data){if(_clEdit&&_clEdit.id===c.id)return clientEditHTML(c);const day=c.status==='active'&&c.liveDate?daysSince(c.liveDate):null;return`<div class="card" id="card_${esc(c.id)}" style="margin-bottom:14px;scroll-margin-top:120px"><div class="client-head"><div class="client-name">${esc(c.name)}</div><div class="client-controls"><span class="pipe-stage-label psl-${esc(clientStatusView(c).key)}">${esc(clientStatusView(c).label)}</span>${stageOf(c)?'':`<select class="mini-select" onchange="setClientStatus('${c.id}',this.value)"><option value="active" ${c.status==='active'?'selected':''}>Active</option><option value="inactive" ${c.status==='inactive'?'selected':''}>Inactive</option></select>`}<button type="button" class="ob-btn" onclick="clEditStart('${esc(c.id)}')">Edit details</button></div></div>${clContactLine(c)}${stageBlock(c)}${isLocalClient(c)?`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Monthly</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Desk</div><div class="cf-v">${c.deskTenant?'Connected · '+esc(c.deskTenant):'Not connected'} <button class="comm-status cs-pending" onclick="deskConnect('${c.id}')">${c.deskTenant?'change':'connect'}</button>`:`<div class="client-fields"><div class="cf"><div class="cf-l">Terms</div><div class="cf-v">${esc(c.terms)}</div></div><div class="cf"><div class="cf-l">Ad Spend</div><div class="cf-v">${esc(c.adSpend)}</div></div><div class="cf"><div class="cf-l">Retainer</div><div class="cf-v">£${Number(currentRetainer(c,data)).toLocaleString()}/mo${c.founding?' · founding':''}</div></div><div class="cf"><div class="cf-l">Baseline (3-mo avg)</div><div class="cf-v">${c.baselineRevenue?'£'+Number(c.baselineRevenue).toLocaleString()+'/mo':'not set'}</div></div><div class="cf"><div class="cf-l">Growth steps</div><div class="cf-v">${growthState(c,data).steps} fired`}</div></div></div>${c.status==='active'?`<div class="date-row"><span class="date-lbl">Go-live date:</span><input type="date" class="date-inp" value="${c.liveDate||''}" onchange="setLiveDate('${c.id}',this.value)" />${day?`<span class="date-lbl" style="margin-left:auto">Live ${day} day${day===1?'':'s'}</span>`:''}</div>`:''}${portalBlock(c)}</div>`;}
 /* ── CLIENTS, compact (2026-09-29) ──
    One row per client: name, stage, next action on one line, and badges for checklist, access and
    unread portal messages. The open client (one at a time) is kept in localStorage so the re-render
@@ -1461,7 +1541,7 @@ function clientKind(c){return isLocalClient(c)?'local':(c&&c.segment==='Artist')
 const KIND_LABEL={artist:'Artist',brand:'Brand',local:'Local'};
 function clOpenId(){try{return localStorage.getItem(CL_OPEN_KEY)||'';}catch(e){return '';}}
 function clSetOpen(id){try{if(id)localStorage.setItem(CL_OPEN_KEY,id);else localStorage.removeItem(CL_OPEN_KEY);}catch(e){}}
-function clMatches(c){const q=_clQuery.trim().toLowerCase();return(!q||String(c.name||'').toLowerCase().includes(q))&&(_clStatus==='all'||getClientStage(c).key===_clStatus)&&(_clKind==='all'||clientKind(c)===_clKind);}
+function clMatches(c){const q=_clQuery.trim().toLowerCase();return(!q||String(c.name||'').toLowerCase().includes(q))&&(_clStatus==='all'||clientStatusView(c).key===_clStatus)&&(_clKind==='all'||clientKind(c)===_clKind);}
 function clFilter(){const q=document.getElementById('clientSearch'),st=document.getElementById('clientStatusFilter');_clQuery=q?q.value:'';_clStatus=st?st.value:'all';const kd=document.getElementById('clientKindFilter');_clKind=kd?kd.value:'all';renderClients(load());}
 function toggleClient(id){
   const opening=clOpenId()!==id;clSetOpen(opening?id:'');renderClients(load());
@@ -1470,11 +1550,11 @@ function toggleClient(id){
   if(r.top<120||r.top>innerHeight-80)row.scrollIntoView({block:'start'});
 }
 function clientRowHTML(c,data,open){
-  const s=getClientStage(c);const active=c.status!=='inactive';
-  const next=active?clientNextAction(c).text:'Inactive. Set it back to Active on the card to pick it up again.';
+  const s=clientStatusView(c);const active=c.status!=='inactive';const na=naOf(c);
+  const next=active?(na.text?'Next: '+naLine(na):clientNextAction(c).text):'Inactive. Set it back to Active on the card to pick it up again.';
   const acc=accessCount(c);const unread=ptUnread(c);const p=checklistProgress(c,data);
   return`<div class="clr-item${open?' open':''}"><button type="button" class="clr" data-id="${esc(c.id)}" aria-expanded="${open}" onclick="toggleClient('${esc(c.id)}')">`
-    +`<span class="clr-top"><span class="clr-name">${esc(c.name)}</span><span class="pt-badge clr-kind" data-kind="${clientKind(c)}">${KIND_LABEL[clientKind(c)]}</span><span class="pipe-stage-label psl-${s.key}">${s.label}</span><span class="clr-chev" aria-hidden="true">›</span></span>`
+    +`<span class="clr-top"><span class="clr-name">${esc(c.name)}</span><span class="pt-badge clr-kind" data-kind="${clientKind(c)}">${KIND_LABEL[clientKind(c)]}</span><span class="pipe-stage-label psl-${esc(s.key)}">${esc(s.label)}</span><span class="clr-chev" aria-hidden="true">›</span></span>`
     +`<span class="clr-next">${esc(next)}</span>`
     +`<span class="clr-badges">${active?`<span class="pt-badge clr-chk">${p.done}/${p.total} tasks</span>`:''}<span class="pt-badge${acc.total&&acc.done===acc.total?' on':''}">Access ${acc.done}/${acc.total}</span>${unread?`<span class="pt-badge unread">${unread} new</span>`:''}</span>`
     +`</button>${open?`<div class="clr-body">${active?'<div class="pipeline-track" id="pipelineTrack"></div><div class="checklist-clients" id="checklistContainer"></div>':''}${clientCardHTML(c,data)}${active&&!isLocalClient(c)?'<div id="growthContainer"></div>':''}</div>`:''}</div>`;
@@ -1485,6 +1565,7 @@ function renderClients(data){
   const ae=document.activeElement,keep=_clEdit&&ae&&ae.closest&&ae.closest('form.ce-form')?{n:ae.name,v:ae.value,s:ae.selectionStart}:null;
   host.innerHTML=list.length?list.map(c=>clientRowHTML(c,data,c.id===openId)).join(''):'<div style="color:var(--muted);font-size:13px;">'+(all.length?'No clients match.':'No clients yet.')+'</div>';
   if(list.some(c=>c.id===openId)){renderClientPipeline(data);renderClientChecklist(data);renderGrowth(data);}
+  renderDash(data);renderPlaybook(data);
   /* a realtime re-render mid-edit rebuilds the form from the draft; put the cursor back */
   const f=keep&&host.querySelector('form.ce-form');const el=f&&(keep.n==='accessApps'?f.querySelector('input[name="accessApps"][value="'+CSS.escape(keep.v)+'"]'):f.elements[keep.n]);
   if(el){el.focus({preventScroll:true});try{if(keep.s!=null)el.setSelectionRange(keep.s,keep.s);}catch(e){}}
@@ -1492,6 +1573,182 @@ function renderClients(data){
 /* Connect a local client to the Desk: the three fields the portal's Desk panel reads.
    Blank address = disconnect (the portal goes back to "switches on when your front office goes live"). */
 function deskConnect(id){const d=load();const c=d.clients.find(x=>x.id===id);if(!c)return;const u=prompt('Desk address for '+c.name+' (https://…, blank to disconnect)',c.deskUrl||'');if(u===null)return;let r=null;if(u.trim()){const t=prompt('Desk account (tenant id, e.g. hollow-oak)',c.deskTenant||'');if(t===null)return;const k=prompt('Their portal key (portal_key in the Desk tenant file)',c.deskKey||'');if(k===null)return;r=deskConnection(u,t,k);if(r&&r.error){showToast(r.error);return;}}if(r){c.deskUrl=r.deskUrl;c.deskTenant=r.deskTenant;c.deskKey=r.deskKey;}else{delete c.deskUrl;delete c.deskTenant;delete c.deskKey;}save(d);renderClients(d);showToast(r?'Desk connected — their portal numbers switch on':'Desk disconnected');}
+/* ── STAGE SPINE (2026-10-12, Diego's CRM overhaul; Rahaid: "add in what Diego wants") ──
+   Six stages replace Onboarding / Live / Inactive as what a card shows. The fields live on the card in
+   ke_data and any card may lack any of them: stage, stageHistory [{stage,date,by,why}], nextAction
+   {text,owner,due}, blocker, stageChecks[stage][i], batches, paidAds, payStep, todoistUrl, resultsNote,
+   salesLog, accessVerified. Every write is load() → change → save(d), so the updated_at guard holds.
+   c.status stays in the data: it still drives Active / Inactive and the old onboarding checklist. */
+const STAGES=['Book','Audit','Onboard','Build','Deliver','Retain'];
+/* Law's mapping of Runbook 00. Edit the wording here. auto: the CRM works that tick out itself.
+   Entry rules other than Book's are "the stage before is done" until the runbook says otherwise. */
+const STAGE_RULES={
+  Book:{entry:'They want a call',exit:['Call booked','Show-up messages sent']},
+  Audit:{entry:'Book exit done: the call is on',exit:['Brand Read done','Call one done','Both numbers set','Deck and guide built']},
+  Onboard:{entry:'Audit exit done: they said yes',exit:['Agreement signed','First payment in',{t:'Access collected',auto:'access'},{t:'Drive folder shared',auto:'drive'}]},
+  Build:{entry:'Onboard exit done',exit:['Month-one template system made (statics + motion)']},
+  Deliver:{entry:'Build exit done',exit:['Weekly loop running','Numbers posted to the portal']},
+  Retain:{entry:'Deliver exit done',exit:['Growth step checked against the trailing 3-month average']}
+};
+/* The delivery loop, per batch. "Client approves batch" is ticked by us: approvals do not come through the portal. */
+const DELIVER_STEPS=[['shoot','Shoot'],['edit','Edit'],['send','Send batch'],['approve','Client approves batch'],['schedule','Schedule'],['spend','Pick what gets paid spend']];
+const PAID_ADS=[['targeting','Targeting'],['budget','Budget'],['testing','Testing'],['tracking','Tracking']];
+const SP_PEOPLE=['Diego','Rahaid','Law','Levi'];
+/* One shared login (2026-08-24 ruling), so "who did this" is picked on the device, not read from auth. */
+function crmMe(){try{return localStorage.getItem('crm_me')||'CRM';}catch(e){return 'CRM';}}
+function crmMeSet(v){try{if(v)localStorage.setItem('crm_me',v);else localStorage.removeItem('crm_me');}catch(e){}renderDash(load());}
+function stageOf(c){return c&&STAGES.includes(c.stage)?c.stage:'';}
+/* What the card shows as its status. No stage yet: the old one, labelled as such. */
+function clientStatusView(c){
+  if(c.status==='inactive')return{key:'inactive',label:'Inactive'};
+  const st=stageOf(c);if(st)return{key:'st-'+st.toLowerCase(),label:st};
+  if(c.stage)return{key:'st-unknown',label:String(c.stage)+' (unknown stage)'};
+  const s=getClientStage(c);return{key:s.key,label:s.label+' (old status)'};
+}
+function naOf(c){const n=c&&c.nextAction;if(!n)return{text:'',owner:'',due:''};if(typeof n==='string')return{text:n,owner:'',due:''};return{text:String(n.text||''),owner:String(n.owner||''),due:String(n.due||'')};}
+function naLine(n){return n.text?n.text+(n.owner||n.due?' ('+[n.owner,n.due?'due '+n.due:''].filter(Boolean).join(', ')+')':''):'';}
+function naOverdue(n){return !!(n.due&&n.due<todayStr());}
+function exitList(c,st){
+  const r=STAGE_RULES[st];if(!r)return[];const chk=((c.stageChecks||{})[st])||{};
+  return r.exit.map((x,i)=>{const t=typeof x==='string'?x:x.t,auto=typeof x==='string'?'':x.auto;let on=!!chk[i];
+    if(auto==='access'){const a=accessCount(c);on=a.total>0&&a.done===a.total;}else if(auto==='drive')on=!!c.driveUrl;
+    return{t,on,auto,i};});
+}
+function salesRate(c){const m=String(c.terms||'').match(/(\d+(?:\.\d+)?)\s*%\s*of\s*(?:the\s+)?net\s+sales/i);return m?Number(m[1]):null;}
+function hasSalesLog(c){return /net\s+sales/i.test(String(c.terms||''))||Array.isArray(c.salesLog);}
+function salesFees(c){const r=salesRate(c),ym=todayStr().slice(0,7),rows=Array.isArray(c.salesLog)?c.salesLog:[];
+  if(r===null)return{rate:null,month:0,total:0,rows:rows.length};let month=0,total=0;
+  rows.forEach(x=>{const f=r/100*(Number(x.netSales)||0);total+=f;if(String(x.month||'').slice(0,7)===ym)month+=f;});return{rate:r,month,total,rows:rows.length};}
+/* Real money only: invoices in ke_portal_items. Never from retainerValue (the free pilots are £0 on purpose). */
+function moneyFor(cid){const ym=todayStr().slice(0,7),r={paidM:0,owedM:0,paid:0,owed:0};
+  (_ptItems[cid]||[]).filter(x=>x.kind==='invoice').forEach(v=>{const a=Number(v.amount)||0,m=String(v.on_date||v.created_at||'').slice(0,7),paid=v.status==='paid';
+    if(paid)r.paid+=a;else r.owed+=a;if(m===ym){if(paid)r.paidM+=a;else r.owedM+=a;}});return r;}
+/* load → change → save. fn returns false to cancel. */
+function cardEdit(id,fn){const d=load();const c=(d.clients||[]).find(x=>x.id===id);if(!c)return null;if(fn(c,d)===false)return null;save(d);renderClients(d);return c;}
+function stageSet(id,to){
+  const d0=load();const c0=(d0.clients||[]).find(x=>x.id===id);if(!c0||!STAGES.includes(to)||c0.stage===to)return;
+  const from=stageOf(c0);let override=false;
+  if(from&&STAGES.indexOf(to)>STAGES.indexOf(from)){const left=exitList(c0,from).filter(x=>!x.on);
+    if(left.length){if(!confirm(from+' exit is not done: '+left.map(x=>x.t).join(', ')+'. Move to '+to+' anyway?')){renderClients(d0);return;}override=true;}}
+  const why=prompt(override?'Why move anyway? A reason is needed.':'Why move to '+to+'? (optional)','');
+  if(why===null||(override&&!why.trim())){if(why!==null)showToast('Moving anyway needs a reason');renderClients(d0);return;}
+  cardEdit(id,c=>{c.stage=to;if(!Array.isArray(c.stageHistory))c.stageHistory=[];const h={stage:to,date:todayStr(),by:crmMe(),why:why.trim()};if(override)h.override=true;c.stageHistory.push(h);});
+  showToast((c0.name||'Client')+' moved to '+to);
+}
+function stageCheck(id,st,i){cardEdit(id,c=>{if(!c.stageChecks||typeof c.stageChecks!=='object')c.stageChecks={};if(!c.stageChecks[st]||typeof c.stageChecks[st]!=='object')c.stageChecks[st]={};c.stageChecks[st][i]=!c.stageChecks[st][i];});}
+/* Free-text field on the card, by path ("nextAction.owner", "payStep.next"). Blank removes it. */
+function spSet(id,path,v){
+  v=String(v==null?'':v).trim();
+  if(path==='todoistUrl'&&v&&!/^https:\/\//i.test(v)){showToast('Use the full https:// link');renderClients(load());return;}
+  cardEdit(id,c=>{const ks=path.split('.');let o=c;
+    for(let i=0;i<ks.length-1;i++){const k=ks[i];if(typeof o[k]==='string')o[k]={text:o[k]};if(!o[k]||typeof o[k]!=='object')o[k]={};o=o[k];}
+    const last=ks[ks.length-1];if(v)o[last]=v;else delete o[last];});
+}
+function batchAdd(id){const n=prompt('Batch name, e.g. October week 2','');if(n===null||!n.trim())return;cardEdit(id,c=>{if(!Array.isArray(c.batches))c.batches=[];c.batches.push({name:n.trim(),steps:{}});});}
+function batchStep(id,bi,k){cardEdit(id,c=>{const b=(c.batches||[])[bi];if(!b)return false;if(!b.steps||typeof b.steps!=='object')b.steps={};if(b.steps[k])delete b.steps[k];else b.steps[k]=todayStr();});}
+function batchDel(id,bi){if(!confirm('Remove this batch from the card?'))return;cardEdit(id,c=>{if(!Array.isArray(c.batches))return false;c.batches.splice(bi,1);});}
+function adsCheck(id,k){cardEdit(id,c=>{if(!c.paidAds||typeof c.paidAds!=='object')c.paidAds={};if(!c.paidAds.checks||typeof c.paidAds.checks!=='object')c.paidAds.checks={};c.paidAds.checks[k]=!c.paidAds.checks[k];});}
+/* "Verified by Rahaid": only that Rahaid checked the access works. The client's own done / not relevant
+   (clientAccess) is a different thing and is not touched. */
+function accVerify(id,app){cardEdit(id,c=>{if(!c.accessVerified||typeof c.accessVerified!=='object')c.accessVerified={};if(c.accessVerified[app])delete c.accessVerified[app];else c.accessVerified[app]={by:'Rahaid',at:todayStr()};});}
+function salesAdd(id){
+  const m=document.getElementById('sl_m_'+id),n=document.getElementById('sl_n_'+id),t=document.getElementById('sl_t_'+id);
+  const month=m&&m.value,net=Number(n&&n.value);if(!month||!(net>=0)||n.value===''){showToast('Month and net sales needed');return;}
+  cardEdit(id,c=>{if(!Array.isArray(c.salesLog))c.salesLog=[];c.salesLog.push({month,netSales:Math.round(net*100)/100,note:(t&&t.value||'').trim()});c.salesLog.sort((a,b)=>String(a.month).localeCompare(String(b.month)));});
+}
+function salesDel(id,i){if(!confirm('Remove this month from the sales log?'))return;cardEdit(id,c=>{if(!Array.isArray(c.salesLog))return false;c.salesLog.splice(i,1);});}
+function spInp(id,path,val,ph,type,extra){return '<input type="'+(type||'text')+'" class="pt-inp" value="'+esc(val)+'" placeholder="'+esc(ph||'')+'" aria-label="'+esc(ph||path)+'" onchange="spSet(\''+esc(id)+'\',\''+path+'\',this.value)"'+(extra||'')+' />';}
+function stageBlock(c){
+  const id=esc(c.id),st=stageOf(c),si=STAGES.indexOf(st),na=naOf(c),hist=Array.isArray(c.stageHistory)?c.stageHistory:[];
+  const spine='<div class="sp-spine">'+STAGES.map((s,i)=>'<span class="sp-step'+(i<si?' done':i===si?' on':'')+'">'+s+'</span>').join('')+'</div>';
+  const sel='<select class="mini-select" aria-label="Stage" onchange="stageSet(\''+id+'\',this.value)">'+(st?'':'<option value="" selected>Set a stage</option>')+STAGES.map(s=>'<option value="'+s+'"'+(s===st?' selected':'')+'>'+s+'</option>').join('')+'</select>';
+  const rule=st?STAGE_RULES[st]:null;
+  const exits=st?exitList(c,st).map(x=>x.auto?'<span class="sp-tick'+(x.on?' on':'')+'" title="Worked out by the CRM">'+(x.on?'✓ ':'')+esc(x.t)+' <i>auto</i></span>':'<button type="button" class="sp-tick'+(x.on?' on':'')+'" onclick="stageCheck(\''+id+'\',\''+st+'\','+x.i+')">'+(x.on?'✓ ':'')+esc(x.t)+'</button>').join(''):'';
+  const owner='<input type="text" class="pt-inp" list="spPeople" value="'+esc(na.owner)+'" placeholder="Owner" aria-label="Owner" style="flex:0 0 110px" onchange="spSet(\''+id+'\',\'nextAction.owner\',this.value)" />';
+  let deliver='';
+  if(st==='Deliver'||Array.isArray(c.batches)&&c.batches.length||c.paidAds){
+    const bs=Array.isArray(c.batches)?c.batches:[];
+    const pa=c.paidAds&&typeof c.paidAds==='object'?c.paidAds:{},pc=pa.checks||{};
+    deliver='<div class="sp-sub"><div class="sp-h">Delivery loop</div>'
+      +(bs.length?bs.map((b,bi)=>'<div class="sp-batch"><div class="sp-bn">'+esc(b&&b.name||'Batch '+(bi+1))+' <a href="#" onclick="batchDel(\''+id+'\','+bi+');return false" class="sp-x" aria-label="Remove batch">×</a></div><div class="sp-ticks">'+DELIVER_STEPS.map(([k,l])=>{const dt=b&&b.steps&&b.steps[k];return '<button type="button" class="sp-tick'+(dt?' on':'')+'" onclick="batchStep(\''+id+'\','+bi+',\''+k+'\')">'+(dt?'✓ ':'')+l+(dt?' <i>'+esc(dt)+'</i>':'')+'</button>';}).join('')+'</div></div>').join(''):'<div class="sp-none">No batches yet.</div>')
+      +'<button type="button" class="ob-btn" onclick="batchAdd(\''+id+'\')">+ Batch</button>'
+      +'<div class="sp-h" style="margin-top:12px">Paid ads</div><div class="sp-ticks">'+PAID_ADS.map(([k,l])=>'<button type="button" class="sp-tick'+(pc[k]?' on':'')+'" onclick="adsCheck(\''+id+'\',\''+k+'\')">'+(pc[k]?'✓ ':'')+l+'</button>').join('')
+      +'<span class="sp-lbl">Owner</span><input type="text" class="pt-inp" list="spPeople" value="'+esc(pa.owner||'Rahaid')+'" aria-label="Paid ads owner" style="flex:0 0 110px" onchange="spSet(\''+id+'\',\'paidAds.owner\',this.value)" /></div></div>';
+  }
+  let sales='';
+  if(hasSalesLog(c)){
+    const rate=salesRate(c),rows=Array.isArray(c.salesLog)?c.salesLog:[],fees=salesFees(c);
+    sales='<div class="sp-sub"><div class="sp-h">Sales log <span class="sp-lbl">'+(rate===null?'rate not set':'fee rate '+rate+'% of net sales, from the terms')+'</span></div>'
+      +(rows.length?'<div class="sp-sales">'+rows.map((r,i)=>'<div class="sp-sr"><span>'+esc(r.month||'')+'</span><span>Net '+fmtGBP(r.netSales)+'</span><span>'+(rate===null?'fee: rate not set':'Fee '+fmtGBP(rate/100*(Number(r.netSales)||0)))+'</span><span class="sp-note">'+esc(r.note||'')+'</span><a href="#" class="sp-x" onclick="salesDel(\''+id+'\','+i+');return false" aria-label="Remove month">×</a></div>').join('')+'</div>'
+        +(rate===null?'':'<div class="sp-none">Fees logged: '+fmtGBP(fees.total)+' to date, '+fmtGBP(fees.month)+' this month. Not invoices: raise those in the portal.</div>'):'<div class="sp-none">No months logged.</div>')
+      +'<div class="pt-row"><input type="month" class="pt-inp" id="sl_m_'+id+'" aria-label="Month" style="flex:0 0 150px" /><input type="number" class="pt-inp" id="sl_n_'+id+'" placeholder="Net sales £" min="0" step="0.01" style="flex:0 0 130px" /><input type="text" class="pt-inp" id="sl_t_'+id+'" placeholder="Note (optional)" /><button type="button" class="ob-btn" onclick="salesAdd(\''+id+'\')">+ Month</button></div></div>';
+  }
+  const ps=c.payStep&&typeof c.payStep==='object'?c.payStep:{};
+  return '<div class="sp-wrap">'
+    +'<div class="sp-top"><span class="cf-l" style="margin:0">Stage</span>'+sel+(c.todoistUrl&&/^https:\/\//i.test(c.todoistUrl)?'<a href="'+esc(c.todoistUrl)+'" target="_blank" rel="noopener" class="sp-link">Todoist ↗</a>':'')+'</div>'
+    +spine
+    +(rule?'<div class="sp-rule"><b>Entry</b> '+esc(rule.entry)+'</div><div class="sp-rule"><b>Exit</b> <span class="sp-ticks">'+exits+'</span></div>':'<div class="sp-none">No stage yet. Showing the old status: '+esc(clientStatusView(c).label)+'.</div>')
+    +'<div class="sp-grid">'
+    +'<div class="sp-f"><span class="sp-lbl">Next action'+(naOverdue(na)?' <b class="sp-late">overdue</b>':'')+'</span><div class="pt-row" style="margin:0">'+spInp(c.id,'nextAction.text',na.text,'What happens next')+owner+spInp(c.id,'nextAction.due',na.due,'Due','date',' style="flex:0 0 150px"')+'</div></div>'
+    +'<div class="sp-f"><span class="sp-lbl">Blocker</span>'+spInp(c.id,'blocker',typeof c.blocker==='string'?c.blocker:'','Nothing blocking')+'</div>'
+    +'<div class="sp-f"><span class="sp-lbl">Pay step</span><div class="pt-row" style="margin:0">'+spInp(c.id,'payStep.current',ps.current||'','Current, e.g. free pilot')+spInp(c.id,'payStep.next',ps.next||'','Next step')+spInp(c.id,'payStep.trigger',ps.trigger||'','What triggers it')+'</div></div>'
+    +'<div class="sp-f"><span class="sp-lbl">Results</span>'+spInp(c.id,'resultsNote',typeof c.resultsNote==='string'?c.resultsNote:'','Results so far, in a line')+'</div>'
+    +'<div class="sp-f"><span class="sp-lbl">Todoist link</span>'+spInp(c.id,'todoistUrl',c.todoistUrl||'','https://todoist.com/…','url')+'</div>'
+    +'</div>'
+    +deliver+sales
+    +(hist.length?'<div class="sp-sub"><div class="sp-h">Stage history</div>'+hist.slice().reverse().map(h=>'<div class="sp-hist"><b>'+esc(h&&h.stage||'')+'</b> '+esc([h&&h.date,h&&h.by].filter(Boolean).join(' · '))+(h&&h.why?' · '+esc(h.why):'')+(h&&h.override?' <span class="pt-badge unread">moved anyway</span>':'')+'</div>').join('')+'</div>':'')
+    +'</div>';
+}
+/* ── DASHBOARD (top of Clients) ── one row per client, who is waiting on whom, and real money. */
+function renderDash(data){
+  const host=document.getElementById('ovDash');if(!host)return;
+  const cl=(data.clients||[]).filter(c=>c.status!=='inactive');const me=crmMe();
+  const rows=cl.map(c=>{const v=clientStatusView(c),n=naOf(c);return '<div class="ov-row"><button type="button" class="ov-name" onclick="openClientCard(\''+esc(c.id)+'\')">'+esc(c.name)+'</button><span class="pipe-stage-label psl-'+esc(v.key)+'">'+esc(v.label)+'</span>'
+    +'<span class="ov-c"><i>Blocker</i> '+(c.blocker?esc(c.blocker):'none')+'</span><span class="ov-c'+(naOverdue(n)?' late':'')+'"><i>Next</i> '+(n.text?esc(naLine(n)):'not set')+'</span>'+(c.resultsNote?'<span class="ov-c"><i>Results</i> '+esc(c.resultsNote)+'</span>':'')+'</div>';}).join('');
+  const groups={};cl.forEach(c=>{const n=naOf(c);if(!n.text)return;const o=(n.owner||'No owner').trim();const k=SP_PEOPLE.find(p=>p.toLowerCase()===o.toLowerCase())||o;(groups[k]=groups[k]||[]).push({c,n});});
+  const order=['Diego','Rahaid',...Object.keys(groups).filter(k=>k!=='Diego'&&k!=='Rahaid').sort()];
+  const sortN=(a,b)=>(naOverdue(b.n)-naOverdue(a.n))||String(a.n.due||'9999').localeCompare(String(b.n.due||'9999'));
+  const waits=order.map(k=>{const g=(groups[k]||[]).sort(sortN);return '<div class="ov-wait"><div class="sp-h">Waiting on '+esc(k)+' <span class="sp-lbl">'+g.length+'</span></div>'+(g.length?g.map(x=>'<div class="ov-w'+(naOverdue(x.n)?' late':'')+'"><b>'+esc(x.c.name)+'</b> '+esc(x.n.text)+(x.n.due?' <i>'+(naOverdue(x.n)?'overdue, ':'')+'due '+esc(x.n.due)+'</i>':'')+'</div>').join(''):'<div class="sp-none">Nothing.</div>')+'</div>';}).join('');
+  const tot={paidM:0,owedM:0,paid:0,owed:0,feeM:0,fee:0};
+  const money=cl.map(c=>{const m=moneyFor(c.id),f=salesFees(c);['paidM','owedM','paid','owed'].forEach(k=>tot[k]+=m[k]);tot.feeM+=f.month;tot.fee+=f.total;
+    return '<div class="ov-m"><b>'+esc(c.name)+'</b><span data-l="Paid this month">'+fmtGBP(m.paidM)+'</span><span data-l="Owed this month">'+fmtGBP(m.owedM)+'</span><span data-l="Paid to date">'+fmtGBP(m.paid)+'</span><span data-l="Owed to date">'+fmtGBP(m.owed)+'</span><span data-l="Sales-log fees">'+(hasSalesLog(c)?(f.rate===null?'rate not set':fmtGBP(f.total)):'')+'</span></div>';}).join('');
+  host.innerHTML='<div class="ov-bar"><div class="section-label" style="margin:0">Overview</div><label class="sp-lbl">You are <select class="mini-select" onchange="crmMeSet(this.value)" aria-label="Who is using the CRM"><option value="">Not set (CRM)</option>'+SP_PEOPLE.map(p=>'<option'+(p===me?' selected':'')+'>'+p+'</option>').join('')+'</select></label><button type="button" class="btn-save" style="padding:7px 16px;font-size:12px" onclick="mondayReport()">Monday report</button></div>'
+    +'<div class="ov-rows">'+(rows||'<div class="sp-none">No active clients.</div>')+'</div>'
+    +'<div class="ov-waits">'+waits+'</div>'
+    +'<div class="ov-money"><div class="sp-h">Money <span class="sp-lbl">invoices in the portal; sales-log fees are logged, not invoiced</span></div><div class="ov-m ov-mh"><b>Client</b><span>Paid this month</span><span>Owed this month</span><span>Paid to date</span><span>Owed to date</span><span>Sales-log fees</span></div>'+money
+    +'<div class="ov-m ov-mt"><b>Total</b><span data-l="Paid this month">'+fmtGBP(tot.paidM)+'</span><span data-l="Owed this month">'+fmtGBP(tot.owedM)+'</span><span data-l="Paid to date">'+fmtGBP(tot.paid)+'</span><span data-l="Owed to date">'+fmtGBP(tot.owed)+'</span><span data-l="Sales-log fees">'+fmtGBP(tot.fee)+'</span></div></div>';
+}
+/* ── MONDAY REPORT ── plain text from the cards, shown to copy. Nothing is sent anywhere. */
+function mondayReportText(d){
+  const t=todayStr(),wk=_localDateStr(new Date(Date.now()-7*86400000));const cl=(d.clients||[]).filter(c=>c.status!=='inactive');
+  const out=['KaizenEvol weekly report, '+t,''];const tot={paid:0,owed:0,paidM:0,owedM:0};
+  cl.forEach(c=>{const v=clientStatusView(c),n=naOf(c),m=moneyFor(c.id),f=salesFees(c),un=ptUnread(c);['paid','owed','paidM','owedM'].forEach(k=>tot[k]+=m[k]);
+    const moved=(Array.isArray(c.stageHistory)?c.stageHistory:[]).filter(h=>h&&h.date&&h.date>=wk);
+    out.push((c.name||'Client').toUpperCase()+': '+v.label);
+    out.push('  Moved this week: '+(moved.length?moved.map(h=>h.stage+' on '+h.date+(h.by?' by '+h.by:'')+(h.why?' ('+h.why+')':'')+(h.override?' [moved anyway]':'')).join('; '):'nothing'));
+    out.push('  Next: '+(n.text?naLine(n)+(naOverdue(n)?' OVERDUE':''):'not set'));
+    out.push('  Blocker: '+(c.blocker||'none'));
+    out.push('  Money: paid '+fmtGBP(m.paidM)+' this month ('+fmtGBP(m.paid)+' to date), owed '+fmtGBP(m.owed));
+    if(hasSalesLog(c))out.push('  Sales log: '+(f.rate===null?'rate not set':f.rows+' month'+(f.rows===1?'':'s')+', fees '+fmtGBP(f.total)+' to date'));
+    if(c.resultsNote)out.push('  Results: '+c.resultsNote);
+    out.push('  Unread portal messages: '+un);out.push('');});
+  out.push('TOTAL: paid '+fmtGBP(tot.paidM)+' this month ('+fmtGBP(tot.paid)+' to date), owed '+fmtGBP(tot.owed));
+  return out.join('\n');
+}
+function mondayReport(){document.getElementById('mrText').value=mondayReportText(load());document.getElementById('mrModal').classList.add('open');}
+function mondayClose(){document.getElementById('mrModal').classList.remove('open');}
+async function mondayCopy(){const t=document.getElementById('mrText');try{await navigator.clipboard.writeText(t.value);}catch(e){t.select();try{document.execCommand('copy');}catch(e2){}}showToast('Report copied');}
+/* ── PLAYBOOK ── SOPs from ke_data.playbook, read-only with an edit modal. Ships with five titles and
+   no content: the writing happens separately. */
+const PLAYBOOK_TITLES=['Onboarding','Launch','Weekly optimisation','Reporting','Creative refresh'];
+let _pbIdx=-1;
+function playbookList(d){return Array.isArray(d.playbook)&&d.playbook.length?d.playbook:PLAYBOOK_TITLES.map(t=>({title:t,body:'not written yet'}));}
+function renderPlaybook(d){const host=document.getElementById('pbList');if(!host)return;
+  host.innerHTML=playbookList(d).map((p,i)=>'<div class="pb-item"><div class="pb-head"><div class="pb-t">'+esc(p&&p.title||'Untitled')+'</div><button type="button" class="ob-btn" onclick="pbEdit('+i+')">Edit</button></div><div class="pb-b">'+esc(p&&p.body||'')+'</div></div>').join('');}
+function pbEdit(i){const p=playbookList(load())[i]||{};_pbIdx=i;document.getElementById('pbT').value=p.title||'';document.getElementById('pbB').value=p.body||'';document.getElementById('pbModal').classList.add('open');}
+function pbClose(){document.getElementById('pbModal').classList.remove('open');_pbIdx=-1;}
+function pbSave(){const t=document.getElementById('pbT').value.trim();if(!t){showToast('A title is needed');return;}const d=load();const list=playbookList(d).map(x=>({title:String(x&&x.title||''),body:String(x&&x.body||'')}));
+  if(_pbIdx<0||_pbIdx>=list.length)return;list[_pbIdx]={title:t,body:document.getElementById('pbB').value};d.playbook=list;save(d);renderPlaybook(d);pbClose();showToast('Saved');}
 /* ── EDIT CLIENT DETAILS (2026-09-29, Rahaid and Diego: "edit details on the CRM directly") ──
    Edit details turns the open card into a form over the keys the card and the portal read. It saves
    through load()/save(), so realtime sync and the updated_at guard work as for any other edit. While
@@ -1668,7 +1925,7 @@ function accessCount(c){const apps=accessApps(c);const acc=((load().clientAccess
 function accessLine(c){
   const apps=accessApps(c);
   const acc=((load().clientAccess)||{})[c.id]||{};const done=apps.filter(a=>acc[a]).length;
-  return '<div style="margin-top:6px"><span class="cf-l" style="margin:0 6px 0 0">Access '+done+'/'+apps.length+'</span>'+apps.map(a=>{const st=acc[a]&&acc[a].state;const on=st==='done';return '<span class="pt-badge'+(on?' on':'')+'" style="margin:2px 4px 2px 0;display:inline-block;white-space:nowrap">'+esc(ACCESS_NAMES[a])+' · '+(on?'done':st==='na'?'not relevant':'not yet')+'</span>';}).join('')+'</div>';
+  return '<div style="margin-top:6px"><span class="cf-l" style="margin:0 6px 0 0">Access '+done+'/'+apps.length+'</span>'+apps.map(a=>{const st=acc[a]&&acc[a].state;const on=st==='done';const vf=c.accessVerified&&c.accessVerified[a];return '<span class="pt-badge'+(on?' on':'')+'" style="margin:2px 4px 2px 0;display:inline-block;white-space:nowrap">'+esc(ACCESS_NAMES[a])+' · '+(on?'done':st==='na'?'not relevant':'not yet')+' <button type="button" class="sp-tick'+(vf?' on':'')+'" data-verify="'+a+'" style="padding:1px 7px;font-size:10px" title="Rahaid has checked this access works" onclick="accVerify(\''+esc(c.id)+'\',\''+a+'\')">'+(vf?'✓ verified by Rahaid'+(vf.at?' '+esc(vf.at):''):'verify')+'</button></span>';}).join('')+'</div>';
 }
 /* Client logins for the apps with no team invite (2026-09-29). The client saves them in the portal
    (portal_login_set, db/portal-logins.sql); they live in Supabase Vault, never in ke_data. _plSaved holds
@@ -1707,7 +1964,8 @@ function portalBlock(c){
     +(files.length?'<div style="margin-top:6px">'+files.map(f=>'<span class="pt-badge" style="margin:2px 4px 2px 0">'+(f.mine?'':'from client · ')+'<a href="#" data-p="'+esc(f.path)+'" onclick="ptFileOpen(this.dataset.p);return false" style="color:inherit">'+esc(f.name)+'</a> <a href="#" data-p="'+esc(f.path)+'" onclick="ptFileDel(this.dataset.p);return false" style="color:var(--muted);text-decoration:none">×</a></span>').join('')+'</div>':'')
     +invs.map(v=>'<div class="pt-item"><span class="d">'+esc(v.on_date||String(v.created_at).slice(0,10))+'</span>'+esc(v.title||'Invoice')+' · £'+Number(v.amount||0).toLocaleString('en-GB')+' <span class="pt-badge'+(v.status==='paid'?' on':'')+'">'+(v.status==='paid'?'paid':'due')+'</span> <a href="#" onclick="ptInvPaid('+v.id+',\''+(v.status==='paid'?'due':'paid')+'\');return false" style="color:var(--green)">'+(v.status==='paid'?'mark due':'mark paid')+'</a> <a href="#" onclick="ptDel('+v.id+',\''+c.id+'\');return false" style="color:var(--muted);text-decoration:none">×</a></div>').join('')
     +msgs.slice(0,5).map(m=>'<div class="pt-item client"><span class="d">'+esc(String(m.created_at).slice(0,10))+' · from the client</span>'+esc(m.body||'')+(m.read_by_staff?'':' <a href="#" onclick="ptRead('+m.id+',\''+c.id+'\');return false" style="color:var(--green)">mark read</a>')+'</div>').join('')
-    +'<div class="pt-row"><input type="text" class="pt-inp" id="ptr_'+c.id+'" placeholder="Reply in the portal (they also get email replies from you directly)" /><button class="ob-btn" onclick="ptAdd(\''+c.id+'\',\'message\')">Reply</button></div>'
+    /* no reply box (2026-10-12, Diego: portal messaging is off, clients text or call). Old client
+       messages stay above, read-only, with mark read, so nothing already sent is missed. */
     +'</div>';
 }
 async function ptInvite(id){const d=load();const c=(d.clients||[]).find(x=>x.id===id);if(!c)return;const cur=_ptUsers[id];const email=prompt('Client email for the portal (the one on the agreement):',(cur&&cur.email)||c.email||'');if(!email)return;const em=email.trim().toLowerCase();try{if(cur&&cur.email!==em){await _sb.from('ke_portal_users').delete().eq('email',cur.email);}const{error}=await _sb.from('ke_portal_users').upsert({email:em,client_id:id,client_name:c.name||''},{onConflict:'email'});if(error){showToast('Could not save: '+error.message);return;}c.email=c.email||em;save(d);const{data}=await _sb.auth.getSession();const jwt=data&&data.session&&data.session.access_token;const r=await fetch('/api/portal?op=invite',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+jwt},body:JSON.stringify({email:em,clientName:c.name||'',founder:c.founder||''})});const j=await r.json();showToast(r.ok?'Invite emailed to '+em:(j.error||'Saved, but the email did not send'));await ptLoad();renderClients(load());}catch(e){showToast('Invite failed');}}

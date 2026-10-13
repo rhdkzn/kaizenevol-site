@@ -10,8 +10,9 @@
  * What this guards:
  *   1. an unpaid invoice with a pay link is a full-width "Pay £X" button near the top;
  *   2. saving a login marks that app done (portal_access_set) and updates the count;
- *   3. a message box that inserts a client message, a thread in order, and every
- *      "message us" in the page linking to it;
+ *   3. (changed 2026-10-12, Diego: clients text or call) NO message box; the thread still shows
+ *      our updates and old messages in order, read-only; no "message us" copy pointing at a box
+ *      that is gone, and the page says to text or call Diego;
  *   4. an "n of N done" strip at the top, and a "You're all set" state when it is all done;
  *   5. an artist with no custom checklist sees the artist list (a1.. ids), not the ecom one;
  *   7. one opening-hours box that takes plain wording and still saves the structured value.
@@ -147,36 +148,23 @@ const guard = async (name, fn) => { try { await fn() } catch (e) { ok(name, fals
   ok('6 artist: no "code from us by text"', !/code from us/i.test(acc))
   ok('6 artist: step and note both say the app sends you the code and we text to ask', (acc.match(/sends you a code\. We text you to ask for it/g) || []).length >= 2)
 
-  // 3. message box
-  ok('3 artist: a message box is on the page', await page.isVisible('#msg-body') && await page.isVisible('#msg-send'))
+  // 3. no message box (2026-10-12): clients text or call; the thread stays, read-only
+  ok('3 artist: no message box on the page', !(await page.$('#p-msg, #msg-body, #msg-send')))
   const thread = await page.innerText('#p-updates').catch(() => '')
-  ok('3 artist: the thread shows our reply and the client message, oldest first', thread.indexOf('quick question') > -1 && thread.indexOf('Welcome aboard') > thread.indexOf('quick question'), thread)
-  const unlinked = await page.evaluate(() => {
+  ok('3 artist: the thread still shows our reply and the old client message, oldest first', thread.indexOf('quick question') > -1 && thread.indexOf('Welcome aboard') > thread.indexOf('quick question'), thread)
+  const stale = await page.evaluate(() => {
     const out = [], w = document.createTreeWalker(document.getElementById('s-portal'), NodeFilter.SHOW_TEXT)
-    while (w.nextNode()) { const n = w.currentNode; if (/message us|in a message/i.test(n.nodeValue) && !(n.parentElement.closest('a[href="#p-msg"],label[for="msg-body"]'))) out.push(n.nodeValue.trim().slice(0, 60)) }
+    while (w.nextNode()) { const n = w.currentNode; if (/message us|in a message/i.test(n.nodeValue)) out.push(n.nodeValue.trim().slice(0, 60)) }
     return out
   })
-  ok('3 artist: every "message us" in the page links to the box', unlinked.length === 0, unlinked.join(' | '))
-  const links = await page.locator('#s-portal a[href="#p-msg"]').count()
-  ok('3 artist: there are "message us" links to follow', links >= 2, String(links))
+  ok('3 artist: no "message us" copy left pointing at a box that is gone', stale.length === 0, stale.join(' | '))
+  ok('3 artist: no links to the old box', (await page.locator('#s-portal a[href="#p-msg"]').count()) === 0)
+  ok('3 artist: the page says to text or call Diego', /text or call Diego/.test(await page.innerText('#p-msg-wrap')))
   if (SHOTS) {
     await page.evaluate(() => scrollTo(0, 0)); await page.screenshot({ path: `${SHOTS}/smooth-artist-top-390.png` })
     await page.screenshot({ path: `${SHOTS}/smooth-artist-top-to-pay-390.png`, fullPage: true, clip: { x: 0, y: 0, width: 390, height: await payBottom(page) } })
+    await page.locator('#p-msg-wrap').screenshot({ path: `${SHOTS}/smooth-artist-messages-390.png` })
   }
-  await guard('3 artist: a message can be sent', async () => {
-    await page.locator('#s-portal a[href="#p-msg"]:visible').first().click({ timeout: 3000 })
-    await page.waitForTimeout(200)
-    ok('3 artist: following "message us" focuses the box', await page.evaluate(() => document.activeElement && document.activeElement.id === 'msg-body'))
-    await page.fill('#msg-body', 'Can we move the shoot to Friday?')
-    await page.click('#msg-send')
-    await page.waitForTimeout(400)
-    const ins = await page.evaluate(() => (window.__calls.find(c => c[0] === 'insert' && c[1] === 'ke_portal_items') || [])[2])
-    ok('3 artist: Send inserts a client message', ins && ins.client_id === 'c_art01' && ins.kind === 'message' && ins.author === 'client' && ins.title === 'Message' && ins.body === 'Can we move the shoot to Friday?', JSON.stringify(ins))
-    const th = await page.innerText('#p-updates')
-    ok('3 artist: the new message shows at the end of the thread', th.trim().endsWith('Can we move the shoot to Friday?'), th.slice(-120))
-    ok('3 artist: the box is cleared after sending', (await page.inputValue('#msg-body')) === '')
-    if (SHOTS) await page.locator('#p-msg-wrap').screenshot({ path: `${SHOTS}/smooth-artist-messages-390.png` })
-  })
   ok('artist: no em dashes in the new sections', !/—/.test(await text(page, '#p-progress') + await text(page, '#p-pay-wrap') + await text(page, '#p-msg-wrap')))
   ok('artist: no horizontal scroll at 390px', (await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)) <= 0)
   ok('artist: no script errors', errors.length === 0, errors.join(' | '))
