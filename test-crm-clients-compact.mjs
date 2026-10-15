@@ -19,7 +19,7 @@ const SEED = {
     C('c5', 'Lumen Candles', {}),
     C('c6', 'Old Client Ltd', { status: 'inactive' }),
   ],
-  clientTasks: { c1: { ob1: true, ob2: true } }, growth: { snapshots: [] },
+  clientTasks: { c1: { ob1: true, ob2: true } }, growth: { snapshots: [{ clientId: 'c1', date: '2026-09', avg: 12500 }] },
   settings: { retainerValue: 2000, foundingValue: 1000, stepValue: 1000, stepTrigger: 1.5 },
   clientAccess: { c2: { instagram: { state: 'done' } } },
 }
@@ -49,6 +49,10 @@ ok('rows are compact on a phone (each under 100px)', rows.length && rows.every(r
 const r1 = rows.find(r => r.id === 'c1')?.t || '', r2 = rows.find(r => r.id === 'c2')?.t || ''
 ok('row shows stage label and checklist progress', /Live/.test(r1) && /2\s*\/\s*15/.test(r1), r1)
 ok('row shows Access n/N and unread messages', /Access 1\/7/.test(r2) && /1 new/.test(r2), r2)
+const r4 = rows.find(r => r.id === 'c4')?.t || ''
+/* c1: baseline £8,000, logged £12,500 → one step fired, bonus = one month at the new rate (£1,000 + £1,000) */
+ok('row shows a growth-step bonus due without opening the client', /£2,000 bonus due/.test(r1), r1)
+ok('no bonus badge when no step has fired', !/bonus due/.test(r4) && !/bonus due/.test(rows.find(r => r.id === 'c3')?.t || ''), r4)
 ok('nothing expanded: no card, checklist or portal block rendered', await page.evaluate(() => !document.querySelector('#clientsContainer .card, .checklist-client, .pt-wrap')))
 
 /* (b) tap a row: that client's pipeline, checklist, card and portal block — nobody else's */
