@@ -11,6 +11,30 @@
    else as a failure, and a confirmed waiver is what unlocks booking. So this
    returns {"success":true} ONLY when Resend accepted the email. */
 
+/* 2026-09-29 (later): the submitter gets a copy again, as they did under
+   FormSubmit. Success still depends on the STUDIO email only: a customer who
+   typos their own address must not be blocked at the waiver gate.
+
+   Because the copy goes to whatever address was typed, from our sending domain
+   (which our own sales mail also uses), copies are rate limited per IP and per
+   recipient. The limit is in memory, so it is per warm function instance and
+   resets on a cold start: it stops a casual loop, not a determined attacker
+   spread across instances or IPs. It only ever skips the COPY; the studio email
+   is never throttled, so a class signing waivers on the studio wifi still gets
+   through. */
+const COPY_LIMIT = 5;                 // copies per IP, and per recipient, per window
+const COPY_WINDOW_MS = 60 * 60 * 1000;
+const copyLog = new Map();            // key -> timestamps, this instance only
+
+function allowCopy(keys) {
+  const now = Date.now();
+  if (copyLog.size > 5000) copyLog.clear();   // bound memory on a long-lived instance
+  const recent = keys.map((k) => (copyLog.get(k) || []).filter((t) => now - t < COPY_WINDOW_MS));
+  if (recent.some((r) => r.length >= COPY_LIMIT)) return false;
+  keys.forEach((k, i) => copyLog.set(k, [...recent[i], now]));
+  return true;
+}
+
 const ALLOWED_ORIGINS = ['https://reformpilates.fit', 'https://www.reformpilates.fit'];
 const TO = 'kavfit78@gmail.com';
 const MAX_BYTES = 50 * 1024;
@@ -123,6 +147,35 @@ export default async function handler(req, res) {
   if (!r.ok) {
     console.error('kavita-form: Resend refused', r.status, await r.text().catch(() => ''));
     return res.status(502).json({ success: false, message: 'Email could not be sent' });
+  }
+
+  // Customer copy: one send, one recipient (the validated single address above).
+  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket?.remoteAddress || 'unknown';
+  if (!allowCopy([`ip:${ip}`, `to:${replyTo.toLowerCase()}`])) {
+    console.warn('kavita-form: customer copy skipped, rate limit', ip);
+  } else {
+    try {
+      const c = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'Reformer Pilates <noreply@mail.kaizenevol.com>',
+          to: [replyTo],
+          reply_to: TO,
+          subject: isWaiver ? 'Your Reformer Pilates waiver — copy for your records' : 'We got your message — Reformer Pilates',
+          /* The enquiry copy does NOT echo what was typed: free text sent to any
+             address from our domain is exactly what a spammer wants. The waiver
+             copy has to carry the answers, because a record is its whole point. */
+          text: (isWaiver
+            ? ['Thanks for signing. Here is a copy of the form you submitted, for your records.', '', ...lines, '']
+            : ['Thanks for getting in touch. We have your message and will reply soon.', '']
+          ).concat('Questions? Just reply to this email.').join('\n'),
+        }),
+      });
+      if (!c.ok) console.error('kavita-form: customer copy refused', c.status, await c.text().catch(() => ''));
+    } catch (e) {
+      console.error('kavita-form: customer copy failed', e);
+    }
   }
   return res.status(200).json({ success: true });
 }
